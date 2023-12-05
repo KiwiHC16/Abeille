@@ -1,0 +1,15 @@
+{
+    "act_tuyaEF00-SetValue-Slider": {
+        "type": "action",
+        "subType": "slider",
+        "template": "",
+        "logicalId": "tuyaEF00-SetValue-#EP#-#DPID#",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setValue&dpId=#DPID#&data=#slider#",
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "genericType": "LIGHT_SLIDER"
+    }
+}

@@ -69,6 +69,9 @@
             return;
         }
 
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+
         $found = false;
         if (isset($GLOBALS['devices'][$net][$addr]))
             $found = true;
@@ -297,7 +300,8 @@
             foreach(range(priorityMin, priorityMax) as $prio) {
                 $GLOBALS['zigates'][$zgId]['cmdQueue'][$prio] = [];
             }
-            $GLOBALS['zigates'][$zgId]['sentPri'] = 0;      // Priority for last sent cmd for following 8000 ack
+            $GLOBALS['zigates'][$zgId]['sentPri'] = 0;      // Last sent cmd priority
+            $GLOBALS['zigates'][$zgId]['sentIdx'] = 0;      // Last send cmd index
         } else {
             if (!isset($GLOBALS['devices'][$net]))
                 $GLOBALS['devices'][$net] = [];

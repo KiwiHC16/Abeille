@@ -3,19 +3,17 @@
         "manufacturer": "Xiaomi",
         "model": "plug EU",
         "type": "Xiaomi plug EU",
+        "genericType": "Outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "icon": "Xiaomi-Plug-EU"
         },
         "category": {
-            "automatism": "1"
+            "automatism": "1",
+            "energy": "1"
         },
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
@@ -24,9 +22,17 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle"
+            },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Puissance Inst": {
                 "use": "inf_zbAttr-000C-PresentValue",
@@ -41,13 +47,6 @@
             },
             "Temperature": {
                 "use": "temperaturePrise"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

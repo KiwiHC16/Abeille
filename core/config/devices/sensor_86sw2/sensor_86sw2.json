@@ -4,7 +4,7 @@
         "model": "WXKG02LM",
         "type": "Xiaomi double rocker switch",
         "alternateIds": {
-            "sensor_86sw2.es1": {}
+            "sensor_86sw2.es1": []
         },
         "timeout": "60",
         "comment": "Remonte le nom lumi.sensor_86sw2 apres association et lumi.sensor_86sw2Un sur un getName EP 01  donc les deux fichiers doivent \u00eatre identiques.",
@@ -33,15 +33,14 @@
                 "use": "etatSwitchDouble_3"
             }
         },
-        "xiaomi": {
-            "fromDevice": {
-                "0000-FF01": {
-                    "01-21": {
-                        "func": "numberDiv",
-                        "div": 1000,
-                        "info": "0001-01-0020"
-                    }
-                }
+        "private": {
+            "0000-FF01": {
+                "01-21": {
+                    "func": "numberDiv",
+                    "div": 1000,
+                    "info": "0001-01-0020"
+                },
+                "type": "xiaomi"
             }
         }
     }

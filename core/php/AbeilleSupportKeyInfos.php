@@ -138,9 +138,33 @@
         logIt("\n");
     }
 
+    function printDeviceInfos($addr, $eqLogic) {
+        $eqHName = $eqLogic->getHumanName();
+        $eqId = $eqLogic->getId();
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        $eqModelId = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+        $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
+        $extra = '';
+        $status = 'ok ';
+        if (!$eqLogic->getIsEnable())
+            $status = "DIS";
+        else if ($eqLogic->getStatus('timeout') == 1) {
+            $lastComm = $eqLogic->getStatus('lastCommunication');
+            $extra = ", TIMEOUT (last comm ".$lastComm.")";
+            $status = "TO ";
+        } else if ($eqLogic->getStatus('ab::txAck', 'ok') != 'ok') {
+            $extra = ", NO-ACK";
+            $status = "NA ";
+        }
+
+        logIt("- ${status}: ${eqHName}, Id=${eqId}${extra}\n");
+        logIt("      Addr=${addr}, Model='${eqModelId}', Type='${eqType}'\n");
+    }
+
     // Display devices status
     function devicesInfos() {
         logTitle("Devices");
+        logIt("Reminder: TO=timeout, NA=no-ack, DIS=disabled\n");
 
         for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
             if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
@@ -148,33 +172,22 @@
 
             logIt("Zigate ${zgId}\n");
 
+            // Zigate first
+            $eqLogic = Abeille::byLogicalId("Abeille${zgId}/0000", 'Abeille');
+            printDeviceInfos("0000", $eqLogic);
+
+            // Then equipments
             $eqLogics = Abeille::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+                if ($addr == "0000")
+                    continue; // It's a Zigate
+
                 $zgId2 = substr($net, 7); // AbeilleX => X
                 if ($zgId2 != $zgId)
                     continue;
 
-                $eqHName = $eqLogic->getHumanName();
-                $eqId = $eqLogic->getId();
-                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                $eqModelId = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
-                $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
-                $extra = '';
-                $status = 'ok ';
-                if (!$eqLogic->getIsEnable())
-                    $status = "DIS";
-                else if ($eqLogic->getStatus('timeout') == 1) {
-                    $lastComm = $eqLogic->getStatus('lastCommunication');
-                    $extra = ", TIMEOUT (last comm ".$lastComm.")";
-                    $status = "TO ";
-                } else if ($eqLogic->getStatus('ab::txAck', 'ok') != 'ok') {
-                    $extra = ", NO-ACK";
-                    $status = "NA ";
-                }
-
-                logIt("- ${status}: ${eqHName}, id=${eqId}${extra}\n");
-                logIt("      addr=${addr}, model='${eqModelId}', type='${eqType}'\n");
+                printDeviceInfos($addr, $eqLogic);
             }
         }
         logIt("\n");

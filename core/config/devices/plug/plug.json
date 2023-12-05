@@ -46,31 +46,30 @@
                 "isVisible": 1
             }
         },
-        "xiaomi": {
-            "fromDevice": {
-                "0000-FF01": {
-                    "03-28": {
-                        "func": "number",
-                        "info": "0402-01-0000",
-                        "comment": "Device temp"
-                    },
-                    "64-10": {
-                        "func": "number",
-                        "info": "0006-01-0000",
-                        "comment": "On/off"
-                    },
-                    "95-39": {
-                        "func": "number",
-                        "info": "0B04-01-0508",
-                        "comment": "Current"
-                    },
-                    "98-39": {
-                        "func": "number",
-                        "info": "000C-02-0055",
-                        "comment": "Power",
-                        "comment2": "Also returned by EP02 cluster 000C attrib 0000"
-                    }
-                }
+        "private": {
+            "0000-FF01": {
+                "03-28": {
+                    "func": "number",
+                    "info": "0402-01-0000",
+                    "comment": "Device temp"
+                },
+                "64-10": {
+                    "func": "number",
+                    "info": "0006-01-0000",
+                    "comment": "On/off"
+                },
+                "95-39": {
+                    "func": "number",
+                    "info": "0B04-01-0508",
+                    "comment": "Current"
+                },
+                "98-39": {
+                    "func": "number",
+                    "info": "000C-02-0055",
+                    "comment": "Power",
+                    "comment2": "Also returned by EP02 cluster 000C attrib 0000"
+                },
+                "type": "xiaomi"
             }
         }
     }

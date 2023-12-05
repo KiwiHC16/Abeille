@@ -246,7 +246,7 @@
             $path = __DIR__."/../../".$file;
             $status = 0;
             $error = "";
-            // logDebug("action=delFile, file=".$file.", path=".$path);
+            logDebug("action=delFile, file=".$file.", path=".$path);
 
             if (!file_exists($path)) {
                 $status = 1;
@@ -406,7 +406,7 @@ logDebug("jsonLocation=".$jsonLocation);
             }
             if ($status == 0) {
                 $fullPath = $jsonDir.'/'.$jsonId.'.json';
-                $json = json_encode($devConfig, JSON_PRETTY_PRINT);
+                $json = json_encode($devConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 logDebug("json=".$json);
                 file_put_contents($fullPath, $json);
             }

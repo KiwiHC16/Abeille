@@ -28,10 +28,6 @@
                 "params": "ep=2C&clustId=0001",
                 "execAtCreation": "yes"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
-            },
             "Arm Value": {
                 "use": "inf_zbCmdC-0501-Arm-Value",
                 "repeatEventManagement": "always",
@@ -59,8 +55,11 @@
             "ZoneStatus Change": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig 2C-0500-0002-tamper with extracted boolean value",
-                "trigOut": "2C-0500-0002-tamper",
-                "trigOutOffset": "#value#&4"
+                "trigOut": {
+                    "2C-0500-0002-tamper": {
+                        "valueOffset": "#value#&4"
+                    }
+                }
             },
             "Tamper": {
                 "use": "inf_zbAttr-0500-ZoneStatus-Tamper",

@@ -2,18 +2,36 @@
     "eTRV0100": {
         "manufacturer": "Danfoss",
         "model": "014G2461",
-        "type": "Dansfoss Ally Radiator Thermostat 014G2461",
+        "type": "Dansfoss Ally radiator thermostat",
         "alternateIds": {
             "eTRV0101": [],
             "eTRV0103": [],
-            "eT093WRO": []
+            "TRV001": {
+                "manufacturer": "Hive",
+                "model": "UK7004240",
+                "type": "Radiator valve"
+            },
+            "TRV003": {
+                "manufacturer": "Hive",
+                "model": "UK7004240",
+                "type": "Radiator valve"
+            },
+            "eT093WRO": {
+                "manufacturer": "Popp",
+                "model": "701721",
+                "type": "Smart thermostat"
+            },
+            "eT093WRG": {
+                "manufacturer": "Popp",
+                "model": "701721",
+                "type": "Smart thermostat"
+            }
         },
         "genericType": "Thermostat",
         "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
         "timeout": "0",
         "configuration": {
             "mainEP": "01",
-            "poll": "1",
             "icon": "Danfoss-Ally-Thermostat",
             "batteryType": "2x1.5V LR6/AA"
         },
@@ -35,21 +53,43 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
             },
-            "Consigne Set": {
-                "use": "danfossTemperatureConsigneSet"
-            },
-            "Consigne Get": {
-                "use": "danfossTemperatureConsigneGet"
-            },
-            "Consigne": {
-                "use": "danfossTemperatureConsigneValue",
+            "Set setpoint (OLD)": {
+                "use": "danfossTemperatureConsigneSet",
                 "nextLine": "after"
             },
-            "Temp": {
-                "use": "spiritTemperature"
+            "-": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
+                "valueOffset": "(#logicid0201-01-0012#-0.5)*100",
+                "comment": "Writing (setpoint value - 0.5) * 100",
+                "logicalId": "lowerSetpoint",
+                "isVisible": 1
             },
-            "getTemperature": {
-                "use": "spiritTemperatureGet"
+            "+": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
+                "valueOffset": "(#logicid0201-01-0012#+0.5)*100",
+                "comment": "Writing (setpoint value + 0.5) * 100",
+                "logicalId": "raiseSetpoint",
+                "isVisible": 1
+            },
+            "Get setpoint": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0201&attrId=0012"
+            },
+            "Setpoint": {
+                "use": "inf_zbAttr-0201-OccupiedHeatingSetpoint",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get temp": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0201&attrId=0000"
+            },
+            "Temp": {
+                "use": "inf_zbAttr-0201-LocalTemperature",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Mode": {
                 "use": "danfossSystemeModeValue"
@@ -88,14 +128,14 @@
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
             "SetReporting-0001-0020": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0020&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreationDelay": 12,
                 "execAtCreation": "Yes"
             },

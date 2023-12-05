@@ -33,7 +33,7 @@
                 "isVisible": 1
             },
             "Level": {
-                "use": "inf_LevelPercent",
+                "use": "inf_levelPercent",
                 "isVisible": 1
             }
         },

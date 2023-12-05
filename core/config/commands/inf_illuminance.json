@@ -1,5 +1,5 @@
 {
-    "inf_Illuminance": {
+    "inf_illuminance": {
         "comment": "Illuminance (in Lux)",
         "subType": "numeric",
         "template": "badge",

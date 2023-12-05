@@ -1,5 +1,5 @@
 {
-    "inf_Valve-TimeLeft": {
+    "inf_valve-TimeLeft": {
         "comment": "Received Time Left from valve",
         "subType": "numeric",
         "template": "badge",

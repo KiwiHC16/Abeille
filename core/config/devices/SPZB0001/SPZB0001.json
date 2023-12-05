@@ -8,30 +8,46 @@
         "configuration": {
             "mainEP": "01",
             "icon": "SPZB0001",
-            "batteryType": "2x1,5V LR6 AA"
+            "batteryType": "2x1.5V LR6/AA"
         },
         "category": {
-            "automatism": "1"
+            "heating": "1"
         },
         "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Bind-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "SetReporting-0001-0021": {
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=A85C&maxInterval=A924&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
-            "Consigne": {
-                "use": "spiritTemperatureConsigne"
-            },
-            "getConsigne": {
-                "use": "spiritTemperatureConsigneGet"
-            },
-            "Set Consigne": {
+            "Set setpoint": {
                 "use": "spiritTemperatureConsigneSet"
             },
-            "Temp\u00e9rature": {
-                "use": "spiritTemperature"
+            "Get setpoint": {
+                "use": "spiritTemperatureConsigneGet"
+            },
+            "Setpoint": {
+                "use": "spiritTemperatureConsigne"
             },
             "getTemperature": {
                 "use": "spiritTemperatureGet"
+            },
+            "Temp": {
+                "use": "inf_zbAttr-0201-LocalTemperature",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Bind 0201-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -39,8 +55,8 @@
                 "execAtCreation": "yes"
             },
             "setReportTemperature": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0201&attrType=29&attrId=0000&minInterval=012C&maxInterval=0DAC&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0201&attrType=29&attrId=0000&minInterval=300&maxInterval=3500",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
@@ -74,21 +90,6 @@
             "Set TRV Mode Valve": {
                 "use": "spiritTrvModeSetValve"
             },
-            "BatteriePourcent": {
-                "use": "spiritBatterie-Pourcent"
-            },
-            "Bind-0001-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0001",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
-            "SetReporting-0001-0021": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=A85C&maxInterval=A924&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
-            },
             "Host Flags": {
                 "use": "spiritHostFlags"
             },
@@ -109,19 +110,6 @@
             },
             "Off": {
                 "use": "spiritHostFlagsOffSet"
-            },
-            "Unknown1": {
-                "use": "spiritUnknown1"
-            },
-            "Unknown2": {
-                "use": "spiritUnknown2"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             }
         }
     }

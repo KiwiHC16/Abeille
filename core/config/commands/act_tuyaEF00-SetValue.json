@@ -1,13 +1,13 @@
 {
     "act_tuyaEF00-SetValue": {
+        "type": "action",
         "subType": "other",
         "template": "",
-        "logicalId": "#EP#-TuyaEF00-SetValue",
+        "logicalId": "tuyaEF00-SetValue-#EP#-#DPID#",
         "configuration": {
             "topic": "cmd-tuyaEF00",
-            "request": "ep=#EP#&cmd=setValue&data=#data#"
+            "request": "ep=#EP#&cmd=setValue&dpId=#DPID#&data=#data#"
         },
-        "type": "action",
         "genericType": "GENERIC_ACTION"
     }
 }

@@ -1,5 +1,5 @@
 {
-    "inf_Vibration": {
+    "inf_vibration": {
         "comment": "Vibration (shock) attribute",
         "type": "info",
         "subType": "binary",

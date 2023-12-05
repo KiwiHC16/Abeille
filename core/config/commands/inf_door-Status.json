@@ -1,11 +1,11 @@
 {
-    "inf_Door-Status": {
+    "inf_door-Status": {
         "comment": "A generic attribut to display a door/window status",
         "comment2": "Ex: Received window detection status from thermostat",
         "comment3": "Tcharp38: Can we map on a Zigbee standard attribute ?",
+        "type": "info",
         "subType": "binary",
         "template": "door",
-        "type": "info",
         "logicalId": "#EP#-doorStatus",
         "unit": "",
         "invertBinary": 1,

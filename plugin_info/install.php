@@ -878,10 +878,12 @@
          * - eqLogic DB: Removed 'ab::txAck' for devices not always listening
          * - eqLogic DB: 'ab::eqModel', sig/id/location renamed to modelSig/modelName/modelSource
          * - eqLogic DB: 'ab::eqModel', 'forcedByUser' => 'modelForced'
+         * - eqLogic DB: 'ab::xiaomi' replaced by 'ab::eqModel['private']' + type=xiaomi
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
          * - Cmds DB: 'onGroupBroadcast'/'offGroupBroadcast' replaced by 'cmd-0006'
+         * - Cmds DB: 'ab::trigOut' syntax updated to associative array
          */
         if (intval($dbVersion) < 20231106) {
             // 'eqLogic' + 'cmd' DB updates
@@ -939,6 +941,18 @@
                     log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::eqModel' update '${oldK}' to '${newK}");
                     $saveEqModel = true;
                 }
+                // ab::xiaomi replaced by ab::eqModel['private'] + type=xiaomi
+                $xiaomi = $eqLogic->getConfiguration('ab::xiaomi', null);
+                if ($xiaomi !== null) {
+                    $eqMode['private'] = [];
+                    foreach ($xiaomi['fromDevice'] as $pKey => $pVal) {
+                        $pVal['type'] = "xiaomi";
+                        $eqModel['private'][$pKey] = $pVal;
+                    }
+                    $eqLogic->setConfiguration('ab::xiaomi', null);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::xiaomi' replaced by 'private' entries");
+                    $saveEqModel = true;
+                }
 
                 if ($saveEqModel) {
                     $eqLogic->setConfiguration('ab::eqModel', $eqModel);
@@ -949,18 +963,34 @@
 
                 // cmd
                 foreach ($cmds as $cmdLogic) {
-                    $saveCmd = false;
                     $cmdLogicId = $cmdLogic->getLogicalId();
+                    $cmdHName = $cmdLogic->getHumanName();
+
                     $topic = $cmdLogic->getConfiguration('topic', '');
                     if (substr($topic, 0, 10) == "CmdAbeille") {
                         $ar = explode("/", $topic);
                         $topic = $ar[2];
                     }
 
+                    $saveCmd = false;
                     if ($cmdLogicId == 'online') {
-                        if ($cmdLogic->setConfiguration('repeatEventManagement', '') == '') {
+                        if ($cmdLogic->getConfiguration('repeatEventManagement', '') == '') {
                             $cmdLogic->setConfiguration('repeatEventManagement', "always");
-                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Added 'repeatEventManagement'='always'");
+                            log::add('Abeille', 'debug', "  ${cmdHName}: Added 'repeatEventManagement'='always'");
+                            $saveCmd = true;
+                        }
+                    // '0201-#EP#-0000': Removing 'calculValueOffset'
+                    } else if (preg_match("/^0201-[0-9A-F]*-0000/", $cmdLogicId)) {
+                        if ($cmdLogic->getConfiguration('calculValueOffset', null) !== null) {
+                            $cmdLogic->setConfiguration('calculValueOffset', null);
+                            log::add('Abeille', 'debug', "  ${cmdHName}: Removed 'calculValueOffset'");
+                            $saveCmd = true;
+                        }
+                    // '0201-#EP#-0012': Removing 'calculValueOffset'
+                    } else if (preg_match("/^0201-[0-9A-F]*-0012/", $cmdLogicId)) {
+                        if ($cmdLogic->getConfiguration('calculValueOffset', null) !== null) {
+                            $cmdLogic->setConfiguration('calculValueOffset', null);
+                            log::add('Abeille', 'debug', "  ${cmdHName}: Removed 'calculValueOffset'");
                             $saveCmd = true;
                         }
                     } else if ($topic == 'OnOff') {
@@ -971,7 +1001,7 @@
                         $request = str_replace("EP=", "ep=", $request);
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
-                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOff' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced 'OnOff' by 'cmd-0006'");
                         $saveCmd = true;
                     } else if ($topic == 'OnOffGroup') {
                         $request = $cmdLogic->getConfiguration('request', '');
@@ -988,7 +1018,7 @@
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
                         $cmdLogic->setLogicalId($lId);
-                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOffGroup' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced 'OnOffGroup' by 'cmd-0006'");
                         $saveCmd = true;
                     } else if (($topic == 'onGroupBroadcast') || ($topic == 'offGroupBroadcast')) {
                         $request = $cmdLogic->getConfiguration('request', '');
@@ -999,15 +1029,33 @@
                             $request = "cmd=01&addrMode=04";
                             $lId = "0006-CmdOnGroup";
                         } else { // assuming toggle
-                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": ERROR: topic=${topic}, req=${request}");
+                            log::add('Abeille', 'debug', "  ${cmdHName}: ERROR: topic=${topic}, req=${request}");
                             continue;
                         }
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
                         $cmdLogic->setLogicalId($lId);
-                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced '${topic}' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced '${topic}' by 'cmd-0006'");
                         $saveCmd = true;
                     }
+
+                    // Updating 'ab::trigOut' syntax to associative array
+                    $confVal = $cmdLogic->getConfiguration('ab::trigOut', null);
+                    if (($confVal !== null) && (gettype($confVal) == "string")) {
+                        $toLogicId = $confVal;
+                        $to = [];
+                        $to[$toLogicId] = [];
+                        $toOffset = $cmdLogic->getConfiguration('ab::trigOutOffset', '');
+                        if ($toOffset != '') {
+                            $to[$toLogicId]['valueOffset'] = $toOffset;
+                            $cmdLogic->setConfiguration('ab::trigOutOffset', null);
+                        }
+                        $cmdLogic->setConfiguration('ab::trigOut', $to);
+                        log::add('Abeille', 'debug', "  ${cmdHName}: 'ab::trigOut' updated to associative array");
+                        $saveCmd = true;
+                    }
+                    $cmdLogic->setConfiguration('trigOut', null); // Removing obsolete
+                    $cmdLogic->setConfiguration('trigOutOffset', null); // Removing obsolete
 
                     if ($saveCmd)
                         $cmdLogic->save();

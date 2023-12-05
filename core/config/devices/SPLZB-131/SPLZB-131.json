@@ -36,8 +36,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
             "Total power": {
@@ -75,8 +75,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting-0B04-RMSCurrent": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=0508&attrType=21",
                 "execAtCreation": "yes"
             },
             "SetReporting-0B04-ActivePower": {

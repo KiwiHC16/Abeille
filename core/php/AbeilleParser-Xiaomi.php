@@ -34,7 +34,7 @@
     //     }
     // }
 
-    function xiaomiDecodeFunction($valueHex, $value, $m, $map, &$attrReportN = null, &$toMon = null) {
+    function xiaomiDecodeFunction($addr, $valueHex, $value, $m, $map, &$attrReportN = null) {
         $value2 = $value;
         $mapTxt = ' ==> ';
 
@@ -76,10 +76,10 @@
         $mapTxt .= '='.$value2;
 
         $m .= ' => '.$value.$mapTxt;
-        parserLog('debug', $m);
+        parserLog2('debug', $addr, $m);
 
-        if ($toMon !== null)
-            $toMon[] = $m;
+        // if ($toMon !== null)
+        //     $toMon[] = $m;
         if ($attrReportN !== null)
             $attrReportN[] = array( "name" => $map['info'], "value" => $value2 );
     }
@@ -88,15 +88,16 @@
     // Based on https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Xiaomi-manufacturer-specific-clusters%2C-attributes-and-attribute-reporting
     // Could be cluster 0000, attr FF01, type 42 (character string)
     // Could be cluster FCC0, attr 00F7, type 41 (octet string)
-    function xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl, &$attrReportN = null, &$toMon = null) {
+    // Decode tags & use mapping to know how to interpret them
+    function xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl, &$attrReportN = null) {
         $eq = &getDevice($net, $addr); // By ref
         // parserLog('debug', 'eq='.json_encode($eq));
-        if (!isset($eq['xiaomi']) || !isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
-            parserLog('debug', "    No defined Xiaomi mapping");
+        if (!isset($eq['private']) || !isset($eq['private'][$clustId.'-'.$attrId])) {
+            parserLog2('debug', $addr, "    No defined Xiaomi mapping");
             // return;
             $mapping = [];
         } else
-            $mapping = $eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId];
+            $mapping = $eq['private'][$clustId.'-'.$attrId];
 
         $l = strlen($pl);
         if ($attrReportN !== null)
@@ -108,7 +109,7 @@
             $type = zbGetDataType($typeId);
             $size = $type['size'];
             if ($size == 0) {
-                parserLog('debug', '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
+                parserLog2('debug', $addr, '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
                 break;
             }
             $valueHex = substr($pl, $i + 4, $size * 2);
@@ -121,150 +122,288 @@
 
             $idx = strtoupper($tagId.'-'.$typeId);
             if (isset($mapping[$idx]))
-                xiaomiDecodeFunction($valueHex, $value, $m, $mapping[$idx], $attrReportN, $toMon);
+                xiaomiDecodeFunction($addr, $valueHex, $value, $m, $mapping[$idx], $attrReportN);
             else {
                 $m .= ' => '.$value.' (ignored)';
-                parserLog('debug', $m);
-                $toMon[] = $m;
+                parserLog2('debug', $addr, $m);
+                // $toMon[] = $m;
             }
         }
     }
 
-    function xiaomiReportAttributes($net, $addr, $clustId, $pl, &$attrReportN = null, &$toMon = null) {
-        $eq = &getDevice($net, $addr); // By ref
+    // Decode tags only. For debugging purposes only
+    function xiaomiDecodeTagsDebug($net, $addr, $clustId, $attrId, $pl) {
+        parserLog2('debug', $addr, "  Cluster ${clustId}, attrib ${attrId}: Decoding for debug purposes only");
         $l = strlen($pl);
-        for ( ; $l > 0; ) {
-            $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
-            $attrType = substr($pl, 4, 2);
-            $pl = substr($pl, 6); // Skipping attr ID + attr type
-            $pl2 = $pl;
+        for ($i = 0; $i < $l; ) {
+            $tagId = substr($pl, $i + 0, 2);
+            $typeId = substr($pl, $i + 2, 2);
 
-            // Computing attribute size for legacy decodes
-            if (($attrType == "41") || ($attrType == "42")) {
-                $attrSize = hexdec(substr($pl, 0, 2));
-                $pl = substr($pl, 2); // Skipping 1B size
-            } else if ($attrType == "4C") { // Struct
-                $pl = substr($pl, 4); // Skipping 2B count
-                $attrSize = strlen($pl) / 2; // WARNING: This is wrong. Then can't support consecutive attributes
-            } else {
-                $type = zbGetDataType($attrType);
-                $attrSize = $type['size'];
-                if ($attrSize == 0) {
-                    $attrSize = strlen($pl) / 2;
-                    parserLog('debug', "  WARNING: attrSize is unknown for type ".$attrType);
-                }
+            $type = zbGetDataType($typeId);
+            $size = $type['size'];
+            if ($size == 0) {
+                parserLog2('debug', $addr, '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
+                break;
             }
-            $attrData = substr($pl, 0, $attrSize * 2); // Raw attribute data
+            $valueHex = substr($pl, $i + 4, $size * 2);
+            $i += 4 + ($size * 2);
+            if ($size > 1)
+                $valueHex = AbeilleTools::reverseHex($valueHex);
+            $value = AbeilleParser::decodeDataType($valueHex, $typeId, false, 0, $dataSize, $valueHex);
 
-            $pl = substr($pl, $attrSize * 2); // Point on next attribute
-            $l = strlen($pl);
+            $m = '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' => '.$value;
+            parserLog2('debug', $addr, $m);
+        }
+    }
 
-            //
-            // Flexible decoding according to 'xiaomi' model's section
-            //
-            // Section format:
-            // - Attribute
-            // - Attribute including tags
-            // - Attribute type 4C/struct
-            //      "struct": 1, => indicates 4C/structure
-            //      "01-21": { => <idx>-<type>
-            //          "func": "numberDiv",
-            //          "div": 1000,
-            //          "info": "0001-01-0020",
-            //          "comment": "Battery volt"
-            //      }
+    // OBSOLETE: Handle several attributes in a private way
+    // Modified to treat 1 attribute only
+    // function xiaomiReportAttributeOld($net, $addr, $clustId, $pl, &$attrReportN = null) {
+    //     $eq = &getDevice($net, $addr); // By ref
+    //     // $l = strlen($pl);
+    //     // for ( ; $l > 0; ) {
+    //         $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
+    //         $attrType = substr($pl, 4, 2);
+    //         $pl = substr($pl, 6); // Skipping attr ID + attr type
+    //         $pl2 = $pl;
 
-            /* "xiaomi": {
-                   "fromDevice": {
-                        "FCC0-0112": {
-                            "info": "0400-01-0000"
-                        },
-                        "FCC0-00F7": {
-                            "01-21": {
-                                "func": "numberDiv",
-                                "div": 1000,
-                                "info": "0001-01-0020",
-                                "comment": "Battery volt"
-                            }
-                        },
-                        "FCC0-00F7": {
-                            "struct": 1,
-                            "01-21": {
-                                "func": "numberDiv",
-                                "div": 1000,
-                                "info": "0001-01-0020",
-                                "comment": "Battery volt"
-                            }
-                        }
+    //         // Computing attribute size for legacy decodes
+    //         if (($attrType == "41") || ($attrType == "42")) {
+    //             $attrSize = hexdec(substr($pl, 0, 2));
+    //             $pl = substr($pl, 2); // Skipping 1B size
+    //         } else if ($attrType == "4C") { // Struct
+    //             $pl = substr($pl, 4); // Skipping 2B count
+    //             $attrSize = strlen($pl) / 2; // WARNING: This is wrong. Then can't support consecutive attributes
+    //         } else {
+    //             $type = zbGetDataType($attrType);
+    //             $attrSize = $type['size'];
+    //             if ($attrSize == 0) {
+    //                 $attrSize = strlen($pl) / 2;
+    //                 parserLog2('debug', $addr, "  WARNING: attrSize is unknown for type ".$attrType);
+    //             }
+    //         }
+    //         $attrData = substr($pl, 0, $attrSize * 2); // Raw attribute data
+
+    //         $pl = substr($pl, $attrSize * 2); // Point on next attribute
+    //         $l = strlen($pl);
+
+    //         //
+    //         // Flexible decoding according to 'xiaomi' model's section
+    //         //
+    //         // Section format:
+    //         // - Attribute
+    //         // - Attribute including tags
+    //         // - Attribute type 4C/struct
+    //         //      "struct": 1, => indicates 4C/structure
+    //         //      "01-21": { => <idx>-<type>
+    //         //          "func": "numberDiv",
+    //         //          "div": 1000,
+    //         //          "info": "0001-01-0020",
+    //         //          "comment": "Battery volt"
+    //         //      }
+
+    //         /* "xiaomi": {
+    //                "fromDevice": {
+    //                     "FCC0-0112": {
+    //                         "info": "0400-01-0000"
+    //                     },
+    //                     "FCC0-00F7": {
+    //                         "01-21": {
+    //                             "func": "numberDiv",
+    //                             "div": 1000,
+    //                             "info": "0001-01-0020",
+    //                             "comment": "Battery volt"
+    //                         }
+    //                     },
+    //                     "FCC0-00F7": {
+    //                         "struct": 1,
+    //                         "01-21": {
+    //                             "func": "numberDiv",
+    //                             "div": 1000,
+    //                             "info": "0001-01-0020",
+    //                             "comment": "Battery volt"
+    //                         }
+    //                     }
+    //                 }
+    //             } */
+
+    //         if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
+    //             $fromDev = $eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId];
+    //             if (isset($fromDev['info'])) {
+    //                 // 'CLUSTER-ATTRIB' + 'info' syntax
+    //                 $value = AbeilleParser::decodeDataType($pl2, $attrType, true, 0, $attrSize, $valueHex);
+
+    //                 $m = '  AttrId='.$attrId
+    //                     .', AttrType='.$attrType
+    //                     .', ValueHex='.$valueHex.' => '.$value.' ==> '.$fromDev['info'].'='.$value;
+    //                 parserLog2('debug', $addr, $m);
+    //                 // $toMon[] = $m;
+
+    //                 $attrReportN[] = array(
+    //                     'name' => $fromDev['info'],
+    //                     'value' => $value
+    //                 );
+    //             } else if (!isset($fromDev['struct'])) { // Idx format 'TA-TY', TA=tagId, TY=typeId
+    //                 // 'CLUSTER-ATTRIB' + 'TAG-TYPE' syntax
+    //                 $m = '  AttrId='.$attrId
+    //                     .', AttrType='.$attrType;
+    //                 parserLog2('debug', $addr, $m);
+    //                 // $toMon[] = $m;
+
+    //                 xiaomiDecodeTagsOld($net, $addr, $clustId, $attrId, $attrData, $attrReportN);
+    //             } else { // CLUSTER-ATTRIB for type 4C/struct
+    //                 $m = '  AttrId='.$attrId
+    //                     .', AttrType='.$attrType;
+    //                 parserLog2('debug', $addr, $m);
+    //                 // $toMon[] = $m;
+
+    //                 // Note: 2B count already skipped
+    //                 // 4C/struct format reminder
+    //                 //      xxxx = 2 Bytes for count (ignored)
+    //                 //      t1 d1 = Type 1 (1 B) followed by data 1 (size depends on t1)
+    //                 //      t2 d2 = Type 2 (1 B) followed by data 2 (size depends on t2)
+    //                 //      ...
+    //                 $subIdx = 0;
+    //                 while (strlen($attrData) > 0) {
+    //                     parserLog2('debug', $addr, '  attrData='.$attrData);
+
+    //                     $subType = substr($attrData, 0, 2);
+    //                     $subData = substr($attrData, 2); // Skipping type (1B)
+    //                     $value = AbeilleParser::decodeDataType($subData, $subType, true, 0, $subSize, $valueHex);
+    //                     $m = '    Idx='.$subIdx.', SubType='.$subType.', ValueHex='.$valueHex;
+    //                     $idx = sprintf("%02X", $subIdx);
+    //                     $idx .= '-'.$subType;
+    //                     if (isset($fromDev[$idx]))
+    //                         xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$idx], $attrReportN);
+    //                     else {
+    //                         $m .= ' => '.$value.' (ignored)';
+    //                         parserLog2('debug', $addr, $m);
+    //                         // $toMon[] = $m;
+    //                     }
+
+    //                     $attrData = substr($attrData, 2 + ($subSize * 2)); // Skipping sub-type + sub-data
+    //                     $subIdx++;
+    //                 }
+    //             }
+    //             // continue;
+    //         } else {
+    //             $m = "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData;
+    //             parserLog2('debug', $addr, $m);
+    //             if (($attrType == "41") || ($attrType == "42")) // Even if unhandled, displaying debug infos
+    //                 xiaomiDecodeTagsOld($net, $addr, $clustId, $attrId, $attrData, $attrReportN);
+    //         }
+    //     // }
+    // }
+
+    // Handle 1 attribute in a private way
+    function xiaomiReportAttribute($net, $addr, $clustId, $attr, &$attrReportN = null) {
+        $eq = &getDevice($net, $addr); // By ref
+
+        $attrId = $attr['id'];
+        $attrType = $attr['dataType'];
+        $attrData = $attr['valueHex']; // Raw attribute data
+
+        //
+        // Flexible decoding according to 'xiaomi' model's section
+        //
+        // Section format:
+        // - Attribute
+        // - Attribute including tags
+        // - Attribute type 4C/struct
+        //      "struct": 1, => indicates 4C/structure
+        //      "01-21": { => <idx>-<type>
+        //          "func": "numberDiv",
+        //          "div": 1000,
+        //          "info": "0001-01-0020",
+        //          "comment": "Battery volt"
+        //      }
+
+        /* "private": {
+                "FCC0-0112": {
+                    "type": "xiaomi",
+                    "info": "0400-01-0000"
+                },
+                "FCC0-00F7": {
+                    "type": "xiaomi",
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "Battery volt"
                     }
-                } */
-
-            if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
-                $fromDev = $eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId];
-                if (isset($fromDev['info'])) {
-                    // 'CLUSTER-ATTRIB' + 'info' syntax
-                    $value = AbeilleParser::decodeDataType($pl2, $attrType, true, 0, $attrSize, $valueHex);
-
-                    $m = '  AttrId='.$attrId
-                        .', AttrType='.$attrType
-                        .', ValueHex='.$valueHex.' => '.$value.' ==> '.$fromDev['info'].'='.$value;
-                    parserLog('debug', $m);
-                    $toMon[] = $m;
-
-                    $attrReportN[] = array(
-                        'name' => $fromDev['info'],
-                        'value' => $value
-                    );
-                } else if (!isset($fromDev['struct'])) { // Idx format 'TA-TY', TA=tagId, TY=typeId
-                    // 'CLUSTER-ATTRIB' + 'TAG-TYPE' syntax
-                    $m = '  AttrId='.$attrId
-                        .', AttrType='.$attrType;
-                    parserLog('debug', $m);
-                    $toMon[] = $m;
-
-                    xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
-                } else { // CLUSTER-ATTRIB for type 4C/struct
-                    $m = '  AttrId='.$attrId
-                        .', AttrType='.$attrType;
-                    parserLog('debug', $m);
-                    $toMon[] = $m;
-
-                    // Note: 2B count already skipped
-                    // 4C/struct format reminder
-                    //      xxxx = 2 Bytes for count (ignored)
-                    //      t1 d1 = Type 1 (1 B) followed by data 1 (size depends on t1)
-                    //      t2 d2 = Type 2 (1 B) followed by data 2 (size depends on t2)
-                    //      ...
-                    $subIdx = 0;
-                    while (strlen($attrData) > 0) {
-                        parserLog('debug', '  attrData='.$attrData);
-
-                        $subType = substr($attrData, 0, 2);
-                        $subData = substr($attrData, 2); // Skipping type (1B)
-                        $value = AbeilleParser::decodeDataType($subData, $subType, true, 0, $subSize, $valueHex);
-                        $m = '    Idx='.$subIdx.', SubType='.$subType.', ValueHex='.$valueHex;
-                        $idx = sprintf("%02X", $subIdx);
-                        $idx .= '-'.$subType;
-                        if (isset($fromDev[$idx]))
-                            xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$idx], $attrReportN, $toMon);
-                        else {
-                            $m .= ' => '.$value.' (ignored)';
-                            parserLog('debug', $m);
-                            $toMon[] = $m;
-                        }
-
-                        $attrData = substr($attrData, 2 + ($subSize * 2)); // Skipping sub-type + sub-data
-                        $subIdx++;
+                },
+                "FCC0-00F7": {
+                    "type": "xiaomi",
+                    "struct": 1,
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "Battery volt"
                     }
                 }
-                continue;
-            }
+            } */
 
-            $m = "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData;
-            parserLog('debug', $m);
-            $toMon[] = $m;
+        if (!isset($eq['private']) || !isset($eq['private'][$clustId.'-'.$attrId])) {
+            parserLog2('debug', $addr, "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData);
             if (($attrType == "41") || ($attrType == "42")) // Even if unhandled, displaying debug infos
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN);
+            return;
+        }
+
+        $private = $eq['private'][$clustId.'-'.$attrId];
+        if (isset($private['info'])) {
+            // 'CLUSTER-ATTRIB' + 'info' syntax
+            $value = AbeilleParser::decodeDataType($pl2, $attrType, true, 0, $attrSize, $valueHex);
+
+            $m = '  AttrId='.$attrId
+                .', AttrType='.$attrType
+                .', ValueHex='.$valueHex.' => '.$value.' ==> '.$fromDev['info'].'='.$value;
+            parserLog2('debug', $addr, $m);
+
+            $attrReportN[] = array(
+                'name' => $private['info'],
+                'value' => $value
+            );
+        } else if (!isset($private['struct'])) { // Idx format 'TA-TY', TA=tagId, TY=typeId
+            // 'CLUSTER-ATTRIB' + 'TAG-TYPE' syntax
+            $m = '  AttrId='.$attrId
+                .', AttrType='.$attrType;
+            parserLog2('debug', $addr, $m);
+            // $toMon[] = $m;
+
+            xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN);
+        } else { // CLUSTER-ATTRIB for type 4C/struct
+            $m = '  AttrId='.$attrId
+                .', AttrType='.$attrType;
+            parserLog2('debug', $addr, $m);
+
+            // Note: 2B count already skipped
+            // 4C/struct format reminder
+            //      xxxx = 2 Bytes for count (ignored)
+            //      t1 d1 = Type 1 (1 B) followed by data 1 (size depends on t1)
+            //      t2 d2 = Type 2 (1 B) followed by data 2 (size depends on t2)
+            //      ...
+            $subIdx = 0;
+            while (strlen($attrData) > 0) {
+                parserLog2('debug', $addr, '  attrData='.$attrData);
+
+                $subType = substr($attrData, 0, 2);
+                $subData = substr($attrData, 2); // Skipping type (1B)
+                $value = AbeilleParser::decodeDataType($subData, $subType, true, 0, $subSize, $valueHex);
+                $m = '    Idx='.$subIdx.', SubType='.$subType.', ValueHex='.$valueHex;
+                $idx = sprintf("%02X", $subIdx);
+                $idx .= '-'.$subType;
+                if (isset($private[$idx]))
+                    xiaomiDecodeFunction($valueHex, $value, $m, $private[$idx], $attrReportN);
+                else {
+                    $m .= ' => '.$value.' (ignored)';
+                    parserLog2('debug', $addr, $m);
+                }
+
+                $attrData = substr($attrData, 2 + ($subSize * 2)); // Skipping sub-type + sub-data
+                $subIdx++;
+            }
         }
     }
 ?>

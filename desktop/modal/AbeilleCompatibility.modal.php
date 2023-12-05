@@ -1,47 +1,58 @@
 <?php
     // Supported devices list generation is now done by '.tools/gen_devices_list.php'
 
-    function genHtml($eqList, $resultRaw, $result) {
+     /* Developers debug features & PHP errors */
+     require_once __DIR__.'/../../core/config/Abeille.config.php';
+     if (file_exists(dbgFile)) {
+         $dbgDeveloperMode = true;
 
-        sort( $eqList );
+         /* Dev mode: enabling PHP errors logging */
+         error_reporting(E_ALL);
+         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
+         ini_set('log_errors', 'On');
+    }
+
+    function genHtml($eqList, $resultRaw = [], $result = []) {
+
+        sort($eqList);
 
         echo "<h1>{{Equipements supportés}}</h1>";
         echo "Les docs stockées de chaque équipement sont accessibles via un clic sur le champ 'ID Zigbee'. Si pas de doc, vous tomberez sur une page du type 'erreur 404'<br><br>";
         echo '<table class="tablesorter" id="idEqTable">';
         // echo "<caption>Equipements supportés</caption>";
         echo '<thead><tr>';
-        echo '<th class="header" width="100px" title="Trier par fabricant">Fabricant</th>';
-        echo '<th class="header" width="120px" title="Trier par modèle">Modèle</th>';
-        echo '<th class="header" title="Trier par nom">Nom</th>';
-        echo '<th class="header" title="Trier par ID Zigbee">ID Zigbee</th>';
         echo '<th class="header">Icone</th>';
+        echo '<th class="header" width="100px" title="Trier par fabricant">Fabricant</th>';
+        echo '<th class="header" width="100px" title="Trier par modèle">Modèle</th>';
+        echo '<th class="header" width="100px" title="Trier par type">Type</th>';
+        echo '<th class="header" title="Trier par ID Zigbee">ID Zigbee</th>';
         echo '</tr></thead>';
-        foreach ( $eqList as $eq ) {
+        foreach ($eqList as $eq) {
             echo '<tr>';
+            echo '<td><img src="/plugins/Abeille/images/node_'.$eq['icon'].'.png" width="100" height="100"></td>';
             echo '<td>'.$eq['manufacturer'].'</td>';
             echo '<td>'.$eq['model'].'</td>';
             echo '<td>'.$eq['type'].'</td>';
-            echo '<td><a href="'.urlProducts.'/'.$eq['jsonId'].'">'.$eq['jsonId'].'</a></td>';
-            echo '<td><img src="/plugins/Abeille/images/node_'.$eq['icon'].'.png" width="100" height="100"></td>';
+            echo '<td><a href="'.urlProducts.'/'.$eq['modelSig'].'">'.$eq['modelSig'].'</a></td>';
             echo '</tr>'."\n";
         }
         echo "</table>";
 
         //---------------------------------------------------------------------
-        echo "<h1>{{Equipements et fonctions associées}}</h1>";
-        echo "<table>\n";
-        echo "<tr><td>{{Nom}}</td><td>{{Nom Zigbee}}</td><td>{{Fonction}}</td></tr>\n";
+        // echo "<h1>{{Equipements et fonctions associées}}</h1>";
+        // echo "<table>\n";
+        // echo "<tr><td>{{Nom}}</td><td>{{Nom Zigbee}}</td><td>{{Fonction}}</td></tr>\n";
 
-        sort( $result );
-        foreach ( $result as $line ) echo $line."\n";
-        echo "</table>\n";
+        // sort( $result );
+        // foreach ( $result as $line ) echo $line."\n";
+        // echo "</table>\n";
 
         //---------------------------------------------------------------------
-        echo "<h1>{{Fonctions utilisées}}</h1>";
-        $includeList = array_column( $resultRaw, 'fonction');
-        $includeList = array_unique($includeList);
-        sort( $includeList );
-        foreach ( $includeList as $value ) echo $value."<br>\n";
+        // echo "<h1>{{Fonctions utilisées}}</h1>";
+        // $includeList = array_column($resultRaw, 'fonction');
+        // $includeList = array_unique($includeList);
+        // sort( $includeList );
+        // foreach ( $includeList as $value ) echo $value."<br>\n";
     }
 
     function equipementAdoc( $eqList, $resultRaw, $result) {
@@ -88,7 +99,7 @@
     //     addToFile(rstFile, "Dernière mise-à-jour le ".date('Y-m-d')."\n\n");
 
     //     foreach ( $eqList as $eq ) {
-    //         echo "- ".$eq['jsonId']."\n";
+    //         echo "- ".$eq['modelName']."\n";
     //         if (isset($eq['manufacturer']))
     //             echo "  manuf : ".$eq['manufacturer']."\n";
     //         if (isset($eq['model']))
@@ -109,33 +120,49 @@
     require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
 
     // Collecting list of supported devices (by their JSON)
-    $devList = AbeilleTools::getDevicesList('Abeille');
-    foreach ($devList as $jsonId => $dev) {
+    $modelsList = AbeilleTools::getDevicesList('Abeille');
+    // logDebug("modelsList=".json_encode($modelsList));
+    $eqList = [];
+    $resultRaw = [];
+    $result = [];
+    foreach ($modelsList as $modelSig => $model) {
+        // logDebug("LA model=".json_encode($model));
+
+        $modelName = $model['modelName'];
+        $path = __DIR__.'/../../core/config/devices/'.$modelName.'/'.$modelName.'.json';
+        if (!file_exists($path)) {
+            logDebug("ERROR: Path does not exists: ${path}");
+            continue;
+        }
+        $contentJSON = file_get_contents($path);
+        $content = json_decode($contentJSON, true);
+        $content = $content[$modelName]; // Skip top 'modelName' key
+        // logDebug("LA2 content=".json_encode($content));
 
         $eqList[] = array(
-            'manufacturer' => $dev["manufacturer"],
-            'model' => $dev["model"],
-            'type' => $dev["type"],
-            'jsonId' => $jsonId,
-            'icon' => $dev["icon"]
+            'modelSig' => $modelSig,
+            'modelName' => $modelName,
+            'manufacturer' => isset($content["manufacturer"]) ? $content["manufacturer"] : '',
+            'model' => isset($content["model"]) ? $content["model"] : '',
+            'type' => isset($content["type"]) ? $content["type"] : '',
+            'icon' => isset($content["configuration"]["icon"]) ? $content["configuration"]["icon"] : '',
         );
 
         // Collect all information related to Command used by the products
-        $path = __DIR__.'/../../core/config/devices/'.$jsonId.'/'.$jsonId.'.json';
-        $contentJSON = file_get_contents($path);
-        $content = json_decode($contentJSON, true);
-        if (isset($content[$jsonId]['commands'])) {
-            $commands = $content[$jsonId]['commands'];
-            foreach ($commands as $include) {
+        if (isset($content['commands'])) {
+            $commands = $content['commands'];
+            // logDebug("LA commands=".json_encode($commands));
+            foreach ($commands as $cmdName => $cmd) {
                 $resultRaw[] = array(
-                    'jsonId' => $jsonId,
-                    'type' => $content[$jsonId]["type"],
-                    'fonction' => $include
+                    'modelName' => $modelName,
+                    'type' => $content["type"],
+                    'fonction' => $cmdName
                 );
-                $result[] = "<tr><td>".$content[$jsonId]["type"]."</td><td>".$jsonId."</td><td>".$include."</td></tr>";
+                $result[] = "<tr><td>".$content["type"]."</td><td>".$modelName."</td><td>".$cmdName."</td></tr>";
             }
         }
     }
+    // logDebug("eqList=".json_encode($eqList));
 
     // Met en forme.
     if (isset($argv[1])) {

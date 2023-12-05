@@ -1,6 +1,91 @@
 ChangeLog
 =========
 
+231205-BETA-6
+-------------
+
+  .. warning:: **Mise-à-jour de modèles**
+
+    - Malgré la volonté de faire des évolutions les plus transparentes possibles, il se peut que certains équipements nécessitent d'être mis-à-jour à partir de leur dernier modèle pour à nouveau fonctionner correctement. Si ils sont sur batterie, réinclusion nécessaire. Si sur secteur, aller à la page 'avancé' et bouton 'mise-à-jour'.
+  .. warning:: **Zigates v2/+**
+
+    - FW **v3.22** recommandé.
+    - La maturité de la v2 n'est pas au niveau de la v1. Le FW qui semble le plus stable n'est PAS le dernier dispo (3.A0) mais le précédent (**3.22**). Nous vous conseillons de faire la mise-à-jour vers celui ci.
+  .. warning:: **Zigates v1**
+
+    - FW **v3.23** recommandé, en version **OPDM**.
+    - Le dernier FW officiel est le v3.23. Il est recommandé de basculer dessus pour ne pas faire façe à des soucis déja corrigés.
+    - D'autre part si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+- Interne: Cmd: Réactivation régulation NPDU pour éviter erreurs x85.
+- Assistant modèle: Correction.
+- Tuya detecteur de présence ZG-205Z: Support préliminaire.
+- Page EQ/avancé: correction suppression modèle local.
+- Modèles de commandes: Normalisation noms.
+- Correction regression Tuya: 'Call to undefined function tuyaGenSqn()'
+- Tuya IH-K009: Mise-à-jour modèle 'TS0201__TZ3000_dowj6gyi'.
+- Page santé: Amélioration: Equipements désactivités barrés.
+- Support de clusters privés:
+
+  - Syntaxe des modèles revue (mot clef 'private').
+  - Support limité à Xiaomi seulement.
+  - Tous les modèles Xiaomi mis-à-jour.
+- Xiaomi Aqara smart plug EU: Mise-à-jour du modèle (2665).
+- Tuya/Moes universal remote: Séparation des modèles pour versions batterie et USB.
+- Page maintenance/infos clefs: Amélioration affichage.
+- Modèles
+
+  - Plusieurs mis-à-jour pour utiliser 'configureReporting2' au lieu de 'configureReporting'.
+  - Plusieurs corrigés pour reporting cluster 0008. Mauvais type d'attribut.
+  - Plusieurs corrigés pour reporting cluster 0102. Mauvais type d'attribut ou mauvais attribut.
+- Multiprise Lidl HG6338-FR: Mise-à-jour du modèle.
+
+231202-BETA-3
+-------------
+
+- Page EQ/avancé: Traductions US.
+- Modèles: Nettoyage 'poll=0'
+- Modèles: Amélioration 'trigOut' pour support multiples actions.
+- Attribut 0000/LocalTemp du cluster 0201 divisé par 100 par défaut.
+- Interne: Cmd: Correction 'writeAttribute0530()'
+- Interne: Cmd: Corrections 'writeAttribute()'
+- Attribut 0012/OccupiedHeatingSetpoint du cluster 0201 divisé par 100 par défaut.
+- Danfoss eTRV010x: Modèle en cours de changements (2662).
+- Page EQ/avancé: Améliorations écriture attribut.
+- Danfoss eTRV010x: Qq commandes cachées par défaut car sans interet (2662).
+- Interne: Améliorations constantes Zigbee cluster 0201.
+
+231130-BETA-2
+-------------
+
+- Interne: Parser: decode8002, monitoring revu => parserLog2().
+- Danfoss eTRV010x: Modèle en cours de changements (2662).
+- Suppression de modèles de commandes obsoletes:
+
+  - spiritBatterie-Pourcent
+  - spiritTemperature
+  - spiritUnknown1
+  - spiritUnknown2
+- Interne: Cmd: execute() revue préliminaire.
+- Modele 'TS0601__TZE200_e3oitdyu' (Moes MS105B): Ajout de signatures alternatives (2473).
+- Modele 'TS0601__TZE200_e3oitdyu' (Moes MS105B): Mise-à-jour du modèle pour canal 2 (2473).
+- Support Tuya, commandes action:
+
+  - Ajout 'setEnum'
+  - Ajout support optionnel 'mult' & 'div' pour 'setValue'.
+  - 'setValueMult' & 'setValueDiv' sont obsoletes => 'setValue' + mult/div
+  - Modeles obsoletes: act_tuyaEF00-Set-Setpoint, act_tuyaEF00-Set-Setpoint-Mult, act_tuyaEF00-SetThermostatMode
+- Page EQ/avancé: Ajout support 'manufCode' sur commande générique.
+
+231128-BETA-1
+-------------
+
 - Interne: Cmd: 'configureReporting2' completement revu.
 - Ikea Tradfri E27 LED2102G3: Correction image (2626).
 - Icones: Qq images renommées
@@ -14,6 +99,8 @@ ChangeLog
   - 'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
   - 'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
 - Interne: Cmd: Mise-à-jour formatAttribute().
+- Interne: Cmd: Correction formatAtrtibute() pour type 0x30/enum8.
+- Page 'compatibilité' revue.
 
 231127-BETA-3
 -------------

@@ -25,7 +25,7 @@
         "1d" => array( "desc" => "48-bit bitmap", "short" => "map48", "size" => 6 ),
         "1e" => array( "desc" => "56-bit bitmap", "short" => "map56", "size" => 7 ),
         "1f" => array( "desc" => "64-bit bitmap", "short" => "map64", "size" => 8 ),
-        "20" => array( "desc" => "Analog Unsigned 8-bit integer", "short" => "uint8", "size" => 1 ),
+        "20" => array( "desc" => "Unsigned 8-bit integer", "short" => "uint8", "size" => 1 ),
         "21" => array( "desc" => "Unsigned 16-bit integer", "short" => "uint16", "size" => 2 ),
         "22" => array( "desc" => "Unsigned 24-bit integer", "short" => "uint24", "size" => 3 ),
         "23" => array( "desc" => "Unsigned 32-bit integer", "short" => "uint32", "size" => 4 ),
@@ -549,7 +549,10 @@
             "name" => "Thermostat",
             "attributes" => array(
                 "0000" => array( "name" => "LocalTemperature", "access" => "RP", "dataType" => 0x29 ), // int16
+                "0001" => array( "name" => "OutdoorTemperature", "access" => "R", "dataType" => 0x29 ), // int16
                 "0002" => array( "name" => "Occupancy", "access" => "R", "dataType" => 0x18 ),
+                "0007" => array( "name" => "PICoolingDemand", "access" => "RP", "dataType" => 0x20 ), // uint8
+                "0008" => array( "name" => "PIHeatingDemand", "access" => "RP", "dataType" => 0x20 ), // uint8
                 "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ), // int16
                 "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ), // int16
 
@@ -817,6 +820,12 @@
         ),
         "FC41" => array(
             "name" => "Legrand private ?",
+        ),
+        "FCC0" => array(
+            "name" => "Xiaomi private ?",
+        ),
+        "FF01" => array(
+            "name" => "Xiaomi private ?",
         ),
     );
 

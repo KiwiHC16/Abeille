@@ -1,0 +1,13 @@
+{
+    "act_tuyaEF00-SetEnum": {
+        "type": "action",
+        "subType": "other",
+        "template": "",
+        "logicalId": "tuyaEF00-SetEnum-#EP#-#DPID#-#DATA#",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setEnum&data=#DATA#"
+        },
+        "genericType": "GENERIC_ACTION"
+    }
+}

@@ -6,7 +6,7 @@
     // Decode cluster 0006 received cmd FD
     // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
     // Tuya 1,2,3,4 buttons switch
-    function tuyaDecode0006CmdFD($ep, $msg) {
+    function tuyaDecode0006CmdFD($ep, $addr, $msg) {
         $attributesN = [];
 
         $value = substr($msg, 0, 2);
@@ -17,12 +17,12 @@
         else if ($value == "02")
             $click = 'long';
         else {
-            parserLog('debug',  '  Tuya 0006-FD specific command'
+            parserLog2('debug',  $addr, '  Tuya 0006-FD specific command'
                 .', value='.$value.' => UNSUPPORTED', "8002");
             return $attributesN;
         }
 
-        parserLog('debug',  '  Tuya 0006-FD specific command'
+        parserLog2('debug',  $addr, '  Tuya 0006-FD specific command'
                         .', ValueHex='.$value.' => Click='.$click, "8002");
 
         // Generating an event thru '#EP#-click' Jeedom cmd (ex: '01-click' = 'single')

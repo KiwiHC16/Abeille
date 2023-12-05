@@ -43,8 +43,11 @@
             "ZoneStatusChange": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig 0500-Status with extracted boolean value",
-                "trigOut": "0500-Status",
-                "trigOutOffset": "#value#&1"
+                "trigOut": {
+                    "0500-Status": {
+                        "valueOffset": "#value#&1"
+                    }
+                }
             },
             "Bind 0500-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -52,8 +55,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0500-0002": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0500&attrId=0002&attrType=19",
                 "execAtCreation": "yes"
             },
             "Temperature": {

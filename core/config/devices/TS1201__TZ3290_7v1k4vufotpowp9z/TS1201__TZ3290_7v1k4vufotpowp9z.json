@@ -1,0 +1,50 @@
+{
+    "TS1201__TZ3290_7v1k4vufotpowp9z": {
+        "manufacturer": "Tuya",
+        "model": "ZS08",
+        "type": "Tuya universal remote USB powered",
+        "comment": "Universal remote USB powered",
+        "timeout": "60",
+        "alternateIds": {
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-UniversalRemote",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Init 0": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0001&attrId=0020,0021",
+                "comment": "Might be required for init",
+                "logicalId": "readAttr-Volt-Percent",
+                "execAtCreation": "yes"
+            },
+            "Start learning": {
+                "use": "act_zbCmdC-Generic",
+                "params": "ep=01&clustId=E004&cmd=00&data=7B227374756479223A307D",
+                "comment": "data is JSON of {'study': 0}",
+                "isVisible": "1",
+                "logicalId": "startLearning"
+            },
+            "Learned IR code": {
+                "use": "inf_generic-String",
+                "isVisible": "1",
+                "logicalId": "learnedCode"
+            },
+            "Code to send": {
+                "use": "act_cmd-Private",
+                "params": "ep=01&fct=tuyaZosung&cmd=00",
+                "isVisible": "1",
+                "logicalId": "sendCode"
+            }
+        },
+        "fromDevice": {
+            "ED00": {
+                "type": "tuya-zosung"
+            }
+        }
+    }
+}

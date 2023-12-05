@@ -133,7 +133,7 @@
 
     // Decode tags only. For debugging purposes only
     function xiaomiDecodeTagsDebug($net, $addr, $clustId, $attrId, $pl) {
-        parserLog2('debug', $addr, '    Decoding attribute for debug purposes only');
+        parserLog2('debug', $addr, "  Cluster ${clustId}, attrib ${attrId}: Decoding for debug purposes only");
         $l = strlen($pl);
         for ($i = 0; $i < $l; ) {
             $tagId = substr($pl, $i + 0, 2);

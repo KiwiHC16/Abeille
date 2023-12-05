@@ -64,7 +64,7 @@
             },
             "SetReporting 0102": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0102&attrId=0000&attrType=30",
+                "params": "clustId=0102&attrId=0008&attrType=20",
                 "execAtCreation": "yes"
             }
         }

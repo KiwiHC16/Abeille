@@ -43,7 +43,7 @@ ChangeLog
 
   - Plusieurs mis-à-jour pour utiliser 'configureReporting2' au lieu de 'configureReporting'.
   - Plusieurs corrigés pour reporting cluster 0008. Mauvais type d'attribut.
-  - Plusieurs corrigés pour reporting cluster 0102. Mauvais type d'attribut.
+  - Plusieurs corrigés pour reporting cluster 0102. Mauvais type d'attribut ou mauvais attribut.
 
 231202-BETA-3
 -------------

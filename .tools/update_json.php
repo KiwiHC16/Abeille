@@ -409,10 +409,31 @@
                 }
 
                 // Cluster 0102 updates
-                else if (($cmdFName == "act_zbConfigureReporting") &&
-                        ($cmd['params'] ==  "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                else if (($cmdFName == "act_zbConfigureReporting2") &&
+                        ($cmd['params'] ==  "clustId=0102&attrId=0000&attrType=30")) {
                     $cmd['use'] = "act_zbConfigureReporting2";
-                    $cmd['params'] =  "clustId=0102&attrId=0000&attrType=30";
+                    $cmd['params'] =  "clustId=0102&attrId=0008&attrType=20";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "ep=01&clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "ep=01&clustId=0102&attrId=0008&attrType=20";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "ep=01&clustId=0102&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "ep=01&clustId=0102&attrId=0008&attrType=20";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "clustId=0102&attrType=20&attrId=0008&minInterval=0000&maxInterval=0000&changeVal=01")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "clustId=0102&attrId=0008&attrType=20&minInterval=0000&maxInterval=0000&changeVal=01";
                     $commands2[$cmdJName] = $cmd;
                     $devUpdated = true;
                     echo "  Cmd '${cmdJName}' UPDATED.\n";

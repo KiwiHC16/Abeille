@@ -27,6 +27,17 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
+            "Bind-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0006-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "Power": {
                 "use": "inf_zbAttr-000C-PresentValue",
                 "params": "ep=15",

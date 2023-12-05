@@ -169,7 +169,7 @@
             $msg = array();
             $msg['topic']   = $topic;
             $msg['payload'] = $payload;
-            $msgJson = json_encode($msg);
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
             if (msg_send($queue, $priority, $msgJson, false, false)) {
                 cmdLog('debug', '(fct publishMosquitto) mesage: '.$msgJson.' added to queue : '.$queueId, $this->debug['tempo']);
@@ -479,31 +479,25 @@
          */
         function displayStatus() {
             // cmdLog("debug", __FUNCTION__." AbeilleCmdQueue constructor, zigates:".json_encode($GLOBALS['zigates']), $this->debug["AbeilleCmdClass"] );
-            $zgTxt = '';
             // foreach ($GLOBALS['zigates'] as $zgId => $zg) {
             foreach ($GLOBALS['zigates'] as $zgId => $zg) {
-                $available = $zg['available'] ? "yes" : "NO";
-                $zgTxt .= "/".$available;
-            }
-            cmdLog("debug", "  Zg (avail): ".$zgTxt);
+                $avail = $zg['available'] ? "idle" : "BUSY";
 
-
-            $queuesTxt = "";
-            if (isset($this->tempoMessageQueue)) {
-                $queuesTxt .= "tempo=".count( $this->tempoMessageQueue );
-            }
-
-            foreach ($GLOBALS['zigates'] as $zgId => $zg) {
-                foreach (range(priorityMin, priorityMax) as $prio) {
-                    $queuesTxt .= ", Queue[".$zgId."][".$prio."]=".count($zg['cmdQueue'][$prio]);
-
-                    if ($zgTxt != "")
-                        $zgTxt .= ", ";
-                    $zgTxt .= "zg".$zgId."=on";
+                $queuesTxt = '';
+                foreach (range(priorityMax, priorityMin) as $prio) {
+                    if ($queuesTxt != '')
+                        $queuesTxt .= ', ';
+                    $queuesTxt .= "Pri${prio}=".count($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio]);
                 }
+
+                cmdLog("debug", "Zg${zgId} status: ${avail}, ".$queuesTxt);
             }
 
-            cmdLog("debug", "Status, queues : ".$queuesTxt);
+            if (isset($this->tempoMessageQueue))
+                $tempoCount = count($this->tempoMessageQueue);
+            else
+                $tempoCount = 0;
+            cmdLog("debug", "Tempo status: count=".$tempoCount);
         }
 
         // Check if any pending cmd to be sent to Zigate

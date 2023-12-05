@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231209-BETA-1
+231209-BETA-2
 -------------
 
 - Interne: Correction NPDU regulation.

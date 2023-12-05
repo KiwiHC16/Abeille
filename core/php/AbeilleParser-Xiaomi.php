@@ -133,6 +133,7 @@
 
     // Decode tags only. For debugging purposes only
     function xiaomiDecodeTagsDebug($net, $addr, $clustId, $attrId, $pl) {
+        parserLog2('debug', $addr, '    Decoding attribute for debug purposes only');
         $l = strlen($pl);
         for ($i = 0; $i < $l; ) {
             $tagId = substr($pl, $i + 0, 2);
@@ -150,8 +151,7 @@
                 $valueHex = AbeilleTools::reverseHex($valueHex);
             $value = AbeilleParser::decodeDataType($valueHex, $typeId, false, 0, $dataSize, $valueHex);
 
-            $m = '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'];
-            $m .= ' => '.$value.' (ignored)';
+            $m = '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' => '.$value;
             parserLog2('debug', $addr, $m);
         }
     }

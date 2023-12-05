@@ -5,6 +5,13 @@
         "zbManufacturer": "_TZ3000_vzopcetz",
         "type": "Silvercrest power strip USB SPSZ 3 A1",
         "genericType": "Outlet",
+        "alternateIds": {
+            "TS011F__TZ3000_wzauvbcs": {},
+            "TS011F__TZ3000_oznonj5q": {},
+            "TS011F__TZ3000_1obwwnmq": {},
+            "TS011F__TZ3000_4uf3d0ax": {},
+            "TS011F__TZ3000_vmpbygs5": {}
+        },
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

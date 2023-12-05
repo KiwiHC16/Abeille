@@ -3582,7 +3582,7 @@
                                 if ($manufCode == '115F') { // Xiaomi specific: displaying debug infos
                                     $attrType = $attr['dataType'];
                                     if (($attrType == "41") || ($attrType == "42")) // Even if unhandled, displaying debug infos
-                                        xiaomiDecodeTagsOld($dest, $srcAddr, $clustId, $attrId, $attr['valueHex']);
+                                        xiaomiDecodeTagsDebug($dest, $srcAddr, $clustId, $attrId, $attr['valueHex']);
                                 }
 
                                 // else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
@@ -5643,7 +5643,7 @@
                     parserLog("debug","  WARNING !! This support should be moved to decode8002 with 'private' section in model");
 
                     // For info until activation
-                    xiaomiDecodeTagsOld($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    xiaomiDecodeTagsDebug($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));

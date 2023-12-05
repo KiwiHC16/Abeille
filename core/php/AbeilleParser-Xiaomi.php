@@ -88,47 +88,7 @@
     // Based on https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Xiaomi-manufacturer-specific-clusters%2C-attributes-and-attribute-reporting
     // Could be cluster 0000, attr FF01, type 42 (character string)
     // Could be cluster FCC0, attr 00F7, type 41 (octet string)
-    function xiaomiDecodeTagsOld($net, $addr, $clustId, $attrId, $pl, &$attrReportN = null) {
-        $eq = &getDevice($net, $addr); // By ref
-        // parserLog('debug', 'eq='.json_encode($eq));
-        if (!isset($eq['xiaomi']) || !isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
-            parserLog2('debug', $addr, "    No defined Xiaomi mapping");
-            // return;
-            $mapping = [];
-        } else
-            $mapping = $eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId];
-
-        $l = strlen($pl);
-        if ($attrReportN !== null)
-            $attrReportN = [];
-        for ($i = 0; $i < $l; ) {
-            $tagId = substr($pl, $i + 0, 2);
-            $typeId = substr($pl, $i + 2, 2);
-
-            $type = zbGetDataType($typeId);
-            $size = $type['size'];
-            if ($size == 0) {
-                parserLog2('debug', $addr, '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
-                break;
-            }
-            $valueHex = substr($pl, $i + 4, $size * 2);
-            $i += 4 + ($size * 2);
-            if ($size > 1)
-                $valueHex = AbeilleTools::reverseHex($valueHex);
-            $value = AbeilleParser::decodeDataType($valueHex, $typeId, false, 0, $dataSize, $valueHex);
-
-            $m = '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'];
-
-            $idx = strtoupper($tagId.'-'.$typeId);
-            if (isset($mapping[$idx]))
-                xiaomiDecodeFunction($addr, $valueHex, $value, $m, $mapping[$idx], $attrReportN);
-            else {
-                $m .= ' => '.$value.' (ignored)';
-                parserLog2('debug', $addr, $m);
-            }
-        }
-    }
-
+    // Decode tags & use mapping to know how to interpret them
     function xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl, &$attrReportN = null) {
         $eq = &getDevice($net, $addr); // By ref
         // parserLog('debug', 'eq='.json_encode($eq));
@@ -168,6 +128,31 @@
                 parserLog2('debug', $addr, $m);
                 // $toMon[] = $m;
             }
+        }
+    }
+
+    // Decode tags only. For debugging purposes only
+    function xiaomiDecodeTagsDebug($net, $addr, $clustId, $attrId, $pl) {
+        $l = strlen($pl);
+        for ($i = 0; $i < $l; ) {
+            $tagId = substr($pl, $i + 0, 2);
+            $typeId = substr($pl, $i + 2, 2);
+
+            $type = zbGetDataType($typeId);
+            $size = $type['size'];
+            if ($size == 0) {
+                parserLog2('debug', $addr, '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
+                break;
+            }
+            $valueHex = substr($pl, $i + 4, $size * 2);
+            $i += 4 + ($size * 2);
+            if ($size > 1)
+                $valueHex = AbeilleTools::reverseHex($valueHex);
+            $value = AbeilleParser::decodeDataType($valueHex, $typeId, false, 0, $dataSize, $valueHex);
+
+            $m = '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'];
+            $m .= ' => '.$value.' (ignored)';
+            parserLog2('debug', $addr, $m);
         }
     }
 

@@ -218,6 +218,15 @@
                 //     echo "  Cmd '".$cmdFName."' RENAMED.\n";
                 // }
 
+                // TO BE COMPLETED
+                // else if ($cmdFName == "act_zbConfigureReporting") {
+                //     $cmd['use'] = "act_zbConfigureReporting2";
+                //     $cmd['params'] =  "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600";
+                //     $commands2[$cmdJName] = $cmd;
+                //     $devUpdated = true;
+                //     echo "  Cmd '${cmdJName}' UPDATED.\n";
+                // }
+
                 // Cluster 0001 updates
                 else if (($cmdFName == "act_zbConfigureReporting") &&
                         ($cmd['params'] ==  "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=")) {

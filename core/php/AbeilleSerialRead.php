@@ -27,15 +27,14 @@
     include_once __DIR__.'/AbeilleLog.php';
     include_once __DIR__.'/../class/AbeilleTools.class.php';
 
-    /* Tcharp38: Ouahhh. How can it handle multi-zigate ? Who is
-       dealing with concurrent msg_send() on the same queue ? */
+    /* Tcharp38: msg_send() seems to handle directly concurrent writes to same queue */
     function msgToParser($msgToSend) {
         global $queueXToParser;
-        $jsonMsg = json_encode($msgToSend);
+        $jsonMsg = json_encode($msgToSend, JSON_UNESCAPED_SLASHES);
         // Note: '@' to suppress PHP warning message.
         if (@msg_send($queueXToParser, 1, $jsonMsg, false, false, $errCode) == false) {
-            logMessage('debug', 'msg_send(queueXToParser): ERROR '.$errCode);
-            logMessage('debug', '  msg='.json_encode($msgToSend));
+            logMessage('error', 'msg_send(queueXToParser): ERROR '.$errCode);
+            logMessage('debug', "  msg=${jsonMsg}");
             return false;
         }
         return true;
@@ -157,13 +156,12 @@
     $queueMax = $abQueues["xToParser"]["max"];
 
     /* Inform others that i'm ready to process zigate messages */
-    // $msgToSend = array(
-    //     'src' => 'serialRead',
-    //     'net' => $net,
-    //     'type' => 'status',
-    //     'status' => 'ready',
-    // );
-    // msgToParser($msgToSend);
+    $msgToSend = array(
+        'type' => 'rcvChanStatus',
+        'net' => $net,
+        'status' => 'ready',
+    );
+    msgToParser($msgToSend);
 
     $transcode = false;
     $frame = ""; // Transcoded message from Zigate

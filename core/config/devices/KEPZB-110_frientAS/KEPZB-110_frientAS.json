@@ -19,8 +19,8 @@
                 "params": "ep=2C"
             },
             "SetReporting 2C-0001-00020": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=2C&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=2C&clustId=0001&attrId=0020&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "yes"
             },
             "Bind 2C-0001-ToZigate": {

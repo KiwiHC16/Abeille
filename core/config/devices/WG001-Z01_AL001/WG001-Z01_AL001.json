@@ -12,13 +12,6 @@
             "mainEP": "02"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
                 "isVisible": "1"
@@ -45,7 +38,7 @@
             },
             "SetReporting 02-0008-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=02&clustId=0008&attrType=10&attrId=0000",
+                "params": "ep=02&clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "yes"
             }
         }

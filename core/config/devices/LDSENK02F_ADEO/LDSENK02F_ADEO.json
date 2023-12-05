@@ -106,8 +106,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-050B": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=050B&attrType=29",
                 "execAtCreation": "yes"
             }
         }

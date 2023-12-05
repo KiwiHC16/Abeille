@@ -219,13 +219,109 @@
                 // }
 
                 // TO BE COMPLETED
-                // else if ($cmdFName == "act_zbConfigureReporting") {
-                //     $cmd['use'] = "act_zbConfigureReporting2";
-                //     $cmd['params'] =  "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600";
-                //     $commands2[$cmdJName] = $cmd;
-                //     $devUpdated = true;
-                //     echo "  Cmd '${cmdJName}' UPDATED.\n";
-                // }
+                // Ex $cmd['params'] = "ep=01&clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal="
+                else if ($cmdFName == "act_zbConfigureReporting") {
+                    $ep = '';
+                    $clustId = '';
+                    $attrId = '';
+                    $attrType = '';
+                    $minInterval = '';
+                    $maxInterval = '';
+                    $changeVal = '';
+                    $pArr = explode('&', $cmd['params']); // params to array of xxx=yyy
+                    foreach ($pArr as $p) {
+                        // $p format is paramX=valueX
+                        $pArr2 = explode('=', $p); // pX=vX to array of pX & vX
+                        // echo "pArr2=".json_encode($pArr2)."\n";
+                        $pX = $pArr2[0];
+                        $vX = $pArr2[1];
+                        // echo "px=${pX}, vx=${vX}\n";
+
+                        switch ($pX) {
+                        case "ep":
+                            $ep = $vX;
+                            break;
+                        case "clustId":
+                            $clustId = $vX;
+                            break;
+                        case "attrId":
+                            $attrId = $vX;
+                            break;
+                        case "attrType":
+                            $attrType = $vX;
+                            break;
+                        case "minInterval":
+                            $minInterval = hexdec($vX);
+                            break;
+                        case "maxInterval":
+                            $maxInterval = hexdec($vX);
+                            break;
+                        case "changeVal":
+                            if ($vX != '')
+                                $changeVal = hexdec($vX);
+                            break;
+                        }
+                    }
+                    if ($changeVal !== '') {
+                        // ChangeVal is defined => Min & max required
+                        if ($minInterval === '')
+                            $minInterval = 0;
+                        if ($maxInterval === '')
+                            $maxInterval = 0;
+                    } else {
+                        // ChangeVal is undefined.
+                        if ($maxInterval === 0) {
+                            $maxInterval = ''; // Not required if 0
+                            if ($minInterval === 0)
+                                $minInterval = ''; // Not required if 0 and max==0
+                        }
+                    }
+                    // Attribute type correction
+                    if (($clustId == "0008") && ($attrId == "0000") && ($attrType != "20")) {
+                        $attrType = "20";
+                        echo "  Cmd '${cmdJName}': Attribute type corrected.\n";
+                    }
+
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $params = '';
+                    if ($ep !== '')
+                        $params .= "ep=${ep}";
+                    if ($clustId !== '') {
+                        if ($params != '')
+                            $params .= "&";
+                        $params .= "clustId=${clustId}";
+                    }
+                    if ($attrId !== '') {
+                        if ($params != '')
+                            $params .= "&";
+                        $params .= "attrId=${attrId}";
+                    }
+                    if ($attrType !== '') {
+                        if ($params != '')
+                            $params .= "&";
+                        $params .= "attrType=${attrType}";
+                    }
+                    if ($minInterval !== '') {
+                        if ($params != '')
+                            $params .= "&";
+                        $params .= "minInterval=${minInterval}";
+                    }
+                    if ($maxInterval !== '') {
+                        if ($params != '')
+                            $params .= "&";
+                        $params .= "maxInterval=${maxInterval}";
+                    }
+                    if ($changeVal !== '') {
+                        if ($params != '')
+                            $params .= "&";
+                        $params .= "changeVal=${changeVal}";
+                    }
+                    // echo "  act_zbConfigureReporting2 params = ${params}\n";
+                    $cmd['params'] = $params;
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                }
 
                 // Cluster 0001 updates
                 else if (($cmdFName == "act_zbConfigureReporting") &&
@@ -381,40 +477,6 @@
                     $commands2[$cmdJName] = $cmd;
                     $devUpdated = true;
                     echo "  Cmd '${cmdJName}' UPDATED.\n";
-                } else if (($cmdFName == "setReportLevel") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use"=> "zbConfigureReporting",
-                        "params" => "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                        "execAtCreation" => "Yes",
-                        "execAtCreationDelay" => 11
-                    );
-                    $commands2["SetReporting-0008-0000"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "levelLight") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use"=> "zb-0008-CurrentLevel",
-                        "isVisible" => 1,
-                    );
-                    $commands2["CurrentLevel-0008"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "setLevelVoletDown") && $oldSyntax) {
-                    $commands2["Down"] = Array(
-                        "use" => "zbCmd-0008-DownClose",
-                        // "params" => "clustId=0008&attrId=0000",
-                        "isVisible" => 1,
-                    );
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if ($cmdFName == "setLevel") {
-                    $commands2["Set Level"] = Array(
-                        "use" => "act_setLevel-Light",
-                        // "params" => "clustId=0008&attrId=0000",
-                        "isVisible" => 1,
-                    );
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
                 // Cluster 0102 updates
@@ -514,42 +576,6 @@
                 //     $commands2["Set Temperature"] = $cmdArr;
                 //     $devUpdated = true;
                 //     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "6000K") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zbCmd-0300-MoveToColorTemp",
-                        "params" => "slider=6000",
-                        "isVisible" => 1,
-                    );
-                    $commands2["Set 6000K"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "Vert") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zbCmd-0300-MoveToColor",
-                        "params" => "X=147A&Y=D709",
-                        "isVisible" => 1,
-                    );
-                    $commands2["Set Green"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "Blanc") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zbCmd-0300-MoveToColor",
-                        "params" => "X=6000&Y=6000",
-                        "isVisible" => 1,
-                    );
-                    $commands2["Set White"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "Rouge") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zbCmd-0300-MoveToColor",
-                        "params" => "X=AE13&Y=51EB",
-                        "isVisible" => 1,
-                    );
-                    $commands2["Set Red"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else if ($cmdFName == "temperatureLight") {
                     $commands2["Color temp"] = Array(
                         "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
@@ -702,9 +728,9 @@
     function updateCommand($fileName, $fullPath, $cmd) {
         global $commandsList;
 
-        // foreach ($cmd as $cmdKey => $cmd2) {
-        //     break;
-        // }
+        foreach ($cmd as $cmdKey => $cmd2) {
+            break;
+        }
 
         if (isset($cmd2['type']))
             $type = $cmd2['type'];

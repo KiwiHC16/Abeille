@@ -197,7 +197,7 @@
             //     break;
 
             // case "setReportSpirit": // OBSOLETE: Use 'configureReporting' instead
-            case "setReport": // OBSOLETE: Use 'configureReporting' instead
+            case "setReport": // OBSOLETE: Use 'configureReporting2' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -227,7 +227,7 @@
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
 
-            // case "setReportRaw": // OBSOLETE: Use 'configureReporting' instead
+            // case "setReportRaw": // OBSOLETE: Use 'configureReporting2' instead
             //     $fields = preg_split("/[=&]+/", $msg);
             //     if (count($fields) > 1) {
             //         $parameters = $this->proper_parse_str($msg);

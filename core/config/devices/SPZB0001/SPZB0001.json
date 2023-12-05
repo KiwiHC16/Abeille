@@ -24,8 +24,8 @@
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=A85C&maxInterval=A924&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=43100&maxInterval=43300",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },

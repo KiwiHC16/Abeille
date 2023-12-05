@@ -35,6 +35,8 @@
     // }
 
     function xiaomiDecodeFunction($addr, $valueHex, $value, $m, $map, &$attrReportN = null) {
+        parserLog2('debug', $addr, "      BEN  valueHex: ".json_encode($valueHex). ", value: ".json_encode($value)." mgs: ".$m );
+
         $value2 = $value;
         $mapTxt = ' ==> ';
 
@@ -124,7 +126,7 @@
             if (isset($mapping[$idx]))
                 xiaomiDecodeFunction($addr, $valueHex, $value, $m, $mapping[$idx], $attrReportN);
             else {
-                $m .= ' => '.$value.' (ignored)';
+                $m .= ' => '.$value.' (ignored (1))';
                 parserLog2('debug', $addr, $m);
                 // $toMon[] = $m;
             }
@@ -397,7 +399,7 @@
                 if (isset($private[$idx]))
                     xiaomiDecodeFunction($valueHex, $value, $m, $private[$idx], $attrReportN);
                 else {
-                    $m .= ' => '.$value.' (ignored)';
+                    $m .= ' => '.$value.' (ignored (2))';
                     parserLog2('debug', $addr, $m);
                 }
 

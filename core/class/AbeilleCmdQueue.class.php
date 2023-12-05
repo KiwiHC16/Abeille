@@ -628,7 +628,7 @@
         /**
          * Loop to read all messages and quit when no more message (break loop)
          */
-        function processAcks() {
+        function processAcksQueue() {
 
             // cmdLog("debug", __FUNCTION__." Begin");
 
@@ -670,7 +670,7 @@
                 $sentPri = $GLOBALS['zigates'][$zgId]['sentPri'];
                 $sentIdx = $GLOBALS['zigates'][$zgId]['sentIdx'];
 
-                // Tcharp38 TODO: This msg should be not passed thru this queue.
+                // Tcharp38 TODO: This msg should be not passed thru this priority queue.
                 if ($msg['type'] == "8010") {
                     cmdLog("debug", "  8010 msg: FwVersion=".$msg['major']."-".$msg['minor']);
                     if ($msg['major'] == '0005')
@@ -679,6 +679,10 @@
                         $hw = 1;
                     $GLOBALS['zigates'][$zgId]['hw'] = $hw;
                     $GLOBALS['zigates'][$zgId]['fw'] = hexdec($msg['minor']);
+                    continue;
+                }
+                if ($msg['type'] == "rcvChanStatus") {
+                    configureZigate($zgId); // Configure Zigate
                     continue;
                 }
 
@@ -891,8 +895,9 @@
             $msgMax = $this->queueXToCmdMax;
             if (msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == false) {
                 if ($errCode == 7) {
+                    logMessage('error', 'processXToCmdQueue() ERROR: msg TOO BIG ignored.');
+                    logMessage('debug', "  msg=${msgJson}");
                     msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                    logMessage('debug', 'processXToCmdQueue() ERROR: msg TOO BIG ignored.');
                 } else if ($errCode != 42) // 42 = No message
                     logMessage("error", "processXToCmdQueue() ERROR ".$errCode." on queue 'xToCmd'");
                 return;

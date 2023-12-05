@@ -367,7 +367,7 @@
             // log::add('Abeille', 'debug', 'getDeviceModel start, modelName='.$modelName.", from=".$from);
 
             if ($modelName == '') {
-                log::add('Abeille', 'error', "getDeviceModel(): 'modelName' vide !");
+                log::add('Abeille', 'error', "  getDeviceModel(): 'modelName' vide !");
                 return false;
             }
 
@@ -380,15 +380,15 @@
                 // log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu. Utilisation du modèle par défaut.');
                 // $modelName = 'defaultUnknown';
                 // $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
-                log::add('Abeille', 'error', 'getDeviceModel(): Modèle \''.$modelName.'\' inconnu.');
+                log::add('Abeille', 'error', '  getDeviceModel(): Modèle \''.$modelName.'\' inconnu.');
                 return false;
             }
 
             $jsonContent = file_get_contents($modelPath);
             $device = json_decode($jsonContent, true);
             if (json_last_error() != JSON_ERROR_NONE) {
-                log::add('Abeille', 'error', 'Le modèle JSON \''.$modelName.'\' est corrompu.');
-                log::add('Abeille', 'debug', 'getDeviceModel(): content='.$jsonContent);
+                log::add('Abeille', 'error', '  Le modèle JSON \''.$modelName.'\' est corrompu.');
+                log::add('Abeille', 'debug', '  getDeviceModel(): content='.$jsonContent);
                 return false;
             }
 

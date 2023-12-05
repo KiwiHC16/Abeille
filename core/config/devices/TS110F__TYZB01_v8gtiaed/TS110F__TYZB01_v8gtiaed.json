@@ -102,7 +102,7 @@
             },
             "SetReporting 01-0008-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0008&attrType=10&attrId=0000",
+                "params": "ep=01&clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "yes"
             },
             "Set Level 2": {
@@ -127,7 +127,7 @@
             },
             "SetReporting 02-0008-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=02&clustId=0008&attrType=10&attrId=0000",
+                "params": "ep=02&clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "yes"
             }
         }

@@ -22,8 +22,8 @@
                 "params": "ep=23"
             },
             "SetReporting 23-0001-00020": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=23&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=23&clustId=0001&attrId=0020&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "yes"
             },
             "Bind 23-0001-ToZigate": {
@@ -74,8 +74,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 26-0402-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=26&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=26&clustId=0402&attrId=0000&attrType=29&minInterval=300&maxInterval=3600",
                 "execAtCreation": "yes"
             },
             "Start alarm": {

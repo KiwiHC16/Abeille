@@ -14,48 +14,33 @@
             "energy": "1"
         },
         "commands": {
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
+            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
             },
             "Off": {
                 "use": "act_zbCmdC-0006-Off",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Power": {
+                "use": "inf_zbAttr-000C-PresentValue",
+                "params": "ep=15",
+                "isVisible": 1
+            },
+            "Consommation": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "ep=01&div=1",
+                "unit": "KWh",
                 "isVisible": 1
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
-            },
-            "Status": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1,
-                "nextLine": "after"
-            },
-            "Bind-01-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0006",
-                "execAtCreation": "Yes"
-            },
-            "SetReporting-01-0006-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=0006&attrType=10&attrId=0000",
-                "execAtCreation": "Yes"
-            },
-            "Total power": {
-                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
-                "params": "ep=01&div=10",
-                "unit": "KWh",
-                "isVisible": 1
-            },
-            "Bind-01-0702-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0702",
-                "execAtCreation": "Yes"
-            },
-            "ActivePower": {
-                "use": "inf_zbAttr-000C-PresentValue",
-                "params": "ep=15",
-                "isVisible": 1
             }
         },
         "private": {
@@ -66,13 +51,15 @@
                     "info": "0006-01-0000"
                 },
                 "95-39": {
-                    "func": "raw",
+                    "func": "numberMult",
+                    "mult": "1",
                     "info": "0702-01-0000"
                 }
             }
         },
         "comment": "https://github.com/KiwiHC16/Abeille/issues/1578",
         "comment2": "https://github.com/KiwiHC16/Abeille/issues/2665",
-        "comment3": "https://github.com/KiwiHC16/Abeille/issues/2670"
+        "comment3": "https://github.com/KiwiHC16/Abeille/issues/2670",
+        "comment4": "https://github.com/KiwiHC16/Abeille/issues/2671"
     }
 }

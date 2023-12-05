@@ -948,21 +948,21 @@ class Abeille extends eqLogic {
             // Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
             self::createRuche("Abeille".$zgId);
 
-            // Configuring zigate: TODO: This should be done on Abeille startup or on new beehive creation.
-            if (isset($config['ab::zgChan'.$zgId])) {
-                $chan = $config['ab::zgChan'.$zgId];
-                if ($chan == 0)
-                    $mask = 0x7fff800; // All channels = auto
-                else
-                    $mask = 1 << $chan;
-                $mask = sprintf("%08X", $mask);
-                log::add('Abeille', 'debug', "deamon(): Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetChannelMask", "mask=".$mask);
-            }
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSoftReset", "");
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgStartNetwork", "");
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetTimeServer", "");
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgGetVersion", "");
+            // Zigate configuration is now triggered from AbeilleCmd when receive channel is opened (serial=>parser)
+            // if (isset($config['ab::zgChan'.$zgId])) {
+            //     $chan = $config['ab::zgChan'.$zgId];
+            //     if ($chan == 0)
+            //         $mask = 0x7fff800; // All channels = auto
+            //     else
+            //         $mask = 1 << $chan;
+            //     $mask = sprintf("%08X", $mask);
+            //     log::add('Abeille', 'debug', "deamon(): Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
+            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetChannelMask", "mask=".$mask);
+            // }
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSoftReset", "");
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgStartNetwork", "");
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetTimeServer", "");
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgGetVersion", "");
 
             // Set Zigate in 'hybrid' mode, (possible only since 3.1D).
             // Tcharp38: Need to get current FW version first so this part if moved to 'msgFromParser' on 'zigateVersion' recept.
@@ -1963,7 +1963,7 @@ class Abeille extends eqLogic {
 
                     $ieee2 = $eqLogic->getConfiguration('IEEE', '');
                     if ($ieee2 == '') {
-                        log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId."' config.");
+                        log::add('Abeille', 'debug', "  Eq announce: WARNING. No IEEE addr in '".$eqLogicId."' config.");
                         continue; // No registered IEEE
                     }
                     if ($ieee2 != $ieee)
@@ -1971,7 +1971,7 @@ class Abeille extends eqLogic {
 
                     $eqLogic->setLogicalId($logicalId); // Updating logical ID
                     $eqLogic->save();
-                    log::add('Abeille', 'debug', "msgFromParser(): Eq found with old addr ".$addr2.". Update done.");
+                    log::add('Abeille', 'debug', "  Eq announce: Eq found with old addr ".$addr2.". Update done.");
                     break; // No need to go thru other equipments
                 }
             }
@@ -2117,7 +2117,7 @@ class Abeille extends eqLogic {
                 $eqLogic->setIsEnable(0);
                 /* Display message only if NOT in include mode */
                 if (self::checkInclusionStatus($net) != 1)
-                    message::add("Abeille", $eqLogic->getHumanName().": a quitté le réseau => désactivé.", '');
+                    message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
                 $eqLogic->save();
                 $eqLogic->refresh();
                 log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().' has left the network => DISABLED');
@@ -2186,6 +2186,24 @@ class Abeille extends eqLogic {
             return;
         } // End 'attributesReportN' or 'readAttributesResponseN'
 
+        if ($msg['type'] == "deviceAlive") {
+            /* $msg reminder
+                'type' => 'deviceAlive',
+                'net' => $net,
+                'addr' => $addr,
+                'time' => time(),
+                'lqi' => $lqi
+            */
+            log::add('Abeille', 'debug', "msgFromParser(): Device '${net}/${addr}' is ALIVE");
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  Unknown device '${net}/${addr}'");
+                return; // Unknown device
+            }
+            Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+            return;
+        }
+
         /* Zigate version (8010 response) */
         if ($msg['type'] == "zigateVersion") {
             /* Reminder
@@ -2213,23 +2231,24 @@ class Abeille extends eqLogic {
                     log::add('Abeille', 'debug', '  FW saved version: '.$savedVersion);
                 if ($savedVersion == '---------') {
                     $zgId = substr($net, 7);
+                    // Zigate mode is now HYBRID in all cases. Abeille is no longer able to deal with older firmwares
                     if ($msg['major'] == 'AB01') { // Abeille's FW for Zigate v1
-                        log::add('Abeille', 'debug', '  FW version AB01 => Configuring zigate '.$zgId.' in hybrid mode');
-                        Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
+                        // log::add('Abeille', 'debug', '  FW version AB01 => Configuring zigate '.$zgId.' in hybrid mode');
+                        // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
                     } else {
                         if (hexdec($msg['minor']) >= 0x031D) {
-                            log::add('Abeille', 'debug', '  FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
-                            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
+                            // log::add('Abeille', 'debug', '  FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
+                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
                         } else {
-                            log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$zgId.' in normal mode');
-                            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=normal");
+                            // log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$zgId.' in normal mode');
+                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=normal");
                         }
                         // TODO: Different msg according to v1 or v2
                         if (hexdec($msg['minor']) < 0x0321) {
                             if (hexdec($msg['minor']) < 0x031E)
                                 message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec un trop vieux FW incompatible avec Abeille. Merci de faire une mise-à-jour en 3.21 ou supérieur.');
                             else
-                                message::add('Abeille', "Il est recommandé de mettre à jour votre Zigate avec la version '3.21'.");
+                                message::add('Abeille', "Il est nécessaire de mettre à jour votre Zigate avec la version '3.23'.");
                         }
                     }
                 }
@@ -2803,7 +2822,7 @@ class Abeille extends eqLogic {
                 $dev = array(
                     'net' =>
                     'addr' =>
-                    'modelSig' => 'remotecontrol', // Model sig
+                    'modelSig' => 'remotecontrol', // Model signature
                     'modelName' => 'remotecontrol', // Model file name
                     'modelSource' => 'Abeille', // Model file location
                 );
@@ -2885,7 +2904,7 @@ class Abeille extends eqLogic {
                 message::add("Abeille", $eqHName.": Nouvel équipement identifié.", '');
                 $action = 'reset';
             } else if (($curEqModel == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
-                message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
+                message::add("Abeille", $eqHName.": S'est réannoncé => Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
                 $action = 'reset'; // Update from defaultUnknown = reset to new model
             }
             // else if ($action == "update")
@@ -2898,7 +2917,7 @@ class Abeille extends eqLogic {
                     Other reasons to generate message ?
                 */
                 if ($eqLogic->getIsEnable() != 1)
-                    message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
+                    message::add("Abeille", $eqHName.": S'est réannoncé => Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
             }
         }
 

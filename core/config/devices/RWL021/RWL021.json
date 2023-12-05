@@ -29,8 +29,8 @@
                 "execAtCreationDelay": 9
             },
             "SetReporting 02-0001-0021": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=02&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=00",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=02&clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600&changeVal=0",
                 "comment": "Reporting every 30 to 60mins",
                 "comment2": "changeVal=00 seems MANDATORY",
                 "execAtCreation": "Yes",

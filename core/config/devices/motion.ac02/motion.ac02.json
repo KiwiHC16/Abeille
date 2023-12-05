@@ -50,8 +50,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting 0400-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0400&attrId=0000&attrType=21&minInterval=300&maxInterval=600&changeVal=0",
                 "comment": "Reporting every 5 to 10mins",
                 "execAtCreation": "Yes"
             },

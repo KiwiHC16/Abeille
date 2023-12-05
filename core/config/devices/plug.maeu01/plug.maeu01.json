@@ -31,26 +31,11 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
-            "Bind-01-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0006",
-                "execAtCreation": "Yes"
-            },
-            "SetReporting-01-0006-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=0006&attrType=10&attrId=0000",
-                "execAtCreation": "Yes"
-            },
-            "Total power": {
+            "Consommation": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",
-                "params": "ep=01&div=10",
+                "params": "ep=01",
                 "unit": "KWh",
                 "isVisible": 1
-            },
-            "Bind-01-0702-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0702",
-                "execAtCreation": "Yes"
             },
             "ActivePower": {
                 "use": "inf_zbAttr-000C-PresentValue",
@@ -58,7 +43,21 @@
                 "isVisible": 1
             }
         },
+        "private": {
+            "FCC0-00F7": {
+                "type": "xiaomi",
+                "64-10": {
+                    "func": "raw",
+                    "info": "0006-01-0000"
+                },
+                "95-39": {
+                    "func": "raw",
+                    "info": "0702-01-0000"
+                }
+            }
+        },
         "comment": "https://github.com/KiwiHC16/Abeille/issues/1578",
-        "comment2": "https://github.com/KiwiHC16/Abeille/issues/2665"
+        "comment2": "https://github.com/KiwiHC16/Abeille/issues/2665",
+        "comment3": "https://github.com/KiwiHC16/Abeille/issues/2670"
     }
 }

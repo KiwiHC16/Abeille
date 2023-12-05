@@ -821,6 +821,12 @@
         "FC41" => array(
             "name" => "Legrand private ?",
         ),
+        "FCC0" => array(
+            "name" => "Xiaomi private ?",
+        ),
+        "FF01" => array(
+            "name" => "Xiaomi private ?",
+        ),
     );
 
     /* Returns cluster name from its ID */

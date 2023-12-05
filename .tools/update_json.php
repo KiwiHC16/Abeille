@@ -552,7 +552,14 @@
                 }
 
                 // Cluster 0500 updates
-                else if (($cmdFName == "BindShortToSmokeHeiman") && $oldSyntax) {
+                else if (($cmdFName == "act_zbConfigureReporting") &&
+                        ($cmd['params'] ==  "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "clustId=0500&attrId=0002&attrType=19";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "BindShortToSmokeHeiman") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbBindToZigate",
                         "params" => "clustId=0500",

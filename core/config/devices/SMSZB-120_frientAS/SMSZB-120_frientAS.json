@@ -55,8 +55,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0500-0002": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0500&attrId=0002&attrType=19",
                 "execAtCreation": "yes"
             },
             "Temperature": {

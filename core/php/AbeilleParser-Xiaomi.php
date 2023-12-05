@@ -125,10 +125,10 @@
             else {
                 $m .= ' => '.$value.' (ignored)';
                 parserLog2('debug', $addr, $m);
-                // $toMon[] = $m;
             }
         }
     }
+
     function xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl, &$attrReportN = null) {
         $eq = &getDevice($net, $addr); // By ref
         // parserLog('debug', 'eq='.json_encode($eq));

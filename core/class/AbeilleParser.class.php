@@ -3531,6 +3531,8 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
+                        if (isset($eq['private']))
+                            parserLog('debug', "  Model with 'private' entry");
                         $updates = [];
 
                         while (($l = strlen($pl) > 0)) {
@@ -3546,7 +3548,7 @@
                             unset($private); // Clear in case it is set by previous attribute
                             // parserLog('debug', 'LA eq='.json_encode($eq));
                             if (isset($eq['private'])) {
-                                parserLog('debug', "  Model with 'private' entry");
+                                // parserLog('debug', "  Model with 'private' entry");
                                 foreach ($eq['private'] as $pKey => $pVal) {
                                     $pKeyLen = strlen($pKey);
                                     parserLog('debug', "  clustId/attrId=${clustId}/${attrId} vs pKey=${pKey}, len=${pKeyLen}");
@@ -3562,7 +3564,7 @@
 
                             // Handling attribute
                             if (isset($private)) {
-                                parserLog('debug', "  This cluster/attrib must be handled as private");
+                                // parserLog('debug', "  This cluster/attrib must be handled as private");
                                 if ($private['type'] == "xiaomi") {
                                     xiaomiReportAttribute($dest, $srcAddr, $clustId, $attr, $attrReportN);
                                 } else {
@@ -3570,12 +3572,18 @@
                                 }
                             } else {
                                 // Not private or obsolete way to handle this attribute as private
+
                                 // if ($manufCode == '115F') { // Xiaomi specific
                                 //     parserLog('warning', "  Old way (manufCode) to handle Xiaomi private cluster");
                                 //     // parserLog('debug', "  plOld=${plOld}");
                                 //     xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
                                 //     // $pl = ''; // Full payload treated
                                 // }
+                                if ($manufCode == '115F') { // Xiaomi specific: displaying debug infos
+                                    $attrType = $attr['dataType'];
+                                    if (($attrType == "41") || ($attrType == "42")) // Even if unhandled, displaying debug infos
+                                        xiaomiDecodeTagsOld($dest, $srcAddr, $clustId, $attrId, $attr['valueHex']);
+                                }
 
                                 // else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
                                 //     parserLog('warning', "  Old way (fromDevice) to handle Xiaomi private cluster");

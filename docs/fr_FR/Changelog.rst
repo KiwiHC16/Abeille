@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231205-BETA-4
+231205-BETA-5
 -------------
 
   .. warning:: **Mise-à-jour de modèles**

@@ -62,8 +62,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0102": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0102&attrId=0000&attrType=30",
                 "execAtCreation": "yes"
             }
         }

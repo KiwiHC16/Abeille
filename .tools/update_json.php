@@ -409,7 +409,14 @@
                 }
 
                 // Cluster 0102 updates
-                else if (($cmdFName == "WindowsCoveringStop") && $oldSyntax) {
+                else if (($cmdFName == "act_zbConfigureReporting") &&
+                        ($cmd['params'] ==  "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "clustId=0102&attrId=0000&attrType=30";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "WindowsCoveringStop") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbCmd-0102-Stop",
                         // "params" => "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",

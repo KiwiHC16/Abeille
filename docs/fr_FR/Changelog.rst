@@ -33,6 +33,7 @@ ChangeLog
   - Syntaxe des modèles revue (mot clef 'private').
   - Support limité à Xiaomi seulement.
   - Tous les modèles Xiaomi mis-à-jour.
+- Xiaomi Aqara smart plug EU: Mise-à-jour du modèle (2665).
 
 231202-BETA-3
 -------------

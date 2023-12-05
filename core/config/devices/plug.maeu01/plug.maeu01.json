@@ -1,8 +1,8 @@
 {
     "plug.maeu01": {
         "manufacturer": "Xiaomi",
-        "model": "SP-EUC01 ?",
-        "type": "Aqara SmartPlug",
+        "model": "SP-EUC01",
+        "type": "Xiaomi Aqara EU smart plug",
         "genericType": "Outlet",
         "timeout": "60",
         "configuration": {
@@ -37,55 +37,18 @@
                 "unit": "KWh",
                 "isVisible": 1
             },
-            "UnitOfMeasure": {
-                "use": "inf_zbAttr-0702-UnitOfMeasure"
-            },
-            "Get-0702-UnitOfMeasure": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0702&attrId=0300"
-            },
-            "Multiplier": {
-                "use": "inf_zbAttr-0702-Multiplier"
-            },
-            "Get-0702-Multiplier": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0702&attrId=0301"
-            },
-            "Divisor": {
-                "use": "inf_zbAttr-0702-Divisor"
-            },
-            "Get-0702-Divisor": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0702&attrId=0302"
-            },
-            "SummationFormatting": {
-                "use": "inf_zbAttr-0702-SummationFormatting"
-            },
-            "Get-0702-SummationFormatting": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0702&attrId=0303"
-            },
             "Bind-01-0702-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0702",
                 "execAtCreation": "Yes"
             },
-            "Set-0B04-050B-Reporting": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=01&clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0E10&changeVal=",
-                "execAtCreation": "Yes"
-            },
             "ActivePower": {
-                "use": "inf_zbAttr-0B04-ActivePower",
-                "params": "mult=1&div=1",
+                "use": "inf_zbAttr-000C-PresentValue",
+                "params": "ep=15",
                 "isVisible": 1
-            },
-            "Bind-01-0B04-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0B04",
-                "execAtCreation": "Yes"
             }
         },
-        "comment": "https://github.com/KiwiHC16/Abeille/issues/1578"
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1578",
+        "comment2": "https://github.com/KiwiHC16/Abeille/issues/2665"
     }
 }

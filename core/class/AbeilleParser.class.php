@@ -3535,7 +3535,7 @@
 
                         while (($l = strlen($pl) > 0)) {
                             // Decode attribute
-                            $plOld = $pl; // Saving pl for old way support
+                            // $plOld = $pl; // Saving pl for old way support
                             $attr = $this->decode8002_ReportAttribute($srcAddr, $pl, $skipSize);
                             if ($attr === false)
                                 break;
@@ -5632,7 +5632,7 @@
                 if (($attrId == 'FF01') && ($attrSize == "0026")) {
                     // Assuming $dataType == "42"
                     parserLog('debug', '  Xiaomi proprietary (Aqara Wireless Switch V3)');
-                    parserLog("debug","  WARNING !! This support should be moved to decode8002");
+                    parserLog("debug","  WARNING !! This support should be moved to decode8002 with 'private' section in model");
 
                     // For info until activation
                     xiaomiDecodeTagsOld($dest, $srcAddr, $clustId, $attrId, $Attribut);

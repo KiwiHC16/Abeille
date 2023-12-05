@@ -292,11 +292,17 @@
                 'ackAps'    => $ackAps, // True if ACK, false else
                 'waitFor'   => $ackAps ? "ACK": "8000",
             );
+
             // Abeille PDM restore cmd can be slow
             if ($zgCmd == "AB02") {
                 $newCmd['timeout'] = 120; // TODO: Should be relative to data size
                 $newCmd['waitFor'] = "AB03";
             }
+
+            // LQI request to Zigate will not generate any ACK
+            else if (($zgCmd == "004E") && ($addr == "0000"))
+                $newCmd['waitFor'] = "8000";
+
             if ($begin) {
                 // cmdLog('debug', 'LA='.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]));
                 array_unshift($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri], $newCmd);
@@ -537,10 +543,10 @@
                             cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
                         }
 
-                        // If regulation is required, applying only on cmd not dedicated to Zigate
+                        // If regulation is required, commands for Zigate only (not sent over the air) can be executed
                         if (!$cmd['zgOnly'] && ($regulation != '')) {
                             cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
-                            continue;
+                            continue; // Moving to next cmd until zigate only found
                         }
 
                         cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}, Idx=${cmdIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
@@ -560,7 +566,8 @@
 
                         break;
                     }
-                }
+                } // End priorities loop
+            } // End zigates loop
 
                     // Throughput limitation
                     // $zg['tp_time'] gives time (in us) when Zigate can be considered available again.
@@ -621,7 +628,6 @@
 
                     // break; // This zigate is no longer idle so do not check other priorities now.
                 // }
-            }
         }
 
         // Process 8000, 8011, 8012 or 8702 messages
@@ -681,6 +687,8 @@
                     $GLOBALS['zigates'][$zgId]['fw'] = hexdec($msg['minor']);
                     continue;
                 }
+
+                // Serial to parser receive channel is UP
                 if ($msg['type'] == "rcvChanStatus") {
                     configureZigate($zgId); // Configure Zigate
                     continue;
@@ -844,10 +852,9 @@
                     cmdLog('debug', "  Removing cmd from queue (Pri=${sentPri}, Idx=${sentIdx})");
                     // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
                     // cmdLog('debug', '  queue before='.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
-                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx);
+                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
                     // cmdLog('debug', '  queue after='.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
 
-                    // cmdLog('debug', '               queue after='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
                     $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
                 }
             }
@@ -884,7 +891,7 @@
 
                 cmdLog("debug", "WARNING: checkZigatesStatus(): Zigate".$zgId." cmd ".$cmd['cmd']." ${timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
                 // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx);
+                array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
                 $GLOBALS['zigates'][$zgId]['available'] = 1;
             }
         } // End checkZigatesStatus()

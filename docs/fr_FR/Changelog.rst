@@ -1,7 +1,21 @@
 ChangeLog
 =========
 
-231207-BETA-1
+231209-BETA-1
+-------------
+
+- Interne: Correction NPDU regulation.
+
+231208-BETA-1
+-------------
+
+- Interne: Mise-à-jour powerCycleUsb pour récuperer sortie 'dmesg' si erreur.
+- Interne: AbeilleCmd: Pas de ACK sur requete LQI vers Zigate.
+- Placement réseau: Utilisation image par défaut si plan n'existe plus.
+- Interne: AbeilleCmd: Correction perte de commandes si trop dans la queue à la fois.
+- Interne: AbeilleCmd: Amélioration 'throughput regulation'.
+
+231207-BETA-2
 -------------
 
   .. warning:: **Mise-à-jour de modèles**
@@ -33,6 +47,7 @@ ChangeLog
 - Rappel: Le mode 'normal' de la Zigate n'est plus supporté donc FW >= 3.1E requis.
 - Timeout: Correction pouvant expliquer le passage en timeout de certains équipements.
 - Interne: Autre corrections du parser.
+- Support Xiaomi: Améliorations internes.
 
 231205-BETA-6
 -------------

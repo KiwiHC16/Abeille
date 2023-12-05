@@ -40,6 +40,7 @@ ChangeLog
   - Tous les modèles Xiaomi mis-à-jour.
 - Xiaomi Aqara smart plug EU: Mise-à-jour du modèle (2665).
 - Tuya/Moes universal remote: Séparation des modèles pour versions batterie et USB.
+- Page maintenance/infos clefs: Amélioration affichage.
 
 231202-BETA-3
 -------------

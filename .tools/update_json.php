@@ -579,6 +579,23 @@
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
+                // Cluster 0405 updates
+                else if (($cmdFName == "act_zbConfigureReporting") &&
+                        ($cmd['params'] ==  "ep=02&clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "ep=02&clustId=0405&attrId=0000&attrType=21&minInterval=300&maxInterval=600";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                        ($cmd['params'] ==  "clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "clustId=0405&attrId=0000&attrType=21&minInterval=300&maxInterval=600";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                }
+
                 // Cluster 0500 updates
                 else if (($cmdFName == "act_zbConfigureReporting") &&
                         ($cmd['params'] ==  "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=")) {

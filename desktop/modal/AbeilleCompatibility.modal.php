@@ -117,38 +117,47 @@
     //----------------------------------------------------------------------------------------------------
 
     require_once __DIR__.'/../../core/config/Abeille.config.php';
-    require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
+    // require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
+    require_once __DIR__.'/../../core/php/AbeilleModels.php';
 
     // Collecting list of supported devices (by their JSON)
-    $modelsList = AbeilleTools::getDevicesList('Abeille');
+    // $modelsList = AbeilleTools::getDevicesList('Abeille');
+    $modelsList = getModelsList('Abeille');
     // logDebug("modelsList=".json_encode($modelsList));
     $eqList = [];
     $resultRaw = [];
     $result = [];
-    foreach ($modelsList as $modelSig => $model) {
+    foreach ($modelsList as $modelSigV => $model) {
         // logDebug("LA model=".json_encode($model));
 
         $modelName = $model['modelName'];
-        $path = __DIR__.'/../../core/config/devices/'.$modelName.'/'.$modelName.'.json';
-        if (!file_exists($path)) {
-            logDebug("ERROR: Path does not exists: ${path}");
-            continue;
-        }
-        $contentJSON = file_get_contents($path);
-        $content = json_decode($contentJSON, true);
-        $content = $content[$modelName]; // Skip top 'modelName' key
+        // $path = __DIR__.'/../../core/config/devices/'.$modelName.'/'.$modelName.'.json';
+        // if (!file_exists($path)) {
+        //     logDebug("ERROR: Path does not exists: ${path}");
+        //     continue;
+        // }
+        // $contentJSON = file_get_contents($path);
+        // $content = json_decode($contentJSON, true);
+        // $content = $content[$modelName]; // Skip top 'modelName' key
         // logDebug("LA2 content=".json_encode($content));
 
         $eqList[] = array(
-            'modelSig' => $modelSig,
-            'modelName' => $modelName,
-            'manufacturer' => isset($content["manufacturer"]) ? $content["manufacturer"] : '',
-            'model' => isset($content["model"]) ? $content["model"] : '',
-            'type' => isset($content["type"]) ? $content["type"] : '',
-            'icon' => isset($content["configuration"]["icon"]) ? $content["configuration"]["icon"] : '',
+            'modelSig' => $model['modelSig'],
+            'modelName' => $model['modelName'],
+            'manufacturer' => $model["manufacturer"],
+            'model' => $model["model"],
+            'type' => $model["type"],
+            'icon' => $model["icon"],
         );
 
         // Collect all information related to Command used by the products
+        if (isset($model['modelPath']))
+            $path = __DIR__.'/../../core/config/devices/'.$model['modelPath'];
+        else
+            $path = __DIR__.'/../../core/config/devices/'.$modelName.'/'.$modelName.'.json';
+        $contentJSON = file_get_contents($path);
+        $content = json_decode($contentJSON, true);
+        $content = $content[$modelName]; // Skip top 'modelName' key
         if (isset($content['commands'])) {
             $commands = $content['commands'];
             // logDebug("LA commands=".json_encode($commands));

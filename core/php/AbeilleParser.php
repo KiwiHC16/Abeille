@@ -296,7 +296,15 @@
 
                 $GLOBALS['eqList'][$net][$addr] = $eq;
                 unset($GLOBALS['eqList'][$net][$oldAddr]);
-                parserLog('debug', '  EQ already known: Addr updated from '.$oldAddr.' to '.$addr);
+                parserLog('debug', "  EQ already known: Addr updated from ${oldAddr} to ${addr}");
+
+                // Removing any cmd pending message for old address since device would no longer answer
+                $msg = array(
+                    'type' => 'clearMessages',
+                    'net' => $net,
+                    'addr' => $oldAddr
+                );
+                msgToCmdAck($msg);
 
                 // Informing Abeille about short addr change
                 $msg = array(
@@ -465,8 +473,10 @@
         $queueXToParserMax = $abQueues["xToParser"]["max"];
 
         /* Init list of supported & user/custom devices */
-        $GLOBALS['supportedEqList'] = AbeilleTools::getDevicesList("Abeille");
-        $GLOBALS['customEqList'] = AbeilleTools::getDevicesList("local");
+        // $GLOBALS['supportedEqList'] = AbeilleTools::getDevicesList("Abeille");
+        $GLOBALS['supportedEqList'] = getModelsList("Abeille");
+        // $GLOBALS['customEqList'] = AbeilleTools::getDevicesList("local");
+        $GLOBALS['customEqList'] = getModelsList("local");
         logMessage('debug', 'customEqList='.json_encode( $GLOBALS['customEqList']));
 
         /* Init known devices list */

@@ -63,13 +63,22 @@
 ?>
 
 <style>
-    #idLinksGraphTab {
+    body, html {
+        height: 100%;
+    }
+    .tab-content {
+  height:100%;
+}
+.tab-pane {
+  height: 100%;
+}
+    /* #idLinksGraphTab {
         height: 80%;
         width: 90%;
         position: absolute;
-    }
+    } */
 
-    #idLinksGraphTabSVG {
+    #idLinksGraphTabSVG svg {
         height: 100%;
         width: 100%
     }
@@ -137,21 +146,27 @@
 <!-- Area to display alert message -->
 <div id='div_networkZigbeeAlert' style="display: none;"></div>
 
-<div class='network' nid='' id="div_templateNetwork">
-    <div class="container-fluid">
-        <div id="content">
+<!-- <div class='network' id="div_templateNetwork"> -->
+    <!-- <div class="container-fluid"> -->
+        <div id="content" style="height:100%">
 
-            <ul id="tabs_network" class="nav nav-tabs" data-tabs="tabs">
+            <!-- <ul class="nav nav-tabs" data-tabs="tabs">
                 <li class="active" id="tab_nodes"> <a href="#idLinksTableTab" data-toggle="tab"> <i class="fas fa-table">     </i> {{Table des liens}}    </a></li>
                 <li                id="tab_graph"> <a href="#idLinksGraphTab" data-toggle="tab"> <i class="far fa-image"> </i> {{Graphique des liens}}</a></li>
                 <li                id="tab_routes"><a href="#idRoutesTab"     data-toggle="tab"> <i class="fas fa-tachometer-alt"></i> {{Routes}}             </a></li>
-                <?php
+                < ?php
                 if (isset($dbgDeveloperMode))
                     echo '<li                id="tab_test1"> <a href="#test1"        data-toggle="tab"> <i class="fas fa-tachometer-alt"></i> {{Bruit}}              </a></li>';
                 ?>
-            </ul>
+            </ul> -->
+            <nav class="nav nav-tabs" style="height:3%">
+                <a class="nav-item nav-link active" href="#idLinksTableTab"" data-toggle="tab"><i class="fas fa-table"></i> {{Table des liens}}</a>
+                <a class="nav-item nav-link" href="#idLinksGraphTab"" data-toggle="tab"><i class="far fa-image"></i> {{Graphique des liens}}</a>
+                <a class="nav-item nav-link" href="#idRoutesTab"" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> {{Routes}}</a>
+            </nav>
 
-            <div id="network-tab-content" class="tab-content">
+            <div style="height:97%">
+            <div class="tab-content">
 
                 <!-- Links table -->
                 <div id="idLinksTableTab" class="tab-pane active">
@@ -211,12 +226,16 @@
                 <!-- Links graph -->
                 <div id="idLinksGraphTab" class="tab-pane">
 
-                    <div class="col-lg-2" style="height:inherit;overflow-y:auto;overflow-x:hidden;">
+                <!-- <div class="container">
+                    <div class="row"> -->
+                    <!-- <div class="col-lg-2" style="height:inherit;overflow-y:auto;overflow-x:hidden;"> -->
+                    <div class="col-lg-2">
                         <?php
                             displayNetworks(maxNbOfZigate, "linksGraph", "column");
                         ?>
-                        <table class="table table-bordered table-condensed"
-                        style="width: 150px;position:fixed;margin-top : 25px;">
+                        <br>
+                        <!-- <table class="table table-bordered table-condensed" style="width: 150px;position:fixed;margin-top : 25px;"> -->
+                        <table class="table table-bordered table-condensed" style="width: 150px">
                         <thead>
                         <tr>
                             <th colspan="2">{{Légende}}</th>
@@ -250,6 +269,8 @@
                         <div id="idLinksGraphTabSVG" style="height:inherit">
                         </div>
                     </div>
+<!-- </div>
+</div> -->
                 </div>
 
                 <!-- tab Route -->
@@ -402,8 +423,9 @@
                 </div>
             </div> <!-- div id="network-tab-content" class="tab-content" -->
         </div> <!-- div id="content" -->
-    </div> <!-- div class="container-fluid" -->
-</div> <!-- div class='network' nid='' id="div_templateNetwork" -->
+        </div>
+    <!-- </div> div class="container-fluid" -->
+<!-- </div> div class='network' nid='' id="div_templateNetwork" -->
 
 <script type="text/javascript">
     <?php

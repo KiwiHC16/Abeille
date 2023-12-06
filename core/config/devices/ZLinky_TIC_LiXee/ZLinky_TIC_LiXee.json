@@ -14,10 +14,9 @@
         },
         "commands": {
             "OPTARIF": {
-                "use": "inf_generic-NumericBadge",
+                "use": "inf_generic-String",
                 "params": "clustId=FF66&attrId=0000",
-                "subType": "string",
-                "logicalId": "OPTARIF",
+                "logicalId": "FF66-01-0000",
                 "isVisible": 1
             },
             "Get OPTARIF": {
@@ -29,7 +28,7 @@
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B01&attrId=000D",
                 "unit": "A",
-                "logicalId": "ISOUSC",
+                "logicalId": "0B01-01-000D",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -39,21 +38,101 @@
                 "execAtCreation": 1
             },
             "ADC0": {
-                "use": "inf_generic-NumericBadge",
+                "use": "inf_generic-String",
                 "params": "clustId=0702&attrId=0308",
-                "subType": "string",
-                "logicalId": "ADC0"
+                "logicalId": "0702-01-0308"
             },
             "Get ADC0": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0308",
                 "execAtCreation": 1
             },
+            "IINST": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0508",
+                "logicalId": "0B04-01-0508"
+            },
+            "Get IINST": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=0508",
+                "execAtCreation": 1
+            },
+            "SetReporting IINST": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=0508&attrType=21",
+                "execAtCreation": "yes"
+            },
+            "IINST1": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0508",
+                "logicalId": "IINST1"
+            },
+            "IINST2": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0908",
+                "logicalId": "IINST2"
+            },
+            "IINST3": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0A08",
+                "logicalId": "IINST3"
+            },
+            "IMAX": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050A",
+                "logicalId": "0B04-01-050A"
+            },
+            "Get-IMAX": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=050A",
+                "execAtCreation": 1
+            },
+            "IMAX1": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050A",
+                "logicalId": "IMAX1"
+            },
+            "IMAX2": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=090A",
+                "logicalId": "IMAX2"
+            },
+            "IMAX3": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0A0A",
+                "logicalId": "IMAX3"
+            },
+            "PMAX": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050D",
+                "logicalId": "0B04-01-050D"
+            },
+            "PAPP": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050F",
+                "logicalId": "0B04-01-050F"
+            },
+            "SetReporting PAPP": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=050F&attrType=21",
+                "execAtCreation": "yes"
+            },
+            "ADPS": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0005",
+                "logicalId": "FF66-01-0005"
+            },
+            "SetReporting ADPS": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=FF66&attrId=0005&attrType=21",
+                "execAtCreation": "yes"
+            },
+
             "BASE": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0000",
                 "unit": "Wh",
-                "logicalId": "BASE",
+                "logicalId": "0702-01-0000",
                 "isVisible": 1
             },
             "Get BASE": {
@@ -61,6 +140,7 @@
                 "params": "clustId=0702&attrId=0000",
                 "execAtCreation": 1
             },
+
             "HCHC": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0102",
@@ -73,6 +153,17 @@
                 "logicalId": "HCHP",
                 "isVisible": 1
             },
+            "HHPHC": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0002",
+                "logicalId": "FF66-01-0002"
+            },
+            "Get HHPHC": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FF66&attrId=0002",
+                "execAtCreation": 1
+            },
+
             "EJPHN": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0100",
@@ -83,6 +174,12 @@
                 "params": "clustId=0702&attrId=0102",
                 "logicalId": "EJPHPM"
             },
+            "PEJP": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0004",
+                "logicalId": "PEJP"
+            },
+            
             "BBRHCJB": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0100",
@@ -113,100 +210,21 @@
                 "params": "clustId=0702&attrId=010A",
                 "logicalId": "BBRHPJR"
             },
-            "IINST": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=0508",
-                "logicalId": "IINST"
-            },
-            "Get IINST": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=0508",
-                "execAtCreation": 1
-            },
-            "SetReporting IINST": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=0B04&attrId=0508&attrType=21",
-                "execAtCreation": "yes"
-            },
-            "IINST1": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=0508",
-                "logicalId": "IINST1"
-            },
-            "IINST2": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=0908",
-                "logicalId": "IINST2"
-            },
-            "IINST3": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=0A08",
-                "logicalId": "IINST3"
-            },
-            "IMAX": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=050A",
-                "logicalId": "IMAX"
-            },
-            "Get-IMAX": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=050A",
-                "execAtCreation": 1
-            },
-            "IMAX1": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=050A",
-                "logicalId": "IMAX1"
-            },
-            "IMAX2": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=090A",
-                "logicalId": "IMAX2"
-            },
-            "IMAX3": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=0A0A",
-                "logicalId": "IMAX3"
-            },
-            "PMAX": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=050D",
-                "logicalId": "PMAX"
-            },
-            "PAPP": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=050F",
-                "logicalId": "PAPP"
-            },
-            "PTEC": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0020",
-                "logicalId": "PTEC"
-            },
             "DEMAIN": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=FF66&attrId=0001",
                 "logicalId": "DEMAIN"
             },
-            "HHPHC": {
+            
+            "PTEC": {
                 "use": "inf_generic-NumericBadge",
-                "params": "clustId=FF66&attrId=0002",
-                "logicalId": "HHPHC"
+                "params": "clustId=0702&attrId=0020",
+                "logicalId": "PTEC"
             },
             "PPOT": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=FF66&attrId=0003",
                 "logicalId": "PPOT"
-            },
-            "PEJP": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=FF66&attrId=0004",
-                "logicalId": "PEJP"
-            },
-            "ADPS": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=FF66&attrId=0005",
-                "logicalId": "ADPS"
             }
         }
     }

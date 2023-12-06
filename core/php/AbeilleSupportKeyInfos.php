@@ -158,7 +158,7 @@
         }
 
         logIt("- ${status}: ${eqHName}, Id=${eqId}${extra}\n");
-        logIt("      Addr=${addr}, Model='${eqModelId}', Type='${eqType}'\n");
+        logIt("       Addr=${addr}, Model='${eqModelId}', Type='${eqType}'\n");
     }
 
     // Display devices status

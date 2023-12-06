@@ -1,6 +1,7 @@
 <?php
     require_once __DIR__.'/../php/AbeilleLog.php';
     require_once __DIR__.'/../config/Abeille.config.php';
+    require_once __DIR__.'/../php/AbeilleModels.php'; // getModelsList()
 
     define('corePhpDir', __DIR__.'/../php/');
     define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
@@ -87,88 +88,89 @@
                 'modelName' => model file
                 'modelSource' => model file location
             ) */
-        public static function getDevicesList($from = "Abeille") {
-            $devicesList = [];
+        // Note: OBSOLETE !! Use getModelsList() from AbeilleModels.php library
+        // public static function getDevicesList($from = "Abeille") {
+        //     $devicesList = [];
 
-            if ($from == "Abeille")
-                $rootDir = devicesDir;
-            else if ($from == "local")
-                $rootDir = devicesLocalDir;
-            else {
-                log::add('Abeille', 'error', "getDevicesList(): Emplacement JSON '".$from."' invalide");
-                return false;
-            }
+        //     if ($from == "Abeille")
+        //         $rootDir = devicesDir;
+        //     else if ($from == "local")
+        //         $rootDir = devicesLocalDir;
+        //     else {
+        //         log::add('Abeille', 'error', "getDevicesList(): Emplacement JSON '".$from."' invalide");
+        //         return false;
+        //     }
 
-            $dh = opendir($rootDir);
-            if ($dh === false) {
-                log::add('Abeille', 'error', 'getDevicesList(): opendir('.$rootDir.')');
-                return false;
-            }
-            while (($dirEntry = readdir($dh)) !== false) {
-                /* Ignoring some entries */
-                if (in_array($dirEntry, array(".", "..")))
-                    continue;
-                $fullPath = $rootDir.$dirEntry;
-                if (!is_dir($fullPath))
-                    continue;
+        //     $dh = opendir($rootDir);
+        //     if ($dh === false) {
+        //         log::add('Abeille', 'error', 'getDevicesList(): opendir('.$rootDir.')');
+        //         return false;
+        //     }
+        //     while (($dirEntry = readdir($dh)) !== false) {
+        //         /* Ignoring some entries */
+        //         if (in_array($dirEntry, array(".", "..")))
+        //             continue;
+        //         $fullPath = $rootDir.$dirEntry;
+        //         if (!is_dir($fullPath))
+        //             continue;
 
-                $fullPath = $rootDir.$dirEntry.'/'.$dirEntry.".json";
-                if (!file_exists($fullPath))
-                    continue; // No local JSON model. Maybe just an auto-discovery ?
+        //         $fullPath = $rootDir.$dirEntry.'/'.$dirEntry.".json";
+        //         if (!file_exists($fullPath))
+        //             continue; // No local JSON model. Maybe just an auto-discovery ?
 
-                $dev = array(
-                    'modelSig' => $dirEntry,
-                    'modelName' => $dirEntry,
-                    'modelSource' => $from
-                );
+        //         $dev = array(
+        //             'modelSig' => $dirEntry,
+        //             'modelName' => $dirEntry,
+        //             'modelSource' => $from
+        //         );
 
-                /* Check if config is compliant with other device identification */
-                $content = file_get_contents($fullPath);
-                $devMod = json_decode($content, true); // Device model
-                $devMod = $devMod[$dirEntry]; // Removing top key
-                // $dev['manufacturer'] = isset($devMod['manufacturer']) ? $devMod['manufacturer'] : '';
-                // $dev['model'] = isset($devMod['model']) ? $devMod['model']: '';
-                // $dev['type'] = $devMod['type'];
-                // $dev['icon'] = $devMod['configuration']['icon'];
-                $devicesList[$dirEntry] = $dev;
+        //         /* Check if config is compliant with other device identification */
+        //         $content = file_get_contents($fullPath);
+        //         $devMod = json_decode($content, true); // Device model
+        //         $devMod = $devMod[$dirEntry]; // Removing top key
+        //         // $dev['manufacturer'] = isset($devMod['manufacturer']) ? $devMod['manufacturer'] : '';
+        //         // $dev['model'] = isset($devMod['model']) ? $devMod['model']: '';
+        //         // $dev['type'] = $devMod['type'];
+        //         // $dev['icon'] = $devMod['configuration']['icon'];
+        //         $devicesList[$dirEntry] = $dev;
 
-                if (isset($devMod['alternateIds'])) {
-                    $ai = $devMod['alternateIds'];
-                    /* Reminder:
-                       "alternateIds": {
-                          "alternateSigX": {
-                            "manufacturer": "manufX", // Optional
-                            "model": "modelX", // Optional
-                            "type": "typeX" // Optional
-                            "icon": "iconX" // Optional
-                          },
-                          "alternateSigY": {},
-                          "alternateSigZ": {}
-                       } */
-                    foreach ($ai as $aId => $aIdVal) {
-                        log::add('Abeille', 'debug', "getDevicesList(): Alternate ID '".$aId."' for '".$dirEntry."'");
-                        $dev = array(
-                            'modelSig' => $aId,
-                            'modelName' => $dirEntry,
-                            'modelSource' => $from
-                        );
-                        // manufacturer, model, type or icon overload
-                        // if (isset($aIdVal['manufacturer']))
-                        //     $dev['manufacturer'] = $aIdVal['manufacturer'];
-                        // if (isset($aIdVal['model']))
-                        //     $dev['model'] = $aIdVal['model'];
-                        // if (isset($aIdVal['type']))
-                        //     $dev['type'] = $aIdVal['type'];
-                        // if (isset($aIdVal['icon']))
-                        //     $dev['icon'] = $aIdVal['icon'];
-                        $devicesList[$aId] = $dev;
-                    }
-                }
-            }
-            closedir($dh);
+        //         if (isset($devMod['alternateIds'])) {
+        //             $ai = $devMod['alternateIds'];
+        //             /* Reminder:
+        //                "alternateIds": {
+        //                   "alternateSigX": {
+        //                     "manufacturer": "manufX", // Optional
+        //                     "model": "modelX", // Optional
+        //                     "type": "typeX" // Optional
+        //                     "icon": "iconX" // Optional
+        //                   },
+        //                   "alternateSigY": {},
+        //                   "alternateSigZ": {}
+        //                } */
+        //             foreach ($ai as $aId => $aIdVal) {
+        //                 log::add('Abeille', 'debug', "getDevicesList(): Alternate ID '".$aId."' for '".$dirEntry."'");
+        //                 $dev = array(
+        //                     'modelSig' => $aId,
+        //                     'modelName' => $dirEntry,
+        //                     'modelSource' => $from
+        //                 );
+        //                 // manufacturer, model, type or icon overload
+        //                 // if (isset($aIdVal['manufacturer']))
+        //                 //     $dev['manufacturer'] = $aIdVal['manufacturer'];
+        //                 // if (isset($aIdVal['model']))
+        //                 //     $dev['model'] = $aIdVal['model'];
+        //                 // if (isset($aIdVal['type']))
+        //                 //     $dev['type'] = $aIdVal['type'];
+        //                 // if (isset($aIdVal['icon']))
+        //                 //     $dev['icon'] = $aIdVal['icon'];
+        //                 $devicesList[$aId] = $dev;
+        //             }
+        //         }
+        //     }
+        //     closedir($dh);
 
-            return $devicesList;
-        } // End getDevicesList()
+        //     return $devicesList;
+        // } // End getDevicesList()
 
         /* Clean 'devices_local'.
            Returns: true=ok, false=error */
@@ -359,19 +361,22 @@
          * Read given device configuration from JSON file and associated commands.
          * 'modelSig': Model signature (!= modelName if alternate signature)
          * 'modelName': JSON file name without extension
-         * 'from': JSON file location (default=Abeille, or 'local')
+         * 'src': JSON file location (default=Abeille, or 'local')
          * 'mode': 0/default=load commands too, 1=split cmd call & file
          * Return: device associative array WITHOUT top level key (modelSig) or false if error.
          */
-        public static function getDeviceModel($modelSig, $modelName, $from="Abeille", $mode=0) {
-            // log::add('Abeille', 'debug', 'getDeviceModel start, modelName='.$modelName.", from=".$from);
+        public static function getDeviceModel($modelSig, $modelName, $src="Abeille", $mode=0) {
+            log::add('Abeille', 'debug', "getDeviceModel(${modelSig}, ${modelName}, ${src}, ${mode})");
+
+            $dbg = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+            log::add('Abeille', 'debug', "BACKTRACE: ".json_encode($dbg, JSON_UNESCAPED_SLASHES));
 
             if ($modelName == '') {
                 log::add('Abeille', 'error', "  getDeviceModel(): 'modelName' vide !");
                 return false;
             }
 
-            if (($from == 'Abeille') || ($from == ''))
+            if (($src == 'Abeille') || ($src == ''))
                 $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
             else
                 $modelPath = devicesLocalDir.$modelName.'/'.$modelName.'.json';
@@ -395,7 +400,7 @@
             $device = $device[$modelName]; // Removing top key
             $device['modelSig'] = ($modelSig != '') ? $modelSig : $modelName;
             $device['jsonId'] = $modelName;
-            $device['jsonLocation'] = $from; // Official device or local one ?
+            $device['jsonLocation'] = $src; // Official device or local one ?
 
             /* Alternate signature support */
             if ($device['modelSig'] != $modelName) {
@@ -620,18 +625,20 @@
             $identifier2 = $zbModelId;
 
             // Search by <zbModelId>_<zbManufId>, starting from local models list
-            $localModels = AbeilleTools::getDevicesList('local');
-            foreach ($localModels as $modelId => $model) {
-                if ($modelId == $identifier1) {
+            // $localModels = AbeilleTools::getDevicesList('local');
+            $localModels = getModelsList('local');
+            foreach ($localModels as $modelSig => $model) {
+                if ($modelSig == $identifier1) {
                     $identifier = $identifier1;
                     break;
                 }
             }
             if (!isset($identifier)) {
                 // Search by <zbModelId>_<zbManufId>, starting from offical models list
-                $officialModels = AbeilleTools::getDevicesList('Abeille');
-                foreach ($officialModels as $modelId => $model) {
-                    if ($modelId == $identifier1) {
+                // $officialModels = AbeilleTools::getDevicesList('Abeille');
+                $officialModels = getModelsList('Abeille');
+                foreach ($officialModels as $modelSig => $model) {
+                    if ($modelSig == $identifier1) {
                         $identifier = $identifier1;
                         break;
                     }
@@ -639,8 +646,8 @@
             }
             if (!isset($identifier)) {
                 // Search by <zbModelId> in local models
-                foreach ($localModels as $modelId => $model) {
-                    if ($modelId == $identifier2) {
+                foreach ($localModels as $modelSig => $model) {
+                    if ($modelSig == $identifier2) {
                         $identifier = $identifier2;
                         break;
                     }
@@ -648,8 +655,8 @@
             }
             if (!isset($identifier)) {
                 // Search by <zbModelId> in offical models
-                foreach ($officialModels as $modelId => $model) {
-                    if ($modelId == $identifier2) {
+                foreach ($officialModels as $modelSig => $model) {
+                    if ($modelSig == $identifier2) {
                         $identifier = $identifier2;
                         break;
                     }

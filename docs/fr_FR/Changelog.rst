@@ -7,7 +7,8 @@ ChangeLog
   - Correction de certains mauvais type d'attribut pour configureReporting2.
   - Améliorations outil de check.
 - Page santé: Réactivation raffraichissement toutes les 2 sec.
-- Interne: Configuration des Zigates au démarrage revue. Déplacé dans AbeilleCmd.
+- Interne: Configuration des Zigates au démarrage revue. Déplacée dans AbeilleCmd.
+- Rappel: Le mode 'normal' de la Zigate n'est plus supporté donc FW >= 3.1E requis.
 
 231205-BETA-6
 -------------
@@ -21,7 +22,7 @@ ChangeLog
     - La maturité de la v2 n'est pas au niveau de la v1. Le FW qui semble le plus stable n'est PAS le dernier dispo (3.A0) mais le précédent (**3.22**). Nous vous conseillons de faire la mise-à-jour vers celui ci.
   .. warning:: **Zigates v1**
 
-    - FW **v3.23** recommandé, en version **OPDM**.
+    - FW **v3.23 OPDM** recommandé. La version minimale est la '3.1E'
     - Le dernier FW officiel est le v3.23. Il est recommandé de basculer dessus pour ne pas faire façe à des soucis déja corrigés.
     - D'autre part si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
 

@@ -2213,23 +2213,24 @@ class Abeille extends eqLogic {
                     log::add('Abeille', 'debug', '  FW saved version: '.$savedVersion);
                 if ($savedVersion == '---------') {
                     $zgId = substr($net, 7);
+                    // Zigate mode is now HYBRID in all cases. Abeille is no longer able to deal with older firmwares
                     if ($msg['major'] == 'AB01') { // Abeille's FW for Zigate v1
-                        log::add('Abeille', 'debug', '  FW version AB01 => Configuring zigate '.$zgId.' in hybrid mode');
-                        Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
+                        // log::add('Abeille', 'debug', '  FW version AB01 => Configuring zigate '.$zgId.' in hybrid mode');
+                        // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
                     } else {
                         if (hexdec($msg['minor']) >= 0x031D) {
-                            log::add('Abeille', 'debug', '  FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
-                            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
+                            // log::add('Abeille', 'debug', '  FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
+                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
                         } else {
-                            log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$zgId.' in normal mode');
-                            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=normal");
+                            // log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$zgId.' in normal mode');
+                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=normal");
                         }
                         // TODO: Different msg according to v1 or v2
                         if (hexdec($msg['minor']) < 0x0321) {
                             if (hexdec($msg['minor']) < 0x031E)
                                 message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec un trop vieux FW incompatible avec Abeille. Merci de faire une mise-à-jour en 3.21 ou supérieur.');
                             else
-                                message::add('Abeille', "Il est recommandé de mettre à jour votre Zigate avec la version '3.21'.");
+                                message::add('Abeille', "Il est nécessaire de mettre à jour votre Zigate avec la version '3.23'.");
                         }
                     }
                 }

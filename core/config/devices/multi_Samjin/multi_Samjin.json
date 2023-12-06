@@ -43,8 +43,8 @@
                 "isVisible": "1"
             },
             "SetReporting 0402-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0402&attrId=0000&attrType=29&minInterval=300&maxInterval=600",
                 "comment": "Reporting every 5 to 10mins",
                 "execAtCreation": "yes"
             },
@@ -83,23 +83,23 @@
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0010": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=FC02&attrId=0010&attrType=18&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=FC02&attrId=0010&attrType=18",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0012": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=FC02&attrId=0012&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=FC02&attrId=0012&attrType=29",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0013": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=FC02&attrId=0013&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=FC02&attrId=0013&attrType=29",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0014": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=FC02&attrId=0014&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=FC02&attrId=0014&attrType=29",
                 "execAtCreation": "yes"
             }
         }

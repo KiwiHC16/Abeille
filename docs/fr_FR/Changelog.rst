@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+- Modèles:
+
+  - Tous les modèles utilisent 'act_zbConfigureReporting2'.
+  - Correction de certains mauvais type d'attribut pour configureReporting2.
+  - Améliorations outil de check.
+
 231205-BETA-6
 -------------
 

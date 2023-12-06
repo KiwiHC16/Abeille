@@ -610,7 +610,7 @@
         "0400" => array(
             "name" => "Illuminance Measurement",
             "attributes" => array(
-                "0000" => array( "name" => "MeasuredValue", "access" => "R" ),
+                "0000" => array( "name" => "MeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
             ),
         ),
         "0401" => array(

@@ -3,6 +3,7 @@
 
     define('devicesDir', __DIR__.'/../core/config/devices');
     define('commandsDir', __DIR__.'/../core/config/commands');
+    require_once __DIR__.'/../core/php/AbeilleZigbeeConst.php'; // Zigbee constants
 
     // eqLogic categories
     // {"heating":"1","security":"0","energy":"0","light":"0","opening":"0","automatism":"0","multimedia":"0","default":"0"}
@@ -77,7 +78,7 @@
     }
 
     // Check device model
-    function checkDevice($devName, $dev) {
+    function checkDeviceModel($devName, $dev) {
         global $missingCmds;
         global $commandsList;
         global $eqGenTypes;
@@ -179,7 +180,7 @@
                 if ($i !== false)
                     unset($unusedCmds[$i]); // $cmdModel is used
 
-                // List of supported command keys
+                // Check command keys
                 $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
                 array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
                 array_push($validCmdKeys, 'returnStateTime', 'returnStateValue', 'Polling');
@@ -198,6 +199,31 @@
                         continue;
                     $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$cmdJName."' Jeedom command");
                 }
+
+                // act_zbConfigureReporting2 ... checking attribute type vs attribute
+                if ($cmd['use'] == "act_zbConfigureReporting2") {
+                    $params = $cmd['params'];
+                    $pArr = explode('&', $params);
+                    $clustId = '';
+                    $attrId = '';
+                    $attrType = '';
+                    foreach ($pArr as $p) {
+                        $pArr2 = explode('=', $p); // pX=vX to array of pX & vX
+                        if ($pArr2[0] == 'clustId')
+                            $clustId = $pArr2[1];
+                        else if ($pArr2[0] == 'attrId')
+                            $attrId = $pArr2[1];
+                        else if ($pArr2[0] == 'attrType')
+                            $attrType = $pArr2[1];
+                    }
+                    $attr = zbGetZCLAttribute($clustId, $attrId);
+                    if ($attr !== false) {
+                        $correctAttrType = sprintf("%02X", $attr['dataType']);
+                        if ($attrType != $correctAttrType) {
+                            $error = newDevError($devName, "ERROR", "Cmd '${cmdJName}': Invalid attribute type '${attrType}' for clust ${clustId} attr ${attrId}");
+                        }
+                    }
+                }
             }
 
             if ($error)
@@ -206,7 +232,7 @@
                 step('.');
         }
 
-        /* Tuya specific checks */
+        /* OBSOLETE SOON: Tuya specific checks */
         // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
         if (isset($dev[$devName]['tuyaEF00'])) {
             foreach ($dev[$devName]['tuyaEF00'] as $key => $value) {
@@ -235,16 +261,11 @@
             }
         }
 
-        /* Xiaomi specific checks */
-        // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
-        if (isset($dev[$devName]['xiaomi'])) {
-        }
-
         /* Custom cluster/attribute specific checks */
         // TODO: To be completed
         // WORK ONGOING !!!
         /* Generic format for private clusters/commands reminder
-        "fromDevice": {
+        "private": {
             "ED00": {
                 "type": "tuya-zosung"
             },
@@ -264,7 +285,7 @@
                 },
             }
         } */
-        if (isset($dev[$devName]['fromDevice'])) {
+        if (isset($dev[$devName]['private'])) {
         }
 
         /* Checking top level supported keywords */
@@ -280,11 +301,11 @@
     }
 
     // Check command model
-    function checkCommand($cmdName, $cmd) {
+    function checkCommandModel($cmdName, $cmd) {
         global $commandsList;
 
         if (!isset($cmd[$cmdName])) {
-            newCmdError($cmdName, "ERROR", "Expecting '".$cmdName."' top key");
+            newCmdError($cmdName, "ERROR", "Expecting '".$cmdName."' command top key");
             return;
         }
 
@@ -350,7 +371,7 @@
                 continue;
                 newCmdError($cmdName, "ERROR", "Invalid command top key '".$key."'");
         }
-    } // End checkCommand()
+    } // End checkCommandModel()
 
     function buildDevModelsList() {
         echo "Building devices models list ...\n";
@@ -591,7 +612,7 @@
             newDevError($devName, 'ERROR', 'Corrupted JSON file');
             step('E');
         } else
-            checkDevice($devName, $content);
+            checkDeviceModel($devName, $content);
     }
 
     // TODO: Should be USED cmds only
@@ -605,7 +626,7 @@
             newCmdError($entry, 'ERROR', 'Corrupted JSON file');
             continue;
         }
-        checkCommand($entry, $content);
+        checkCommandModel($entry, $content);
     }
 
     echo "\nChecking command variables\n- ";

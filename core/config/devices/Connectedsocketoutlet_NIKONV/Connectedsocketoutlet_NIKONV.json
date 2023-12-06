@@ -71,8 +71,8 @@
                 "isVisible": 1
             },
             "SetReporting-RMSVoltage": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000&changeVal=000A",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=0505&attrType=21&minInterval=0&maxInterval=0&changeVal=10",
                 "execAtCreation": "yes"
             },
             "SetReporting-RMSCurrent": {
@@ -81,8 +81,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting-ActivePower": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=050B&attrType=29",
                 "execAtCreation": "yes"
             },
             "Bind-0B04-ToZigate": {

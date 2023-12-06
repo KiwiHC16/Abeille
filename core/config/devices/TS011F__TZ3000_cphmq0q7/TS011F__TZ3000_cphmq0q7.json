@@ -84,8 +84,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting-0702-TotalPower": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0702&attrType=25&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0702&attrId=0000&attrType=25",
                 "execAtCreation": "yes"
             },
             "Poll 0702": {

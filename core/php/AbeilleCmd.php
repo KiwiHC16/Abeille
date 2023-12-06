@@ -107,6 +107,7 @@
         // Whatever found or new... updating infos used by cmd process
         if (!isset($GLOBALS['devices'][$net]))
             $GLOBALS['devices'][$net] = [];
+
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
@@ -130,11 +131,16 @@
     }
 
     /* Send msg to 'xToCmd' queue. */
-    function msgToCmd($msg) {
-        global $abQueues;
+    function msgToCmd($topic, $payload = '') {
+        $msg = array(
+            'topic' => $topic,
+            'payload' => $payload
+        );
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
+        global $abQueues;
         $queue = msg_get_queue($abQueues["xToCmd"]["id"]);
-        if (msg_send($queue, 1, json_encode($msg), false, false, $errCode) == false) {
+        if (msg_send($queue, 1, $msgJson, false, false, $errCode) == false) {
             cmdLog("debug", "msgToCmd(): ERROR ".$errCode);
         }
     }
@@ -147,6 +153,31 @@
         if (msg_send($queue, 1, json_encode($msg), false, false, $errCode) == false) {
             cmdLog("debug", "msgToAbeille(): ERROR ".$errCode);
         }
+    }
+
+    // Configure Zigate
+    // Called to configure Zigate when receive channel is already opened to not loose responses
+    function configureZigate($zgId) {
+        cmdLog('debug', "configureZigate(${zgId})");
+
+        msgToCmd("CmdAbeille".$zgId."/0000/zgSoftReset", "");
+        // 1sec delay to wait for chip reset
+
+        global $config;
+        if (isset($config['ab::zgChan'.$zgId])) {
+            $chan = $config['ab::zgChan'.$zgId];
+            if ($chan == 0)
+                $mask = 0x7fff800; // All channels = auto
+            else
+                $mask = 1 << $chan;
+            $mask = sprintf("%08X", $mask);
+            cmdLog('debug', "  Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
+            msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetChannelMask&tempo=".(time()+1), "mask=".$mask);
+        }
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetTimeServer&tempo=".(time()+1), "");
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgStartNetwork&tempo=".(time()+1), "");
+
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+1), "");
     }
 
     // Configure device
@@ -198,11 +229,7 @@
                 $delay = time() + $delay;
                 $topic = "TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay;
             }
-            $msg = array(
-                'topic' => $topic,
-                'payload' => $request
-            );
-            msgToCmd($msg);
+            msgToCmd($topic, $request);
         }
 
         return true;
@@ -292,6 +319,7 @@
             $GLOBALS['zigates'][$zgId]['ieeeOk'] = ($config['ab::zgIeeeAddrOk'.$zgId] == 1) ? true : false;
             $GLOBALS['zigates'][$zgId]['port'] = $config['ab::zgPort'.$zgId];
             $GLOBALS['zigates'][$zgId]['available'] = true; // By default we consider the Zigate available to receive commands
+            $GLOBALS['zigates'][$zgId]['status'] = 'waitParser'; // 'waitParser', 'ok'
             $GLOBALS['zigates'][$zgId]['hw'] = 0;           // HW version: 1=v1, 2=v2
             $GLOBALS['zigates'][$zgId]['fw'] = 0;           // FW minor version (ex 0x321)
             $GLOBALS['zigates'][$zgId]['nPDU'] = 0;         // Last NDPU
@@ -340,8 +368,8 @@
         // $rerouteNet = ""; // Rerouted network if defined (ex: 'Abeille1')
 
         while (true) {
-            // Treat Zigate statuses (0x8000 cmd) coming from parser
-            $AbeilleCmdQueue->processAcks();
+            // Treat Zigate key infos (ex 0x8000 cmd) coming from parser
+            $AbeilleCmdQueue->processAcksQueue();
 
             // Treat pending commands for zigate
             $AbeilleCmdQueue->processCmdQueues();

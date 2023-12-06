@@ -175,7 +175,7 @@
         /* Send message to 'AbeilleCmd' thru 'xToCmd' queue */
         function msgToCmd2($prio, $msg) {
             $errCode = 0;
-            if (msg_send($this->queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
+            if (msg_send($this->queueXToCmd, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
                 parserLog("debug", "  ERROR: msgToCmd2(): Can't write to 'queueXToCmd', error=".$errCode);
             }
         }
@@ -183,7 +183,7 @@
         /* Send message to 'AbeilleLQI'.
            Returns: true=ok, false=ERROR */
         function msgToLQICollector($msg) {
-            $msgJson = json_encode($msg);
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
             if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
@@ -254,15 +254,6 @@
                 parserLog("debug", "  msgToClient(): ERROR ".$errCode);
             } else
                 parserLog("debug", "  msgToClient(): Sent ".json_encode($msg));
-        }
-
-        function msgToCmdAck($msg) {
-            $msgJson = json_encode($msg);
-            if (msg_send($this->queueParserToCmdAck, 1, $msgJson, false, false)) {
-                // parserLog("debug","(fct msgToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msg), "8000");
-            } else {
-                parserLog("debug", "  ERROR: Can't send msg to 'queueParserToCmdAck'. msg=".$msgJson, "8000");
-            }
         }
 
         /* Check if message is a duplication of another one using SQN.
@@ -1650,7 +1641,7 @@
                     if ($ieeeStatus == 0) {
                         msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/zgGetNetworkStatus");
 
-                        $acceptedBeforeZigateIdentified = array("0208", "0300", "8001", "8009", "8010", "8024", "9999");
+                        $acceptedBeforeZigateIdentified = array("0208", "0302", "8001", "8006", "8007", "8009", "8010", "8024", "9999");
                         if (!in_array($type, $acceptedBeforeZigateIdentified)) {
                             parserLog('debug', $dest.', ab::zgIeeeAddrOk==0 => msg '.$type." ignored. Waiting 8009 or 8024.");
                             return 0;
@@ -1865,7 +1856,7 @@
                 $msg['nPDU'] = $nPdu;
                 $msg['aPDU'] = $aPdu;
             }
-            $this->msgToCmdAck($msg);
+            msgToCmdAck($msg);
 
             if ($packetType == "0002") {
                 if ($status == "00") {
@@ -4685,7 +4676,7 @@
                 'major'     => $major,
                 'minor'     => $minor,
             );
-            $this->msgToCmdAck($msg);
+            msgToCmdAck($msg);
 
             $msg = array(
                 // 'src' => 'parser',
@@ -4739,7 +4730,7 @@
                 'addr'      => $dstAddr,
                 'sqnAps'    => $sqnAps,
             );
-            $this->msgToCmdAck($toAbeille);
+            msgToCmdAck($toAbeille);
 
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
@@ -4786,13 +4777,13 @@
             $msg = array (
                 'type'      => "8012",
                 'net'       => $net,
-                'status'    => $status,
-                'addr'      => $dstAddr,
-                'sqnAps'    => $sqnAps,
+                // 'status'    => $status, // Unused so far
+                // 'addr'      => $dstAddr, // Unused so far
+                // 'sqnAps'    => $sqnAps, // Unused so far
                 'nPDU'      => $nPdu,
                 'aPDU'      => $aPdu,
             );
-            $this->msgToCmdAck($msg);
+            msgToCmdAck($msg);
 
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
@@ -5920,7 +5911,7 @@
             //     'nPDU'      => $nPdu,
             //     'aPDU'      => $aPdu,
             // );
-            // $this->msgToCmdAck($msg);
+            // msgToCmdAck($msg);
 
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
@@ -6035,7 +6026,7 @@
                 'id'        => $id,
                 'status'    => $status,
             );
-            $this->msgToCmdAck($msg);
+            msgToCmdAck($msg);
         }
 
         /* 9999/Extended error */

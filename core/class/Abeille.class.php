@@ -948,21 +948,21 @@ class Abeille extends eqLogic {
             // Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
             self::createRuche("Abeille".$zgId);
 
-            // Configuring zigate: TODO: This should be done on Abeille startup or on new beehive creation.
-            if (isset($config['ab::zgChan'.$zgId])) {
-                $chan = $config['ab::zgChan'.$zgId];
-                if ($chan == 0)
-                    $mask = 0x7fff800; // All channels = auto
-                else
-                    $mask = 1 << $chan;
-                $mask = sprintf("%08X", $mask);
-                log::add('Abeille', 'debug', "deamon(): Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetChannelMask", "mask=".$mask);
-            }
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSoftReset", "");
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgStartNetwork", "");
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetTimeServer", "");
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgGetVersion", "");
+            // Zigate configuration is now triggered from AbeilleCmd when receive channel is opened (serial=>parser)
+            // if (isset($config['ab::zgChan'.$zgId])) {
+            //     $chan = $config['ab::zgChan'.$zgId];
+            //     if ($chan == 0)
+            //         $mask = 0x7fff800; // All channels = auto
+            //     else
+            //         $mask = 1 << $chan;
+            //     $mask = sprintf("%08X", $mask);
+            //     log::add('Abeille', 'debug', "deamon(): Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
+            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetChannelMask", "mask=".$mask);
+            // }
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSoftReset", "");
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgStartNetwork", "");
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetTimeServer", "");
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgGetVersion", "");
 
             // Set Zigate in 'hybrid' mode, (possible only since 3.1D).
             // Tcharp38: Need to get current FW version first so this part if moved to 'msgFromParser' on 'zigateVersion' recept.

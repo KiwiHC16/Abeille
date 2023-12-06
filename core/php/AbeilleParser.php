@@ -168,7 +168,7 @@
                      );
 
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
-    $toMon = []; // Monitoring messages from device to monitor only
+    $toMon = []; // Monitoring messages from device to monitor only (filled by parserLog2())
 
     /* Parser log function.
        If 'dev mode' & 'debug' level: message can be filtered according to "debug.json" */
@@ -214,11 +214,19 @@
             'topic' => $topic,
             'payload' => $payload
         );
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
         global $queueXToCmd;
-        $errCode = 0;
-        if (msg_send($queueXToCmd, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
+        if (msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
             parserLog("debug", "  ERROR: msgToCmd(): Can't write to 'queueXToCmd', error=".$errCode);
+        }
+    }
+
+    function msgToCmdAck($msg) {
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+        global $queueParserToCmdAck;
+        if (msg_send($queueParserToCmdAck, 1, $msgJson, false, false) == false) {
+            parserLog("error", "  ERROR: Can't send msg to 'queueParserToCmdAck'. msg=".$msgJson);
         }
     }
 
@@ -407,6 +415,7 @@
     // $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
     $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
+    $queueParserToCmdAck = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */
@@ -551,7 +560,12 @@
                     continue;
                 }
 
-                if ($msg['type'] == "serialRead") {
+                if ($msg['type'] == "rcvChanStatus") {
+                    logMessage('debug', $msg['net'].' RX channel status '.$msg['status']);
+                    // Message from AbeilleSerialReadX
+                    // Sending msg to cmd indicating receive channel status
+                    msgToCmdAck($msg);
+                } else if ($msg['type'] == "serialRead") {
                     // Message from AbeilleSerialReadX
                     $AbeilleParser->protocolDatas($msg['net'], $msg['msg']);
                 } else {
@@ -592,8 +606,9 @@
                 }
             }
             if ($errCode == 7) { // Too big
+                logMessage('error', '  msg_receive(queueXToParser) ERROR: msg TOO BIG ignored.');
+                logMessage('debug', "  msg=${msgJson}");
                 msg_receive($queueXToParser, 0, $msgType, $queueXToParserMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR); // Purge
-                logMessage('debug', '  msg_receive(queueXToParser) ERROR: msg TOO BIG ignored.');
             } else if ($errCode != 42) { // 42 = No message
                 logMessage('debug', '  msg_receive(queueXToParser) ERROR '.$errCode);
                 time_nanosleep(0, 10000000); // 1/100s

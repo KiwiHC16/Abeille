@@ -744,12 +744,13 @@
             $nbAttr = 0;
             foreach ($list as $attrId) {
                 if (strlen($attrId) != 4) {
-                    cmdLog('error', "readAttribute(): Format attribut (".$attrId.") incorrect => ignoré.");
+                    cmdLog('error', "  readAttribute(): Format attribut (".$attrId.") incorrect => ignoré.");
                     continue;
                 }
                 $attribList .=  $attrId;
                 $nbAttr++;
             }
+            cmdLog('debug', "  readAttribute: ClustId=${clustId}, AttrList=${attribList}");
             $nbOfAttrib = sprintf("%02X", $nbAttr);
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
 
@@ -1248,7 +1249,7 @@
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
             if (isset($Command['setReport'])) // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
             {
-                cmdLog('debug', "  command setReport", $this->debug['processCmd']);
+                cmdLog('debug', "  WARNING: OBSOLETE: command setReport", $this->debug['processCmd']);
                 // Configure Reporting request
                 // Msg Type = 0x0120
 
@@ -1320,7 +1321,7 @@
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
             // For the time being hard coded to run tests but should replace setReport due to a bug on Timeout of command 0120. See my notes.
             if (isset($Command['setReportRaw'])) { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
-                cmdLog('debug', "  command setReportRaw", $this->debug['processCmd']);
+                cmdLog('debug', "  WARNING: OBSOLETE: command setReportRaw", $this->debug['processCmd']);
 
                 $cmd = "0530";
 
@@ -3745,6 +3746,7 @@
                     // TODO: changeVal should be set to some default, in the proper format
 
                     cmdLog('debug', "  configureReporting: manufId=".$manufId.", attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'", $this->debug['processCmd']);
+                    cmdLog('debug', "  WARNING: OBSOLETE function");
                     $manufId = AbeilleTools::reverseHex($manufId);
                     $minInterval = AbeilleTools::reverseHex($minInterval);
                     $maxInterval = AbeilleTools::reverseHex($maxInterval);

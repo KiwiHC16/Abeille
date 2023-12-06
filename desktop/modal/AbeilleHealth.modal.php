@@ -320,9 +320,9 @@
 
     refreshHealth();
 
-    // setInterval(function () {
-    //     refreshHealth();
-    // }, 2000);
+    setInterval(function () {
+        refreshHealth();
+    }, 2000);
 
     // $(function() {
     //     $("#table_healthAbeille").tablesorter();

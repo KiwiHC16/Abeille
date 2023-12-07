@@ -1963,7 +1963,7 @@ class Abeille extends eqLogic {
 
                     $ieee2 = $eqLogic->getConfiguration('IEEE', '');
                     if ($ieee2 == '') {
-                        log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId."' config.");
+                        log::add('Abeille', 'debug', "  Eq announce: WARNING. No IEEE addr in '".$eqLogicId."' config.");
                         continue; // No registered IEEE
                     }
                     if ($ieee2 != $ieee)
@@ -1971,7 +1971,7 @@ class Abeille extends eqLogic {
 
                     $eqLogic->setLogicalId($logicalId); // Updating logical ID
                     $eqLogic->save();
-                    log::add('Abeille', 'debug', "msgFromParser(): Eq found with old addr ".$addr2.". Update done.");
+                    log::add('Abeille', 'debug', "  Eq announce: Eq found with old addr ".$addr2.". Update done.");
                     break; // No need to go thru other equipments
                 }
             }
@@ -2117,7 +2117,7 @@ class Abeille extends eqLogic {
                 $eqLogic->setIsEnable(0);
                 /* Display message only if NOT in include mode */
                 if (self::checkInclusionStatus($net) != 1)
-                    message::add("Abeille", $eqLogic->getHumanName().": a quitté le réseau => désactivé.", '');
+                    message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
                 $eqLogic->save();
                 $eqLogic->refresh();
                 log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().' has left the network => DISABLED');
@@ -2886,7 +2886,7 @@ class Abeille extends eqLogic {
                 message::add("Abeille", $eqHName.": Nouvel équipement identifié.", '');
                 $action = 'reset';
             } else if (($curEqModel == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
-                message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
+                message::add("Abeille", $eqHName.": S'est réannoncé => Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
                 $action = 'reset'; // Update from defaultUnknown = reset to new model
             }
             // else if ($action == "update")
@@ -2899,7 +2899,7 @@ class Abeille extends eqLogic {
                     Other reasons to generate message ?
                 */
                 if ($eqLogic->getIsEnable() != 1)
-                    message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
+                    message::add("Abeille", $eqHName.": S'est réannoncé => Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
             }
         }
 

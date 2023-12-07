@@ -268,13 +268,18 @@
             "ED00": {
                 "type": "tuya-zosung"
             },
-            "0000-FF01": { // CLUSTID-ATTRID
+            "0000-FF01": { // CLUSTID-ATTRID Xiaomi with tag/type decode
                 "type": "xiaomi",
                 "01-21": {
                     "func": "numberDiv",
                     "div": 1000,
                     "info": "0001-01-0020"
                 }
+            },
+            "FCC0-0112": { // CLUSTID-ATTRID Xiaomi
+                "info": "01-illumAndPresence",
+                "comment": "Illuminance + motion detection",
+                "type": "xiaomi"
             },
             "EF00": {
                 "type": "tuya",
@@ -287,16 +292,34 @@
         if (isset($dev[$devName]['private'])) {
             $private = $dev[$devName]['private'];
             foreach ($private as $pKey => $pVal) {
+                if (!isset($pVal['type'])) {
+                    newDevError($devName, "ERROR", "Private support: Missing 'type'");
+                    continue;
+                }
+
                 $pKeyLen = strlen($pKey);
-                if ($pKeyLen == 9) { // Xiaomi private cluster/attr support
+                $pType = $pVal['type'];
+                if ($pType = "xiaomi") {
+                    if ($pKeyLen != 9) {
+                        newDevError($devName, "ERROR", "Xiaomi private support: Invalid key '${pKey}'");
+                        continue;
+                    }
+
                     foreach ($private[$pKey] as $tt => $tt2) {
                         echo "LA tt=${tt}, tt2=".json_encode($tt2)."\n";
                         if (substr($tt, 0, 7) == "comment")
                             continue;
-                        else if ($tt == "type") {
+                        if ($tt == "type") {
                             if ($tt2 != "xiaomi")
                                 newDevError($devName, "ERROR", "Xiaomi private support: 'type' should be 'xiaomi' for '".$tt."'");
-                        } else if (($tt2['numberDiv']) && !isset($tt2['div']))
+                            continue;
+                        }
+                        $ttLen = strlen($tt);
+                        if ($ttLen != 5) { // Expecting 'tag-type' (TA-TY)
+                            newDevError($devName, "ERROR", "Xiaomi private support: Unexpected entry '".$tt."'");
+                            continue;
+                        }
+                        if (($tt2['numberDiv']) && !isset($tt2['div']))
                             newDevError($devName, "ERROR", "Xiaomi private support: Missing 'div' for '".$tt."'");
                     }
                 }

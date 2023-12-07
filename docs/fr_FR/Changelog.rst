@@ -1,18 +1,6 @@
 ChangeLog
 =========
 
-- Modèles:
-
-  - Tous les modèles utilisent 'act_zbConfigureReporting2'.
-  - Correction de certains mauvais type d'attribut pour configureReporting2.
-  - Améliorations outil de check.
-- Page santé: Réactivation raffraichissement toutes les 2 sec.
-- Interne: Configuration des Zigates au démarrage revue. Déplacée dans AbeilleCmd.
-- Rappel: Le mode 'normal' de la Zigate n'est plus supporté donc FW >= 3.1E requis.
-
-231205-BETA-6
--------------
-
   .. warning:: **Mise-à-jour de modèles**
 
     - Malgré la volonté de faire des évolutions les plus transparentes possibles, il se peut que certains équipements nécessitent d'être mis-à-jour à partir de leur dernier modèle pour à nouveau fonctionner correctement. Si ils sont sur batterie, réinclusion nécessaire. Si sur secteur, aller à la page 'avancé' et bouton 'mise-à-jour'.
@@ -31,6 +19,20 @@ ChangeLog
       - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
       - Les firmwares avant 3.1e sont forcement 'legacy'.
       - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+- Modèles:
+
+  - Tous les modèles utilisent 'act_zbConfigureReporting2'.
+  - Correction de certains mauvais type d'attribut pour configureReporting2.
+  - Améliorations outil de check.
+- Page santé: Réactivation raffraichissement toutes les 2 sec.
+- Interne: Configuration des Zigates au démarrage revue. Déplacée dans AbeilleCmd.
+- Rappel: Le mode 'normal' de la Zigate n'est plus supporté donc FW >= 3.1E requis.
+- Timeout: Correction pouvant expliquer le passage en timeout de certains équipements.
+- Interne: Autre corrections du parser.
+
+231205-BETA-6
+-------------
 
 - Interne: Cmd: Réactivation régulation NPDU pour éviter erreurs x85.
 - Assistant modèle: Correction.

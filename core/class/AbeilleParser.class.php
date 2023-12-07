@@ -501,6 +501,7 @@
         /* There is a device info updates (manufId + modelId, or location).
            Note: As opposed to 'updateDevice()', info is coming from device itself. */
         function deviceUpdates($net, $addr, $ep, $updates = []) {
+parserLog('debug', "deviceUpdates(${net}, ${addr}, upd=".json_encode($updates).")");
             if (isset($updates['ieee']))
                 $ieee = $updates['ieee'];
             else
@@ -2010,7 +2011,7 @@
 
         /* Called from decode8002() to decode IEEE addr response (IEEE_addr_rsp) message.
            Previously decoded by 8041. */
-        function decode8002_IeeeAddrRsp($net, $srcAddr, $pl, $lqi) {
+        function decode8002_IeeeAddrRsp($net, $srcAddr, $pl, $lqi, &$devUpdates, &$toAbeille) {
             $sqn = substr($pl, 0, 2);
             $status = substr($pl, 2, 2);
             $ieee = AbeilleTools::reverseHex(substr($pl, 4, 16));
@@ -2043,13 +2044,12 @@
             // $this->whoTalked[] = $net.'/'.$addr;
 
             // If device is unknown, may have pending messages for him
-            $updates = [];
-            $updates['ieee'] = $ieee;
-            $unknown = $this->deviceUpdates($net, $addr, '', $updates);
-            if ($unknown)
-                return;
+            $devUpdates['ieee'] = $ieee;
+            // $unknown = $this->deviceUpdates($net, $addr, '', $updates);
+            // if ($unknown)
+            //     return;
 
-            $msg = array(
+            $toAbeille[] = array(
                 // 'src' => 'parser',
                 'type' => 'ieeeAddrResponse',
                 'net' => $net,
@@ -2058,11 +2058,11 @@
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            msgToAbeille2($msg);
+            // msgToAbeille2($msg);
         } // End decode8002_IeeeAddrRsp()
 
         /* Called from decode8002() to decode "Node descriptor response" message */
-        function decode8002_NodeDescRsp($net, $srcAddr, $pl) {
+        function decode8002_NodeDescRsp($net, $srcAddr, $pl, &$devUpdates) {
             $sqn = substr($pl, 0, 2);
             $status = substr($pl, 2, 2);
             $addr = AbeilleTools::reverseHex(substr($pl, 4, 4));
@@ -2086,33 +2086,186 @@
                 parserLog2('debug', $srcAddr, "  'macCapa' customization: ".$macCapa);
             }
 
-            $updates = [];
+            // $updates = [];
             if ($macCapa != $eq['macCapa'])
-                $updates['macCapa'] = $macCapa;
+                $devUpdates['macCapa'] = $macCapa;
             else {
                 // Check rxOn status even if macCapa is correct
                 $rxOnWhenIdle = (hexdec($macCapa) >> 3) & 0b1;
                 if ($rxOnWhenIdle != $eq['rxOnWhenIdle'])
-                    $updates['rxOnWhenIdle'] = $rxOnWhenIdle;
+                    $devUpdates['rxOnWhenIdle'] = $rxOnWhenIdle;
             }
             if (!isset($eq['manufCode']) || ($manufCode != $eq['manufCode']))
-                $updates['manufCode'] = $manufCode;
-            if (count($updates) != 0)
-                $this->deviceUpdates($net, $addr, '', $updates);
+                $devUpdates['manufCode'] = $manufCode;
+            // if (count($updates) != 0)
+            //     $this->deviceUpdates($net, $addr, '', $updates);
         }
 
+        /* Called from decode8002() to decode "Simple_Desc_rsp"
+           Was previously handled by 8043. */
+           function decode8002_SimpleDescRsp($net, $srcAddr, $pl, &$devUpdates) {
+            $sqn        = substr($pl, 0, 2);
+            $status     = substr($pl, 2, 2);
+            $srcAddr    = substr($pl, 6, 2).substr($pl, 4, 2);
+            $len        = substr($pl, 8, 2);
+            $ep         = substr($pl, 10, 2);
+            $profId     = substr($pl, 14, 2).substr($pl, 12, 2);
+            $deviceId   = substr($pl, 18, 2).substr($pl, 16, 2);
+            $m = '  Simple descriptor response'
+                .': SQN='.$sqn
+                .', Status='.$status
+                .', Addr='.$srcAddr
+                .', Len='.$len
+                .', EP='.$ep
+                .', ProfId='.$profId.'/'.zgGetProfile($profId)
+                .', DevId='.$deviceId.'/'.zgGetDevice($profId, $deviceId);
+
+            $discovering = $this->discoveringState($net, $srcAddr);
+            if ($status != "00") {
+                parserLog2('debug', $srcAddr, $m);
+                // $toMon[] = $m;
+                // if ($status == "83")
+                //     $statusMsg = 'EP is NOT active';
+                $m = '  Status ('.$status.') != "00" => Decoding ignored';
+                parserLog2('debug', $srcAddr, $m);
+                // $toMon[] = $m;
+                if ($discovering)
+                    $this->discoverUpdate($net, $srcAddr, $ep, 'SimpleDescriptorResponse', $status, $statusMsg);
+                return;
+            }
+
+            // Status ok => continue decoding
+            $servClustCount = hexdec(substr($pl, 22, 2)); // Number of server clusters
+            $servClusters = [];
+            for ($i = 0; $i < ($servClustCount * 4); $i += 4) {
+                $clustId = AbeilleTools::reverseHex(substr($pl, (24 + $i), 4));
+                $servClusters[$clustId] = [];
+            }
+            $cliClustCount = hexdec(substr($pl, 24 + $i, 2));
+            $cliClusters = [];
+            for ($j = 0; $j < ($cliClustCount * 4); $j += 4) {
+                $clustId = AbeilleTools::reverseHex(substr($pl, (24 + $i + 2 + $j), 4));
+                $cliClusters[$clustId] = [];
+            }
+
+            /* Log */
+            parserLog2('debug', $srcAddr, $m);
+            $inputClusters = "";
+            $outputClusters = "";
+            if ($status == "00") {
+                parserLog2('debug', $srcAddr, '  ServClustCount='.$servClustCount);
+                foreach ($servClusters as $clustId => $clust) {
+                    if ($inputClusters != "")
+                        $inputClusters .= "/";
+                    $inputClusters .= $clustId;
+                    $m = '  ServCluster='.$clustId.' => '.zbGetZCLClusterName($clustId);
+                    parserLog2('debug', $srcAddr, $m);
+                }
+                parserLog2('debug', $srcAddr, '  CliClustCount='.$cliClustCount);
+                foreach ($cliClusters as $clustId => $clust) {
+                    if ($outputClusters != "")
+                        $outputClusters .= "/";
+                    $outputClusters .= $clustId;
+                    $m = '  OutCluster='.$clustId.' => '.zbGetZCLClusterName($clustId);
+                    parserLog2('debug', $srcAddr, $m);
+                }
+            }
+
+            // $this->whoTalked[] = $dest.'/'.$srcAddr;
+
+            /* Record info if discovering state for this device */
+            // $discovering = $this->discoveringState($net, $srcAddr);
+            if (!$discovering) {
+                // $updates = [];
+                $devUpdates['servClusters'] = $inputClusters;
+                // $this->deviceUpdates($net, $srcAddr, $ep, $updates);
+            } else {
+                $sdr = [];
+                $sdr['servClustCount'] = $servClustCount;
+                $sdr['servClusters'] = $servClusters;
+                $sdr['cliClustCount'] = $cliClustCount;
+                $sdr['cliClusters'] = $cliClusters;
+                $this->discoverUpdate($net, $srcAddr, $ep, 'SimpleDescriptorResponse', "00", $sdr);
+            }
+
+            /* Send to client if required (EQ page opened) */
+            $toCli = array(
+                // 'src' => 'parser',
+                'type' => 'simpleDesc',
+                'net' => $net,
+                'addr' => $srcAddr,
+                'ep' => $ep,
+                'inClustList' => $inputClusters, // Format: 'xxxx/yyyy/zzzz'
+                'outClustList' => $outputClusters // Format: 'xxxx/yyyy/zzzz'
+            );
+            $this->msgToClient($toCli);
+        } // End decode8002_SimpleDescRsp()
+
+        /* Called from decode8002() to decode "Active_EP_rsp"
+           Was previously handled by 8045. */
+        function decode8002_ActiveEpRsp($net, $srcAddr, $pl, &$devUpdates) {
+            $sqn        = substr($pl, 0, 2);
+            $status     = substr($pl, 2, 2);
+            $srcAddr    = substr($pl, 6, 2).substr($pl, 4, 2);
+            $m = '  Active endpoints response'
+               .': SQN='.$sqn
+               .', Status='.$status
+               .', Addr='.$srcAddr;
+
+            if ($status != "00") {
+                parserLog2('debug', $srcAddr, $m);
+                $m = '  Status != 0 => ignoring';
+                parserLog2('debug', $srcAddr, $m);
+                return;
+            }
+
+            // Status ok => continue decoding
+            $epCount    = substr($pl, 8, 2);
+            $epList     = "";
+            for ($i = 0; $i < (intval($epCount) * 2); $i += 2) {
+                if ($i != 0)
+                    $epList .= "/";
+                $epList .= substr($pl, (10 + $i), 2);
+                if ($i == 0) {
+                    $ep = substr($pl, (10 + $i), 2);
+                }
+            }
+
+            $m = $m.', EPCount='.$epCount
+               .', EPList='.$epList;
+            parserLog2('debug', $srcAddr, $m);
+
+            // $this->whoTalked[] = $net.'/'.$srcAddr;
+
+            /* Update equipement key infos */
+            // $updates = [];
+            $devUpdates['epList'] = $epList;
+            // $unknown = $this->deviceUpdates($net, $srcAddr, '', $updates);
+            // if ($unknown)
+            //     return;
+
+            /* Send to client */
+            $toCli = array(
+                // 'src' => 'parser',
+                'type' => 'activeEndpoints',
+                'net' => $net,
+                'addr' => $srcAddr,
+                'epList' => $epList
+            );
+            $this->msgToClient($toCli);
+        } // End decode8002_ActiveEpRsp()
+
         /* Called from decode8002() to decode "Bind response" message (Bind_rsp, cluster 8021) */
-        function decode8002_BindRsp($net, $srcAddr, $pl, $lqi) {
+        function decode8002_BindRsp($net, $srcAddr, $pl, $lqi, &$toAbeille) {
             $sqn = substr($pl, 0, 2);
             $status = substr($pl, 2, 2);
 
             $m = '  Bind response'
                 .': SQN='.$sqn
                 .', Status='.$status;
-            parserLog('debug', $srcAddr, $m);
-            // $toMon[] = $m;
+            parserLog2('debug', $srcAddr, $m);
 
-            $msg = array(
+            $toAbeille[] = array(
                 // 'src' => 'parser',
                 'type' => 'bindResponse',
                 'net' => $net,
@@ -2121,11 +2274,11 @@
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            msgToAbeille2($msg);
+            // msgToAbeille2($msg);
         } // End decode8002_BindRsp()
 
         /* Called from decode8002() to decode "Unbind response" message (Unbind_rsp, cluster 8022) */
-        function decode8002_UnbindRsp($net, $srcAddr, $pl, $lqi) {
+        function decode8002_UnbindRsp($net, $srcAddr, $pl, $lqi, &$toAbeille) {
             $sqn = substr($pl, 0, 2);
             $status = substr($pl, 2, 2);
 
@@ -2133,9 +2286,8 @@
                 .': SQN='.$sqn
                 .', Status='.$status.'/'.zbGetZCLStatus($status);
             parserLog2('debug', $srcAddr, $m);
-            // $toMon[] = $m;
 
-            $msg = array(
+            $toAbeille[] = array(
                 // 'src' => 'parser',
                 'type' => 'unbindResponse',
                 'net' => $net,
@@ -2144,7 +2296,7 @@
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            msgToAbeille2($msg);
+            // msgToAbeille2($msg);
         } // End decode8002_UnbindRsp()
 
         /* Called from decode8002() to decode "Mgmt_lqi_rsp" message */
@@ -2162,7 +2314,6 @@
             $m = '  Management LQI response';
             $m = $m.': SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', StartIdx='.$startIdx.', NTableListCount='.$nTableListCount;
             parserLog2('debug', $srcAddr, $m);
-            // $toMon[] = $m;
             $toLqiCollector = array(
                 'type' => '804E',
                 'srcAddr' => $srcAddr,
@@ -2174,9 +2325,7 @@
             );
 
             if ($status != "00") {
-                $m = "  Status != 00 => Decode canceled";
-                parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
+                parserLog2('debug', $srcAddr, "  Status != 00 => Decode canceled");
                 $this->msgToLQICollector($toLqiCollector);
                 return;
             }
@@ -2192,7 +2341,6 @@
             if ($corrupted) {
                 $m = '  WARNING: Corrupted/inconsistent message => ignored';
                 parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
                 $toLqiCollector['status'] = '12'; // Fake but failed status
                 $this->msgToLQICollector($toLqiCollector);
                 return;
@@ -2287,13 +2435,10 @@
                     .', TableEntries='.$tableEntries
                     .', StartIdx='.$startIdx
                     .', TableListCount='.$tableListCount;
-            parserLog('debug', $srcAddr, $m);
-            // $toMon[] = $m;
+            parserLog2('debug', $srcAddr, $m);
 
             if ($status != "00") {
-                $m = "  Status != 00 => Decode canceled";
-                parserLog('debug', $srcAddr, $m);
-                // $toMon[] = $m;
+                parserLog2('debug', $srcAddr, "  Status != 00 => Decode canceled");
                 return;
             }
 
@@ -2325,8 +2470,7 @@
                 $pl = substr($pl, 10);
 
                 $m = '  DestAddr='.$destAddr.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop;
-                // parserLog('debug', $m);
-                // $toMon[] = $m;
+                parserLog2('debug', $srcAddr, $m);
 
                 if (($statusRouting == 0) && ($nextHop != $destAddr)) {
                     $routingTable[$destAddr] = $nextHop;
@@ -2384,166 +2528,6 @@
 
             parserLog2('debug', $srcAddr, '  Channels='.json_encode($results));
         } // End decode8002_MgmtNwkUpdateNotify()
-
-        /* Called from decode8002() to decode "Simple_Desc_rsp"
-           Was previously handled by 8043. */
-        function decode8002_SimpleDescRsp($net, $srcAddr, $pl) {
-            $sqn        = substr($pl, 0, 2);
-            $status     = substr($pl, 2, 2);
-            $srcAddr    = substr($pl, 6, 2).substr($pl, 4, 2);
-            $len        = substr($pl, 8, 2);
-            $ep         = substr($pl, 10, 2);
-            $profId     = substr($pl, 14, 2).substr($pl, 12, 2);
-            $deviceId   = substr($pl, 18, 2).substr($pl, 16, 2);
-            $m = '  Simple descriptor response'
-                .': SQN='.$sqn
-                .', Status='.$status
-                .', Addr='.$srcAddr
-                .', Len='.$len
-                .', EP='.$ep
-                .', ProfId='.$profId.'/'.zgGetProfile($profId)
-                .', DevId='.$deviceId.'/'.zgGetDevice($profId, $deviceId);
-
-            $discovering = $this->discoveringState($net, $srcAddr);
-            if ($status != "00") {
-                parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
-                // if ($status == "83")
-                //     $statusMsg = 'EP is NOT active';
-                $m = '  Status ('.$status.') != "00" => Decoding ignored';
-                parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
-                if ($discovering)
-                    $this->discoverUpdate($net, $srcAddr, $ep, 'SimpleDescriptorResponse', $status, $statusMsg);
-                return;
-            }
-
-            // Status ok => continue decoding
-            $servClustCount = hexdec(substr($pl, 22, 2)); // Number of server clusters
-            $servClusters = [];
-            for ($i = 0; $i < ($servClustCount * 4); $i += 4) {
-                $clustId = AbeilleTools::reverseHex(substr($pl, (24 + $i), 4));
-                $servClusters[$clustId] = [];
-            }
-            $cliClustCount = hexdec(substr($pl, 24 + $i, 2));
-            $cliClusters = [];
-            for ($j = 0; $j < ($cliClustCount * 4); $j += 4) {
-                $clustId = AbeilleTools::reverseHex(substr($pl, (24 + $i + 2 + $j), 4));
-                $cliClusters[$clustId] = [];
-            }
-
-            /* Log */
-            parserLog('debug', $srcAddr, $m);
-            // $toMon[] = $m;
-            $inputClusters = "";
-            $outputClusters = "";
-            if ($status == "00") {
-                parserLog2('debug', $srcAddr, '  ServClustCount='.$servClustCount);
-                foreach ($servClusters as $clustId => $clust) {
-                    if ($inputClusters != "")
-                        $inputClusters .= "/";
-                    $inputClusters .= $clustId;
-                    $m = '  ServCluster='.$clustId.' => '.zbGetZCLClusterName($clustId);
-                    parserLog('debug', $srcAddr, $m);
-                    // $toMon[] = $m;
-                }
-                parserLog('debug','  CliClustCount='.$cliClustCount);
-                foreach ($cliClusters as $clustId => $clust) {
-                    if ($outputClusters != "")
-                        $outputClusters .= "/";
-                    $outputClusters .= $clustId;
-                    $m = '  OutCluster='.$clustId.' => '.zbGetZCLClusterName($clustId);
-                    parserLog('debug', $srcAddr, $m);
-                    // $toMon[] = $m;
-                }
-            }
-
-            // $this->whoTalked[] = $dest.'/'.$srcAddr;
-
-            /* Record info if discovering state for this device */
-            // $discovering = $this->discoveringState($net, $srcAddr);
-            if (!$discovering) {
-                $updates = [];
-                $updates['servClusters'] = $inputClusters;
-                $this->deviceUpdates($net, $srcAddr, $ep, $updates);
-            } else {
-                $sdr = [];
-                $sdr['servClustCount'] = $servClustCount;
-                $sdr['servClusters'] = $servClusters;
-                $sdr['cliClustCount'] = $cliClustCount;
-                $sdr['cliClusters'] = $cliClusters;
-                $this->discoverUpdate($net, $srcAddr, $ep, 'SimpleDescriptorResponse', "00", $sdr);
-            }
-
-            /* Send to client if required (EQ page opened) */
-            $toCli = array(
-                // 'src' => 'parser',
-                'type' => 'simpleDesc',
-                'net' => $net,
-                'addr' => $srcAddr,
-                'ep' => $ep,
-                'inClustList' => $inputClusters, // Format: 'xxxx/yyyy/zzzz'
-                'outClustList' => $outputClusters // Format: 'xxxx/yyyy/zzzz'
-            );
-            $this->msgToClient($toCli);
-        } // End decode8002_SimpleDescRsp()
-
-        /* Called from decode8002() to decode "Active_EP_rsp"
-           Was previously handled by 8045. */
-        function decode8002_ActiveEpRsp($net, $srcAddr, $pl) {
-            $sqn        = substr($pl, 0, 2);
-            $status     = substr($pl, 2, 2);
-            $srcAddr    = substr($pl, 6, 2).substr($pl, 4, 2);
-            $m = '  Active endpoints response'
-               .': SQN='.$sqn
-               .', Status='.$status
-               .', Addr='.$srcAddr;
-
-            if ($status != "00") {
-                parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
-                $m = '  Status != 0 => ignoring';
-                parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
-                return;
-            }
-
-            // Status ok => continue decoding
-            $epCount    = substr($pl, 8, 2);
-            $epList     = "";
-            for ($i = 0; $i < (intval($epCount) * 2); $i += 2) {
-                if ($i != 0)
-                    $epList .= "/";
-                $epList .= substr($pl, (10 + $i), 2);
-                if ($i == 0) {
-                    $ep = substr($pl, (10 + $i), 2);
-                }
-            }
-
-            $m = $m.', EPCount='.$epCount
-               .', EPList='.$epList;
-            parserLog2('debug', $srcAddr, $m);
-            // $toMon[] = $m;
-
-            // $this->whoTalked[] = $net.'/'.$srcAddr;
-
-            /* Update equipement key infos */
-            $updates = [];
-            $updates['epList'] = $epList;
-            $unknown = $this->deviceUpdates($net, $srcAddr, '', $updates);
-            if ($unknown)
-                return;
-
-            /* Send to client */
-            $toCli = array(
-                // 'src' => 'parser',
-                'type' => 'activeEndpoints',
-                'net' => $net,
-                'addr' => $srcAddr,
-                'epList' => $epList
-            );
-            $this->msgToClient($toCli);
-        } // End decode8002_ActiveEpRsp()
 
         // Add group response (cluster 0004, cmd 00).
         function decode8002_AddGroupRsp($net, $srcAddr, $ep, $pl, $lqi, &$toAbeille) {
@@ -2690,9 +2674,11 @@
                             .", DstAddrMode=".$dstAddrMode
                             .", DstAddr=".$dstAddr;
             parserLog2('debug', $srcAddr, $dest.', Type='.$msgDecoded, "8002");
-            $toAbeille = []; // List of msg to be sent to 'Abeille.class'
-            // $toMon = [];
-            // $toMon[] = $msgDecoded;
+
+            $devUpdates = []; // Device key infos updates: Sent at end of decode8002()
+            $attrReportN = []; // Report attribute msg: Sent at end of decode8002()
+            $readAttributesResponseN = []; // Read attr response msg: Sent at end of decode8002()
+            $toAbeille = []; // Other messages type: Sent at end of decode8002()
 
             /* Note: the following decode can generate the following messages if required
                - toAbeille: a message for main daemon
@@ -2728,32 +2714,32 @@
 
                 // IEEE addr response (IEEE_addr_rsp)
                 else if ($clustId == "8001") {
-                    $this->decode8002_IeeeAddrRsp($dest, $srcAddr, $pl, $lqi, $toAbeille);
+                    $this->decode8002_IeeeAddrRsp($dest, $srcAddr, $pl, $lqi, $devUpdates, $toAbeille);
                 }
 
                 // Node Descriptor Response (Node_Desc_rsp)
                 else if ($clustId == "8002") {
-                    $this->decode8002_NodeDescRsp($dest, $srcAddr, $pl);
+                    $this->decode8002_NodeDescRsp($dest, $srcAddr, $pl, $devUpdates);
                 }
 
                 // Simple descriptor response (Simple_Desc_rsp)
                 else if ($clustId == "8004") {
-                    $this->decode8002_SimpleDescRsp($dest, $srcAddr, $pl);
+                    $this->decode8002_SimpleDescRsp($dest, $srcAddr, $pl, $devUpdates);
                 }
 
                 // Active Enpoints Response (Active_EP_rsp)
                 else if ($clustId == "8005") {
-                    $this->decode8002_ActiveEpRsp($dest, $srcAddr, $pl);
+                    $this->decode8002_ActiveEpRsp($dest, $srcAddr, $pl, $devUpdates);
                 }
 
                 // Bind Response (Bind_rsp, cluster=8021)
                 else if ($clustId == "8021") {
-                    $this->decode8002_BindRsp($dest, $srcAddr, $pl, $lqi);
+                    $this->decode8002_BindRsp($dest, $srcAddr, $pl, $lqi, $toAbeille);
                 }
 
                 // Bind Response (Unbind_rsp, cluster=8022)
                 else if ($clustId == "8022") {
-                    $this->decode8002_UnbindRsp($dest, $srcAddr, $pl, $lqi);
+                    $this->decode8002_UnbindRsp($dest, $srcAddr, $pl, $lqi, $toAbeille);
                 }
 
                 // Management LQI Response (Mgmt_Lqi_rsp)
@@ -2816,9 +2802,9 @@
                         }
                     }
 
-                    $updates = [];
-                    $updates['bindingTableSize'] = $tableSize;
-                    $this->deviceUpdates($dest, $srcAddr, $srcEp, $updates);
+                    // $updates = [];
+                    $devUpdates['bindingTableSize'] = $tableSize;
+                    // $this->deviceUpdates($dest, $srcAddr, $srcEp, $updates);
                 } // End Mgmt_Bind_rsp
 
                 // Management network update notify (Mgmt_NWK_Update_notify, cluster=8038)
@@ -3229,8 +3215,6 @@
                 // Getting corresponding device or create if unknown
                 $eq = getDevice($dest, $srcAddr);
 
-                $attrReportN = [];
-
                 if ($frameType == 0) { // General command
                     /*
                     * General ZCL command
@@ -3342,8 +3326,7 @@
 
                         else {
                             $attributes = [];
-                            $readAttributesResponseN = []; // Attributes by Jeedom logical name
-                            $devUpdates = []; // Any device information update (devUpdates[updId] = updValue)
+                            // $devUpdates = []; // Any device information update (devUpdates[updId] = updValue)
                             $l = strlen($pl);
                             // $eq = getDevice($dest, $srcAddr); // Corresponding device
                             $size = 0;
@@ -3398,9 +3381,9 @@
                                     $devUpdates[$clustId.'-'.$attrId] = $attr['value'];
                             }
 
-                            if (count($devUpdates) != 0) {
-                                $this->deviceUpdates($dest, $srcAddr, $srcEp, $devUpdates);
-                            }
+                            // if (count($devUpdates) != 0) {
+                            //     $this->deviceUpdates($dest, $srcAddr, $srcEp, $devUpdates);
+                            // }
 
                             if (count($attributes) != 0) {
                                 // If discovering step, recording infos
@@ -3523,7 +3506,7 @@
                             return;
 
                         if (isset($eq['private']))
-                            parserLog('debug', "  Model with 'private' entry");
+                            parserLog2('debug', $srcAddr, "  Model with 'private' entry");
                         $updates = [];
 
                         while (($l = strlen($pl) > 0)) {
@@ -3542,13 +3525,13 @@
                                 // parserLog('debug', "  Model with 'private' entry");
                                 foreach ($eq['private'] as $pKey => $pVal) {
                                     $pKeyLen = strlen($pKey);
-                                    parserLog('debug', "  clustId/attrId=${clustId}/${attrId} vs pKey=${pKey}, len=${pKeyLen}");
+                                    // parserLog2('debug', $srcAddr, "  clustId/attrId=${clustId}/${attrId} vs pKey=${pKey}, len=${pKeyLen}");
                                     if ((($pKeyLen == 4) && ($pKey != $clustId)) || // 'CCCC' (clustId) case
                                         (($pKeyLen == 9) && ($pKey != $clustId.'-'.$attrId))) // 'CCCC-AAAA (clustId-attrId) case
                                         continue;
 
                                     $private = $pVal;
-                                    parserLog('debug', "  Private=".json_encode($private));
+                                    parserLog2('debug', $srcAddr, "  Private=".json_encode($private));
                                     break;
                                 }
                             }
@@ -3559,7 +3542,7 @@
                                 if ($private['type'] == "xiaomi") {
                                     xiaomiReportAttribute($dest, $srcAddr, $clustId, $attr, $attrReportN);
                                 } else {
-                                    parserLog("error", "  Ouahh... missing code to handle private cluster");
+                                    parserLog2("error", $srcAddr, "  Ouahh... missing code to handle private cluster");
                                 }
                             } else {
                                 // Not private or obsolete way to handle this attribute as private
@@ -3600,7 +3583,7 @@
                                     $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
                                     parserLog2("debug", $srcAddr, "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
 
-                                    $attrReportN = [
+                                    $attrReportN[] = [
                                         array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
                                         array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
                                     ];
@@ -4542,25 +4525,13 @@
                 } // End cluster specific commands
             }
 
+            // Any device key info updates ?
+            if (count($devUpdates) != 0)
+                $this->deviceUpdates($dest, $srcAddr, '', $devUpdates);
+
             // Something to report to main daemon ?
-            foreach ($toAbeille as $ta)
-                msgToAbeille2($ta);
-            if (isset($readAttributesResponseN) && (count($readAttributesResponseN) > 0)) {
-                $toAbeille = array(
-                    // 'src' => 'parser',
-                    'type' => 'readAttributesResponseN',
-                    'net' => $dest,
-                    'addr' => $srcAddr,
-                    'ep' => $srcEp,
-                    'clustId' => $clustId,
-                    'attributes' => $readAttributesResponseN,
-                    'time' => time(),
-                    'lqi' => $lqi
-                );
-                msgToAbeille2($toAbeille);
-            }
-            if (isset($attrReportN) && (count($attrReportN) > 0)) {
-                $toAbeille = array(
+            if (count($attrReportN) > 0) {
+                $msg = array(
                     // 'src' => 'parser',
                     'type' => 'attributesReportN',
                     'net' => $dest,
@@ -4571,7 +4542,36 @@
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                msgToAbeille2($toAbeille);
+                msgToAbeille2($msg);
+            }
+            if (count($readAttributesResponseN) > 0) {
+                $msg = array(
+                    // 'src' => 'parser',
+                    'type' => 'readAttributesResponseN',
+                    'net' => $dest,
+                    'addr' => $srcAddr,
+                    'ep' => $srcEp,
+                    'clustId' => $clustId,
+                    'attributes' => $readAttributesResponseN,
+                    'time' => time(),
+                    'lqi' => $lqi
+                );
+                msgToAbeille2($msg);
+            }
+            if (count($toAbeille) > 0) {
+                foreach ($toAbeille as $msg)
+                    msgToAbeille2($msg);
+            }
+            // If nothing to report, at least informing device is alive to prevent timeout
+            if ((count($attrReportN) == 0) && (count($readAttributesResponseN) == 0) && (count($toAbeille) == 0)) {
+                $msg = array(
+                    'type' => 'deviceAlive',
+                    'net' => $dest,
+                    'addr' => $srcAddr,
+                    'time' => time(),
+                    'lqi' => $lqi
+                );
+                msgToAbeille2($msg);
             }
 
             // Something to report to client ?
@@ -4605,7 +4605,7 @@
             $chan       = hexdec(substr($payload, 40, 2));
 
             $msgDecoded = '8009/Network state response, Addr='.$addr.', ExtAddr='.$extAddr.', PANId='.$panId.', ExtPANId='.$extPanId.', Chan='.$chan;
-            parserLog('debug', $dest.', Type='.$msgDecoded, "8009");
+            parserLog2('debug', $addr, $dest.', Type='.$msgDecoded, "8009");
 
             $this->whoTalked[] = $dest.'/'.$addr;
 
@@ -4663,7 +4663,7 @@
             $major = substr($payload, 0, 4);
             $minor = substr($payload, 4, 4);
 
-            parserLog('debug', $dest.', Type=8010/Version, Appli='.$major.', SDK='.$minor, "8010");
+            parserLog2('debug', '0000', $dest.', Type=8010/Version, Appli='.$major.', SDK='.$minor, "8010");
 
             $zgId = substr($dest, 7);
             $GLOBALS['zigate'.$zgId]['fwVersionMaj'] = $major;
@@ -4720,7 +4720,7 @@
             $msgDecoded = '8011/APS data ACK, Status='.$status.'/'.zbGetAPSStatus($status).', Addr='.$dstAddr.', EP='.$dstEp.', ClustId='.$clustId;
             if ($sqnAps != '')
                 $msgDecoded .= ', SQNAPS='.$sqnAps;
-            parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
+            parserLog2('debug', $dstAddr, $dest.', Type='.$msgDecoded, "8011");
 
             // Sending msg to cmd for flow control
             $toAbeille = array (
@@ -4771,7 +4771,7 @@
 
             // Log
             $msgDecoded = '8012/APS data confirm, Status='.$status.', Addr='.$dstAddr.', SQNAPS='.$sqnAps.', NPDU='.$nPdu.', APDU='.$aPdu;
-            parserLog('debug', $net.', Type='.$msgDecoded, "8012");
+            parserLog2('debug', $dstAddr, $net.', Type='.$msgDecoded, "8012");
 
             // Sending msg to cmd for flow control => Useful to update NPDU/APDU
             $msg = array (
@@ -4812,11 +4812,11 @@
             // Local status storage
             $GLOBALS['zigate'.$zgId]['permitJoin'] = $status;
 
-            parserLog('debug', $dest.', Type=8014/Permit join status response, PermitJoinStatus='.$status);
+            parserLog2('debug', '0000', $dest.', Type=8014/Permit join status response, PermitJoinStatus='.$status);
             if ($status == "01")
-                parserLog('info', '  Zigate'.$zgId.': en mode INCLUSION', "8014");
+                parserLog2('info', '0000', '  Zigate'.$zgId.': en mode INCLUSION', "8014");
             else
-                parserLog('info', '  Zigate'.$zgId.': mode inclusion inactif', "8014");
+                parserLog2('info', '0000', '  Zigate'.$zgId.': mode inclusion inactif', "8014");
 
             $msg = array(
                 // 'src' => 'parser',
@@ -4886,7 +4886,7 @@
         function decode8017($dest, $payload, $lqi) {
             // <Timestamp UTC: uint32_t> from 2000-01-01 00:00:00
             $timestamp = substr($payload, 0, 8);
-            parserLog('debug', $dest.', Type=8017/Get time server response, Timestamp='.hexdec($timestamp), "8017");
+            parserLog2('debug', '0000', $dest.', Type=8017/Get time server response, Timestamp='.hexdec($timestamp), "8017");
 
             // Note: updating timestamp ref from 2000 to 1970
             $data = date(DATE_RFC2822, hexdec($timestamp) + mktime(0, 0, 0, 1, 1, 2000));
@@ -4926,7 +4926,7 @@
             $dataNetwork = hexdec(substr($payload, 22, 2));
 
             /* Log */
-            parserLog('debug', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', Addr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork, "8024");
+            parserLog2('debug', '0000', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', Addr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork, "8024");
 
             // Zigate IEEE local storage
             $zgId = substr($dest, 7);
@@ -4969,7 +4969,7 @@
             $PDMEvtCode = substr($payload, 0, 2); // <PDM event code: uint8_t>
             $RecId = substr($payload, 2, 8); // <record id : uint32_t>
 
-            parserLog('debug', $dest.', Type=8035/PDM event code'
+            parserLog2('debug', '0000', $dest.', Type=8035/PDM event code'
                              .', PDMEvtCode=x'.$PDMEvtCode
                              .', RecId='.$RecId
                              .' => '.zgGetPDMEvent($PDMEvtCode), "8035");
@@ -5027,7 +5027,7 @@
 
             /* Log */
             $msgDecoded = '8048/Leave indication, ExtAddr='.$ieee.', RejoinStatus='.$rejoinStatus;
-            parserLog('debug', $dest.', Type='.$msgDecoded, "8048");
+            parserLog2('debug', $ieee, $dest.', Type='.$msgDecoded, "8048");
 
             /* Config ongoing. Informing Abeille for EQ creation/update */
             $msg = array(

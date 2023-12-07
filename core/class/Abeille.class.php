@@ -2186,6 +2186,24 @@ class Abeille extends eqLogic {
             return;
         } // End 'attributesReportN' or 'readAttributesResponseN'
 
+        if ($msg['type'] == "deviceAlive") {
+            /* $msg reminder
+                'type' => 'deviceAlive',
+                'net' => $net,
+                'addr' => $addr,
+                'time' => time(),
+                'lqi' => $lqi
+            */
+            log::add('Abeille', 'debug', "msgFromParser(): Device '${net}/${addr}' is ALIVE");
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  Unknown device '${net}/${addr}'");
+                return; // Unknown device
+            }
+            Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+            return;
+        }
+
         /* Zigate version (8010 response) */
         if ($msg['type'] == "zigateVersion") {
             /* Reminder
@@ -2804,7 +2822,7 @@ class Abeille extends eqLogic {
                 $dev = array(
                     'net' =>
                     'addr' =>
-                    'modelSig' => 'remotecontrol', // Model sig
+                    'modelSig' => 'remotecontrol', // Model signature
                     'modelName' => 'remotecontrol', // Model file name
                     'modelSource' => 'Abeille', // Model file location
                 );

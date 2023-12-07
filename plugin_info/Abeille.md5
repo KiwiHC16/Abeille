@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231207-BETA-1"
+# VERSION="231207-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1145,7 +1145,7 @@ a64a6c46046de1e2e395c78aa730496b *core/config/devices/magnet.acn001/magnet.acn00
 92c050cb373e899f9f8cff0437854bbe *core/config/devices/multi_Samjin/discovery.json
 6d06fcbb41ff2083bbe709a2326ac7f8 *core/config/devices/multi_Samjin/multi_Samjin.json
 03dd8caf51b3f992f1a3b1e90825227f *core/config/devices/plug.maeu01/notes.txt
-98f73bb21b6431b3b94b2a978638508e *core/config/devices/plug.maeu01/plug.maeu01.json
+9b5f0a1397bacbd5002bdd50a791980b *core/config/devices/plug.maeu01/plug.maeu01.json
 9d8c73554d51c9054142bbef5b915cc5 *core/config/devices/plug.mmeu01/plug.mmeu01.json
 2047f77aef7ad4206f01528085017543 *core/config/devices/plug/discovery-plug_LUMI.json
 55c6ec0ce647960031d07405cdfd8f9e *core/config/devices/plug/plug.json
@@ -1237,7 +1237,7 @@ cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 3f23e5dbc4f01327d47fd90e2ef88952 *core/php/AbeilleNoise.php
 9ab85f33787d42bdae75985d3e3b4d69 *core/php/AbeilleOTA.php
 304db580d3a99eff5ea65f6bbf9f8334 *core/php/AbeilleParser-Tuya.php
-1329244b7b98ce03c9e95ab7358be657 *core/php/AbeilleParser-Xiaomi.php
+641b7ce025b6e72b5ec7a7dd87d5c3d6 *core/php/AbeilleParser-Xiaomi.php
 28c21d11098330afc1b6340aae32b17a *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 85a8f4e9a88f2685e98e989154a1764d *core/php/AbeilleRepair.php
@@ -1314,7 +1314,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 ce32db08df86d3ff94f08d80d463b7f2 *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-c86cf14d4887c0f3cb4360aae422ae60 *docs/fr_FR/Changelog.rst
+68d4841e81722d89b614483e084a85c2 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1650,10 +1650,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-02cbfea6b9c47a3b7d175a87c55f59f7 *plugin_info/Abeille.version
+fd0b82c0aef950604b127e2726a7706c *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-38608dc4caa0147f1c664641d9af7c38 *plugin_info/info.json
+9444b2b7f0a3a6094b708bd9b0a66bf3 *plugin_info/info.json
 314350267ea4b99330e92eecbcef5769 *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

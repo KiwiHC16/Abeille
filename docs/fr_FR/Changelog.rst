@@ -33,6 +33,7 @@ ChangeLog
 - Rappel: Le mode 'normal' de la Zigate n'est plus supporté donc FW >= 3.1E requis.
 - Timeout: Correction pouvant expliquer le passage en timeout de certains équipements.
 - Interne: Autre corrections du parser.
+- Support Xiaomi: Améliorations internes.
 
 231205-BETA-6
 -------------

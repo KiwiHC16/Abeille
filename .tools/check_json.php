@@ -263,7 +263,6 @@
 
         /* Custom cluster/attribute specific checks */
         // TODO: To be completed
-        // WORK ONGOING !!!
         /* Generic format for private clusters/commands reminder
         "private": {
             "ED00": {
@@ -286,6 +285,22 @@
             }
         } */
         if (isset($dev[$devName]['private'])) {
+            $private = $dev[$devName]['private'];
+            foreach ($private as $pKey => $pVal) {
+                $pKeyLen = strlen($pKey);
+                if ($pKeyLen == 9) { // Xiaomi private cluster/attr support
+                    foreach ($private[$pKey] as $tt => $tt2) {
+                        echo "LA tt=${tt}, tt2=".json_encode($tt2)."\n";
+                        if (substr($tt, 0, 7) == "comment")
+                            continue;
+                        else if ($tt == "type") {
+                            if ($tt2 != "xiaomi")
+                                newDevError($devName, "ERROR", "Xiaomi private support: 'type' should be 'xiaomi' for '".$tt."'");
+                        } else if (($tt2['numberDiv']) && !isset($tt2['div']))
+                            newDevError($devName, "ERROR", "Xiaomi private support: Missing 'div' for '".$tt."'");
+                    }
+                }
+            }
         }
 
         /* Checking top level supported keywords */

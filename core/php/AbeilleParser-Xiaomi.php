@@ -4,32 +4,30 @@
     // Included by 'AbeilleParser.php'
 
     // Model syntax reminder for Xiaomi
-    // "xiaomi": {
-    //     "fromDevice": {
-    //         "<clust>-<attr>": {
-    //             "XX-YY": { "func": "number", "info": "info_cmd_logic_id" }
-    //             "XX-Y2": { "func": "numberDiv", "div": 100, "info": "info_cmd_logic_id" }
-    //         }
+    // "private": {
+    //     "<clust>-<attr>": {
+    //         "type": "xiaomi",
+    //         "XX-YY": { "func": "number", "info": "info_cmd_logic_id" }
+    //         "XX-Y2": { "func": "numberDiv", "div": 100, "info": "info_cmd_logic_id" }
     //     }
     // }
     // where 'XX'=tag value, 'YY'=data type
     //       'func' (function to apply on value) can be 'raw', 'number', 'numberDiv', 'numberMult', 'toPercent'
     //              raw: received hexa value transmitted as it is
-    //              number: resulting number transmitted as it is
+    //              number: resulting number transmitted as it is with optional 'div' and/or 'mult' factors
     //              numberDiv: resulting number is divided by 'div' before Jeedom update
     //              numberMult: resulting number is multiplied by 'mult' before Jeedom update
     //              toPercent: resulting number is converted to percentage (with 'min' & 'max') before Jeedom update
     //              divAndPercent: resulting number is divided ('div') then converted to percentage (with 'min' & 'max') before Jeedom update
     // Example
-    // "xiaomi": {
-    //     "fromDevice": {
-    //         "0000-FF02": {
-    //             "01-21": {
-    //                 "func": "numberDiv",
-    //                 "div": 1000,
-    //                 "info": "0001-01-0020",
-    //                 "comment": "Battery-Volt"
-    //             }
+    // "private": {
+    //     "0000-FF02": {
+    //         "type": "xiaomi",
+    //         "01-21": {
+    //             "func": "numberDiv",
+    //             "div": 1000,
+    //             "info": "0001-01-0020",
+    //             "comment": "Battery-Volt"
     //         }
     //     }
     // }
@@ -43,14 +41,26 @@
         $func = (isset($map['func']) ? $map['func'] : "raw");
         if ($func == "raw") {
             $value2 = $valueHex;
-        } else if ($func == "numberDiv") {
+        } else if ($func == "number") {
+            if (isset($map['div'])) {
+                $div = $map['div'];
+                $mapTxt .= 'div='.$div.', ';
+            } else
+                $div = 1;
+            if (isset($map['mult'])) {
+                $mult = $map['mult'];
+                $mapTxt .= 'mult='.$mult.', ';
+            } else
+                $mult = 1;
+            $value2 = $value * $mult / $div;
+        } else if ($func == "numberDiv") { // OBSOLETE: Use 'number' with 'div' field
             $div = $map['div'];
-            $value2 = $value / $div;
             $mapTxt .= 'div='.$div.', ';
-        } else if ($func == "numberMult") {
+            $value2 = $value / $div;
+        } else if ($func == "numberMult") { // OBSOLETE: Use 'number' with 'mult' field
             $mult = $map['mult'];
-            $value2 = $value * $mult;
             $mapTxt .= 'mult='.$mult.', ';
+            $value2 = $value * $mult;
         } else if ($func == "toPercent") {
             $min = (isset($map['min']) ? $map['min'] : 2.85);
             $max = (isset($map['max']) ? $map['max'] : 3.0);
@@ -73,6 +83,10 @@
             $value2 = ($value2 - $min) / ($max - $min);
             $value2 *= 100;
             $mapTxt .= 'div='.$div.', min='.$min.', max='.$max.', ';
+        } else {
+            $m .= " => ERROR: Unexpected function '${func}'";
+            parserLog2('debug', $addr, $m);
+            return;
         }
         $mapTxt .= $map['info'];
         $mapTxt .= '='.$value2;
@@ -128,7 +142,6 @@
             else {
                 $m .= ' => '.$value.' (ignored (1))';
                 parserLog2('debug', $addr, $m);
-                // $toMon[] = $m;
             }
         }
     }

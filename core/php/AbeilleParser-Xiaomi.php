@@ -340,7 +340,7 @@
                 },
                 "FCC0-00F7": {
                     "type": "xiaomi",
-                    "01-21": {
+                    "01-21": { // <tag>-<type>
                         "func": "numberDiv",
                         "div": 1000,
                         "info": "0001-01-0020",
@@ -350,7 +350,7 @@
                 "FCC0-00F7": {
                     "type": "xiaomi",
                     "struct": 1,
-                    "01-21": {
+                    "01-21": { // <idx>-<type>
                         "func": "numberDiv",
                         "div": 1000,
                         "info": "0001-01-0020",

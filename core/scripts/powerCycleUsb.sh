@@ -29,9 +29,10 @@ DEV=${FULLDEV#/dev/}
 # Identifing corresponding port using dmesg
 # [   11.037185] usb 3-1.2: cp210x converter now attached to ttyUSB0
 #DMESG=`dmesg | grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/'`
-DMESG=$(dmesg 2>/dev/null| grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/')
+DMESG=$(dmesg 2>/dev/null | grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/')
 if [ "${DMESG}" == "" ]; then
-    echo "ERROR: Grep on dmesg failed."
+    echo "ERROR: Grep on dmesg failed. 'dmesg' output follows"
+    dmesg
     exit 3
 fi
 echo "DMESG=$DMESG"

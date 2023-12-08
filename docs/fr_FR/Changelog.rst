@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Mise-à-jour powerCycleUsb pour récuperer sortie 'dmesg' si erreur.
+
 231207-BETA-2
 -------------
 

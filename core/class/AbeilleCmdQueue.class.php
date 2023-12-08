@@ -546,7 +546,7 @@
                         // If regulation is required, applying only on cmd not dedicated to Zigate
                         if (!$cmd['zgOnly'] && ($regulation != '')) {
                             cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
-                            continue;
+                            break; // Moving to next Zigate
                         }
 
                         cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}, Idx=${cmdIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
@@ -852,10 +852,9 @@
                     cmdLog('debug', "  Removing cmd from queue (Pri=${sentPri}, Idx=${sentIdx})");
                     // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
                     // cmdLog('debug', '  queue before='.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
-                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx);
+                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
                     // cmdLog('debug', '  queue after='.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
 
-                    // cmdLog('debug', '               queue after='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
                     $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
                 }
             }
@@ -892,7 +891,7 @@
 
                 cmdLog("debug", "WARNING: checkZigatesStatus(): Zigate".$zgId." cmd ".$cmd['cmd']." ${timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
                 // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx);
+                array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
                 $GLOBALS['zigates'][$zgId]['available'] = 1;
             }
         } // End checkZigatesStatus()

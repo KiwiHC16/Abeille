@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: Mise-à-jour powerCycleUsb pour récuperer sortie 'dmesg' si erreur.
+- Interne: AbeilleCmd: Pas de ACK sur requete LQI vers Zigate.
 
 231207-BETA-2
 -------------

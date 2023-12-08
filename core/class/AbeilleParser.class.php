@@ -501,7 +501,7 @@
         /* There is a device info updates (manufId + modelId, or location).
            Note: As opposed to 'updateDevice()', info is coming from device itself. */
         function deviceUpdates($net, $addr, $ep, $updates = []) {
-parserLog('debug', "deviceUpdates(${net}, ${addr}, upd=".json_encode($updates).")");
+            parserLog('debug', "  deviceUpdates(${net}, ${addr}, upd=".json_encode($updates).")");
             if (isset($updates['ieee']))
                 $ieee = $updates['ieee'];
             else
@@ -2314,6 +2314,7 @@ parserLog('debug', "deviceUpdates(${net}, ${addr}, upd=".json_encode($updates)."
             $m = '  Management LQI response';
             $m = $m.': SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', StartIdx='.$startIdx.', NTableListCount='.$nTableListCount;
             parserLog2('debug', $srcAddr, $m);
+
             $toLqiCollector = array(
                 'type' => '804E',
                 'srcAddr' => $srcAddr,
@@ -2324,6 +2325,7 @@ parserLog('debug', "deviceUpdates(${net}, ${addr}, upd=".json_encode($updates)."
                 'nList' => []
             );
 
+            // Tcharp38: I've seen 'C1' when Zigate is empty
             if ($status != "00") {
                 parserLog2('debug', $srcAddr, "  Status != 00 => Decode canceled");
                 $this->msgToLQICollector($toLqiCollector);
@@ -2339,8 +2341,7 @@ parserLog('debug', "deviceUpdates(${net}, ${addr}, upd=".json_encode($updates)."
             if ((strlen($pl) / 2) != (hexdec($nTableListCount) * 22))
                 $corrupted = true; // Wrong size
             if ($corrupted) {
-                $m = '  WARNING: Corrupted/inconsistent message => ignored';
-                parserLog2('debug', $srcAddr, $m);
+                parserLog2('debug', $srcAddr, '  WARNING: Corrupted/inconsistent message => ignored');
                 $toLqiCollector['status'] = '12'; // Fake but failed status
                 $this->msgToLQICollector($toLqiCollector);
                 return;
@@ -2373,7 +2374,6 @@ parserLog('debug', "deviceUpdates(${net}, ${addr}, upd=".json_encode($updates)."
                     .', NDepth='.$N['depth']
                     .', NLQI='.$N['lqi']);
             }
-            // $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
             $toLqiCollector['nList'] = $nList;
             $this->msgToLQICollector($toLqiCollector);
 

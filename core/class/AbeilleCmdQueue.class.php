@@ -292,11 +292,17 @@
                 'ackAps'    => $ackAps, // True if ACK, false else
                 'waitFor'   => $ackAps ? "ACK": "8000",
             );
+
             // Abeille PDM restore cmd can be slow
             if ($zgCmd == "AB02") {
                 $newCmd['timeout'] = 120; // TODO: Should be relative to data size
                 $newCmd['waitFor'] = "AB03";
             }
+
+            // LQI request to Zigate will not generate any ACK
+            else if (($zgCmd == "004E") && ($addr == "0000"))
+                $newCmd['waitFor'] = "8000";
+
             if ($begin) {
                 // cmdLog('debug', 'LA='.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]));
                 array_unshift($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri], $newCmd);
@@ -681,6 +687,8 @@
                     $GLOBALS['zigates'][$zgId]['fw'] = hexdec($msg['minor']);
                     continue;
                 }
+
+                // Serial to parser receive channel is UP
                 if ($msg['type'] == "rcvChanStatus") {
                     configureZigate($zgId); // Configure Zigate
                     continue;

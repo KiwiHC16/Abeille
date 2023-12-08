@@ -56,6 +56,16 @@
             'mapFile' => 'AbeilleNetworkMap-1200.png'
         );
     }
+    // Checking that image exists
+    foreach ($networkMap['levels'] as $levIdx => $lev) {
+        $path = __DIR__.'/';
+        $path .= (isset($lev['mapDir']) ? $lev['mapDir'] : 'images');
+        $path .= (isset($lev['mapFile']) ? $lev['mapFile'] : 'AbeilleNetworkMap-1200.png');
+        if (!file_exists($path)) {
+            $networkMap['levels'][$levIdx]['mapDir'] = 'images';
+            $networkMap['levels'][$levIdx]['mapFile'] = 'AbeilleNetworkMap-1200.png';
+        }
+    }
     if (isset($nm['levelChoice']))
         $networkMap['levelChoice'] = $nm['levelChoice'];
     else

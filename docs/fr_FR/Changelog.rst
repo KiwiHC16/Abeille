@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231208-BETA-1
+-------------
+
 - Interne: Mise-à-jour powerCycleUsb pour récuperer sortie 'dmesg' si erreur.
 - Interne: AbeilleCmd: Pas de ACK sur requete LQI vers Zigate.
 - Placement réseau: Utilisation image par défaut si plan n'existe plus.

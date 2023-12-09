@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Cmd: Regulation revue.
+
 231209-BETA-2
 -------------
 

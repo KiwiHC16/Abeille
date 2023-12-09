@@ -528,35 +528,39 @@
                     if ($count == 0)
                         continue; // Queue empty
 
-                    // There is something to send
+                    // There is something to send in this priority queue
+                    // We take 1st command unless regulation is required and command is not Zigate specific.
+                    $cmdIdx = 0;
+                    $cmd = $zg['cmdQueue'][$priority][$cmdIdx];
+                    if ($cmd['zgOnly'] || ($regulation == '')) {
+                        // Zigate only or no regulation
+                        $sendIdx = 0;
+                    } else {
+                        // Regulation required. Looking for Zigate only cmd
+                        cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri/Idx=${priority}/${cmdIdx}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
+                        foreach ($zg['cmdQueue'][$priority] as $cmdIdx => $cmd) {
+                            if ($cmdIdx == 0)
+                                continue; // 1st cmd already checked
+                            if (!$cmd['zgOnly'])
+                                continue;
 
-                    foreach ($zg['cmdQueue'][$priority] as $cmdIdx => $cmd) {
-                        cmdLog('debug', "  cmd=".json_encode($cmd));
-                        if ($cmd['status'] != '') {
-                            cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
+                            $sendIdx = $cmdIdx;
+                            break;
                         }
-
-                        // If regulation is required, commands for Zigate only (not sent over the air) can be executed
-                        if (!$cmd['zgOnly'] && ($regulation != '')) {
-                            cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri/Idx=${priority}/${cmdIdx}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
-                            continue; // Moving to next cmd until zigate only found
-                        }
-
-                        $sendIdx = $cmdIdx;
-                        break;
                     }
+
                     if (isset($sendIdx))
                         break;
                 } // End priorities loop
 
-                // Finally something to sent for this Zigate ?
+                // Finally something to send for this Zigate ?
                 if (isset($sendIdx)) {
-                    $cmd = $zg['cmdQueue'][$priority][$sendIdx];
-                    cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}, Idx=${sendIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
+                    cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri/Idx=${priority}/${sendIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
                     $GLOBALS['zigates'][$zgId]['available'] = 0; // Zigate no longer free
                     $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
                     $GLOBALS['zigates'][$zgId]['sentIdx'] = $sendIdx;
 
+                    $cmd = $zg['cmdQueue'][$priority][$sendIdx];
                     $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
 
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['status'] = "SENT";

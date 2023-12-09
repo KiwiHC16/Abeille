@@ -522,6 +522,8 @@
                 else
                     $regulation = '';
 
+                unset($sendIdx);
+
                 // Looking for a cmd to send in priority order
                 foreach (range(priorityMax, priorityMin) as $priority) {
                     $count = count($zg['cmdQueue'][$priority]);

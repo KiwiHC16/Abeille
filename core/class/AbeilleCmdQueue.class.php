@@ -378,7 +378,7 @@
             foreach (range(priorityMax, priorityMin) as $prio) {
                 if ($queuesTxt != '')
                     $queuesTxt .= ', ';
-                $queuesTxt .= "[".$prio."]=".count($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio]);
+                $queuesTxt .= "Pri${prio}=".count($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio]);
             }
             cmdLog('debug', '    Zg '.$zgId.' queues: '.$queuesTxt);
             if (count($GLOBALS['zigates'][$zgId]['cmdQueue'][$priority]) > 50) {
@@ -528,7 +528,7 @@
                 else
                     $regulation = '';
 
-                // Looking for a cmd in priority order
+                // Looking for a cmd to send in priority order
                 foreach (range(priorityMax, priorityMin) as $priority) {
                     $count = count($zg['cmdQueue'][$priority]);
                     if ($count == 0)
@@ -537,7 +537,6 @@
                     // There is something to send
 
                     foreach ($zg['cmdQueue'][$priority] as $cmdIdx => $cmd) {
-                        // $cmd = $zg['cmdQueue'][$priority][0]; // Takes first cmd
                         cmdLog('debug', "  cmd=".json_encode($cmd));
                         if ($cmd['status'] != '') {
                             cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
@@ -849,7 +848,7 @@
                 // Removing last sent cmd
                 if (isset($removeCmd) && $removeCmd) {
 
-                    cmdLog('debug', "  Removing cmd from queue (Pri=${sentPri}, Idx=${sentIdx})");
+                    cmdLog('debug', "  Removing cmd from queue (Pri/Idx=${sentPri}/${sentIdx})");
                     // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
                     cmdLog('debug', '  BEFORE: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);

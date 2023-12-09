@@ -538,28 +538,35 @@
 
                         // If regulation is required, commands for Zigate only (not sent over the air) can be executed
                         if (!$cmd['zgOnly'] && ($regulation != '')) {
-                            cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
+                            cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri/Idx=${priority}/${cmdIdx}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
                             continue; // Moving to next cmd until zigate only found
                         }
 
-                        cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}, Idx=${cmdIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
-                        $GLOBALS['zigates'][$zgId]['available'] = 0; // Zigate no longer free
-                        $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
-                        $GLOBALS['zigates'][$zgId]['sentIdx'] = $cmdIdx;
-
-                        $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
-
-                        $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$cmdIdx]['status'] = "SENT";
-                        $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$cmdIdx]['sentTime'] = time();
-                        $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$cmdIdx]['try']--;
-                        $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
-
-                        if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
-                            monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
-
+                        $sendIdx = $cmdIdx;
                         break;
                     }
+                    if (isset($sendIdx))
+                        break;
                 } // End priorities loop
+
+                // Finally something to sent for this Zigate ?
+                if (isset($sendIdx)) {
+                    $cmd = $zg['cmdQueue'][$priority][$sendIdx];
+                    cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}, Idx=${sendIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
+                    $GLOBALS['zigates'][$zgId]['available'] = 0; // Zigate no longer free
+                    $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
+                    $GLOBALS['zigates'][$zgId]['sentIdx'] = $sendIdx;
+
+                    $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
+
+                    $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['status'] = "SENT";
+                    $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['sentTime'] = time();
+                    $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['try']--;
+                    $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
+
+                    if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
+                        monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
+                }
             } // End zigates loop
 
                     // Throughput limitation

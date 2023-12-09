@@ -851,9 +851,9 @@
 
                     cmdLog('debug', "  Removing cmd from queue (Pri=${sentPri}, Idx=${sentIdx})");
                     // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                    // cmdLog('debug', '  queue before='.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
+                    cmdLog('debug', '  BEFORE: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
-                    // cmdLog('debug', '  queue after='.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
+                    cmdLog('debug', '  AFTER: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
 
                     $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
                 }

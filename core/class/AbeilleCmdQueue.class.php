@@ -543,10 +543,10 @@
                             cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
                         }
 
-                        // If regulation is required, applying only on cmd not dedicated to Zigate
+                        // If regulation is required, commands for Zigate only (not sent over the air) can be executed
                         if (!$cmd['zgOnly'] && ($regulation != '')) {
                             cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
-                            break; // Moving to next Zigate
+                            continue; // Moving to next cmd until zigate only found
                         }
 
                         cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}, Idx=${cmdIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
@@ -566,7 +566,8 @@
 
                         break;
                     }
-                }
+                } // End priorities loop
+            } // End zigates loop
 
                     // Throughput limitation
                     // $zg['tp_time'] gives time (in us) when Zigate can be considered available again.
@@ -627,7 +628,6 @@
 
                     // break; // This zigate is no longer idle so do not check other priorities now.
                 // }
-            }
         }
 
         // Process 8000, 8011, 8012 or 8702 messages

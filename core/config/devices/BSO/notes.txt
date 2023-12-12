@@ -1,0 +1,53 @@
+Ancienne commande info
+======================
+    "moveToLiftAndTiltBSO_Tilt": {
+        "isVisible": 1,
+        "logicalId": "#EP#-SetBSOTilt",
+        "subType": "slider",
+        "value": "Tilt",
+        "template": "",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "90",
+            "topic": "moveToLiftAndTiltBSO",
+            "request": "EP=01&lift=#cmdInfo_Lift_#&inclinaison=#slider#&duration=10",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
+    }
+
+Domoticz
+========
+    # payload: 11 45 10 03 55 2d ffff
+    # Option Parameter uint8   Bit0 Ask for lift action, Bit1 Ask fr a tilt action
+    # Lift Parameter   uint8   Lift value between 1 to 254
+    # Tilt Parameter   uint8   Tilt value between 0 and 90
+    # Transition Time  uint16  Transition Time between current and asked position
+
+    ManfufacturerCode = "1110"
+
+    payload = (
+        cluster_frame
+        + ManfufacturerCode[2:4]
+        + ManfufacturerCode[0:2]
+        + sqn
+        + cmd
+        + "%02x" % option
+        + "%02x" % level
+        + "%02x" % tilt
+        + "FFFF"
+    )
+
+Utilisation de 'cmd-Generic' pour faire un set tilt
+===================================================
+    else if ($cmdName == 'cmd-Generic') {
+        $required = ['addr', 'ep', 'clustId', 'cmd', 'data']; // Mandatory infos
+
+    topic = cmd-Generic
+    payload = addr + ep=01&manufCode=1110&clustId=0008&cmd=10&data=OOLLTTDDDD
+    
+    data = OOLLTTDDDD
+        OO = option = 02
+        LL = level = 00
+        TT = tilt
+        DDDD = duration 10sec=>000A

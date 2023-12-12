@@ -25,20 +25,24 @@
                 "use": "act_zbCmdC-0008-StopWithOnOff",
                 "isVisible": 1
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "genericType": "FLAP_STATE",
                 "nextLine": "after",
                 "isVisible": 1
             },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
-            },
             "Set Level": {
                 "use": "setLevelVolet",
                 "value": "Level",
                 "isVisible": 1
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
             },
             "Level": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
@@ -47,16 +51,6 @@
                 "nextLine": "after",
                 "isVisible": 1
             },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
-            "Set Lift": {
-                "use": "moveToLiftAndTiltBSO_Lift"
-            },
-            "Lift": {
-                "use": "Lift"
-            },
             "Set Tilt": {
                 "use": "moveToLiftAndTiltBSO_Tilt"
             },
@@ -64,8 +58,7 @@
                 "use": "Tilt"
             },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

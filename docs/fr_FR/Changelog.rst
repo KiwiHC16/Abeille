@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: Cmd: Regulation revue.
+- Profalux BSO: Modèle revu. Suppression 'lift' (idem 'Set Level').
 
 231209-BETA-2
 -------------

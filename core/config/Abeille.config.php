@@ -26,15 +26,21 @@
     $GLOBALS['abQueues'] = $abQueues;
 
     // Tcharp38 note: WARNING: TOP PRIORITY is 1, not 5
+    // define('priorityMax',           1);
+    // define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
+    // define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
+    // define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
+    // define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
+    // define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
+    // define('priorityMin',           5); // est egale aux max des priorités définies.
+    // 3 priorities only
     define('priorityMax',           1);
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
-    define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
-    define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
-    define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
-    define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
-    define('priorityMin',           5); // est egale aux max des priorités définies.
+    define('priorityInterrogation', 2); // Message pour recuperer des etats, valeurs
+    define('priorityMin',           3); // est egale aux max des priorités définies.
 
     // New priorities model, will be replaced by old one again after code review (KiwiHC16)
+    define('PRIO_LOW', priorityMin);
     define('PRIO_NORM', priorityInterrogation); // Normal
     define('PRIO_HIGH', priorityMax); // High priority (ex: parser to cmd to react on wakeup)
 

@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Cmd: Regulation revue.
 - Profalux BSO: Modèle revu. Suppression 'lift' (idem 'Set Level').
+- Interne: Cmd: Plus que 3 niveaux de priorités.
 
 231231-STABLE-1
 ---------------

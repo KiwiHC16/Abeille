@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-Très bonne année à vous tous.
+231231-STABLE-1
 
 Abeille continue son petit chemin, même si exclusivement dédié aux Zigates aujourd'hui. Toujours dans l'idée de rendre son utilisation plus robuste et simple.
 

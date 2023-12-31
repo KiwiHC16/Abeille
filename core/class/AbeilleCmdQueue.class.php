@@ -855,7 +855,8 @@
                 // Removing last sent cmd
                 if (isset($removeCmd) && $removeCmd) {
 
-                    cmdLog('debug', "  Removing cmd from queue (Pri/Idx=${sentPri}/${sentIdx})");
+                    $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
+                    cmdLog('debug', "  Removing cmd from queue (Pri/Idx/Count=${sentPri}/${sentIdx}/${count})");
                     // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
                     cmdLog('debug', '  BEFORE: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);

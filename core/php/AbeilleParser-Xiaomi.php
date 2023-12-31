@@ -33,7 +33,7 @@
     // }
 
     function xiaomiDecodeFunction($addr, $valueHex, $value, $m, $map, &$attrReportN = null) {
-        parserLog2('debug', $addr, "      BEN  valueHex: ".json_encode($valueHex). ", value: ".json_encode($value)." mgs: ".$m );
+        // parserLog2('debug', $addr, "      BEN  valueHex: ".json_encode($valueHex). ", value: ".json_encode($value)." mgs: ".$m );
 
         $value2 = $value;
         $mapTxt = ' ==> ';

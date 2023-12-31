@@ -1,6 +1,29 @@
 ChangeLog
 =========
 
+Très bonne année à vous tous.
+
+Abeille continue son petit chemin, même si exclusivement dédié aux Zigates aujourd'hui. Toujours dans l'idée de rendre son utilisation plus robuste et simple.
+
+  .. warning:: **Mise-à-jour de modèles**
+
+    - Malgré la volonté de faire des évolutions les plus transparentes possibles, il se peut que certains équipements nécessitent d'être mis-à-jour à partir de leur dernier modèle pour à nouveau fonctionner correctement. Si ils sont sur batterie, réinclusion nécessaire. Si sur secteur, aller à la page 'avancé' et bouton 'mise-à-jour'.
+  .. warning:: **Zigates v2/+**
+
+    - FW **v3.22** recommandé.
+    - La maturité de la v2 n'est pas au niveau de la v1. Le FW qui semble le plus stable n'est PAS le dernier dispo (3.A0) mais le précédent (**3.22**). Nous vous conseillons de faire la mise-à-jour vers celui ci.
+  .. warning:: **Zigates v1**
+
+    - FW **v3.23 OPDM** recommandé. La version minimale est la '3.1E' mais ne sera bientot plus supportée.
+    - Le dernier FW officiel est le v3.23. Il est recommandé de basculer dessus pour ne pas faire façe à des soucis déja corrigés.
+    - D'autre part si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 231209-BETA-2
 -------------
 
@@ -17,25 +40,6 @@ ChangeLog
 
 231207-BETA-2
 -------------
-
-  .. warning:: **Mise-à-jour de modèles**
-
-    - Malgré la volonté de faire des évolutions les plus transparentes possibles, il se peut que certains équipements nécessitent d'être mis-à-jour à partir de leur dernier modèle pour à nouveau fonctionner correctement. Si ils sont sur batterie, réinclusion nécessaire. Si sur secteur, aller à la page 'avancé' et bouton 'mise-à-jour'.
-  .. warning:: **Zigates v2/+**
-
-    - FW **v3.22** recommandé.
-    - La maturité de la v2 n'est pas au niveau de la v1. Le FW qui semble le plus stable n'est PAS le dernier dispo (3.A0) mais le précédent (**3.22**). Nous vous conseillons de faire la mise-à-jour vers celui ci.
-  .. warning:: **Zigates v1**
-
-    - FW **v3.23 OPDM** recommandé. La version minimale est la '3.1E'
-    - Le dernier FW officiel est le v3.23. Il est recommandé de basculer dessus pour ne pas faire façe à des soucis déja corrigés.
-    - D'autre part si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
 - Modèles:
 

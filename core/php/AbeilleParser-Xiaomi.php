@@ -140,7 +140,7 @@
             if (isset($mapping[$idx]))
                 xiaomiDecodeFunction($addr, $valueHex, $value, $m, $mapping[$idx], $attrReportN);
             else {
-                $m .= ' => '.$value.' (ignored (1))';
+                $m .= ' => '.$value.' (ignored)';
                 parserLog2('debug', $addr, $m);
             }
         }
@@ -412,7 +412,7 @@
                 if (isset($private[$idx]))
                     xiaomiDecodeFunction($valueHex, $value, $m, $private[$idx], $attrReportN);
                 else {
-                    $m .= ' => '.$value.' (ignored (2))';
+                    $m .= ' => '.$value.' (ignored)';
                     parserLog2('debug', $addr, $m);
                 }
 

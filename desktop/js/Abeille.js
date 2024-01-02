@@ -70,11 +70,11 @@ function refreshEqInfos() {
             eqBatteryType = eq.batteryType;
             curEq = {
                 zigbee: {
-                    addr: eq.addr
+                    addr: eq.addr,
                 },
                 model: {
-                    modelName: eq.model.modelName
-                }
+                    modelName: eq.model.modelName,
+                },
             };
 
             // console.log("idEqName=", document.getElementById("idEqName"));
@@ -829,15 +829,15 @@ function migrateEq() {
     });
 }
 
-/* Attempt to detect devices on network but unknown to Jeedom. */
-function recoverDevices() {
-    console.log("recoverDevices()");
+// /* Attempt to detect devices on network but unknown to Jeedom. */
+// function recoverDevices() {
+//     console.log("recoverDevices()");
 
-    $("#md_modal").dialog({ title: "{{Récupération d'équipements fantômes}}" });
-    $("#md_modal")
-        .load("index.php?v=d&plugin=Abeille&modal=AbeilleRecovery.modal")
-        .dialog("open");
-}
+//     $("#md_modal").dialog({ title: "{{Récupération d'équipements fantômes}}" });
+//     $("#md_modal")
+//         .load("index.php?v=d&plugin=Abeille&modal=AbeilleRecovery.modal")
+//         .dialog("open");
+// }
 
 /* Confirm unknown zigate must be accepted. */
 function acceptNewZigate() {
@@ -1124,25 +1124,26 @@ $("#idModelChangeBtn").on("click", function () {
         },
         dataType: "json",
         global: false,
-        success: function (lstModels) {
+        success: function (modelsList) {
+            console.log("modelsList=", modelsList);
             // Populate html5 datalist
-            Object.values(lstModels).forEach((model) => {
+            Object.values(modelsList).forEach((model) => {
                 var str = "";
                 // Zigbee signature
                 if (
                     typeof model.manufacturer == "string" &&
                     model.manufacturer != ""
-                ) {
+                )
                     str += "[" + model.manufacturer + "] ";
-                }
+                else str += "[?] ";
 
                 if (
                     typeof model.model == "string" &&
                     model.model != "" &&
                     model.model != "?"
-                ) {
+                )
                     str += model.model + " ";
-                }
+                else str += "? ";
 
                 // Label
                 if (str != "") {
@@ -1151,8 +1152,16 @@ $("#idModelChangeBtn").on("click", function () {
                 str += model.type;
 
                 // JSON id (including location)
-                str +=
-                    " (" + model.jsonLocation + "/" + model.jsonId + ".json)";
+                if (typeof model.modelPath != "undefined")
+                    // modelPath is optional
+                    str += " (" + model.modelPath + ")";
+                else
+                    str +=
+                        " (" +
+                        model.modelName +
+                        "/" +
+                        model.modelName +
+                        ".json)";
 
                 // Adding to datalist
                 var $opt = $("<option></option>");

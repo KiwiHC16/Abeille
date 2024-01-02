@@ -8,6 +8,8 @@
     $resourcePath = realpath(__DIR__.'/../../resources');
     define('wifiLink', '/tmp/zigateWifi'); // For WIFI: Socat output
     define('otaDir', 'tmp/fw_ota'); // OTA FW location relative to Abeille's root
+    define('modelsDir', __DIR__ . '/devices/'); // Abeille's supported devices
+    define('modelsLocalDir', __DIR__ . '/devices_local/'); // Unsupported/user devices
 
     /* Inter-daemons queues:
        array['<queueName>'] = array("id" => queueId, "max" => maxMsgSize) */

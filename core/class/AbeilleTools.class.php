@@ -87,6 +87,7 @@
                 'modelName' => model file
                 'modelSource' => model file location
             ) */
+        // Note: OBSOLETE !! Use getModelsList() from AbeilleModels.php library
         public static function getDevicesList($from = "Abeille") {
             $devicesList = [];
 

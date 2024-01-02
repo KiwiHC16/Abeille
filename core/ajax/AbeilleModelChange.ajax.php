@@ -37,12 +37,10 @@ if (!isConnect('admin')) {
     throw new Exception('401 Unauthorized');
 }
 
-define('devicesDir', __DIR__ . '/../config/devices/'); // Abeille's supported devices
-define('devicesLocalDir', __DIR__ . '/../config/devices_local/'); // Unsupported/user devices
+require_once __DIR__ . '/../php/AbeilleModels.php'; // Libray to deal with models
 
 // Perform the requested action
 $action = $_POST['action'];
-
 if (function_exists($action)) {
     $action();
 } else {
@@ -53,12 +51,11 @@ if (function_exists($action)) {
  * Returns in JSON the list of existing models (known by Abeille).
  * Includes built-in models and local models (if any).
  */
-function getModelChoiceList()
-{
+function getModelChoiceList() {
     // We allow the choice of local models and official models
     // Associative array modelID => model data
-    $list = getDevicesList("local");
-    $list = array_merge($list, getDevicesList("Abeille"));
+    $list = getModelsList("local");
+    $list = array_merge($list, getModelsList("Abeille"));
 
     // Retrieve the current model of the equipment (if it has one)
     $eqId = (int) $_POST['eqId'];
@@ -86,8 +83,7 @@ function getModelChoiceList()
  * forces it to 'manual' so that the model is no longer modified automatically
  * from zigbee signature at equipment announcement.
  */
-function setModelToDevice()
-{
+function setModelToDevice() {
     // Retrieving equipment
     $eqId = (int) $_POST['eqId'];
     $eqLogic = eqLogic::byId($eqId);
@@ -156,8 +152,7 @@ function setModelToDevice()
  * Restores normal (automatic) model selection for equipment.
  * (= the model can be detected again by Abeille at the next announcement of the equipment)
  */
-function disableManualModelForDevice()
-{
+function disableManualModelForDevice() {
     // Retrieving equipment
     $eqId = (int) $_POST['eqId'];
     $eqLogic = eqLogic::byId($eqId);
@@ -182,70 +177,68 @@ function disableManualModelForDevice()
 }
 
 
-
 /** Code from .tools\gen_devices_list.php  */
 // TODO refactor to avoid code duplication
 
 /* Get list of supported devices ($from="Abeille"), or user/custom ones ($from="local")
         Returns: Associative array; $devicesList[$identifier] = array(), or false if error */
-function getDevicesList($from = "Abeille")
-{
-    $devicesList = [];
+// function getModelsList($from = "Abeille") {
+//     $devicesList = [];
 
-    if ($from == "Abeille")
-        $rootDir = devicesDir;
-    else if ($from == "local")
-        $rootDir = devicesLocalDir;
-    else {
-        echo ("ERROR: Emplacement JSON '" . $from . "' invalide\n");
-        return false;
-    }
+//     if ($from == "Abeille")
+//         $rootDir = modelsDir;
+//     else if ($from == "local")
+//         $rootDir = modelsLocalDir;
+//     else {
+//         echo ("ERROR: Emplacement JSON '" . $from . "' invalide\n");
+//         return false;
+//     }
 
-    $dh = opendir($rootDir);
-    if ($dh === false) {
-        echo ('ERROR: getDevicesList(): opendir(' . $rootDir . ')\n');
-        return false;
-    }
-    while (($dirEntry = readdir($dh)) !== false) {
-        /* Ignoring some entries */
-        if (in_array($dirEntry, array(".", "..")))
-            continue;
-        $fullPath = $rootDir . $dirEntry;
-        if (!is_dir($fullPath))
-            continue;
+//     $dh = opendir($rootDir);
+//     if ($dh === false) {
+//         echo ('ERROR: getModelsList(): opendir(' . $rootDir . ')\n');
+//         return false;
+//     }
+//     while (($dirEntry = readdir($dh)) !== false) {
+//         /* Ignoring some entries */
+//         if (in_array($dirEntry, array(".", "..")))
+//             continue;
+//         $fullPath = $rootDir . $dirEntry;
+//         if (!is_dir($fullPath))
+//             continue;
 
-        $fullPath = $rootDir . $dirEntry . '/' . $dirEntry . ".json";
-        if (!file_exists($fullPath))
-            continue; // No local JSON model. Maybe just an auto-discovery ?
+//         $fullPath = $rootDir . $dirEntry . '/' . $dirEntry . ".json";
+//         if (!file_exists($fullPath))
+//             continue; // No local JSON model. Maybe just an auto-discovery ?
 
-        $dev = array(
-            'modelName' => $dirEntry,
-            'modelSource' => $from
-        );
+//         $dev = array(
+//             'modelName' => $dirEntry,
+//             'modelSource' => $from
+//         );
 
-        /* Check if config is compliant with other device identification */
-        $content = file_get_contents($fullPath);
-        $devConf = json_decode($content, true);
-        $devConf = $devConf[$dirEntry]; // Removing top key
-        $dev['manufacturer'] = isset($devConf['manufacturer']) ? $devConf['manufacturer'] : '';
-        $dev['model'] = isset($devConf['model']) ? $devConf['model'] : '';
-        $dev['type'] = $devConf['type'];
-        $dev['icon'] = $devConf['configuration']['icon'];
-        $devicesList[$dirEntry] = $dev;
+//         /* Check if config is compliant with other device identification */
+//         $content = file_get_contents($fullPath);
+//         $devConf = json_decode($content, true);
+//         $devConf = $devConf[$dirEntry]; // Removing top key
+//         $dev['manufacturer'] = isset($devConf['manufacturer']) ? $devConf['manufacturer'] : '';
+//         $dev['model'] = isset($devConf['model']) ? $devConf['model'] : '';
+//         $dev['type'] = $devConf['type'];
+//         $dev['icon'] = $devConf['configuration']['icon'];
+//         $devicesList[$dirEntry] = $dev;
 
-        if (isset($devConf['alternateIds'])) {
-            $idList = explode(',', $devConf['alternateIds']);
-            foreach ($idList as $id) {
-                echo ("getDevicesList(): Alternate ID '" . $id . "' for '" . $dirEntry . "'\n");
-                $dev = array(
-                    'modelName' => $dirEntry,
-                    'modelSource' => $from
-                );
-                $devicesList[$id] = $dev;
-            }
-        }
-    }
-    closedir($dh);
+//         if (isset($devConf['alternateIds'])) {
+//             $idList = explode(',', $devConf['alternateIds']);
+//             foreach ($idList as $id) {
+//                 echo ("getModelsList(): Alternate ID '" . $id . "' for '" . $dirEntry . "'\n");
+//                 $dev = array(
+//                     'modelName' => $dirEntry,
+//                     'modelSource' => $from
+//                 );
+//                 $devicesList[$id] = $dev;
+//             }
+//         }
+//     }
+//     closedir($dh);
 
-    return $devicesList;
-}
+//     return $devicesList;
+// }

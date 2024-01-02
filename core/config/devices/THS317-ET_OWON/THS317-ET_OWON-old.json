@@ -1,0 +1,55 @@
+{
+    "THS317-ET_OWON-old": {
+        "comment": "Special model for old devices with EP 03. To be used as a 'forced model'",
+        "manufacturer": "Owon",
+        "zbManufacturer": "OWON",
+        "model": "THS317-ET",
+        "type": "Owon multi-sensor 1st gen",
+        "genericType": "Environment",
+        "timeout": "60",
+        "category": {
+            "heating": "1"
+        },
+        "comment": "WARNING: Recent devices are using EP01 while old one are on EP03 (see #2379)",
+        "configuration": {
+            "icon": "Owon-THS317-ET",
+            "mainEP": "03",
+            "batteryType": "2x1.5V AAA"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "isVisible": "1"
+            },
+            "Bind 0402-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=300&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "SetReporting 0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3300",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 30 to 55mins"
+            }
+        }
+    }
+}

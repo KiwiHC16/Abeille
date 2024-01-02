@@ -13,8 +13,8 @@
 
     /* Get list of supported devices ($from="Abeille"), or user/custom ones ($from="local")
     Returns: false if error
-        or associative array $modelsList[$modelName] = array(
-            'modelSig' => model signature
+        or associative array $modelsList[$modelSig+$modelVariant] = array(
+            'modelSig' => model signature (the Zigbee signature that leads to this model)
             'modelName' => model file name WITHOUT '.json' extension
             'modelSource' => model file location ('Abeille' or 'local')
             'modelPath' => OPTIONAL: Path relative to 'modelSource' (default='<modelName>/<modelName>.json')

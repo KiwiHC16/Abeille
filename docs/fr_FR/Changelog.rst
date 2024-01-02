@@ -6,6 +6,7 @@ ChangeLog
 - Interne: Cmd: Plus que 3 niveaux de priorités.
 - Owon-THS317-ET: Ajout d'un modèle pour les vieux équipements (EP=03 au lieu de 01, voir 2319).
 - Interne: Nouvelle lib 'AbeilleModels.php'.
+- Page compatibilité: Mise-à-jour.
 
 231231-STABLE-1
 ---------------

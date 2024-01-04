@@ -361,19 +361,19 @@
          * Read given device configuration from JSON file and associated commands.
          * 'modelSig': Model signature (!= modelName if alternate signature)
          * 'modelName': JSON file name without extension
-         * 'from': JSON file location (default=Abeille, or 'local')
+         * 'src': JSON file location (default=Abeille, or 'local')
          * 'mode': 0/default=load commands too, 1=split cmd call & file
          * Return: device associative array WITHOUT top level key (modelSig) or false if error.
          */
-        public static function getDeviceModel($modelSig, $modelName, $from="Abeille", $mode=0) {
-            // log::add('Abeille', 'debug', 'getDeviceModel start, modelName='.$modelName.", from=".$from);
+        public static function getDeviceModel($modelSig, $modelName, $src="Abeille", $mode=0) {
+            log::add('Abeille', 'debug', "getDeviceModel(${modelSig}, ${modelName}, ${src}, ${mode})");
 
             if ($modelName == '') {
                 log::add('Abeille', 'error', "  getDeviceModel(): 'modelName' vide !");
                 return false;
             }
 
-            if (($from == 'Abeille') || ($from == ''))
+            if (($src == 'Abeille') || ($src == ''))
                 $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
             else
                 $modelPath = devicesLocalDir.$modelName.'/'.$modelName.'.json';
@@ -397,7 +397,7 @@
             $device = $device[$modelName]; // Removing top key
             $device['modelSig'] = ($modelSig != '') ? $modelSig : $modelName;
             $device['jsonId'] = $modelName;
-            $device['jsonLocation'] = $from; // Official device or local one ?
+            $device['jsonLocation'] = $src; // Official device or local one ?
 
             /* Alternate signature support */
             if ($device['modelSig'] != $modelName) {

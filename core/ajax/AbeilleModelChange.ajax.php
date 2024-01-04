@@ -37,7 +37,7 @@ if (!isConnect('admin')) {
     throw new Exception('401 Unauthorized');
 }
 
-require_once __DIR__ . '/../php/AbeilleModels.php'; // Libray to deal with models
+require_once __DIR__ . '/../php/AbeilleModels.php'; // Library to deal with models
 
 // Perform the requested action
 $action = $_POST['action'];

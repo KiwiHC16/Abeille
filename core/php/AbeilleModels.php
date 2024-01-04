@@ -11,7 +11,7 @@
 
     include_once __DIR__.'/../php/AbeilleLog.php'; // logMessage(), logDebug()
 
-    /* Get list of supported devices ($from="Abeille"), or user/custom ones ($from="local")
+    /* Get list of supported devices ($src="Abeille"), or user/custom ones ($src="local")
     Returns: false if error
         or associative array $modelsList[$modelSig+$modelVariant] = array(
             'modelSig' => model signature (the Zigbee signature that leads to this model)
@@ -23,15 +23,15 @@
             'type' => equipment short description
             'icon' => equipment associated icon
         ) */
-    function getModelsList($from = "Abeille") {
+    function getModelsList($src = "Abeille") {
         $devicesList = [];
 
-        if ($from == "Abeille")
+        if ($src == "Abeille")
             $rootDir = modelsDir;
-        else if ($from == "local")
+        else if ($src == "local")
             $rootDir = modelsLocalDir;
         else {
-            log::add('Abeille', 'error', "getModelsList(): Emplacement JSON '".$from."' invalide");
+            log::add('Abeille', 'error', "getModelsList(): Emplacement JSON '".$src."' invalide");
             return false;
         }
 
@@ -50,8 +50,8 @@
 
             /* Supporting multiple variant of a model (rare case)
                <modelName>/<modelName>.json
-               <modelName>/<modelName>-<variantX>.json
-               <modelName>/<modelName>-<variantY>.json */
+               <modelName>/<modelName>-<variantX>.json (can't be auto-detected)
+               <modelName>/<modelName>-<variantY>.json (can't be auto-detected) */
             $dh2 = opendir($fullPath);
             $deLen = strlen($dirEntry);
             while (($dirEntry2 = readdir($dh2)) !== false) {
@@ -66,7 +66,7 @@
                 $dev = array(
                     'modelSig' => $dirEntry,
                     'modelName' => $dirEntry2,
-                    'modelSource' => $from
+                    'modelSource' => $src
                 );
                 if ($dirEntry2 != $dirEntry)
                     $dev['modelPath'] = $dirEntry.'/'.$dirEntry2.'.json'; // It's a variant
@@ -115,58 +115,6 @@
                 }
             }
             closedir($dh2);
-
-            // $fullPath = $rootDir.$dirEntry.'/'.$dirEntry.".json";
-            // if (!file_exists($fullPath))
-            //     continue; // No model. Maybe just an auto-discovery ?
-
-            // $dev = array(
-            //     'modelSig' => $dirEntry,
-            //     'modelName' => $dirEntry,
-            //     'modelSource' => $from
-            // );
-
-            // $content = file_get_contents($fullPath);
-            // $devMod = json_decode($content, true); // Device model
-            // $devMod = $devMod[$dirEntry]; // Removing top key
-
-            // $dev['manufacturer'] = isset($devMod['manufacturer']) ? $devMod['manufacturer'] : '';
-            // $dev['model'] = isset($devMod['model']) ? $devMod['model']: '';
-            // $dev['type'] = isset($devMod['type']) ? $devMod['type'] : '';
-            // $dev['icon'] = isset($devMod['configuration']['icon']) ? $devMod['configuration']['icon'] : '';
-            // $devicesList[$dirEntry] = $dev;
-
-            // /* Any other equipments using the same model ? */
-            // if (isset($devMod['alternateIds'])) {
-            //     $ai = $devMod['alternateIds'];
-            //     /* Reminder:
-            //         "alternateIds": {
-            //             "alternateSigX": {
-            //                 "manufacturer": "manufX", // Optional
-            //                 "model": "modelX", // Optional
-            //                 "type": "typeX" // Optional
-            //                 "icon": "iconX" // Optional
-            //             },
-            //             "alternateSigY": {},
-            //             "alternateSigZ": {}
-            //         } */
-            //     foreach ($ai as $aId => $aIdVal) {
-            //         log::add('Abeille', 'debug', "getModelsList(): Alternate ID '".$aId."' for '".$dirEntry."'");
-            //         $devA = $dev; // modelName, modelSource & modelPath do not change
-            //         $devA['modelSig'] = $aId;
-
-            //         // manufacturer, model, type or icon can be overload
-            //         if (isset($aIdVal['manufacturer']))
-            //             $devA['manufacturer'] = $aIdVal['manufacturer'];
-            //         if (isset($aIdVal['model']))
-            //             $devA['model'] = $aIdVal['model'];
-            //         if (isset($aIdVal['type']))
-            //             $devA['type'] = $aIdVal['type'];
-            //         if (isset($aIdVal['icon']))
-            //             $devA['icon'] = $aIdVal['icon'];
-            //         $devicesList[$aId] = $devA;
-            //     }
-            // }
         }
         closedir($dh);
 

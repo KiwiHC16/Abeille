@@ -7,6 +7,8 @@ ChangeLog
 - Owon-THS317-ET: Ajout d'un modèle pour les vieux équipements (EP=03 au lieu de 01, voir 2319).
 - Interne: Nouvelle lib 'AbeilleModels.php'.
 - Page compatibilité: Mise-à-jour.
+- Interne: Abeille.class: Utilisation lib 'AbeilleModels.php'.
+- Interne: AbeilleTools/getDevicesList() remplacé par AbeilleModels/getModelsList()
 
 231231-STABLE-1
 ---------------

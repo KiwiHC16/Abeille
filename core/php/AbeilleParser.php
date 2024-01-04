@@ -465,8 +465,10 @@
         $queueXToParserMax = $abQueues["xToParser"]["max"];
 
         /* Init list of supported & user/custom devices */
-        $GLOBALS['supportedEqList'] = AbeilleTools::getDevicesList("Abeille");
-        $GLOBALS['customEqList'] = AbeilleTools::getDevicesList("local");
+        // $GLOBALS['supportedEqList'] = AbeilleTools::getDevicesList("Abeille");
+        $GLOBALS['supportedEqList'] = getModelsList("Abeille");
+        // $GLOBALS['customEqList'] = AbeilleTools::getDevicesList("local");
+        $GLOBALS['customEqList'] = getModelsList("local");
         logMessage('debug', 'customEqList='.json_encode( $GLOBALS['customEqList']));
 
         /* Init known devices list */

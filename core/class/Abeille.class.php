@@ -31,23 +31,9 @@
     include_once __DIR__.'/AbeilleCmd.class.php';
     include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
     include_once __DIR__.'/../php/AbeilleLog.php'; // logGetPluginLevel()
+    include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()
 
 class Abeille extends eqLogic {
-    // // Fonction dupliquée dans AbeilleParser.
-    // public static function volt2pourcent($voltage) {
-    //     $max = 3.135;
-    //     $min = 2.8;
-    //     if ($voltage / 1000 > $max) {
-    //         log::add('Abeille', 'debug', 'Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.');
-    //         return 100;
-    //     }
-    //     if ($voltage / 1000 < $min) {
-    //         log::add('Abeille', 'debug', 'Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.');
-    //         return 0;
-    //     }
-    //     return round(100 - ((($max - ($voltage / 1000)) / ($max - $min)) * 100));
-    // }
-
     /**
      * Jeedom requirement: returns health status.
      *
@@ -1115,61 +1101,6 @@ class Abeille extends eqLogic {
         // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
     }
 
-    // Tcharp38: Seems useless now.
-    // public static function fetchShortFromIEEE($IEEE, $checkShort)
-    // {
-    //     // Return:
-    //     // 0 : Short Address is aligned with the one received
-    //     // Short : Short Address is NOT aligned with the one received
-    //     // -1 : Error Nothing found
-
-    //     // $lookForIEEE = "000B57fffe490C2a";
-    //     // $checkShort = "2006";
-    //     // log::add('Abeille', 'debug', 'KIWI: start function fetchShortFromIEEE');
-    //     $abeilles = Abeille::byType('Abeille');
-
-    //     foreach ($abeilles as $abeille) {
-
-    //         if (strlen($abeille->getConfiguration('IEEE', 'none')) == 16) {
-    //             $IEEE_abeille = $abeille->getConfiguration('IEEE', 'none');
-    //         } else {
-    //             $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
-    //             if (is_object($cmdIEEE)) {
-    //                 $IEEE_abeille = $cmdIEEE->execCmd();
-    //                 if (strlen($IEEE_abeille) == 16) {
-    //                     $abeille->setConfiguration('IEEE', $IEEE_abeille); // si j ai l IEEE dans la cmd et pas dans le conf, je transfer, retro compatibility
-    //                     $abeille->save();
-    //                     $abeille->refresh();
-    //                 }
-    //             }
-    //         }
-
-    //         if ($IEEE_abeille == $IEEE) {
-
-    //             $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
-    //             if ($cmdShort) {
-    //                 if ($cmdShort->execCmd() == $checkShort) {
-    //                     // echo "Success ";
-    //                     // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return 0');
-    //                     return 0;
-    //                 } else {
-    //                     // echo "Pas success du tout ";
-    //                     // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
-    //                     // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
-    //                     // return $cmdShort->execCmd();
-    //                     // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
-    //                     return substr($abeille->getlogicalId(), -4);
-    //                 }
-
-    //                 return $return;
-    //             }
-    //         }
-    //     }
-
-    //     // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return -1');
-    //     return -1;
-    // }
-
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
     public static function checkInclusionStatus($dest)
     {
@@ -1254,34 +1185,6 @@ class Abeille extends eqLogic {
     //     return;
     // }
 
-    // Tcharp38: No longer required.
-    // This part is directly handled by parser for better reactivity mandatory for battery powered devices.
-    // public static function interrogateUnknowNE( $dest, $addr ) {
-    //     if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'Oui', 1 ) == 'Oui' ) {
-    //         log::add('Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, je ne cherche pas a le recupérer, param: blocage recuperation equipment.");
-    //         return;
-    //     }
-
-    //     if ($addr == "0000") return;
-
-    //     log::add('Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, j'essaye d interroger l equipement pour le créer.");
-
-    //     // EP 01
-    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "01");
-    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Default");
-    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceProfalux", "Default");
-
-    //     // EP 0B
-    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "0B");
-    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Hue");
-
-    //     // EP 03
-    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "03");
-    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "OSRAM");
-
-    //     return;
-    // }
-
     // TODO: To be moved in AbeilleTools. Could be used by parser too
     // Attempt to find model corresponding to given zigbee signature.
     // Returns: associative array('jsonId', 'jsonLocation') or false
@@ -1291,18 +1194,20 @@ class Abeille extends eqLogic {
         $identifier2 = $zbModelId;
 
         // Search by <zbModelId>_<zbManufId>, starting from local models list
-        $localModels = AbeilleTools::getDevicesList('local');
-        foreach ($localModels as $modelId => $model) {
-            if ($modelId == $identifier1) {
+        // $localModels = AbeilleTools::getDevicesList('local');
+        $localModels = getModelsList('local');
+        foreach ($localModels as $modelSig => $model) {
+            if ($modelSig == $identifier1) {
                 $identifier = $identifier1;
                 break;
             }
         }
         if (!isset($identifier)) {
             // Search by <zbModelId>_<zbManufId>, starting from offical models list
-            $officialModels = AbeilleTools::getDevicesList('Abeille');
-            foreach ($officialModels as $modelId => $model) {
-                if ($modelId == $identifier1) {
+            // $officialModels = AbeilleTools::getDevicesList('Abeille');
+            $officialModels = getModelsList('Abeille');
+            foreach ($officialModels as $modelSig => $model) {
+                if ($modelSig == $identifier1) {
                     $identifier = $identifier1;
                     break;
                 }
@@ -1310,8 +1215,8 @@ class Abeille extends eqLogic {
         }
         if (!isset($identifier)) {
             // Search by <zbModelId> in local models
-            foreach ($localModels as $modelId => $model) {
-                if ($modelId == $identifier2) {
+            foreach ($localModels as $modelSig => $model) {
+                if ($modelSig == $identifier2) {
                     $identifier = $identifier2;
                     break;
                 }
@@ -1319,8 +1224,8 @@ class Abeille extends eqLogic {
         }
         if (!isset($identifier)) {
             // Search by <zbModelId> in offical models
-            foreach ($officialModels as $modelId => $model) {
-                if ($modelId == $identifier2) {
+            foreach ($officialModels as $modelSig => $model) {
+                if ($modelSig == $identifier2) {
                     $identifier = $identifier2;
                     break;
                 }

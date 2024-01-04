@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240104-BETA-1
+-------------
+
 - Interne: Cmd: Regulation revue.
 - Profalux BSO: Modèle revu. Suppression 'lift' (idem 'Set Level').
 - Interne: Cmd: Plus que 3 niveaux de priorités.

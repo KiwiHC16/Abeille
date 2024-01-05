@@ -349,33 +349,34 @@
         /* Retrieve device configuration reading device JSON & associated commands JSON.
            'jsonId' is JSON device name without extension.
            Returns: status=0 if found, -1 else */
-        if (init('action') == 'readDeviceConfig') {
-            $jsonId = init('jsonId');
-            $jsonLocation = init('jsonLocation');
-            $mode = init('mode');
+        // No longer used
+        // if (init('action') == 'readDeviceConfig') {
+        //     $jsonId = init('jsonId');
+        //     $jsonLocation = init('jsonLocation');
+        //     $mode = init('mode');
 
-            $status = 0;
-            $error = "";
-            $content = "";
+        //     $status = 0;
+        //     $error = "";
+        //     $content = "";
 
-            if ($jsonLocation == "Abeille")
-                $fullPath = __DIR__.'/../config/devices/'.$jsonId.'/'.$jsonId.'.json';
-            else
-                $fullPath = __DIR__.'/../config/devices_local/'.$jsonId.'/'.$jsonId.'.json';
-            if (!file_exists($fullPath)) {
-                $status = -1;
-                $error = "Le fichier '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
-            } else {
-                $devModel = AbeilleTools::getDeviceModel('', $jsonId, $jsonLocation, $mode);
-                if ($devModel === false) {
-                    $status = -1;
-                    $error = "Le modèle '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
-                } else
-                    $content = json_encode($devModel);
-            }
+        //     if ($jsonLocation == "Abeille")
+        //         $fullPath = __DIR__.'/../config/devices/'.$jsonId.'/'.$jsonId.'.json';
+        //     else
+        //         $fullPath = __DIR__.'/../config/devices_local/'.$jsonId.'/'.$jsonId.'.json';
+        //     if (!file_exists($fullPath)) {
+        //         $status = -1;
+        //         $error = "Le fichier '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
+        //     } else {
+        //         $devModel = AbeilleTools::getDeviceModel('', $jsonId, $jsonLocation, $mode);
+        //         if ($devModel === false) {
+        //             $status = -1;
+        //             $error = "Le modèle '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
+        //         } else
+        //             $content = json_encode($devModel);
+        //     }
 
-            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));
-        }
+        //     ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));
+        // }
 
         /* Write device configuration.
            'jsonId' is JSON device name without extension.

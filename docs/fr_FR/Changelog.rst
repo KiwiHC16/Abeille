@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Réseau: Rework en cours 'graph des liens'.
+
 240104-BETA-1
 -------------
 

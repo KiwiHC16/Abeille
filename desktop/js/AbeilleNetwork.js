@@ -745,6 +745,7 @@ function displayLinksGraph(zgId) {
             for (rLogicId in lqiTable.routers) {
                 router = lqiTable.routers[rLogicId];
                 console.log("Adding router " + rLogicId + "=", router);
+
                 // console.log(
                 //     "Adding router " + rLogicId + " (" + router["name"] + ")"
                 // );
@@ -757,6 +758,7 @@ function displayLinksGraph(zgId) {
                     icon: router["icon"],
                 });
 
+                break; // TEMP
                 for (nLogicId in router.neighbors) {
                     neighbor = router.neighbors[nLogicId];
                     console.log("neighbor=", neighbor);
@@ -843,23 +845,20 @@ function displayLinksGraph(zgId) {
                     );
                 });
 
-            var idealLength = 150;
             var layout = Viva.Graph.Layout.forceDirected(graph, {
-                springLength: idealLength,
+                springLength: 150,
                 springCoeff: 0.0005,
                 stableThreshold: 0.1,
                 dragCoeff: 0.02,
                 gravity: -0.5,
             });
 
-            // $("#idLinksGraphTab svg").remove(); // Remove previous one
             $("#idLinksGraphTabSVG svg").remove(); // Remove previous one
 
             var renderer = Viva.Graph.View.renderer(graph, {
                 layout: layout,
                 graphics: graphics,
                 prerender: 10,
-                // container: document.getElementById("idLinksGraphTab"),
                 container: document.getElementById("idLinksGraphTabSVG"),
             });
             renderer.run();

@@ -397,7 +397,7 @@
         function deviceAnnounce($net, $addr, $ieee, $macCapa, $rejoin) {
             $eq = &getDevice($net, $addr, $ieee); // By ref
             // 'status' set to 'identifying' if new device
-            parserLog('debug', '  eq='.json_encode($eq));
+            parserLog('debug', '  eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
 
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
                 $eq['macCapa'] = $eq['customization']['macCapa'];
@@ -514,8 +514,8 @@
             foreach ($updates as $updType => $value) {
                 // Log only if relevant
                 if ($updType && ($eq['status'] != 'idle')) {
-                    $v = ($value === false) ? "false" : "'".$value."'";
-                    parserLog('debug', "  deviceUpdates('".$updType."', ".$v."): Status=".$eq['status']);
+                    $v = ($value === false) ? "false" : "'${value}'";
+                    parserLog('debug', "    '${updType}'=${v}. Status=".$eq['status']);
                 }
 
                 /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
@@ -602,7 +602,7 @@
             // Any new info for Abeille.class ?
             // Note: Updates are transmitted only if IEEE address is already known to have unique identification
             if ((count($abUpdates) != 0) && ($eq['ieee'] !== null)) {
-                parserLog('debug', '  Updated eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
+                parserLog('debug', '    Updated eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
                 $msg = array(
                     'type' => 'deviceUpdates',
                     'net' => $net,
@@ -636,14 +636,14 @@
                 $ret = false;
 
             if (!$eq['ieee']) {
-                parserLog('debug', '  Requesting IEEE');
+                parserLog('debug', '    Requesting IEEE');
                 msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
                 return $ret;
             }
             // IEEE is available
 
             if (!$eq['endPoints']) {
-                parserLog('debug', '  Requesting active endpoints list');
+                parserLog('debug', '    Requesting active endpoints list');
                 msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
                 return $ret;
             }
@@ -652,21 +652,21 @@
             // What about server clusters & groups ?
             foreach ($eq['endPoints'] as $epId2 => $ep2) {
                 if (!isset($ep2['servClusters'])) {
-                    parserLog('debug', '  Requesting simple descriptor for EP '.$epId2);
+                    parserLog('debug', '    Requesting simple descriptor for EP '.$epId2);
                     msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
                     break; // To reduce requests on first missing descriptor
                 } else if (strpos($ep2['servClusters'], '0004') !== false) {
                     if (isset($ep2['groups']))
-                        parserLog('debug', '  Groups='.json_encode($ep2['groups']));
+                        parserLog('debug', '    Groups='.json_encode($ep2['groups']));
                     if (!isset($eq['groups']) || !isset($eq['groups'][$epId2])) {
-                        parserLog('debug', '  Requesting groups membership for EP '.$epId2);
+                        parserLog('debug', '    Requesting groups membership for EP '.$epId2);
                         msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
                         break; // To reduce requests on first missing groups membership
                     }
                 }
             }
             if (!isset($eq['manufCode']) || ($eq['manufCode'] === null)) {
-                parserLog('debug', '  Requesting node descriptor');
+                parserLog('debug', '    Requesting node descriptor');
                 msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
             }
 
@@ -720,7 +720,7 @@
                         $missingTxt .= 'location';
                     }
                     if ($missing != '') {
-                        parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$epId2);
+                        parserLog('debug', '    Requesting '.$missingTxt.' from EP '.$epId2);
                         msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                         break; // Reducing requests on first missing stuff
                     }
@@ -756,7 +756,7 @@
                 /* ModelId UNsupported. Trying with 'location' */
                 $this->findModel($eq, 'location');
             } else { // Neither modelId nor location supported ?! Ouahhh...
-                parserLog('debug', "  WARNING: Neither modelId nor location supported => using default config.");
+                parserLog('debug', "    WARNING: Neither modelId nor location supported => using default config.");
                 $eq['jsonId'] = 'defaultUnknown';
                 $eq['jsonLocation'] = "Abeille";
             }
@@ -779,16 +779,16 @@
                 $profalux = (substr($eq['ieee'], 0, 6) == "20918A") ? true : false;
                 if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
-                        parserLog('debug', '  Profalux v2: Requesting binding table size.');
+                        parserLog('debug', '    Profalux v2: Requesting binding table size.');
                         msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
                         return false; // Remote still not binded with curtain
                     }
                     if ($eq['bindingTableSize'] == 0) {
-                        parserLog('debug', '  Profalux v2: Waiting remote to be binded.');
+                        parserLog('debug', '    Profalux v2: Waiting remote to be binded.');
                         msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
                         return false; // Remote still not binded with curtain
                     }
-                    parserLog('debug', '  Profalux v2: Remote binded. Let\'s configure.');
+                    parserLog('debug', '    Profalux v2: Remote binded. Let\'s configure.');
                 }
 
                 $this->deviceConfigure($net, $addr);
@@ -1710,9 +1710,9 @@
             else
                 $rejoin = "";
 
-            $msgDecoded = '004d/Device announce'.', Addr='.$addr.', ExtAddr='.$ieee.', MACCapa='.$macCapa;
-            if ($rejoin != "") $msgDecoded .= ', Rejoin='.$rejoin;
-            parserLog('debug', $dest.', Type='.$msgDecoded);
+            $m = '004d/Device announce'.', Addr='.$addr.', ExtAddr='.$ieee.', MACCapa='.$macCapa;
+            if ($rejoin != "") $m .= ', Rejoin='.$rejoin;
+            parserLog('debug', $dest.', Type='.$m);
 
             // Work-around for https://github.com/fairecasoimeme/ZiGatev2/issues/36#
             // Note: if no 8002 before (dev announce just after restart), better to ignore instead of accept a wrong dev announce.
@@ -1738,7 +1738,7 @@
                 $GLOBALS["dbgMonitorAddr"] = $addr;
             }
 
-            $this->whoTalked[] = $dest.'/'.$addr;
+            // $this->whoTalked[] = $dest.'/'.$addr;
 
             /* Send to client if required (EQ page opened) */
             $toCli = array(
@@ -2214,8 +2214,7 @@
 
             if ($status != "00") {
                 parserLog2('debug', $srcAddr, $m);
-                $m = '  Status != 0 => ignoring';
-                parserLog2('debug', $srcAddr, $m);
+                parserLog2('debug', $srcAddr, '  Status != 0 => ignoring');
                 return;
             }
 
@@ -2231,9 +2230,7 @@
                 }
             }
 
-            $m = $m.', EPCount='.$epCount
-               .', EPList='.$epList;
-            parserLog2('debug', $srcAddr, $m);
+            parserLog2('debug', $srcAddr, $m.', EPCount='.$epCount.', EPList='.$epList);
 
             // $this->whoTalked[] = $net.'/'.$srcAddr;
 
@@ -4527,7 +4524,7 @@
 
             // Any device key info updates ?
             if (count($devUpdates) != 0)
-                $this->deviceUpdates($dest, $srcAddr, '', $devUpdates);
+                $this->deviceUpdates($dest, $srcAddr, $srcEp, $devUpdates);
 
             // Something to report to main daemon ?
             if (count($attrReportN) > 0) {

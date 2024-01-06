@@ -369,10 +369,7 @@
             log::add('Abeille', 'debug', "getDeviceModel(${modelSig}, ${modelName}, ${src}, ${mode})");
 
             $dbg = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-            $line = $dbg[0]['line'] ?? '';
-            $function = $dbg[1]['function'] ?? '';
-            $file = $dbg[0]['file'] ?? '';
-            log::add('Abeille', 'debug', "BACKTRACE: line ${line}, func ${function}, file ${file}");
+            log::add('Abeille', 'debug', "BACKTRACE: ".json_encode($dbg, JSON_UNESCAPED_SLASHES));
 
             if ($modelName == '') {
                 log::add('Abeille', 'error', "  getDeviceModel(): 'modelName' vide !");

@@ -55,13 +55,18 @@
     // Reread Jeedom useful infos on eqLogic DB update
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {
+        logMessage('debug', "  #2675: updateDeviceFromDB(${eqId})");
         $eqLogic = eqLogic::byId($eqId);
         if (!is_object($eqLogic)) {
             logMessage('debug', "  ERROR: updateDeviceFromDB(): Equipment ID ${eqId} does not exist");
             return;
         }
+
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
+
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
 
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         if (!isset($GLOBALS['devices'][$net][$addr]) && ($ieee == '')) {
@@ -69,14 +74,12 @@
             return;
         }
 
-        if (!isset($GLOBALS['devices'][$net]))
-            $GLOBALS['devices'][$net] = [];
-
+        // Checking if known by AbeilleCmd
         $found = false;
         if (isset($GLOBALS['devices'][$net][$addr]))
             $found = true;
         if ($found == false) {
-            // Address may have changed following new 'device announce'
+            // Unknown: Address may have changed following new 'device announce'
             foreach ($GLOBALS['devices'][$net] as $addr2 => $eq2) {
                 if ($eq2['ieee'] == $ieee) {
                     $found = true;
@@ -88,7 +91,7 @@
             }
         }
         if ($found == false) {
-            // Equipment may have been migrated from another network
+            // Unknown: Equipment may have been migrated from another network
             foreach ($GLOBALS['devices'] as $net2 => $devices2) { // Go thru all networks
                 if ($net2 == $net)
                     continue; // This network has already been checked
@@ -105,10 +108,8 @@
         }
 
         // Whatever found or new... updating infos used by cmd process
-        if (!isset($GLOBALS['devices'][$net]))
-            $GLOBALS['devices'][$net] = [];
-
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        logMessage('debug', "  #2675: eqModel=".json_encode($eqModel));
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
         $eq = array(

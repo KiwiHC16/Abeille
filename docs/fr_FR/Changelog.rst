@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Réseau: Rework en cours 'graph des liens'.
+- Internes: Corrections suite debug 2675 (Modèle 'rucheCommand' inconnu).
 
 240104-BETA-1
 -------------

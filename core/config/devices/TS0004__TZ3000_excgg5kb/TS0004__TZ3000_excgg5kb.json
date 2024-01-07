@@ -1,14 +1,14 @@
 {
     "TS0004__TZ3000_excgg5kb": {
         "manufacturer": "MHCOZY",
-        "model": "ZG-0005-RF",
+        "model": "ZG-005-RF",
         "type": "Mhcozy 4 chan relay",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Mhcozy-ZG-0005-RF",
+            "icon": "Mhcozy-ZG-005-RF",
             "mainEP": "01"
         },
         "alternateIds": {

@@ -885,7 +885,7 @@
          * - Cmds DB: 'onGroupBroadcast'/'offGroupBroadcast' replaced by 'cmd-0006'
          * - Cmds DB: 'ab::trigOut' syntax updated to associative array
          */
-        if (intval($dbVersion) < 20231106) {
+        if (intval($dbVersion) < 20240107) {
             // 'eqLogic' + 'cmd' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -907,6 +907,7 @@
                     'TRADFRIbulbE14WS470lm' => 'Ikea-BulbE14-Candle',
                     'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
                     'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
+                    'Mhcozy-ZG-0005-RF'=> 'Mhcozy-ZG-005-RF'
                 );
                 $curIcon = $eqLogic->getConfiguration('ab::icon', '');
                 if (($curIcon != '') && isset($iconsList[$curIcon])) {

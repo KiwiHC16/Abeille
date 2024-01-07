@@ -704,9 +704,9 @@
                     cmdLog("debug", "  clearMessages for ".$msg['net']."/".$msg['addr']);
                     foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $p => $q) {
                         cmdLog("debug", "  p=${p}, q=".json_encode($q));
-                        while (count($q) != 0) {
+                        while (count($GLOBALS['zigates'][$zgId]['cmdQueue'][$p]) != 0) {
                             $updated = false; // True if queue updated
-                            foreach ($q as $cIdx => $c) {
+                            foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'][$p] as $cIdx => $c) {
                                 cmdLog("debug", "  cIdx=${cIdx}, c=".json_encode($c));
                                 if ($c['addr'] != $msg['addr'])
                                     continue;
@@ -715,7 +715,7 @@
                                 $updated = true; // Queue updated. Foreach must restart from scratch
                                 break;
                             }
-                            if (!$updated)
+                            if ($updated == false)
                                 break;
                         }
                     }

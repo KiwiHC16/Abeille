@@ -16,7 +16,7 @@
             "OPTARIF": {
                 "use": "inf_generic-String",
                 "params": "clustId=FF66&attrId=0000",
-                "logicalId": "OPTARIF",
+                "logicalId": "FF66-01-0000",
                 "isVisible": 1
             },
             "Get OPTARIF": {
@@ -28,7 +28,7 @@
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B01&attrId=000D",
                 "unit": "A",
-                "logicalId": "ISOUSC",
+                "logicalId": "0B01-01-000D",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -40,7 +40,7 @@
             "ADC0": {
                 "use": "inf_generic-String",
                 "params": "clustId=0702&attrId=0308",
-                "logicalId": "ADC0"
+                "logicalId": "0702-01-0308"
             },
             "Get ADC0": {
                 "use": "act_zbReadAttribute",
@@ -51,7 +51,7 @@
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0000",
                 "unit": "Wh",
-                "logicalId": "BASE",
+                "logicalId": "0702-01-0000",
                 "isVisible": 1
             },
             "Get BASE": {
@@ -114,7 +114,7 @@
             "IINST": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B04&attrId=0508",
-                "logicalId": "IINST"
+                "logicalId": "0B04-01-0508"
             },
             "Get IINST": {
                 "use": "act_zbReadAttribute",
@@ -144,7 +144,7 @@
             "IMAX": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B04&attrId=050A",
-                "logicalId": "IMAX"
+                "logicalId": "0B04-01-050A"
             },
             "Get-IMAX": {
                 "use": "act_zbReadAttribute",

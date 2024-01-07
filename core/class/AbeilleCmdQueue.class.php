@@ -636,10 +636,7 @@
                 // }
         }
 
-        // Process 8000, 8011, 8012 or 8702 messages
-        /**
-         * Loop to read all messages and quit when no more message (break loop)
-         */
+        // Process high priority queue from parser (8000, 8011, 8012 or 8702 messages)
         function processAcksQueue() {
 
             // cmdLog("debug", __FUNCTION__." Begin");
@@ -699,6 +696,29 @@
                     configureZigate($zgId); // Configure Zigate
                     continue;
                 }
+
+                // Clear all pending messages for net/addr device.
+                // This is useful when short addr changed, due to (multiple) device announce.
+                // TODO: Device may change network too
+                if ($msg['type'] == "clearMessages") {
+                    cmdLog("debug", "  clearMessages for ".$msg['net']."/".$msg['addr']);
+                    foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $p => $q) {
+                        while (true) {
+                            $updated = false;
+                            foreach ($q as $cIdx => $c) {
+                                if ($c['addr'] != $msg['addr'])
+                                    continue;
+                                array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$p], $cIdx, 1);
+                                cmdLog("debug", "  Removed Pri/Idx=${p}/${$cIdx}");
+                                $updated = true; // Queue updated. Foreach must restart from scratch
+                                break;
+                            }
+                            if (!$updated)
+                                break;
+                        }
+                    }
+                    continue;
+                } // End type=='clearMessages'
 
                 // PDM restore response (Abeille's ABxx-yyyy specific FW)
                 if ($msg['type'] == "AB03") {

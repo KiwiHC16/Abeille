@@ -6,6 +6,7 @@ ChangeLog
 - Interne: Parser: Correction 2678 ('getSimpleDescriptor': Paramètre 'ep' vide !).
 - ZG-003-RF: Support préliminaire (2408).
 - Zlinky: Mise-à-jour du modèle (2678).
+- Interne: Cmd: Suppression des messages pending suite changement adresse.
 
 240104-BETA-1
 -------------

@@ -296,7 +296,15 @@
 
                 $GLOBALS['eqList'][$net][$addr] = $eq;
                 unset($GLOBALS['eqList'][$net][$oldAddr]);
-                parserLog('debug', '  EQ already known: Addr updated from '.$oldAddr.' to '.$addr);
+                parserLog('debug', "  EQ already known: Addr updated from ${oldAddr} to ${addr}");
+
+                // Removing any cmd pending message for old address since device would no longer answer
+                $msg = array(
+                    'type' => 'clearMessages',
+                    'net' => $net,
+                    'addr' => $oldAddr
+                );
+                msgToCmdAck($msg);
 
                 // Informing Abeille about short addr change
                 $msg = array(

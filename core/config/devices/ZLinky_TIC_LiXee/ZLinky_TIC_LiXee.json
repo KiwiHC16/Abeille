@@ -14,9 +14,8 @@
         },
         "commands": {
             "OPTARIF": {
-                "use": "inf_generic-NumericBadge",
+                "use": "inf_generic-String",
                 "params": "clustId=FF66&attrId=0000",
-                "subType": "string",
                 "logicalId": "OPTARIF",
                 "isVisible": 1
             },
@@ -39,9 +38,8 @@
                 "execAtCreation": 1
             },
             "ADC0": {
-                "use": "inf_generic-NumericBadge",
+                "use": "inf_generic-String",
                 "params": "clustId=0702&attrId=0308",
-                "subType": "string",
                 "logicalId": "ADC0"
             },
             "Get ADC0": {

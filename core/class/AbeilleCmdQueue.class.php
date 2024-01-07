@@ -703,9 +703,11 @@
                 if ($msg['type'] == "clearMessages") {
                     cmdLog("debug", "  clearMessages for ".$msg['net']."/".$msg['addr']);
                     foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $p => $q) {
-                        while (true) {
-                            $updated = false;
+                        cmdLog("debug", "  p=${p}, q=".json_encode($q));
+                        while (count($q) != 0) {
+                            $updated = false; // True if queue updated
                             foreach ($q as $cIdx => $c) {
+                                cmdLog("debug", "  cIdx=${cIdx}, c=".json_encode($c));
                                 if ($c['addr'] != $msg['addr'])
                                     continue;
                                 array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$p], $cIdx, 1);

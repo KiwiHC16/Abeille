@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240107-BETA-1
+-------------
+
 - Réseau: Rework en cours 'graph des liens'.
 - Interne: Corrections suite debug 2675 (Modèle 'rucheCommand' inconnu).
 - Interne: Parser: Correction 2678 ('getSimpleDescriptor': Paramètre 'ep' vide !).

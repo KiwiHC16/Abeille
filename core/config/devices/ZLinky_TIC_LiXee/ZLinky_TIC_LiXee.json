@@ -47,70 +47,6 @@
                 "params": "clustId=0702&attrId=0308",
                 "execAtCreation": 1
             },
-            "BASE": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0000",
-                "unit": "Wh",
-                "logicalId": "0702-01-0000",
-                "isVisible": 1
-            },
-            "Get BASE": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0702&attrId=0000",
-                "execAtCreation": 1
-            },
-            "HCHC": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0102",
-                "logicalId": "HCHC",
-                "isVisible": 1
-            },
-            "HCHP": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0100",
-                "logicalId": "HCHP",
-                "isVisible": 1
-            },
-            "EJPHN": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0100",
-                "logicalId": "EJPHN"
-            },
-            "EJPHPM": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0102",
-                "logicalId": "EJPHPM"
-            },
-            "BBRHCJB": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0100",
-                "logicalId": "BBRHCJB"
-            },
-            "BBRHPJB": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0102",
-                "logicalId": "BBRHPJB"
-            },
-            "BBRHCJW": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0104",
-                "logicalId": "BBRHCJW"
-            },
-            "BBRHPJW": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0106",
-                "logicalId": "BBRHPJW"
-            },
-            "BBRHCJR": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=0108",
-                "logicalId": "BBRHCJR"
-            },
-            "BBRHPJR": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0702&attrId=010A",
-                "logicalId": "BBRHPJR"
-            },
             "IINST": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B04&attrId=0508",
@@ -166,6 +102,90 @@
                 "params": "clustId=0B04&attrId=0A0A",
                 "logicalId": "IMAX3"
             },
+
+            "BASE": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0000",
+                "unit": "Wh",
+                "logicalId": "0702-01-0000",
+                "isVisible": 1
+            },
+            "Get BASE": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0702&attrId=0000",
+                "execAtCreation": 1
+            },
+
+            "HCHC": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0102",
+                "logicalId": "HCHC",
+                "isVisible": 1
+            },
+            "HCHP": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0100",
+                "logicalId": "HCHP",
+                "isVisible": 1
+            },
+            "HHPHC": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0002",
+                "logicalId": "HHPHC"
+            },
+
+            "EJPHN": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0100",
+                "logicalId": "EJPHN"
+            },
+            "EJPHPM": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0102",
+                "logicalId": "EJPHPM"
+            },
+            "PEJP": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0004",
+                "logicalId": "PEJP"
+            },
+            
+            "BBRHCJB": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0100",
+                "logicalId": "BBRHCJB"
+            },
+            "BBRHPJB": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0102",
+                "logicalId": "BBRHPJB"
+            },
+            "BBRHCJW": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0104",
+                "logicalId": "BBRHCJW"
+            },
+            "BBRHPJW": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0106",
+                "logicalId": "BBRHPJW"
+            },
+            "BBRHCJR": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0108",
+                "logicalId": "BBRHCJR"
+            },
+            "BBRHPJR": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=010A",
+                "logicalId": "BBRHPJR"
+            },
+            "DEMAIN": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0001",
+                "logicalId": "DEMAIN"
+            },
+            
             "PMAX": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B04&attrId=050D",
@@ -181,25 +201,10 @@
                 "params": "clustId=0702&attrId=0020",
                 "logicalId": "PTEC"
             },
-            "DEMAIN": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=FF66&attrId=0001",
-                "logicalId": "DEMAIN"
-            },
-            "HHPHC": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=FF66&attrId=0002",
-                "logicalId": "HHPHC"
-            },
             "PPOT": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=FF66&attrId=0003",
                 "logicalId": "PPOT"
-            },
-            "PEJP": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=FF66&attrId=0004",
-                "logicalId": "PEJP"
             },
             "ADPS": {
                 "use": "inf_generic-NumericBadge",

@@ -711,7 +711,7 @@
                                 if ($c['addr'] != $msg['addr'])
                                     continue;
                                 array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$p], $cIdx, 1);
-                                cmdLog("debug", "  Removed Pri/Idx=${p}/${$cIdx}");
+                                cmdLog("debug", "  Removed Pri/Idx=${p}/${cIdx}");
                                 $updated = true; // Queue updated. Foreach must restart from scratch
                                 break;
                             }

@@ -102,6 +102,31 @@
                 "params": "clustId=0B04&attrId=0A0A",
                 "logicalId": "IMAX3"
             },
+            "PMAX": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050D",
+                "logicalId": "0B04-01-050D"
+            },
+            "PAPP": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050F",
+                "logicalId": "0B04-01-050F"
+            },
+            "SetReporting PAPP": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=050F&attrType=21",
+                "execAtCreation": "yes"
+            },
+            "ADPS": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0005",
+                "logicalId": "FF66-01-0005"
+            },
+            "SetReporting ADPS": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=FF66&attrId=0005&attrType=21",
+                "execAtCreation": "yes"
+            },
 
             "BASE": {
                 "use": "inf_generic-NumericBadge",
@@ -131,7 +156,12 @@
             "HHPHC": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=FF66&attrId=0002",
-                "logicalId": "HHPHC"
+                "logicalId": "FF66-01-0002"
+            },
+            "Get HHPHC": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FF66&attrId=0002",
+                "execAtCreation": 1
             },
 
             "EJPHN": {
@@ -186,16 +216,6 @@
                 "logicalId": "DEMAIN"
             },
             
-            "PMAX": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=050D",
-                "logicalId": "PMAX"
-            },
-            "PAPP": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=0B04&attrId=050F",
-                "logicalId": "PAPP"
-            },
             "PTEC": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0020",
@@ -205,11 +225,6 @@
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=FF66&attrId=0003",
                 "logicalId": "PPOT"
-            },
-            "ADPS": {
-                "use": "inf_generic-NumericBadge",
-                "params": "clustId=FF66&attrId=0005",
-                "logicalId": "ADPS"
             }
         }
     }

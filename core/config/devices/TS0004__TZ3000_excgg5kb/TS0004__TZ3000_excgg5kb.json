@@ -2,7 +2,7 @@
     "TS0004__TZ3000_excgg5kb": {
         "manufacturer": "MHCOZY",
         "model": "ZG-005-RF",
-        "type": "Mhcozy 4 chan relay",
+        "type": "Smart Switch 4 chan relay",
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -13,9 +13,12 @@
         },
         "alternateIds": {
             "TS0004__TZ3000_wkr3jqmr": {
-                "manufacturer": "Smart Switch",
-                "model": "ZG-005-RF",
-                "type": "Smart Switch 4 chan relay"
+                "manufacturer": "Smart Switch"
+            },
+            "TS0004__TZ3000_u3oupgdy": {
+                "manufacturer": "Tuya",
+                "model": "ZG-003-RF",
+                "icon": "Tuya-ZG-003-RF"
             }
         },
         "commands": {

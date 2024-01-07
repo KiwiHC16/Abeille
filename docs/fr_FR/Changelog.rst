@@ -4,7 +4,7 @@ ChangeLog
 - Réseau: Rework en cours 'graph des liens'.
 - Interne: Corrections suite debug 2675 (Modèle 'rucheCommand' inconnu).
 - Interne: Parser: Correction 2678 ('getSimpleDescriptor': Paramètre 'ep' vide !).
-- ZG-003-RF: Support préliminaire ().
+- ZG-003-RF: Support préliminaire (2408).
 
 240104-BETA-1
 -------------

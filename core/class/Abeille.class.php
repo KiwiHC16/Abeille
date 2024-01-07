@@ -1723,8 +1723,9 @@ class Abeille extends eqLogic {
 
         /* Parser has found device infos to update. */
         if ($msg['type'] == "deviceUpdates") {
-            log::add('Abeille', 'debug', "msgFromParser(): ".$net.'/'.$addr.'/'.$ep.", Device updates, ".json_encode($msg, JSON_UNESCAPED_SLASHES));
+            log::add('Abeille', 'debug', "msgFromParser(): '${net}/${addr}/${ep}' device updates, ".json_encode($msg['updates'], JSON_UNESCAPED_SLASHES));
 
+            $eqChanged = false;
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
                 if (!isset($msg['updates']['ieee'])) {
@@ -1744,15 +1745,15 @@ class Abeille extends eqLogic {
                     if ($net != $net2)
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Migrated from '${net2}/${addr2}' to '${net}/${addr}'");
                     else
-                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'addr' updated to ${addr}");
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Addr updated from ${addr2} to ${addr}");
                     $eqLogic->setIsEnable(1);
                     $eqChanged = true;
                     $informCmd = true;
+                    break;
                 }
             }
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
             $zigbeeChanged = false;
-            $eqChanged = false;
             foreach ($msg['updates'] as $updKey => $updVal) {
                 if ($updKey == 'ieee')
                     continue; // Already treated
@@ -1808,14 +1809,13 @@ class Abeille extends eqLogic {
                     $zigbeeChanged = true;
                     log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][swBuildId]' updated to '${updVal}'");
                 }
-                if ($zigbeeChanged) {
-                    $eqLogic->setConfiguration('ab::zigbee', $zigbee);
-                    $eqChanged = true;
-                }
+            }
+            if ($zigbeeChanged) {
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqChanged = true;
             }
             if ($eqChanged)
                 $eqLogic->save();
-
             if (isset($informCmd)) {
                 // Inform cmd that EQ config has changed
                 $msg = array(

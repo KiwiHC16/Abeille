@@ -238,6 +238,27 @@
         return true;
     } // End configureDevice()
 
+    // Remove all pending messages for given zgId/addr.
+    // Useful for ex when addr changed on device announce.
+    function clearPending($zgId, $addr) {
+        cmdLog("debug", "  clearPending(${zgId}, ${addr})");
+        foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $pri => $q) {
+            cmdLog("debug", "  pri=${pri}, q=".json_encode($q));
+            $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]);
+            for ($cmdIdx = 0; $cmdIdx < $count; ) {
+                $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$pri][$cmdIdx];
+                if ($cmd['addr'] == $addr) {
+                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri], $cmdIdx, 1);
+                    // Note: cmd @cmdIdx is the next cmd after array_splice
+                    cmdLog("debug", "  Removed Pri/Idx=${pri}/${cmdIdx}");
+                    $count--;
+                    continue;
+                }
+                $cmdIdx++;
+            }
+        }
+    }
+
     logSetConf("AbeilleCmd.log", true);
     logMessage('info', ">>> {{Démarrage d'AbeilleCmd}}");
 

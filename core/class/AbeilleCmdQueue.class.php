@@ -702,23 +702,24 @@
                 // TODO: Device may change network too
                 if ($msg['type'] == "clearMessages") {
                     cmdLog("debug", "  clearMessages for ".$msg['net']."/".$msg['addr']);
-                    foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $p => $q) {
-                        cmdLog("debug", "  p=${p}, q=".json_encode($q));
-                        while (count($GLOBALS['zigates'][$zgId]['cmdQueue'][$p]) != 0) {
-                            $updated = false; // True if queue updated
-                            foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'][$p] as $cIdx => $c) {
-                                cmdLog("debug", "  cIdx=${cIdx}, c=".json_encode($c));
-                                if ($c['addr'] != $msg['addr'])
-                                    continue;
-                                array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$p], $cIdx, 1);
-                                cmdLog("debug", "  Removed Pri/Idx=${p}/${cIdx}");
-                                $updated = true; // Queue updated. Foreach must restart from scratch
-                                break;
-                            }
-                            if ($updated == false)
-                                break;
-                        }
-                    }
+                    clearPending($zgId, $msg['addr']);
+                    // foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $p => $q) {
+                    //     cmdLog("debug", "  p=${p}, q=".json_encode($q));
+                    //     while (count($GLOBALS['zigates'][$zgId]['cmdQueue'][$p]) != 0) {
+                    //         $updated = false; // True if queue updated
+                    //         foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'][$p] as $cIdx => $c) {
+                    //             cmdLog("debug", "  cIdx=${cIdx}, c=".json_encode($c));
+                    //             if ($c['addr'] != $msg['addr'])
+                    //                 continue;
+                    //             array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$p], $cIdx, 1);
+                    //             cmdLog("debug", "  Removed Pri/Idx=${p}/${cIdx}");
+                    //             $updated = true; // Queue updated. Foreach must restart from scratch
+                    //             break;
+                    //         }
+                    //         if ($updated == false)
+                    //             break;
+                    //     }
+                    // }
                     continue;
                 } // End type=='clearMessages'
 
@@ -878,11 +879,13 @@
                 if (isset($removeCmd) && $removeCmd) {
 
                     $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                    cmdLog('debug', "  Removing cmd from queue (Pri/Idx/Count=${sentPri}/${sentIdx}/${count})");
+                    cmdLog('debug', "  Removing cmd from queue (Pri=${sentPri}/Idx=${sentIdx}/Count=${count})");
                     // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                    cmdLog('debug', '  BEFORE: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
+                    // cmdLog('debug', '  BEFORE: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
-                    cmdLog('debug', '  AFTER: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
+                    // cmdLog('debug', '  AFTER: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
+                    $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
+                    cmdLog('debug', "  Queue count after=${count}");
 
                     $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
                 }

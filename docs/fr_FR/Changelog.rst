@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Cmd: clearPending().
+
 240107-BETA-1
 -------------
 

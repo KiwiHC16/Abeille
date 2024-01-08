@@ -159,12 +159,22 @@
                 "logicalId": "0702-01-0102",
                 "isVisible": 1
             },
+            "SetReporting HCHC": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0702&attrId=0102&attrType=25",
+                "execAtCreation": "yes"
+            },
             "HCHP": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0100",
                 "unit": "Wh",
                 "logicalId": "0702-01-0100",
                 "isVisible": 1
+            },
+            "SetReporting HCHP": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0702&attrId=0100&attrType=25",
+                "execAtCreation": "yes"
             },
             "HHPHC": {
                 "use": "inf_generic-NumericBadge",

@@ -39,16 +39,22 @@
     //     'levelChoice' => idx
     // )
     // Note: Peek only few fields allows to cleanup format
-    $nm = config::byKey('ab::networkMap', 'Abeille', [], true);
-    $networkMap = [];
-    $networkMap['levels'] = [];
-    if (isset($nm['levels'])) {
-        foreach ($nm['levels'] as $nml) {
-            if (!isset($nml['levelName']) || !isset($nml['mapDir']) || !isset($nml['mapFile']))
-                continue;
-            $networkMap['levels'][] = $nml;
-        }
-    }
+    // $nm = config::byKey('ab::networkMap', 'Abeille', [], true);
+    // logDebug('nm='.json_encode($nm));
+    // $networkMap = [];
+    // $networkMap['levels'] = [];
+    // if (isset($nm['levels'])) {
+    //     foreach ($nm['levels'] as $nml) {
+    //         if (!isset($nml['levelName']) || !isset($nml['mapDir']) || !isset($nml['mapFile']))
+    //             continue;
+    //         $networkMap['levels'][] = $nml;
+    //     }
+    // }
+    $networkMap = config::byKey('ab::networkMap', 'Abeille', [], true);
+    logDebug('networkMap='.json_encode($networkMap));
+    if (!isset($networkMap['levels']))
+        $networkMap['levels'] = [];
+    // Set default level & image if none
     if (count($networkMap['levels']) == 0) {
         $networkMap['levels'][] = array(
             'levelName' => 'Level 0',
@@ -58,9 +64,11 @@
     }
     // Checking that image exists
     foreach ($networkMap['levels'] as $levIdx => $lev) {
-        $path = __DIR__.'/';
+        $path = __DIR__.'/../../';
         $path .= (isset($lev['mapDir']) ? $lev['mapDir'] : 'images');
+        $path .= '/';
         $path .= (isset($lev['mapFile']) ? $lev['mapFile'] : 'AbeilleNetworkMap-1200.png');
+        logDebug("path=${path}");
         if (!file_exists($path)) {
             $networkMap['levels'][$levIdx]['mapDir'] = 'images';
             $networkMap['levels'][$levIdx]['mapFile'] = 'AbeilleNetworkMap-1200.png';
@@ -826,7 +834,7 @@
 
     /* 'config' DB update */
     function saveConfig() {
-        console.log("saveConfig()");
+        console.log("saveConfig(): config=", config);
 
         $.ajax({
             type: 'POST',

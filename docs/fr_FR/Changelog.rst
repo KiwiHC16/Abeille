@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Cmd: clearPending().
 - Zlinky: Mise-à-jour du modèle (2678).
+- Placement réseau: Correction affichage plan.
 
 240107-BETA-1
 -------------

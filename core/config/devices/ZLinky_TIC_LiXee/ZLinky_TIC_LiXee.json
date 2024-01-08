@@ -110,6 +110,7 @@
             "PAPP": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B04&attrId=050F",
+                "unit": "VA",
                 "logicalId": "0B04-01-050F"
             },
             "SetReporting PAPP": {
@@ -126,6 +127,16 @@
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=FF66&attrId=0005&attrType=21",
                 "execAtCreation": "yes"
+            },
+            "MOTDETAT": {
+                "use": "inf_generic-String",
+                "params": "clustId=FF66&attrId=0009",
+                "logicalId": "FF66-01-0009"
+            },
+            "Get-MOTDETAT": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FF66&attrId=0009",
+                "execAtCreation": 1
             },
 
             "BASE": {
@@ -144,19 +155,22 @@
             "HCHC": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0102",
-                "logicalId": "HCHC",
+                "unit": "Wh",
+                "logicalId": "0702-01-0102",
                 "isVisible": 1
             },
             "HCHP": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0100",
-                "logicalId": "HCHP",
+                "unit": "Wh",
+                "logicalId": "0702-01-0100",
                 "isVisible": 1
             },
             "HHPHC": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=FF66&attrId=0002",
-                "logicalId": "FF66-01-0002"
+                "logicalId": "FF66-01-0002",
+                "isVisible": 1
             },
             "Get HHPHC": {
                 "use": "act_zbReadAttribute",

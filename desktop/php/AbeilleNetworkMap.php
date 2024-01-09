@@ -62,17 +62,27 @@
             'mapFile' => 'AbeilleNetworkMap-1200.png'
         );
     }
-    // Checking that image exists
+    // Checking that image exists & fills $viewImages[]
+    $viewImages = [];
     foreach ($networkMap['levels'] as $levIdx => $lev) {
-        $path = __DIR__.'/../../';
-        $path .= (isset($lev['mapDir']) ? $lev['mapDir'] : 'images');
-        $path .= '/';
-        $path .= (isset($lev['mapFile']) ? $lev['mapFile'] : 'AbeilleNetworkMap-1200.png');
+        $relPath = (isset($lev['mapDir']) ? $lev['mapDir'] : 'images');
+        $relPath .= '/';
+        $relPath .= (isset($lev['mapFile']) ? $lev['mapFile'] : 'AbeilleNetworkMap-1200.png');
+        $path = __DIR__.'/../../'.$relPath;
         logDebug("path=${path}");
         if (!file_exists($path)) {
             $networkMap['levels'][$levIdx]['mapDir'] = 'images';
             $networkMap['levels'][$levIdx]['mapFile'] = 'AbeilleNetworkMap-1200.png';
         }
+
+        $iSize = getimagesize(__DIR__."/../../".$relPath);
+        $width = $iSize[0];
+        $height = $iSize[1];
+        $viewImages[] = Array(
+            "path" => $relPath, // Path relative to Abeille's root
+            "width" => $width,
+            "height" => $height
+        );
     }
     if (isset($nm['levelChoice']))
         $networkMap['levelChoice'] = $nm['levelChoice'];
@@ -82,26 +92,27 @@
     sendVarToJS('networkMap', $networkMap);
     $levelChoice = $networkMap['levelChoice'];
     sendVarToJS('viewLevel', $levelChoice);
+    sendVarToJS('viewImages', $viewImages);
 
-    require_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
-    $choice = $networkMap['levels'][$levelChoice];
-    logDebug('choice='.json_encode($choice));
-    $mapDir = isset($choice['mapDir']) ? $choice['mapDir'] : 'images';
-    $mapFile = isset($choice['mapFile']) ? $choice['mapFile'] : 'AbeilleNetworkMap-1200.png';
-    $userMap = $mapDir.'/'.$mapFile;
+    // require_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
+    // $choice = $networkMap['levels'][$levelChoice];
+    // logDebug('choice='.json_encode($choice));
+    // $mapDir = isset($choice['mapDir']) ? $choice['mapDir'] : 'images';
+    // $mapFile = isset($choice['mapFile']) ? $choice['mapFile'] : 'AbeilleNetworkMap-1200.png';
+    // $userMap = $mapDir.'/'.$mapFile;
 
-    $iSize = getimagesize(__DIR__."/../../".$userMap);
-    $width = $iSize[0];
-    $height = $iSize[1];
-    $image = Array(
-        "path" => $userMap, // Path relative to Abeille's root
-        "width" => $width,
-        "height" => $height
-    );
-    // logDebug('image='.json_encode($image));
-    sendVarToJS('viewImage', $image);
-    sendVarToJS('maxX', $width);
-    sendVarToJS('maxY', $height);
+    // $iSize = getimagesize(__DIR__."/../../".$userMap);
+    // $width = $iSize[0];
+    // $height = $iSize[1];
+    // $viewImage = Array(
+    //     "path" => $userMap, // Path relative to Abeille's root
+    //     "width" => $width,
+    //     "height" => $height
+    // );
+    // logDebug('viewImage='.json_encode($viewImage));
+    sendVarToJS('viewImage', $viewImage);
+    sendVarToJS('viewImageMaxX', $width);
+    sendVarToJS('viewImageMaxY', $height);
 ?>
 
 <html>
@@ -122,11 +133,14 @@
     <style>
         #idGraph {
         <?php
-            echo 'background-image: url("/plugins/Abeille/'.$image['path'].'");';
-            echo 'width: '.$image['width'].'px;';
-            echo 'height: '.$image['height'].'px;';
+            // echo 'background-image: url("/plugins/Abeille/'.$viewImage['path'].'");';
+            // echo 'width: '.$viewImage['width'].'px;';
+            // echo 'height: '.$viewImage['height'].'px;';
+            echo 'width: 100%;';
+            echo 'height: 100%;';
         ?>
             background-size: contain;
+            background-repeat: no-repeat;
         }
         .column {
             float: left;
@@ -140,7 +154,7 @@
 
     <!-- <div class="row"> -->
     <div>
-        <div id="idLeftBar" class="column" style="width:100px">
+        <div id="idLeftBar" class="column" style="width:100px; margin-right:8px">
             <div id="idDisplayPart">
                 <label>{{Affichage}}</label><br>
                 <!-- Level choice if more than 1 level -->
@@ -194,19 +208,6 @@
 </html>
 
 <script type="text/javascript">
-    viewLevel = 0; // Level idx to display
-    viewLinks = true; // Display links
-    // viewImage = Oject(); Map image to display
-    // networks = [] of Object(
-    //     'zgId' =>
-    //     'lqiTable' => // Network topology coming from LQI collect.
-    //     'devList' => new Object();
-    //     'devListNb' => x;
-    //     'linksList' => new Object();
-    // );
-    var jeedomDevices; // Jeedom known devices
-    let configMode = false;
-
     // Edition mode
     $("#idConfigMode").on("click", function() {
         console.log("idConfigMode click");
@@ -232,18 +233,41 @@
     //         makeDraggable(evt);
     // });
 
-    $("#idSelectLevel").on("change", function() {
-        viewLevel = document.getElementById("idSelectLevel").value;
-        console.log("Level changed to "+viewLevel);
-
-        lev = networkMap.levels[viewLevel];
-        console.log("Level=", lev);
-        viewImage.path = lev.mapDir + "/" + lev.mapFile;
-        console.log("viewImage=", viewImage);
+    // Display given 'viewLevel'
+    function displayMap(viewLevel) {
+        // lev = networkMap.levels[viewLevel];
+        console.log("displayMap("+viewLevel+")");
+        // viewImage.path = lev.mapDir + "/" + lev.mapFile;
+        console.log("viewImages=", viewImages);
 
         elm = document.getElementById("idGraph");
-        elm.style.backgroundImage = 'url("/plugins/Abeille/'+viewImage.path+'")';
+        elm.style.backgroundImage = 'url("/plugins/Abeille/'+viewImages[viewLevel].path+'")';
         console.log("idGraph elm=", elm);
+
+        // Get size of 'div' #idGraph to get image size
+        var rectangle = elm.getBoundingClientRect();
+        // x = rectangle.left;
+        // y = rectangle.top;
+        w = rectangle.width;
+        h = rectangle.height;
+        viewImageMaxX = w;
+        viewImageMaxY = h;
+        console.log("width=" + w + ", height=" + h);
+    };
+
+    $("#idSelectLevel").on("change", function() {
+        viewLevel = document.getElementById("idSelectLevel").value;
+        console.log("View level changed to "+viewLevel);
+
+        displayMap(viewLevel);
+        // lev = networkMap.levels[viewLevel];
+        // console.log("Level=", lev);
+        // viewImage.path = lev.mapDir + "/" + lev.mapFile;
+        // console.log("viewImage=", viewImage);
+
+        // elm = document.getElementById("idGraph");
+        // elm.style.backgroundImage = 'url("/plugins/Abeille/'+viewImage.path+'")';
+        // console.log("idGraph elm=", elm);
 
         // Saving user choice
         networkMap.levelChoice = viewLevel;
@@ -363,13 +387,13 @@
     // Ensure that device coordinates are within background map size
     function checkGrpLimits(grpX, grpY) {
         if (grpX < 0) grpX = 0;
-        // console.log("  maxX=", maxX);
-        if ((grpX + 50) > maxX)
-            grpX = maxX - 50;
+        // console.log("  viewImageMaxX=", viewImageMaxX);
+        if ((grpX + 50) > viewImageMaxX)
+            grpX = viewImageMaxX - 50;
         if (grpY < 0) grpY = 0;
-        // console.log("  maxY=", maxY);
-        if ((grpY + 50) > maxY)
-            grpY = maxY - 50;
+        // console.log("  viewImageMaxY=", viewImageMaxY);
+        if ((grpY + 50) > viewImageMaxY)
+            grpY = viewImageMaxY - 50;
 
         console.log("  grpX="+grpX+", grpY="+grpY);
         return {
@@ -387,13 +411,13 @@
         grpY = posY - 25;
 
         if (grpX < 0) grpX = 0;
-        // console.log("  maxX=", maxX);
-        if ((grpX + 50) > maxX)
-            grpX = maxX - 50;
+        // console.log("  viewImageMaxX=", viewImageMaxX);
+        if ((grpX + 50) > viewImageMaxX)
+            grpX = viewImageMaxX - 50;
         if (grpY < 0) grpY = 0;
-        // console.log("  maxY=", maxY);
-        if ((grpY + 50) > maxY)
-            grpY = maxY - 50;
+        // console.log("  viewImageMaxY=", viewImageMaxY);
+        if ((grpY + 50) > viewImageMaxY)
+            grpY = viewImageMaxY - 50;
 
         console.log("  grpX="+grpX+", grpY="+grpY);
         dev['posX'] = grpX + 25;
@@ -934,11 +958,13 @@
 
     // Redraw full page
     function refreshPage() {
-
+        console.log("refreshPage(): viewLevel="+viewLevel);
         // if (typeof devList === "undefined") {
         //     console.log("refreshPage(): UNDEFINED devList");
         //     return;
         // }
+
+        displayMap(viewLevel);
 
         lesAbeilles = "";
         for (n = 0; n < networks.length; n++) {
@@ -959,7 +985,6 @@
             if (viewLinks)
                 drawLinks(n);
         }
-
         document.getElementById("idDevices").innerHTML = lesAbeilles;
     }
 
@@ -1083,6 +1108,23 @@
     // MAIN
     //-----------------------------------------------------------------------
 
+    // viewLevel = 0; // Level idx to display. Updated from 'networkMap['levelChoice']
+    viewLinks = true; // Display links
+    // $viewImage = Array(
+    //     "path" => $userMapPath, // Path relative to Abeille's root
+    //     "width" => $width,
+    //     "height" => $height
+    // );
+    // networks = [] of Object(
+    //     'zgId' =>
+    //     'lqiTable' => // Network topology coming from LQI collect.
+    //     'devList' => new Object();
+    //     'devListNb' => x;
+    //     'linksList' => new Object();
+    // );
+    var jeedomDevices; // Jeedom known devices
+    let configMode = false;
+
     var networkInformation = "";
     var networkInformationProgress = "Processing";
     var TopoSetReply = "";
@@ -1146,5 +1188,5 @@
     autoYIdx = 0;
 
     refreshPage();
-    console.log("End of script");
+    // console.log("End of script");
 </script>

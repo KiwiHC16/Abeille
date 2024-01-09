@@ -136,8 +136,8 @@
             // echo 'background-image: url("/plugins/Abeille/'.$viewImage['path'].'");';
             // echo 'width: '.$viewImage['width'].'px;';
             // echo 'height: '.$viewImage['height'].'px;';
-            echo 'width: 100%;';
-            echo 'height: 100%;';
+            echo 'width: 500px;';
+            echo 'height: 500px;';
         ?>
             background-size: contain;
             background-repeat: no-repeat;
@@ -243,6 +243,12 @@
         elm = document.getElementById("idGraph");
         elm.style.backgroundImage = 'url("/plugins/Abeille/'+viewImages[viewLevel].path+'")';
         console.log("idGraph elm=", elm);
+
+        w = viewImages[viewLevel].width;
+        h = viewImages[viewLevel].height;
+        // elm.setAttribute("style", "width:"+w+"px;height:"+h+"px");
+        elm.style.width = w+"px";
+        elm.style.height = h+"px";
 
         // Get size of 'div' #idGraph to get image size
         var rectangle = elm.getBoundingClientRect();

@@ -4,6 +4,7 @@ ChangeLog
 - Interne: Cmd: clearPending().
 - Zlinky: Mise-à-jour du modèle (2678).
 - Placement réseau: Corrections.
+- Interne: Suppression fichiers obsoletes => archives.
 
 240107-BETA-1
 -------------

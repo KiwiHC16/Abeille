@@ -120,11 +120,13 @@
         if (newNetworkMap != networkMap) {
             console.log("Saving new networkMap=", newNetworkMap);
             config = new Object();
-            config['ab::networkMap'] =  newNetworkMap;
+            config['ab::networkMap'] = newNetworkMap;
             saveConfig(config);
             networkMap = Object.assign(networkMap, newNetworkMap); // Update networkMap
         }
         $('#md_modal').dialog('close')
+
+        location.reload(true); // Reload page
     }
 
     // Add new map to index 'idx'

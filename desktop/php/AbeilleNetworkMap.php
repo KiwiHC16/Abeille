@@ -125,26 +125,31 @@
         Placement réseau (BETA, dev en cours)
     </div>
 
-    <!-- <style>
-    td {
-        border: 1px solid black;
-    }
-    </style> -->
     <style>
-        #idGraph {
-        <?php
-            // echo 'background-image: url("/plugins/Abeille/'.$viewImage['path'].'");';
-            // echo 'width: '.$viewImage['width'].'px;';
-            // echo 'height: '.$viewImage['height'].'px;';
-            echo 'width: 500px;';
-            echo 'height: 500px;';
-        ?>
+        html, body{
+            height: 100%;
+        }
+        .ab-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .ab-left-column, .ab-right-column{
+            display: flex;
+            flex-direction: row;
+        }
+        .ab-left-column {
+            justify-content: flex-start;
+            height: 100%;
+            width: 100px;
+            margin-right:8px;
+        }
+        .ab-right-column {
+            width: 500px;
+            height: 500px;
             background-size: contain;
             background-repeat: no-repeat;
-        }
-        .column {
-            float: left;
-            width: 50%;
         }
         .disabledDiv {
             pointer-events: none;
@@ -153,8 +158,8 @@
    </style>
 
     <!-- <div class="row"> -->
-    <div>
-        <div id="idLeftBar" class="column" style="width:100px; margin-right:8px">
+    <div class="ab-container">
+        <div id="idLeftBar" class="ab-left-column">
             <div id="idDisplayPart">
                 <label>{{Affichage}}</label><br>
                 <!-- Level choice if more than 1 level -->
@@ -194,12 +199,12 @@
                 <label>{{Configuration}}</label></br>
                 <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
                 <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
-                <button id="idMap" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
+                <button id="idMapsBtn" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
                 <!-- TODO: Text size (to be stored in DB) -->
             </div>
-            </div>
+        </div>
 
-        <div id="idGraph" class="column">
+        <div id="idGraph" class="ab-right-column">
             <svg id="idDevices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
             </svg>
         </div>
@@ -234,9 +239,9 @@
     // });
 
     // Display given 'viewLevel'
-    function displayMap(viewLevel) {
+    function refreshMap(viewLevel) {
         // lev = networkMap.levels[viewLevel];
-        console.log("displayMap("+viewLevel+")");
+        console.log("refreshMap("+viewLevel+")");
         // viewImage.path = lev.mapDir + "/" + lev.mapFile;
         console.log("viewImages=", viewImages);
 
@@ -265,7 +270,7 @@
         viewLevel = document.getElementById("idSelectLevel").value;
         console.log("View level changed to "+viewLevel);
 
-        displayMap(viewLevel);
+        refreshMap(viewLevel);
         // lev = networkMap.levels[viewLevel];
         // console.log("Level=", lev);
         // viewImage.path = lev.mapDir + "/" + lev.mapFile;
@@ -970,7 +975,7 @@
         //     return;
         // }
 
-        displayMap(viewLevel);
+        refreshMap(viewLevel);
 
         lesAbeilles = "";
         for (n = 0; n < networks.length; n++) {
@@ -994,7 +999,7 @@
         document.getElementById("idDevices").innerHTML = lesAbeilles;
     }
 
-    $("#idMap").on("click", function () {
+    $("#idMapsBtn").on("click", function () {
         $("#md_modal").dialog({ title: "{{Plan par niveau}}" });
         $("#md_modal")
             .load("index.php?v=d&plugin=Abeille&modal=AbeilleNetworkMap.modal")

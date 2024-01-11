@@ -5,6 +5,7 @@ ChangeLog
 - Zlinky: Mise-à-jour du modèle (2678).
 - Placement réseau: Corrections.
 - Interne: Suppression fichiers obsoletes => archives.
+- Capteur lumière AQARA GZCGQ11LM: Ajout support (2679).
 
 240107-BETA-1
 -------------

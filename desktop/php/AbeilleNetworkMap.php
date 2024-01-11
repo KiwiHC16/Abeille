@@ -110,9 +110,9 @@
     //     "height" => $height
     // );
     // logDebug('viewImage='.json_encode($viewImage));
-    sendVarToJS('viewImage', $viewImage);
-    sendVarToJS('viewImageMaxX', $width);
-    sendVarToJS('viewImageMaxY', $height);
+    // sendVarToJS('viewImage', $viewImage);
+    // sendVarToJS('viewImageMaxX', $width);
+    // sendVarToJS('viewImageMaxY', $height);
 ?>
 
 <html>
@@ -132,12 +132,12 @@
         .ab-container {
             height: 100%;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             flex-wrap: nowrap;
         }
         .ab-left-column, .ab-right-column{
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
         }
         .ab-left-column {
             justify-content: flex-start;
@@ -204,10 +204,18 @@
             </div>
         </div>
 
-        <div id="idGraph" class="ab-right-column">
-            <svg id="idDevices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
+        <!-- SVG reminder
+        viewPort = visible area of the SVG image. So should allow to see the full SVG.
+            Controlled with 'width' and 'height' attributes.
+            <svg width="500" height="300"></svg>
+        viewBox = zoom in/out part of the viewPort
+         -->
+
+        <!-- <div id="idGraph" class="ab-right-column"> -->
+            <!-- <svg id="idDevices" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)"> -->
+            <svg id="idGraph" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 60 55" onload="makeDraggable(evt)">
             </svg>
-        </div>
+        <!-- </div> -->
     </div>
 </body>
 </html>
@@ -264,6 +272,8 @@
         viewImageMaxX = w;
         viewImageMaxY = h;
         console.log("width=" + w + ", height=" + h);
+
+        elm.setAttribute("viewBox", "0 0 "+w+" "+h);
     };
 
     $("#idSelectLevel").on("change", function() {
@@ -992,11 +1002,16 @@
                 lesAbeilles += drawDevice(devLogicId);
             }
 
+            // TEMP
+            // lesAbeilles += '<rect rx="10" ry="10" width="50" height="50" style="fill:green" />';
+            // END TEMP
+
             // Displaying links ?
             if (viewLinks)
                 drawLinks(n);
         }
-        document.getElementById("idDevices").innerHTML = lesAbeilles;
+        // document.getElementById("idDevices").innerHTML = lesAbeilles;
+        document.getElementById("idGraph").innerHTML = lesAbeilles;
     }
 
     $("#idMapsBtn").on("click", function () {

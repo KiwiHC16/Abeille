@@ -6,6 +6,7 @@ ChangeLog
 - Placement réseau: Corrections.
 - Interne: Suppression fichiers obsoletes => archives.
 - Capteur lumière AQARA GZCGQ11LM: Ajout support (2679).
+- Ikea Capteur qualité de l'air: Support préliminaire (2681).
 
 240107-BETA-1
 -------------

@@ -1,0 +1,60 @@
+{
+    "VINDSTYRKA_IKEAofSweden": {
+        "manufacturer": "Ikea",
+        "model": "VINDSTYRKA",
+        "type": "Ikea air quality sensor",
+        "category": {
+            "default": "1"
+        },
+        "configuration": {
+            "icon": "Ikea-AirQualitySensor",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Temperature": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0402&attrId=0000"
+            },
+            "SetReporting 01-0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0402&attrType=29&attrId=0000&minInterval=300&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "Bind 01-0402-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Humidity": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0405&attrId=0000"
+            },
+            "SetReporting 01-0405-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0405&attrType=21&attrId=0000&minInterval=300&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "Bind 01-0405-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0405",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

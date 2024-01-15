@@ -7,6 +7,8 @@ ChangeLog
 - Interne: Suppression fichiers obsoletes => archives.
 - Capteur lumière AQARA GZCGQ11LM: Ajout support (2679).
 - Ikea Capteur qualité de l'air: Support préliminaire (2681).
+- Assistant modèles: Correction cluster 0008.
+- Ikea Trafri E27: Support préliminaire (2680).
 
 240107-BETA-1
 -------------

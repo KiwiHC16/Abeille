@@ -10,6 +10,7 @@ ChangeLog
 - Assistant modèles: Correction cluster 0008.
 - Ikea Trafri E27: Support préliminaire (2680).
 - Lidl detecteur de mouvement: Correction modèle (2674).
+- Page réseau: Revisitée.
 
 240107-BETA-1
 -------------

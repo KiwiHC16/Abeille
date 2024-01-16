@@ -758,7 +758,6 @@ function displayLinksGraph(zgId) {
                     icon: router["icon"],
                 });
 
-                break; // TEMP
                 for (nLogicId in router.neighbors) {
                     neighbor = router.neighbors[nLogicId];
                     console.log("neighbor=", neighbor);

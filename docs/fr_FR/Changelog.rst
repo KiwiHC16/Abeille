@@ -9,6 +9,7 @@ ChangeLog
 - Ikea Capteur qualité de l'air: Support préliminaire (2681).
 - Assistant modèles: Correction cluster 0008.
 - Ikea Trafri E27: Support préliminaire (2680).
+- Lidl detecteur de mouvement: Correction modèle (2674).
 
 240107-BETA-1
 -------------

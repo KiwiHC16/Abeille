@@ -501,7 +501,7 @@
         /* There is a device info updates (manufId + modelId, or location).
            Note: As opposed to 'updateDevice()', info is coming from device itself. */
         function deviceUpdates($net, $addr, $ep, $updates = []) {
-            parserLog('debug', "  deviceUpdates(${net}, ${addr}, upd=".json_encode($updates).")");
+            parserLog('debug', "  deviceUpdates(${net}, ${addr}, upd=".json_encode($updates, JSON_UNESCAPED_SLASHES).")");
             if (isset($updates['ieee']))
                 $ieee = $updates['ieee'];
             else

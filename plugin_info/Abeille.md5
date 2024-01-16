@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240107-BETA-1"
+# VERSION="240116-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -49,10 +49,10 @@ ddb2ec59adabf2a0a18d9c4405116a2a *core/class/AbeilleCmd.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
 0095f81c613249fb5d719326ef2f74d3 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
-b40ad7431f684f93a3d676f5a37ab771 *core/class/AbeilleCmdQueue.class.php
+f98f73c8eaecf98d7c114edabd7f44bb *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-b75bc693f0df8a004e5de95392302a3f *core/class/AbeilleParser.class.php
+219048f3c9268bf7a980bfb1b32a40e0 *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -83,7 +83,6 @@ b18281e08e9ec6976418f8af07e08553 *core/config/commands/LegrandContactorEtat.json
 3df8d78888423692247bdc49bca45d38 *core/config/commands/LegrandContactorMode.json
 9977a6b0d4286dcbb52b63f72495c908 *core/config/commands/LegrandContactorOff.json
 7cd7f45ddcbfc03d4f71ee6a25ffb918 *core/config/commands/LegrandContactorOn.json
-ab3962454f1229a00d4d62dd8ee2dd3e *core/config/commands/Lift.json
 f0e7b4c77df1e2b381df3af94937eef5 *core/config/commands/LivoloSwitchTrick1.json
 3d665d0fb02f8ecb4d0acd0f5df0dce7 *core/config/commands/LivoloSwitchTrick2.json
 78dd6700ab22f69727cccc6543096b8a *core/config/commands/LivoloSwitchTrick3.json
@@ -130,6 +129,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Identify.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/IkeaTeleCmdLeftRigth.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Level Stop.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Level.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Lift.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Link-Quality.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Off.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Off1.json
@@ -282,6 +282,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/location.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminosite.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminositeHue.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminositeXiaomi.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/moveToLiftAndTiltBSO_Lift.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/nom.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/offGroup.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/offGroupBroadcast.json
@@ -539,7 +540,6 @@ b4799c21f2192529396b77962dcbbde5 *core/config/commands/inf_zbCmdC-0501-Arm-Value
 8a565468b6779ae7a5566a11391d0c92 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ChangeNotification.json
 3e99eaf761d47554bde5fd7f44936d84 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ZoneEnrollRequest.json
 05ec4445fd5f3a42d32f353bc33eb51c *core/config/commands/inf_zone-Alarm1.json
-3b82c374b33304d5741a154d79bbc45b *core/config/commands/moveToLiftAndTiltBSO_Lift.json
 26a2083a9cdc89612d7a6c6ff15de432 *core/config/commands/moveToLiftAndTiltBSO_Tilt.json
 8c24f9f574812ad0bf6c859af615059b *core/config/commands/multi.json
 b38024843b13b0f28646fdd397e117fe *core/config/commands/offGroupEP1.json
@@ -892,6 +892,8 @@ d26ddc4e658be44572ddebff8fdeafe7 *core/config/devices/TRADFRIbulbE27WW806lm/TRAD
 b9a498ab8b795e67425afe9a80e9806a *core/config/devices/TRADFRIbulbE27WWG95CL470lm_IKEAofSweden/TRADFRIbulbE27WWG95CL470lm_IKEAofSweden.json
 b38c832e3d4171814953727a10924127 *core/config/devices/TRADFRIbulbE27WWG95CL470lm_IKEAofSweden/discovery-TRADFRIbulbE27WWG95CL470lm_IKEAofSweden.json
 40924535e61461d802fb8bcd37a2ab7f *core/config/devices/TRADFRIbulbE27WWclear250lm/TRADFRIbulbE27WWclear250lm.json
+d8087761f0ff082be0d7126a57c042e3 *core/config/devices/TRADFRIbulbE27WWglobe806lm_IKEAofSweden/TRADFRIbulbE27WWglobe806lm_IKEAofSweden.json
+c72d0f7cf8c505a0f7d00c8297a546ef *core/config/devices/TRADFRIbulbE27WWglobe806lm_IKEAofSweden/discovery-TRADFRIbulbE27WWglobe806lm_IKEAofSweden(1).json
 6f0f227990587bc8312c04dc4714c6ab *core/config/devices/TRADFRIbulbE27Wopal1000lm/TRADFRIbulbE27Wopal1000lm.json
 5ebf4564e0a047729c56044d90a8196e *core/config/devices/TRADFRIbulbE27Wopal1000lm2/TRADFRIbulbE27Wopal1000lm2.json
 628100ed32c2244abd2aac065568be65 *core/config/devices/TRADFRIbulbE27opal1000lm/TRADFRIbulbE27opal1000lm.json
@@ -1097,12 +1099,14 @@ c327c85b1abd5c9e1105949717c01990 *core/config/devices/TS130F__TZ3000_vd43bbfq/TS
 1c00b135fb5cc0d65016d6de133c3c4c *core/config/devices/TS130F__TZ3000_vd43bbfq/discovery.json
 ba19681efbed8870a8d3fab24efb41ee *core/config/devices/TS130F__TZ3000_xxgrunjb/TS130F__TZ3000_xxgrunjb.json
 464d01c1b1a882bea7f85e837105e053 *core/config/devices/TS130F__TZ3000_xxgrunjb/discovery.json
-4da0c204e9da52717b8a2d7d48461eda *core/config/devices/TY0202__TZ1800_fcdjzz3s/TY0202__TZ1800_fcdjzz3s.json
+a968874939af4336f525ba736e017ee5 *core/config/devices/TY0202__TZ1800_fcdjzz3s/TY0202__TZ1800_fcdjzz3s.json
 41c3f2663efe7fae07d7c7cd78303a62 *core/config/devices/TY0202__TZ1800_fcdjzz3s/discovery.json
 ac257ed9c43ef77563947a5ff7d55d66 *core/config/devices/TY0A01/TY0A01.json
 4b9ae13b1bfc4ebd4a28618c5e9cf33a *core/config/devices/Teleruptor/Teleruptor.json
 a3918bc26769085f6c0b8eb9d77674c9 *core/config/devices/Thermostat_SchneiderElectric/Thermostat_SchneiderElectric.json
 f86cbebf536f188c4abca7a2ec4b9ac4 *core/config/devices/Thermostat_SchneiderElectric/discovery.json
+4aca0047bbcf7e120af60d9331d7fd50 *core/config/devices/VINDSTYRKA_IKEAofSweden/VINDSTYRKA_IKEAofSweden.json
+793067a51a8e75c657f3ffcba0e3253d *core/config/devices/VINDSTYRKA_IKEAofSweden/discovery-VINDSTYRKA_IKEAofSweden.json
 9913316c267ece08ea0c22039bea53be *core/config/devices/WB01/WB01.json
 af1df226ed3f569623a19dc54823479e *core/config/devices/WG001-Z01_AL001/WG001-Z01_AL001.json
 76f336c0257b6fb24c12768d5ef8fbb4 *core/config/devices/WG001-Z01_AL001/discovery-WG001-Z01_AL001.json
@@ -1126,7 +1130,7 @@ a3532a26ad9c865d91cb5bc1221adc9a *core/config/devices/ZLL-DimmableLigh/ZLL-Dimma
 85d113446c5b26d889214206ba165673 *core/config/devices/ZLO-ExtendedColor/ZLO-ExtendedColor.json
 ebc427c017b2479cd4daa4f7129f667a *core/config/devices/ZLO-LTOSensor/ZLO-LTOSensor.json
 11d3fc45411f457286acb41ae0053321 *core/config/devices/ZLO-OccupancySensor/ZLO-OccupancySensor.json
-dfe86382c018593ea26d16767812e700 *core/config/devices/ZLinky_TIC_LiXee/ZLinky_TIC_LiXee.json
+8e6d35e64a59d54bc7eeba28e36b62e3 *core/config/devices/ZLinky_TIC_LiXee/ZLinky_TIC_LiXee.json
 540772a2b411674dd3ae8452725fcc1c *core/config/devices/airmonitor.acn01/airmonitor.acn01.json
 c231624feb1712be4f3ce9448521092a *core/config/devices/airmonitor.acn01/discovery.json
 ab4153235d50896eff544b3869b50c01 *core/config/devices/ctrl_86plug.aq1/ctrl_86plug.aq1.json
@@ -1169,8 +1173,9 @@ db5e4208620e427a916f1d0d2fa94b34 *core/config/devices/remote.b486opcn01/discover
 3f2fcdfdf3e3a6ae5ddef047d5f2290a *core/config/devices/remote.b686opcn01/remote.b686opcn01.json
 ae49915df0d52b3e031ff0972bd21967 *core/config/devices/remotecontrol/remotecontrol.json
 4dc6b808b74f3d45d2a0bcbd169b29ac *core/config/devices/router/router.json
+d23fa8eeae170c8252494da6e2254cb6 *core/config/devices/sen_ill.mgl01/discovery-sen_ill.agl01_LUMI.json
 7e2e47d4f465801f2a7114c07e9b8563 *core/config/devices/sen_ill.mgl01/discovery.json
-7021c47cde524e171ec04c855e924302 *core/config/devices/sen_ill.mgl01/sen_ill.mgl01.json
+0219fadc75a1c930d90cf27b36dccaef *core/config/devices/sen_ill.mgl01/sen_ill.mgl01.json
 945cb618fc2179a47d0aa96142a8c86e *core/config/devices/sensor_86sw1/sensor_86sw1.json
 4e7b5e9d5a02a268cfe5fd52e45690e6 *core/config/devices/sensor_86sw2/sensor_86sw2.json
 e4d999f28708dca37bd686b887c09032 *core/config/devices/sensor_cube.aqgl01/sensor_cube.aqgl01.json
@@ -1230,7 +1235,7 @@ bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 dcfb58fd6f80bdd40d5b97fdec96fc8f *core/php/AbeilleCliToQueue.php
 c6cf74efae0f03c8b6a83c75eb271b75 *core/php/AbeilleCmd-Tuya.php
-e661e593220cb27e46af9a8d5b74a6ec *core/php/AbeilleCmd.php
+a9c124ac96c2b904927a780670dfb3e8 *core/php/AbeilleCmd.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
 e19dfc28fe5aab5966a0dcca176381ff *core/php/AbeilleGetEq.php
 da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
@@ -1280,14 +1285,14 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 8152b9a95c1e174c3246ea4176c6325a *core/scripts/updateFirmwareDIN.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
 beaaac5744bd1087a95a3af9e71f80cd *desktop/js/Abeille.js
-c15ead9c296179514e8c359ccfa3389d *desktop/js/AbeilleNetwork.js
+2e00be0309eb2d74924a4dce869662a0 *desktop/js/AbeilleNetwork.js
 d0d1ca56ff2c7b9b33e3f9e1b392e3ba *desktop/modal/Abeille-OTA.modal.php
 65de456a79b820dd9307d1d50d21137d *desktop/modal/AbeilleCompatibility.modal.php
 7ca26f7277c821d963f462509d7db7aa *desktop/modal/AbeilleConfigPage.modal.php
 bde50de6fd6c15507c6caa507426c7a6 *desktop/modal/AbeilleHealth.modal.php
 066eb590e69ec549df11007e773aaf63 *desktop/modal/AbeilleLoadJsonCmd.modal.php
-80485dad0ad0db0108ef5cf3ac812d9e *desktop/modal/AbeilleNetwork.modal.php
-4ed20495700103b5e2ab8ec859bab077 *desktop/modal/AbeilleNetworkMap.modal.php
+dfe7e7c0a82eadd478faa6a02658f657 *desktop/modal/AbeilleNetwork.modal.php
+8b4ab1cb64a7e473b74f036308d5c4e5 *desktop/modal/AbeilleNetworkMap.modal.php
 6b00578f611f5fa81d811c882c0284dc *desktop/modal/healthShort.php
 4615ed0aa641629d18fc1a66a2d0f86b *desktop/modal/installPiGpio.abeille.php
 5d6dab381308612706a7c1edba90de07 *desktop/modal/installSocat.abeille.php
@@ -1312,14 +1317,14 @@ e96fc105526c91fd2f09df2165ba1c11 *desktop/php/Abeille-ReplaceEq.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 7d9aad2337c75a7f070509f48130cb8a *desktop/php/Abeille-TopButtons.php
 8703d2d03f6d6019f1ac51d4572108da *desktop/php/Abeille.php
-86f0aef60d453e4017e68b1da8d7f33d *desktop/php/AbeilleEqAssist.php
+0c29a9903accba851d90061e670808b4 *desktop/php/AbeilleEqAssist.php
 e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
 07102ab0b527dbbd4e8974328c1b99ef *desktop/php/AbeilleMaintenance-Logs.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 ce32db08df86d3ff94f08d80d463b7f2 *desktop/php/AbeilleMaintenance.php
-7e07573c7b7460265b0d894f548e8701 *desktop/php/AbeilleNetworkMap.php
-5a99d762ba142af685fab6fe3df85a33 *docs/fr_FR/Changelog.rst
+26663d8664ef45ffcf63a25b39fd0312 *desktop/php/AbeilleNetworkMap.php
+93a8275f40bd0e64a887639d2c82e737 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1658,15 +1663,13 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-4780901181343f244f73dbe72f519630 *plugin_info/Abeille.version
+920cab9abae10f20aeffbe1abb4f7d17 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-2b21078151df950bead217fce734e87a *plugin_info/info.json
+1354282540327b5115bdda18279890f8 *plugin_info/info.json
 d87b82c7bc79f010375fc50af59278ab *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
-9dccf462d245f55ac3e0cdb0e5401f5b *resources/AbeilleDeamon/Debug/verification.php
-48de209ad59ec98fef5bf5ea93e57aa3 *resources/AbeilleDeamon/Debug/verification.sh
 d41d8cd98f00b204e9800998ecf8427e *resources/COM
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleInterrogate.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleLQI_List.php
@@ -1702,6 +1705,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/desktop/AbeilleEq-Main.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/desktop/AbeilleEq.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/desktop/health.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/essai.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/fw_DIY/DIYRuZRT.zip
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/inconnu.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/modelesPage.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/prog_jennic/JennicModuleProgrammerRPI3
@@ -1709,9 +1713,10 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/upload.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/usbreset/README.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/usbreset/makefile
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/usbreset/usbreset.c
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/verification.php
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/verification.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/xmlhttpConfChange.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/xmlhttpMQTTSend.php
-b30943fb5fbe4f4944ac60c06f50cb70 *resources/fw_DIY/DIYRuZRT.zip
 fd690e586457113b24f7ad64d76a915f *resources/fw_zigate/FW_ChangeLog.md
 ab45dc6fed08407de72aa24a25a17f46 *resources/fw_zigate/zigatev1-3.23-legacy.bin
 1aa395c7afe456eedb78337044f04724 *resources/fw_zigate/zigatev1-3.23-opdm.bin

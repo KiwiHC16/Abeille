@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240116-BETA-1
+-------------
+
 - Interne: Cmd: clearPending().
 - Zlinky: Mise-à-jour du modèle (2678).
 - Placement réseau: Corrections.

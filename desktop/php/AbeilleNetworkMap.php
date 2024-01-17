@@ -226,7 +226,7 @@
 
         <!-- <div id="idGraph" class="ab-right-column"> -->
             <!-- <svg id="idDevices" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)"> -->
-            <svg id="idGraph" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 60 55" onload="makeDraggable(evt)">
+            <svg id="idGraph" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)">
             </svg>
         <!-- </div> -->
     </div>

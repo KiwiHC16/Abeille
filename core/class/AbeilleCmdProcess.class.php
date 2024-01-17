@@ -250,9 +250,21 @@
             case '25':
                 $valOut = sprintf("%012X", $valIn);
                 break;
+            case '28': // int8
+                $valOut = $this->signed2Hex($valIn, 1);
+                break;
+            case '29': // int16
             case 'int16':
-            case '29':
                 $valOut = $this->signed2Hex($valIn, 2);
+                break;
+            case '2A': // int24
+                $valOut = $this->signed2Hex($valIn, 3);
+                break;
+            case '2B': // int32
+                $valOut = $this->signed2Hex($valIn, 4);
+                break;
+            case '39': // Single precision
+                $valOut = strrev(unpack('h*', pack('f', $valIn))[1]);
                 break;
             case '42': // string
                 $len = sprintf("%02X", strlen($valIn));
@@ -3298,7 +3310,7 @@
 
                     $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode);
                     return;
-                }
+                } // cmdName == 'writeAttribute'
 
                 // ZCL global: Generic 'write attribute request' function based on 0530 zigate msg
                 // Tcharp38 note: not clear yet why it can be required but 0110 is still a nightmare. Doc is weak and too

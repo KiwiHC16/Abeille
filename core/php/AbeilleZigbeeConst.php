@@ -674,6 +674,33 @@
                 "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x21 ), // uint16
             ),
         ),
+        "040C" => array(
+            "name" => "Carbon Monoxide (CO)",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "RP", "dataType" => 0x39 ), // single
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x39 ), // single
+            ),
+        ),
+        "040D" => array(
+            "name" => "Carbon Dioxide (CO2)",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "RP", "dataType" => 0x39 ), // single
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x39 ), // single
+            ),
+        ),
+        "042A" => array(
+            "name" => "PM2.5",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "RP", "dataType" => 0x39 ), // single
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x39 ), // single
+            ),
+        ),
         "0500" => array(
             "name" => "IAS Zone",
             "attributes" => array(
@@ -820,6 +847,15 @@
         ),
         "FC41" => array(
             "name" => "Legrand private ?",
+        ),
+        "FC57" => array(
+            "name" => "Ikea private ?",
+        ),
+        "FC7C" => array(
+            "name" => "Ikea private ?",
+        ),
+        "FC7E" => array(
+            "name" => "Ikea private ?",
         ),
         "FCC0" => array(
             "name" => "Xiaomi private ?",

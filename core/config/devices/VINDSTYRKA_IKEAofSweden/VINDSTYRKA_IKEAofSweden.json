@@ -39,7 +39,8 @@
             "Humidity": {
                 "use": "inf_zbAttr-0405-MeasuredValue",
                 "params": "ep=01",
-                "isVisible": "1"
+                "isVisible": "1",
+                "nextLine": "after"
             },
             "Get Humidity": {
                 "use": "act_zbReadAttribute",
@@ -77,6 +78,18 @@
                 "params": "ep=01&clustId=FC7E&attrId=0000&attrType=39&minInterval=1800&maxInterval=1800",
                 "execAtCreation": "yes",
                 "comment": "VOC, type Single precision/39, reporting every 30mins"
+            },
+            "PM2.5": {
+                "use": "inf_generic-NumericBadge",
+                "params": "ep=01&clustId=042A&attrId=0000",
+                "logicalId": "042A-01-0000",
+                "isVisible": "1"
+            },
+            "VOC": {
+                "use": "inf_generic-NumericBadge",
+                "params": "ep=01&clustId=FC7E&attrId=0000",
+                "logicalId": "FC7E-01-0000",
+                "isVisible": "1"
             }
         }
     }

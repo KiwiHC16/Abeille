@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Ikea capteur qualité de l'air VINDSTYRKA: Mise-à-jour du modèle (2681).
+
 240116-BETA-1
 -------------
 

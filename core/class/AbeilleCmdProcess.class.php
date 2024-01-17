@@ -119,6 +119,7 @@
             } else {
                 $manufSpecific = 1;
                 $manufCode = AbeilleTools::reverseHex($manufCode);
+                $zhTxt .= "/ManufCode=${manufCode}";
             }
             $toCli = $toCli ? 1 : 0;
             if ($toCli)
@@ -132,7 +133,7 @@
             $fcf = sprintf("%02X", $fcf);
 
             $zclHeader = $fcf.$manufCode.$zclSqn.$cmdId;
-            cmdLog('debug', '  zclHeader: '.$zhTxt.', SQN='.$zclSqn.', cmd='.$cmdId);
+            cmdLog('debug', '  zclHeader: '.$zhTxt.', SQN='.$zclSqn.', CmdId='.$cmdId);
             return $zclHeader;
         }
 

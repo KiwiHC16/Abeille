@@ -121,15 +121,24 @@
 </head>
 
 <body>
-    <div style="background: #e9e9e9; font-weight: bold; padding: .4em 1em;">
-        Placement réseau (BETA, dev en cours)
-    </div>
-
     <style>
         html, body{
             height: 100%;
         }
         .ab-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+        }
+        .ab-top {
+            display: flex;
+            background: #e9e9e9;
+            font-weight: bold;
+            padding: .4em 1em;
+            margin-bottom: 8px;
+        }
+        .ab-container2 {
             height: 100%;
             display: flex;
             flex-direction: row;
@@ -159,50 +168,54 @@
 
     <!-- <div class="row"> -->
     <div class="ab-container">
-        <div id="idLeftBar" class="ab-left-column">
-            <div id="idDisplayPart">
-                <label>{{Affichage}}</label><br>
-                <!-- Level choice if more than 1 level -->
-                <?php
-                    $count = count($networkMap['levels']);
-                    if ($count > 1) {
-                        echo '<select id="idSelectLevel">';
-                        for ($l = 0; $l < $count; $l++ ) {
-                            $level = $networkMap['levels'][$l];
-                            if ($l == $levelChoice)
-                                $selected = "selected";
-                            else
-                                $selected = "";
-                            echo '<option value="'.$l.'" '.$selected.'>'.$level['levelName'].'</option>'."\n";
-                        }
-                        echo '</select>';
-                    }
-
-                    for ($n = 0; $n < count($networks); $n++ ) {
-                        $zgId = $networks[$n]['zgId'];
-
-                        echo '<input type="checkbox" class="viewNet" id="idViewNet-'.$n.'" checked><label>Abeille '.$zgId.'</label><br>';
-                    }
-                ?>
-
-                <!-- View options -->
-                <input type="checkbox" id="idViewLinks" checked title="{{Affiche les liens entre équipements}}"><label>{{Liens}}</label>
-                <button id="idRefreshLqi" style="width:100%;margin-right:7px" title="{{Force l'analyse du réseau}}">{{Analyser}}</button>
-            </div>
-
-            </br>
-            </br>
-            </br>
-            <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Edition}}</button>
-            </br>
-            <div id="idConfigPart" class="disabledDiv">
-                <label>{{Configuration}}</label></br>
-                <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
-                <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
-                <button id="idMapsBtn" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
-                <!-- TODO: Text size (to be stored in DB) -->
-            </div>
+        <div class="ab-top">
+            Placement réseau (BETA, dev en cours)
         </div>
+        <div class="ab-container2">
+            <div class="ab-left-column">
+                <div id="idDisplayPart">
+                    <label>{{Affichage}}</label><br>
+                    <!-- Level choice if more than 1 level -->
+                    <?php
+                        $count = count($networkMap['levels']);
+                        if ($count > 1) {
+                            echo '<select id="idSelectLevel">';
+                            for ($l = 0; $l < $count; $l++ ) {
+                                $level = $networkMap['levels'][$l];
+                                if ($l == $levelChoice)
+                                    $selected = "selected";
+                                else
+                                    $selected = "";
+                                echo '<option value="'.$l.'" '.$selected.'>'.$level['levelName'].'</option>'."\n";
+                            }
+                            echo '</select>';
+                        }
+
+                        for ($n = 0; $n < count($networks); $n++ ) {
+                            $zgId = $networks[$n]['zgId'];
+
+                            echo '<input type="checkbox" class="viewNet" id="idViewNet-'.$n.'" checked><label>Abeille '.$zgId.'</label><br>';
+                        }
+                    ?>
+
+                    <!-- View options -->
+                    <input type="checkbox" id="idViewLinks" checked title="{{Affiche les liens entre équipements}}"><label>{{Liens}}</label>
+                    <button id="idRefreshLqi" style="width:100%;margin-right:7px" title="{{Force l'analyse du réseau}}">{{Analyser}}</button>
+                </div>
+
+                </br>
+                </br>
+                </br>
+                <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Edition}}</button>
+                </br>
+                <div id="idConfigPart" class="disabledDiv">
+                    <label>{{Configuration}}</label></br>
+                    <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
+                    <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
+                    <button id="idMapsBtn" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
+                    <!-- TODO: Text size (to be stored in DB) -->
+                </div>
+            </div>
 
         <!-- SVG reminder
         viewPort = visible area of the SVG image. So should allow to see the full SVG.

@@ -237,7 +237,7 @@
 
                 Abeille::pauseDaemons(0);
 
-                if ($erasePdm) {
+                if (($status == 0) && $erasePdm) {
                     logMessage('info', 'Effacement de la PDM');
                     if (sendToCmd('TempoCmdAbeille'.$zgId.'/0000/zgErasePdm&time='.(time()+2), '') == false) {
                         $status = -1;

@@ -169,7 +169,7 @@
             echo '<div class="col-lg-5">';
                     echo '<div id="idUpdFw'.$zgId.'">';
                     echo '<a id="idUpdateFW'.$zgId.'" class="btn btn-danger" onclick="updateFW('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre-à-jour}}</a>';
-                    echo '<select id="idFW'.$zgId.'" style="width:120px; margin-left:4px" title="{{Firmwares disponibles}}">';
+                    echo '<select id="idFW'.$zgId.'" style="width:160px; margin-left:4px" title="{{Firmwares disponibles}}">';
                     foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
                         $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
                         if (substr($fwVers, -4) == "-dev") {
@@ -179,7 +179,7 @@
                             $fwVers = substr($fwVers, 0, -4); // Removing "-dev" suffix
                         }
                         $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
-                        if ($fwVers == "3.23-opdm")
+                        if ($fwVers == "0004-0323-opdm")
                             echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                         else
                             echo '<option value='.$fwName.'>'.$fwVers.'</option>';
@@ -997,12 +997,14 @@
         let zgPort = $("#idSelSP"+zgId).val();
         let zgGpioLib = $("#idZgGpioLib").val();
         let curFw = document.getElementById("idFwVersion"+zgId).value;
+        console.log("updateFW2("+zgId+", "+zgType+", "+zgFW+"): curFw="+curFw);
 
         msg = '{{Vous êtes sur le point de mettre à jour le firmware de la Zigate}}';
         msg += '<br> - {{Type}}    : '+zgType;
         msg += '<br> - {{Port}}    : '+zgPort;
         msg += '<br> - {{Lib GPIO}}: '+zgGpioLib;
-        msg += '<br> - {{Firmware}}: '+zgFW+'<br><br>';
+        msg += '<br> - {{Ancien firmware}}: '+curFw;
+        msg += '<br> - {{Nouveau firmware}}: '+zgFW+'<br><br>';
         let curIsLegacy = true;
         let newIsOpdm = false;
         erasePdm = false;
@@ -1014,7 +1016,7 @@
             if ((curFw == '0004') || (curFw == '0005') || (curFw == 'AB01'))
                 curIsLegacy = false; // Already OPDM
         }
-        if ((zgFW.indexOf("opdm") != -1) && (zgFW.indexOf("AB01-") != -1))
+        if ((zgFW.indexOf("opdm") != -1) || (zgFW.indexOf("AB01-") != -1))
             newIsOpdm = true;
         if (curIsLegacy) {
             if (newIsOpdm) {

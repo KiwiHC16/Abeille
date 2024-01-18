@@ -5,6 +5,7 @@ ChangeLog
 - Interne: Cmd: Amélioration formatAttribute() pour type x39/single precision + int8/int24/int32.
 - Placement réseau: En cours de revue.
 - Interne: Zigbee: Ajout support clusters 040C/CO, 040D/CO2, 042A/PM2.5
+- Page config: Firmwares renommés.
 
 240116-BETA-1
 -------------

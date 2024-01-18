@@ -95,12 +95,13 @@ if [ ${ACTION} == "check" ]; then
     exit 0
 elif [ ${ACTION} == "eraseeeprom" ]; then
     echo "Effacement de l'EEPROM"
-    echo "- Port tty: ${ZGPORT}"
 else
     echo "Lancement de la programmation du firmware"
-    echo "- Port tty: ${ZGPORT}"
     echo "- Firmware: ${FW_PATH}"
 fi
+echo "- Port tty: ${ZGPORT}"
+echo "- Lib GPIO: ${LIBGPIO}"
+echo "- Prog    : ${PROG}"
 
 # Memo connexion PiZiGate
 # port 0 = RESET
@@ -119,9 +120,6 @@ if [ ${LIBGPIO} == "WiringPi" ]; then
     gpio write 0 0
     sleep 1
     gpio write 0 1
-    sleep 1
-
-    gpio write 2 1
     sleep 1
 fi
 if [ ${LIBGPIO} == "PiGpio" ]; then
@@ -157,7 +155,7 @@ if [ ${LIBGPIO} == "WiringPi" ]; then
     sleep 1
     gpio write 0 0
     sleep 1
-gpio write 0 1
+    gpio write 0 1
 fi
 if [ ${LIBGPIO} == "PiGpio" ]; then
     python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py

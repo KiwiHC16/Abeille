@@ -18,7 +18,7 @@ BUILD_DIR=${PWD}/../../resources/prog_jennic-0.7/build
 FW_DIR=${PWD}/../../resources/fw_zigate
 
 # Checks
-echo "Vérifications préliminaires"
+echo "- Vérifications préliminaires"
 echo ${PWD}
 error=0
 if [ $# -lt 3 ]; then
@@ -28,7 +28,7 @@ if [ $# -lt 3 ]; then
 fi
 ACTION=$1
 ZGPORT=$2
-LIBGPIO=$3
+GPIOLIB=$3
 FW=$4
 
 if [ ${ACTION} != "flash" ] && [ ${ACTION} != "check" ] && [ ${ACTION} != "eraseeeprom" ]; then
@@ -53,28 +53,31 @@ else
         echo "=         Port: ${ZGPORT}"
         error=1
     fi
-    if [ ${LIBGPIO} == "WiringPi" ]; then
+    if [ ${GPIOLIB} == "WiringPi" ]; then
         command -v gpio >/dev/null
         if [ $? -ne 0 ]; then
             echo "= ERREUR: Commande 'gpio' manquante ou non exécutable !"
             echo "=         Le package WiringPi est probablement mal installé."
             error=1
         fi
+    # elif [ ${GPIOLIB} == "PiGpio" ]; then
+    # else
+    elif [ ${GPIOLIB} != "PiGpio" ]; then
+        echo "= ERREUR: Type de lib GPIO invalid (${GPIOLIB}) !"
+        error=1
     fi
-    if [ ! -e ${PROG} ]; then
-        # Compiling Jennic programmer since v0.7
-        echo "Compilation du programmateur"
-        pushd ${BUILD_DIR} >/dev/null
-        sudo make
-        if [ $? -ne 0 ]; then
-            echo "= ERREUR: Compilation ratée !"
-            error=1
-        fi
-        # echo "= ERREUR: Programmateur Jennic manquant !"
-        # echo "=         ${PROG}"
-        # error=1
-        popd >/dev/null
+    # (Re)Compiling Jennic programmer v0.7-Abeille
+    echo "- Compilation du programmateur"
+    pushd ${BUILD_DIR} >/dev/null
+    sudo make
+    if [ $? -ne 0 ]; then
+        echo "= ERREUR: Compilation ratée !"
+        error=1
     fi
+    # echo "= ERREUR: Programmateur Jennic manquant !"
+    # echo "=         ${PROG}"
+    # error=1
+    popd >/dev/null
     if [ ! -x ${PROG} ]; then
         # Attempting to correct execution right
         sudo chmod +x ${PROG} >/dev/null
@@ -94,14 +97,14 @@ echo "= Ok"
 if [ ${ACTION} == "check" ]; then
     exit 0
 elif [ ${ACTION} == "eraseeeprom" ]; then
-    echo "Effacement de l'EEPROM"
+    echo "- Effacement de l'EEPROM"
 else
-    echo "Lancement de la programmation du firmware"
-    echo "- Firmware: ${FW_PATH}"
+    echo "- Lancement de la programmation du firmware"
+    echo "  Firmware: ${FW_PATH}"
 fi
-echo "- Port tty: ${ZGPORT}"
-echo "- Lib GPIO: ${LIBGPIO}"
-echo "- Prog    : ${PROG}"
+echo "  Port tty: ${ZGPORT}"
+echo "  Lib GPIO: ${GPIOLIB}"
+echo "  Prog    : ${PROG}"
 
 # Memo connexion PiZiGate
 # port 0 = RESET
@@ -110,7 +113,7 @@ echo "- Prog    : ${PROG}"
 # Mode flash: FLASH=0, RESET=0 puis 1
 
 
-if [ ${LIBGPIO} == "WiringPi" ]; then
+if [ ${GPIOLIB} == "WiringPi" ]; then
     gpio mode 0 out
     gpio mode 2 out
 
@@ -121,8 +124,7 @@ if [ ${LIBGPIO} == "WiringPi" ]; then
     sleep 1
     gpio write 0 1
     sleep 1
-fi
-if [ ${LIBGPIO} == "PiGpio" ]; then
+elif [ ${GPIOLIB} == "PiGpio" ]; then
     python /var/www/html/plugins/Abeille/core/scripts/pizigateModeFlash.py
 fi
 
@@ -133,8 +135,8 @@ if [ ${ACTION} == "eraseeeprom" ]; then
         echo "= ERREUR: Effacement impossible"
         status=2
     else
-        echo "- Ok. Effacement terminé"
-        echo "Redémarrage de la PiZiGate"
+        echo "= Ok. Effacement terminé"
+        echo "- Redémarrage de la PiZiGate"
         status=0
     fi
 else
@@ -143,21 +145,20 @@ else
         # echo "= ERREUR: Programmation impossible"
         status=2
     else
-        echo "- Ok. Programmation faite"
-        echo "Redémarrage de la PiZiGate"
+        echo "= Ok. Programmation faite"
+        echo "- Redémarrage de la PiZiGate"
         status=0
     fi
 fi
 
 # Switch back to 'prod' mode
-if [ ${LIBGPIO} == "WiringPi" ]; then
+if [ ${GPIOLIB} == "WiringPi" ]; then
     gpio write 2 1
     sleep 1
     gpio write 0 0
     sleep 1
     gpio write 0 1
-fi
-if [ ${LIBGPIO} == "PiGpio" ]; then
+elif [ ${GPIOLIB} == "PiGpio" ]; then
     python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py
 fi
 

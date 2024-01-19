@@ -903,7 +903,7 @@
             data: {
                 action: 'checkTTY',
                 zgport: document.getElementById("ZiGatePort").value,
-                zgtype: 'PI',
+                zgtype: $("#idSelZgType" + zgId).val(),
             },
             dataType: 'json',
             global: false,
@@ -1005,19 +1005,25 @@
         msg += '<br> - {{Lib GPIO}}: '+zgGpioLib;
         msg += '<br> - {{Ancien firmware}}: '+curFw;
         msg += '<br> - {{Nouveau firmware}}: '+zgFW+'<br><br>';
-        let curIsLegacy = true;
-        let newIsOpdm = false;
         erasePdm = false;
+
+        // Current FW type ?
+        let curIsLegacy = false; // Assuming OPDM
         if (curFw != '') {
             // Format XXXX-YYYY: where
-            // Offical FW => XXXX=0003 (legacy), 0004 (OPDMv1), ou 0005 (OPDMv2)
-            // Abeille FW => AB01=OPDMv1
-            // v = curFw.substr(3, 1);
-            if ((curFw == '0004') || (curFw == '0005') || (curFw == 'AB01'))
-                curIsLegacy = false; // Already OPDM
+            // Offical FW => XXXX=0003 (Zigate v1, legacy), 0004 (Zigate v1, OPDM), ou 0005 (Zigate v2, OPDM)
+            // Abeille FW => AB01=Zigate v1, OPDM
+            major = curFw.substr(0, 4);
+            console.log("major=", major);
+            if (major == '0003')
+                curIsLegacy = true;
         }
+
+        // New FW type ?
+        let newIsOpdm = false;
         if ((zgFW.indexOf("opdm") != -1) || (zgFW.indexOf("AB01-") != -1))
             newIsOpdm = true;
+
         if (curIsLegacy) {
             if (newIsOpdm) {
                 msg += "{{Vous allez passer d'une version 'legacy' à 'OPDM'. La table des équipements connus de la Zigate doit être éffacée et vous allez devoir faire une réassocitaion complète.}}<br><br>";

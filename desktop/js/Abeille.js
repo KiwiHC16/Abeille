@@ -1418,7 +1418,7 @@ function sendZigate(action, param) {
                     console.log("config=", config);
                     saveConfig(config);
 
-                    topic = "CmdAbeille" + zgId + "/0000/zgSstartNetwork";
+                    topic = "CmdAbeille" + zgId + "/0000/zgStartNetwork";
                     payload = "";
                     sendToZigate(topic, payload);
                 }

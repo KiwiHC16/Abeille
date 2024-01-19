@@ -7,6 +7,7 @@ ChangeLog
 - Interne: Zigbee: Ajout support clusters 040C/CO, 040D/CO2, 042A/PM2.5
 - Page config: Firmwares renommés.
 - Page config: Corrections test de port + mise-à-jour FW.
+- Page config: Correction canal Zigbee (? = auto) + correction erreur changement.
 
 240116-BETA-1
 -------------

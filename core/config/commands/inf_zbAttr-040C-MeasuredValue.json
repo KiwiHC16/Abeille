@@ -1,0 +1,16 @@
+{
+    "inf_zbAttr-040C-MeasuredValue": {
+        "comment": "040C/CO cluster, attrib 0000/MeasuredValue",
+        "name": "MeasuredValue",
+        "subType": "numeric",
+        "template": "badge",
+        "isHistorized": "1",
+        "configuration": {
+            "historizeRound": "0"
+        },
+        "type": "info",
+        "logicalId": "040C-#EP#-0000",
+        "unit": "",
+        "genericType": "CO"
+    }
+}

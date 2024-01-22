@@ -1,0 +1,16 @@
+{
+    "inf_zbAttr-042A-MeasuredValue": {
+        "comment": "042A/PM2.5 cluster, attrib 0000/MeasuredValue",
+        "name": "MeasuredValue",
+        "subType": "numeric",
+        "template": "badge",
+        "isHistorized": "1",
+        "configuration": {
+            "historizeRound": "0"
+        },
+        "type": "info",
+        "logicalId": "042A-#EP#-0000",
+        "unit": "",
+        "genericType": "PM2.5"
+    }
+}

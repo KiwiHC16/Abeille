@@ -1187,9 +1187,42 @@
                     cmds["Occupancy"]["isVisible"] = 1;
                     // cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "clustId=0405&attrId=0000");
                     cmds["Bind "+epId+"-0406-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0406", "yes");
-                    cmds["SetReporting "+epId+"-0406-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0406&attrType=18&attrId=0000", "yes");
+                    cmds["SetReporting "+epId+"-0406-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0406&attrId=0000&attrType=18", "yes");
                     // if (minTimeout > 10)
                     //     minTimeout = 10;
+                }
+            }
+
+            /* 040C/Carbon Monoxide (CO) cluster */
+            if (isset(ep.servClusters["040C"]) && isset(ep.servClusters["042040CA"]['attributes'])) {
+                attributes = ep.servClusters["040C"]['attributes'];
+                if (isset(attributes['0000'])) {
+                    cmds["CO"] = newCmd("inf_zbAttr-040C-MeasuredValue");
+                    cmds["CO"]["isVisible"] = 1;
+                    cmds["Bind "+epId+"-040C-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=040C", "yes");
+                    cmds["SetReporting "+epId+"-040C-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=040C&attrId=0000&attrType=39", "yes");
+                }
+            }
+
+            /* 040D/Carbon Dioxide (CO2) cluster */
+            if (isset(ep.servClusters["040D"]) && isset(ep.servClusters["040D"]['attributes'])) {
+                attributes = ep.servClusters["040D"]['attributes'];
+                if (isset(attributes['0000'])) {
+                    cmds["CO2"] = newCmd("inf_zbAttr-040D-MeasuredValue");
+                    cmds["CO2"]["isVisible"] = 1;
+                    cmds["Bind "+epId+"-040D-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=040D", "yes");
+                    cmds["SetReporting "+epId+"-040D-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=040D&attrId=0000&attrType=39", "yes");
+                }
+            }
+
+            /* 042A/PM2.5 cluster */
+            if (isset(ep.servClusters["042A"]) && isset(ep.servClusters["042A"]['attributes'])) {
+                attributes = ep.servClusters["042A"]['attributes'];
+                if (isset(attributes['0000'])) {
+                    cmds["PM2.5"] = newCmd("inf_zbAttr-042A-MeasuredValue");
+                    cmds["PM2.5"]["isVisible"] = 1;
+                    cmds["Bind "+epId+"-042A-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=042A", "yes");
+                    cmds["SetReporting "+epId+"-042A-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=042A&attrId=0000&attrType=39", "yes");
                 }
             }
 

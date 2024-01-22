@@ -1,0 +1,61 @@
+{
+    "RODRETDimmer_IKEAofSweden": {
+        "manufacturer": "Ikea",
+        "model": "E2201",
+        "type": "Ikea RODRET dimmer",
+        "genericType": "Light",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Ikea-Dimmer",
+            "mainEP": "01",
+            "batteryType": "?"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0008&attrId=0000"
+            },
+            "Bind 01-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0008-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0008&attrType=20&attrId=0000",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

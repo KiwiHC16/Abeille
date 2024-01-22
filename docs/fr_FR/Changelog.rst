@@ -10,6 +10,7 @@ ChangeLog
 - Page config: Correction canal Zigbee (? = auto) + correction erreur changement.
 - Assitant modèle: Ajout support clusters 040C/CO, 040D/CO2 & 042A/PM2.5
 - Ikea RODRET dimmer: Suppport préliminaire (2684).
+- Interne: Cmd: getSimpleDescriptor = commande avec ACK.
 
 240116-BETA-1
 -------------

@@ -3092,27 +3092,31 @@
 
                 // Zigbee command: Active endpoints request (Active_EP_req)
                 // Mandatory params: 'addr'
+                // Optional: 'priority'
                 else if ($cmdName == 'getActiveEndpoints') {
                     /* Checking that mandatory infos are there */
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0045";
+                    $zgCmd = "0045";
 
                     // <target short address: uint16_t>
 
-                    $priority = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
+                    $prio = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
                     $addr = $Command['addr'];
                     $addrMode = "02"; // Short addr with ACK
 
+                    cmdLog('debug', "  getActiveEndpoints: Prio=${prio}, Addr=${addr}, EP=${ep}");
                     $data = $addr;
 
-                    $this->addCmdToQueue2($priority, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2($prio, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
                 // Zigbee command: Simple descriptor request (Simple_Desc_req)
+                // Mandatory: 'addr' + 'ep'
+                // Optional: 'priority'
                 else if ($cmdName == 'getSimpleDescriptor') {
                     $required = ['addr', 'ep'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -3121,13 +3125,16 @@
                     // <target short address: uint16_t>
                     // <endpoint: uint8_t>
 
-                    $cmd = "0043";
+                    $zgCmd = "0043";
+                    $prio = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
                     $addr = sprintf("%04X", hexdec($Command['addr']));
+                    $addrMode = "02"; // Short addr with ACK
                     $ep = sprintf("%02X", hexdec($Command['ep']));
 
+                    cmdLog('debug', "  getSimpleDescriptor: Prio=${prio}, Addr=${addr}, EP=${ep}");
                     $data = $addr.$ep;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2($prio, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
@@ -3139,12 +3146,12 @@
 
                     // <target short address: uint16_t>
 
-                    $cmd = "0042";
+                    $zgCmd = "0042";
                     $addr = sprintf("%04X", hexdec($Command['addr']));
 
                     $data = $addr;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
                 }
 

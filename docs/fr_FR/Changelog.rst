@@ -12,6 +12,7 @@ ChangeLog
 - Ikea RODRET dimmer: Suppport préliminaire (2684).
 - Interne: Cmd: getSimpleDescriptor = commande avec ACK.
 - Interne: Parser: Correction mauvais EP enregistré lors d'une réponse 'simple descriptor'.
+- Remplacement d'équipement: Corrections (2683).
 
 240116-BETA-1
 -------------

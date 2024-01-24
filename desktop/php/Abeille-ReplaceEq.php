@@ -31,6 +31,7 @@
 				list($net, $addr) = explode("/", $eqLogic->getLogicalId());
 				if ($addr == '0000')
 					continue; // Ignoring zigates
+				$zgId = substr($net, 7);
 				echo '<option value="'.$eqLogic->getId().'">Zigate '.$zgId.': '.$eqLogic->getHumanName().'</option>';
 			}
 		?>

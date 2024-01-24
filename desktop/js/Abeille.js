@@ -707,6 +707,7 @@ function replaceEq() {
     }
     // Ensure same jsonId
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
+    // console.log("eqPerZigate=", eqPerZigate);
     deadJsonId = eqPerZigate[deadZgId][deadId]["jsonId"];
     newJsonId = eqPerZigate[newZgId][newId]["jsonId"];
     if (deadJsonId != newJsonId) {
@@ -718,7 +719,11 @@ function replaceEq() {
     }
 
     var msg =
-        "{{Vous souhaitez remplacer '" + deadHName + "' par " + newHName + ".";
+        "{{Vous souhaitez remplacer}}<br> - " +
+        deadHName +
+        "<br>{{par}}<br> - " +
+        newHName +
+        "<br>";
 
     // if (dstZgId == srcZgId) {
     //     msg += "\n\nMais.. ca ne fait aucun sens.";
@@ -727,9 +732,8 @@ function replaceEq() {
     // }
 
     msg +=
-        "<br><br>L'équipement mort va recevoir les adresses du nouvel équipement.";
-    msg += "<br>Tout l'historique de l'équipement mort sera ainsi préservé.";
-    msg += "<br><br>On y va ?}}";
+        "<br>{{Pour récupérer l'historique de l'équipement mort, celui-ci va prendre les adresses du nouvel équipement.}}";
+    msg += "<br><br>{{On y va ?}}";
     bootbox.confirm(msg, function (result) {
         if (result == false) return;
 

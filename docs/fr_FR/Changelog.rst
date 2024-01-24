@@ -11,6 +11,7 @@ ChangeLog
 - Assitant modèle: Ajout support clusters 040C/CO, 040D/CO2 & 042A/PM2.5
 - Ikea RODRET dimmer: Suppport préliminaire (2684).
 - Interne: Cmd: getSimpleDescriptor = commande avec ACK.
+- Interne: Parser: Correction mauvais EP enregistré lors d'une réponse 'simple descriptor'.
 
 240116-BETA-1
 -------------

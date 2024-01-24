@@ -498,10 +498,9 @@
         //     }
         // }
 
-        /* There is a device info updates (manufId + modelId, or location).
-           Note: As opposed to 'updateDevice()', info is coming from device itself. */
+        /* There are device infos updates (ex: endpoints, manufId, modelId, location, ...). */
         function deviceUpdates($net, $addr, $ep, $updates = []) {
-            parserLog('debug', "  deviceUpdates(${net}, ${addr}, upd=".json_encode($updates, JSON_UNESCAPED_SLASHES).")");
+            parserLog('debug', "  deviceUpdates(${net}, ${addr}, EP=${ep}, upd=".json_encode($updates, JSON_UNESCAPED_SLASHES).")");
             if (isset($updates['ieee']))
                 $ieee = $updates['ieee'];
             else
@@ -2103,7 +2102,7 @@
 
         /* Called from decode8002() to decode "Simple_Desc_rsp"
            Was previously handled by 8043. */
-           function decode8002_SimpleDescRsp($net, $srcAddr, $pl, &$devUpdates) {
+        function decode8002_SimpleDescRsp($net, $srcAddr, $pl) {
             $sqn        = substr($pl, 0, 2);
             $status     = substr($pl, 2, 2);
             $srcAddr    = substr($pl, 6, 2).substr($pl, 4, 2);
@@ -2123,12 +2122,7 @@
             $discovering = $this->discoveringState($net, $srcAddr);
             if ($status != "00") {
                 parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
-                // if ($status == "83")
-                //     $statusMsg = 'EP is NOT active';
-                $m = '  Status ('.$status.') != "00" => Decoding ignored';
-                parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
+                parserLog2('debug', $srcAddr, "  Status (${status}) != '00' => Decoding ignored");
                 if ($discovering)
                     $this->discoverUpdate($net, $srcAddr, $ep, 'SimpleDescriptorResponse', $status, $statusMsg);
                 return;
@@ -2175,10 +2169,9 @@
 
             /* Record info if discovering state for this device */
             // $discovering = $this->discoveringState($net, $srcAddr);
+            $devUpdates = [];
             if (!$discovering) {
-                // $updates = [];
                 $devUpdates['servClusters'] = $inputClusters;
-                // $this->deviceUpdates($net, $srcAddr, $ep, $updates);
             } else {
                 $sdr = [];
                 $sdr['servClustCount'] = $servClustCount;
@@ -2187,6 +2180,12 @@
                 $sdr['cliClusters'] = $cliClusters;
                 $this->discoverUpdate($net, $srcAddr, $ep, 'SimpleDescriptorResponse', "00", $sdr);
             }
+
+            /* Note: reporting device updates here and not and the end of decode8002
+               because for this case EP00 may report infos for EP01, leading to
+               clusters saved for wrong EP00 instead of 01. */
+            if (count($devUpdates) != 0)
+                $this->deviceUpdates($net, $srcAddr, $ep, $devUpdates);
 
             /* Send to client if required (EQ page opened) */
             $toCli = array(
@@ -2721,7 +2720,7 @@
 
                 // Simple descriptor response (Simple_Desc_rsp)
                 else if ($clustId == "8004") {
-                    $this->decode8002_SimpleDescRsp($dest, $srcAddr, $pl, $devUpdates);
+                    $this->decode8002_SimpleDescRsp($dest, $srcAddr, $pl);
                 }
 
                 // Active Enpoints Response (Active_EP_rsp)

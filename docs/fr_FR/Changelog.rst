@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240124-BETA-1
+-------------
+
 - Ikea capteur qualité de l'air VINDSTYRKA: Mise-à-jour du modèle (2681).
 - Interne: Cmd: Amélioration formatAttribute() pour type x39/single precision + int8/int24/int32.
 - Placement réseau: En cours de revue.

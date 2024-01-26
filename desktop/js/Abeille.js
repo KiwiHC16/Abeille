@@ -90,6 +90,11 @@ function refreshEqInfos() {
             document.getElementById("idEqId").value = curEqId;
             document.getElementById("idEqAddr").value = eq.addr;
             document.getElementById("idZgType").value = eq.zgType;
+
+            rxOnWhenIdle = eq.zigbee.rxOnWhenIdle;
+            document.getElementById("idZbRxOnWhenIdle").value = rxOnWhenIdle
+                ? "{{Oui}}"
+                : "{{Non}}";
             document.getElementById("idZbModel").value = eq.zbModel;
             document.getElementById("idZbManuf").value = eq.zbManuf;
 

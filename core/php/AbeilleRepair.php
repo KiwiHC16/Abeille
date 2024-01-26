@@ -147,6 +147,12 @@
                     msgToCli("step", "EP${epId2} server cluster 0000 infos");
                     logMessage('debug', '  Requesting '.$missingTxt.' from EP '.$epId2);
                     msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+
+                    // WARNING: At least a device (TS0001, _TZ3000_tqlv4ug4) is not responding if multiple attributes at the same time (ex: 0004,0005,0006,4000)
+                    //          No solution so far. This will prevent to have the repair phase completed.
+                    // $missing = "0004,0005,0006";
+                    // $missing = "0004,0005";
+                    // msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/readAttribute2", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                     return; // Reducing requests on first missing stuff
                 }
             }

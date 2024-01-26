@@ -1732,7 +1732,7 @@
 
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $ieee)) {
-                monMsgFromZigate($msgDecoded); // Send message to monitor
+                monMsgFromZigate($m); // Send message to monitor
                 monAddrHasChanged($addr, $ieee); // Short address has changed
                 $GLOBALS["dbgMonitorAddr"] = $addr;
             }

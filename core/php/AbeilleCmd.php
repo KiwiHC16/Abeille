@@ -360,13 +360,13 @@
 
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-            $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
+
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', ''),
                 'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
                 'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
                 'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
-                'rxOnWhenIdle' => $rwOnWhenIdle ? true : false
+                'rxOnWhenIdle' => (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1)) ? true : false
             );
             if ($eq['jsonId'] != '') {
                 // Read JSON to get list of commands to execute

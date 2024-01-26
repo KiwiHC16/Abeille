@@ -289,7 +289,7 @@
                 'timeout'   => $ackAps ? 8 : 4, // Cmd expiration time
                 'sqn'       => '', // Zigate SQN
                 'sqnAps'    => '', // Network SQN
-                'ackAps'    => $ackAps, // True if ACK, false else
+                'ackAps'    => $ackAps, // True if ACK, false else => OBSOLETE. Replaced by 'waitFor'
                 'waitFor'   => $ackAps ? "ACK": "8000",
             );
 
@@ -369,9 +369,24 @@
                 }
             }
 
+            // If priority is not LOW_PRIO & device TX status is 'NO ACK', moving to low priority queue to not delay cmds to other devices
+            if ($priority != PRIO_LOW) {
+                $dev = &getDevice($net, $addr);
+                if (isset($dev['txStatus']) && ($dev['txStatus'] == 'noack')) {
+                    cmdLog('debug', "    Device is NO-ACK: Moving cmd to low priority queue");
+                    $priority = PRIO_LOW;
+                }
+            }
+
             // $this->incStatCmd($cmd);
 
             AbeilleCmdQueue::pushZigateCmd($zgId, $priority, $zgCmd, $payload, $addr, $addrMode);
+
+            // TEST
+            // if ($addr == '85B1') {
+            //     logMessage("debug", "LA4 cmdQueue=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'], JSON_UNESCAPED_SLASHES));
+            // }
+            // END TEST
 
             // Display statistics
             $queuesTxt = '';
@@ -807,10 +822,8 @@
                     }
                     cmdLog('debug', "  cmd=".json_encode($cmd, JSON_UNESCAPED_SLASHES));
 
-                    // If ACK is requested but failed, removing cmd or it will lead to cmd timeout.
+                    // If ACK is requested but failed, txStatus='noack' must be stored.
                     // Note: This is done only if cmd == last sent.
-                    // if ($cmd['ackAps'] && $lastSent)
-                    //     $removeCmd = true;
                     if ($lastSent && ($cmd['waitFor'] == "ACK")) {
                         $removeCmd = true;
 
@@ -820,7 +833,7 @@
                         if ($eq === []) {
                             cmdLog('debug', "  WARNING: Unknown device: Net=${net} Addr=${addr}");
                         } else {
-                            cmdLog('debug', "  eq=".json_encode($eq));
+                            cmdLog('debug', "  eq=".json_encode($eq, JSON_UNESCAPED_SLASHES));
                             // Note: TX status makes sense only if device is always listening (rxOnWhenIdle=TRUE)
                             //       For other devices any interrogation without waking up device may lead to NO-ACK which is normal
                             if (isset($eq['rxOnWhenIdle']) && $eq['rxOnWhenIdle']) {

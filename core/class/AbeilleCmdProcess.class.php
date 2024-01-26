@@ -3107,7 +3107,7 @@
                     $addr = $Command['addr'];
                     $addrMode = "02"; // Short addr with ACK
 
-                    cmdLog('debug', "  getActiveEndpoints: Prio=${prio}, Addr=${addr}, EP=${ep}");
+                    cmdLog('debug', "  getActiveEndpoints: Prio=${prio}, Addr=${addr}");
                     $data = $addr;
 
                     $this->addCmdToQueue2($prio, $dest, $zgCmd, $data, $addr, $addrMode);
@@ -3255,6 +3255,75 @@
                     $this->readAttribute(PRIO_NORM, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId'], $manufId);
                     return;
                 }
+
+                // ZCL global: Generic 'read attribute request' function based on 0530 zigate msg
+                // Mandatory params: 'addr', 'ep', 'clustId', 'attrId'
+                // Optional : 'priority', 'manufCode'
+                else if ($cmdName == 'readAttribute2') {
+                    /* Checking that mandatory infos are there */
+                    $required = ['ep', 'clustId', 'attrId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <cluster ID: uint16_t>
+                    // <profile ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    // ZCL header
+                        // Frame control
+                        // Manuf code
+                        // SQN
+                        // Command ID
+                    // Write attribute record 1
+                        // Attribute id
+                        // Attribute data type
+                        // Attribute data
+                    // ...
+                    // Write attribute record X
+
+                    $priority   = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $clustId    = $Command['clustId'];
+                    $profId     = "0104";
+                    $secMode    = "02"; // ???
+                    $radius     = "30"; // ???
+
+                    /* ZCL header */
+                    $hParams = array(
+                        'manufCode' => isset($Command['manufCode']) ? $Command['manufCode'] : '',
+                        'cmdId' => '00', // Read Attributes
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
+
+                    cmdLog('debug', "  readAttribute2: AttrId=".$Command['attrId']);
+
+                    $list = explode(',', $Command['attrId']);
+                    $attrIdList = '';
+                    foreach ($list as $attrId) {
+                        if (strlen($attrId) != 4) {
+                            cmdLog('error', "  readAttribute2(): Format attribut (${attrId}) incorrect => ignoré.");
+                            continue;
+                        }
+                        $attrIdList .= AbeilleTools::reverseHex($attrId);
+                    }
+
+                    $data2 = $zclHeader.$attrIdList;
+                    $dataLength = sprintf("%02X", strlen($data2) / 2);
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
+                    $data = $data1.$data2;
+                    $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode);
+                    return;
+                } // End 'readAttribute2'
 
                 // Generic 'write attribute request' function based on 0110 Zigate msg.
                 // ZCL global: writeAttribute command

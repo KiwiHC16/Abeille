@@ -8,6 +8,13 @@
 ?>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Toujours en écoute}}</label>
+    <div class="col-sm-5">
+        <input id="idZbRxOnWhenIdle" readonly title="{{'Oui' si l'équipement est toujours en écoute}}" value="" />
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
     <div class="col-sm-5">
         <input id="idZbModel" readonly title="{{Identificant Zigbee du modèle}}" value="" />

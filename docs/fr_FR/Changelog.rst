@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Interne: Amélioration latence. Si equipement sans réponse (NO-ACK), passe en basse priorité.
+- Interne: Qq corrections + ajout support 'readAttribute2()' pour test.
+
 240124-BETA-1
 -------------
 

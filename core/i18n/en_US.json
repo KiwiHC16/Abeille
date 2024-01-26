@@ -127,6 +127,8 @@
         "Nom logique": "Logical name",
         "Adresse (courte/IEEE)": "Addr (short/IEEE)",
         "Voir ici si présente": "See there",
+        "Toujours en écoute": "RX always ON",
+        "'Oui' si l'équipement est toujours en écoute": "'True' means device is always listening",
         "Identifiant Zigbee": "Zigbee ID",
         "Identificant Zigbee du modèle": "Zigbee model ID",
         "Identificant Zigbee du fabricant": "Zigbee manufacturer ID",

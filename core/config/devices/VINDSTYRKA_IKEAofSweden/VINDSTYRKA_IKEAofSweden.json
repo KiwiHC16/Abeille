@@ -69,13 +69,13 @@
             },
             "SetReporting 01-042A-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=042A&attrId=0000&attrType=39&minInterval=1800&maxInterval=1800&changeVal=2",
+                "params": "ep=01&clustId=042A&manufCode=1141&attrId=0000&attrType=39&minInterval=1800&maxInterval=1800&changeVal=2",
                 "execAtCreation": "yes",
                 "comment": "PM2.5, type Single precision/39, reporting every 30mins or diff 2"
             },
             "SetReporting 01-FC7E-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=FC7E&attrId=0000&attrType=39&minInterval=1800&maxInterval=1800&manufCode=1141",
+                "params": "ep=01&clustId=FC7E&manufCode=1141&attrId=0000&attrType=39&minInterval=1800&maxInterval=1800",
                 "execAtCreation": "yes",
                 "comment": "VOC, type Single precision/39, reporting every 30mins"
             },

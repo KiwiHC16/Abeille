@@ -3958,7 +3958,7 @@
                         else
                             $changeVal = $this->formatAttribute($changeVal, $attrType);
 
-                        cmdLog('debug', "  configureReporting2: AttrId=${$attrId}, AttrType='${attrType}', Min='${minInterval}', Max='${maxInterval}', ChangeVal='${changeVal}'");
+                        cmdLog('debug', "  configureReporting2: AttrId=${attrId}, AttrType=${attrType}, Min=${minInterval}, Max=${maxInterval}, ChangeVal=${changeVal}");
                         $attrId = AbeilleTools::reverseHex($attrId);
                         $minInterval = AbeilleTools::reverseHex($minInterval);
                         $maxInterval = AbeilleTools::reverseHex($maxInterval);

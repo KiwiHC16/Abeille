@@ -4,6 +4,7 @@ ChangeLog
 - Interne: Amélioration latence. Si equipement sans réponse (NO-ACK), passe en basse priorité.
 - Interne: Qq corrections + ajout support 'readAttribute2()' pour test.
 - Ikea RODRET dimmer: Mise-à-jour du modèle (2684).
+- Ikea capteur qualité de l'air VINDSTYRKA: Mise-à-jour du modèle (2681).
 
 240124-BETA-1
 -------------

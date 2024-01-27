@@ -10,7 +10,7 @@
         "configuration": {
             "icon": "Ikea-Dimmer",
             "mainEP": "01",
-            "batteryType": "?"
+            "batteryType": "1x1.2V AAA/HR03"
         },
         "commands": {
             "Battery-Percent": {
@@ -27,34 +27,18 @@
                 "params": "ep=01&clustId=0001",
                 "execAtCreation": "yes"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "nextLine": "after"
-            },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "params": "ep=01",
-                "isVisible": "1"
-            },
-            "Level": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "params": "ep=01",
-                "isVisible": "1",
-                "nextLine": "after"
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0008&attrId=0000"
-            },
             "Bind 01-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0008",
                 "execAtCreation": "yes"
             },
-            "SetReporting 01-0008-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0008&attrType=20&attrId=0000",
-                "execAtCreation": "yes"
+            "Up Long": {
+                "use": "inf_zbCmdC-0008-MoveWithOnOff",
+                "isVisible": 1
+            },
+            "Down Long": {
+                "use": "inf_zbCmdC-0008-Move",
+                "isVisible": 1
             }
         }
     }

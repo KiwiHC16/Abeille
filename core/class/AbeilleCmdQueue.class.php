@@ -355,21 +355,22 @@
                 return;
             }
 
-            // Overflow optimisation
-            // Ignoring if same cmd/payload already in the pipe
+            // Troughput optimisation: Ignoring if same cmd/payload is already in the pipe
             // TODO: May need to take care about 'toggle' case.
-            // $pendingCmds = $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority];
-            $pendingCmds = $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority];
-            foreach($pendingCmds as $pendCmd) {
-                if ($pendCmd['cmd'] != $zgCmd)
-                    continue;
-                if ($pendCmd['datas'] == $payload) {
-                    cmdLog('debug', "    Same cmd already pending with priority ${priority} => ignoring");
-                    return;
+            // TODO: Is it worth removing old pendind cmd and adding new one ? Might allow to keep latest cmds order.
+            foreach (range(priorityMax, priorityMin) as $prio2) {
+                $pendingCmds = $GLOBALS['zigates'][$zgId]['cmdQueue'][$prio2];
+                foreach($pendingCmds as $pendCmd) {
+                    if ($pendCmd['cmd'] != $zgCmd)
+                        continue;
+                    if ($pendCmd['datas'] == $payload) {
+                        cmdLog('debug', "    Same cmd already pending with priority ${prio2} => ignoring");
+                        return;
+                    }
                 }
             }
 
-            // If priority is not LOW_PRIO & device TX status is 'NO ACK', moving to low priority queue to not delay cmds to other devices
+            // If priority is not PRIO_LOW & device TX status is 'NO ACK', moving to low priority queue to not delay cmds to other devices
             if ($priority != PRIO_LOW) {
                 $dev = &getDevice($net, $addr);
                 if (isset($dev['txStatus']) && ($dev['txStatus'] == 'noack')) {
@@ -554,7 +555,7 @@
                         $sendIdx = 0;
                     } else {
                         // Regulation required. Looking for Zigate only cmd
-                        cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri/Idx=${priority}/${cmdIdx}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
+                        cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}/Idx=${cmdIdx}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
                         foreach ($zg['cmdQueue'][$priority] as $cmdIdx => $cmd) {
                             if ($cmdIdx == 0)
                                 continue; // 1st cmd already checked
@@ -572,7 +573,7 @@
 
                 // Finally something to send for this Zigate ?
                 if (isset($sendIdx)) {
-                    cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri/Idx=${priority}/${sendIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
+                    cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}/Idx=${sendIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
                     $GLOBALS['zigates'][$zgId]['available'] = 0; // Zigate no longer free
                     $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
                     $GLOBALS['zigates'][$zgId]['sentIdx'] = $sendIdx;

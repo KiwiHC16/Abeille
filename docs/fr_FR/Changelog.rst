@@ -5,6 +5,7 @@ ChangeLog
 - Interne: Qq corrections + ajout support 'readAttribute2()' pour test.
 - Ikea RODRET dimmer: Mise-à-jour du modèle (2684).
 - Ikea capteur qualité de l'air VINDSTYRKA: Mise-à-jour du modèle (2681).
+- Interne: Cmd ignorée si déja 'pending' qq soit la priorité.
 
 240124-BETA-1
 -------------

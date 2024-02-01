@@ -349,8 +349,8 @@
                 },
                 "FCC0-00F7": {
                     "type": "xiaomi",
-                    "struct": 1,
-                    "01-21": { // <idx>-<type>
+                    "struct": 1, // Indicates to handle attr FCC0-00F7 as a 4C/structure
+                    "01-21": { // <type>-<data>
                         "func": "numberDiv",
                         "div": 1000,
                         "info": "0001-01-0020",

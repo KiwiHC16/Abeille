@@ -290,8 +290,8 @@
             },
             "FCC0-00F7": { // CLUSTID-ATTRID for struct/4C
                 "type": "xiaomi",
-                "struct": 1,
-                "01-21": { // <idx>-<type>
+                "struct": 1, // Indicates to handle attr FCC0-00F7 as a 4C/structure
+                "01-21": { // <type>-<data>
                     "func": "numberDiv",
                     "div": 1000,
                     "info": "0001-01-0020",
@@ -309,13 +309,15 @@
 
                 $pKeyLen = strlen($pKey);
                 $pType = $pVal['type'];
-                if ($pType = "xiaomi") {
+                if ($pType == "xiaomi") {
                     if ($pKeyLen != 9) { // Expecting CLUSTID-ATTRID
                         newDevError($devName, "ERROR", "Xiaomi private support: Invalid key '${pKey}'");
                         continue;
                     }
 
-                    if (isset($pVal['info'])) {
+                    if (isset($pVal['struct'])) {
+                        // 4C/struct case
+                    } else if (isset($pVal['info'])) {
                         // info + function case
                     } else {
                         // tag-type case

@@ -57,6 +57,9 @@ Exemple: BASICZBR3.json
         "Off": { "use": "Off", "isVisible": 1 },
         "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
         "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" }
+      },
+      "private": {
+        "comment": "Optional section but required for private clusters"
       }
     }
   }
@@ -160,20 +163,11 @@ Exemple: BASICZBR3.json
 
 Support spécifique de cluster privés
 ====================================
-EN COURS !!!
 La syntaxe actuelle est la suivante :
 
     "private": {
         "ED00": { // CLUSTID
             "type": "tuya-zosung"
-        },
-        "0000-FF01": { // CLUSTID-ATTRID
-            "type": "xiaomi",
-            "01-21": {
-                "func": "numberDiv",
-                "div": 1000,
-                "info": "0001-01-0020"
-            }
         },
         "EF00": { // CLUSTID
             "type": "tuya",
@@ -181,5 +175,30 @@ La syntaxe actuelle est la suivante :
                 "function": "rcvValue",
                 "info": "01-measuredValue"
             },
+        },
+
+        "FCC0-0112": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "info": "0400-01-0000"
+        },
+        "0000-FF01": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "comment": "Xiaomi private case for <tag>-<type>",
+            "01-21": {
+                "func": "numberDiv",
+                "div": 1000,
+                "info": "0001-01-0020"
+            }
+        },
+        "0000-FF02": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "struct": 1,
+            "comment": "Xiaomi private case with 4C/struct data type",
+            "01-21": {
+                "func": "numberDiv",
+                "div": 1000,
+                "info": "0001-01-0020",
+                "comment": "Battery-Volt"
+            }
         }
     }

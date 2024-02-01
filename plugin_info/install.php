@@ -874,7 +874,7 @@
         /* Internal changes
          * - Logs: AbeilleSerialReadX logs moved to /tmp/jeedom/Abeille
          * - Config DB: Removing keys for Zigates 7 to 10.
-         * - eqLogic DB: Icon renamed 'IkeaTradfriDimmer' => 'Ikea-Tradfri-Dimmer'
+         * - eqLogic DB: Several icons renamed for normalizations purposes
          * - eqLogic DB: Removed 'ab::txAck' for devices not always listening
          * - eqLogic DB: 'ab::eqModel', sig/id/location renamed to modelSig/modelName/modelSource
          * - eqLogic DB: 'ab::eqModel', 'forcedByUser' => 'modelForced'
@@ -898,16 +898,22 @@
 
                 // eqLogic: Renaming icons if required
                 $iconsList = array(
-                    "IkeaTradfriDimmer" => "Ikea-Tradfri-Dimmer",
                     'eTRV0100' => 'Danfoss-Ally-Thermostat',
+
+                    "IkeaTradfriDimmer" => "Ikea-Tradfri-Dimmer",
                     'IkeaTradfriBulbE14WSOpal400lm' => 'Ikea-BulbE14-Globe',
-                    'ProfaluxLigthModule' => 'Profalux-LigthModule',
                     'Ikea-BulbE14CandleWhite' => 'Ikea-BulbE14-Candle',
                     'TRADFRIbulbE14Wopch400lm' => 'Ikea-BulbE14-Candle',
                     'TRADFRIbulbE14WS470lm' => 'Ikea-BulbE14-Candle',
                     'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
                     'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
-                    'Mhcozy-ZG-0005-RF'=> 'Mhcozy-ZG-005-RF'
+
+                    'Mhcozy-ZG-0005-RF'=> 'Mhcozy-ZG-005-RF',
+
+                    'ProfaluxLigthModule' => 'Profalux-LigthModule',
+
+                    'XiaomiBouton1' => 'Xiaomi-Button-3',
+                    'XiaomiBouton3' => 'Xiaomi-Button-2',
                 );
                 $curIcon = $eqLogic->getConfiguration('ab::icon', '');
                 if (($curIcon != '') && isset($iconsList[$curIcon])) {

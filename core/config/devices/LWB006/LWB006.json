@@ -1,5 +1,8 @@
 {
     "LWB006": {
+        "manufacturer": "Philips",
+        "model": "?",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",

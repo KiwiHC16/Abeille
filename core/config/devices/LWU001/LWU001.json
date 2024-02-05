@@ -2,6 +2,7 @@
     "LWU001": {
         "manufacturer": "Philips",
         "model": "9290024406",
+        "genericType": "Light",
         "type": "Philips E14 white bulb",
         "timeout": "60",
         "category": {

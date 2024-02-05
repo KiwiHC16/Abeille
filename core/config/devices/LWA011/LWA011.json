@@ -3,6 +3,7 @@
         "manufacturer": "Philips",
         "model": "9290018216",
         "type": "Philips E27 white bulb",
+        "genericType": "Light",
         "timeout": "60",
         "category": {
             "light": "1"

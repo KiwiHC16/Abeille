@@ -1,7 +1,8 @@
 {
-    "RODRETDimmer_IKEAofSweden": {
+    "RODRETDimmer_IKEAofSweden-direct": {
         "manufacturer": "Ikea",
-        "model": "E2201",
+        "model": "E2201 direct",
+        "comment": "Commands sent directly to groupe. Except battery, nothing received on Jeedom side.",
         "type": "Ikea RODRET dimmer",
         "genericType": "Light",
         "category": {
@@ -26,24 +27,6 @@
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0001",
                 "execAtCreation": "yes"
-            },
-            "Bind 01-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0006",
-                "execAtCreation": "yes"
-            },
-            "Bind 01-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0008",
-                "execAtCreation": "yes"
-            },
-            "Up Long": {
-                "use": "inf_zbCmdC-0008-MoveWithOnOff",
-                "isVisible": 1
-            },
-            "Down Long": {
-                "use": "inf_zbCmdC-0008-Move",
-                "isVisible": 1
             }
         }
     }

@@ -57,7 +57,7 @@
             while (($dirEntry2 = readdir($dh2)) !== false) {
                 if (in_array($dirEntry2, array(".", "..")))
                     continue;
-                logDebug("dirEntry2='${dirEntry2}'");
+                logDebug("${dirEntry} => dirEntry2='${dirEntry2}'");
                 // Model and its optional variants is named '<modelName>[-<variant>].json'
                 if (substr($dirEntry2, 0, $deLen) != $dirEntry)
                     continue; // Discovery or other file but not a model

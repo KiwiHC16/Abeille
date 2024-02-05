@@ -714,28 +714,11 @@
                 }
 
                 // Clear all pending messages for net/addr device.
-                // This is useful when short addr changed, due to (multiple) device announce.
-                // TODO: Device may change network too
+                // This is useful when short addr changed, due to (multiple) device announce,
+                // or device migrated to another network.
                 if ($msg['type'] == "clearMessages") {
                     cmdLog("debug", "  clearMessages for ".$msg['net']."/".$msg['addr']);
                     clearPending($zgId, $msg['addr']);
-                    // foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $p => $q) {
-                    //     cmdLog("debug", "  p=${p}, q=".json_encode($q));
-                    //     while (count($GLOBALS['zigates'][$zgId]['cmdQueue'][$p]) != 0) {
-                    //         $updated = false; // True if queue updated
-                    //         foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'][$p] as $cIdx => $c) {
-                    //             cmdLog("debug", "  cIdx=${cIdx}, c=".json_encode($c));
-                    //             if ($c['addr'] != $msg['addr'])
-                    //                 continue;
-                    //             array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$p], $cIdx, 1);
-                    //             cmdLog("debug", "  Removed Pri/Idx=${p}/${cIdx}");
-                    //             $updated = true; // Queue updated. Foreach must restart from scratch
-                    //             break;
-                    //         }
-                    //         if ($updated == false)
-                    //             break;
-                    //     }
-                    // }
                     continue;
                 } // End type=='clearMessages'
 

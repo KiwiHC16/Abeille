@@ -3,6 +3,7 @@ ChangeLog
 
 - Modèles: Ajout fabricant & type generic sur certains modèles Philips.
 - Ikea RODRET dimmer: Ajout modèle variante 'direct' (2684).
+- Interne: Parser+Cmd: Messages en attente supprimés si équipement change de réseau.
 
 240201-BETA-1
 -------------

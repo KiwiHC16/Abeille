@@ -333,6 +333,14 @@
                     unset($GLOBALS['eqList'][$oldNet][$oldAddr]);
                     parserLog('debug', '  EQ already known on network '.$oldNet.' with addr '.$oldAddr.' => migrated');
 
+                    // Removing any cmd pending message for old net/address since device would no longer answer
+                    $msg = array(
+                        'type' => 'clearMessages',
+                        'net' => $oldNet,
+                        'addr' => $oldAddr
+                    );
+                    msgToCmdAck($msg);
+
                     // Informing Abeille to migrate Jeedom part to proper network.
                     $msg = array(
                         'type' => 'eqMigrated',

@@ -133,7 +133,8 @@
                     echo '<a class="serialPortStatus'.$zgId.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         echo '<span class="label label-success" style="font-size:1em">-?-</span>';
                     echo '</a>';
-                    echo '<a class="btn btn-danger ml4px" onclick="installTTY()" title="{{Tentative de libération du port qui pourrait être utilisé par la console}}"><i class="fas fa-sync"></i> {{Libérer}}</a>';
+                    if (isset($dbgDeveloperMode))
+                        echo '<a class="btn btn-danger ml4px" onclick="installTTY()" title="{{Tentative de libération du port qui pourrait être utilisé par la console}}"><i class="fas fa-sync"></i> {{Libérer}}</a>';
                 echo '</div>';
             echo '</div>';
         echo '</div>';

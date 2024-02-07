@@ -5,6 +5,7 @@ ChangeLog
 - Ikea RODRET dimmer: Ajout modèle variante 'direct' (2684).
 - Interne: Parser+Cmd: Messages en attente supprimés si équipement change de réseau.
 - Page config: Bouton 'libérer' visible en mode dev seulement. Pas robuste pour utilisateur final.
+- Outils: Script de test en ligne de cmd préliminaire (resources/scripts/checkZigate.sh)
 
 240201-BETA-1
 -------------

@@ -7,15 +7,26 @@
 ###
 
 # Usage
-# checkZigate.sh <portName>
+# checkZigate.sh [options] <portName>
+# Possible options
+# -k => kill process using port
 # ex: checkZigate.sh /dev/ttyUSB0
 
 # Args
 PORT=""
 TYPE="USB"
+KILLIFUSED=0
 while [[ $# -gt 0 ]]; do
     if [[ "$1" == "-"* ]]; then
-        echo "option $1"
+        case $1 in
+            '-k')
+                KILLIFUSED=1
+                ;;
+            *)
+                echo "ERROR: Unexpected option '$1'"
+                exit 1
+                ;;
+        esac
     else
         if [ "${PORT}" != "" ]; then
             echo "ERROR: Unexpected arg '$1'"
@@ -59,16 +70,34 @@ else
             break
         fi
     done
-    echo "= ERROR: Port is used by process '${PID}'."
 
-    PSOUT=`ps --pid ${PID} -o ppid,cmd | grep -v PPID`
-    IFS=' '
-    read -ra PSOUTA <<< "${PSOUT}"
-    PPID2=${PSOUTA[0]}
-    CMD=${PSOUTA[@]:1}
-    echo "=         Process details ${PID}:"
-    echo "=           PPid=${PPID2}, cmd='${CMD}'"
-    exit 3
+    # Kill requested ?
+    if [ ${KILLIFUSED} -eq 1 ]; then
+        echo "- Killing process ${PID}"
+        kill -9 ${PID}
+        # TODO: While loop with timeout to wait for effective kill
+    else
+        echo "= ERROR: Port is used by process '${PID}'."
+
+        PSOUT=`ps --pid ${PID} -o ppid,cmd | grep -v PPID`
+        IFS=' '
+        read -ra PSOUTA <<< "${PSOUT}"
+        PPID2=${PSOUTA[0]}
+        CMD=${PSOUTA[@]:1}
+        echo "=        ${PID} process details:"
+        echo "=        PPid=${PPID2}, cmd='${CMD}'"
+        exit 4
+    fi
 fi
+
+# Port is free, let's interrogate Zigate but python is required for that.
+command -v python3 >/dev/null
+if [ $? -ne 0 ]; then
+    echo "= ERROR: Could not find 'python3' command."
+    echo "         It is required for next steps"
+    exit 5
+fi
+
+python3 core/python/AbeilleZigate.py
 
 exit 0

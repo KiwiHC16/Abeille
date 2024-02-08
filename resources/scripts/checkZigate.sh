@@ -98,6 +98,6 @@ if [ $? -ne 0 ]; then
     exit 5
 fi
 
-python3 core/python/AbeilleZigate.py
+python3 core/python/AbeilleZigate.py ${PORT}
 
 exit 0

@@ -1,9 +1,7 @@
+### Python interface for Zigate
+### Requires python3
+
 # coding: utf-8
-# Requires python3
-
-# WORK IN PROGRESS - UNUSED so far
-# Trials to migrate some Abeille control parts in Python.
-
 import os.path
 # import json
 from collections import OrderedDict
@@ -11,13 +9,22 @@ import sys
 import time
 import subprocess
 
+# Global vars
+zgDebug = 0 # Debug/verbose mode (0=none)
+
+# Print function if debug mode enabled
+def zgLog(txt):
+    if zgDebug == 0:
+        return
+    print(txt)
+
 # Wait for port to be available, configure it then open it
 def zgWaitPort(serial):
 
-    print("zgWaitPort("+serial+")")
+    zgLog("zgWaitPort("+serial+")")
     while (True):
         # Wait for port
-        print("wait for port "+serial)
+        zgLog("wait for port "+serial)
         while (True):
             if (os.path.exists(serial)):
                 break
@@ -27,14 +34,14 @@ def zgWaitPort(serial):
         # exec(str(str(str(system.getCmdSudo()) + 'sudo chmod 666 ') + str(serial)) + ' >/dev/null 2>&1');
         os.system("sudo chmod 666 " + str(serial) + ' >/dev/null 2>&1')
         # exec(str("stty -F " + str(serial)) + " sane >/dev/null 2>&1", out, status);
-        print("stty sane")
+        zgLog("stty sane")
         proc = subprocess.Popen(['stty', '-F', str(serial), 'sane'],
            stdout=subprocess.PIPE,
            stderr=subprocess.STDOUT)
         status = proc.wait()
         if (status == 0):
             # exec(str("stty -F " + str(serial)) + " speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1", out, status);
-            print("stty speed...")
+            zgLog("stty speed...")
             proc = subprocess.Popen(['stty', '-F', str(serial), 'speed', '115200', 'cs8', '-parenb', '-cstopb', '-echo', 'raw'],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT)
@@ -43,31 +50,31 @@ def zgWaitPort(serial):
             # Could not configure it properly
             # err = implode("/", out)
             # logMessage('debug', 'stty error: ' + str(err))
-            print("ERROR: stty config failed")
+            zgLog("ERROR: stty config failed")
             continue
 
         # Config done. Opening
         try:
             f = open(serial, "rb")
-            print(str(serial)+" port opened")
+            zgLog(str(serial)+" port opened")
             # logMessage('debug', str(serial) + ' port opened')
             # stream_set_blocking(f, True)
             # Should be blocking read but is it default ?
             # $firstFrame = true; // First frame might be corrupted
             return f
         except:
-            print("ERROR: open")
+            zgLog("ERROR: open failed. Retrying ...")
             time.sleep(0.5) # Sleep 500ms
 
 def zgOpenPort(serial):
-    print("zgOpenPort(%s)" % serial)
+    zgLog("zgOpenPort(" + serial + ")")
     f = zgWaitPort(serial)
     return 0, f
 
 # Read message from given port handler
 def zgReadMsg(f):
 
-    print("zgReadMsg()")
+    zgLog("zgReadMsg()")
 
     transcode = False
     frame = ""  # Transcoded message from Zigate
@@ -130,11 +137,11 @@ def zgReadMsg(f):
                 # logMessage('debug', 'Got ' + json.dumps(frame))
                 if (ccrc != ecrc):
                     # CRC ERROR => no longer transmitted to Parser
-                    print('ERROR: CRC: got=0x%X, exp=0x%X, msg=%s' % (hex(ccrc), hex(ecrc), frame[0:0 + 12]))
+                    zgLog('ERROR: CRC: got=0x%X, exp=0x%X, msg=%s' % (hex(ccrc), hex(ecrc), frame[0:0 + 12]))
                 else:
                     # msgToSend = OrderedDict([('type','serialRead'),('net',net),('msg',frame)]);
                     # msgToParser(msgToSend)
-                    print("frame=", frame)
+                    zgLog("frame=" + frame)
                     return frame
 
                 # $frame = "";
@@ -159,7 +166,7 @@ def zgReadMsg(f):
     # f.close()
 
 def zgComposeMsg(msgType, *args):
-    print("zgComposeMsg(%s)" % msgType)
+    zgLog("zgComposeMsg(%s)" % msgType)
 
     # TODO: Ensure msgType is a 4 char string
     payload = "".join(args)
@@ -193,43 +200,62 @@ def zgMsgToFrame(msg):
     return "01" + msgout + "03"
 
 def zgWrite(f, zgMsg):
-    print("zgWrite(%s)" % zgMsg)
+    zgLog("zgWrite(%s)" % zgMsg)
 
     if not f:
-        print("zgWrite() END: fopen ERROR")
+        zgLog("zgWrite() END: fopen ERROR")
         return -1
     frame = zgMsgToFrame(zgMsg)
     status = f.write(bytes.fromhex(frame))
     f.flush()
     if not status:
-        print("zgWrite() END: fwrite ERROR")
+        zgLog("zgWrite() END: fwrite ERROR")
         return -1
     # logging.debug("zgWrite() END")
     return 0
 
-port = "/dev/ttyUSB0"
-err, f = zgOpenPort(port)
-zgMsg = zgComposeMsg("0010")
-print("zgMsg=", zgMsg)
-fW = open(port, "wb")
-zgWrite(fW, zgMsg)
-while True:
-    msg = zgReadMsg(f)
-    msgType = msg[0:4]
-    print("msgType=", msgType)
-    if (msgType == "8000"):
-        break
-while True:
-    msg = zgReadMsg(f)
-    msgType = msg[0:4]
-    print("msgType=", msgType)
-    if (msgType == "8010"):
-        break
-major = msg[10:14]
-minor = msg[14:18]
-version = major + '-' + minor
-print("Version " + version)
+# Read FW version from current opened port
+# Returns version as string ("MMMM-mmmm") or "" if error
+def zgGetFwVersion(fR, fW):
+    if (not fR) or (not fW):
+        zgLog("ERROR: zgGetFwVersion(): no opened port")
+        return ""
 
-f.close()
-fW.close()
+    zgMsg = zgComposeMsg("0010")
+    zgLog("zgMsg=" + zgMsg)
+    zgWrite(fW, zgMsg)
+    while True:
+        msg = zgReadMsg(fR)
+        msgType = msg[0:4]
+        zgLog("msgType=" + msgType)
+        if (msgType == "8000"):
+            break
+    while True:
+        msg = zgReadMsg(fR)
+        msgType = msg[0:4]
+        zgLog("msgType=" + msgType)
+        if (msgType == "8010"):
+            break
+    major = msg[10:14]
+    minor = msg[14:18]
+    version = major + '-' + minor
+    zgLog("Version " + version)
+    return version
+
+# Main
+if __name__ == '__main__':
+
+    # Checking arguments
+    nbArgs = len(sys.argv) # arg0=script name
+    if nbArgs < 2:
+        print("ERROR: Missing port name")
+        exit(1)
+    port = sys.argv[1]
+    zgDebug = 1
+
+    err, f = zgOpenPort(port)
+    fW = open(port, "wb")
+    version = zgGetFwVersion(f, fW)
+    f.close()
+    fW.close()
 

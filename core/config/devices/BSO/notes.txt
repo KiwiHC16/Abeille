@@ -38,8 +38,8 @@ Domoticz
         + "FFFF"
     )
 
-Utilisation de 'cmd-Generic' pour faire un set tilt
-===================================================
+Utilisation de 'cmd-Generic' pour faire un set tilt particulier
+===============================================================
     else if ($cmdName == 'cmd-Generic') {
         $required = ['addr', 'ep', 'clustId', 'cmd', 'data']; // Mandatory infos
 

@@ -6,6 +6,7 @@ ChangeLog
 - Interne: Parser+Cmd: Messages en attente supprimés si équipement change de réseau.
 - Page config: Bouton 'libérer' visible en mode dev seulement. Pas robuste pour utilisateur final.
 - Outils: Script de test en ligne de cmd préliminaire (resources/scripts/checkZigate.sh)
+- Profalux BSO tilt: Correction regression (2687).
 
 240201-BETA-1
 -------------

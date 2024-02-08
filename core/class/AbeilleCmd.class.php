@@ -55,7 +55,7 @@
             // log::add( 'Abeille', 'debug', 'CmdInfo: Start analysis: '.$request );
             // #cmdInfo_xxxxxxx_#
             if (preg_match('`#cmdInfo_(.*)_#`m', $request2, $m)) {
-                // log::add( 'Abeille', 'debug', 'CmdInfo: found it: '.json_encode($m) );
+                log::add( 'Abeille', 'debug', '  updateField(): Found cmd info: '.json_encode($m, JSON_UNESCAPED_SLASHES));
                 $cmdInfo = $eqLogic->getCmd('info', $m[1]);
                 // log::add( 'Abeille', 'debug', 'CmdInfo: '.$cmdInfo->getName() );
                 $request2 = str_replace("#cmdInfo_".$m[1]."_#", $cmdInfo->execCmd(), $request2);

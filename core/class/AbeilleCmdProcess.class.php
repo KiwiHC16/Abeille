@@ -1867,32 +1867,33 @@
             // }
 
             //----------------------------------------------------------------------------
-            if (isset($Command['Network_Address_request']))
-            {
-                $cmd = "0040";
+            // OBSOLETE: Replaced by getNwkAddress()
+            // if (isset($Command['Network_Address_request']))
+            // {
+            //     $cmd = "0040";
 
-                // <target short address: uint16_t> -> 4
-                // <extended address:uint64_t>      -> 16
-                // <request type: uint8_t>          -> 2
-                // <start index: uint8_t>           -> 2
-                // Request Type:
-                // 0 = Single Request 1 = Extended Request
-                // -> 24 / 2 = 12 => 0x0C
+            //     // <target short address: uint16_t> -> 4
+            //     // <extended address:uint64_t>      -> 16
+            //     // <request type: uint8_t>          -> 2
+            //     // <start index: uint8_t>           -> 2
+            //     // Request Type:
+            //     // 0 = Single Request 1 = Extended Request
+            //     // -> 24 / 2 = 12 => 0x0C
 
-                $address = $Command['address'];
-                $IeeeAddress = $Command['IEEEAddress'];
-                $requestType = "01";
-                $startIndex = "00";
+            //     $address = $Command['address'];
+            //     $IeeeAddress = $Command['IEEEAddress'];
+            //     $requestType = "01";
+            //     $startIndex = "00";
 
-                $data = $address.$IeeeAddress.$requestType.$startIndex ;
-                // $length = "000C"; // A verifier
+            //     $data = $address.$IeeeAddress.$requestType.$startIndex ;
+            //     // $length = "000C"; // A verifier
 
-                cmdLog('debug', '  Network_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
+            //     cmdLog('debug', '  Network_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
 
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
+            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
+            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+            //     return;
+            // }
 
             // Don't know how to make it works
             if (isset($Command['touchLinkFactoryResetTarget']))
@@ -3064,7 +3065,7 @@
                 } // End $cmdName == 'unbind0031'
 
                 // Zigbee command: IEEE address request (IEEE_addr_req)
-                else if ($cmdName == 'getIeeeAddress') { // IEEE_addr_req + IEEE_addr_rsp
+                else if ($cmdName == 'getIeeeAddress') { // IEEE_addr_req => IEEE_addr_rsp
                     /* Checking that mandatory infos are there */
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -3088,6 +3089,30 @@
                     $data = $address.$shortAddress.$requestType.$startIndex ;
 
                     $this->addCmdToQueue2($priority, $dest, $cmd, $data, $address);
+                    return;
+                }
+
+                // Zigbee command: Network address request (NWK_addr_req)
+                // Mandatory: 'ieee'
+                else if ($cmdName == 'getNwkAddress') {
+                    $zgCmd = "0040";
+
+                    // <target short address: uint16_t> // Tcharp38: What for ??
+                    // <extended address:uint64_t>
+                    // <request type: uint8_t>
+                    // <start index: uint8_t>
+                    // Request Type: 0 = Single Request 1 = Extended Request
+
+                    $addr = '0000'; // What for ?
+                    $ieee = $Command['ieee'];
+                    $requestType = "01";
+                    $startIndex = "00";
+
+                    $data = $addr.$ieee.$requestType.$startIndex ;
+
+                    cmdLog('debug', "  getNwkAddress: IEEE=${ieee}");
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
                 }
 

@@ -47,7 +47,7 @@
         <!-- <span>< ?php echo $eqAddr; ?></span> -->
         <input id="idEqAddr" type="text" value="" readonly>
         /
-        <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
+        <span id="idEqIeee" class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
     </div>
 </div>
 

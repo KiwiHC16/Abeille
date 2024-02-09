@@ -1758,6 +1758,10 @@ function interrogate(request) {
     } else if (request == "getIeeeAddress") {
         topic = "Cmd" + logicalId + "_getIeeeAddress";
         payload = "";
+    } else if (request == "getNwkAddress") {
+        topic = "Cmd" + logicalId + "_getNwkAddress";
+        ieee = document.getElementById("idEqIeee").innerText; // span case
+        payload = "ieee=" + ieee;
     } else if (request == "mgmtNetworkUpdateReq") {
         topic = "Cmd" + logicalId + "_mgmtNetworkUpdateReq";
         scanChan = document.getElementById("idMgmtNwkUpdReqSC").value;

@@ -329,22 +329,6 @@
         "invertBinary": "0",
         "template": ""
     },
-    "Network_Address_request": {
-        "name": "Network Address Request",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "Network_Address_request",
-            "request": "address=#title#&#message#"
-        },
-        "display": {
-            "forceReturnLineAfter": "0",
-            "title_placeholder": "Adresse courte de l equipement",
-            "message_placeholder": "IEEEAddress=xxxxxxxxxxxxxxxx[&requestType=00&startIndex=00] "
-        }
-    },
     "Group-Membership": {
         "isVisible": 0,
         "name": "Groups",

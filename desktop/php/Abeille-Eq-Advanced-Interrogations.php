@@ -49,7 +49,6 @@
     <label class="col-sm-3 control-label" title="getActiveEndPoints">{{Liste des 'end points'}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getActiveEndPoints\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getActiveEndPoints");
         ?>
     </div>
@@ -58,7 +57,6 @@
     <label class="col-sm-3 control-label" title="getSimpleDescriptor (Simple_Desc_req)">{{Descripteur simple}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getSimpleDescriptor\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getSimpleDescriptor");
             addEpInput("idEpSDR");
         ?>
@@ -68,7 +66,6 @@
     <label class="col-sm-3 control-label" title="getNodeDescriptor (Node_Desc_req)">{{Descripteur de noeud}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getNodeDescriptor\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getNodeDescriptor");
         ?>
     </div>
@@ -77,8 +74,15 @@
     <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">{{Adresse IEEE}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getIeeeAddress\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getIeeeAddress");
+        ?>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="getNwkAddress (NWK_addr_req)">{{Adresse courte}}</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Interroger}}", "btn-default", "getNwkAddress");
         ?>
     </div>
 </div>
@@ -86,7 +90,6 @@
     <label class="col-sm-3 control-label" title="Mgmt_NWK_Update_req">Mgmt network update request</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'mgmtNetworkUpdateReq\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-warning", "mgmtNetworkUpdateReq");
         ?>
         <input id="idMgmtNwkUpdReqSC" title="{{Scanned channels mask (ex: all=07FFF800)}}" />

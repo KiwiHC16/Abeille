@@ -2008,6 +2008,62 @@
             return $attr;
         }
 
+        /* Called from decode8002() to decode Network addr response (Nwk_addr_rsp) message.
+           Previously decoded by 8040. */
+        function decode8002_NwkAddrRsp($net, $srcAddr, $pl, $lqi, &$devUpdates, &$toAbeille) {
+            $sqn = substr($pl, 0, 2);
+            $status = substr($pl, 2, 2);
+            $ieee = AbeilleTools::reverseHex(substr($pl, 4, 16));
+            $addr = AbeilleTools::reverseHex(substr($pl, 20, 4));
+
+            // TODO: TO BE REVISITED NOT TESTED YET
+
+
+
+            // Log
+            $m = '  NWK address response'
+                    .': SQN='.$sqn
+                    .', Status='.$status
+                    .', ExtAddr='.$ieee
+                    .', Addr='.$addr;
+            parserLog2('debug', $srcAddr, $m);
+
+            if ($status != "00") {
+                parserLog2('debug', $srcAddr, '  Status='.$status.' => Unknown error');
+                // $unknown = $this->deviceUpdate($net, $addr, ''); // Useless
+                return;
+            }
+
+            // Status == "00" => continue decoding
+            $nbDevices = substr($pl, 24, 2);
+            $startIdx = substr($pl, 26, 2);
+            $m .= ', NbOfAssociatedDevices='.$nbDevices
+                .', StartIndex='.$startIdx;
+
+            for ($i = 0; $i < (intval($nbDevices) * 4); $i += 4) {
+                parserLog2('debug', $srcAddr, '  AssociatedDev='.substr($pl, (28 + $i), 4));
+            }
+
+            // $this->whoTalked[] = $net.'/'.$addr;
+
+            // If device is unknown, may have pending messages for him
+            $devUpdates['ieee'] = $ieee;
+            // $unknown = $this->deviceUpdates($net, $addr, '', $updates);
+            // if ($unknown)
+            //     return;
+
+            $toAbeille[] = array(
+                // 'src' => 'parser',
+                'type' => 'ieeeAddrResponse',
+                'net' => $net,
+                'addr' => $addr,
+                'ieee' => $ieee,
+                'time' => time(),
+                'lqi' => $lqi,
+            );
+            // msgToAbeille2($msg);
+        } // End decode8002_NwkAddrRsp()
+
         /* Called from decode8002() to decode IEEE addr response (IEEE_addr_rsp) message.
            Previously decoded by 8041. */
         function decode8002_IeeeAddrRsp($net, $srcAddr, $pl, $lqi, &$devUpdates, &$toAbeille) {
@@ -2707,6 +2763,11 @@
                 // else if ($clustId == "0038") {
                 //     // $this->decode8002_MgmtNwkUpdateReq($dest, $srcAddr, $pl, $toMon);
                 // }
+
+                // Netowrk addr response (NWK_addr_rsp)
+                else if ($clustId == "8000") {
+                    $this->decode8002_NwkAddrRsp($dest, $srcAddr, $pl, $lqi, $devUpdates, $toAbeille);
+                }
 
                 // IEEE addr response (IEEE_addr_rsp)
                 else if ($clustId == "8001") {

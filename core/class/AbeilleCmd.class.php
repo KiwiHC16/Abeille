@@ -52,13 +52,18 @@
 
             // Request with multi inputs, input from a Info command.
             // Todo: At this stage process only one cmd info, could need multi info command in the futur
-            // log::add( 'Abeille', 'debug', 'CmdInfo: Start analysis: '.$request );
             // #cmdInfo_xxxxxxx_#
+            // Ex: lift=#cmdInfo_Level_# => lift=value from 'Level' info cmd
+            // OBSOLETE !! Better to use #logicidxxxx# since the cmd could be renamed by user
             if (preg_match('`#cmdInfo_(.*)_#`m', $request2, $m)) {
                 log::add( 'Abeille', 'debug', '  updateField(): Found cmd info: '.json_encode($m, JSON_UNESCAPED_SLASHES));
                 $cmdInfo = $eqLogic->getCmd('info', $m[1]);
-                // log::add( 'Abeille', 'debug', 'CmdInfo: '.$cmdInfo->getName() );
-                $request2 = str_replace("#cmdInfo_".$m[1]."_#", $cmdInfo->execCmd(), $request2);
+                if (!is_object($cmdInfo)) {
+                    log::add( 'Abeille', 'error', $eqLogic->getHumanName().": Modèle invalide. La commande info '".$m[1]."' n'existe pas.");
+                } else {
+                    // log::add( 'Abeille', 'debug', 'CmdInfo: '.$cmdInfo->getName() );
+                    $request2 = str_replace("#cmdInfo_".$m[1]."_#", $cmdInfo->execCmd(), $request2);
+                }
             }
             // log::add( 'Abeille', 'debug', 'CmdInfo: End analysis' );
 

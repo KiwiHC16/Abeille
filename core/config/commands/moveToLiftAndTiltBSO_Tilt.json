@@ -9,7 +9,7 @@
             "minValue": "0",
             "maxValue": "90",
             "topic": "moveToLiftAndTiltBSO",
-            "request": "EP=01&lift=#cmdInfo_Lift_#&inclinaison=#slider#&duration=10",
+            "request": "EP=01&inclinaison=#slider#&duration=10",
             "visibilityCategory": "All"
         },
         "type": "action"

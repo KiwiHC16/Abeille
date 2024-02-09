@@ -1905,6 +1905,7 @@
                 return;
             }
 
+            // OBSOLETE !! Replaced by cmd-Private + fct=profaluxSetTiltLift
             if (isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']))
             {
                 cmdLog('debug', "  command moveToLiftAndTiltBSO", $this->debug['processCmd']);

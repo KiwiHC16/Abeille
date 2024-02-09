@@ -1,16 +1,11 @@
 {
     "Tilt": {
-        "isVisible": 1,
-        "name": "Tilt",
-        "isHistorized": "1",
         "subType": "numeric",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "minValue": "0",
             "maxValue": "90",
             "historizeRound": "0",
-            "calculValueOffset": "",
             "visibilityCategory": "All"
         },
         "type": "info",

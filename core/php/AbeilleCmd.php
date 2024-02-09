@@ -21,7 +21,8 @@
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
     include_once __DIR__.'/AbeilleOTA.php';
-    include_once __DIR__.'/AbeilleCmd-Tuya.php';
+    include_once __DIR__.'/AbeilleCmd-Tuya.php'; // Tuya specific commands
+    include_once __DIR__.'/AbeilleCmd-Profalux.php'; // Profalux specific commands
     include_once __DIR__.'/AbeilleZigateConst.php';
 
     // Log if proper log level

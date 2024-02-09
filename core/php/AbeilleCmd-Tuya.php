@@ -1,5 +1,5 @@
 <?php
-    // Tuya specific commands (to device) functions.
+    // Tuya specific commands (to device).
     // Included by 'AbeilleCmd.php'
 
     $tuyaTransId = 0; // Transaction ID: 0 to 255

@@ -7,6 +7,8 @@ ChangeLog
 - Page config: Bouton 'libérer' visible en mode dev seulement. Pas robuste pour utilisateur final.
 - Outils: Script de test en ligne de cmd préliminaire (resources/scripts/checkZigate.sh)
 - Profalux BSO tilt: Correction regression (2687).
+- Interne: Cmd: Meilleur support '#cmdInfo_xxx'.
+- Interne: Cmd: Ajout 'AbeilleCmd-Profalux.php' pour nettoyage modeles.
 
 240201-BETA-1
 -------------

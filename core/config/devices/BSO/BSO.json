@@ -52,10 +52,21 @@
                 "isVisible": 1
             },
             "Set Tilt": {
-                "use": "moveToLiftAndTiltBSO_Tilt"
+                "use": "moveToLiftAndTiltBSO_Tilt",
+                "comment": "'lift' value is taken from 'Level' info cmd",
+                "params": "lift=#cmdInfo_0008-01-0000_#"
+            },
+            "Set Tilt 2": {
+                "use": "act_cmd-Private",
+                "subType": "slider",
+                "minValue": "0",
+                "maxValue": "90",
+                "params": "fct=profaluxSetTiltLift&cmd=00&tilt=#slider#",
+                "isVisible": 1
             },
             "Tilt": {
-                "use": "Tilt"
+                "use": "Tilt",
+                "isVisible": 1
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify"

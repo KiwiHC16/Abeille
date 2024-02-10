@@ -172,8 +172,10 @@
     // Use cases: ED00 cluster support (Moes universal remote)
     // Cmd 00: 'data'=IR code to send (base64 URL encoded format)
     // Cmd 03: 'data'=JSON encoded {'seq' => hex string, 'pos' => binary, 'maxLen' => binary}
-    function tuyaZosung($net, $addr, $ep, $cmd, $data) {
-        cmdLog2('debug', $addr, "  tuyaZosung(net=${net}, addr=${addr}, ep=${ep}, cmd=${cmd})");
+    function tuyaZosung($net, $addr, $ep, $command) {
+        $cmd = $command['cmd'];
+        $data = $command['data'];
+        cmdLog2('debug', $addr, "  tuyaZosung(Net=${net}, Addr=${addr}, EP=${ep}, Cmd=${cmd})");
 
         if ($cmd == '00') { // Send IR code
             // Data is base64 URL encoded

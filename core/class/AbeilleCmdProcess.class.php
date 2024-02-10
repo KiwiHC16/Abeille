@@ -5342,21 +5342,24 @@
                 } // End $cmdName == 'cmd-tuyaEF00'
 
                 // Generic way to support private cluster/cmd
-                // Mandatory params: 'addr', 'ep', 'fct', 'cmd' & 'message'
+                // Mandatory params: 'addr', 'ep', 'fct'
                 else if ($cmdName == 'cmd-Private') {
-                    $required = ['addr', 'ep', 'fct', 'cmd', 'message']; // Mandatory infos
+                    // $required = ['addr', 'ep', 'fct', 'cmd', 'message']; // Mandatory infos
+                    $required = ['addr', 'ep', 'fct']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
                     $addr       = $Command['addr'];
                     $ep         = $Command['ep'];
                     $fctName    = $Command['fct'];
-                    $cmd        = $Command['cmd'];
-                    $message    = $Command['message'];
+                    // $cmd        = $Command['cmd'];
+                    // $message    = $Command['message'];
                     if (function_exists($fctName)) {
-                        $fctName($dest, $addr, $ep, $cmd, $message);
+                        // $fctName($dest, $addr, $ep, $cmd, $message);
+                        $fctName($dest, $addr, $ep, $Command);
                     } else if (method_exists($this, $fctName)) {
-                        $this->$fctName($dest, $addr, $ep, $cmd, $message);
+                        // $this->$fctName($dest, $addr, $ep, $cmd, $message);
+                        $this->$fctName($dest, $addr, $ep, $Command);
                     } else {
                         cmdLog2('error', $addr, "  Commande privée: Fonction '${fctName}' inconnue");
                     }

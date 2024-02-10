@@ -1160,21 +1160,26 @@ $("#idModelChangeBtn").on("click", function () {
                 }
                 str += model.type;
 
+                var $opt = $("<option></option>");
+
                 // JSON id (including location)
-                if (typeof model.modelPath != "undefined")
+                if (typeof model.modelPath != "undefined") {
                     // modelPath is optional
                     str += " (" + model.modelPath + ")";
-                else
+                    $opt.attr("modelPath", model.modelPath);
+                } else {
                     str +=
                         " (" +
                         model.modelName +
                         "/" +
                         model.modelName +
                         ".json)";
+                        $opt.attr("modelPath", model.modelName + "/" + model.modelNameh);
+                    }
 
                 // Adding to datalist
-                var $opt = $("<option></option>");
                 $opt.attr("value", str);
+                $opt.attr("modelSource", model.modelSource);
                 $datalist.append($opt);
 
                 // Display if it is current model of equipment

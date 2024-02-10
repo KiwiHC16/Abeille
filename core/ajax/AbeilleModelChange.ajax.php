@@ -38,6 +38,7 @@ if (!isConnect('admin')) {
 }
 
 require_once __DIR__ . '/../php/AbeilleModels.php'; // Library to deal with models
+require_once __DIR__ . '/../php/AbeilleLog.php'; // logDebug()
 
 // Perform the requested action
 $action = $_POST['action'];
@@ -84,31 +85,36 @@ function getModelChoiceList() {
  * from zigbee signature at equipment announcement.
  */
 function setModelToDevice() {
+    logDebug("setModelToDevice(): _POST=".json_encode($_POST, JSON_UNESCAPED_SLASHES));
+
+    // Ex: _POST={"action":"setModelToDevice","eqId":"9","modelChoice":"[Profalux] BSO > Profalux BSO (BSO/BSO.json)"
     // Retrieving equipment
     $eqId = (int) $_POST['eqId'];
+
     $eqLogic = eqLogic::byId($eqId);
     if (!is_object($eqLogic)) {
         throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__) . ' ' . $eqId);
     }
 
     // Retrieving chose model, under the form "blabla (Abeille/id.json)" or "blabla (local/id.json)"
-    $strSaisie = $_POST['modelChoice'];
+    $modelChoice = $_POST['modelChoice'];
 
     // Extracting json pathname
-    $tmpPos = strrpos($strSaisie, ' (');
+    $tmpPos = strrpos($modelChoice, ' (');
     if ($tmpPos === false) {
         throw new Exception(__('Saisie incorrecte', __FILE__) . ' ' . $eqId);
     }
 
-    $tmpModelPath = mb_substr($strSaisie, $tmpPos + 2); // like "Abeille/id.json)"
+    $tmpModelPath = mb_substr($modelChoice, $tmpPos + 2); // like "Abeille/id.json)"
     $tmpModelPath = mb_substr($tmpModelPath, 0, mb_strlen($tmpModelPath) - 1); // like "Abeille/id.json"
+logDebug("tmpModelPath=${tmpModelPath}");
 
-    $tmpNomModel = explode("/", $tmpModelPath);
-    if (!is_array($tmpNomModel) || sizeof($tmpNomModel) != 2) {
+    $tmpModelArr = explode("/", $tmpModelPath);
+    if (!is_array($tmpModelArr) || (sizeof($tmpModelArr) != 2)) {
         throw new Exception(__('Saisie incorrecte', __FILE__) . ' ' . $eqId);
     }
-    $source = $tmpNomModel[0]; // Abeille or local
-    $json = pathinfo(basename($tmpNomModel[1]), PATHINFO_FILENAME); // drops .json
+    $source = $tmpModelArr[0]; // Abeille or local
+    $json = pathinfo(basename($tmpModelArr[1]), PATHINFO_FILENAME); // drops .json
 
     $modelPath = '';
     if ($source == 'Abeille') {

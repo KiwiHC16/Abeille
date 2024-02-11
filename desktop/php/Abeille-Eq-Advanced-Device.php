@@ -61,9 +61,8 @@
         </p>
     </div>
 
-    <!-- Liste de choix des modèles connus d'Abeille, rempli plus tard en ajax, si besoin -->
+    <!-- Abeille's models list if user wants to force a different one -->
     <datalist id="abeille-all-models-list"></datalist>
-    <!-- Fin choix du modèle -->
 </div>
 
 

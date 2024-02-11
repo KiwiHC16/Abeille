@@ -1137,6 +1137,10 @@ $("#idModelChangeBtn").on("click", function () {
             console.log("modelsList=", modelsList);
             // Populate html5 datalist
             Object.values(modelsList).forEach((model) => {
+                // We allow only official models for this case
+                if (model.modelSource != "Abeille")
+                    return;
+
                 var str = "";
                 // Zigbee signature
                 if (
@@ -1179,7 +1183,7 @@ $("#idModelChangeBtn").on("click", function () {
 
                 // Adding to datalist
                 $opt.attr("value", str);
-                $opt.attr("modelSource", model.modelSource);
+                $opt.attr("modelSource", model.modelSource); // Working ?
                 $datalist.append($opt);
 
                 // Display if it is current model of equipment
@@ -1198,11 +1202,24 @@ $("#idModelChangeBtn").on("click", function () {
     // Save button
     $content.find(".btn-success").on("click", function () {
         // Check user input
-        var strSaisie = $content.find("input[type=search]").val();
-        if ($datalist.find('option[value="' + strSaisie + '"]').length == 0) {
+        var userInput = $content.find("input[type=search]").val();
+        if ($datalist.find('option[value="' + userInput + '"]').length == 0) {
             alert("{{Erreur: vous devez choisir un modèle dans la liste.}}");
             return;
         }
+
+        // console.log("datalistfind=", $datalist.find('option[value="' + userInput + '"]'));
+        // dl = document.getElementById("abeille-all-models-list");
+        // opSelected = dl.querySelector(`[value="${userInput}"]`);
+        // console.log("opSelected=", opSelected);
+        // opSelected2 = dl.querySelector('option[value="' + userInput + '"]');
+        // console.log("opSelected2=", opSelected2);
+        // selectedOption = $('option[value="' + userInput + '"]');
+        // console.log("selectedOption=", selectedOption);
+        // console.log("selectedOption.ms=", selectedOption.attr['modelSource']);
+        // console.log("selectedOption.mp=", selectedOption.attr['modelPath']);
+        // console.log("selectedOption.dataset=", selectedOption.dataset);
+        // console.log("selectedOption.id=", selectedOption.attr['id']);
 
         // Ask confirmation (+ ask to wake up the equipment if it is on battery)
         var strSuppBatterie = "";
@@ -1226,14 +1243,14 @@ $("#idModelChangeBtn").on("click", function () {
                 data: {
                     action: "setModelToDevice",
                     eqId: curEqId,
-                    modelChoice: strSaisie,
+                    userInput: userInput,
                 },
                 dataType: "json",
                 global: false,
                 success: function () {
                     // Second query: reset device using its (new) model
-                    console.log("Simulation clic sur Mise à jour...");
-                    $("#idUpdateBtn").trigger("click");
+                    // console.log("Simulation clic sur Mise à jour...");
+                    // $("#idUpdateBtn").trigger("click");
                 },
             });
         }

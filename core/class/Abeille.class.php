@@ -299,8 +299,8 @@ class Abeille extends eqLogic {
 
                 /* Special case: should ignore virtual remote */
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-                $jsonId = $eqModel ? $eqModel['modelName'] : '';
-                if ($jsonId == "remotecontrol")
+                $modelName = $eqModel ? $eqModel['modelName'] : '';
+                if ($modelName == "remotecontrol")
                     continue; // Abeille virtual remote
 
                 $eqName = $eqLogic->getname();
@@ -1318,8 +1318,8 @@ class Abeille extends eqLogic {
                 if ($net2 != $net)
                     continue; // Wrong network
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-                $jsonId2 = $eqModel ? $eqModel['modelName'] : '';
-                if ($jsonId2 != "remotecontrol")
+                $modelName2 = $eqModel ? $eqModel['modelName'] : '';
+                if ($modelName2 != "remotecontrol")
                     continue; // Not a remote
                 if ($addr2 == '')
                     continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
@@ -1689,13 +1689,32 @@ class Abeille extends eqLogic {
     public static function msgFromParser($msg) {
         global $abQueues;
 
-        $net = $msg['net'];
+        if (isset($msg['net']))
+            $net = $msg['net'];
         if (isset($msg['addr']))
             $addr = $msg['addr'];
         if (isset($msg['ep']))
             $ep = $msg['ep'];
         else
             $ep = '';
+
+        /* Request to update EQ from given model (ex: user force model) */
+        if ($msg['type'] == "updateFromForcedModel") {
+            log::add('Abeille', 'debug', "msgFromParser(): updateFromForcedModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
+
+            $dev = array(
+                'net' => $net,
+                'addr' => $addr,
+                'modelSource' => $msg['modelSource'], // Model file location
+                'modelName' => $msg['modelName'], // Model name (modelX[-variant])
+                'modelPath' => $msg['modelPath'], // Model file path (modelX/modelX[-variant].json)
+                'modelSig' => $msg['modelSig'], // Model signature
+                'modelForced' => true,
+            );
+            Abeille::createDevice("reset", $dev);
+
+            return;
+        } // End 'updateFromForcedModel'
 
         /* Parser has found a new device. Basic Jeedom entry to be created. */
         if ($msg['type'] == "newDevice") {
@@ -1847,9 +1866,9 @@ class Abeille extends eqLogic {
                 ); */
 
             $logicalId = $net.'/'.$addr;
-            $jsonId = $msg['jsonId'];
-            $jsonLocation = $msg['jsonLocation']; // 'Abeille' or 'local'
-            log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$jsonId."'".", jsonLoc='".$jsonLocation."'");
+            $modelName = $msg['jsonId'];
+            $modelSource = $msg['jsonLocation']; // 'Abeille' or 'local'
+            log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$modelName."'".", jsonLoc='".$modelSource."'");
 
             $ieee = $msg['ieee'];
 
@@ -1889,8 +1908,8 @@ class Abeille extends eqLogic {
                 'ieee' => $ieee,
                 'modelId' => $msg['modelId'],
                 'manufId' => $msg['manufId'],
-                'modelName' => $jsonId,
-                'modelSource' => $jsonLocation,
+                'modelName' => $modelName,
+                'modelSource' => $modelSource,
                 'macCapa' => $msg['macCapa']
             );
             Abeille::createDevice("update", $dev);
@@ -2718,7 +2737,7 @@ class Abeille extends eqLogic {
        - To update from JSON (identical to re-inclusion) => action = 'update'
      */
     public static function createDevice($action, $dev) {
-        log::add('Abeille', 'debug', 'createDevice('.$action.', dev='.json_encode($dev));
+        log::add('Abeille', 'debug', 'createDevice('.$action.', dev='.json_encode($dev, JSON_UNESCAPED_SLASHES));
 
         /* $action reminder
               'update' => create or update device (device announce/update)
@@ -2727,37 +2746,55 @@ class Abeille extends eqLogic {
                 $dev = array(
                     'net' =>
                     'addr' =>
-                    'modelSig' => 'remotecontrol', // Model signature
+                    'modelSource' => 'Abeille', // Model file location ('Abeille' or 'local')
                     'modelName' => 'remotecontrol', // Model file name
-                    'modelSource' => 'Abeille', // Model file location
+                    'modelSig' => 'remotecontrol', // Model signature
                 );
          */
 
-        $modelSig = isset($dev['modelSig']) ? $dev['modelSig']: '';
-        $jsonId = isset($dev['modelName']) ? $dev['modelName']: '';
-        $jsonLocation = isset($dev['modelSource']) ? $dev['modelSource']: '';
-        if ($jsonLocation == '')
-            $jsonLocation = 'Abeille';
 
         $eqLogicId = $dev['net'].'/'.$dev['addr'];
         $eqLogic = eqLogic::byLogicalId($eqLogicId, 'Abeille');
 
         // Special case: if the equipment already exists, and the user has forced the model,
         // we keep the current model and ignore the zigbee signature (case of re-announcement)
-        $isModelForcedByUser = false;
-        if(is_object($eqLogic)){
-            $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
-            if(isset($jEqModel['modelName']) && isset($jEqModel['modelSource']) && isset($jEqModel['modelForced']) && ($jEqModel['modelForced'] == true)){
-                $jsonLocation = $jEqModel['modelSource'];
-                $jsonId = $jEqModel['modelName'];
-                $isModelForcedByUser = true;
+        if (isset($dev['modelName'])) {
+            $modelSource = isset($dev['modelSource']) ? $dev['modelSource']: '';
+            if ($modelSource == '')
+                $modelSource = 'Abeille';
+            $modelName = isset($dev['modelName']) ? $dev['modelName']: '';
+            $modelPath = isset($dev['modelPath']) ? $dev['modelPath']: $modelName.'/'.$modelName.'.json';
+            $modelSig = isset($dev['modelSig']) ? $dev['modelSig']: $modelName;
+            $modelForced = isset($dev['modelForced']) ? $dev['modelForced']: false;
+        } else {
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'error', $dev['net'].'/'.$dev['addr'].": 'modelName' manquant.");
+                return;
             }
-        }
 
-        if ($jsonId != '' && $jsonLocation != '') {
-            $model = AbeilleTools::getDeviceModel($modelSig, $jsonId, $jsonLocation);
+            $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
+            $modelSource = isset($jEqModel['modelSource']) ? $jEqModel['modelSource']: '';
+            if ($modelSource == '')
+                $modelSource = 'Abeille';
+            $modelName = isset($jEqModel['modelName']) ? $jEqModel['modelName']: '';
+            $modelPath = isset($jEqModel['modelPath']) ? $jEqModel['modelPath']: '';
+            $modelSig = isset($jEqModel['modelSig']) ? $jEqModel['modelSig']: '';
+            $modelForced = isset($jEqModel['modelForced']) ? $jEqModel['modelForced']: false;
+        }
+        // $modelForced = false;
+        // if(is_object($eqLogic)) {
+        //     $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
+        //     if(isset($jEqModel['modelName']) && isset($jEqModel['modelSource']) && isset($jEqModel['modelForced']) && ($jEqModel['modelForced'] == true)){
+        //         $modelSource = $jEqModel['modelSource'];
+        //         $modelName = $jEqModel['modelName'];
+        //         $modelForced = true;
+        //     }
+        // }
+
+        if (($modelSource != '') && ($modelName != '')) {
+            $model = AbeilleTools::getDeviceModel($modelSig, $modelName, $modelSource);
             if ($model === false) {
-                // log::add('Abeille', 'error', "  createDevice(jsonId=".$jsonId.", location=".$jsonLocation."): Unknown model");
+                // log::add('Abeille', 'error', "  createDevice(jsonId=".$modelName.", location=".$modelSource."): Unknown model");
                 return;
             }
             log::add('Abeille', 'debug', '  Model='.json_encode($model, JSON_UNESCAPED_SLASHES));
@@ -2774,10 +2811,10 @@ class Abeille extends eqLogic {
 
             // $action == 'create'
             log::add('Abeille', 'debug', '  New device '.$eqLogicId);
-            if ($jsonId != "defaultUnknown")
+            if ($modelName != "defaultUnknown")
                 message::add("Abeille", "Nouvel équipement identifié (".$modelType."). Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
             else
-                message::add("Abeille", "Nouvel équipement détecté mais non supporté. Création en cours avec la config par défaut (".$jsonId."). Rafraîchissez votre dashboard dans qq secondes.", '');
+                message::add("Abeille", "Nouvel équipement détecté mais non supporté. Création en cours avec la config par défaut (".$modelName."). Rafraîchissez votre dashboard dans qq secondes.", '');
 
             $eqLogic = new Abeille();
             $eqLogic->setEqType_name('Abeille');
@@ -2808,26 +2845,26 @@ class Abeille extends eqLogic {
                 $eqLogic->setName($eqName);
                 message::add("Abeille", $eqHName.": Nouvel équipement identifié.", '');
                 $action = 'reset';
-            } else if (($curEqModel == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
+            } else if (($curEqModel == 'defaultUnknown') && ($modelName != 'defaultUnknown')) {
                 message::add("Abeille", $eqHName.": S'est réannoncé => Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
                 $action = 'reset'; // Update from defaultUnknown = reset to new model
             }
             // else if ($action == "update")
-            //     message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
+            //     message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle (source=".$modelSource.")");
             else if ($action == "reset")
-                message::add("Abeille", $eqHName.": Réinitialisation à partir de '".$jsonId."' (source=".$jsonLocation.")");
+                message::add("Abeille", $eqHName.": Réinitialisation à partir de '".$modelName."' (source=".$modelSource.")");
             else { // action = create
                 /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
                     to not generate plenty messages, unless device was disabled.
                     Other reasons to generate message ?
                 */
                 if ($eqLogic->getIsEnable() != 1)
-                    message::add("Abeille", $eqHName.": S'est réannoncé => Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
+                    message::add("Abeille", $eqHName.": S'est réannoncé => Mise-à-jour à partir de son modèle (source=".$modelSource.")");
             }
         }
 
-        if ($jsonLocation == "local") {
-            $fullPath = __DIR__."/../config/devices/".$jsonId."/".$jsonId.".json";
+        if ($modelSource == "local") {
+            $fullPath = __DIR__."/../config/devices/".$modelName."/".$modelName.".json";
             if (file_exists($fullPath))
                 message::add("Abeille", $eqHName.": Attention ! Modèle local (devices_local) utilisé alors qu'un modèle officiel existe.", '');
         }
@@ -2971,10 +3008,10 @@ class Abeille extends eqLogic {
         // JSON model infos
         $eqModelInfos = array(
             // Model infos
+            'modelSource' => $modelSource, // Equipment model file location
+            'modelName' => $modelName, // Equipment model file name
             'modelSig' => $modelSig, // Equipent model signature
-            'modelName' => $jsonId, // Equipment model file name
-            'modelSource' => $jsonLocation, // Equipment model file location
-            'modelForced' => $isModelForcedByUser,
+            'modelForced' => $modelForced,
 
             // Equipment infos
             'manuf' => isset($model['manufacturer']) ? $model['manufacturer'] : '',
@@ -3004,7 +3041,7 @@ class Abeille extends eqLogic {
             $modelCmds2 = json_encode($modelCmds, JSON_UNESCAPED_SLASHES);
             if (strstr($modelCmds2, '#EP#') !== false) {
                 if ($mainEP == "") {
-                    message::add("Abeille", "'mainEP' est requis mais n'est pas défini dans '".$jsonId.".json'", '');
+                    message::add("Abeille", "'mainEP' est requis mais n'est pas défini dans '".$modelName.".json'", '');
                     $mainEP = "01";
                 }
 

@@ -97,59 +97,78 @@ function setModelToDevice() {
     }
 
     // Retrieving chose model, under the form "blabla (Abeille/id.json)" or "blabla (local/id.json)"
-    $modelChoice = $_POST['modelChoice'];
+    $userInput = $_POST['userInput'];
 
     // Extracting json pathname
-    $tmpPos = strrpos($modelChoice, ' (');
+    $tmpPos = strrpos($userInput, ' (');
     if ($tmpPos === false) {
         throw new Exception(__('Saisie incorrecte', __FILE__) . ' ' . $eqId);
     }
+    $modelPath = mb_substr($userInput, $tmpPos + 2); // like "modelName/modelName.json)"
+    $modelPath = mb_substr($modelPath, 0, mb_strlen($modelPath) - 1); // like "modelName/modelName.json"
+    // logDebug("modelPath=${modelPath}");
 
-    $tmpModelPath = mb_substr($modelChoice, $tmpPos + 2); // like "Abeille/id.json)"
-    $tmpModelPath = mb_substr($tmpModelPath, 0, mb_strlen($tmpModelPath) - 1); // like "Abeille/id.json"
-logDebug("tmpModelPath=${tmpModelPath}");
-
-    $tmpModelArr = explode("/", $tmpModelPath);
-    if (!is_array($tmpModelArr) || (sizeof($tmpModelArr) != 2)) {
+    $modelPathArr = explode("/", $modelPath);
+    if (!is_array($modelPathArr) || (sizeof($modelPathArr) != 2)) {
         throw new Exception(__('Saisie incorrecte', __FILE__) . ' ' . $eqId);
     }
-    $source = $tmpModelArr[0]; // Abeille or local
-    $json = pathinfo(basename($tmpModelArr[1]), PATHINFO_FILENAME); // drops .json
+    // $source = $tmpModelArr[0]; // Abeille or local
+    // $json = pathinfo(basename($tmpModelArr[1]), PATHINFO_FILENAME); // drops .json
+    $modelName = pathinfo(basename($modelPathArr[1]), PATHINFO_FILENAME); // drops .json
 
-    $modelPath = '';
-    if ($source == 'Abeille') {
-        $modelPath = devicesDir . $json . '/' . $json . '.json';
-    } else {
-        $modelPath = devicesLocalDir . $json . '/' . $json . '.json';
-        $source = 'local'; // should already be ok
+    $eqLogicId = $eqLogic->getLogicalId();
+    list($net, $addr) = explode( "/", $eqLogicId);
+    $msg = array(
+        'type' => 'updateFromForcedModel',
+        'net' => $net,
+        'addr' => $addr,
+        'modelSource' => "Abeille",  // Tcharp38: Only offical models allowed
+        'modelName' => $modelName,
+        'modelPath' => $modelPath,
+        'modelSig' => $modelName,
+    );
+    global $abQueues;
+    $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+    if (msg_send($queueXToAbeille, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
+        // parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
     }
+
+    die("true");
+
+
+    // if ($source == 'Abeille') {
+    //     $modelPath = devicesDir . $json . '/' . $json . '.json';
+    // } else {
+    //     $modelPath = devicesLocalDir . $json . '/' . $json . '.json';
+    //     $source = 'local'; // should already be ok
+    // }
 
     // We check that the model file exists (ultimate control) and we load it
-    if (!is_readable($modelPath)) {
-        throw new Exception(__('Saisie incorrecte - Fichier modèle introuvable', __FILE__) . ' ' . $eqId);
-    }
-    $jsonModelData = json_decode(file_get_contents($modelPath), true);
-    if (!isset($jsonModelData[$json]['type'])) {
-        // Weird, but there may be some old json incorrectly filled in
-        $libelleType = '';
-    } else {
-        $libelleType = $jsonModelData[$json]['type'];
-    }
+    // if (!is_readable($modelPath)) {
+    //     throw new Exception(__('Saisie incorrecte - Fichier modèle introuvable', __FILE__) . ' ' . $eqId);
+    // }
+    // $jsonModelData = json_decode(file_get_contents($modelPath), true);
+    // if (!isset($jsonModelData[$json]['type'])) {
+    //     // Weird, but there may be some old json incorrectly filled in
+    //     $libelleType = '';
+    // } else {
+    //     $libelleType = $jsonModelData[$json]['type'];
+    // }
 
-    // Save new config
-    $eqModelInfos = array(
-        'modelName' => $json, // ID du json
-        'modelSource' => $source, // Abeille ou local
-        'modelForced' => true, // Prevents the model from being overwritten if the equipment is re-announced
-        'type' => $libelleType,
-        'lastUpdate' => time(), // Store last update from model
-    );
-    $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
+    // // Save new config
+    // $eqModelInfos = $eqLogic->getConfiguration('ab::eqModel', []);
+    // $eqModelInfos['modelName'] = $json; // ID du json
+    // $eqModelInfos['modelSource'] = $source; // Abeille ou local
+    // $eqModelInfos['modelForced'] = true; // Prevents the model from being overwritten if the equipment is re-announced
+    // $eqModelInfos['type'] = $libelleType;
+    // // TODO: Missing 'private'
+    // // TODO: modelSig ?
+    // //
+    // $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
+    // $eqLogic->save();
 
-    $eqLogic->save();
-
-    message::add("Abeille", date('d/m/Y H:i:s') . " > Modèle enregistré. L'équipement va maintenant être reconfiguré...", '');
-    die("true");
+    // message::add("Abeille", date('d/m/Y H:i:s') . " > Modèle enregistré. L'équipement va maintenant être reconfiguré...", '');
+    // die("true");
 
     // (The HMI will send a second ajax request to reconfigure the equipment from the new model)
 }

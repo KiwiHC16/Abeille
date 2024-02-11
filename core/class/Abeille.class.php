@@ -1708,7 +1708,7 @@ class Abeille extends eqLogic {
                 'modelSource' => $msg['modelSource'], // Model file location
                 'modelName' => $msg['modelName'], // Model name (modelX[-variant])
                 'modelPath' => $msg['modelPath'], // Model file path (modelX/modelX[-variant].json)
-                'modelSig' => $msg['modelSig'], // Model signature
+                // 'modelSig' => $msg['modelSig'], // Model signature
                 'modelForced' => true,
             );
             Abeille::createDevice("reset", $dev);

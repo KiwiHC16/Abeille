@@ -125,7 +125,8 @@ function setModelToDevice() {
         'modelSource' => "Abeille",  // Tcharp38: Only offical models allowed
         'modelName' => $modelName,
         'modelPath' => $modelPath,
-        'modelSig' => $modelName,
+        'modelForced' => true,
+        // 'modelSig' => $modelName, // Signature stays the original one
     );
     global $abQueues;
     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);

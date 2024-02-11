@@ -57,8 +57,7 @@
                 "params": "lift=#cmdInfo_0008-01-0000_#"
             },
             "Set Tilt 2": {
-                "use": "act_cmd-Private",
-                "subType": "slider",
+                "use": "act_cmd-Private-Slider",
                 "minValue": "0",
                 "maxValue": "90",
                 "params": "fct=profaluxSetTiltLift&cmd=00&tilt=#slider#",

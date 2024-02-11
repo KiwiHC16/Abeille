@@ -35,7 +35,7 @@
                 "logicalId": "learnedCode"
             },
             "Code to send": {
-                "use": "act_cmd-Private",
+                "use": "act_cmd-Private-Message",
                 "params": "ep=01&fct=tuyaZosung&cmd=00",
                 "isVisible": "1",
                 "logicalId": "sendCode"

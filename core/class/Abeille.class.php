@@ -1185,57 +1185,57 @@ class Abeille extends eqLogic {
     //     return;
     // }
 
-    // TODO: To be moved in AbeilleTools. Could be used by parser too
-    // Attempt to find model corresponding to given zigbee signature.
-    // Returns: associative array('jsonId', 'jsonLocation') or false
-    public static function findModel($zbModelId, $zbManufId) {
+    // // TODO: To be moved in AbeilleTools. Could be used by parser too
+    // // Attempt to find model corresponding to given zigbee signature.
+    // // Returns: associative array('jsonId', 'jsonLocation') or false
+    // public static function findModel($zbModelId, $zbManufId) {
 
-        $identifier1 = $zbModelId.'_'.$zbManufId;
-        $identifier2 = $zbModelId;
+    //     $identifier1 = $zbModelId.'_'.$zbManufId;
+    //     $identifier2 = $zbModelId;
 
-        // Search by <zbModelId>_<zbManufId>, starting from local models list
-        // $localModels = AbeilleTools::getDevicesList('local');
-        $localModels = getModelsList('local');
-        foreach ($localModels as $modelSig => $model) {
-            if ($modelSig == $identifier1) {
-                $identifier = $identifier1;
-                break;
-            }
-        }
-        if (!isset($identifier)) {
-            // Search by <zbModelId>_<zbManufId>, starting from offical models list
-            // $officialModels = AbeilleTools::getDevicesList('Abeille');
-            $officialModels = getModelsList('Abeille');
-            foreach ($officialModels as $modelSig => $model) {
-                if ($modelSig == $identifier1) {
-                    $identifier = $identifier1;
-                    break;
-                }
-            }
-        }
-        if (!isset($identifier)) {
-            // Search by <zbModelId> in local models
-            foreach ($localModels as $modelSig => $model) {
-                if ($modelSig == $identifier2) {
-                    $identifier = $identifier2;
-                    break;
-                }
-            }
-        }
-        if (!isset($identifier)) {
-            // Search by <zbModelId> in offical models
-            foreach ($officialModels as $modelSig => $model) {
-                if ($modelSig == $identifier2) {
-                    $identifier = $identifier2;
-                    break;
-                }
-            }
-        }
-        if (!isset($identifier))
-            return false; // No model found
+    //     // Search by <zbModelId>_<zbManufId>, starting from local models list
+    //     // $localModels = AbeilleTools::getDevicesList('local');
+    //     $localModels = getModelsList('local');
+    //     foreach ($localModels as $modelSig => $model) {
+    //         if ($modelSig == $identifier1) {
+    //             $identifier = $identifier1;
+    //             break;
+    //         }
+    //     }
+    //     if (!isset($identifier)) {
+    //         // Search by <zbModelId>_<zbManufId>, starting from offical models list
+    //         // $officialModels = AbeilleTools::getDevicesList('Abeille');
+    //         $officialModels = getModelsList('Abeille');
+    //         foreach ($officialModels as $modelSig => $model) {
+    //             if ($modelSig == $identifier1) {
+    //                 $identifier = $identifier1;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     if (!isset($identifier)) {
+    //         // Search by <zbModelId> in local models
+    //         foreach ($localModels as $modelSig => $model) {
+    //             if ($modelSig == $identifier2) {
+    //                 $identifier = $identifier2;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     if (!isset($identifier)) {
+    //         // Search by <zbModelId> in offical models
+    //         foreach ($officialModels as $modelSig => $model) {
+    //             if ($modelSig == $identifier2) {
+    //                 $identifier = $identifier2;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     if (!isset($identifier))
+    //         return false; // No model found
 
-        return $model;
-    }
+    //     return $model;
+    // }
 
     public static function message($topic, $payload) {
         // KiwiHC16: Please leave this line log::add commented otherwise too many messages in log Abeille
@@ -1389,7 +1389,8 @@ class Abeille extends eqLogic {
 
             if (($eqSig != []) && ($eqSig['modelId'] != "") && !$modelForced) {
                 // Any user or official model ?
-                $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
+                // $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
+                $modelInfos = identifyModel($eqSig['modelId'], $eqSig['manufId']);
                 if ($modelInfos !== false) {
                     $modelSig = $modelInfos['modelSig'];
                     $modelName = $modelInfos['modelName'];
@@ -1712,7 +1713,7 @@ class Abeille extends eqLogic {
             );
             if (isset($msg['modelPath']))
                 $dev['modelPath'] = $msg['modelPath'];
-            Abeille::createDevice("reset", $dev);
+            Abeille::createDevice("update", $dev);
 
             return;
         } // End 'setForcedModel'
@@ -1721,17 +1722,32 @@ class Abeille extends eqLogic {
         if ($msg['type'] == "removeForcedModel") {
             log::add('Abeille', 'debug', "msgFromParser(): removeForcedModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
 
-            // $dev = array(
-            //     'net' => $net,
-            //     'addr' => $addr,
-            //     'modelSource' => $msg['modelSource'], // Model file location
-            //     'modelName' => $msg['modelName'], // Model name (modelX[-variant]) WITHOUT '.json'
-            //     // 'modelPath' => $msg['modelPath'], // Optional: Model file path (modelX/modelX[-variant].json)
-            //     'modelForced' => true,
-            // );
-            // if (isset($msg['modelPath']))
-            //     $dev['modelPath'] = $msg['modelPath'];
-            // Abeille::createDevice("reset", $dev);
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'error', "removeForcedModel '${net}/${addr}': Equipement inconnu.");
+                return;
+            }
+            // TODO: Should rely on model signature first if exists
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if (!isset($zigbee['modelId']) || !isset($zigbee['manufId'])) {
+                log::add('Abeille', 'warning', "removeForcedModel '${net}/${addr}': Identifiant Zigbee incomplet.");
+                log::add('Abeille', 'debug', "zigbee=".json_encode($zigbee, JSON_UNESCAPED_SLASHES));
+                return;
+            }
+            $model = identifyModel($zigbee['modelId'], $zigbee['manufId']);
+            if ($model !== false) {
+                $dev = array(
+                    'net' => $net,
+                    'addr' => $addr,
+                    'modelSource' => $model['modelSource'], // Model file location
+                    'modelName' => $model['modelName'], // Model name (modelX[-variant]) WITHOUT '.json'
+                    // 'modelPath' => $msg['modelPath'], // Optional: Model file path (modelX/modelX[-variant].json)
+                    'modelForced' => true,
+                );
+                if (isset($model['modelPath']))
+                    $dev['modelPath'] = $model['modelPath'];
+                Abeille::createDevice("update", $dev);
+            }
 
             return;
         } // End 'removeForcedModel'
@@ -2763,7 +2779,7 @@ class Abeille extends eqLogic {
        - To force a different model than the one auto-detected => action = 'update'
      */
     public static function createDevice($action, $dev) {
-        log::add('Abeille', 'debug', 'createDevice('.$action.', dev='.json_encode($dev, JSON_UNESCAPED_SLASHES));
+        log::add('Abeille', 'debug', '  createDevice('.$action.', dev='.json_encode($dev, JSON_UNESCAPED_SLASHES));
 
         /* $action reminder
               'update' => create or update device (device announce/update)

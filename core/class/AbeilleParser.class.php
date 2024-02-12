@@ -803,7 +803,11 @@
             parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['jsonId'].")");
 
             // Read JSON to get list of commands to execute
-            $eqModel = AbeilleTools::getDeviceModel('', $eq['jsonId'], $eq['jsonLocation']);
+            if (isset($eq['modelPath']))
+                $modelPath = $eq['modelPath'];
+            else
+                $modelPath = $eq['jsonId']."/".$eq['jsonId'].".json";
+            $eqModel = getDeviceModel($eq['jsonLocation'], $modelPath, $eq['jsonId']);
             if ($eqModel === false)
                 return;
 
@@ -837,6 +841,8 @@
                 'macCapa' => $eq['macCapa'],
                 'time' => time()
             );
+            if (isset($eq['modelPath']))
+                $msg['modelPath'] = $eq['modelPath'];
             msgToAbeille2($msg);
 
             // TODO

@@ -1138,8 +1138,7 @@ $("#idModelChangeBtn").on("click", function () {
             // Populate html5 datalist
             Object.values(modelsList).forEach((model) => {
                 // We allow only official models for this case
-                if (model.modelSource != "Abeille")
-                    return;
+                if (model.modelSource != "Abeille") return;
 
                 var str = "";
                 // Zigbee signature
@@ -1178,8 +1177,11 @@ $("#idModelChangeBtn").on("click", function () {
                         "/" +
                         model.modelName +
                         ".json)";
-                        $opt.attr("modelPath", model.modelName + "/" + model.modelNameh);
-                    }
+                    $opt.attr(
+                        "modelPath",
+                        model.modelName + "/" + model.modelNameh
+                    );
+                }
 
                 // Adding to datalist
                 $opt.attr("value", str);
@@ -1241,7 +1243,7 @@ $("#idModelChangeBtn").on("click", function () {
                 type: "POST",
                 url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
                 data: {
-                    action: "setModelToDevice",
+                    action: "setForcedModel",
                     eqId: curEqId,
                     userInput: userInput,
                 },
@@ -1269,14 +1271,14 @@ $("body").on("click", "a#linkRestoreAutoModel", function () {
                     type: "POST",
                     url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
                     data: {
-                        action: "disableManualModelForDevice",
+                        action: "removeForcedModel",
                         eqId: curEqId,
                     },
                     dataType: "json",
                     global: false,
                     success: function () {
                         // Let the user read the message, then refresh the page
-                        console.log("disableManualModelForDevice OK");
+                        console.log("removeForcedModel OK");
                         setTimeout(function () {
                             document.location.reload();
                         }, 3000);

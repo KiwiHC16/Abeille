@@ -110,19 +110,25 @@
 
         // Whatever found or new... updating infos used by cmd process
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        logMessage('debug', "  #2675: eqModel=".json_encode($eqModel));
+        // logMessage('debug', "  #2675: eqModel=".json_encode($eqModel));
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
         $eq = array(
             'ieee' => $ieee,
             'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
-            'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
             'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
+            'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
+            // 'modelPath' => isset($eqModel['modelPath']) ? $eqModel['modelPath'] : "<modName>/<modName>.json",
             'rxOnWhenIdle' => $rwOnWhenIdle ? true : false
         );
         if ($eq['jsonId'] != '') {
+            if (isset($eqModel['modelPath']))
+                $eq['modelPath'] = $eqModel['modelPath'];
+            else
+                $eq['modelPath'] = $eq['jsonId']."/".$eq['jsonId'].".json";
+
             // Read JSON to get list of commands to execute
-            $model = AbeilleTools::getDeviceModel('', $eq['jsonId'], $eq['jsonLocation']);
+            $model = getDeviceModel($eq['jsonLocation'], $eq['modelPath'], $eq['jsonId']);
             if ($model !== false) {
                 $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
                 $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
@@ -367,11 +373,17 @@
                 'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
                 'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
                 'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
+                // 'modelPath' => isset($eqModel['modelPath']) ? $eqModel['modelPath'] : "<modName>/<modName>.json",
                 'rxOnWhenIdle' => (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1)) ? true : false
             );
             if ($eq['jsonId'] != '') {
+                if (isset($eqModel['modelPath']))
+                    $eq['modelPath'] = $eqModel['modelPath'];
+                else
+                    $eq['modelPath'] = $eq['jsonId']."/".$eq['jsonId'].".json";
+
                 // Read JSON to get list of commands to execute
-                $model = AbeilleTools::getDeviceModel('', $eq['jsonId'], $eq['jsonLocation']);
+                $model = getDeviceModel($eq['jsonLocation'], $eq['modelPath'], $eq['jsonId']);
                 if ($model !== false) {
                     $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
                     $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];

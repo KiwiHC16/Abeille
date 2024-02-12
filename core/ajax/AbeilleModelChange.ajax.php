@@ -84,10 +84,10 @@ function getModelChoiceList() {
  * forces it to 'manual' so that the model is no longer modified automatically
  * from zigbee signature at equipment announcement.
  */
-function setModelToDevice() {
-    logDebug("setModelToDevice(): _POST=".json_encode($_POST, JSON_UNESCAPED_SLASHES));
+function setForcedModel() {
+    logDebug("setForcedModel(): _POST=".json_encode($_POST, JSON_UNESCAPED_SLASHES));
 
-    // Ex: _POST={"action":"setModelToDevice","eqId":"9","modelChoice":"[Profalux] BSO > Profalux BSO (BSO/BSO.json)"
+    // Ex: _POST={"action":"setForcedModel","eqId":"9","modelChoice":"[Profalux] BSO > Profalux BSO (BSO/BSO.json)"
     // Retrieving equipment
     $eqId = (int) $_POST['eqId'];
 
@@ -116,18 +116,21 @@ function setModelToDevice() {
     // $json = pathinfo(basename($tmpModelArr[1]), PATHINFO_FILENAME); // drops .json
     $modelName = pathinfo(basename($modelPathArr[1]), PATHINFO_FILENAME); // drops .json
 
+    // Requesting main daemon to update model
     $eqLogicId = $eqLogic->getLogicalId();
     list($net, $addr) = explode( "/", $eqLogicId);
     $msg = array(
-        'type' => 'updateFromForcedModel',
+        'type' => 'setForcedModel',
         'net' => $net,
         'addr' => $addr,
         'modelSource' => "Abeille",  // Tcharp38: Only offical models allowed
         'modelName' => $modelName,
-        'modelPath' => $modelPath,
+        // 'modelPath' => $modelPath, // Optional: Present if variant (<modName>/<modeName>[-variantX].json)
         'modelForced' => true,
         // 'modelSig' => $modelName, // Signature stays the original one
     );
+    if ($modelPath != "${modelName}/${modelName}.json")
+        $msg['modelPath'] = $modelPath;
     global $abQueues;
     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
     if (msg_send($queueXToAbeille, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
@@ -178,7 +181,7 @@ function setModelToDevice() {
  * Restores normal (automatic) model selection for equipment.
  * (= the model can be detected again by Abeille at the next announcement of the equipment)
  */
-function disableManualModelForDevice() {
+function removeForcedModel() {
     // Retrieving equipment
     $eqId = (int) $_POST['eqId'];
     $eqLogic = eqLogic::byId($eqId);
@@ -186,18 +189,31 @@ function disableManualModelForDevice() {
         throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__) . ' ' . $eqId);
     }
 
-    // Restores automatic model selection (without actually triggering it for now)
-    $currentModel = $eqLogic->getConfiguration('ab::eqModel', null);
-    if ($currentModel == null || ! isset($currentModel['id'])) {
-        // Should never happen
-        throw new Exception(__('ab::eqModel non défini. Essayez de ré-inclure l\'équipement.', __FILE__) . ' ' . $eqId);
+    // Requesting main daemon to update from orignal model (identified from signature)
+    $eqLogicId = $eqLogic->getLogicalId();
+    list($net, $addr) = explode( "/", $eqLogicId);
+    $msg = array(
+        'type' => 'removeForcedModel',
+        'net' => $net,
+        'addr' => $addr
+    );
+    global $abQueues;
+    $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+    if (msg_send($queueXToAbeille, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
+        // parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
     }
-    $currentModel['modelForced'] = false;
-    $eqLogic->setConfiguration('ab::eqModel', $currentModel);
-    $eqLogic->save();
 
-    message::add("Abeille", date('d/m/Y H:i:s') . " > Choix automatique du modèle réactivé pour cet équipement. Vous pouvez maintenant le Mettre à jour pour le re-configurer.", '');
+    // Restores automatic model selection (without actually triggering it for now)
+    // $currentModel = $eqLogic->getConfiguration('ab::eqModel', []);
+    // if (!isset($currentModel['id'])) {
+    //     // Should never happen
+    //     throw new Exception(__('ab::eqModel non défini. Essayez de ré-inclure l\'équipement.', __FILE__) . ' ' . $eqId);
+    // }
+    // $currentModel['modelForced'] = false;
+    // $eqLogic->setConfiguration('ab::eqModel', $currentModel);
+    // $eqLogic->save();
 
+    // message::add("Abeille", date('d/m/Y H:i:s') . " > Choix automatique du modèle réactivé pour cet équipement. Vous pouvez maintenant le Mettre à jour pour le re-configurer.", '');
 
     die("true");
 }

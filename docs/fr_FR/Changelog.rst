@@ -6,6 +6,8 @@ ChangeLog
 - Interne: Cmd: 'cmd-Private' revisité.
 - Modèle forcé: Corrections.
 - Profalux: Cmd: Corrections.
+- Réparation d'équipement: Améliorations.
+- Interne: Corrections pour meilleur support des modèles avec variante.
 
 240209-BETA-1
 -------------

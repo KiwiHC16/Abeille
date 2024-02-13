@@ -1738,10 +1738,9 @@ class Abeille extends eqLogic {
                 log::add('Abeille', 'error', "removeForcedModel '${net}/${addr}': Equipement inconnu.");
                 return;
             }
-            // TODO: Should rely on model signature first if exists
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
             if (!isset($zigbee['modelId']) || !isset($zigbee['manufId'])) {
-                log::add('Abeille', 'warning', "removeForcedModel '${net}/${addr}': Identifiant Zigbee incomplet.");
+                log::add('Abeille', 'warning', "removeForcedModel '${net}/${addr}': Identifiant Zigbee incomplet => réparer");
                 log::add('Abeille', 'debug', "zigbee=".json_encode($zigbee, JSON_UNESCAPED_SLASHES));
                 return;
             }
@@ -1753,7 +1752,7 @@ class Abeille extends eqLogic {
                     'modelSource' => $model['modelSource'], // Model file location
                     'modelName' => $model['modelName'], // Model name (modelX[-variant]) WITHOUT '.json'
                     // 'modelPath' => $msg['modelPath'], // Optional: Model file path (modelX/modelX[-variant].json)
-                    'modelForced' => true,
+                    'modelForced' => false,
                 );
                 if (isset($model['modelPath']))
                     $dev['modelPath'] = $model['modelPath'];

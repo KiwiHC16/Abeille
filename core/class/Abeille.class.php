@@ -1721,6 +1721,7 @@ class Abeille extends eqLogic {
                 'modelName' => $msg['modelName'], // Model name (modelX[-variant]) WITHOUT '.json'
                 // 'modelPath' => $msg['modelPath'], // Optional: Model file path (modelX/modelX[-variant].json)
                 'modelForced' => true,
+                'modelSig' => $msg['modelSig'],
             );
             if (isset($msg['modelPath']))
                 $dev['modelPath'] = $msg['modelPath'];
@@ -1753,6 +1754,7 @@ class Abeille extends eqLogic {
                     'modelName' => $model['modelName'], // Model name (modelX[-variant]) WITHOUT '.json'
                     // 'modelPath' => $msg['modelPath'], // Optional: Model file path (modelX/modelX[-variant].json)
                     'modelForced' => false,
+                    'modelSig' => $model['modelSig'], // Model signature for devices supported thru alternate IDs
                 );
                 if (isset($model['modelPath']))
                     $dev['modelPath'] = $model['modelPath'];

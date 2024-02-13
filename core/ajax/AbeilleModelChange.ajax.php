@@ -127,7 +127,7 @@ function setForcedModel() {
         'modelName' => $modelName,
         // 'modelPath' => $modelPath, // Optional: Present if variant (<modName>/<modeName>[-variantX].json)
         'modelForced' => true,
-        // 'modelSig' => $modelName, // Signature stays the original one
+        'modelSig' => $modelName, // Using main model signature
     );
     if ($modelPath != "${modelName}/${modelName}.json")
         $msg['modelPath'] = $modelPath;

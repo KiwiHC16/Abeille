@@ -933,7 +933,8 @@
                 }
                 // Rename some 'ab::eqModel' keys
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                $saveEqModel = false;
+                $saveEqZigbee = false; // true if 'ab::zigbee' must be updated
+                $saveEqModel = false; // true if 'ab::eqModel' must be updated
                 $eqModelRename = array(
                     'sig' => 'modelSig',
                     'id' => 'modelName',

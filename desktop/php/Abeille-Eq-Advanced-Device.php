@@ -15,6 +15,27 @@
 </div>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Code fabricant}} (manufCode)</label>
+    <div class="col-sm-5">
+        <input id="idManufCode" readonly title="{{Code fabricant}}" value="" />
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Date fabrication}} (DateCode)</label>
+    <div class="col-sm-5">
+        <input type="text" id="idDateCode" title="{{Cluster 0000, attribut 0006/DateCode}}" value="" readonly>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
+    <div class="col-sm-5">
+        <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
     <div class="col-sm-5">
         <input id="idZbModel" readonly title="{{Identificant Zigbee du modèle}}" value="" />
@@ -70,27 +91,6 @@
     <label class="col-sm-3 control-label">{{Assistant de découverte}}</label>
     <div class="col-sm-5">
         <a class="btn btn-default" id="idEqAssistBtn">{{Ouvrir}}</a>
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{Code fabricant}} (manufCode)</label>
-    <div class="col-sm-5">
-        <input id="idManufCode" readonly title="{{Code fabricant}}" value="" />
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{Date fabrication}} (DateCode)</label>
-    <div class="col-sm-5">
-        <input type="text" id="idDateCode" title="{{Cluster 0000, attribut 0006/DateCode}}" value="" readonly>
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
-    <div class="col-sm-5">
-        <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
     </div>
 </div>
 

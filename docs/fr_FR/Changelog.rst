@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240213-BETA-1
+-------------
+
 - Interne: Cmd: Suppression 'Network_Address_request' => 'getNwkAddress'.
 - Page équipment/avancé: Ajout support 'Network_Address_request'.
 - Interne: Cmd: 'cmd-Private' revisité.

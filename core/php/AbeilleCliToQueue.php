@@ -138,20 +138,20 @@
             return; // ERROR
         }
         list($eqNet, $eqAddr) = explode("/", $eqLogic->getLogicalId());
-        $zgId = substr($eqNet, 7); // AbeilleX => X
-        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
-            $jsonId = $eqModel['modelName'];
-        else
-            $jsonId = '';
-        if (isset($eqModel['modelSource']) && ($eqModel['modelSource'] != '') && ($eqModel['modelSource'] != null))
-            $jsonLocation = $eqModel['modelSource'];
-        else
-            $jsonLocation = 'Abeille';
-        if ($jsonId == '') {
-            logDebug("CliToQueue: ERROR: jsonId empty for device ".$eqId);
-            return; // ERROR
-        }
+        // $zgId = substr($eqNet, 7); // AbeilleX => X
+        // $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        // if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
+        //     $jsonId = $eqModel['modelName'];
+        // else
+        //     $jsonId = '';
+        // if (isset($eqModel['modelSource']) && ($eqModel['modelSource'] != '') && ($eqModel['modelSource'] != null))
+        //     $jsonLocation = $eqModel['modelSource'];
+        // else
+        //     $jsonLocation = 'Abeille';
+        // if ($jsonId == '') {
+        //     logDebug("CliToQueue: ERROR: jsonId empty for device ".$eqId);
+        //     return; // ERROR
+        // }
 
         // OBSOLETE: Moved to 'ab::zigbee'
         // $sig = $eqLogic->getConfiguration('ab::signature');
@@ -162,42 +162,42 @@
         //     $modelId = "";
         //     $manufId = "";
         // }
-        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-        $modelId = isset($zigbee['modelId']) ? $zigbee['modelId'] : '';
-        $manufId = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
+        // $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+        // $modelId = isset($zigbee['modelId']) ? $zigbee['modelId'] : '';
+        // $manufId = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
 
     	// Model forced by user ?
-    	$isManualModel = isset($eqModel['modelForced']) ? $eqModel['modelForced']: false;
+    	// $modelForced = isset($eqModel['modelForced']) ? $eqModel['modelForced']: false;
 
-        if (($jsonId == "defaultUnknown") && ($modelId != "") && !$isManualModel) {
-            $jsonId2 = "";
-            $jsonLoc2 = "";
-            $localP = __DIR__."/../../core/config/devices/";
-            $abeilleP = __DIR__."/../../core/config/devices/";
-            if (file_exists($localP.$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
-                $jsonId2 = $modelId."_".$manufId;
-                $jsonLoc2 = "local";
-            } else if (file_exists($abeilleP.$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
-                $jsonId2 = $modelId."_".$manufId;
-                $jsonLoc2 = "Abeille";
-            } else if (file_exists($localP.$modelId."/".$modelId.".json")) {
-                $jsonId2 = $modelId;
-                $jsonLoc2 = "local";
-            } else if (file_exists($abeilleP.$modelId."/".$modelId.".json")) {
-                $jsonId2 = $modelId;
-                $jsonLoc2 = "Abeille";
-            }
-            if (($jsonId2 != $jsonId) || ($jsonLoc2 != $jsonLocation)) {
-                if (isset($dbgTcharp38)) logDebug("CliToQueue: New jsonId: ".$jsonId2."/".$jsonLoc2);
-                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                $eqModel['modelName'] = $jsonId2;
-                $eqModel['modelSource'] = $jsonLoc2;
-                $eqLogic->setConfiguration('ab::eqModel', $eqModel);
-                $eqLogic->save();
-                $jsonId = $jsonId2;
-                $jsonLocation = $jsonLoc2;
-            }
-        }
+        // if (($jsonId == "defaultUnknown") && ($modelId != "") && !$modelForced) {
+        //     $jsonId2 = "";
+        //     $jsonLoc2 = "";
+        //     $localP = __DIR__."/../../core/config/devices/";
+        //     $abeilleP = __DIR__."/../../core/config/devices/";
+        //     if (file_exists($localP.$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
+        //         $jsonId2 = $modelId."_".$manufId;
+        //         $jsonLoc2 = "local";
+        //     } else if (file_exists($abeilleP.$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
+        //         $jsonId2 = $modelId."_".$manufId;
+        //         $jsonLoc2 = "Abeille";
+        //     } else if (file_exists($localP.$modelId."/".$modelId.".json")) {
+        //         $jsonId2 = $modelId;
+        //         $jsonLoc2 = "local";
+        //     } else if (file_exists($abeilleP.$modelId."/".$modelId.".json")) {
+        //         $jsonId2 = $modelId;
+        //         $jsonLoc2 = "Abeille";
+        //     }
+        //     if (($jsonId2 != $jsonId) || ($jsonLoc2 != $jsonLocation)) {
+        //         if (isset($dbgTcharp38)) logDebug("CliToQueue: New jsonId: ".$jsonId2."/".$jsonLoc2);
+        //         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        //         $eqModel['modelName'] = $jsonId2;
+        //         $eqModel['modelSource'] = $jsonLoc2;
+        //         $eqLogic->setConfiguration('ab::eqModel', $eqModel);
+        //         $eqLogic->save();
+        //         $jsonId = $jsonId2;
+        //         $jsonLocation = $jsonLoc2;
+        //     }
+        // }
 
         if ($action == "update") {
             $msg = array(

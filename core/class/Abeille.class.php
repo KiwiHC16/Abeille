@@ -1380,37 +1380,45 @@ class Abeille extends eqLogic {
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             $modelSource = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
             $modelName = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+            $modelPath = isset($eqModel['modelPath']) ? $eqModel['modelPath'] : '';
             $modelForced = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
+            $modelSig = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : $modelName;
             $modelName1 = $modelName;
 
             // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
             // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
             // $eqSig = $eqLogic->getConfiguration('ab::signature', []);
-            if (($eqSig != []) && ($eqSig['modelId'] != "") && !$modelForced) {
-                // Any user or official model ?
-                // $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
-                $modelInfos = identifyModel($eqSig['modelId'], $eqSig['manufId']);
-                if ($modelInfos !== false) {
-                    $modelSig = $modelInfos['modelSig'];
-                    $modelName = $modelInfos['modelName'];
-                    $modelSource = $modelInfos['modelSource'];
-                    $eqHName = $eqLogic->getHumanName();
-                }
-            }
-            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-            if (isset($zigbee['modelId']) && ($zigbee['modelId'] != "") && !$modelForced) {
-                // Any user or official model ?
-                $modelInfos = identifyModel($zigbee['modelId'], $zigbee['manufId']);
-                if ($modelInfos !== false) {
-                    $modelSig = $modelInfos['modelSig'];
-                    $modelName = $modelInfos['modelName'];
-                    $modelSource = $modelInfos['modelSource'];
-                    $eqHName = $eqLogic->getHumanName();
+            // if (($eqSig != []) && ($eqSig['modelId'] != "") && !$modelForced) {
+            //     // Any user or official model ?
+            //     // $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
+            //     $modelInfos = identifyModel($eqSig['modelId'], $eqSig['manufId']);
+            //     if ($modelInfos !== false) {
+            //         $modelSig = $modelInfos['modelSig'];
+            //         $modelName = $modelInfos['modelName'];
+            //         $modelSource = $modelInfos['modelSource'];
+            //         $eqHName = $eqLogic->getHumanName();
+            //     }
+            // }
+            if (($modelName == '') || (($modelName == "defaultUnknown") && !$modelForced)) {
+                // Any better model ?
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                if (isset($zigbee['modelId']) && ($zigbee['modelId'] != "")) {
+                    $modelInfos = identifyModel($zigbee['modelId'], $zigbee['manufId']);
+                    if ($modelInfos !== false) {
+                        $modelSource = $modelInfos['modelSource'];
+                        $modelName = $modelInfos['modelName'];
+                        $modelPath = isset($modelInfos['modelPath']) ? $modelInfos['modelPath'] : '';
+                        $modelSig = $modelInfos['modelSig'];
+                        $eqHName = $eqLogic->getHumanName();
+                        message::add("Abeille", $eqHName.": Mise-à-jour à partir du modèle '${modelName}'", '');
+                    }
                 }
             }
 
-            if ($modelName != $modelName1)
-                message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
+            if ($modelName == '') {
+                message::add("Abeille", $eqHName.": Mise-à-jour impossible. Modele non identifié => Réparer", '');
+                return;
+            }
 
             $dev = array(
                 'net' => $dest,
@@ -1420,6 +1428,8 @@ class Abeille extends eqLogic {
                 'modelName' => $modelName, // Model file name
                 'modelSig' => $modelSig, // Model signature
             );
+            if ($modelPath != '')
+                $dev['modelPath'] = $modelPath;
             Abeille::createDevice($action, $dev);
 
             return;

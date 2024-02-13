@@ -15,7 +15,7 @@
 </div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">{{Code fabricant}} (manufCode)</label>
+    <label class="col-sm-3 control-label">{{Code fabricant}} (ManufCode)</label>
     <div class="col-sm-5">
         <input id="idManufCode" readonly title="{{Code fabricant}}" value="" />
     </div>

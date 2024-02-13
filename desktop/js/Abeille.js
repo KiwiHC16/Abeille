@@ -121,10 +121,16 @@ function refreshEqInfos() {
             if (typeof eq.zigbee.endPoints != "undefined") {
                 for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
                     // console.log("LA epId=", epId + ", ep=", ep);
-                    if (typeof ep.dateCode != "undefined")
+                    if (
+                        typeof ep.dateCode != "undefined" &&
+                        ep.dateCode != false
+                    )
                         document.getElementById("idDateCode").value =
                             ep.dateCode;
-                    if (typeof ep.swBuildId != "undefined")
+                    if (
+                        typeof ep.swBuildId != "undefined" &&
+                        ep.swBuildId != false
+                    )
                         document.getElementById("idSwBuildId").value =
                             ep.swBuildId;
                 }

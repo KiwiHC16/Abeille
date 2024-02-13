@@ -136,7 +136,7 @@
                 }
                 // Profalux specific: Need 'location' to identify device
                 // Note: IEEE address is Profalux (20918A) or sometimes Ember corp (00:0D:6F)
-                if (isset($ep2['modelId']) && ($ep2['modelId'] == '') && !isset($ep2['location'])) { // Location is useful for Profalux 1st gen
+                if (isset($ep2['modelId']) && ($ep2['modelId'] == false) && !isset($ep2['location'])) { // Location is useful for Profalux 1st gen
                     if ($missing != '') {
                         $missing .= ',';
                         $missingTxt .= '/';
@@ -144,7 +144,7 @@
                     $missing .= '0010';
                     $missingTxt .= 'location';
                 }
-                if (!isset($ep2['dateCode'])) { // DateCode
+                if (!isset($ep2['dateCode']) || ($ep2['dateCode'] === null)) { // DateCode undefined
                     if ($missing != '') {
                         $missing .= ',';
                         $missingTxt .= '/';
@@ -152,7 +152,7 @@
                     $missing .= '0006';
                     $missingTxt .= 'DateCode';
                 }
-                if (!isset($ep2['swBuildId'])) { // SWBuildID
+                if (!isset($ep2['swBuildId']) || ($ep2['swBuildId'] === null)) { // SWBuildID undefined
                     if ($missing != '') {
                         $missing .= ',';
                         $missingTxt .= '/';

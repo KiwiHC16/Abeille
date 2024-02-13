@@ -78,17 +78,19 @@
         } else
             msgToCli("step", "IEEE", "ok");
 
+        $saveEqZigbee = false;
+
         // Zigbee endpoints list defined ?
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         logMessage('debug', '  ab::zigbee='.json_encode($zigbee, JSON_UNESCAPED_SLASHES));
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) { // Checking current EP list
-            // logMessage('debug', "  LA epId2=${epId2}");
             if (($epId2 == '') || ($epId2 == '00')) {
-                unset($zigbee['endPoints']); // Bad content
-                saveEqConfig($eqLogic, 'ab::zigbee', $zigbee);
-                break;
+                unset($zigbee['endPoints'][$epId2]); // Removing unexpected content
+                $saveEqZigbee = true;
             }
         }
+        if ($saveEqZigbee)
+            saveEqConfig($eqLogic, 'ab::zigbee', $zigbee);
         if (!isset($zigbee['endPoints'])) {
             msgToCli("step", "Active end points");
             logMessage('debug', '  Requesting active endpoints list');
@@ -222,7 +224,7 @@
         }
         if (!isset($zbSig['modelId'])) {
             msgToCli("step", "Zigbee signature");
-            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($zbSig));
+            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($zbSig, JSON_UNESCAPED_SLASHES));
             return;
         }
         msgToCli("step", "Zigbee signature", "ok");

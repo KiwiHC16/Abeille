@@ -960,7 +960,20 @@
                     log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::xiaomi' replaced by 'private' entries");
                     $saveEqModel = true;
                 }
+                // ab::signature content moved into 'ab::zigbee'
+                $sig = $eqLogic->getConfiguration('ab::signature', null);
+                if ($sig !== null) {
+                    $zigbee['modelId'] = isset($sig['modelId']) ? $sig['modelId'] : '';
+                    $zigbee['manufId'] = isset($sig['manufId']) ? $sig['manufId'] : '';
+                    $eqLogic->setConfiguration('ab::signature', null);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::signature' content moved in 'ab::zigbee'");
+                    $saveEqZigbee = true;
+                }
 
+                if ($saveEqZigbee) {
+                    $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                    $saveEq = true;
+                }
                 if ($saveEqModel) {
                     $eqLogic->setConfiguration('ab::eqModel', $eqModel);
                     $saveEq = true;

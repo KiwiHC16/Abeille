@@ -191,9 +191,10 @@
 
         // Zigbee main signature correct ?
         // Should reflect the signature of the first EP supporting cluster 0000
-        $zbSig = $eqLogic->getConfiguration('ab::signature', []);
-        logMessage('debug', '  ab::signature='.json_encode($zbSig));
-        $zbNewSig = [];
+        // $zbSig = $eqLogic->getConfiguration('ab::signature', []);
+        // logMessage('debug', '  ab::signature='.json_encode($zbSig));
+        // $zbNewSig = [];
+        $saveEqZigbee = false;
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
             if (strpos($ep2['servClusters'], '0000') === false)
                 continue; // No basic cluster for this EP
@@ -204,27 +205,36 @@
             }
 
             // model or manuf are now either known or unsupported
-            if (!isset($zbNewSig['manufId']) && ($ep2['manufId'] != ''))
-                $zbNewSig['manufId'] = $ep2['manufId'];
-            if (!isset($zbNewSig['modelId']) && ($ep2['modelId'] != ''))
-                $zbNewSig['modelId'] = $ep2['modelId'];
+            if (!isset($zigbee['manufId']) && ($ep2['manufId'] != '')) {
+                $zigbee['manufId'] = $ep2['manufId'];
+                $saveEqZigbee = true;
+            }
+            if (!isset($zigbee['modelId']) && ($ep2['modelId'] != '')) {
+                $zigbee['modelId'] = $ep2['modelId'];
+                $saveEqZigbee = true;
+            }
 
             // Profalux specific case: using 'location' to get identifier
-            if (!isset($zbNewSig['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
+            if (!isset($zigbee['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
                 logMessage('debug', "  Profalux case: Using 'location' info '".$ep2['location']."'");
-                $zbNewSig['modelId'] = $ep2['location'];
-                $zbNewSig['manufId'] = '';
+                $zigbee['modelId'] = $ep2['location'];
+                $zigbee['manufId'] = '';
+                $saveEqZigbee = true;
             }
         }
-        if ($zbNewSig != $zbSig) {
-            $eqLogic->setConfiguration('ab::signature', $zbNewSig);
-            $eqLogic->save();
-            logMessage('debug', "  ab::signature updated to ".json_encode($zbNewSig));
-            $zbSig = $zbNewSig;
+        // if ($zbNewSig != $zbSig) {
+        //     $eqLogic->setConfiguration('ab::signature', $zbNewSig);
+        //     $eqLogic->save();
+        //     logMessage('debug', "  ab::signature updated to ".json_encode($zbNewSig));
+        //     $zbSig = $zbNewSig;
+        // }
+        if ($saveEqZigbee) {
+            saveEqConfig($eqLogic, "ab::zigbee", $zigbee);
+            logMessage('debug', "  ab::zigbee main signature updated to ".json_encode($zigbee));
         }
-        if (!isset($zbSig['modelId'])) {
+        if (!isset($zigbee['modelId'])) {
             msgToCli("step", "Zigbee signature");
-            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($zbSig, JSON_UNESCAPED_SLASHES));
+            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($zigbee, JSON_UNESCAPED_SLASHES));
             return;
         }
         msgToCli("step", "Zigbee signature", "ok");

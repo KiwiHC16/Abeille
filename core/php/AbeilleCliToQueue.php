@@ -153,14 +153,18 @@
             return; // ERROR
         }
 
-        $sig = $eqLogic->getConfiguration('ab::signature');
-        if ($sig) {
-            $modelId = $sig['modelId'];
-            $manufId = $sig['manufId'];
-        } else {
-            $modelId = "";
-            $manufId = "";
-        }
+        // OBSOLETE: Moved to 'ab::zigbee'
+        // $sig = $eqLogic->getConfiguration('ab::signature');
+        // if ($sig) {
+        //     $modelId = $sig['modelId'];
+        //     $manufId = $sig['manufId'];
+        // } else {
+        //     $modelId = "";
+        //     $manufId = "";
+        // }
+        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+        $modelId = isset($zigbee['modelId']) ? $zigbee['modelId'] : '';
+        $manufId = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
 
     	// Model forced by user ?
     	$isManualModel = isset($eqModel['modelForced']) ? $eqModel['modelForced']: false;

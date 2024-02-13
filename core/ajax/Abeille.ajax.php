@@ -565,9 +565,10 @@
                 $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');
                 $eq['batteryType'] = $eqLogic->getConfiguration('battery_type', '');
 
-                $sig = $eqLogic->getConfiguration('ab::signature', []);
-                $eq['zbModel'] = isset($sig['modelId']) ? $sig['modelId'] : '';
-                $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
+                // OBSOLETE: Moved to 'ab::zigbee'
+                // $sig = $eqLogic->getConfiguration('ab::signature', []);
+                // $eq['zbModel'] = isset($sig['modelId']) ? $sig['modelId'] : '';
+                // $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
 
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
                 // logDebug('  eqModel='.json_encode($eqModel));
@@ -589,7 +590,10 @@
                     'type' => isset($eqModel['type']) ? $eqModel['type'] : '',
                 );
 
-                $eq['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                $eq['zigbee'] = $zigbee;
+                $eq['zbModel'] = isset($zigbee['modelId']) ? $zigbee['modelId'] : '';
+                $eq['zbManuf'] = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
 
                 $eq['paramType'] = $eqLogic->getConfiguration('paramType', "");
 

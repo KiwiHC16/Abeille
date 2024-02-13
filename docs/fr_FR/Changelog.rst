@@ -8,6 +8,7 @@ ChangeLog
 - Profalux: Cmd: Corrections.
 - Réparation d'équipement: Améliorations.
 - Interne: Corrections pour meilleur support des modèles avec variante.
+- Interne: eqLogic: 'ab::signature' supprimé => 'ab::zigbee'.
 
 240209-BETA-1
 -------------

@@ -1385,8 +1385,7 @@ class Abeille extends eqLogic {
 
             // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
             // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
-            $eqSig = $eqLogic->getConfiguration('ab::signature', []);
-
+            // $eqSig = $eqLogic->getConfiguration('ab::signature', []);
             if (($eqSig != []) && ($eqSig['modelId'] != "") && !$modelForced) {
                 // Any user or official model ?
                 // $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
@@ -1398,6 +1397,18 @@ class Abeille extends eqLogic {
                     $eqHName = $eqLogic->getHumanName();
                 }
             }
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if (isset($zigbee['modelId']) && ($zigbee['modelId'] != "") && !$modelForced) {
+                // Any user or official model ?
+                $modelInfos = identifyModel($zigbee['modelId'], $zigbee['manufId']);
+                if ($modelInfos !== false) {
+                    $modelSig = $modelInfos['modelSig'];
+                    $modelName = $modelInfos['modelName'];
+                    $modelSource = $modelInfos['modelSource'];
+                    $eqHName = $eqLogic->getHumanName();
+                }
+            }
+
             if ($modelName != $modelName1)
                 message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
 
@@ -2932,13 +2943,14 @@ class Abeille extends eqLogic {
         }
         $eqLogic->setConfiguration('mainEP', $mainEP);
 
-        if (isset($dev['modelId'])) {
-            $sig = array(
-                'modelId' => $dev['modelId'],
-                'manufId' => $dev['manufId'],
-            );
-            $eqLogic->setConfiguration('ab::signature', $sig);
-        }
+        // OBSOLETE: Moved to 'ab::zigbee'
+        // if (isset($dev['modelId'])) {
+        //     $sig = array(
+        //         'modelId' => $dev['modelId'],
+        //         'manufId' => $dev['manufId'],
+        //     );
+        //     $eqLogic->setConfiguration('ab::signature', $sig);
+        // }
 
         // Icon updated if no-longer-exists/reset/undefined/defaultUnknown
         $curIcon = $eqLogic->getConfiguration('ab::icon', '');
@@ -3052,6 +3064,10 @@ class Abeille extends eqLogic {
             $mc = hexdec($zigbee['macCapa']);
             $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powered
             $zigbee['rxOnWhenIdle'] = ($mc >> 3) & 0b1; // 1=Receiver enabled when idle
+        }
+        if (isset($dev['modelId'])) { // Was previously stored in 'ab::signature'
+            $zigbee['modelId'] = $dev['modelId'];
+            $zigbee['manufId'] = $dev['manufId'];
         }
         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
 

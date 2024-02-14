@@ -1735,7 +1735,7 @@ class Abeille extends eqLogic {
             );
             if (isset($msg['modelPath']))
                 $dev['modelPath'] = $msg['modelPath'];
-            Abeille::createDevice("update", $dev);
+            Abeille::createDevice("reset", $dev); // Changing to another model => force reset
 
             return;
         } // End 'setForcedModel'
@@ -1768,7 +1768,7 @@ class Abeille extends eqLogic {
                 );
                 if (isset($model['modelPath']))
                     $dev['modelPath'] = $model['modelPath'];
-                Abeille::createDevice("update", $dev);
+                Abeille::createDevice("reset", $dev); // Changing to another model => force reset
             }
 
             return;

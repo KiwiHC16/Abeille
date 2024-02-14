@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Modèle forcé: Correction.
+
 240213-BETA-1
 -------------
 

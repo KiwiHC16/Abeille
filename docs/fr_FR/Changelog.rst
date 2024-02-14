@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Modèle forcé: Correction.
+- Réparation d'équipement: Améliorations.
 
 240213-BETA-1
 -------------

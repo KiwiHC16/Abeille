@@ -240,7 +240,11 @@
         msgToCli("step", "Zigbee signature", "ok");
 
         $error = false;
-        $eqChanged = false;
+        $saveEqZigbee = false;
+        $saveEqModel = false;
+        $saveEq = false;
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        logMessage('debug', '  ab::eqModel='.json_encode($eqModel));
 
         // Is model identification correct ?
         // ab::eqModel = array(
@@ -253,12 +257,9 @@
         //     'model' => EQ model nam
         //     'type' => EQ model type
         // )
-        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        logMessage('debug', '  ab::eqModel='.json_encode($eqModel));
-        $eqModelChanged = false;
         if (!isset($eqModel['modelName']) || ($eqModel['modelName'] == '') || ($eqModel['modelName'] == 'defaultUnknown')) {
             msgToCli("step", "Model file name");
-            $modelContent = identifyModel($zbSig['modelId'], $zbSig['manufId']);
+            $modelContent = identifyModel($zigbee['modelId'], $zigbee['manufId']);
             if ($modelContent !== false) {
                 $eqModel['modelSource'] = $modelContent['modelSource'];
                 $eqModel['modelName'] = $modelContent['modelName'];
@@ -267,7 +268,7 @@
                 // $eqModel['modelForced'] = false;
 
                 $eqModel['modelSig'] = $modelContent['modelSig'];
-                $eqModelChanged = true;
+                $saveEqModel = true;
             }
             // If returns false but modelName=='defaultUnknown', stay as it is
         }
@@ -276,19 +277,21 @@
         else
             $error = true;
 
-        if (!isset($eqModel['modelSig']) || ($eqModel['modelSig'] == '')) {
-            msgToCli("step", "Model signature");
-            logMessage('debug', "  Missing model sig.");
-            $modelContent = identifyModel($zbSig['modelId'], $zbSig['manufId']);
-            if ($modelContent !== false) {
-                $eqModel['modelSig'] = $modelContent['modelSig'];
-                $eqModelChanged = true;
+        if (!$error) {
+            if (!isset($eqModel['modelSig']) || ($eqModel['modelSig'] == '')) {
+                msgToCli("step", "Model signature");
+                logMessage('debug', "  Missing model sig.");
+                $modelContent = identifyModel($zigbee['modelId'], $zigbee['manufId']);
+                if ($modelContent !== false) {
+                    $eqModel['modelSig'] = $modelContent['modelSig'];
+                    $saveEqModel = true;
+                }
             }
+            if (isset($eqModel['modelSig']) && ($eqModel['modelSig'] != ''))
+                msgToCli("step", "Model signature", "ok");
+            else
+                $error = true;
         }
-        if (isset($eqModel['modelSig']) && ($eqModel['modelSig'] != ''))
-            msgToCli("step", "Model signature", "ok");
-        else
-            $error = true;
 
         // Compute optional 'modelPath'
         if (isset($eqModel['modelPath']))
@@ -297,19 +300,21 @@
             $modelPath = $eqModel['modelName']."/".$eqModel['modelName'].".json";
 
         // Equipment infos
-        if (!$error && (!isset($eqModel['manuf']) || ($eqModel['manuf'] == '') ||
-            !isset($eqModel['model']) || ($eqModel['model'] == '') ||
-            !isset($eqModel['type']) || ($eqModel['type'] == ''))) {
-            msgToCli("step", "Equipment infos");
-            $model = getDeviceModel($eqModel['modelSource'], $modelPath, $eqModel['modelName'], $eqModel['modelSig']);
-            logMessage('debug', "model=".json_encode($model));
-            $eqModel['manuf'] = isset($model['manufacturer']) ? $model['manufacturer']: '';
-            $eqModel['model'] = isset($model['model']) ? $model['model']: '';
-            $eqModel['type'] = isset($model['type']) ? $model['type']: '';
-            $eqModelChanged = true;
+        if (!$error) {
+            if ((!isset($eqModel['manuf']) || ($eqModel['manuf'] == '') ||
+                !isset($eqModel['model']) || ($eqModel['model'] == '') ||
+                !isset($eqModel['type']) || ($eqModel['type'] == ''))) {
+                msgToCli("step", "Equipment infos");
+                $model = getDeviceModel($eqModel['modelSource'], $modelPath, $eqModel['modelName'], $eqModel['modelSig']);
+                logMessage('debug', "model=".json_encode($model));
+                $eqModel['manuf'] = isset($model['manufacturer']) ? $model['manufacturer']: '';
+                $eqModel['model'] = isset($model['model']) ? $model['model']: '';
+                $eqModel['type'] = isset($model['type']) ? $model['type']: '';
+                $saveEqModel = true;
+            }
+            if (($eqModel['manuf'] != '') && ($eqModel['model'] != '') && ($eqModel['type'] != ''))
+                msgToCli("step", "Equipment infos", "ok");
         }
-        if (($eqModel['manuf'] != '') && ($eqModel['model'] != '') && ($eqModel['type'] != ''))
-            msgToCli("step", "Equipment infos", "ok");
 
         // Checking icon
         if (!$error) {
@@ -322,7 +327,7 @@
                 if (isset($model['configuration']['icon'])) {
                     $eqLogic->setConfiguration('ab::icon', $model['configuration']['icon']);
                     logMessage('debug', "  ab::icon updated to '".$model['configuration']['icon']."'");
-                    $eqChanged = true;
+                    $saveEq = true;
                 }
             }
             $icon = $eqLogic->getConfiguration('ab::icon', '');
@@ -330,12 +335,18 @@
                 msgToCli("step", "Icon", "ok");
         }
 
-        if ($eqModelChanged) {
+        // Updating eqLogic if required
+        if ($saveEqZigbee) {
+            $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+            logMessage('debug', "  ab::zigbee updated to ".json_encode($zigbee, JSON_UNESCAPED_SLASHES));
+            $saveEq = true;
+        }
+        if ($saveEqModel) {
             $eqLogic->setConfiguration('ab::eqModel', $eqModel);
             logMessage('debug', "  ab::eqModel updated to ".json_encode($eqModel, JSON_UNESCAPED_SLASHES));
-            $eqChanged = true;
+            $saveEq = true;
         }
-        if ($eqChanged)
+        if ($saveEq)
             $eqLogic->save();
 
         if ($error)

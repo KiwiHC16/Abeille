@@ -52,22 +52,14 @@
                 "isVisible": 1
             },
             "Set Tilt": {
-                "use": "moveToLiftAndTiltBSO_Tilt",
-                "comment": "'lift' value is taken from 'Level' info cmd",
-                "params": "lift=#cmdInfo_0008-01-0000_#"
-            },
-            "Tilt": {
-                "use": "Tilt",
-                "isVisible": 1
-            },
-            "Set Tilt 2": {
                 "use": "act_cmd-Private-Slider",
                 "minValue": "0",
                 "maxValue": "90",
+                "value": "Tilt",
                 "params": "fct=profaluxSetTiltLift&cmd=00&tilt=#slider#",
                 "isVisible": 1
             },
-            "Tilt 2": {
+            "Tilt": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "FC21-01-0001",
                 "isVisible": 1,

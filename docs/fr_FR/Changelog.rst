@@ -6,6 +6,7 @@ ChangeLog
 - Interne: Zigbee const: Ajout FC20 + FC21 (Profalux).
 - Interne: Cmd: Amélioration 'configureReporting2'.
 - Profalux BSO: Mise-à-jour du modèle (2687).
+- Interne: Parser: Corrections pour support modèle avec variante (<modelName>[-variantX]).
 
 240213-BETA-1
 -------------

@@ -600,6 +600,7 @@
 
             // Any new info for Abeille.class ?
             // Note: Updates are transmitted only if IEEE address is already known to have unique identification
+            // Note: if count($abUpdates) != 0 then there is a diff vs what was stored
             if ((count($abUpdates) != 0) && ($eq['ieee'] !== null)) {
                 parserLog('debug', '    Updated eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
                 $msg = array(

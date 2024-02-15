@@ -253,11 +253,12 @@
             'time' => time(),
             'endPoints' => null,
             'mainEp' => '',
-            'manufId' => null, // null(undef)/false(unsupported)/'xx'
-            'modelId' => null, // null(undef)/false(unsupported)/'xx'
-            'location' => null, // null(undef)/false(unsupported)/'xx'
-            'jsonId' => '',
-            'jsonLocation' => '',
+            'manufId' => null, // Zigbee manufacturer: null(undef)/false(unsupported)/'xx'
+            'modelId' => null, // Zigmee model: null(undef)/false(unsupported)/'xx'
+            'location' => null, // Zigbee location: null(undef)/false(unsupported)/'xx'
+            'jsonId' => '', // Model file name WITHOUT '.json'
+            'jsonLocation' => '', // Model source ('Abeille' or 'local')
+            'modelForced' => false, // Model forced by user if 'true'
             // Optional 'private'
             // Optional 'notStandard-0400-0000'
         );
@@ -378,6 +379,13 @@
         if (!isset($GLOBALS['eqList'][$net][$addr]))
             $GLOBALS['eqList'][$net][$addr] = [];
         $eq = &$GLOBALS['eqList'][$net][$addr];
+
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        $eq['jsonId'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+        $eq['jsonLocation'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
+        $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
+        if (isset($eqModel['modelPath'])) // Forced model variant case
+            $eq['modelPath'] = $eqModel['modelPath'];
 
         $private = $eqLogic->getConfiguration('ab::private', null);
         if ($private !== null) {
@@ -513,9 +521,9 @@
                 'endPoints' => isset($zigbee['endPoints']) ? $zigbee['endPoints'] : null, // null(undef)
                 'mainEp' => '',
                 // Cluster 0000 infos
-                'manufId' => null, // null(undef)/false(unsupported)/'xx'
-                'modelId' => null, // null(undef)/false(unsupported)/'xx'
-                'location' => null, // null(undef)/false(unsupported)/'xx'
+                'manufId' => null, // Zigbee manufacturer: null(undef)/false(unsupported)/'xx'
+                'modelId' => null, // Zigmee model: null(undef)/false(unsupported)/'xx'
+                'location' => null, // Zigbee location: null(undef)/false(unsupported)/'xx'
                 'dateCode' => null,
                 'swBuildId' => null,
                 // Abeille's model infos

@@ -3,6 +3,9 @@ ChangeLog
 
 - Modèle forcé: Correction.
 - Réparation d'équipement: Améliorations.
+- Interne: Zigbee const: Ajout FC20 + FC21 (Profalux).
+- Interne: Cmd: Amélioration 'configureReporting2'.
+- Profalux BSO: Mise-à-jour du modèle (2687).
 
 240213-BETA-1
 -------------

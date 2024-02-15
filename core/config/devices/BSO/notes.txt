@@ -1,21 +1,3 @@
-Ancienne commande info
-======================
-    "moveToLiftAndTiltBSO_Tilt": {
-        "isVisible": 1,
-        "logicalId": "#EP#-SetBSOTilt",
-        "subType": "slider",
-        "value": "Tilt",
-        "template": "",
-        "configuration": {
-            "minValue": "0",
-            "maxValue": "90",
-            "topic": "moveToLiftAndTiltBSO",
-            "request": "EP=01&lift=#cmdInfo_Lift_#&inclinaison=#slider#&duration=10",
-            "visibilityCategory": "All"
-        },
-        "type": "action"
-    }
-
 Domoticz
 ========
     # payload: 11 45 10 03 55 2d ffff
@@ -51,3 +33,22 @@ Utilisation de 'cmd-Generic' pour faire un set tilt particulier
         LL = level = 00
         TT = tilt
         DDDD = duration 10sec=>000A
+        
+Ancienne commande action
+========================
+    "moveToLiftAndTiltBSO_Tilt": {
+        "isVisible": 1,
+        "logicalId": "#EP#-SetBSOTilt",
+        "subType": "slider",
+        "value": "Tilt",
+        "template": "",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "90",
+            "topic": "moveToLiftAndTiltBSO",
+            "request": "EP=01&lift=#cmdInfo_Lift_#&inclinaison=#slider#&duration=10",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
+    }
+

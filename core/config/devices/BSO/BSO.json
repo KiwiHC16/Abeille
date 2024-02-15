@@ -78,13 +78,19 @@
             },
             "SetReporting-0006-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0006&attrType=10&attrId=0000",
+                "params": "clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
             "SetReporting-0008-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0008&attrType=20&attrId=0000",
+                "params": "clustId=0008&attrId=0000&attrType=20",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
+            "SetReporting-FC21-0001": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=FC21&attrId=0001&attrType=20&manufCode=1110",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             }

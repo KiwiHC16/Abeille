@@ -842,6 +842,12 @@
         "FC02" => array(
             "name" => "Private", // Used by multi_Samjin
         ),
+        "FC20" => array(
+            "name" => "Profalux private ?",
+        ),
+        "FC21" => array(
+            "name" => "Profalux private ?",
+        ),
         "FC40" => array(
             "name" => "Legrand private ?",
         ),

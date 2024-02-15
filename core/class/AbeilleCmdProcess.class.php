@@ -3877,13 +3877,13 @@
                 } // End 'configureReporting'
 
                 // ZCL global: Configure reporting command (2)
-                // Mandatory parameters: addr, clustId, attrId
+                // Mandatory parameters: addr, ep, clustId, attrId
                 // Optional params: manufCode (2B hex), dir (1B hex, default=00)
                 // Mandatory extra params if dir=00: attrType (1B hex), minInterval (number), maxInterval (number), changeVal (number)
                 // Mandatory extra params if dir=01: timeout (number)
                 else if ($cmdName == 'configureReporting2') {
                     /* Mandatory infos: addr, clustId, attrId. 'attrType' can be auto-detected */
-                    $required = ['addr', 'clustId', 'attrId'];
+                    $required = ['addr', 'ep', 'clustId', 'attrId'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 

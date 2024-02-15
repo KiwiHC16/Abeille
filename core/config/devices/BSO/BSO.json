@@ -88,6 +88,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
+            "Bind-FC21-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=FC21",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "SetReporting-FC21-0001": {
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=FC21&attrId=0001&attrType=20&manufCode=1110",

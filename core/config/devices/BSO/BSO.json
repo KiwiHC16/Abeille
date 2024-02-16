@@ -62,6 +62,7 @@
             "Tilt": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "FC21-01-0001",
+                "unit": "deg",
                 "isVisible": 1,
                 "nextLine": "after"
             },

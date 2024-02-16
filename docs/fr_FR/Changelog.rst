@@ -7,6 +7,7 @@ ChangeLog
 - Interne: Cmd: Amélioration 'configureReporting2'.
 - Profalux BSO: Mise-à-jour du modèle (2687).
 - Interne: Parser: Corrections pour support modèle avec variante (<modelName>[-variantX]).
+- Interne: AbeilleModels: Amélioration pour robustesse.
 
 240213-BETA-1
 -------------

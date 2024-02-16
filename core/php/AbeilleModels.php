@@ -57,12 +57,21 @@
             while (($dirEntry2 = readdir($dh2)) !== false) {
                 if (in_array($dirEntry2, array(".", "..")))
                     continue;
-                logDebug("${dirEntry} => dirEntry2='${dirEntry2}'");
+                if (pathinfo($dirEntry2, PATHINFO_EXTENSION) != "json")
+                    continue;
+
                 // Model and its optional variants is named '<modelName>[-<variant>].json'
+                logDebug("${dirEntry} => dirEntry2='${dirEntry2}'");
                 if (substr($dirEntry2, 0, $deLen) != $dirEntry)
                     continue; // Discovery or other file but not a model
 
                 $dirEntry2 = substr($dirEntry2, 0, -5); // Removing trailing '.json'
+                $fullPath2 = $rootDir.$dirEntry.'/'.$dirEntry2.'.json';
+                if (!is_file($fullPath2)) {
+                    logMessage("error", "getModelsList(): Erreur interne '${fullPath2}'");
+                    continue;
+                }
+
                 $dev = array(
                     'modelSig' => $dirEntry,
                     'modelName' => $dirEntry2,
@@ -71,7 +80,6 @@
                 if ($dirEntry2 != $dirEntry)
                     $dev['modelPath'] = $dirEntry.'/'.$dirEntry2.'.json'; // It's a variant
 
-                $fullPath2 = $rootDir.$dirEntry.'/'.$dirEntry2.'.json';
                 $content = file_get_contents($fullPath2);
                 $devMod = json_decode($content, true);
                 $devMod = $devMod[$dirEntry2]; // Removing top key

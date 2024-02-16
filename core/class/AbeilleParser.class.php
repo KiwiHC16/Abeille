@@ -302,36 +302,50 @@
             $lo = ($eq['location'] === false) ? 'false' : "'".$eq['location']."'";
             parserLog('debug', "  findModel(), manufId=".$ma.", modelId=".$mo.", loc=".$lo);
 
+            /* If forced model, do not attempt to auto-detect proper model unless forced model is not valid */
+            if (isset($eq['modelForced']) && $eq['modelForced']) {
+                $modelSource = ($eq['modelSource'] != '') ? $eq['modelSource'] : 'Abeille';
+                $modelPath = isset($eq['modelPath']) ? $eq['modelPath'] : $eq['modelName'].'/'.$eq['modelName'].'.json';
+                $modelSig = isset($eq['modelSig']) ? $eq['modelSig'] : $eq['modelName'];
+                $fullPath = ($modelSource == "Abeille") ? modelsDir : modelsLocalDir;
+                $fullPath .= $modelPath;
+                if (is_file($fullPath)) {
+                    parserLog('debug', "    Forced model (${modelPath}) is still valid");
+                    return;
+                } else
+                    parserLog('debug', "    Forced model (${modelPath}) is NO LONGER valid");
+            }
+
             /* Looking for corresponding JSON if supported device.
                - Look with '<modelId>_<manufacturer>' identifier
                - If not found, look with '<modelId>' identifier
                - And if still not found, use 'defaultUnknown'
              */
-            $modelSignature = ''; // Successful identifier (<modelId_manuf> or <modelId> or <location>)
-            $jsonLocation = "Abeille"; // Default location
+            $modelSig = ''; // Successful identifier (<modelId_manuf> or <modelId> or <location>)
+            $modelSource = "Abeille"; // Default location
 
             if (($eq['modelId'] !== false) && ($eq['modelId'] != '')) {
                 if (($eq['manufId'] !== false) && ($eq['manufId'] != '')) {
                     /* Search by modelId AND manufacturer */
                     $identifier = $eq['modelId'].'_'.$eq['manufId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
-                        $modelSignature = $identifier;
-                        $jsonLocation = "local";
+                        $modelSig = $identifier;
+                        $modelSource = "local";
                         parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
                     } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                        $modelSignature = $identifier;
+                        $modelSig = $identifier;
                         parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
-                if ($modelSignature == '') {
+                if ($modelSig == '') {
                     /* Search by modelId */
                     $identifier = $eq['modelId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
-                        $modelSignature = $identifier;
-                        $jsonLocation = "local";
+                        $modelSig = $identifier;
+                        $modelSource = "local";
                         parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
                     } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                        $modelSignature = $identifier;
+                        $modelSig = $identifier;
                         parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
@@ -339,32 +353,32 @@
                 /* Search by location */
                 $identifier = $eq['location'];
                  if (isset($GLOBALS['customEqList'][$identifier])) {
-                    $modelSignature = $identifier;
-                    $jsonLocation = "local";
+                    $modelSig = $identifier;
+                    $modelSource = "local";
                     parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' location identifier");
                 } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                    $modelSignature = $identifier;
+                    $modelSig = $identifier;
                     parserLog('debug', "  EQ is supported with '".$identifier."' location identifier");
                 }
             }
 
-            if ($modelSignature == '') {
-                $eq['modelSignature'] = "";
-                $eq['jsonId'] = "defaultUnknown";
-                $eq['jsonLocation'] = "Abeille";
+            if ($modelSig == '') {
+                $eq['modelSig'] = "";
+                $eq['modelName'] = "defaultUnknown";
+                $eq['modelSource'] = "Abeille";
                 parserLog('debug', "  EQ is UNsupported. 'defaultUnknown' config will be used");
                 return false;
             }
 
-            $eq['modelSignature'] = $modelSignature;
-            if ($jsonLocation == "Abeille")
-                $eq['jsonId'] = $GLOBALS['supportedEqList'][$modelSignature]['modelName'];
+            $eq['modelSig'] = $modelSig;
+            if ($modelSource == "Abeille")
+                $eq['modelName'] = $GLOBALS['supportedEqList'][$modelSig]['modelName'];
             else
-                $eq['jsonId'] = $GLOBALS['customEqList'][$modelSignature]['modelName'];
-            $eq['jsonLocation'] = $jsonLocation;
-            parserLog('debug', "  JSON id '".$eq['jsonId']."', location '".$jsonLocation."'");
+                $eq['modelName'] = $GLOBALS['customEqList'][$modelSig]['modelName'];
+            $eq['modelSource'] = $modelSource;
+            parserLog('debug', "  ModelName='".$eq['modelName']."', Source='${modelSource}'");
             return true;
-        }
+        } // End findModel()
 
         /* Cached EQ infos reminder:
             $GLOBALS['eqList'][<network>][<addr>] = array(
@@ -381,9 +395,9 @@
                 'manufId' => null (undef)/false (unsupported)/'xx'
                 'modelId' => null (undef)/false (unsupported)/'xx'
                 'location' => null (undef)/false (unsupported)/'xx'
-                'modelSignature' => null (undef)/'' (unsupported)
-                'jsonId' => '', // JSON identifier
-                'jsonLocation' => '', // JSON location ("Abeille"=default, or "local")
+                'modelSig' => null (undef)/'' (unsupported)
+                'modelName' => '', // JSON identifier
+                'modelSource' => '', // JSON location ("Abeille"=default, or "local")
             );
             'status': Tcharp38/TODO: TO BE REVISITED. NOT clear enough
 
@@ -743,7 +757,7 @@
                     if ((substr($eq['modelId'], 0, 2) == "TS") && (strlen($eq['modelId']) == 6))
                         return false; // Tuya case. Waiting for manufacturer to return.
                     if ($this->findModel($eq, 'modelId') === false) {
-                        $eq['jsonId'] = ''; // 'defaultUnknown' case not accepted there
+                        $eq['modelName'] = ''; // 'defaultUnknown' case not accepted there
                         return false;
                     }
                 } else {
@@ -757,21 +771,21 @@
                 $this->findModel($eq, 'location');
             } else { // Neither modelId nor location supported ?! Ouahhh...
                 parserLog('debug', "    WARNING: Neither modelId nor location supported => using default config.");
-                $eq['jsonId'] = 'defaultUnknown';
-                $eq['jsonLocation'] = "Abeille";
+                $eq['modelName'] = 'defaultUnknown';
+                $eq['modelSource'] = "Abeille";
             }
-            if ($eq['jsonId'] == '') {
+            if ($eq['modelName'] == '') {
                 // Still not identified
                 if ($eq['status'] == 'unknown_ident')
                     return true;
                 return false;
             }
 
-            /* If device is identified, 'jsonId' + 'jsonLocation' indicates which model to use. */
+            /* If device is identified, 'modelName' + 'modelSource' indicates which model to use. */
             // Tcharp38: If new dev announce of already known device, should we reconfigure it anyway ?
             // TODO: No reconfigure if rejoin = 02
             // Note: rejoin seems not reliable as generated by this bad NXP stack.
-            if ($eq['jsonId'] == 'defaultUnknown')
+            if ($eq['modelName'] == 'defaultUnknown')
                 $this->deviceDiscover($net, $addr);
             else if ($eq['status'] == 'identifying') {
                 // Special case: Profalux v2: waiting for non empty binding table before binding zigate.
@@ -801,14 +815,14 @@
            Go thru EQ commands and execute all those marked 'execAtCreation' */
         function deviceConfigure($net, $addr) {
             $eq = &$GLOBALS['eqList'][$net][$addr];
-            parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['jsonId'].")");
+            parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['modelName'].")");
 
             // Read JSON to get list of commands to execute
             if (isset($eq['modelPath']))
                 $modelPath = $eq['modelPath'];
             else
-                $modelPath = $eq['jsonId']."/".$eq['jsonId'].".json";
-            $eqModel = getDeviceModel($eq['jsonLocation'], $modelPath, $eq['jsonId']);
+                $modelPath = $eq['modelName']."/".$eq['modelName'].".json";
+            $eqModel = getDeviceModel($eq['modelSource'], $modelPath, $eq['modelName']);
             if ($eqModel === false)
                 return;
 
@@ -837,8 +851,8 @@
                 'ep' => $eq['mainEp'],
                 'modelId' => $eq['modelId'],
                 'manufId' => $eq['manufId'],
-                'jsonId' => $eq['jsonId'],
-                'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
+                'modelName' => $eq['modelName'],
+                'modelSource' => $eq['modelSource'], // "Abeille" or "local"
                 'macCapa' => $eq['macCapa'],
                 'time' => time()
             );
@@ -910,7 +924,7 @@
            This is a phantom device. */
         function deviceCreate($net, $addr) {
             $eq = &$GLOBALS['eqList'][$net][$addr];
-            parserLog('debug', "  deviceCreate(".$net.", ".$addr.", jsonId=".$eq['jsonId'].")");
+            parserLog('debug', "  deviceCreate(".$net.", ".$addr.", jsonId=".$eq['modelName'].")");
 
             /* Config ongoing. Informing Abeille for EQ creation/update */
             $msg = array(
@@ -923,8 +937,8 @@
                 'ep' => $eq['mainEp'],
                 'modelId' => $eq['modelId'],
                 'manufId' => $eq['manufId'],
-                'jsonId' => $eq['jsonId'],
-                'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
+                'modelName' => $eq['modelName'],
+                'modelSource' => $eq['modelSource'], // "Abeille" or "local"
                 'macCapa' => $eq['macCapa'],
                 'time' => time()
             );
@@ -968,9 +982,9 @@
                 'ep' => $eq['mainEp'],
                 'modelId' => $eq['modelId'], // Zigbee model id (cluster 0000)
                 'manufId' => $eq['manufId'], // Zigbee manuf id (cluster 0000)
-                'modelSignature' => $eq['modelSignature'], // Signature used for model identification
-                'jsonId' => $eq['jsonId'],
-                'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
+                'modelSig' => $eq['modelSig'], // Signature used for model identification
+                'modelName' => $eq['modelName'],
+                'modelSource' => $eq['modelSource'], // "Abeille" or "local"
                 'macCapa' => $eq['macCapa'],
                 'time' => time()
             );

@@ -1187,7 +1187,7 @@ class Abeille extends eqLogic {
 
     // // TODO: To be moved in AbeilleTools. Could be used by parser too
     // // Attempt to find model corresponding to given zigbee signature.
-    // // Returns: associative array('jsonId', 'jsonLocation') or false
+    // // Returns: associative array('modelName', 'modelSource') or false
     // public static function findModel($zbModelId, $zbManufId) {
 
     //     $identifier1 = $zbModelId.'_'.$zbManufId;
@@ -1922,15 +1922,15 @@ class Abeille extends eqLogic {
                     'ep' => $eq['epFirst'],
                     'modelId' =>
                     'manufId' =>
-                    'jsonId' => $eq['jsonId'], // JSON identifier
-                    'jsonLocation' => '', // 'Abeille' or 'local'
+                    'modelName' => $eq['modelName'], // JSON identifier
+                    'modelSource' => '', // 'Abeille' or 'local'
                     'macCapa' => $eq['macCapa'],
                     'time' => time()
                 ); */
 
             $logicalId = $net.'/'.$addr;
-            $modelName = $msg['jsonId'];
-            $modelSource = $msg['jsonLocation']; // 'Abeille' or 'local'
+            $modelName = $msg['modelName'];
+            $modelSource = $msg['modelSource']; // 'Abeille' or 'local'
             log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$modelName."'".", jsonLoc='".$modelSource."'");
 
             $ieee = $msg['ieee'];

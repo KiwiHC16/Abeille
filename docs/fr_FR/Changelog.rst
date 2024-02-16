@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240216-BETA-1
+-------------
+
 - Modèle forcé: Correction.
 - Réparation d'équipement: Améliorations.
 - Interne: Zigbee const: Ajout FC20 + FC21 (Profalux).

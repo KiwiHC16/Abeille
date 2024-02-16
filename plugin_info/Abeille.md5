@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240213-BETA-1"
+# VERSION="240216-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -43,16 +43,16 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 925883ec8140b98f8144a29c13348615 *core/ajax/AbeilleModelChange.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
-57a320a18b9960756e977383426238e5 *core/class/Abeille.class.php
+e235742c555258cc1a7295afb55660fa *core/class/Abeille.class.php
 cffd8324015f34cde33e86496bf2f0b3 *core/class/AbeilleCmd.class.php
 44d239f400b4996eac1ef04187bb16ee *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-2eb97a916a2ea52dc93a838ec19df27b *core/class/AbeilleCmdProcess.class.php
+77dbb80843b16c69045db562d8318392 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 b805e88748ab92dca8537e02168ece1c *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-a1a8b41d2836e3a661959419fbc3fba0 *core/class/AbeilleParser.class.php
+d68904c6dbd13613b2e28c4b2a92d88a *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -164,6 +164,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/PuissanceVoltage
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Rouge.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/SW.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Short-Addr.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Tilt.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Time-Time.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Time-TimeStamp.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Toggle.json
@@ -283,6 +284,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminosite.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminositeHue.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminositeXiaomi.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/moveToLiftAndTiltBSO_Lift.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/moveToLiftAndTiltBSO_Tilt.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/nom.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/offGroup.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/offGroupBroadcast.json
@@ -360,7 +362,6 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/zbWriteAttribute
 6091bcc25de57d626fede325dc91cf86 *core/config/commands/Onlevel.json
 a1c86cf68c4a263a28d2d86207fb88ca *core/config/commands/RougeGroup.json
 0ef3463e392fc9ff2112fd5951942600 *core/config/commands/Scene-Membership.json
-a6c442c8f0b624b6c277debc5c6991d5 *core/config/commands/Tilt.json
 95533c5694af9520839cca18708fecdf *core/config/commands/Up-Down.json
 7da6bdcc27056f93de53f73d542dd321 *core/config/commands/VertGroup.json
 3ee46d8207e8cf07d8ac4176575fa4bc *core/config/commands/WindowsCoveringDownGroup.json
@@ -544,7 +545,6 @@ b4799c21f2192529396b77962dcbbde5 *core/config/commands/inf_zbCmdC-0501-Arm-Value
 8a565468b6779ae7a5566a11391d0c92 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ChangeNotification.json
 3e99eaf761d47554bde5fd7f44936d84 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ZoneEnrollRequest.json
 05ec4445fd5f3a42d32f353bc33eb51c *core/config/commands/inf_zone-Alarm1.json
-2e5ea16d95b095d890ff1c625c39663c *core/config/commands/moveToLiftAndTiltBSO_Tilt.json
 8c24f9f574812ad0bf6c859af615059b *core/config/commands/multi.json
 b38024843b13b0f28646fdd397e117fe *core/config/commands/offGroupEP1.json
 58d3deebb4055a065d22917a48f9c688 *core/config/commands/offGroupEP3.json
@@ -670,8 +670,9 @@ c3871124b2a8c3b7407fa7f5cbf2fb01 *core/config/devices/898ca74409a740b28d5841661e
 69e16281e81c136b76030c5c422dc076 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/ALCANTARA2D1.00P1.02Z1.00.json
 b3de5b2b6933161949c28715effe4536 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/discovery.json
 c7c0f631b72722d1c87e3b4b1ef1774b *core/config/devices/BASICZBR3/BASICZBR3.json
-45d5dbff5713226aa4330fcf37908060 *core/config/devices/BSO/BSO.json
-0aa46209b75e6d11ea3b1d97ae4810ca *core/config/devices/BSO/notes.txt
+bf4d61b095b87bcf4d1107397e7a84f3 *core/config/devices/BSO/BSO.json
+bb5b9d0d4a363b9d7e57e9a77d25570d *core/config/devices/BSO/discovery.json
+3873f053b4958af7ce13aadb5c44f932 *core/config/devices/BSO/notes.txt
 43be2041fe655183ccd88ca2e69e4ca3 *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOSRAM.json
 428b390358a340b9ee72b8a0b13463d9 *core/config/devices/CLA60TWOSRAM/CLA60TWOSRAM.json
 a8882db099befb112d35804d0d233238 *core/config/devices/COSensor-EF-3.0/COSensor-EF-3.0.json
@@ -1250,15 +1251,15 @@ da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
 cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 4be0a364bbfda631f5930870cba31ce7 *core/php/AbeilleLQI.php
 255a3cc9c2c67bf09cd584ffb2287b62 *core/php/AbeilleLog.php
-31096c262b99bed416a3f970f3b92d05 *core/php/AbeilleModels.php
+c5441473883bdd2858b8720925842561 *core/php/AbeilleModels.php
 7ac0ddf81520b8454be774cd6f940e6f *core/php/AbeilleMonitor.php
 3f23e5dbc4f01327d47fd90e2ef88952 *core/php/AbeilleNoise.php
 9ab85f33787d42bdae75985d3e3b4d69 *core/php/AbeilleOTA.php
 304db580d3a99eff5ea65f6bbf9f8334 *core/php/AbeilleParser-Tuya.php
 0d30d6037ebca1303823fcb9921cdc57 *core/php/AbeilleParser-Xiaomi.php
-cb36362f0f604e75dcf1d9ed8ff0cd6a *core/php/AbeilleParser.php
+9ccf994e6b6387b1c6cb70c005682aa8 *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
-3b878f45ea10d42828d71d1818702765 *core/php/AbeilleRepair.php
+ed6f0ac5bf37c830c766f8dac73f688f *core/php/AbeilleRepair.php
 2dd71ccb3f901a45a3852a4b92d735c2 *core/php/AbeilleRoutes.php
 440b062d6f3acf9804efa4c2bca11bf5 *core/php/AbeilleSerialRead.php
 220cfe670ad55774709d2fa3e67b1c34 *core/php/AbeilleSetEq.php
@@ -1268,7 +1269,7 @@ feb8ee179978308ad626d738240583ca *core/php/AbeilleTest.php
 98dda2f694581222421a3bad2f6e4480 *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 0d5c02d3055620403f37d6e68d436fa0 *core/php/AbeilleZigateConst.php
-995ce16b98a887a687cf388f826e9e58 *core/php/AbeilleZigbeeConst.php
+b45496a501ad341f6a1bd45d1d1129ac *core/php/AbeilleZigbeeConst.php
 e2b6a4cd856fc09bff24be60d72960c8 *core/python/AbeilleSerialRead.py
 3b4f8b47d0a0cce1a64417437e8c2cb7 *core/python/AbeilleZigate.py
 b6cb443cc29160cd2dc24e041551a919 *core/scripts/checkPiGpio.py
@@ -1325,7 +1326,7 @@ d00ff89f3daf6ae77d3445df34b364ea *desktop/php/Abeille-NewZigate.php
 dc2d218e40e94cd5aa2368041dbc7bce *desktop/php/Abeille-ReplaceEq.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 7d9aad2337c75a7f070509f48130cb8a *desktop/php/Abeille-TopButtons.php
-8703d2d03f6d6019f1ac51d4572108da *desktop/php/Abeille.php
+f4fd40075f675e2e22cb8a4fe3731112 *desktop/php/Abeille.php
 f044b3c7963b367ae2524ce1b7b5a54a *desktop/php/AbeilleEqAssist.php
 e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
@@ -1333,7 +1334,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 ce32db08df86d3ff94f08d80d463b7f2 *desktop/php/AbeilleMaintenance.php
 75c73e3eb81ad29bb0f44b9c0a9c7476 *desktop/php/AbeilleNetworkMap.php
-8f759405d513401e7cfedb89a5ad0669 *docs/fr_FR/Changelog.rst
+b19a16cf4c96ce982115e384f2577547 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1674,10 +1675,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-3aacfb0b9eff32d9fd21230ee5feb59e *plugin_info/Abeille.version
+31c6d4e9ffc30f500c176ae2907acfea *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 66c0e96bc36bffa2866c71fcca9bd268 *plugin_info/configuration.php
-1a5c8e1a7eac5d3f5c7890099849e71c *plugin_info/info.json
+88c128a86abcdb8ee0a06cf1cce65c5b *plugin_info/info.json
 12eb5e36251fad8b46b2167a5668c94a *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

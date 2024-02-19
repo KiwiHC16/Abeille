@@ -19,7 +19,7 @@
             },
             "SetReporting 01-0001-00021": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "yes"
             },
             "Bind 01-0001-ToZigate": {
@@ -36,6 +36,10 @@
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0008",
                 "execAtCreation": "yes"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
             },
             "Up Long": {
                 "use": "inf_zbCmdC-0008-MoveWithOnOff",

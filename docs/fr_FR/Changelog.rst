@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Ikea RODRET dimmer: Mise-à-jour du modèle par défaut pour ON/OFF (2684).
+
 240216-BETA-1
 -------------
 

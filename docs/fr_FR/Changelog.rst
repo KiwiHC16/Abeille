@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Ikea RODRET dimmer: Mise-à-jour du modèle par défaut pour ON/OFF (2684).
+- Mise-à-jour FW PiZiGate: Amélioration scripts & support préliminaire PIv2 (2638).
 
 240216-BETA-1
 -------------

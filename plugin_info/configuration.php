@@ -682,6 +682,7 @@
             break;
         case "PIv2":
             allowReadFw = true;
+            allowUpdFw = true;
             break;
         case "DINv2":
             allowReadFw = true;

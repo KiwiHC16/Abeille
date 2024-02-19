@@ -198,7 +198,7 @@
 
         /* Update FW but check parameters first, prior to shutdown daemon */
         if (init('action') == 'updateFirmware') {
-            $zgType = init('zgtype'); // "PI" or "DIN"
+            $zgType = init('zgtype'); // "PI"/"PIv2" or "DIN"
             $zgPort = init('zgport');
             $zgGpioLib = init('zgGpioLib');
             $zgFwFile = init('fwfile');
@@ -206,15 +206,15 @@
             $zgId = init('zgId');
 
             logSetConf('AbeilleConfig.log', true);
-            logMessage('debug', 'updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgGpioLib.', '.$zgPort.')');
+            logMessage('debug', "updateFirmware(${zgPort}, ${zgType}, ${zgGpioLib}, ${zgFwFile})");
 
-            if ($zgType == "PI")
+            // if (($zgType == "PI") || ($zgType == "PIv2"))
                 $script = "updateFirmware.sh";
-            else
-                $script = "updateFirmwareDIN.sh";
+            // else
+            //     $script = "updateFirmwareDIN.sh";
 
             logMessage('debug', 'Checking parameters');
-            $cmdToExec = $script." check ".$zgPort." ".$zgGpioLib;
+            $cmdToExec = $script." check ${zgPort} ${zgType} ${zgGpioLib} ${zgFwFile}";
             $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
@@ -223,7 +223,7 @@
                 Abeille::pauseDaemons(1);
 
                 /* Updating FW and reset Zigate */
-                $cmdToExec = $script." flash ".$zgPort." ".$zgGpioLib." ".$zgFwFile;
+                $cmdToExec = $script." flash ${zgPort} ${zgType} ${zgGpioLib} ${zgFwFile}";
                 $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
                 exec($cmd, $out, $status);
 

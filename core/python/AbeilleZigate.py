@@ -242,6 +242,12 @@ def zgGetFwVersion(fR, fW):
     zgLog("Version " + version)
     return version
 
+# Set 'flash' or 'prod' mode for PI Zigate
+# gpioLib = WiringPi or PiGpio
+def zgSetPIMode(gpioLib, mode):
+    # TODO
+    return
+
 # Main
 if __name__ == '__main__':
 

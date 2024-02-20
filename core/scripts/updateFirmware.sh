@@ -16,6 +16,7 @@ echo "Démarrage de '$(basename $0)' $@"
 
 # Note: Startup directory is the one from the caller (ajax)
 #       It is then '/var/www/html/plugins/Abeille/core/ajax'
+ABEILLEROOT=${PWD}/../..
 PROG_PIv1=${PWD}/../../tmp/JennicModuleProgrammer
 BUILD_DIR=${PWD}/../../resources/prog_jennic-0.7/build
 PROG_PIv2=${PWD}/../../resources/DK6Programmer
@@ -163,7 +164,7 @@ if [ ${ZGTYPE} == "PI" ] || [ ${ZGTYPE} == "PIv2" ]; then
         gpio write 0 1
         sleep 1
     elif [ ${GPIOLIB} == "PiGpio" ]; then
-        python /var/www/html/plugins/Abeille/core/scripts/pizigateModeFlash.py
+        python3 ${ABEILLEROOT}/core/scripts/pizigateModeFlash.py
     fi
 fi
 
@@ -203,7 +204,7 @@ if [ ${ZGTYPE} == "PI" ] || [ ${ZGTYPE} == "PIv2" ]; then
         sleep 1
         gpio write 0 1
     elif [ ${GPIOLIB} == "PiGpio" ]; then
-        python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py
+        python3 ${ABEILLEROOT}/core/scripts/resetPiZigate.py
     fi
 fi
 

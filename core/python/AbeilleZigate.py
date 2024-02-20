@@ -244,24 +244,104 @@ def zgGetFwVersion(fR, fW):
 
 # Set 'flash' or 'prod' mode for PI Zigate
 # gpioLib = WiringPi or PiGpio
-def zgSetPIMode(gpioLib, mode):
-    # TODO
-    return
+# Returns: status (0/-1) + err msg
+def zgSetPIMode(mode, gpioLib):
+    if (mode != "prod") and (mode != "flash"):
+        return -1, "Wrong mode"
+    if (gpioLib != "WiringPi") and (gpioLib != "PiGpio"):
+        return -1, "Wrong GPIO lib"
+
+    # PiZigate reminder
+    # port 0 = RESET
+    # port 2 = FLASH
+    # Production mode: FLASH=1, RESET=0 then 1
+    # Flash mode: FLASH=0, RESET=0 then 1
+    if gpioLib == "WiringPi":
+        # WARNING !!! This part has NOT been approved yet !
+        import subprocess
+        if mode == "prod":
+            result = subprocess.Popen("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 1; gpio write 0 1");
+        else: # "flash" mode
+            result = subprocess.Popen("gpio mode 0 out; gpio mode 2 out; gpio write 2 0; gpio write 0 0; sleep 1; gpio write 0 1");
+        text = result.communicate()[0]
+        if (result.returncode != 0):
+            return -1, "gpio config failed"
+
+    elif gpioLib == "PiGpio":
+        # WARNING !!! This part has NOT been approved yet !
+        import pigpio
+        # TODO: Test if package found
+
+        pi = pigpio.pi()
+        if not pi.connected:
+            return -1, "Gpio init failed"
+
+        # GPIO 14 TXD
+        # GPIO 15 RXD
+        resetPort = 17
+        flashPort = 27
+
+        pi.set_mode(resetPort, pigpio.OUTPUT)
+        pi.set_mode(flashPort, pigpio.OUTPUT)
+
+        if mode == "prod":
+            pi.write(flashPort, 1)
+        else: # "flash" mode
+            pi.write(flashPort, 0)
+        pi.write(resetPort, 0)
+        time.sleep(0.5)
+        pi.write(resetPort, 1)
+    else:
+        return -1, "zgSetPIMode: Unsupported GPIO lib "+gpioLib
+
+    return 0, ""
+
+# Check if given port is free
+def zgIsPortFree(port):
+    # WARNING !!! This part has NOT been approved yet !
+    result = subprocess.Popen("sudo lsof -Fcn %s" % port)
+    print("result=", result)
+    return 0, "" # Ok, free
 
 # Main
 if __name__ == '__main__':
 
     # Checking arguments
-    nbArgs = len(sys.argv) # arg0=script name
-    if nbArgs < 2:
-        print("ERROR: Missing port name")
-        exit(1)
-    port = sys.argv[1]
-    zgDebug = 1
+    # If first arg is a port name => port test mode
 
-    err, f = zgOpenPort(port)
-    fW = open(port, "wb")
-    version = zgGetFwVersion(f, fW)
-    f.close()
-    fW.close()
+    nbArgs = len(sys.argv) # arg0=script name
+    if (nbArgs < 2):
+        print("ERROR: Missing argument(s)")
+        exit(1)
+    if os.path.exists(sys.argv[1]):
+        port = sys.argv[1]
+        print("Testing Zigate access on port "+port)
+        zgDebug = 1
+        err, f = zgOpenPort(port)
+        fW = open(port, "wb")
+        version = zgGetFwVersion(f, fW)
+        f.close()
+        fW.close()
+    else:
+        action = sys.argv[1]
+        if (action == "setPiMode"):
+            if (nbArgs < 3):
+                print("ERROR: Missing mode")
+                exit(1)
+            mode = sys.argv[2]
+            print("Setting Zigate PI to mode "+mode)
+            err, msg = zgSetPIMode(mode, sys.argv[3])
+            if err != 0:
+                print("ERROR: "+msg)
+        elif (action == "isPortFree"):
+            if (nbArgs < 3):
+                print("ERROR: Missing port name")
+                exit(1)
+            port = sys.argv[2]
+            print("Checking if port %s is free " % port)
+            err, msg = zgIsPortFree(port)
+            if err != 0:
+                print("ERROR: "+msg)
+        else:
+            print("ERROR: Unsupported action "+action)
 

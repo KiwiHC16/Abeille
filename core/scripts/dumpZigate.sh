@@ -1,7 +1,9 @@
 #! /bin/bash
 # Note: This script is launched from Abeille/core/ajax directory
+# Note: The port must NOT be used during this script execution. This is NOT CHECKED so far.
 
-DK6PROG=${PWD}/../../resources/DK6Programmer
+ABEILLEROOT=${PWD}/../..
+DK6PROG=${ABEILLEROOT}/resources/DK6Programmer
 
 # NOW=`date +"%Y-%m-%d %H:%M:%S"`
 # echo "[${NOW}] Démarrage de '$(basename $0)'"
@@ -60,12 +62,12 @@ if [ ${ZGTYPE} == "PI" ] || [ ${ZGTYPE} == "PIv2" ]; then
         gpio write 0 1
         sleep 1
     elif [ ${GPIOLIB} == "PiGpio" ]; then
-        python3 /var/www/html/plugins/Abeille/core/scripts/pizigateModeFlash.py
+        python3 ${ABEILLEROOT}/core/scripts/pizigateModeFlash.py
     fi
 fi
 
 if [ ${ZGTYPE} == "PIv2" ]; then
-    ${DK6PROG} -s ${ZGPORT} -P 500000 -d FLASH:0x9FFFF@0=${DUMPFILE}
+    ${DK6PROG} -V 3 -s ${ZGPORT} -P 500000 -d FLASH:0x9FFFF@0=${DUMPFILE}
 fi
 ERROR=$?
 
@@ -78,7 +80,7 @@ if [ ${ZGTYPE} == "PI" ] || [ ${ZGTYPE} == "PIv2" ]; then
         sleep 1
         gpio write 0 1
     elif [ ${GPIOLIB} == "PiGpio" ]; then
-        python3 /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py
+        python3 ${ABEILLEROOT}/core/scripts/resetPiZigate.py
     fi
 fi
 

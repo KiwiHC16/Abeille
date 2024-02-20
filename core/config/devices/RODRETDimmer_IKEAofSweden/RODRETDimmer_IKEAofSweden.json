@@ -48,6 +48,14 @@
             "Down Long": {
                 "use": "inf_zbCmdC-0008-Move",
                 "isVisible": 1
+            },
+            "On": {
+                "use": "inf_zbCmdC-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "inf_zbCmdC-0006-Off",
+                "isVisible": 1
             }
         }
     }

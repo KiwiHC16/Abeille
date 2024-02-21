@@ -126,6 +126,8 @@
                          echo '<option value="/dev/'.$value.'">'.$value.'</option>';
                     }
                 echo '</select>';
+                // TODO: getUsbMapping={"Cubiboard":"\/dev\/ttyS0","Jeedom Luna Zwave":"\/dev\/ttyS1","Odroid C2":"\/dev\/ttyS1","Jeedom Atlas":"\/dev\/ttyS2","Orange PI":"\/dev\/ttyS3"}
+                // echo "getUsbMapping=".json_encode(jeedom::getUsbMapping('', true))."<br>";
             echo '</div>';
             echo '<div class="col-lg-5">';
                 echo '<div id="idCommTest'.$zgId.'" >';
@@ -665,22 +667,22 @@
         case "USB":
             allowReadFw = true;
             break;
-        case "WIFI":
-            allowSelSP = false;
-            allowWifiAddr = true;
+        case "USBv2":
+            allowReadFw = true;
             break;
         case "PI":
             allowReadFw = true;
             allowUpdFw = true;
             break;
-        case "DIN":
+        case "PIv2":
             allowReadFw = true;
             allowUpdFw = true;
             break;
-        case "USBv2":
-            allowReadFw = true;
+        case "WIFI":
+            allowSelSP = false;
+            allowWifiAddr = true;
             break;
-        case "PIv2":
+        case "DIN":
             allowReadFw = true;
             allowUpdFw = true;
             break;

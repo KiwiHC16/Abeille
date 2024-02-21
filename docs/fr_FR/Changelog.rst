@@ -23,6 +23,8 @@ ChangeLog
 - Ikea RODRET dimmer: Mise-à-jour du modèle par défaut pour ON/OFF (2684).
 - Mise-à-jour FW PiZiGate: Amélioration scripts & support préliminaire PIv2 (2638).
 - Dump Zigate: Support préliminaire.
+- Scripts: Utilisation de 'python3' et non pas 'python'.
+- Scripts/checkTTY: Arret forcé du processus si port utilisé.
 
 240216-BETA-1
 -------------

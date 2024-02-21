@@ -78,14 +78,25 @@ else
         # TODO: While loop with timeout to wait for effective kill
     else
         echo "= ERROR: Port is used by process '${PID}'."
+        echo "=        You can add '-k' option to further tests anyway."
 
         PSOUT=`ps --pid ${PID} -o ppid,cmd | grep -v PPID`
         IFS=' '
         read -ra PSOUTA <<< "${PSOUT}"
         PPID2=${PSOUTA[0]}
         CMD=${PSOUTA[@]:1}
-        echo "=        ${PID} process details:"
-        echo "=        PPid=${PPID2}, cmd='${CMD}'"
+        echo "= Infos:"
+        echo "=   Process ${PID} details:"
+        echo "=   PPid=${PPID2}, cmd='${CMD}'"
+
+        echo
+        echo "= Additional infos I:"
+        dmesg | grep tty
+
+        echo
+        echo "= Additional infos II:"
+        ls -al /dev/serial*
+
         exit 4
     fi
 fi

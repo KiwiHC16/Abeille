@@ -88,7 +88,7 @@ if [ ${GPIOLIB} == "WiringPi" ]; then
 # elif [ ${GPIOLIB} == "PiGpio" ]; then
 # else
 elif [ ${GPIOLIB} != "PiGpio" ]; then
-    echo "= ERREUR: Type de lib GPIO invalid (${GPIOLIB}) !"
+    echo "= ERREUR: Type de lib GPIO invalide (${GPIOLIB}) !"
     ERROR=2
 fi
 if [ $ERROR -ne 0 ]; then

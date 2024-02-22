@@ -55,21 +55,23 @@ if [ ${GPIOLIB} != "WiringPi" ] && [ ${GPIOLIB} != "PiGpio" ]; then
     echo "= ERREUR: Lib GPIO invalide ! (WiringPi ou PiGpio)"
     ERROR=1
 fi
-if [ ${ACTION} == "flash" ] && [ $# -lt 5 ]; then
-    echo "= ERREUR: Nom du FW manquant !"
-    echo "=         updateFirmware.sh <action> <zigatePort> <zigateType> <GpioLib> <fwfile>"
-    ERROR=1
-fi
 if [ ${ACTION} == "flash" ]; then
-    if [[ "${FW}" == "/"* ]]; then # Absolut path ?
-        FW_PATH="${FW}"
-    else
-        FW_PATH="${FW_DIR}/${FW}"
-    fi
-    if [ ! -e ${FW_PATH} ]; then
-        echo "= ERREUR: le FW choisi n'existe pas !"
-        echo "=         FW: ${FW_PATH}"
+    if [ $# -lt 5 ]; then
+        echo "= ERREUR: Nom du FW manquant !"
+        echo "=         updateFirmware.sh <action> <zigatePort> <zigateType> <GpioLib> <fwfile>"
         ERROR=1
+    else
+        FW=$5
+        if [[ "${FW}" == "/"* ]]; then # Absolut path ?
+            FW_PATH="${FW}"
+        else
+            FW_PATH="${FW_DIR}/${FW}"
+        fi
+        if [ ! -e ${FW_PATH} ]; then
+            echo "= ERREUR: le FW choisi n'existe pas !"
+            echo "=         FW: ${FW_PATH}"
+            ERROR=1
+        fi
     fi
 fi
 if [ $ERROR -ne 0 ]; then

@@ -25,6 +25,7 @@ ChangeLog
 - Dump Zigate: Support préliminaire.
 - Scripts: Utilisation de 'python3' et non pas 'python'.
 - Scripts/checkTTY: Arret forcé du processus si port utilisé.
+- Scripts: updateFirmware => updateZigate.
 
 240216-BETA-1
 -------------

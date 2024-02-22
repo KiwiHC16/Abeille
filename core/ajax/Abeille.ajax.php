@@ -209,7 +209,7 @@
             logMessage('debug', "updateFirmware(${zgPort}, ${zgType}, ${zgGpioLib}, ${zgFwFile})");
 
             // if (($zgType == "PI") || ($zgType == "PIv2"))
-                $script = "updateFirmware.sh";
+                $script = "updateZigate.sh";
             // else
             //     $script = "updateFirmwareDIN.sh";
 

@@ -1,13 +1,13 @@
 #! /bin/bash
 # PiZigate & DIN flash programmation script
-# updateFirmware.sh <action> <zigatePort> <zigateType> <lib> [fwfile]
+# updateZigate.sh <action> <zigatePort> <zigateType> <lib> [fwfile]
 #   where action = flash, check, eraseeeprom
 #         zigateType = PI, PIv2, DIN
 #         lib = WiringPi, PiGpio
 #
 # Examples
-# ./updateFirmware.sh flash /dev/ttyS0 PI PiGpio ZiGate_v3.23-OPDM.bin
-# ./updateFirmware.sh eraseeeprom /dev/ttyS0 PI PiGpio ZiGate_v3.23-OPDM.bin
+# ./updateZigate.sh flash /dev/ttyS0 PI PiGpio ZiGate_v3.23-OPDM.bin
+# ./updateZigate.sh eraseeeprom /dev/ttyS0 PI PiGpio ZiGate_v3.23-OPDM.bin
 
 # NOW=`date +"%Y-%m-%d %H:%M:%S"`
 # echo "[${NOW}] Démarrage de '$(basename $0)' $@"
@@ -28,7 +28,7 @@ echo "- Vérifications préliminaires"
 echo ${PWD}
 if [ $# -lt 4 ]; then
     echo "= ERREUR: Argument(s) manquant(s) !"
-    echo "=         updateFirmware.sh <action> <zigatePort> <zigateType> <GpioLib> [fwfile]"
+    echo "=         updateZigate.sh <action> <zigatePort> <zigateType> <GpioLib> [fwfile]"
     exit 1
 fi
 ACTION=$1
@@ -48,7 +48,7 @@ if [ ! -e ${ZGPORT} ]; then
 fi
 if [ ${ZGTYPE} != "PI" ] && [ ${ZGTYPE} != "PIv2" ] && [ ${ZGTYPE} != "DIN" ]; then
     echo "= ERREUR: Type de Zigate invalide ! (PI, PIv2 ou DIN)"
-    echo "=         updateFirmware.sh <action> <zigatePort> <zigateType> <GpioLib> [fwfile]"
+    echo "=         updateZigate.sh <action> <zigatePort> <zigateType> <GpioLib> [fwfile]"
     ERROR=1
 fi
 if [ ${GPIOLIB} != "WiringPi" ] && [ ${GPIOLIB} != "PiGpio" ]; then
@@ -58,7 +58,7 @@ fi
 if [ ${ACTION} == "flash" ]; then
     if [ $# -lt 5 ]; then
         echo "= ERREUR: Nom du FW manquant !"
-        echo "=         updateFirmware.sh <action> <zigatePort> <zigateType> <GpioLib> <fwfile>"
+        echo "=         updateZigate.sh <action> <zigatePort> <zigateType> <GpioLib> <fwfile>"
         ERROR=1
     else
         FW=$5

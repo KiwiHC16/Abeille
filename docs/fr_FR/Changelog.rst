@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Placement réseau: changements en cours.
+
 240223-BETA-1
 -------------
 

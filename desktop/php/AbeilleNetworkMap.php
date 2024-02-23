@@ -127,36 +127,28 @@
         }
         .ab-container {
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
+            display: block;
         }
         .ab-top {
-            display: flex;
             background: #e9e9e9;
             font-weight: bold;
             padding: .4em 1em;
             margin-bottom: 8px;
         }
-        .ab-container2 {
+        .ab-bottom {
             height: 100%;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
         }
         .ab-left-column, .ab-right-column{
-            display: flex;
-            flex-direction: column;
         }
         .ab-left-column {
-            justify-content: flex-start;
+            float: left;
             height: 100%;
-            width: 100px;
+            width: 110px;
             margin-right:8px;
         }
         .ab-right-column {
-            width: 500px;
-            height: 500px;
+            width: auto;
+            height: 100%;
             background-size: contain;
             background-repeat: no-repeat;
         }
@@ -171,8 +163,8 @@
         <div class="ab-top">
             Placement réseau (BETA, dev en cours)
         </div>
-        <div class="ab-container2">
-            <div class="ab-left-column">
+        <div class="ab-bottom">
+            <div class="column ab-left-column">
                 <div id="idDisplayPart">
                     <label>{{Affichage}}</label><br>
                     <!-- Level choice if more than 1 level -->
@@ -206,6 +198,8 @@
                 </br>
                 </br>
                 </br>
+                </br>
+
                 <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Edition}}</button>
                 </br>
                 <div id="idConfigPart" class="disabledDiv">
@@ -217,18 +211,19 @@
                 </div>
             </div>
 
-        <!-- SVG reminder
-        viewPort = visible area of the SVG image. So should allow to see the full SVG.
-            Controlled with 'width' and 'height' attributes.
-            <svg width="500" height="300"></svg>
-        viewBox = zoom in/out part of the viewPort
-         -->
+            <!-- SVG reminder
+            viewPort = visible area of the SVG image. So should allow to see the full SVG.
+                Controlled with 'width' and 'height' attributes.
+                <svg width="500" height="300"></svg>
+            viewBox = zoom in/out part of the viewPort
+            -->
 
-        <!-- <div id="idGraph" class="ab-right-column"> -->
-            <!-- <svg id="idDevices" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)"> -->
+            <!-- <div class="column ab-right-column" id="idGraph" > -->
+                <!-- <svg id="idDevices" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)"> -->
             <svg id="idGraph" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)">
             </svg>
-        <!-- </div> -->
+            <!-- </div> -->
+        </div>
     </div>
 </body>
 </html>
@@ -286,7 +281,7 @@
         viewImageMaxY = h;
         console.log("width=" + w + ", height=" + h);
 
-        elm.setAttribute("viewBox", "0 0 "+w+" "+h);
+        // elm.setAttribute("viewBox", "0 0 "+w+" "+h);
     };
 
     $("#idSelectLevel").on("change", function() {

@@ -171,7 +171,7 @@
 
         if (init('action') == 'checkPiGpio') {
             $prefix = logGetPrefix(""); // Get log prefix
-            $cmd = '/bin/bash python '.__DIR__."/../scripts/checkPiGpio.py | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            $cmd = 'python3 '.__DIR__."/../scripts/checkPiGpio.py | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
             ajax::success(json_encode($status));
         }

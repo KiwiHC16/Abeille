@@ -156,6 +156,9 @@
             pointer-events: none;
             opacity: 0.4;
         }
+        .draggable {
+            cursor: move;
+        }
    </style>
 
     <!-- <div class="row"> -->
@@ -197,10 +200,9 @@
 
                 </br>
                 </br>
+                <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Mode config}}</button>
                 </br>
                 </br>
-
-                <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Edition}}</button>
                 </br>
                 <div id="idConfigPart" class="disabledDiv">
                     <label>{{Configuration}}</label></br>
@@ -220,6 +222,7 @@
 
             <!-- <div class="column ab-right-column" id="idGraph" > -->
                 <!-- <svg id="idDevices" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)"> -->
+            <!-- Useful doc https://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/ -->
             <svg id="idGraph" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)">
             </svg>
             <!-- </div> -->
@@ -231,7 +234,8 @@
 <script type="text/javascript">
     // Edition mode
     $("#idConfigMode").on("click", function() {
-        console.log("idConfigMode click");
+        console.log("idConfigMode click: configMode=", configMode);
+        configModeBtn = document.getElementById("idConfigMode");
         displayPart = document.getElementById("idDisplayPart");
         configPart = document.getElementById("idConfigPart");
         if (configMode) {
@@ -239,11 +243,13 @@
             configPart.classList.add("disabledDiv");
             viewLinks = document.getElementById("idViewLinks").checked;
             configMode = false;
+            configModeBtn.innerHTML = "Mode config";
         } else {
             displayPart.classList.add("disabledDiv");
             configPart.classList.remove("disabledDiv"); // Reenable config part
             viewLinks = false;
             configMode = true;
+            configModeBtn.innerHTML = "Mode normal";
         }
         refreshPage();
     });
@@ -475,13 +481,18 @@
         // Called on 'mousedown' event
         function startDrag(evt) {
 
-            parentG = evt.target.parentNode;
-            if (!parentG.classList.contains('draggable'))
+            // Icon image should be draggable in config mode
+            if (!evt.target.classList.contains('draggable'))
                 return;
+
+            // parentG = evt.target.parentNode;
+            // if (!parentG.classList.contains('draggable'))
+            //     return;
 
             console.log("startDrag(), evt=", evt);
 
-            selectedElement = parentG;
+            parentG = evt.target.parentNode;
+            selectedElement = parentG; // Element to drag
             console.log("  selectedElement= ", selectedElement);
 
             mousePos = getMousePosition(evt);
@@ -1074,28 +1085,52 @@
         // Computing positions based on node central coordinates
         posX = dev['posX'];
         posY = dev['posY'];
-        // txtX = posX + 22;
-        // txtY = posY + 0;
-        txtX = 25;
-        txtY = -5; // Placed on top of group
         grpX = posX - 25;
         grpY = posY - 25;
         // imgX = posX - 20;
         // imgY = posY - 20;
         imgX = 5;
         imgY = 5;
+        // Text is on top of the group
+        // txtX = posX + 22;
+        // txtY = posY + 0;
+        // txtX = 25;
+        // txtY = -5; // Placed on top of group
+        txtX = grpX;
+        txtY = grpY - 10;
 
-        if (configMode)
-            newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
-        else
-            newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
+        // if (configMode)
+        //     newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
+        // else
+        //     newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
+        // newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+        newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
         newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+        // if (configMode) {
+        //     // Add a button to select level
+        //     newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(\''+devLogicId+'\')" />';
+        //     // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu()" />';
+        // }
+        if (configMode)
+            newG += '<image class="draggable" xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+        else
+            newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+        // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
+        // newG += '</g>';
+
+        // newG += '<g id="'+devLogicId+'-txt" transform="translate('+txtX+', '+txtY+')">';
+        // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
+        newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
+        // newG += '</g>';
+
+        // If config mode, add a button to select level
         if (configMode) {
-            // Add a button to select level
-            newG += '<rect x="50" rx="5" ry="5" width="25" height="25" />';
+            btnX = grpX + 25;
+            btnY = grpY;
+            // newG += '<g id="'+devLogicId+'-btn" transform="translate('+btnX+', '+btnY+')">';
+            newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(\''+devLogicId+'\')" />';
+            // newG += '</g>';
         }
-        newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
-        newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
         newG += '</g>';
 
         // console.log("newG=", newG);
@@ -1136,6 +1171,11 @@
 
             lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
         }
+    }
+
+    // Display node menu in config mode
+    function nodeMenu(devLogicId) {
+        console.log("nodeMenu("+devLogicId+")");
     }
 
     //-----------------------------------------------------------------------

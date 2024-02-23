@@ -1,7 +1,7 @@
 ### Python interface for Zigate
 ### Requires python3
-
 # coding: utf-8
+
 import os.path
 # import json
 from collections import OrderedDict

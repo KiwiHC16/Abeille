@@ -650,8 +650,11 @@
 
             if ((zgType == "PI") || (zgType == "PIv2")) {
                 // $("#idWiringPi"+zgId).show();
-                checkWiringPi(); // Force WiringPi check
-                checkPiGpio();
+                let zgGpioLib = $("#idZgGpioLib").val();
+                if (zgGpioLib == "WiringPi")
+                    checkWiringPi(); // Force WiringPi check
+                else
+                    checkPiGpio();
             }
             //     $("#idUpdFw"+zgId).show();
             // } else if (zgType == "DIN") {
@@ -819,6 +822,8 @@
         if (window.checkWiringPiOngoing)
             return;
         window.checkWiringPiOngoing = true;
+
+        console.log("checkWiringPi()");
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
@@ -848,6 +853,8 @@
         if (window.checkPiGpioOngoing)
             return;
         window.checkPiGpioOngoing = true;
+
+        console.log("checkPiGpio()");
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',

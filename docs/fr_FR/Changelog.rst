@@ -1,10 +1,6 @@
 ChangeLog
 =========
 
-- Placement réseau: changements en cours.
-- Scripts: Correction droits 'installPackage.sh'
-- Interne: Abeille: setPIGpio().
-
 240223-BETA-1
 -------------
 
@@ -35,6 +31,10 @@ ChangeLog
 - Scripts: updateFirmware => updateZigate.
 - Scripts: Nettoyage. Suppression 'installWiringPi' + 'installPiGpio' => 'installPackage'
 - Page de config: Correction visuelle mineure.
+- Placement réseau: changements en cours.
+- Scripts: Correction droits 'installPackage.sh'
+- Interne: Abeille: setPIGpio().
+- Support PiGpio: Corrections.
 
 240216-BETA-1
 -------------

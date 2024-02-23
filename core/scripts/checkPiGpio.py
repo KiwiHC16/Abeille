@@ -1,12 +1,19 @@
-import pigpio
+# coding: utf-8
 
-print("Verification de l installation du package 'pigpio'")
+# TODO: pigpio-python seems to depend on a daemon. How to check it is running ?
+
+print("Vérification de l'installation du package 'pigpio'")
+
+try:
+    import pigpio
+except ImportError as e:
+   print("= ERREUR: Le package PiGpio-python3 semble mal installé.")
+   exit(1)
 
 pi = pigpio.pi()       # specify host, default port
-
 if not pi.connected:
-   print("= ERREUR: Commande 'gpio' manquante ou non executable !")
-   print("=         Le package WiringPi est probablement mal installe.")
+   print("= ERREUR: Le package PiGpio semble mal installé ou démon pas démarré.")
+   print("=         'sudo pigpiod' manquant ?")
    exit(1)
 
 print("= Ok")

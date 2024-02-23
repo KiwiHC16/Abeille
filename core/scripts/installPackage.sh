@@ -53,7 +53,7 @@ if [ "${PACKAGE}" == "WiringPi" ]; then
     fi
     echo "= Ok"
 elif [ "${PACKAGE}" == "PiGpio" ]; then
-    sudo apt-get -y install python3-pigpio python3-setuptools
+    sudo apt-get -y install pigpio python3-pigpio
     if [ $? -ne 0 ]; then
         echo "= ERREUR: L'installation n'a pas aboutie."
         echo "=         Il se peut que le package PiGpio ne soit pas supporté sur votre plateforme."

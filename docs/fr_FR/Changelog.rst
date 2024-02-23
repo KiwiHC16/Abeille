@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-240223-BETA-1
+240223-BETA-2
 -------------
 
   .. warning:: **Mise-à-jour de modèles**

@@ -1496,7 +1496,14 @@
          * Returns: true if ok, false if error
          */
         public static function setPIGpio() {
-            if (config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1)=="WiringPi") {
+            /* Configuring GPIO for PiZigate if one active found.
+                PiZigate reminder (using 'WiringPi' (default) or 'PiGpio'):
+                - port 0 = RESET
+                - port 2 = FLASH
+                - Production mode: FLASH=1, RESET=0 then 1 */
+            $gpioLib = config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1);
+            log::add('Abeille', 'debug', "  setPIGpio(): gpioLib='${gpioLib}'");
+            if ($gpioLib == "WiringPi") {
                 exec("command gpio -v", $out, $ret);
                 if ($ret != 0) {
                     log::add('Abeille', 'error', 'WiringPi semble mal installé.');
@@ -1504,22 +1511,16 @@
                     return false;
                 }
 
-                /* Configuring GPIO for PiZigate if one active found.
-                    PiZigate reminder (using 'WiringPi'):
-                    - port 0 = RESET
-                    - port 2 = FLASH
-                    - Production mode: FLASH=1, RESET=0 then 1 */
                 log::add('Abeille', 'debug', 'AbeilleTools:setPIGpio(): Active PiZigate found => configuring GPIOs');
                 exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
                 return true;
-            }
-            if (config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1)=="PiGpio") {
-                exec("python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py");
+            } else if ($gpioLib == "PiGpio") {
+                exec("python3 ".__DIR__."/../scripts/resetPiZigate.py");
                 return true;
             }
 
-            log::add('Abeille', 'error', 'Pas de librairie GPIO definie pour la PiZigate.');
-            message::add('Abeille', 'Pas de librairie GPIO definie pour la PiZigate.');
+            log::add('Abeille', 'error', "Librairie GPIO ${gpioLib} invalide pour la PiZigate.");
+            message::add('Abeille', "Librairie GPIO ${gpioLib} invalide pour la PiZigate.");
         }
 
         /**

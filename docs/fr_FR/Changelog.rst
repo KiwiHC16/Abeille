@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Placement réseau: changements en cours.
+- Scripts: Correction droits 'installPackage.sh'
 
 240223-BETA-1
 -------------

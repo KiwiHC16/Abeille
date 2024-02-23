@@ -131,12 +131,6 @@
             ajax::success(json_encode($status));
         }
 
-        if (init('action') == 'installSocat') {
-            $cmd = '/bin/bash '.__DIR__.'/../scripts/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-            exec($cmd, $out, $status);
-            ajax::success(json_encode($status));
-        }
-
         if (init('action') == 'checkWiringPi') {
             $prefix = logGetPrefix(""); // Get log prefix
             $cmd = '/bin/bash '.__DIR__."/../scripts/checkWiringPi.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
@@ -144,8 +138,33 @@
             ajax::success(json_encode($status));
         }
 
-        if (init('action') == 'installWiringPi') {
-            $cmd = '/bin/bash '.__DIR__.'/../scripts/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        // OBSOLETE: installWiringPi => installPackage + package=WiringPi
+        // if (init('action') == 'installWiringPi') {
+        //     $cmd = '/bin/bash '.__DIR__.'/../scripts/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     ajax::success();
+        // }
+
+        // OBSOLETE: installPiGpio => installPackage + package=PiGpio
+        // if (init('action') == 'installPiGpio') {
+        //     $cmd = '/bin/bash '.__DIR__.'/../scripts/installPiGpio.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     ajax::success();
+        // }
+
+        // OBSOLETE: installSocat => installPackage + package=socat
+        // if (init('action') == 'installSocat') {
+        //     $cmd = '/bin/bash '.__DIR__.'/../scripts/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     ajax::success(json_encode($status));
+        // }
+
+        // Package installation
+        // Supported packages: WiringPi, PiGpio, socat
+        if (init('action') == 'installPackage') {
+            $package = init('package');
+
+            $cmd = '/bin/bash '.__DIR__."/../scripts/installPackage.sh ${package} >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
             ajax::success();
         }
@@ -155,12 +174,6 @@
             $cmd = '/bin/bash python '.__DIR__."/../scripts/checkPiGpio.py | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
             ajax::success(json_encode($status));
-        }
-
-        if (init('action') == 'installPiGpio') {
-            $cmd = '/bin/bash '.__DIR__.'/../scripts/installPiGpio.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-            exec($cmd, $out, $status);
-            ajax::success();
         }
 
         if (init('action') == 'checkTTY') {

@@ -26,6 +26,8 @@ ChangeLog
 - Scripts: Utilisation de 'python3' et non pas 'python'.
 - Scripts/checkTTY: Arret forcé du processus si port utilisé.
 - Scripts: updateFirmware => updateZigate.
+- Scripts: Nettoyage. Suppression 'installWiringPi' + 'installPiGpio' => 'installPackage'
+- Page de config: Correction visuelle mineure.
 
 240216-BETA-1
 -------------

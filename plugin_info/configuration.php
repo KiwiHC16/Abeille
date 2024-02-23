@@ -381,14 +381,14 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group"> -->
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser}} : </label>
-                            <div class="col-lg-4" title="{{Choisissez la libraiie qui va piloter les PIN GPIO de la PiZigate.}}">
+                            <div class="col-lg-4" title="{{Librairie à utiliser pour le controle des GPIO pour la PiZigate.}}">
                                 <select id="idZgGpioLib" class="configKey form-control" data-l1key="ab::defaultGpioLib">
-                                    <option value="WiringPi">WiringPi</option>
                                     <option value="PiGpio">PiGpio</option>
+                                    <option value="WiringPi">WiringPi</option>
                                 </select>
                             </div>
                             <div class="col-lg-5">
@@ -397,7 +397,7 @@
                     </div>
                     <div class="col-lg-6">
                     </div>
-                </div>
+                <!-- </div> -->
             </div>
 
             <!-- Display zigates 2 per line -->
@@ -787,15 +787,6 @@
         });
     }
 
-    $('#bt_installSocat').on('click',function(){
-        bootbox.confirm('{{Vous êtes sur le point d\'installer le package \'socat\' pour les zigates Wifi.<br>Voulez vous continuer ?}}', function (result) {
-            if (result) {
-                $('#md_modal2').dialog({title: "{{Installation de socat}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installSocat.abeille').dialog('open');
-            }
-        });
-    })
-
     $('#idUpdateCheckShowHide').on('click', function () {
         var Label = document.getElementById("idUpdateCheckShowHide").innerText;
         console.log("idUpdateCheckShowHide click: Label=" + Label);
@@ -883,19 +874,36 @@
     }
 
     $('#bt_installWiringPi').on('click', function() {
-        bootbox.confirm('{{Vous êtes sur le point d installer WiringPi (http://wiringpi.com) et cela peut provoquer des conflits avec d\'autres gestionnaires de GPIO.<br> Voulez vous continuer ?}}', function (result) {
+        msg = "{{Vous êtes sur le point d installer le package 'WiringPi' pour le contrôle d'une PiZigate}}<br>";
+        msg += "{{Cela peut provoquer des conflits avec d'autres gestionnaires de GPIO}}<br><br>";
+        msg += "{{Voulez vous continuer ?}}";
+        bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Installation de WiringPi}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installWiringPi.abeille').dialog('open');
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleInstallPackage.modal&package=WiringPi').dialog('open');
             }
         });
     })
 
     $('#bt_installPiGpio').on('click', function() {
-        bootbox.confirm('{{Vous êtes sur le point d installer PiGpio (http://abyz.me.uk/rpi/pigpio/) et cela peut provoquer des conflits avec d\'autres gestionnaires de GPIO.<br> Voulez vous continuer ?}}', function (result) {
+        msg = "{{Vous êtes sur le point d installer le package 'PiGpio' pour le contrôle d'une PiZigate}}<br>";
+        msg += "{{Cela peut provoquer des conflits avec d'autres gestionnaires de GPIO}}<br><br>";
+        msg += "{{Voulez vous continuer ?}}";
+        bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Installation de PiGpio}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installPiGpio.abeille').dialog('open');
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleInstallPackage.modal&package=PiGpio').dialog('open');
+            }
+        });
+    })
+
+    $('#bt_installSocat').on('click',function(){
+        msg = "{{Vous êtes sur le point d installer le package 'socat' pour le contrôle d'une Zigate WIFI}}<br><br>";
+        msg += "{{Voulez vous continuer ?}}";
+        bootbox.confirm(msg, function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Installation de socat}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleInstallPackage.modal&package=socat').dialog('open');
             }
         });
     })

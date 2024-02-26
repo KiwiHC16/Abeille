@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Script: Améliorations 'checkZigate'
+
 240223-BETA-2
 -------------
 

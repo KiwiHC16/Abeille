@@ -3,18 +3,20 @@
 ###
 ### Check TTY port and proper access to Zigate.
 ### WARNING: This script expects that daemon is stoppped to
-###          not disturb Zigate answer.
+###          not disturb communication with Zigate but option '-k' allows to kill using process if any.
 ###
 
 # Usage
-# checkZigate.sh [options] <portName>
+# checkZigate.sh [options] <zgPort> <zgType> [<gpioLib>]
 # Possible options
 # -k => kill process using port
-# ex: checkZigate.sh /dev/ttyUSB0
+# ex: checkZigate.sh /dev/ttyUSB0 USB
+# ex: checkZigate.sh /dev/ttyAMA0 Piv2 PiGpio
 
 # Args
 PORT=""
-TYPE="USB"
+TYPE=""
+GPIOLIB=""
 KILLIFUSED=0
 while [[ $# -gt 0 ]]; do
     if [[ "$1" == "-"* ]]; then
@@ -28,17 +30,39 @@ while [[ $# -gt 0 ]]; do
                 ;;
         esac
     else
-        if [ "${PORT}" != "" ]; then
+        if [ "${PORT}" == "" ]; then
+            PORT=$1
+        elif [ "${TYPE}" == "" ]; then
+            TYPE=$1
+        elif [ "${GPIOLIB}" == "" ]; then
+            GPIOLIB=$1
+        else
             echo "ERROR: Unexpected arg '$1'"
             exit 1
         fi
-        PORT=$1
     fi
     shift
 done
 if [ "${PORT}" == "" ]; then
     echo "ERROR: Missing port name (ex: /dev/ttyUSB0)"
     exit 1
+fi
+if [ "${TYPE}" == "" ]; then
+    echo "ERROR: Missing Zigate type (PI, PIv2 or USB)"
+    exit 1
+fi
+if [ "${TYPE}" != "PI" ] && [ "${TYPE}" != "PIv2" ] && [ "${TYPE}" != "USB" ]; then
+    echo "ERROR: Invalid Zigate type (PI, PIv2 or USB)"
+    exit 1
+fi
+if [ "${TYPE}" == "PI" ] || [ "${TYPE}" == "PIv2" ]; then
+    if [ "${GPIOLIB}" == "" ]; then
+        echo "ERROR: Missing GPIO lib (PiGpio or WiringPi)"
+        exit 1
+    elif [ "${GPIOLIB}" != "PiGpio" ] && [ "${GPIOLIB}" != "WiringPi" ]; then
+        echo "ERROR: Invalid GPIO lib (PiGpio or WiringPi)"
+        exit 1
+    fi
 fi
 
 # Let's start
@@ -109,6 +133,10 @@ if [ $? -ne 0 ]; then
     exit 5
 fi
 
-python3 core/python/AbeilleZigate.py ${PORT}
+if [ "${TYPE}" == "PI" ] || [ "${TYPE}" == "PIv2" ]; then
+    python3 core/python/AbeilleZigate.py zgSetPiMode prod ${GPIOLIB}
+fi
+
+python3 core/python/AbeilleZigate.py readFwVersion ${PORT}
 
 exit 0

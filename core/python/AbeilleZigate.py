@@ -256,25 +256,27 @@ def zgSetPIMode(mode, gpioLib):
     # port 2 = FLASH
     # Production mode: FLASH=1, RESET=0 then 1
     # Flash mode: FLASH=0, RESET=0 then 1
+
     if gpioLib == "WiringPi":
-        # WARNING !!! This part has NOT been approved yet !
         import subprocess
         if mode == "prod":
-            result = subprocess.Popen("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 1; gpio write 0 1");
+            result = subprocess.run("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 1; gpio write 0 1", shell=True)
         else: # "flash" mode
-            result = subprocess.Popen("gpio mode 0 out; gpio mode 2 out; gpio write 2 0; gpio write 0 0; sleep 1; gpio write 0 1");
-        text = result.communicate()[0]
+            result = subprocess.run("gpio mode 0 out; gpio mode 2 out; gpio write 2 0; gpio write 0 0; sleep 1; gpio write 0 1", shell=True)
+        # print("result=", result)
         if (result.returncode != 0):
-            return -1, "gpio config failed"
+            return -1, "zgSetPIMode: gpio config failed"
 
     elif gpioLib == "PiGpio":
         # WARNING !!! This part has NOT been approved yet !
-        import pigpio
-        # TODO: Test if package found
+        try:
+            import pigpio
+        except ImportError as e:
+            return -1, "zgSetPIMode: PiGpio-python3 installation missing"
 
         pi = pigpio.pi()
         if not pi.connected:
-            return -1, "Gpio init failed"
+            return -1, "zgSetPIMode: Gpio init failed. Is 'pigpiod' started ?"
 
         # GPIO 14 TXD
         # GPIO 15 RXD
@@ -324,12 +326,12 @@ if __name__ == '__main__':
         fW.close()
     else:
         action = sys.argv[1]
-        if (action == "setPiMode"):
+        if (action == "zgSetPiMode") or (action == "setPiMode"):
             if (nbArgs < 3):
                 print("ERROR: Missing mode")
                 exit(1)
             mode = sys.argv[2]
-            print("Setting Zigate PI to mode "+mode)
+            print("Setting Zigate PI to '"+mode+"' mode")
             err, msg = zgSetPIMode(mode, sys.argv[3])
             if err != 0:
                 print("ERROR: "+msg)
@@ -342,6 +344,15 @@ if __name__ == '__main__':
             err, msg = zgIsPortFree(port)
             if err != 0:
                 print("ERROR: "+msg)
+        elif (action == "readFwVersion"):
+            port = sys.argv[2]
+            print("Testing Zigate access on port "+port)
+            zgDebug = 1
+            err, f = zgOpenPort(port)
+            fW = open(port, "wb")
+            version = zgGetFwVersion(f, fW)
+            f.close()
+            fW.close()
         else:
             print("ERROR: Unsupported action "+action)
 

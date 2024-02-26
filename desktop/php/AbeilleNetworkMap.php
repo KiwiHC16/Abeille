@@ -159,6 +159,11 @@
         .draggable {
             cursor: move;
         }
+        #idNodeMenu {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+        }
    </style>
 
     <!-- <div class="row"> -->
@@ -220,12 +225,20 @@
             viewBox = zoom in/out part of the viewPort
             -->
 
-            <!-- <div class="column ab-right-column" id="idGraph" > -->
+            <div class="column ab-right-column">
                 <!-- <svg id="idDevices" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)"> -->
-            <!-- Useful doc https://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/ -->
-            <svg id="idGraph" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)">
-            </svg>
-            <!-- </div> -->
+                <!-- Useful doc https://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/ -->
+                <svg id="idGraph" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)">
+                </svg>
+
+                <!-- Node menu visible in config mode only -->
+                <!-- <select name="cars" id="idNodeMenu" style="width:100px">
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="opel">Opel</option>
+                    <option value="audi">Audi</option>
+                </select> -->
+            </div>
         </div>
     </div>
 </body>
@@ -1031,6 +1044,15 @@
         }
         // document.getElementById("idDevices").innerHTML = lesAbeilles;
         document.getElementById("idGraph").innerHTML = lesAbeilles;
+
+        // If config mode, add event listener on node menu
+        if (configMode) {
+            const buttons = document.querySelectorAll(".nodeMenuBtn");
+            buttons.forEach(function(button) {
+                console.log("la");
+                button.addEventListener("click", nodeMenu);
+            });
+        }
     }
 
     $("#idMapsBtn").on("click", function () {
@@ -1125,10 +1147,12 @@
 
         // If config mode, add a button to select level
         if (configMode) {
-            btnX = grpX + 25;
-            btnY = grpY;
+            // btnX = grpX + 25;
+            // btnY = grpY;
             // newG += '<g id="'+devLogicId+'-btn" transform="translate('+btnX+', '+btnY+')">';
-            newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(\''+devLogicId+'\')" />';
+            // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(this, \''+devLogicId+'\')" />';
+            newG += '<rect x="50" rx="5" ry="5" width="25" height="25" class="nodeMenuBtn" />';
+
             // newG += '</g>';
         }
         newG += '</g>';
@@ -1174,8 +1198,21 @@
     }
 
     // Display node menu in config mode
-    function nodeMenu(devLogicId) {
-        console.log("nodeMenu("+devLogicId+")");
+    function nodeMenu(evt) {
+        console.log("nodeMenu(), evt=", evt);
+
+        // var mousePos = getMousePosition(evt);
+        // console.log("  Mouse pos=", mousePos);
+        svg = document.getElementById("idGraph");
+        let CTM = svg.getScreenCTM();
+        x = (evt.clientX - CTM.e) / CTM.a;
+        y = (evt.clientY - CTM.f) / CTM.d;
+        console.log("x="+x+", y="+y)
+
+        parentG = evt.target.parentNode; // Parent group
+
+        // TODO: Get mouse position
+        // TODO: Move 'nodeMenu' to position
     }
 
     //-----------------------------------------------------------------------

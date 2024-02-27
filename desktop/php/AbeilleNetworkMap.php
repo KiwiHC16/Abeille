@@ -159,7 +159,7 @@
         .draggable {
             cursor: move;
         }
-        #idNodeMenu {
+        #idNodeMenuSelect {
             position: absolute;
             top: 60px;
             left: 10px;
@@ -231,13 +231,15 @@
                 <svg id="idGraph" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)">
                 </svg>
 
-                <!-- Node menu visible in config mode only -->
-                <!-- <select name="cars" id="idNodeMenu" style="width:100px">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="opel">Opel</option>
-                    <option value="audi">Audi</option>
-                </select> -->
+                <!-- Node menu visible in config mode on nodeMenuBtn click -->
+                <select id="idNodeMenuSelect" style="width:100px" hidden>
+                <?php
+                    foreach ($networkMap['levels'] as $levIdx => $lev) {
+                        $levelName = $lev['levelName'];
+                        echo "<option value=\"${levIdx}\">${levelName}</option>";
+                    }
+                ?>
+                </select>
             </div>
         </div>
     </div>
@@ -245,6 +247,11 @@
 </html>
 
 <script type="text/javascript">
+
+    console.log("networkMap=", networkMap);
+    console.log("viewLevel=", viewLevel);
+    console.log("viewImages=", viewImages);
+
     // Edition mode
     $("#idConfigMode").on("click", function() {
         console.log("idConfigMode click: configMode=", configMode);
@@ -257,6 +264,9 @@
             viewLinks = document.getElementById("idViewLinks").checked;
             configMode = false;
             configModeBtn.innerHTML = "Mode config";
+
+            let nodeMenuSelect = document.getElementById('idNodeMenuSelect');
+            nodeMenuSelect.style.display = 'none';
         } else {
             displayPart.classList.add("disabledDiv");
             configPart.classList.remove("disabledDiv"); // Reenable config part
@@ -274,9 +284,9 @@
     // });
 
     // Display given 'viewLevel'
-    function refreshMap(viewLevel) {
+    function refreshBackgroundMap(viewLevel) {
         // lev = networkMap.levels[viewLevel];
-        console.log("refreshMap("+viewLevel+")");
+        console.log("refreshBackgroundMap("+viewLevel+")");
         // viewImage.path = lev.mapDir + "/" + lev.mapFile;
         console.log("viewImages=", viewImages);
 
@@ -307,7 +317,7 @@
         viewLevel = document.getElementById("idSelectLevel").value;
         console.log("View level changed to "+viewLevel);
 
-        refreshMap(viewLevel);
+        refreshBackgroundMap(viewLevel);
         // lev = networkMap.levels[viewLevel];
         // console.log("Level=", lev);
         // viewImage.path = lev.mapDir + "/" + lev.mapFile;
@@ -1017,7 +1027,7 @@
         //     return;
         // }
 
-        refreshMap(viewLevel);
+        refreshBackgroundMap(viewLevel);
 
         lesAbeilles = "";
         for (n = 0; n < networks.length; n++) {
@@ -1049,8 +1059,8 @@
         if (configMode) {
             const buttons = document.querySelectorAll(".nodeMenuBtn");
             buttons.forEach(function(button) {
-                console.log("la");
-                button.addEventListener("click", nodeMenu);
+                // console.log("la");
+                button.addEventListener("click", nodeMenuBtnCb);
             });
         }
     }
@@ -1198,9 +1208,10 @@
     }
 
     // Display node menu in config mode
-    function nodeMenu(evt) {
-        console.log("nodeMenu(), evt=", evt);
+    function nodeMenuBtnCb(evt) {
+        console.log("nodeMenuBtnCb(), evt=", evt);
 
+        // TODO: Get mouse position
         // var mousePos = getMousePosition(evt);
         // console.log("  Mouse pos=", mousePos);
         svg = document.getElementById("idGraph");
@@ -1209,11 +1220,35 @@
         y = (evt.clientY - CTM.f) / CTM.d;
         console.log("x="+x+", y="+y)
 
-        parentG = evt.target.parentNode; // Parent group
+        currentGroup = evt.target.parentNode; // Parent group
 
-        // TODO: Get mouse position
         // TODO: Move 'nodeMenu' to position
+        const nmElm = document.getElementById('idNodeMenuSelect');
+        nmElm.style.top = y+'px';
+        nmElm.style.left = x+'px';
+
+        nmElm.style.display = 'inline';
     }
+
+    // Node menu select callback
+    $("#idNodeMenuSelect").on("change", function() {
+        posZ = document.getElementById("idNodeMenuSelect").value;
+        console.log("idNodeMenuSelect changed to '"+posZ+"'");
+
+        // TODO: Move corresponding node to proper level
+        devLogicId = currentGroup.id; // Ex: 'AbeilleX/yyyy'
+        console.log("Select change for devLogicId="+devLogicId);
+        netIdx = devLogicId2Net(devLogicId);
+        devList = networks[netIdx].devList;
+        devList[devLogicId]['posZ'] = posZ;
+
+        // TODO: Hide nodeMenuSelect
+        let nodeMenuSelect = document.getElementById('idNodeMenuSelect');
+        nodeMenuSelect.style.display = 'none';
+
+        // TODO: Refresh display
+        refreshPage();
+    });
 
     //-----------------------------------------------------------------------
     // MAIN
@@ -1238,7 +1273,7 @@
 
     var networkInformation = "";
     var networkInformationProgress = "Processing";
-    var TopoSetReply = "";
+    // var TopoSetReply = "";
     var refreshLqiStatus; // Result of setInterval()
 
     var a = 10;

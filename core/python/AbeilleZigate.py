@@ -216,36 +216,50 @@ def zgWrite(f, zgMsg):
 
 # Read FW version from current opened port
 # Returns version as string ("MMMM-mmmm") or "" if error
-def zgGetFwVersion(fR, fW):
+def zgGetFwVersion(fR, fW, timeout=0):
     if (not fR) or (not fW):
         zgLog("ERROR: zgGetFwVersion(): no opened port")
         return ""
 
-    zgMsg = zgComposeMsg("0010")
-    zgLog("zgMsg=" + zgMsg)
-    zgWrite(fW, zgMsg)
-    while True:
-        msg = zgReadMsg(fR)
-        msgType = msg[0:4]
-        zgLog("msgType=" + msgType)
-        if (msgType == "8000"):
-            break
-    while True:
-        msg = zgReadMsg(fR)
-        msgType = msg[0:4]
-        zgLog("msgType=" + msgType)
-        if (msgType == "8010"):
-            break
-    major = msg[10:14]
-    minor = msg[14:18]
-    version = major + '-' + minor
-    zgLog("Version " + version)
-    return version
+    if (timeout != 0):
+        import signal
+        signal.signal(signal.SIGALRM, zgTimeoutHandler)
+        signal.alarm(timeout)
+
+    try:
+        zgMsg = zgComposeMsg("0010")
+        zgLog("zgMsg=" + zgMsg)
+        zgWrite(fW, zgMsg)
+        while True:
+            msg = zgReadMsg(fR)
+            msgType = msg[0:4]
+            zgLog("msgType=" + msgType)
+            if (msgType == "8000"):
+                break
+        while True:
+            msg = zgReadMsg(fR)
+            msgType = msg[0:4]
+            zgLog("msgType=" + msgType)
+            if (msgType == "8010"):
+                break
+        major = msg[10:14]
+        minor = msg[14:18]
+        version = major + '-' + minor
+        zgLog("Version " + version)
+        return version
+    except Exception:
+        # print("Exception ", exc)
+        signal.alarm(0)
+        return ""
+
+def zgTimeoutHandler():
+    raise Exception("zgTimeout")
 
 # Set 'flash' or 'prod' mode for PI Zigate
 # gpioLib = WiringPi or PiGpio
 # Returns: status (0/-1) + err msg
 def zgSetPIMode(mode, gpioLib):
+    zgLog("zgSetPIMode("+mode+", "+gpioLib+")")
     if (mode != "prod") and (mode != "flash"):
         return -1, "Wrong mode"
     if (gpioLib != "WiringPi") and (gpioLib != "PiGpio"):
@@ -276,7 +290,7 @@ def zgSetPIMode(mode, gpioLib):
 
         pi = pigpio.pi()
         if not pi.connected:
-            return -1, "zgSetPIMode: Gpio init failed. Is 'pigpiod' started ?"
+            return -1, "zgSetPIMode: PiGpio init failed. Is 'pigpiod' started ?"
 
         # GPIO 14 TXD
         # GPIO 15 RXD
@@ -331,7 +345,6 @@ if __name__ == '__main__':
                 print("ERROR: Missing mode")
                 exit(1)
             mode = sys.argv[2]
-            print("Setting Zigate PI to '"+mode+"' mode")
             err, msg = zgSetPIMode(mode, sys.argv[3])
             if err != 0:
                 print("ERROR: "+msg)
@@ -346,13 +359,17 @@ if __name__ == '__main__':
                 print("ERROR: "+msg)
         elif (action == "readFwVersion"):
             port = sys.argv[2]
-            print("Testing Zigate access on port "+port)
+            # print("Testing Zigate access on port "+port)
             zgDebug = 1
             err, f = zgOpenPort(port)
             fW = open(port, "wb")
-            version = zgGetFwVersion(f, fW)
+            version = zgGetFwVersion(f, fW, 5)
             f.close()
             fW.close()
+            if (version == ""):
+                print("ERROR: Timeout !")
+                exit(-1)
+            exit(0)
         else:
             print("ERROR: Unsupported action "+action)
 

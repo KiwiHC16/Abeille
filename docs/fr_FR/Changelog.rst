@@ -2,7 +2,7 @@ ChangeLog
 =========
 
 - Script: Améliorations 'checkZigate'
-- Placement réseau: changements en cours.
+- Placement réseau: Améliorations support multi-niveaux.
 
 240223-BETA-2
 -------------

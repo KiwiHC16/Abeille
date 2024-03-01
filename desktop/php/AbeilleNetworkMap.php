@@ -51,7 +51,7 @@
     //     }
     // }
     $networkMap = config::byKey('ab::networkMap', 'Abeille', [], true);
-    logDebug('networkMap='.json_encode($networkMap));
+    logDebug('networkMap='.json_encode($networkMap, JSON_UNESCAPED_UNICODE));
     if (!isset($networkMap['levels']))
         $networkMap['levels'] = [];
     // Set default level & image if none
@@ -62,6 +62,11 @@
             'mapFile' => 'AbeilleNetworkMap-1200.png'
         );
     }
+    if (!isset($networkMap['levelChoice']))
+        $networkMap['levelChoice'] = 0;
+    else if (gettype($networkMap['levelChoice']) == "string")
+        $networkMap['levelChoice'] = intval($networkMap['levelChoice']); // In case stored as string
+
     // Checking that image exists & fills $viewImages[]
     $viewImages = [];
     foreach ($networkMap['levels'] as $levIdx => $lev) {
@@ -84,35 +89,11 @@
             "height" => $height
         );
     }
-    if (isset($nm['levelChoice']))
-        $networkMap['levelChoice'] = $nm['levelChoice'];
-    else
-        $networkMap['levelChoice'] = 0;
-    logDebug('networkMap='.json_encode($networkMap));
+    logDebug('networkMap='.json_encode($networkMap, JSON_UNESCAPED_UNICODE));
+
     sendVarToJS('networkMap', $networkMap);
-    $levelChoice = $networkMap['levelChoice'];
-    sendVarToJS('viewLevel', $levelChoice);
+    sendVarToJS('viewLevel', $networkMap['levelChoice']);
     sendVarToJS('viewImages', $viewImages);
-
-    // require_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
-    // $choice = $networkMap['levels'][$levelChoice];
-    // logDebug('choice='.json_encode($choice));
-    // $mapDir = isset($choice['mapDir']) ? $choice['mapDir'] : 'images';
-    // $mapFile = isset($choice['mapFile']) ? $choice['mapFile'] : 'AbeilleNetworkMap-1200.png';
-    // $userMap = $mapDir.'/'.$mapFile;
-
-    // $iSize = getimagesize(__DIR__."/../../".$userMap);
-    // $width = $iSize[0];
-    // $height = $iSize[1];
-    // $viewImage = Array(
-    //     "path" => $userMap, // Path relative to Abeille's root
-    //     "width" => $width,
-    //     "height" => $height
-    // );
-    // logDebug('viewImage='.json_encode($viewImage));
-    // sendVarToJS('viewImage', $viewImage);
-    // sendVarToJS('viewImageMaxX', $width);
-    // sendVarToJS('viewImageMaxY', $height);
 ?>
 
 <html>
@@ -182,11 +163,11 @@
                             echo '<select id="idSelectLevel">';
                             for ($l = 0; $l < $count; $l++ ) {
                                 $level = $networkMap['levels'][$l];
-                                if ($l == $levelChoice)
+                                if ($l == $networkMap['levelChoice'])
                                     $selected = "selected";
                                 else
                                     $selected = "";
-                                echo '<option value="'.$l.'" '.$selected.'>'.$level['levelName'].'</option>'."\n";
+                                echo '<option value='.$l.' '.$selected.'>'.$level['levelName'].'</option>'."\n";
                             }
                             echo '</select>';
                         }
@@ -317,15 +298,8 @@
         viewLevel = document.getElementById("idSelectLevel").value;
         console.log("View level changed to "+viewLevel);
 
-        refreshBackgroundMap(viewLevel);
-        // lev = networkMap.levels[viewLevel];
-        // console.log("Level=", lev);
-        // viewImage.path = lev.mapDir + "/" + lev.mapFile;
-        // console.log("viewImage=", viewImage);
-
-        // elm = document.getElementById("idGraph");
-        // elm.style.backgroundImage = 'url("/plugins/Abeille/'+viewImage.path+'")';
-        // console.log("idGraph elm=", elm);
+        // Refresh page to display equipments on this level
+        refreshPage();
 
         // Saving user choice
         networkMap.levelChoice = viewLevel;
@@ -482,6 +456,19 @@
         dev['posY'] = grpY + 25;
     }
 
+    // Identify network index from 'devLogicId'
+    function devLogicId2Net(devLogicId) {
+        net = devLogicId.split('/');
+        netName = net[0]; // Ex: 'AbeilleX'
+        zgId = netName.substring(7);
+        for (n = 0; n < networks.length; n++) {
+            if (networks[n].zgId == zgId)
+                return n;
+        }
+
+        return 0; // Should return an error
+    }
+
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     function makeDraggable(evt) {
         console.log("makeDraggable(), configMode="+configMode);
@@ -590,19 +577,6 @@
 
             //     console.log("New position: "+JSON.stringify(offset));
             // }
-        }
-
-        // Identify network index from 'devLogicId'
-        function devLogicId2Net(devLogicId) {
-            net = devLogicId.split('/');
-            netName = net[0]; // Ex: 'AbeilleX'
-            zgId = netName.substring(7);
-            for (n = 0; n < networks.length; n++) {
-                if (networks[n].zgId == zgId)
-                    return n;
-            }
-
-            return 0; // Should return an error
         }
 
         function moveIt(evt, dragEnd) {
@@ -971,7 +945,7 @@
                     if (typeof jeedomDevices[rLogicId] !== "undefined") {
                         devR['posX'] = jeedomDevices[rLogicId].x;
                         devR['posY'] = jeedomDevices[rLogicId].y;
-                        devR['posZ'] = jeedomDevices[rLogicId].z;
+                        devR['posZ'] = (typeof jeedomDevices[rLogicId].z !== "undefined") ? jeedomDevices[rLogicId].z : 0;
                         devR['jeedomId'] = jeedomDevices[rLogicId].id;
                         // devR['posChanged'] = false;
                     }
@@ -999,7 +973,7 @@
                         if (typeof jeedomDevices[nLogicId] !== "undefined") {
                             devN['posX'] = jeedomDevices[nLogicId].x;
                             devN['posY'] = jeedomDevices[nLogicId].y;
-                            devR['posZ'] = jeedomDevices[rLogicId].z;
+                            devN['posZ'] = (typeof jeedomDevices[nLogicId].z !== "undefined") ? jeedomDevices[nLogicId].z : 0;
                             devN['jeedomId'] = jeedomDevices[nLogicId].id;
                             // devN['posChanged'] = false;
                         }
@@ -1041,6 +1015,14 @@
             devList = netw.devList;
             devListNb = netw.devListNb;
             for (devLogicId in devList) {
+                if (typeof devList[devLogicId]['posZ'] !== "undefined")
+                    posZ = devList[devLogicId]['posZ'];
+                else
+                    posZ = 0;
+                if (posZ != viewLevel) {
+                    console.log(devLogicId+" is not part of current level "+viewLevel);
+                    continue;
+                }
                 lesAbeilles += drawDevice(devLogicId);
             }
 
@@ -1189,10 +1171,12 @@
             srcDev = devList[link.src];
             x1 = srcDev['posX'];
             y1 = srcDev['posY'];
+            z1 = srcDev['posZ'];
 
             dstDev = devList[link.dst];
             x2 = dstDev['posX'];
             y2 = dstDev['posY'];
+            z2 = dstDev['posZ'];
 
             if (typeof link['lqi'] === 'undefined')
                 linkColor = "green";
@@ -1203,7 +1187,21 @@
             else
                 linkColor = "red";
 
-            lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+            if (z2 != z1) {
+                console.log("z2 != z1 => Link not displayed")
+                // Computing x3/y3 in the middle on the line to change line type
+                x3 = x1 + (x2 - x1) / 2;
+                y3 = y1 + (y2 - y1) / 2;
+                lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x3+'" y2="'+y3+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+                lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x3+'" y1="'+y3+'" x2="'+x2+'" y2="'+y2+'" stroke-dasharray="8" style="stroke:'+linkColor+';stroke-width:2"/>';
+            } else {
+                if (z1 != viewLevel) {
+                    console.log("Not corresonding view level => Link not displayed")
+                    continue;
+                }
+
+                lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+            }
         }
     }
 

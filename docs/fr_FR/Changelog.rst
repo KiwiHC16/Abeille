@@ -4,6 +4,7 @@ ChangeLog
 - Script: Améliorations 'checkZigate'
 - Placement réseau: Améliorations support multi-niveaux.
 - Profalux BSO: Mise-à-jour du modèle pour retour level (2689).
+- SonOff SNZB-01: Modèle revu: 'Click-Middle' remplacé par 'Click' (valeur 'single', 'double' ou 'long').
 
 240223-BETA-2
 -------------

@@ -13,8 +13,34 @@
         },
         "type": "Sonoff wireless button",
         "commands": {
-            "Click-Middle": {
-                "use": "Click-Middle"
+            "Click": {
+                "use": "inf_click",
+                "comment": "value = single, double or long",
+                "isVisible": 1
+            },
+            "Single click": {
+                "use": "inf_zbCmdC-0006-Toggle",
+                "trigOut": {
+                    "01-click": {
+                        "valueOffset": "single"
+                    }
+                }
+            },
+            "Double click": {
+                "use": "inf_zbCmdC-0006-On",
+                "trigOut": {
+                    "01-click": {
+                        "valueOffset": "double"
+                    }
+                }
+            },
+            "Long click": {
+                "use": "inf_zbCmdC-0006-Off",
+                "trigOut": {
+                    "01-click": {
+                        "valueOffset": "long"
+                    }
+                }
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

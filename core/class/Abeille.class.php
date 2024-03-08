@@ -589,7 +589,12 @@ class Abeille extends eqLogic {
      * @param none
      * @return array with state, launchable, launchable_message
      */
+    // Note: Seems to be called each from a different process ID
     public static function deamon_info() {
+        // $pid = getmypid();
+        // $toto = isset($GLOBALS['toto']) ? $GLOBALS['toto'] : "UNSET";
+        // log::add('Abeille', 'debug', "deamon_info() PID=${pid} TOTO=${toto}");
+
         // $smId = @shmop_open(12, "a", 0, 0);
         // if ($smId !== false) {
         //     $smContent = shmop_read($smId, 0, shmop_size($smId));
@@ -677,10 +682,15 @@ class Abeille extends eqLogic {
        Starts all daemons.
        Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
     public static function deamon_start($_debug = false) {
+
+        // $GLOBALS['toto'] = 12;
+        // $pid = getmypid();
+        // log::add('Abeille', 'debug', "deamon_start() PID=${pid} TOTO=".json_encode($GLOBALS['toto']));
+
         $smId = @shmop_open(12, "a", 0, 0);
         if ($smId !== false) {
             $smContent = shmop_read($smId, 0, shmop_size($smId));
-            log::add('Abeille', 'debug', 'deamon_start(): starting. smContent='.$smContent);
+            log::add('Abeille', 'debug', 'deamon_start(): Starting. smContent='.$smContent);
             shmop_close($smId);
             $smContent = json_decode($smContent, true);
             if (isset($smContent['daemonsPaused']) && ($smContent['daemonsPaused'] == true)) {
@@ -688,14 +698,14 @@ class Abeille extends eqLogic {
                 return;
             }
         } else
-            log::add('Abeille', 'debug', 'deamon_start(): starting. No shared mem');
+            log::add('Abeille', 'debug', 'deamon_start(): Starting. No shared mem');
 
         /* Some checks before starting daemons
                - Are dependancies ok ?
                - does Abeille cron exist ? */
         if (self::dependancy_info()['state'] != 'ok') {
-            message::add("Abeille", "Tentative de demarrage alors qu\'il y a un soucis avec les dépendances");
-            log::add('Abeille', 'debug', "Tentative de demarrage alors qu il y a un soucis avec les dependances");
+            message::add("Abeille", "Tentative de démarrage alors qu'il y a un souci avec les dépendances");
+            log::add('Abeille', 'debug', "Tentative de démarrage alors qu'il y a un souci avec les dépendances");
             return false;
         }
         if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
@@ -788,7 +798,7 @@ class Abeille extends eqLogic {
                 message::add("Abeille", "Vous êtes en mode debug mais le nombre de lignes est inférieur à 5000 (".$jLines."). Il est recommandé d'augmenter ce nombre pour tout besoin de support.");
         }
 
-        log::add('Abeille', 'debug', 'deamon_start(): Terminé');
+        log::add('Abeille', 'debug', 'deamon_start(): Ended');
         return true;
     }
 
@@ -914,10 +924,14 @@ class Abeille extends eqLogic {
     }
 
     /* This is Abeille's main daemon, directly controlled by Jeedom itself. */
+    // TODO: This is currently launched as cron. Should be isolated as main Abeille's daemon and not depends on cron
     public static function deamon() {
         global $abQueues;
 
         log::add('Abeille', 'debug', 'deamon(): Main daemon starting');
+
+        // $pid = getmypid();
+        // log::add('Abeille', 'debug', "deamon() PID=${pid} TOTO=".json_encode($GLOBALS['toto']));
 
         /* Main daemon starting.
            This means that other daemons have started too. Abeille can communicate with them */

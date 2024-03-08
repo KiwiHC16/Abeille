@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240308-BETA-1
+-------------
+
 - Script: Améliorations 'checkZigate'
 - Placement réseau: Améliorations support multi-niveaux.
 - Profalux BSO: Mise-à-jour du modèle pour retour level (2689).

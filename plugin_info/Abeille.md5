@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240223-BETA-2"
+# VERSION="240308-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -670,7 +670,7 @@ c3871124b2a8c3b7407fa7f5cbf2fb01 *core/config/devices/898ca74409a740b28d5841661e
 69e16281e81c136b76030c5c422dc076 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/ALCANTARA2D1.00P1.02Z1.00.json
 b3de5b2b6933161949c28715effe4536 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/discovery.json
 c7c0f631b72722d1c87e3b4b1ef1774b *core/config/devices/BASICZBR3/BASICZBR3.json
-bf4d61b095b87bcf4d1107397e7a84f3 *core/config/devices/BSO/BSO.json
+4b9ae891c9044c92cf19ad6750c4943d *core/config/devices/BSO/BSO.json
 bb5b9d0d4a363b9d7e57e9a77d25570d *core/config/devices/BSO/discovery.json
 3873f053b4958af7ce13aadb5c44f932 *core/config/devices/BSO/notes.txt
 43be2041fe655183ccd88ca2e69e4ca3 *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOSRAM.json
@@ -1115,7 +1115,7 @@ a3918bc26769085f6c0b8eb9d77674c9 *core/config/devices/Thermostat_SchneiderElectr
 f86cbebf536f188c4abca7a2ec4b9ac4 *core/config/devices/Thermostat_SchneiderElectric/discovery.json
 bfc570cc590865cfc4ecdeb1c4e63805 *core/config/devices/VINDSTYRKA_IKEAofSweden/VINDSTYRKA_IKEAofSweden.json
 793067a51a8e75c657f3ffcba0e3253d *core/config/devices/VINDSTYRKA_IKEAofSweden/discovery-VINDSTYRKA_IKEAofSweden.json
-9913316c267ece08ea0c22039bea53be *core/config/devices/WB01/WB01.json
+f05d09e0623cb7a477f3073fd4658e63 *core/config/devices/WB01/WB01.json
 af1df226ed3f569623a19dc54823479e *core/config/devices/WG001-Z01_AL001/WG001-Z01_AL001.json
 76f336c0257b6fb24c12768d5ef8fbb4 *core/config/devices/WG001-Z01_AL001/discovery-WG001-Z01_AL001.json
 137017a3e31f41b37ba1a86fab99152c *core/config/devices/WS2812_light_controller/WS2812_light_controller.json
@@ -1271,7 +1271,7 @@ b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 0d5c02d3055620403f37d6e68d436fa0 *core/php/AbeilleZigateConst.php
 b45496a501ad341f6a1bd45d1d1129ac *core/php/AbeilleZigbeeConst.php
 e2b6a4cd856fc09bff24be60d72960c8 *core/python/AbeilleSerialRead.py
-4d026967b162e172496f7486c3378336 *core/python/AbeilleZigate.py
+6b03900a80415b5fb4fcca5793eeef3a *core/python/AbeilleZigate.py
 58bd44a198ebcfbe1b49f2c462555e90 *core/scripts/checkPiGpio.py
 f29ff4abcd88db470a13a58615d69c81 *core/scripts/checkPiGpio.sh
 33091517c2fbbab6e5546154033a9362 *core/scripts/checkSocat.sh
@@ -1328,8 +1328,8 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 07102ab0b527dbbd4e8974328c1b99ef *desktop/php/AbeilleMaintenance-Logs.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 ce32db08df86d3ff94f08d80d463b7f2 *desktop/php/AbeilleMaintenance.php
-0c4c791d3825e806a5af28c9439ef13e *desktop/php/AbeilleNetworkMap.php
-271e8c7d684747da7cf6b0ba31ca9b0d *docs/fr_FR/Changelog.rst
+baf90c03b340c417b65373e62d00e6bd *desktop/php/AbeilleNetworkMap.php
+b7439993ff6f63b9bf70129faa352e1f *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1670,10 +1670,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-884eb52004ddc99bacd1e4664e28bc26 *plugin_info/Abeille.version
+31fa67b39a4feedc7f0119cf87ca76ce *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 36903c9a88eaa1bd6c6fe6c0c7c272b5 *plugin_info/configuration.php
-3426a9c287cd7ad1e25a8d393fd9e3d3 *plugin_info/info.json
+c6ca982588f0dd8670f3e82b79f1f2c5 *plugin_info/info.json
 12eb5e36251fad8b46b2167a5668c94a *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
@@ -1754,4 +1754,4 @@ c886e65239e481cedb4f97fe4ddcc54f *resources/prog_jennic-0.7/source/common.h
 d475adb92693fa7a489d5b2e922eabd1 *resources/prog_jennic-0.7/source/main.c
 ca03d69e0031eda1c9e619373fd23c5c *resources/prog_jennic-0.7/source/uart.c
 8a8ae26d16916b55cf64b203ae86a9ab *resources/prog_jennic-0.7/source/uart.h
-dea0c86a5230d08e9373ae6ea3de42b3 *resources/scripts/checkZigate.sh
+bc9e052a7cdf6e062cd00886ac1b430a *resources/scripts/checkZigate.sh

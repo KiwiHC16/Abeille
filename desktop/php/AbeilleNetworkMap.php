@@ -1188,12 +1188,17 @@
                 linkColor = "red";
 
             if (z2 != z1) {
-                console.log("z2 != z1 => Link not displayed")
+                console.log("z2 != z1 => Link thru levels")
                 // Computing x3/y3 in the middle on the line to change line type
                 x3 = x1 + (x2 - x1) / 2;
                 y3 = y1 + (y2 - y1) / 2;
-                lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x3+'" y2="'+y3+'" style="stroke:'+linkColor+';stroke-width:2"/>';
-                lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x3+'" y1="'+y3+'" x2="'+x2+'" y2="'+y2+'" stroke-dasharray="8" style="stroke:'+linkColor+';stroke-width:2"/>';
+                if (z1 == viewLevel) {
+                    lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x3+'" y2="'+y3+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+                    lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x3+'" y1="'+y3+'" x2="'+x2+'" y2="'+y2+'" stroke-dasharray="8" style="stroke:'+linkColor+';stroke-width:2"/>';
+                } else {
+                    lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x3+'" y2="'+y3+'" stroke-dasharray="8" style="stroke:'+linkColor+';stroke-width:2"/>';
+                    lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x3+'" y1="'+y3+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+                }
             } else {
                 if (z1 != viewLevel) {
                     console.log("Not corresonding view level => Link not displayed")
@@ -1233,18 +1238,19 @@
         posZ = document.getElementById("idNodeMenuSelect").value;
         console.log("idNodeMenuSelect changed to '"+posZ+"'");
 
-        // TODO: Move corresponding node to proper level
+        // Move corresponding node to proper level
         devLogicId = currentGroup.id; // Ex: 'AbeilleX/yyyy'
         console.log("Select change for devLogicId="+devLogicId);
         netIdx = devLogicId2Net(devLogicId);
         devList = networks[netIdx].devList;
         devList[devLogicId]['posZ'] = posZ;
+        saveCoordinates(netIdx, devLogicId);
 
-        // TODO: Hide nodeMenuSelect
+        // Hide nodeMenuSelect
         let nodeMenuSelect = document.getElementById('idNodeMenuSelect');
         nodeMenuSelect.style.display = 'none';
 
-        // TODO: Refresh display
+        // Refresh display
         refreshPage();
     });
 

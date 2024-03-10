@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- SonOff ZbminiL2: Modèle revu.
+
 240308-BETA-1
 -------------
 

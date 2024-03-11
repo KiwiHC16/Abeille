@@ -238,12 +238,12 @@
                 return; // No queue
             /* Checking if queue is there alone. Client page might be closed */
             $status = msg_stat_queue($queue);
-            if ($status['msg_qnum'] >= 2) {
+            if ($status['msg_qnum'] >= 4) {
                 parserLog('debug', '  msgToClient(): Pending messages in queue => doing nothing');
                 return;
             }
 
-            $jsonMsg = json_encode($msg);
+            $jsonMsg = json_encode($msg, JSON_UNESCAPED_SLASHES);
             $size = strlen($jsonMsg);
             $max = $abQueues['parserToCli']['max'];
             if ($size > $max) {
@@ -253,7 +253,7 @@
             if (msg_send($queue, 1, $jsonMsg, false, false, $errCode) == false) {
                 parserLog("debug", "  msgToClient(): ERROR ".$errCode);
             } else
-                parserLog("debug", "  msgToClient(): Sent ".json_encode($msg));
+                parserLog("debug", "  msgToClient(): Sent ".$jsonMsg);
         }
 
         /* Check if message is a duplication of another one using SQN.
@@ -3797,7 +3797,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
-                        parserLog2('debug', $srcAddr, "8002/Default Response");
+                        parserLog2('debug', $srcAddr, "  Default Response");
 
                         // Tcharp38 note: Decoded here because 8101 message does not contain source address
                         $cmdId = substr($msg, 0, 2);
@@ -3896,7 +3896,6 @@
                         }
                         $m = '  Supported commands: '.implode("/", $commands);
                         parserLog2('debug', $srcAddr, $m);
-                        // $toMon[] = $m; // For monitor
 
                         /* Send to client if required (ex: EQ page opened) */
                         $toCli = array(
@@ -3949,7 +3948,6 @@
                                 $m .= 'P'; // Reportable
                         }
                         parserLog2('debug', $srcAddr, '  Clust '.$clustId.': '.$m);
-                        // $toMon[] = '  Clust '.$clustId.': '.$m;
 
                         // $this->discoverLog('- Clust '.$clustId.': '.$m);
                         $discovering = $this->discoveringState($dest, $srcAddr);

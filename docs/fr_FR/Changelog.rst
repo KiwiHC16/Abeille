@@ -3,6 +3,8 @@ ChangeLog
 
 - SonOff ZbminiL2: Modèle revu.
 - Profalux 2nd gen: Mise-à-jour mineure du modèle.
+- Syntaxe modèle d'équipement: Ajout section 'variables'.
+- Interne: Parser: Améliorations mineures.
 
 240308-BETA-1
 -------------

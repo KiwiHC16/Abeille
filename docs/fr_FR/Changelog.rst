@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - SonOff ZbminiL2: Modèle revu.
+- Profalux 2nd gen: Mise-à-jour mineure du modèle.
 
 240308-BETA-1
 -------------

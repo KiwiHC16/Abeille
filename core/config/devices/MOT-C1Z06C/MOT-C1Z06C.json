@@ -14,13 +14,14 @@
             "MOT-C1Z20F": [],
             "MOT-C1Z30F": []
         },
+        "comment": "Shutter vs BSO can be identified thru cluster 0xfc21 attrib 0x0000 (uint8)",
+        "comment2": "0=rolling shutters (volet), 1=rolling shutters with tilt (BSO), 2=shade (store)",
         "timeout": "60",
         "category": {
             "opening": "1"
         },
         "configuration": {
             "mainEP": "01",
-            "paramType": "paramABC",
             "icon": "Profalux-Shutter"
         },
         "commands": {
@@ -48,15 +49,15 @@
                 "value": "Level",
                 "isVisible": 1
             },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "Level": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",
                 "template": "shutter",
                 "isVisible": 1
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

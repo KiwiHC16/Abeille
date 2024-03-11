@@ -840,7 +840,7 @@
             "name" => "Legrand private ?",
         ),
         "FC02" => array(
-            "name" => "Private", // Used by multi_Samjin
+            "name" => "Private", // Used by multi_Samjin. Used by Profalux MOT-C1Z10C
         ),
         "FC20" => array(
             "name" => "Profalux private ?",

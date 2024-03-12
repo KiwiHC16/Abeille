@@ -114,6 +114,22 @@ function refreshEqInfos() {
                     .append($aRestoreModelAuto)
                     .insertAfter("#idModelChangeBtn");
             }
+            if (typeof eq.model.variables != "undefined") {
+                h = "";
+                for (const [vKey, vVal] of Object.entries(eq.model.variables)) {
+                    h += '<div class="form-group">';
+                    h +=
+                        '<label class="col-sm-3 control-label">' +
+                        vKey +
+                        "</label>";
+                    h += '<div class="col-sm-9">';
+                    h += '<input type="text" value="' + vVal + '"/>';
+                    h += "</div>";
+                    h += "</div>";
+                }
+                document.getElementById("idVariables").innerHTML = h;
+            }
+
             if (typeof eq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
                     eq.zigbee.manufCode;
@@ -164,13 +180,14 @@ function refreshEqInfos() {
             } else {
                 document.getElementById("telecommande").style.display = "none";
             }
-            if (eq.paramType == "telecommande7groups") {
-                document.getElementById("telecommande7groups").style.display =
-                    "block";
-            } else {
-                document.getElementById("telecommande7groups").style.display =
-                    "none";
-            }
+            // Tcharp38: No longer required. Using 'variables' section
+            // if (eq.paramType == "telecommande7groups") {
+            //     document.getElementById("telecommande7groups").style.display =
+            //         "block";
+            // } else {
+            //     document.getElementById("telecommande7groups").style.display =
+            //         "none";
+            // }
             if (eq.paramType == "paramABC") {
                 document.getElementById("paramABC").style.display = "block";
             } else {

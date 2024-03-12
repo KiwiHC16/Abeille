@@ -134,14 +134,15 @@
 
     /*
      * Read device model
-     * 'modelSig': Model signature (!= modelName if alternate signature)
-     * 'modelName': JSON file name without extension
-     * 'src': JSON file location (default=Abeille, or 'local')
-     * 'mode': 0/default=load commands too, 1=split cmd call & file
+     * - src: 'Abeille' or 'local'
+     * - modelPath: Relative path (modelName/modelName.json unless it is a variant)
+     * - modelName: JSON file name without extension
+     * - modelSig: Model signature (!= modelName if alternate signature)
+     * - mode: 0/default=load commands too, 1=split cmd call & file
      * Return: device associative array WITHOUT top level key (modelSig) or false if error.
      */
     function getDeviceModel($src, $modelPath, $modelName, $modelSig='', $mode=0) {
-        log::add('Abeille', 'debug', "  getDeviceModel(${src}, ${modelPath}, ${modelName}, ${modelSig}, ${mode})");
+        log::add('Abeille', 'debug', "  getDeviceModel(${src}, '${modelPath}', ${modelName}, ${modelSig}, mode=${mode})");
 
         // $dbg = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         // log::add('Abeille', 'debug', "BACKTRACE: ".json_encode($dbg, JSON_UNESCAPED_SLASHES));
@@ -213,6 +214,21 @@
         removeModelComments($device);
         if (isset($device['private']))
             removeModelComments($device['private']);
+
+        // Variables section
+        // "variables": {
+        //     "groupEP1": "1001",
+        //     "groupEP3": "3003",
+        //     "groupEP4": "4004"
+        // }
+        if (isset($device['variables'])) { // Convert keys to upper case
+            $variables = [];
+            foreach($device['variables'] as $vKey => $vVal) {
+                $vKey = strtoupper($vKey);
+                $variables[$vKey] = $vVal;
+            }
+            $device['variables'] = $variables;
+        }
 
         if (isset($device['commands'])) {
             if ($mode == 0) {
@@ -331,20 +347,49 @@
                     if (isset($cmd2['Polling']))
                         $newCmd[$cmd1]['configuration']['Polling'] = $cmd2['Polling'];
 
-                    // All overloads done. Let's check if any remaining variable
+                    // All overloads done. Let's check if any remaining variables
                     // #EP# => replaced by ['configuration']['mainEP']
-                    $newCmdTxt = json_encode($newCmd);
-                    $mainEP = $device['configuration']['mainEP'];
-                    $newCmdTxt = str_ireplace('#EP#', $mainEP, $newCmdTxt);
-                    // Temp '#GROUPEPx#' support
-                    for ($g = 1; $g <= 8; $g++) {
-                        if (isset($device['configuration']["groupEP".$g])) {
-                            // Case insensitive #xxx# replacement
-                            $gVal = $device['configuration']["groupEP".$g];
-                            $newCmdTxt = str_ireplace('#GROUPEP'.$g.'#', $gVal, $newCmdTxt);
-                        }
-                    }
-                    $newCmd = json_decode($newCmdTxt, true);
+                    // $newCmdTxt = json_encode($newCmd);
+                    // $mainEP = $device['configuration']['mainEP'];
+                    // $newCmdTxt = str_ireplace('#EP#', $mainEP, $newCmdTxt);
+                    // // Temp '#GROUPEPx#' support
+                    // for ($g = 1; $g <= 8; $g++) {
+                    //     if (isset($device['configuration']["groupEP".$g])) {
+                    //         // Case insensitive #xxx# replacement
+                    //         $gVal = $device['configuration']["groupEP".$g];
+                    //         $newCmdTxt = str_ireplace('#GROUPEP'.$g.'#', $gVal, $newCmdTxt);
+                    //     }
+                    // }
+                    // $newCmd = json_decode($newCmdTxt, true);
+
+                    // Finally variables are NOT replaced on model load but on execution. This allows user to change them thru advanced tab.
+                    // $newCmdTxt = json_encode($newCmd);
+                    // $offset = 0;
+                    // while (true) {
+                    //     $start = strpos($newCmdTxt, "#", $offset); // Start
+                    //     if ($start === false)
+                    //         break;
+                    //     $len = strpos(substr($newCmdTxt, $start + 1), "#"); // Length
+                    //     if ($len === false) {
+                    //         log::add('Abeille', 'error', "getDeviceModel(): No closing dash (#) for cmd '${cmdJName}'");
+                    //         break;
+                    //     }
+                    //     $len += 2;
+                    //     // echo "S=".$start.", L=".$len."\n";
+                    //     $var = substr($newCmdTxt, $start, $len);
+                    //     $varUp = strtoupper($var);
+
+                    //     if ($var == "#EP#") {
+                    //         $mainEP = $device['configuration']['mainEP'];
+                    //         $newCmdTxt = str_ireplace('#EP#', $mainEP, $newCmdTxt);
+                    //     } else if (isset($device['variables']) && isset($device['variables'][$varUp])) {
+                    //         $newCmdTxt = str_ireplace($var, $device['variables'][$varUp], $newCmdTxt);
+                    //     }
+                    //     // Note: Some vars are replaced just before command is executed
+
+                    //     $offset = $start + $len;
+                    // }
+                    // $newCmd = json_decode($newCmdTxt, true);
 
                     // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                     $deviceCmds += $newCmd;

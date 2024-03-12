@@ -3,8 +3,11 @@ ChangeLog
 
 - SonOff ZbminiL2: Modèle revu.
 - Profalux 2nd gen: Mise-à-jour mineure du modèle.
-- Syntaxe modèle d'équipement: Ajout section 'variables'.
+- Syntaxe modèle d'équipement: Ajout section 'variables' pour support '#groupEPx#'.
 - Interne: Parser: Améliorations mineures.
+- Interne: 'check_json': Améliorations.
+- Interne: eqLogic/configuration: groupEPx => eqModel['variables'].
+- Page EQ/avancé: Affichage des variables. Suppression cas 'telecommande7groups'.
 
 240308-BETA-1
 -------------

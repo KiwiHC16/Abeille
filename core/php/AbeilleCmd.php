@@ -56,7 +56,8 @@
     // Reread Jeedom useful infos on eqLogic DB update
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {
-        logMessage('debug', "  #2675: updateDeviceFromDB(${eqId})");
+        logMessage('debug', "  updateDeviceFromDB(${eqId})");
+
         $eqLogic = eqLogic::byId($eqId);
         if (!is_object($eqLogic)) {
             logMessage('debug', "  ERROR: updateDeviceFromDB(): Equipment ID ${eqId} does not exist");
@@ -134,6 +135,8 @@
                 $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
             }
         }
+        if (isset($eqModel['variables']))
+            $eq['variables'] = $eqModel['variables'];
 
         $GLOBALS['devices'][$net][$addr] = $eq;
     }
@@ -194,7 +197,7 @@
     // Returns: true=ok, false=error
     // WORK ONGOING: Not used yet. Currently same function in AbeilleParser.class.php.
     function configureDevice($net, $addr) {
-        cmdLog('debug', "  configureDevice(".$net.", ".$addr.")");
+        cmdLog('debug', "  configureDevice(${net}, ${addr})");
 
         if (!isset($GLOBALS['devices'][$net][$addr])) {
             cmdLog('debug', "  configureDevice() ERROR: Unknown device");
@@ -202,6 +205,8 @@
         }
 
         $eq = $GLOBALS['devices'][$net][$addr];
+        cmdLog('debug', "    eq=".json_encode($eq, JSON_UNESCAPED_SLASHES));
+
         if (!isset($eq['commands'])) {
             cmdLog('debug', "    No cmds in JSON model.");
             return true;
@@ -221,18 +226,49 @@
                 $delay = $c['execAtCreationDelay'];
             else
                 $delay = 0;
-            cmdLog('debug', "    exec cmd '".$cmdJName."' with delay ".$delay);
+            cmdLog('debug', "    Exec cmd '".$cmdJName."' with delay ".$delay);
             $topic = $c['topic'];
             $request = $c['request'];
-            // TODO: #EP# defaulted to first EP but should be
-            //       defined in cmd use if different target EP
-            // $request = str_ireplace('#EP#', $eq['epFirst'], $request);
+
             $request = str_ireplace('#addrIEEE#', $eq['ieee'], $request);
             $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
             $request = str_ireplace('#EP#', $eq['mainEp'], $request);
             $zgId = substr($net, 7); // 'AbeilleX' => 'X'
             $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigates'][$zgId]['ieee'], $request);
-            cmdLog('debug', '      topic='.$topic.", request='".$request."'");
+
+            // Final replacement of remaining variables (#var#) in 'request'
+            // Use case: Variables 'groupEPx'
+            if (isset($eq['variables'])) {
+                $offset = 0;
+                while(true) {
+                    $varStart = strpos($request, "#", $offset); // Start
+                    if ($varStart === false)
+                        break;
+
+                    if ($offset == 0)
+                        cmdLog('debug', "      Final variables replacement with 'variables' section.");
+
+                    $varEnd = strpos($request, "#", $varStart + 1); // End
+                    if ($varEnd === false) {
+                        // log::add('Abeille', 'error', "getDeviceModel(): No closing dash (#) for cmd '${cmdJName}'");
+                        cmdLog('error', "      No closing dash (#)");
+                        break;
+                    }
+                    $varLen = $varEnd - $varStart + 1;
+                    $var = substr($request, $varStart, $varLen); // $var='#xxx#'
+                    $varUp = strtoupper(substr($var, 1, -1)); // '#var#' => 'VAR' (no #)
+                    cmdLog('debug', "      Start=${varStart}, End=${varEnd} => Size=${varLen}, var=${var}, varUp=${varUp}");
+                    if (isset($eq['variables'][$varUp])) {
+                        $varNew = $eq['variables'][$varUp];
+                        cmdLog('debug', "      Replacing '${var}' by '${varNew}");
+                        $request = str_ireplace($var, $varNew, $request);
+                        $offset = $varStart + strlen($varNew);
+                    } else
+                        $offset = $varStart + $varLen;
+                }
+            }
+
+            cmdLog('debug', '    topic='.$topic.", request='".$request."'");
             if ($delay == 0)
                 $topic = "Cmd".$net."/".$addr."/".$topic;
             else {
@@ -366,6 +402,7 @@
                 $GLOBALS['devices'][$net] = [];
 
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            // cmdLog('debug', "    eqModel for '$eqLogicId'=".json_encode($eqModel, JSON_UNESCAPED_SLASHES));
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
 
             $eq = array(
@@ -375,6 +412,7 @@
                 'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
                 // 'modelPath' => isset($eqModel['modelPath']) ? $eqModel['modelPath'] : "<modName>/<modName>.json",
                 'rxOnWhenIdle' => (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1)) ? true : false
+                // 'variables' // Optional
             );
             if ($eq['jsonId'] != '') {
                 if (isset($eqModel['modelPath']))
@@ -389,7 +427,12 @@
                     $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
                 }
             }
+            if (isset($eqModel['variables'])) {
+                $eq['variables'] = $eqModel['variables'];
+                // cmdLog('debug', "    EQ with variables=".json_encode($eq, JSON_UNESCAPED_SLASHES));
+            }
 
+            cmdLog('debug', "    eq=".json_encode($eq, JSON_UNESCAPED_SLASHES));
             $GLOBALS['devices'][$net][$addr] = $eq;
         }
     }

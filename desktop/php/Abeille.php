@@ -41,6 +41,9 @@
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
         $eq['jsonId'] = $eqModel ? $eqModel['modelName'] : '';
         $eq['name'] = $eqLogic->getName();
+        if (isset($eqModel['variables']))
+            $eq['variables'] = $eqModel['variables'];
+
         if ($eqAddr == "0000") {
             if (isset($eqPerZigate[$zgId][$eqId]))
                 array_unshift($eqPerZigate[$zgId][$eqId], $eq);

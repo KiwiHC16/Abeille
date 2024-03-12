@@ -879,13 +879,14 @@
          * - eqLogic DB: 'ab::eqModel', sig/id/location renamed to modelSig/modelName/modelSource
          * - eqLogic DB: 'ab::eqModel', 'forcedByUser' => 'modelForced'
          * - eqLogic DB: 'ab::xiaomi' replaced by 'ab::eqModel['private']' + type=xiaomi
+         * - eqLogic DB: 'groupEPx' => 'ab::eqModel['variables']'
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
          * - Cmds DB: 'onGroupBroadcast'/'offGroupBroadcast' replaced by 'cmd-0006'
          * - Cmds DB: 'ab::trigOut' syntax updated to associative array
          */
-        if (intval($dbVersion) < 20240107) {
+        if (intval($dbVersion) < 20240312) {
             // 'eqLogic' + 'cmd' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -970,6 +971,26 @@
                     log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::signature' content moved in 'ab::zigbee'");
                     $saveEqZigbee = true;
                 }
+                // eqLogic DB: 'groupEPx' => 'ab::eqModel['variables']'
+                for ($g = 1; $g <= 8; $g++) {
+                    $tmp = $eqLogic->getConfiguration("groupEP${g}", 'nada');
+                    if ($tmp == '') { // 'groupEPx' defined to ''
+                        $eqLogic->setConfiguration("groupEP${g}", null);
+                        $saveEq = true;
+                        log::add('Abeille', 'debug', '  '.$eqHName.": 'groupEP${g}' removed (empty)");
+                    } else if ($tmp != 'nada') {
+                        if (!isset($eqModel['variables']))
+                            $eqModel['variables'] = [];
+                        $eqModel['variables']["groupEP${g}"] = $tmp;
+                        $saveEqModel = true;
+                        $eqLogic->setConfiguration("groupEP${g}", null);
+                        $saveEq = true;
+                        log::add('Abeille', 'debug', '  '.$eqHName.": 'groupEP${g}' moved to 'ab::eqModel[variables]'");
+                    }
+                }
+                // for ($g = 1; $g <= 8; $g++) { // Removing GroupeEPx keys
+                //     $tmp = $eqLogic->getConfiguration("GroupeEP${g}", 'nada');
+                // }
 
                 if ($saveEqZigbee) {
                     $eqLogic->setConfiguration('ab::zigbee', $zigbee);
@@ -1101,7 +1122,7 @@
             }
             removeLogs($obsolete);
 
-            // config::save('ab::dbVersion', '20230927', 'Abeille');
+            // config::save('ab::dbVersion', '20240312', 'Abeille');
         }
     }
 

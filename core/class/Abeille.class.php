@@ -919,7 +919,7 @@ class Abeille extends eqLogic {
                 $return['state'] = 'ok';
             }
         }
-        log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return));
+        log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return, JSON_UNESCAPED_SLASHES));
         return $return;
     }
 
@@ -1029,6 +1029,7 @@ class Abeille extends eqLogic {
 
             // Blocking queue read
             $msgMax = $queueXToAbeilleMax;
+            log::add('Abeille', 'debug', 'deamon(): Infinite listening to queueXToAbeille');
             while (true) {
                 if (msg_receive($queueXToAbeille, 0, $msgType, $msgMax, $msgJson, false, 0, $errCode)) {
                     $msg = json_decode($msgJson, true);
@@ -1042,6 +1043,8 @@ class Abeille extends eqLogic {
                         log::add('Abeille', 'error', "Message (xToAbeille) trop grand ignoré: ".$msgJson);
                     } else if ($errCode != 42)
                         log::add('Abeille', 'error', 'deamon(): msg_receive(xToAbeille) erreur '.$errCode.', msg='.$msgJson);
+                        else
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive(xToAbeille) erreur '.$errCode.', msg='.$msgJson);
                 }
             }
         } catch (Exception $e) {
@@ -2880,8 +2883,10 @@ class Abeille extends eqLogic {
         if (($modelSource != '') && ($modelPath != '')) {
             // $model = AbeilleTools::getDeviceModel($modelSig, $modelName, $modelSource);
             $model = getDeviceModel($modelSource, $modelPath, $modelName, $modelSig);
-            if ($model === false)
+            if ($model === false) {
+                log::add('Abeille', 'debug', '  ERRRRRRRRR');
                 return;
+            }
 
             log::add('Abeille', 'debug', '  Model='.json_encode($model, JSON_UNESCAPED_SLASHES));
             $eqType = $model['type'];
@@ -3038,18 +3043,20 @@ class Abeille extends eqLogic {
 
         if (isset($modelConf['paramType']))
             $eqLogic->setConfiguration('paramType', $modelConf['paramType']);
+
         if (isset($modelConf['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
             $eqLogic->setConfiguration('Groupe', $modelConf['Groupe']);
         }
 
+        // #GROUPEPx# variables now stored as generic vars in 'variables' section and replacement already done by getDeviceModel()
         // Temporary support for 'groupEPx' (to replace #GROUPEPx#)
         // Constant used to define remote control group per EP
-        for ($g = 1; $g <= 8; $g++) {
-            if (isset($modelConf['groupEP'.$g]))
-                $eqLogic->setConfiguration('groupEP'.$g, $modelConf['groupEP'.$g]);
-            else
-                $eqLogic->setConfiguration('groupEP'.$g, null);
-        }
+        // for ($g = 1; $g <= 8; $g++) {
+        //     if (isset($modelConf['groupEP'.$g]))
+        //         $eqLogic->setConfiguration('groupEP'.$g, $modelConf['groupEP'.$g]);
+        //     else
+        //         $eqLogic->setConfiguration('groupEP'.$g, null);
+        // }
 
         if (isset($modelConf['onTime'])) { // Tcharp38: What for ?
             $eqLogic->setConfiguration('onTime', $modelConf['onTime']);
@@ -3111,6 +3118,7 @@ class Abeille extends eqLogic {
             'model' => isset($model['model']) ? $model['model'] : '',
             'type' => $model['type'],
             // 'lastUpdate' => time(), // Store last update from model. // Tcharp38: created for Abeille but not used
+            // 'variables' // Optional
         );
         if ($modelPath != "${modelName}/${modelName}.json")
             $eqModelInfos['modelPath'] = $modelPath;
@@ -3118,6 +3126,8 @@ class Abeille extends eqLogic {
             $eqModelInfos['private'] = $model['private'];
         else if (isset($model['fromDevice'])) // OBSOLETE soon => replaced by 'private'
             $eqModelInfos['fromDevice'] = $model['fromDevice'];
+        if (isset($model['variables'])) // Optional variables
+            $eqModelInfos['variables'] = $model['variables'];
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
         // generic_type

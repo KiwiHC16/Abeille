@@ -15,12 +15,16 @@ Pendant la phase d'inclusion, Abeille va tenter d'identifier le modèle correspo
 
 Ce répertoire doit suivre la structure
     <identificateur>/<identificateur>.json
+    <identificateur>/<identificateur>-<variant1>.json
+    ...
+    <identificateur>/<identificateur>-<variantX>.json
 
     ATTENTION !! Voir 'identificateur' plus bas dans le format du fichier.
 
 Notes
-- Plusieurs signatures Zigbee peuvent utiliser le même modèle (cas d'un équipement vendu sous differentes marques)
-- Pour de très rares cas, d'autres modèles (à forcer à la main apres appairage) peuvent être utilisés.
+- Plusieurs signatures Zigbee peuvent utiliser le même modèle (cas d'un équipement vendu sous differentes marques).
+  Dans ce cas les signatures "alternatives" seront décrites via "alternateIds".
+- Pour de très rares cas, d'autres modèles (à forcer à la main apres appairage) peuvent être utilisés (modèle avec variante).
   Par ex l'équipement a toujours la meme signature mais une incompatibilité dans l'evolution de son firmware rendre
   le modèle par défaut inutilisable (ex: Cas sonde TSH317 Owon: EP=03 pour les anciens, 01 pour les nouveaux).
 
@@ -52,6 +56,9 @@ Exemple: BASICZBR3.json
         "icon": "Sonoff-BASICZBR3",
         "mainEP": "01"
       },
+      "variables": {
+        "comment": "Section optionnelle permettant de déclarer des variables par défaut"
+      },
       "commands": {
         "On": { "use": "On", "isVisible": 1 },
         "Off": { "use": "Off", "isVisible": 1 },
@@ -59,7 +66,7 @@ Exemple: BASICZBR3.json
         "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" }
       },
       "private": {
-        "comment": "Optional section but required for private clusters"
+        "comment": "Section optionnelle pour la gestion des clusters privés"
       }
     }
   }

@@ -953,11 +953,11 @@
 
             $expected[] = 'Parser';
             $expected[] = 'Cmd';
-            log::add('Abeille', 'debug', '  expected='.json_encode($expected));
+            log::add('Abeille', 'debug', '  expected='.json_encode($expected, JSON_UNESCAPED_SLASHES));
 
             // Running daemons
             $running = AbeilleTools::getRunningDaemons2();
-            log::add('Abeille', 'debug', '  running='.json_encode($running));
+            log::add('Abeille', 'debug', '  running='.json_encode($running, JSON_UNESCAPED_SLASHES));
 
             // Restart missing ones
             $restart = '';

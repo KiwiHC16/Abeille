@@ -16,7 +16,7 @@
     $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
     $infSubTypes = ['numeric', 'binary', 'string'];
 
-    $devicesList = [];
+    $devModList = [];
     $commandsList = [];
     $allCommandsList = []; // All available commands
     $missingCmds = 0;
@@ -78,75 +78,76 @@
     }
 
     // Check device model
-    function checkDeviceModel($devName, $dev) {
+    function checkDeviceModel($devModName, $dev) {
         global $missingCmds;
         global $commandsList;
         global $eqGenTypes;
 
-        if (!isset($dev[$devName])) {
-            newDevError($devName, "ERROR", "Corruped JSON. Expecting '".$devName."' top key");
+        if (!isset($dev[$devModName])) {
+            newDevError($devModName, "ERROR", "Corruped JSON. Expecting '".$devModName."' top key");
             step('E');
             return;
         }
         // echo "dev=".json_encode($dev)."\n";
 
         $error = false;
+        $devModel = $dev[$devModName]; // Removing top key
 
         // Checking 'type'
-        if (!isset($dev[$devName]['type'])) {
-            $error = newDevError($devName, "ERROR", "No equipment 'type' defined");
+        if (!isset($dev[$devModName]['type'])) {
+            $error = newDevError($devModName, "ERROR", "No equipment 'type' defined");
         }
 
         // Checking 'genericType'
-        if (isset($dev[$devName]['genericType'])) {
-            $genType = $dev[$devName]['genericType'];
+        if (isset($dev[$devModName]['genericType'])) {
+            $genType = $dev[$devModName]['genericType'];
             if (!in_array($genType, $eqGenTypes))
-                $error = newDevError($devName, "ERROR", "Invalid 'genericType' defined: ".$genType);
+                $error = newDevError($devModName, "ERROR", "Invalid 'genericType' defined: ".$genType);
         } /* else
-            $error = newDevError($devName, "WARNING", "No equipment genericType' defined"); */
+            $error = newDevError($devModName, "WARNING", "No equipment genericType' defined"); */
 
         // Checking 'category'
-        if (!isset($dev[$devName]['category'])) {
-            $error = newDevError($devName, "ERROR", "No 'category' defined");
+        if (!isset($dev[$devModName]['category'])) {
+            $error = newDevError($devModName, "ERROR", "No 'category' defined");
         } else {
-            $allCats = $dev[$devName]['category'];
+            $allCats = $dev[$devModName]['category'];
             // $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
             global $eqCategories;
             foreach($allCats as $cat => $catEn) {
                 if (in_array($cat, $eqCategories))
                     continue;
-                $error = newDevError($devName, "ERROR", "Unexpected '".$cat."' category.");
+                $error = newDevError($devModName, "ERROR", "Unexpected '".$cat."' category.");
             }
         }
 
         // Checking 'configuration'
-        if (!isset($dev[$devName]['configuration'])) {
-            $error = newDevError($devName, "WARNING", "No configuration defined");
+        if (!isset($dev[$devModName]['configuration'])) {
+            $error = newDevError($devModName, "WARNING", "No configuration defined");
         } else {
-            $config = $dev[$devName]['configuration'];
+            $config = $dev[$devModName]['configuration'];
 
             /* Checking icon */
             $icon = "";
             if (!isset($config['icon'])) {
                 if (isset($config['icone'])) {
-                    $error = newDevError($devName, "ERROR", "'icone' is obsolete. Use 'icon' instead.");
+                    $error = newDevError($devModName, "ERROR", "'icone' is obsolete. Use 'icon' instead.");
                     $icon = $config['icone'];
                 }
             } else
                 $icon = $config['icon'];
             if ($icon == "")
-                $error = newDevError($devName, "ERROR", "No 'icon' defined.");
+                $error = newDevError($devModName, "ERROR", "No 'icon' defined.");
             else {
                 $icon = "images/node_".$icon.".png";
                 if (!file_exists($icon)) {
-                    $error = newDevError($devName, "ERROR", "Missing icon '".$icon."' file.");
+                    $error = newDevError($devModName, "ERROR", "Missing icon '".$icon."' file.");
                 }
             }
 
             if (!isset($config['mainEP']))
-                $error = newDevError($devName, "ERROR", "Missing 'configuration:mainEP'");
+                $error = newDevError($devModName, "ERROR", "Missing 'configuration:mainEP'");
             else if (!ctype_xdigit($config['mainEP']))
-                $error = newDevError($devName, "ERROR", "'configuration:mainEP' should be hexa string. #EP# not allowed.");
+                $error = newDevError($devModName, "ERROR", "'configuration:mainEP' should be hexa string. #EP# not allowed.");
 
             /* Checking 'configuration' fields validity */
             $supportedKeys = ['icon', 'mainEP', 'trig', 'trigOffset', 'batteryType', 'poll', 'lastCommunicationTimeOut', 'paramType'];
@@ -154,31 +155,47 @@
                 if (substr($fieldName, 0, 7) == "groupEP")
                     continue; // Allowed
                 if (!in_array($fieldName, $supportedKeys))
-                    $error = newDevError($devName, "ERROR", "Invalid '".$fieldName."' configuration field");
+                    $error = newDevError($devModName, "ERROR", "Invalid '".$fieldName."' configuration field");
             }
+        }
+
+        // Variables section
+        // "variables": {
+        //     "groupEP1": "1001",
+        //     "groupEP3": "3003",
+        //     "groupEP4": "4004"
+        // }
+        if (isset($devModel['variables'])) { // Convert keys to upper case
+            $variables = [];
+            foreach($devModel['variables'] as $vKey => $vVal) {
+                $vKey = strtoupper($vKey);
+                $variables[$vKey] = $vVal;
+            }
+            $devModel['variables'] = $variables;
         }
 
         // Checking 'commands'
         $unusedCmds = &$GLOBALS['unusedCmds'];
-        if (!isset($dev[$devName]['commands'])) {
-            $error = newDevError($devName, "WARNING", "No commands defined");
+        $logicIds = [];
+        if (!isset($dev[$devModName]['commands'])) {
+            $error = newDevError($devModName, "WARNING", "No commands defined");
         } else {
-            $commands = $dev[$devName]['commands'];
+            $commands = $dev[$devModName]['commands'];
             // echo "commands=".json_encode($commands)."\n";
             $logicIds = [];
             foreach ($commands as $cmdJName => $cmd) {
-                // New syntax: "<cmdJName>": { "use": "<fileName>" }
-                $cmdModel = $cmd['use'];
-                $path = commandsDir."/".$cmdModel.".json";
-                if (!file_exists($path)) {
-                    $error = newDevError($devName, "ERROR", "Unknown command JSON ".$cmdModel.".json");
+                // New syntax: "<cmdJName>": { "use": "<fileName>", "params": "X=1&Y=2" }
+                $cmdModName = $cmd['use'];
+                $cmdModPath = commandsDir."/".$cmdModName.".json";
+                if (!file_exists($cmdModPath)) {
+                    $error = newDevError($devModName, "ERROR", "Unknown command JSON ".$cmdModName.".json");
                     $missingCmds++;
                 }
 
                 /* Updating list of unused commands models */
-                $i = array_search($cmdModel, $unusedCmds, true);
+                $i = array_search($cmdModName, $unusedCmds, true);
                 if ($i !== false)
-                    unset($unusedCmds[$i]); // $cmdModel is used
+                    unset($unusedCmds[$i]); // $cmdModName is used
 
                 // Check command keys
                 $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
@@ -191,13 +208,13 @@
                         // if ($key2 == 'subType') {
                         //     // TODO: How to know cmd type ?
                         //     if (!cmdSubTypeIsOk($type, $value2))
-                        //         $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key value for '".$key."' Jeedom command");
+                        //         $error = newDevError($devModName, "ERROR", "Invalid '".$key2."' cmd key value for '".$key."' Jeedom command");
                         // }
                         continue;
                     }
                     if (substr($key2, 0, 7) == "comment")
                         continue;
-                    $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$cmdJName."' Jeedom command");
+                    $error = newDevError($devModName, "ERROR", "Invalid '".$key2."' cmd key for '".$cmdJName."' Jeedom command");
                 }
 
                 // act_zbConfigureReporting2 ... checking attribute type vs attribute
@@ -220,10 +237,20 @@
                     if ($attr !== false) {
                         $correctAttrType = sprintf("%02X", $attr['dataType']);
                         if ($attrType != $correctAttrType) {
-                            $error = newDevError($devName, "ERROR", "Cmd '${cmdJName}': Invalid attribute type '${attrType}' for clust ${clustId} attr ${attrId}");
+                            $error = newDevError($devModName, "ERROR", "Cmd '${cmdJName}': Invalid attribute type '${attrType}' for clust ${clustId} attr ${attrId}");
                         }
                     }
                 }
+
+                // Now loading cmd model
+                $cmdModJson = file_get_contents($cmdModPath);
+                $cmdMod = json_decode($cmdModJson, true);
+                if (json_last_error() != JSON_ERROR_NONE) {
+                    newCmdError($cmdModName, 'ERROR', 'Corrupted JSON file');
+                    continue;
+                }
+                $cmdMod = $cmdMod[$cmdModName]; // Removing top key
+                checkCmd($devModName, $devModel, $cmdJName, $logicIds, $cmd, $cmdMod);
             }
 
             if ($error)
@@ -234,30 +261,30 @@
 
         /* OBSOLETE SOON: Tuya specific checks */
         // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
-        if (isset($dev[$devName]['tuyaEF00'])) {
-            foreach ($dev[$devName]['tuyaEF00'] as $key => $value) {
+        if (isset($dev[$devModName]['tuyaEF00'])) {
+            foreach ($dev[$devModName]['tuyaEF00'] as $key => $value) {
                 if ($key == 'fromDevice') {
-                    foreach ($dev[$devName]['tuyaEF00']['fromDevice'] as $key2 => $value2) {
+                    foreach ($dev[$devModName]['tuyaEF00']['fromDevice'] as $key2 => $value2) {
                         if (!isset($value2['function'])) {
-                            $error = newDevError($devName, "ERROR", "Missing 'function' for tuyaEF00/fromDevice");
+                            $error = newDevError($devModName, "ERROR", "Missing 'function' for tuyaEF00/fromDevice");
                             continue;
                         }
                         $func = $value2['function'];
                         $supportedFunc = ['rcvValue', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
                         if (!in_array($func, $supportedFunc)) {
-                            $error = newDevError($devName, "ERROR", "Invalid function '".$func."' for tuyaEF00/fromDevice");
+                            $error = newDevError($devModName, "ERROR", "Invalid function '".$func."' for tuyaEF00/fromDevice");
                             continue;
                         }
                         if ($func == 'rcvValueDiv') {
                             if (!isset($value2['div'])) {
-                                $error = newDevError($devName, "ERROR", "Missing 'div' for DP '".$key2."' in tuyaEF00/fromDevice");
+                                $error = newDevError($devModName, "ERROR", "Missing 'div' for DP '".$key2."' in tuyaEF00/fromDevice");
                                 continue;
                             }
                         }
                     }
                     continue;
                 }
-                newDevError($devName, "ERROR", "Invalid Tuya key '".$key."'");
+                newDevError($devModName, "ERROR", "Invalid Tuya key '".$key."'");
             }
         }
 
@@ -299,11 +326,11 @@
                 }
             }
         } */
-        if (isset($dev[$devName]['private'])) {
-            $private = $dev[$devName]['private'];
+        if (isset($dev[$devModName]['private'])) {
+            $private = $dev[$devModName]['private'];
             foreach ($private as $pKey => $pVal) {
                 if (!isset($pVal['type'])) {
-                    newDevError($devName, "ERROR", "Private support: Missing 'type'");
+                    newDevError($devModName, "ERROR", "Private support: Missing 'type'");
                     continue;
                 }
 
@@ -311,7 +338,7 @@
                 $pType = $pVal['type'];
                 if ($pType == "xiaomi") {
                     if ($pKeyLen != 9) { // Expecting CLUSTID-ATTRID
-                        newDevError($devName, "ERROR", "Xiaomi private support: Invalid key '${pKey}'");
+                        newDevError($devModName, "ERROR", "Xiaomi private support: Invalid key '${pKey}'");
                         continue;
                     }
 
@@ -327,36 +354,36 @@
                                 continue;
                             if ($tt == "type") {
                                 if ($tt2 != "xiaomi")
-                                    newDevError($devName, "ERROR", "Xiaomi private support: 'type' should be 'xiaomi' for '".$tt."'");
+                                    newDevError($devModName, "ERROR", "Xiaomi private support: 'type' should be 'xiaomi' for '".$tt."'");
                                 continue;
                             }
                             $ttLen = strlen($tt);
                             if ($ttLen != 5) { // Expecting 'tag-type' (TA-TY)
-                                newDevError($devName, "ERROR", "Xiaomi private support: Unexpected entry '".$tt."'");
+                                newDevError($devModName, "ERROR", "Xiaomi private support: Unexpected entry '".$tt."'");
                                 continue;
                             }
                             $func = $tt2['func'];
                             if (($func == 'numberDiv') && !isset($tt2['div']))
-                                newDevError($devName, "ERROR", "Xiaomi private support: Missing 'div' for '".$tt."'");
+                                newDevError($devModName, "ERROR", "Xiaomi private support: Missing 'div' for '".$tt."'");
                             else if (($func == 'numberMult') && !isset($tt2['mult']))
-                                newDevError($devName, "ERROR", "Xiaomi private support: Missing 'mult' for '".$tt."'");
+                                newDevError($devModName, "ERROR", "Xiaomi private support: Missing 'mult' for '".$tt."'");
                         }
                     }
                 }
             }
         }
 
-        /* Checking top level supported keywords */
-        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization', 'xiaomi'];
-        array_push($supportedKeys, 'genericType', 'fromDevice', 'private');
-        foreach ($dev[$devName] as $key => $value) {
-            if (in_array($key, $supportedKeys))
+        /* Checking device model top level keys */
+        $validDevKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization', 'xiaomi'];
+        array_push($validDevKeys, 'genericType', 'fromDevice', 'private', 'variables');
+        foreach ($dev[$devModName] as $key => $value) {
+            if (in_array($key, $validDevKeys))
                 continue;
             if (substr($key, 0, 7) == "comment")
                 continue;
-            newDevError($devName, "ERROR", "Invalid device top key '".$key."'");
+            newDevError($devModName, "ERROR", "Invalid device top key '".$key."'");
         }
-    }
+    } // End checkDeviceModel()
 
     // Check command model
     function checkCommandModel($cmdName, $cmd) {
@@ -433,8 +460,8 @@
 
     function buildDevModelsList() {
         echo "Building devices models list ...\n";
-        global $devicesList;
-        $devicesList = [];
+        global $devModList;
+        $devModList = [];
         $dh = opendir(devicesDir);
         while (($dirEntry = readdir($dh)) !== false) {
              /* Ignoring some entries */
@@ -451,7 +478,7 @@
                 continue;
             }
 
-            $devicesList[$dirEntry] = $fullPath;
+            $devModList[$dirEntry] = $fullPath;
         }
     }
 
@@ -521,7 +548,7 @@
     }
 
     /* Check use of commands */
-    function checkDeviceCommands($devName, $fullPath) {
+    function checkDeviceCommands($devModName, $fullPath) {
         $jsonContent = file_get_contents($fullPath);
         if ($jsonContent === false) {
             step('E');
@@ -533,7 +560,8 @@
             return;
         }
 
-        $device = $device[$devName]; // Removing top key
+        $device = $device[$devModName]; // Removing top key
+
         if (!isset($device['commands'])) {
             step('.');
             return;
@@ -550,6 +578,8 @@
                     "params": "xxx"...
                 } */
             $cmdFName = $devCmd['use']; // File name without '.json'
+            echo "cmdFName=".json_encode($cmdFName)."\n";
+
             $newCmd = getCommandModel($cmdFName, $cmdJName);
             if ($newCmd === false)
                 continue; // Cmd does not exist.
@@ -557,7 +587,7 @@
 
             // Checking Jeedom cmd name
             if (strpos($cmdJName, "/") !== false) {
-                newDevError($devName, "ERROR", "Invalid Jeedom cmd name '".$cmdJName."' ('/' is fordidden)");
+                newDevError($devModName, "ERROR", "Invalid Jeedom cmd name '".$cmdJName."' ('/' is fordidden)");
                 $error = true;
             }
 
@@ -567,6 +597,7 @@
                 $newCmd['logicalId'] = $devCmd['logicalId'];
 
             $newCmdText = json_encode($newCmd);
+            echo "  BEFORE newCmdText=".json_encode($newCmdText)."\n";
             // echo "newCmdText=".$newCmdText."\n";
             if (isset($devCmd['params']) && (trim($devCmd['params']) != '')) {
                 // Overwritting default settings with 'params' content
@@ -578,6 +609,7 @@
                 }
                 $newCmd = json_decode($newCmdText, true);
             }
+            echo "  Posst params newCmdText=".json_encode($newCmdText)."\n";
 
             // Checking all remaining #var# cases
             //  #EP# => replaced at Jeedom EQ creation (pairing)
@@ -591,7 +623,7 @@
 
                 $len = strpos(substr($newCmdText, $start + 1), "#"); // Length
                 if ($len === false) {
-                    $error = newDevError($devName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
+                    $error = newDevError($devModName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
                     break;
                 }
                 $len += 2;
@@ -600,31 +632,32 @@
 
                 if ($var == "#EP#") {
                     if (!isset($device['configuration']['mainEP'])) {
-                        $error = newDevError($devName, "ERROR", "'#EP#' found but NO 'mainEP'");
+                        $error = newDevError($devModName, "ERROR", "'#EP#' found but NO 'mainEP'");
                     }
                 } else if ($var == "#select#") {
                     if (!isset($devCmd['listValue']) && !isset($newCmd['listValue'])) {
-                        $error = newDevError($devName, "ERROR", "Undefined 'listValue' for '#select#'");
+                        $error = newDevError($devModName, "ERROR", "Undefined 'listValue' for '#select#'");
                     }
                 } else {
                     $allowed = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#'];
                     // Tcharp38 note: don't know purpose of slider/title/message/color/onTime/GroupeEPx
                     if (!in_array($var, $allowed)) {
                         if (substr($var, 0, 9) != "#GroupeEP") {
-                            $error = newDevError($devName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
+                            $error = newDevError($devModName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
                         }
                     }
                 }
 
                 $newCmdText = substr($newCmdText, $start + $len);
             }
+            echo "newCmdText=".json_encode($newCmdText)."\n";
 
             // Checking uniqness of logicalId
             $logicId = isset($newCmd['logicalId']) ? $newCmd['logicalId']: '';
             if ($logicId == '')
-                $error = newDevError($devName, "ERROR", "Undefined logical ID for '".$cmdJName."' cmd (model ".$cmdFName.")");
+                $error = newDevError($devModName, "ERROR", "Undefined logical ID for '".$cmdJName."' cmd (model ".$cmdFName.")");
             else if (in_array($logicId, $logicIds))
-                $error = newDevError($devName, "ERROR", "Duplicated logical ID '".$logicId."' (cmd ".$cmdJName.")");
+                $error = newDevError($devModName, "ERROR", "Duplicated logical ID '".$logicId."' (cmd ".$cmdJName.")");
             else
                 $logicIds[] = $logicId;
         }
@@ -634,16 +667,135 @@
             step('.');
     }
 
-    /* TODO: If JSON name not given on cmd line, parsing all
+    /* Check given command
+       - devModName = Device model name (without '.json' ext)
+       - devModel = Device full model (without top key)
+       - cmdJName = Jeedom cmd name
+       - logicIds = Array of cmd logic IDs
+       - devCmd = Device model part of command
+       - cmd = Command model */
+    function checkCmd($devModName, $devModel, $cmdJName, &$logicIds, $devCmd, $cmd) {
+
+        // echo "checkCmd devCmd=".json_encode($devCmd)."\n";
+        // echo "  cmd=".json_encode($cmd)."\n";
+
+        // Checking Jeedom cmd name
+        if (strpos($cmdJName, "/") !== false) {
+            newDevError($devModName, "ERROR", "Invalid Jeedom cmd name '".$cmdJName."' ('/' is fordidden)");
+            $error = true;
+        }
+
+        $newCmd = $cmd;
+
+        // Removing any comments that may disturb analysis
+        foreach($newCmd as $newCmdK => $newCmdV) {
+            if (substr($newCmdK, 0, 7) == "comment")
+                unset($newCmd[$newCmdK]);
+        }
+        if (isset($newCmd['configuration'])) {
+            foreach($newCmd['configuration'] as $newCmdK => $newCmdV) {
+                if (substr($newCmdK, 0, 7) == "comment")
+                    unset($newCmd['configuration'][$newCmdK]);
+            }
+        }
+
+        // Overload from device model
+        // echo "devCmd=".json_encode($devCmd)."\n";
+        if (isset($devCmd['logicalId']))
+            $newCmd['logicalId'] = $devCmd['logicalId'];
+
+        $newCmdText = json_encode($newCmd, JSON_UNESCAPED_SLASHES);
+        // echo "  BEFORE newCmdText=".$newCmdText."\n";
+
+        // Overload from 'params'
+        if (isset($devCmd['params']) && (trim($devCmd['params']) != '')) {
+            // Overwritting default settings with 'params' content
+            $params = explode('&', $devCmd['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
+            foreach ($params as $p) {
+                list($pName, $pVal) = explode("=", $p);
+                // $pName = strtoupper($pName);
+                $newCmdText = str_ireplace('#'.$pName.'#', $pVal, $newCmdText);
+            }
+            $newCmd = json_decode($newCmdText, true);
+        }
+        // echo "  POST params newCmdText=".$newCmdText."\n";
+
+        // Checking all remaining #var# cases
+        //  #EP# => replaced at Jeedom EQ creation (pairing)
+        //  #select# => dynamic variable, replaced at run time
+        //  #title# + #message# => dynamic variables, replaced at run time
+        // echo "newCmdText=".$newCmdText."\n";
+        while (true) {
+            $start = strpos($newCmdText, "#"); // Start
+            if ($start === false)
+                break;
+
+            $len = strpos(substr($newCmdText, $start + 1), "#"); // Length
+            if ($len === false) {
+                $error = newDevError($devModName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
+                break;
+            }
+            $len += 2;
+            // echo "S=".$start.", L=".$len."\n";
+            $var = substr($newCmdText, $start, $len);
+            $varUp = strtoupper($var);
+            $varOk = false;
+            // echo "  Var to identify=".$var."\n"; // Ex: '#message#'
+
+            $validVars = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#select#']; // Jeedom variables
+            array_push($validVars, '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#');
+            if (in_array($var, $validVars)) {
+                $varOk = true;
+                if ($var == "#select#") {
+                    if (!isset($devCmd['listValue']) && !isset($newCmd['listValue']))
+                        $error = newDevError($devModName, "ERROR", "Undefined 'listValue' for '#select#'");
+                }
+            }
+            if (!$varOk && ($var == "#EP#")) {
+                $varOk = true;
+                if (!isset($devModel['configuration']['mainEP']))
+                    $error = newDevError($devModName, "ERROR", "'#EP#' found but NO 'mainEP'");
+            }
+            if (!$varOk && isset($devModel['variables'])) {
+                // echo "  variables=".json_encode($devModel['variables'])."\n";
+                // Removing leading & trailing '#'
+                $v2 = substr($varUp, 1, -1);
+                if (isset($devModel['variables'][$v2]))
+                    $varOk = true;
+            }
+            if (!$varOk) {
+                $error = newDevError($devModName, "ERROR", "Missing '${var}' variable data for cmd '${cmdJName}'");
+            }
+
+            $newCmdText = substr($newCmdText, $start + $len);
+            // echo "  POST var newCmdText=".$newCmdText."\n";
+        }
+
+        // Checking uniqness of logicalId
+        $logicId = isset($newCmd['logicalId']) ? $newCmd['logicalId']: '';
+        if ($logicId == '')
+            $error = newDevError($devModName, "ERROR", "Undefined logical ID for '".$cmdJName."' cmd (model ".$cmdFName.")");
+        else if (in_array($logicId, $logicIds))
+            $error = newDevError($devModName, "ERROR", "Duplicated logical ID '".$logicId."' (cmd ".$cmdJName.")");
+        else
+            $logicIds[] = $logicId;
+
+        if ($error)
+            step('E');
+        else
+            step('.');
+    }
+
+    /* If JSON name not given on cmd line, parsing all
        devices & commands */
     for ($i = 1; $i < $argc; $i++) {
         $modName = $argv[$i];
-        $fullPath = devicesDir.'/'.$modName;
-        if (!is_dir($fullPath)) {
-            echo "- ".$modName.": path access ERROR\n";
-            echo "  ".$fullPath."\n";
-            exit;
-        }
+        // $fullPath = devicesDir.'/'.$modName;
+        // if (!is_dir($fullPath)) {
+        //     echo "- ".$modName.": path access ERROR\n";
+        //     echo "  ".$fullPath."\n";
+        //     exit;
+        // }
 
         $fullPath = devicesDir.'/'.$modName.'/'.$modName.".json";
         if (!file_exists($fullPath)) {
@@ -652,25 +804,25 @@
             exit;
         }
 
-        $devicesList[$modName] = $fullPath;
+        $devModList[$modName] = $fullPath;
         break;
     }
-    if (count($devicesList) == 0) {
+    if (count($devModList) == 0) {
         buildDevModelsList();
         buildAllCommandsList();
     }
 
-    // echo "devl=".json_encode($devicesList)."\n";
+    // echo "devl=".json_encode($devModList)."\n";
     echo "Checking devices models syntax\n- ";
     $idx = 2;
-    foreach ($devicesList as $devName => $fullPath) {
+    foreach ($devModList as $devModName => $fullPath) {
         $jsonContent = file_get_contents($fullPath);
         $content = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            newDevError($devName, 'ERROR', 'Corrupted JSON file');
+            newDevError($devModName, 'ERROR', 'Corrupted JSON file');
             step('E');
         } else
-            checkDeviceModel($devName, $content);
+            checkDeviceModel($devModName, $content);
     }
 
     // TODO: Should be USED cmds only
@@ -687,11 +839,11 @@
         checkCommandModel($entry, $content);
     }
 
-    echo "\nChecking command variables\n- ";
-    $idx = 2;
-    foreach ($devicesList as $devName => $fullPath) {
-        checkDeviceCommands($devName, $fullPath);
-    }
+    // echo "\nChecking command variables\n- ";
+    // $idx = 2;
+    // foreach ($devModList as $devModName => $fullPath) {
+    //     checkDeviceCommands($devModName, $fullPath);
+    // }
 
     $nbErrors = sizeof($cmdErrors);
     echo "\n\nCommands errors summary (".$nbErrors." errors)\n";

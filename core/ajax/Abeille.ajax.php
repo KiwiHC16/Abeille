@@ -601,7 +601,10 @@
                     'manuf' => isset($eqModel['manuf']) ? $eqModel['manuf'] : '',
                     'model' => isset($eqModel['model']) ? $eqModel['model'] : '',
                     'type' => isset($eqModel['type']) ? $eqModel['type'] : '',
+                    // 'variables' => optional
                 );
+                if (isset($eqModel['variables']))
+                    $eq['model']['variables'] = $eqModel['variables'];
 
                 $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
                 $eq['zigbee'] = $zigbee;

@@ -16,12 +16,13 @@
                 // logMessage('debug', 'request - addGroup : '.$request2);
             }
 
-            if (strpos($request2, "#GroupeEP") > 0) {
-                $id = substr($request2, strpos($request2, "#GroupeEP") + strlen("#GroupeEP"), 1);
-                $request2 = str_replace("#GroupeEP".$id."#", $eqLogic->getConfiguration("GroupeEP".$id), $request2);
-                // logMessage('debug', 'request - GroupEP : '.$id.' - '.$request2);
-                // $request .+ "TEST";
-            }
+            // Tcharp38: #GroupeEPx# removed. Now supported thru 'variables' section
+            // if (strpos($request2, "#GroupeEP") > 0) {
+            //     $id = substr($request2, strpos($request2, "#GroupeEP") + strlen("#GroupeEP"), 1);
+            //     $request2 = str_replace("#GroupeEP".$id."#", $eqLogic->getConfiguration("GroupeEP".$id), $request2);
+            //     // logMessage('debug', 'request - GroupEP : '.$id.' - '.$request2);
+            //     // $request .+ "TEST";
+            // }
 
             if (strpos($request2, '#onTime#') > 0) {
                 $onTimeHex = sprintf("%04s", dechex($eqLogic->getConfiguration("onTime") * 10));

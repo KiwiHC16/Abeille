@@ -1,3 +1,9 @@
+Page santé
+    1 couleur differente par réseau pour + de clareté
+
+Collecte des routages
+    Il peut etre tres utile de connaitre le dernier routage pour identifier cause de blocage du reseau
+
 Mise à jour FW Zigate
     Le démon peut etre relancé pendant la programmation. Pas bon => conflit
 

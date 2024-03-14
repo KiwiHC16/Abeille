@@ -7,7 +7,7 @@ ChangeLog
 - Interne: Parser: Améliorations mineures.
 - Interne: 'check_json': Améliorations.
 - Interne: eqLogic/configuration: groupEPx => eqModel['variables'].
-- Page EQ/avancé: Affichage des variables. Suppression cas 'telecommande7groups'.
+- Page EQ/avancé: Ajout d'une section 'variables'. Suppression cas 'telecommande7groups'.
 
 240308-BETA-1
 -------------

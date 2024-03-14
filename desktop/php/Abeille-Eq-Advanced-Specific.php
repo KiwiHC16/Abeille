@@ -6,9 +6,21 @@
 ?>
 
     <div class="form-group">
-        <label>{{Variables}}</label></br>
-        <div id="idVariables">
+        <label class="col-lg-3 control-label"></label>
+        <h3 class="col-lg-3" style="text-align:left">{{Variables}}</h3>
+        <div class="col-lg-4">
         </div>
+    </div>
+
+    <!-- List of variables for this device. Filled by Abeille.js -->
+    <div id="idVariables">
+        <!-- <div class="form-group">
+            <label class="col-lg-3 control-label"></label>
+            <div class="col-lg-3">
+            </div>
+            <div class="col-lg-4">
+            </div>
+        </div> -->
     </div>
 
     <!-- telecommande: visible / hidden -->

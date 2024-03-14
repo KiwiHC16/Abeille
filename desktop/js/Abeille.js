@@ -119,11 +119,13 @@ function refreshEqInfos() {
                 for (const [vKey, vVal] of Object.entries(eq.model.variables)) {
                     h += '<div class="form-group">';
                     h +=
-                        '<label class="col-sm-3 control-label">' +
+                        '<label class="col-lg-3 control-label">' +
                         vKey +
                         "</label>";
-                    h += '<div class="col-sm-9">';
+                    h += '<div class="col-lg-3">';
                     h += '<input type="text" value="' + vVal + '"/>';
+                    h += "</div>";
+                    h += '<div class="col-lg-4">';
                     h += "</div>";
                     h += "</div>";
                 }

@@ -8,6 +8,7 @@ ChangeLog
 - Interne: 'check_json': Améliorations.
 - Interne: eqLogic/configuration: groupEPx => eqModel['variables'].
 - Page EQ/avancé: Ajout d'une section 'variables'. Suppression cas 'telecommande7groups'.
+- Tuya compteur d'énergie: Modèle préliminaire (2691).
 
 240308-BETA-1
 -------------

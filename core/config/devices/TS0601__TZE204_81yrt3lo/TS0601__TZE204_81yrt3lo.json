@@ -1,0 +1,14 @@
+{
+    "TS0601__TZE204_81yrt3lo": {
+        "manufacturer": "Tuya",
+        "model": "?",
+        "type": "Tuya energy metter",
+        "category": {
+            "energy": "1"
+        },
+        "configuration": {
+            "icon": "?",
+            "mainEP": "01"
+        }
+    }
+}

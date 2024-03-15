@@ -705,6 +705,7 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'settings' => $settings)));
         }
 
+        // TODO: OBSOLETE !!! Use 'saveEqConfig' instead, more generic
         // Change eqLogic 'ab::settings' content
         // Param: eqId = Equipment Jeedom ID
         // Param: settings = associative array of settings to change
@@ -727,6 +728,36 @@
                     logDebug('  settings['.$setKey.']='.$setVal);
                 }
                 $eqLogic->setConfiguration('ab::settings', $settings);
+                $eqLogic->save();
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        // Change eqLogic 'configuration' content
+        // Param: eqId = Equipment Jeedom ID
+        // Param: eqConfKey = eqLogic->configuration field to update (ex: 'ab::eqModel', 'ab::settings')
+        // Param: eqConfVal = value for eqLogic->configuration->eqConfKey (note: currently only ASSOCIATIVE ARRAY)
+        if (init('action') == 'saveEqConfig') {
+            $status = 0;
+            $error = "";
+
+            $eqId = init('eqId');
+            $eqConfKey = init('eqConfKey'); // ex: 'ab::eqModel', 'ab::settings'
+            $eqConfVal = init('eqConfVal');
+            $newArr = json_decode($eqConfVal, true); // currently only ASSOCIATIVE ARRAY
+
+            $eqLogic = Abeille::byId($eqId);
+            if (!is_object($eqLogic)) {
+                $error = "Invalid device ID ".$eqId;
+                $status = -1;
+            } else {
+                $curArr = $eqLogic->getConfiguration($eqConfKey, []);
+                foreach ($newArr as $setKey => $setVal) {
+                    $curArr[$setKey] = $setVal;
+                    logDebug("  ${eqConfKey}[${setKey}]=${setVal}");
+                }
+                $eqLogic->setConfiguration($eqConfKey, $curArr);
                 $eqLogic->save();
             }
 

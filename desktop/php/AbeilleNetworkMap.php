@@ -882,7 +882,7 @@
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
-                action: 'saveSettings',
+                action: 'saveSettings', // TODO: Use saveEqConfig instead
                 eqId: eqId,
                 settings: JSON.stringify(settings)
             },

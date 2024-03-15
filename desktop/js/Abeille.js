@@ -123,7 +123,12 @@ function refreshEqInfos() {
                         vKey +
                         "</label>";
                     h += '<div class="col-lg-3">';
-                    h += '<input type="text" value="' + vVal + '"/>';
+                    h +=
+                        '<input type="text" id="idVar' +
+                        vKey +
+                        '" value="' +
+                        vVal +
+                        '"/>';
                     h += "</div>";
                     h += '<div class="col-lg-4">';
                     h += "</div>";
@@ -459,6 +464,50 @@ function removeSelectedEq(zgId) {
     console.log("eqIdList=" + eqIdList);
 
     for (const eqId2 of eqIdList) removeEq(zgId, eqId2);
+}
+
+/* saveEqLogic(): Called on equipement 'Save' button click */
+function saveEqLogic(eqLogic) {
+    console.log("saveEqLogic(), eqLogic=", eqLogic);
+
+    // Note: Expecting 'eq' to be defined as global val
+    if (typeof eq == "undefined") {
+        console.log("OOOPS !! Unexpected case. Missing 'eq'");
+        return;
+    }
+
+    // Tcharp38: Don't understand how to save specific fields in eqLogic/configuration so custom way
+    // Saving variables if any
+    // TODO: Variables are initialized from equipment model but since user can change them, better to move
+    //       them outside 'ab::eqModel'
+    if (typeof eq.model.variables != "undefined") {
+        varUpdated = false;
+        for (const [vKey, vVal] of Object.entries(eq.model.variables)) {
+            newVal = document.getElementById("idVar" + vKey).value;
+            if (newVal != vVal) {
+                eq.model.variables[vKey] = newVal;
+                varUpdated = true;
+            }
+        }
+        if (varUpdated) {
+            console.log("VAR updated, eq.model=", eq.model);
+            $.ajax({
+                type: "POST",
+                url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+                data: {
+                    action: "saveEqConfig",
+                    eqId: eqId,
+                    eqConfKey: "ab::eqModel",
+                    eqConfVal: JSON.stringify(eq.model),
+                },
+                dataType: "json",
+                global: false,
+                success: function (json_res) {},
+            });
+        }
+    }
+
+    return eqLogic;
 }
 
 /* Click on 'remove' button in equipement details page.

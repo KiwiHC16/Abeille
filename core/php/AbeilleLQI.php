@@ -139,7 +139,7 @@
                 )
             ); */
 
-        logMessage("", "  msg=".json_encode($msg));
+        logMessage("", "  msg=".json_encode($msg, JSON_UNESCAPED_SLASHES));
         $tableEntries = $msg->tableEntries; // Total entries on interrogated eq
         $tableListCount = $msg->tableListCount; // Number of neighbours listed in msg
         $startIdx = $msg->startIdx;
@@ -362,7 +362,7 @@
         $msg = array();
         $msg['topic'] = "Cmd".$dest."/".$addr."/getNeighborTable";
         $msg['payload'] = "startIndex=".$index;
-        $msgJson = json_encode($msg);
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
         logMessage("", "msgToCmd: ".$msgJson);
 
         global $queueLQIToCmd;

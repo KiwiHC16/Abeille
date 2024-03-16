@@ -2953,7 +2953,7 @@
 
                 // Zigbee command: Bind to device or bind to group.
                 // Bind, thru command 0030 => generates 'Bind_req' / cluster 0021
-                // Mandatory params: addr, clustId, attrType, attrId
+                // Mandatory params: addr, ep, clustId, destAddr
                 // Optional params: destEp required if destAddr = device ieee addr
                 else if ($cmdName == 'bind0030') {
 

@@ -1,14 +1,67 @@
 {
     "TS0601__TZE204_81yrt3lo": {
         "manufacturer": "Tuya",
-        "model": "?",
-        "type": "Tuya energy metter",
+        "model": "PJ-1203A",
+        "type": "Tuya electricity energy monitor",
         "category": {
             "energy": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "Tuya-EnergyMonitor",
             "mainEP": "01"
+        },
+        "commands": {
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            },
+            "Power A": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "powerA",
+                "unit": "W"
+            },            
+            "Power B": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "powerB",
+                "unit": "W"
+            },
+            "Current A": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "currentA",
+                "unit": "A"
+            },            
+            "Current B": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "currentB",
+                "unit": "A"
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "65": {
+                    "function": "rcvValueDiv",
+                    "div": 10,
+                    "info": "powerA"
+                },
+                "69": {
+                    "function": "rcvValueDiv",
+                    "div": 10,
+                    "info": "powerB"
+                },
+                "71": {
+                    "function": "rcvValueDiv",
+                    "div": 1000,
+                    "info": "currentA"
+                },
+                "72": {
+                    "function": "rcvValueDiv",
+                    "div": 1000,
+                    "info": "currentB"
+                }
+            }
         }
     }
 }

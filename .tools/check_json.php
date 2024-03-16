@@ -678,6 +678,7 @@
 
         // echo "checkCmd devCmd=".json_encode($devCmd)."\n";
         // echo "  cmd=".json_encode($cmd)."\n";
+        $error = false;
 
         // Checking Jeedom cmd name
         if (strpos($cmdJName, "/") !== false) {

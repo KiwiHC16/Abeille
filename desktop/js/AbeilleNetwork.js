@@ -17,23 +17,27 @@
 var currentZigateLG = 1; // Current zigate displayed in links graph
 var prevTrackingMsg = ""; // Previous tracking message
 
-$("#tab_nodes")
+// $("#tab_nodes")
+$("#idLinksTableTab")
     .off("click")
     .on("click", function () {
+        console.log("idLinksTableTab click");
         /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
         displayLinksTable(1);
     });
 
-$("#tab_graph")
+// $("#tab_graph")
+$("#idLinksGraphTab")
     .off("click")
     .on("click", function () {
+        console.log("idLinksGraphTab click");
         /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
         displayLinksGraph(1);
     });
 
-$("#tab_summary")
-    .off("click")
-    .on("click", function () {});
+// $("#tab_summary")
+//     .off("click")
+//     .on("click", function () {});
 
 $("#nodeFrom")
     .off()
@@ -965,3 +969,7 @@ $("#idShowObject").on("change", function (event) {
     console.log("idShowObject click");
     displayLinksGraph(currentZigateLG); // Refresh current links graph
 });
+
+// Default display
+// TODO: Should be set to first enabled Zigate
+displayLinksTable(1);

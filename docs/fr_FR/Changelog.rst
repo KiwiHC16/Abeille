@@ -11,6 +11,7 @@ ChangeLog
 - Tuya compteur d'énergie: Modèle préliminaire (2691).
 - Page EQuipement: 'variables' migrées sur onglet principal.
 - Interne: Configuration sur 'device announce' déplacée de Parser vers Cmd.
+- Réseau: Affichage table des liens Zigate 1 à l'ouverture.
 
 240308-BETA-1
 -------------

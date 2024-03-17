@@ -8,6 +8,10 @@
         "category": {
             "light": "1"
         },
+        "customization": {
+            "comment": "Correct wrong 0x80 macCapa: Force mainsPowered + RX ON",
+            "macCapa": "8C"
+        },
         "configuration": {
             "icon": "Sonoff-ZBMiniL2",
             "mainEP": "01"

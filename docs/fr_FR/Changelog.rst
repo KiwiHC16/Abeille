@@ -12,6 +12,7 @@ ChangeLog
 - Page EQuipement: 'variables' migrées sur onglet principal.
 - Interne: Configuration sur 'device announce' déplacée de Parser vers Cmd.
 - Réseau: Affichage table des liens Zigate 1 à l'ouverture.
+- SonOff ZbminiL2: Correction 'mac capa' incorrect => 'RxOnWhenIdle'.
 
 240308-BETA-1
 -------------

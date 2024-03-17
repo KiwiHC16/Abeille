@@ -53,3 +53,29 @@ About configure reporting
 =========================
 It looks like it is important to add a delay between dev announce and the configure reporting for battery.
 Even if answer is status 00 the reporting is not set if no delay.
+
+Versions
+========
+TRÅDFRI on/off switch and TRÅDFRI open/close remote (24.4.6)
+Product ID: v, E1766
+◆ Optimised battery performance.
+◆ Stability improvements.
+
+TRÅDFRI on/off switch and TRÅDFRI open/close remote (2.3.079)
+Product ID: E1743, E1766
+◆ Fixed the issue of remotes losing connection due to low battery
+◆ Increased security regarding upgrade of firmware
+
+TRÅDFRI on/off switch and TRÅDFRI open/close remote (2.2.010).
+Product ID: E1743, E1766
+◆ Improvements in FW OTA (Over The Air) update.
+
+TRÅDFRI on/off switch and TRÅDFRI open/close remote (2.2.008).
+Product ID: E1743, E1766
+◆ Device ID in Simple Descriptor updated to 0x0203 (Window Covering Controller)
+◆ Application Device Version updated to 1
+◆ Short press configured for up to 700ms
+
+TRÅDFRI on/off switch (2.0.020).
+Product ID: E1743
+◆ Upgrade to ZB 3.0

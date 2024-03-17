@@ -175,7 +175,8 @@
         /* Send message to 'AbeilleCmd' thru 'xToCmd' queue */
         function msgToCmd2($prio, $msg) {
             $errCode = 0;
-            if (msg_send($this->queueXToCmd, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+            if (msg_send($this->queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
                 parserLog("debug", "  ERROR: msgToCmd2(): Can't write to 'queueXToCmd', error=".$errCode);
             }
         }
@@ -860,51 +861,50 @@
                 $msg['modelPath'] = $eq['modelPath'];
             msgToAbeille2($msg);
 
-            // TODO
-            // $msg = array(
-            //     'type' => 'configureDevice',
-            //     'net' => $net,
-            //     'addr' => $addr
-            // );
-            // $this->msgToCmd2(PRIO_NORM, $msg);
-
             if (!isset($eqModel['commands'])) {
-                parserLog('debug', "    No cmds in JSON model.");
-                // return;
+                parserLog('debug', "    No cmds for configuration in JSON model.");
             } else {
-                $cmds = $eqModel['commands'];
+                parserLog('debug', "    Requesting device configuration.");
+                $msg = array(
+                    'type' => 'configureDevice',
+                    'net' => $net,
+                    'addr' => $addr
+                );
+                $this->msgToCmd2(PRIO_NORM, $msg);
 
-                parserLog('debug', "    cmds=".json_encode($cmds));
-                foreach ($cmds as $cmdJName => $cmd) {
-                    if (!isset($cmd['configuration']))
-                        continue; // No 'configuration' section then no 'execAtCreation'
-                    $c = $cmd['configuration'];
-                    if (!isset($c['execAtCreation']))
-                        continue;
+                // $cmds = $eqModel['commands'];
 
-                    if (isset($c['execAtCreationDelay']))
-                        $delay = $c['execAtCreationDelay'];
-                    else
-                        $delay = 0;
-                    parserLog('debug', "    exec cmd '".$cmdJName."' with delay ".$delay);
-                    $topic = $c['topic'];
-                    $request = $c['request'];
-                    // TODO: #EP# defaulted to first EP but should be
-                    //       defined in cmd use if different target EP
-                    // $request = str_ireplace('#EP#', $eq['epFirst'], $request);
-                    $request = str_ireplace('#EP#', $eq['mainEp'], $request);
-                    $request = str_ireplace('#addrIEEE#', $eq['ieee'], $request);
-                    $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
-                    $zgId = substr($net, 7); // 'AbeilleX' => 'X'
-                    $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
-                    parserLog('debug', '      topic='.$topic.", request='".$request."'");
-                    if ($delay == 0)
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/".$topic, $request);
-                    else {
-                        $delay = time() + $delay;
-                        msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
-                    }
-                }
+                // parserLog('debug', "    cmds=".json_encode($cmds));
+                // foreach ($cmds as $cmdJName => $cmd) {
+                //     if (!isset($cmd['configuration']))
+                //         continue; // No 'configuration' section then no 'execAtCreation'
+                //     $c = $cmd['configuration'];
+                //     if (!isset($c['execAtCreation']))
+                //         continue;
+
+                //     if (isset($c['execAtCreationDelay']))
+                //         $delay = $c['execAtCreationDelay'];
+                //     else
+                //         $delay = 0;
+                //     parserLog('debug', "    exec cmd '".$cmdJName."' with delay ".$delay);
+                //     $topic = $c['topic'];
+                //     $request = $c['request'];
+                //     // TODO: #EP# defaulted to first EP but should be
+                //     //       defined in cmd use if different target EP
+                //     // $request = str_ireplace('#EP#', $eq['epFirst'], $request);
+                //     $request = str_ireplace('#EP#', $eq['mainEp'], $request);
+                //     $request = str_ireplace('#addrIEEE#', $eq['ieee'], $request);
+                //     $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
+                //     $zgId = substr($net, 7); // 'AbeilleX' => 'X'
+                //     $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
+                //     parserLog('debug', '      topic='.$topic.", request='".$request."'");
+                //     if ($delay == 0)
+                //         msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/".$topic, $request);
+                //     else {
+                //         $delay = time() + $delay;
+                //         msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
+                //     }
+                // }
 
                 // TODO: WORK ONGOING
                 // For each 'info', attempting to read corresponding cluster/attribute

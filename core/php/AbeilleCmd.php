@@ -195,7 +195,6 @@
 
     // Configure device
     // Returns: true=ok, false=error
-    // WORK ONGOING: Not used yet. Currently same function in AbeilleParser.class.php.
     function configureDevice($net, $addr) {
         cmdLog('debug', "  configureDevice(${net}, ${addr})");
 

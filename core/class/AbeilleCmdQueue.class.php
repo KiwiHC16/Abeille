@@ -671,6 +671,27 @@
 
                 cmdLog("debug", 'processAcks(): msg='.$msgJson);
                 $msg = json_decode($msgJson, true);
+
+                // Clear all pending messages for net/addr device.
+                // This is useful when short addr changed, due to (multiple) device announce,
+                // or device migrated to another network.
+                if ($msg['type'] == "shortAddrChange") {
+                    $oldNet = $msg['oldNet'];
+                    $newNet = $msg['newNet'];
+                    $oldAddr = $msg['oldAddr'];
+                    $newAddr = $msg['newAddr'];
+                    cmdLog("debug", "  shortAddrChange: ${oldNet}/${oldAddr} to ${newNet}/${newAddr}");
+                    // Remove any pending messages to be sent to old address
+                    $zgId = substr($msg['oldNet'], 7);
+                    clearPending($zgId, $msg['oldAddr']);
+                    // Update local infos
+                    if (isset($GLOBALS['devices'][$oldNet]) && isset($GLOBALS['devices'][$oldNet][$oldAddr])) {
+                        $GLOBALS['devices'][$newNet][$newAddr] = $GLOBALS['devices'][$oldNet][$oldAddr];
+                        unset($GLOBALS['devices'][$oldNet][$oldAddr]);
+                    }
+                    continue;
+                } // End type=='shortAddrChange'
+
                 $zgId = substr($msg['net'], 7);
                 $this->zgId = $zgId;
 
@@ -712,15 +733,6 @@
                     configureZigate($zgId); // Configure Zigate
                     continue;
                 }
-
-                // Clear all pending messages for net/addr device.
-                // This is useful when short addr changed, due to (multiple) device announce,
-                // or device migrated to another network.
-                if ($msg['type'] == "clearMessages") {
-                    cmdLog("debug", "  clearMessages for ".$msg['net']."/".$msg['addr']);
-                    clearPending($zgId, $msg['addr']);
-                    continue;
-                } // End type=='clearMessages'
 
                 // PDM restore response (Abeille's ABxx-yyyy specific FW)
                 if ($msg['type'] == "AB03") {

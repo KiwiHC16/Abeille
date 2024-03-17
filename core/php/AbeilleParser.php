@@ -301,9 +301,11 @@
 
                 // Removing any cmd pending message for old address since device would no longer answer
                 $msg = array(
-                    'type' => 'clearMessages',
-                    'net' => $net,
-                    'addr' => $oldAddr
+                    'type' => 'shortAddrChange',
+                    'oldNet' => $net,
+                    'newNet' => $net,
+                    'oldAddr' => $oldAddr,
+                    'newAddr' => $addr
                 );
                 msgToCmdAck($msg);
 
@@ -336,9 +338,11 @@
 
                     // Removing any cmd pending message for old net/address since device would no longer answer
                     $msg = array(
-                        'type' => 'clearMessages',
-                        'net' => $oldNet,
-                        'addr' => $oldAddr
+                        'type' => 'shortAddrChange',
+                        'oldNet' => $oldNet,
+                        'newNet' => $net,
+                        'oldAddr' => $oldAddr,
+                        'newAddr' => $addr
                     );
                     msgToCmdAck($msg);
 

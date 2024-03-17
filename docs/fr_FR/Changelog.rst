@@ -10,6 +10,7 @@ ChangeLog
 - Page EQ/avancé: Ajout d'une section 'variables'. Suppression cas 'telecommande7groups'.
 - Tuya compteur d'énergie: Modèle préliminaire (2691).
 - Page EQuipement: 'variables' migrées sur onglet principal.
+- Interne: Configuration sur 'device announce' déplacée de Parser vers Cmd.
 
 240308-BETA-1
 -------------

@@ -13,6 +13,7 @@ ChangeLog
 - Interne: Configuration sur 'device announce' déplacée de Parser vers Cmd.
 - Réseau: Affichage table des liens Zigate 1 à l'ouverture.
 - SonOff ZbminiL2: Correction 'mac capa' incorrect => 'RxOnWhenIdle'.
+- Interne: Mises-à-jour 'check_json' + 'update_json' pour changement 'tuyaEF00/fromDevice' => 'private/EF00'.
 
 240308-BETA-1
 -------------

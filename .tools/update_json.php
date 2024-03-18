@@ -718,6 +718,20 @@
             $devUpdated = true;
             echo "  'xiaomi' updated to 'private'.\n";
         }
+        // tuyaEF00/fromDevice => private + type=tuya
+        if (isset($dev[$devName]['tuyaEF00'])) {
+            if (isset($dev[$devName]['tuyaEF00']['fromDevice'])) {
+                $dev[$devName]['private'] = [];
+                $dev[$devName]['private']['EF00'] = [];
+                $dev[$devName]['private']['EF00']['type'] = 'tuya';
+                foreach ($dev[$devName]['tuyaEF00']['fromDevice'] as $dpId => $dpVal) {
+                    $dev[$devName]['private']['EF00'][$dpId] = $dpVal;
+                }
+            }
+            unset($dev[$devName]['tuyaEF00']);
+            $devUpdated = true;
+            echo "  'tuyaEF00/fromDevice' updated to 'private/EF00'.\n";
+        }
 
         if ($devUpdated) {
             $text = json_encode($dev, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);

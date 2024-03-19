@@ -40,8 +40,9 @@
                 "isVisible": 1
             }
         },
-        "tuyaEF00": {
-            "fromDevice": {
+        "private": {
+            "EF00": {
+                "type": "tuya",
                 "01": {
                     "function": "rcvValue",
                     "info": "01-doorTrigger",

@@ -50,8 +50,9 @@
                 "isHistorized": 1
             }
         },
-        "tuyaEF00": {
-            "fromDevice": {
+        "private": {
+            "EF00": {
+                "type": "tuya",
                 "05": {
                     "function": "rcvValue",
                     "info": "01-measuredValue"

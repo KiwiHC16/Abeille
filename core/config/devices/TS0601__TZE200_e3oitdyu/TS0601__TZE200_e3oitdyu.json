@@ -89,8 +89,9 @@
                 "nextLine": "after"
             }
         },
-        "tuyaEF00": {
-            "fromDevice": {
+        "private": {
+            "EF00": {
+                "type": "tuya",
                 "01": {
                     "function": "rcvValue",
                     "info": "status1"

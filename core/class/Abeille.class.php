@@ -3066,11 +3066,11 @@ class Abeille extends eqLogic {
         else
             $eqLogic->setConfiguration('poll', null);
 
-        // Tuya specific infos: OBSOLETE soon. Replaced by 'fromDevice'
-        if (isset($model['tuyaEF00']))
-            $eqLogic->setConfiguration('ab::tuyaEF00', $model['tuyaEF00']);
-        else
-            $eqLogic->setConfiguration('ab::tuyaEF00', null);
+        // Tuya specific infos: OBSOLETE ! Replaced by 'private' + 'EF00' + 'type=tuya'
+        // if (isset($model['tuyaEF00']))
+        //     $eqLogic->setConfiguration('ab::tuyaEF00', $model['tuyaEF00']);
+        // else
+        //     $eqLogic->setConfiguration('ab::tuyaEF00', null);
 
         // Xiaomi specific infos: OBSOLETE soon. Replaced by 'fromDevice'
         // if (isset($model['xiaomi']))
@@ -3103,7 +3103,7 @@ class Abeille extends eqLogic {
         }
         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
 
-        // JSON model infos
+        // JSON model infos => 'ab::eqModel'
         $eqModelInfos = array(
             // Model infos
             'modelSource' => $modelSource, // Equipment model file location
@@ -3117,8 +3117,10 @@ class Abeille extends eqLogic {
             'manuf' => isset($model['manufacturer']) ? $model['manufacturer'] : '',
             'model' => isset($model['model']) ? $model['model'] : '',
             'type' => $model['type'],
+
             // 'lastUpdate' => time(), // Store last update from model. // Tcharp38: created for Abeille but not used
             // 'variables' // Optional
+            // 'private' // Optional
         );
         if ($modelPath != "${modelName}/${modelName}.json")
             $eqModelInfos['modelPath'] = $modelPath;

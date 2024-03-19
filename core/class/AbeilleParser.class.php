@@ -836,10 +836,15 @@
                 }
             } else
                 $eq['customization'] = null;
-            if (isset($eqModel['tuyaEF00']))
-                $eq['tuyaEF00'] = $eqModel['tuyaEF00'];
+            // if (isset($eqModel['tuyaEF00']))
+            //     $eq['tuyaEF00'] = $eqModel['tuyaEF00'];
+            // else
+            //     $eq['tuyaEF00'] = null;
+            // Really required here ?
+            if (isset($eqModel['private']))
+                $eq['private'] = $eqModel['private'];
             else
-                $eq['tuyaEF00'] = null;
+                $eq['private'] = null;
 
             /* Config ongoing. Informing Abeille for EQ creation/update */
             $msg = array(

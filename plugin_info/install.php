@@ -886,7 +886,7 @@
          * - Cmds DB: 'onGroupBroadcast'/'offGroupBroadcast' replaced by 'cmd-0006'
          * - Cmds DB: 'ab::trigOut' syntax updated to associative array
          */
-        if (intval($dbVersion) < 20240312) {
+        if (intval($dbVersion) < 20240319) {
             // 'eqLogic' + 'cmd' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -953,23 +953,47 @@
                 // ab::xiaomi replaced by ab::eqModel['private'] + type=xiaomi
                 $xiaomi = $eqLogic->getConfiguration('ab::xiaomi', null);
                 if ($xiaomi !== null) {
-                    $eqMode['private'] = [];
+                    $eqModel['private'] = [];
                     foreach ($xiaomi['fromDevice'] as $pKey => $pVal) {
                         $pVal['type'] = "xiaomi";
                         $eqModel['private'][$pKey] = $pVal;
                     }
+                    $saveEqModel = true;
                     $eqLogic->setConfiguration('ab::xiaomi', null);
                     log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::xiaomi' replaced by 'private' entries");
+                }
+                // eqLogic DB: 'ab::tuyaEF00' => 'ab::eqModel['private']['EF00']'
+                /* Reminder
+                   Old syntax
+                    "tuyaEF00": {
+                        "fromDevice": {
+                            "01": { "function": "rcvValueDiv", "info": "0006-01-0000", "div": 1 }
+                        }
+                    }
+                   New syntax
+                    "private": {
+                        "EF00": {
+                            "type": "tuya",
+                            "01": { "function": "rcvValueDiv", "info": "0006-01-0000", "div": 1 }
+                        }
+                    }
+                 */
+                $tuyaEF00 = $eqLogic->getConfiguration('ab::tuyaEF00', 'nada');
+                if ($tuyaEF00 != 'nada') {
+                    $eqModel['private']['EF00'] = $tuyaEF00['fromDevice'];
+                    $eqModel['private']['EF00']['type'] = "tuya";
                     $saveEqModel = true;
+                    $eqLogic->setConfiguration('ab::tuyaEF00', null);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::tuyaEF00' moved to 'ab::eqModel['private']['EF00']");
                 }
                 // ab::signature content moved into 'ab::zigbee'
                 $sig = $eqLogic->getConfiguration('ab::signature', null);
                 if ($sig !== null) {
                     $zigbee['modelId'] = isset($sig['modelId']) ? $sig['modelId'] : '';
                     $zigbee['manufId'] = isset($sig['manufId']) ? $sig['manufId'] : '';
+                    $saveEqZigbee = true;
                     $eqLogic->setConfiguration('ab::signature', null);
                     log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::signature' content moved in 'ab::zigbee'");
-                    $saveEqZigbee = true;
                 }
                 // eqLogic DB: 'groupEPx' => 'ab::eqModel['variables']'
                 for ($g = 1; $g <= 8; $g++) {

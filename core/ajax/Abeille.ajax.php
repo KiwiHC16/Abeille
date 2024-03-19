@@ -755,7 +755,7 @@
                 $curArr = $eqLogic->getConfiguration($eqConfKey, []);
                 foreach ($newArr as $setKey => $setVal) {
                     $curArr[$setKey] = $setVal;
-                    logDebug("  ${eqConfKey}[${setKey}]=${setVal}");
+                    logDebug("  ${eqConfKey}[${setKey}]=".json_encode($setVal, JSON_UNESCAPED_SLASHES));
                 }
                 $eqLogic->setConfiguration($eqConfKey, $curArr);
                 $eqLogic->save();

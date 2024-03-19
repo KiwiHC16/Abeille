@@ -77,7 +77,7 @@
     // bitmap	0x05	1/2/4	        Large end representation for lengths greater than 1 byte
 
     // Receive a datapoint, map it to a specific function an decode it.
-    // Mapping is defined "per device" directly in its model (tuyaEF00/fromDevice).
+    // Mapping is defined "per device" directly in its model (private + type="tuya").
     function tuyaDecodeDp($addr, $ep, $dp, $mapping) {
         $dpId = $dp['id'];
         if (!isset($mapping[$dpId])) {
@@ -86,8 +86,9 @@
         }
 
         /* New syntax
-            "tuyaEF00": {
-                "fromDevice": {
+            "private": {
+                "EF00": {
+                    "type": "tuya",
                     "01": { "function": "rcvValueDiv", "info": "0006-01-0000", "div": 1 },
                     "02": { "function": "rcvValue", "info": "0008-01-0000" },
                 }
@@ -273,11 +274,14 @@
 
         if (($cmdId == "01") || ($cmdId == "02")) {
             // parserLog('debug', 'eq='.json_encode($eq));
-            if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
+            // if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
+            // TODO: EF00 might not be always the cluster in Tuya DP mode
+            if (!isset($eq['private']) || !isset($eq['private']['EF00'])) {
                 parserLog2('debug', $addr, "  No defined Tuya mapping => ignoring (msg=".$msg.")");
                 return [];
             }
-            $mapping = $eq['tuyaEF00']['fromDevice'];
+            // $mapping = $eq['tuyaEF00']['fromDevice'];
+            $mapping = $eq['private']['EF00'];
             // parserLog('debug', '  Tuya mapping='.json_encode($mapping));
 
             $tSqn = substr($msg, 0, 4); // uint16
@@ -290,8 +294,10 @@
                 if ($a !== false)
                     $attributesN[] = $a;
                 else { // Unknown DP
-                    if (!isset($eq['tuyaEF00']['unknown']) || !isset($eq['tuyaEF00'][$dp['id']]))
-                        $eq['tuyaEF00']['unknown'][$dp['id']] = $dp;
+                    // if (!isset($eq['tuyaEF00']['unknown']) || !isset($eq['tuyaEF00'][$dp['id']]))
+                    //     $eq['tuyaEF00']['unknown'][$dp['id']] = $dp;
+                    // TODO: Is that the right converstion to 'private' section ?
+                    $eq['private']['EF00']['unknown'][$dp['id']] = $dp;
                 }
 
                 // Move to next DP
@@ -303,7 +309,8 @@
             $tSeq = substr($msg, 0, 4);
             $msg = substr($msg, 4); // Skip tSqn
             $dp = tuyaGetDp($msg);
-            $mapping = $eq['tuyaEF00']['fromDevice'];
+            // $mapping = $eq['tuyaEF00']['fromDevice'];
+            $mapping = $eq['private']['EF00'];
             $a = tuyaDecodeDp($addr, $ep, $dp, $mapping);
             if ($a !== false)
                 $attributesN[] = $a;

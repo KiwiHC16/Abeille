@@ -2436,11 +2436,15 @@
                         continue;
                     }
                 }
+                $bitMap1 = hexdec(AbeilleTools::reverseHex(substr($pl, $j + 36, 2))); // Dev type + rxOnWhenIdle + relationShip
+                $bitMap2 = hexdec(AbeilleTools::reverseHex(substr($pl, $j + 38, 2))); // Permit joining
                 $N = array(
                     "extPANId" => $extPanId,
                     "extAddr"  => AbeilleTools::reverseHex(substr($pl, $j + 16, 16)),
                     "addr"     => AbeilleTools::reverseHex(substr($pl, $j + 32, 4)),
-                    "bitMap"   => AbeilleTools::reverseHex(substr($pl, $j + 36, 4)),
+                    "devType"  => $bitMap1 & 0x3,
+                    "rxOnWhenIdle"  => ($bitMap1 >> 2) & 0x3,
+                    "relationship"  => ($bitMap1 >> 4) & 0x7,
                     "depth"    => substr($pl, $j + 40, 2),
                     "lqi"      => substr($pl, $j + 42, 2),
                 );
@@ -2448,7 +2452,9 @@
                 parserLog2('debug', $srcAddr, '  NExtPANId='.$N['extPANId']
                     .', NExtAddr='.$N['extAddr']
                     .', NAddr='.$N['addr']
-                    .', NBitMap='.$N['bitMap'].' => '.zbGetMgmtLqiRspBitmap($N['bitMap'])
+                    .', NDevType='.$N['devType']
+                    .', NRxOnWhenIdle='.$N['rxOnWhenIdle']
+                    .', NRelationship='.$N['relationship']
                     .', NDepth='.$N['depth']
                     .', NLQI='.$N['lqi']);
             }

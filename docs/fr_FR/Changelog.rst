@@ -19,6 +19,7 @@ ChangeLog
 - Interne: Mises-à-jour 'check_json' + 'update_json' pour changement 'tuyaEF00/fromDevice' => 'private/EF00/type=tuya'.
 - Modèles d'équipement: Suppression 'tuyaEF00/fromDevice' => remplacé par 'private/EF00/type=tuya'.
 - Modèles d'équipement: Suppression 'fromDevice/ED00' => remplacé par 'private/ED00/type=tuya-zosung'.
+- Collecte LQI: Traitement messages 'Management LQI response' revu pour clareté.
 
 240308-BETA-1
 -------------

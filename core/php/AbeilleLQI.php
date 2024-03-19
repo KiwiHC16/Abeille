@@ -133,7 +133,9 @@
                         "extPANId"
                         "extAddr"
                         "addr"
-                        "bitMap"
+                        "devType"  => $bitMap1 & 0x3,
+                        "rxOnWhenIdle"  => ($bitMap1 >> 2) & 0x3,
+                        "relationship"  => ($bitMap1 >> 4) & 0x7,
                         "depth"
                         "lqi"
                 )
@@ -208,8 +210,9 @@
             );
 
             // Decode bitmap
-            $bitMap = hexdec($N->bitMap);
-            $attrType = ($bitMap >> 0) & 0x3;
+            // $bitMap = hexdec($N->bitMap);
+            // $attrType = ($bitMap >> 0) & 0x3;
+            $attrType = $N->devType;
             if ($attrType == 0) {
                 $newNeighbor['type'] = "Coordinator";
             } else if ($attrType == 1) {
@@ -221,7 +224,18 @@
                 $newNeighbor['type'] = "Unknown";
             }
 
-            $attrRel = ($bitMap >> 4) & 0x7;
+            // $attrRx = ($bitMap >> 2) & 0x3;
+            $attrRx = $N->rxOnWhenIdle;
+            if ($attrRx == 0) {
+                $newNeighbor['rx'] = "Rx-Off";
+            } else if ($attrRx == 1) {
+                $newNeighbor['rx'] = "Rx-On";
+            } else { // 2 or 3
+                $newNeighbor['rx'] = "Rx-Unknown";
+            }
+
+            // $attrRel = ($bitMap >> 4) & 0x7;
+            $attrRel = $N->relationship;
             if ($attrRel == 0) {
                 $newNeighbor['relationship'] = "Parent";
             } else if ($attrRel == 1) {
@@ -238,21 +252,12 @@
                     logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
             } else if ($attrRel == 2) {
                 $newNeighbor['relationship'] = "Sibling";
-            } else if ($attrRel == 2) {
+            } else if ($attrRel == 3) {
                 $newNeighbor['relationship'] = "None";
-            } else if ($attrRel == 2) {
+            } else if ($attrRel == 4) {
                 $newNeighbor['relationship'] = "Previous";
-            } else { // if ($attrRel == 3)
+            } else {
                 $newNeighbor['relationship'] = "Unknown";
-            }
-
-            $attrRx = ($bitMap >> 2) & 0x3;
-            if ($attrRx == 0) {
-                $newNeighbor['rx'] = "Rx-Off";
-            } else if ($attrRx == 1) {
-                $newNeighbor['rx'] = "Rx-On";
-            } else { // 2 or 3
-                $newNeighbor['rx'] = "Rx-Unknown";
             }
 
             $neighbors[$nLogicId] = $newNeighbor;

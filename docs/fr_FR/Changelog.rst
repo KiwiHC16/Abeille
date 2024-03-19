@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240319-BETA-1
+-------------
+
 - SonOff ZbminiL2: Modèle revu.
 - Profalux 2nd gen: Mise-à-jour mineure du modèle.
 - Syntaxe modèle d'équipement: Ajout section 'variables' pour support '#groupEPx#'.

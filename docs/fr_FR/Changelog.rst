@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-240319-BETA-1
+240319-BETA-2
 -------------
 
 - SonOff ZbminiL2: Modèle revu.

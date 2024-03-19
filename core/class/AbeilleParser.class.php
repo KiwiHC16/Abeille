@@ -4525,6 +4525,13 @@
                         // WORK ONGOING !!!
                         /* Generic format for private clusters/commands reminder
                         "private": {
+                            "EF00": { // CLUSTID
+                                "type": "tuya",
+                                "05": { // DP
+                                    "function": "rcvValue",
+                                    "info": "01-measuredValue"
+                                },
+                            },
                             "ED00": { // CLUSTID
                                 "type": "tuya-zosung"
                             },
@@ -4535,13 +4542,6 @@
                                     "div": 1000,
                                     "info": "0001-01-0020"
                                 }
-                            },
-                            "EF00": { // CLUSTID
-                                "type": "tuya",
-                                "05": { // DP
-                                    "function": "rcvValue",
-                                    "info": "01-measuredValue"
-                                },
                             }
                         }
                         "fromDevice": { // OBSOLETE !! Previous naming
@@ -4576,18 +4576,18 @@
                                 break;
                             }
                         }
-                        else if (isset($eq['fromDevice'])) { // OBSOLETE !! Replaced by 'private'
-                            foreach ($eq['fromDevice'] as $fd1 => $fd2) {
-                                $lenFd1 = strlen($fd1);
-                                if (($lenFd1 == 4) && ($clustId != $fd1)) // 'CCCC' (clustId) case
-                                    continue;
-                                // if (($lenFd1 == 9) && ($clustId.'-'.$attrId != $fd1)) // 'CCCC-AAAA' (clustId-attrId) case
-                                //     continue;
+                        // else if (isset($eq['fromDevice'])) { // OBSOLETE !! Replaced by 'private'
+                        //     foreach ($eq['fromDevice'] as $fd1 => $fd2) {
+                        //         $lenFd1 = strlen($fd1);
+                        //         if (($lenFd1 == 4) && ($clustId != $fd1)) // 'CCCC' (clustId) case
+                        //             continue;
+                        //         // if (($lenFd1 == 9) && ($clustId.'-'.$attrId != $fd1)) // 'CCCC-AAAA' (clustId-attrId) case
+                        //         //     continue;
 
-                                $supportType = $fd2['type']; // "tuya", "tuya-zosung", "xiaomi"
-                                break;
-                            }
-                        }
+                        //         $supportType = $fd2['type']; // "tuya", "tuya-zosung", "xiaomi"
+                        //         break;
+                        //     }
+                        // }
                         if (isset($supportType)) {
                             if ($supportType == 'tuya')
                                 $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);

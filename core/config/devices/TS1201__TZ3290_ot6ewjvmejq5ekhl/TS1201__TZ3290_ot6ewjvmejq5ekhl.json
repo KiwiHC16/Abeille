@@ -58,7 +58,7 @@
                 "logicalId": "sendCode"
             }
         },
-        "fromDevice": {
+        "private": {
             "ED00": {
                 "type": "tuya-zosung"
             }

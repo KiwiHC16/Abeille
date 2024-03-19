@@ -122,8 +122,9 @@ Exemple: BASICZBR3.json
        },
 
 * commands: OBLIGATOIRE, liste des commandes implémentées
-  ATTENTION !! TOUS les nombres sont donnés en HEXA.
-    Ex: minInterval=1800. Si 1800sec alors c'est FAUX => minInterval=0708
+  ATTENTION !! Le format des données dépend de la commande.
+    Ex: configureReporting(): minInterval=1800. Si 1800sec alors c'est FAUX => minInterval=0708
+    Ex: configureReporting2(): minInterval=1800 => Si 1800sec alors ok
 
   Nouvelle syntaxe:
     "<nom_cmde_Jeedom>": { "use": "<nom_fichier_cmde_Abeille>", "params": "<xx=01&xy=0003>", "isVisible": 1, "execAtCreation": "yes" }

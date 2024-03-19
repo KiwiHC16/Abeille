@@ -986,6 +986,15 @@
                     $eqLogic->setConfiguration('ab::tuyaEF00', null);
                     log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::tuyaEF00' moved to 'ab::eqModel['private']['EF00']");
                 }
+                // eqLogic DB: 'ab::fromDevice' => 'ab::eqModel['private']['ED00']'
+                $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', 'nada');
+                if (($fromDevice != 'nada') && (isset($fromDevice['ED00']))) {
+                    $eqModel['private']['ED00'] = $fromDevice['ED00'];
+                    $eqModel['private']['ED00']['type'] = "tuya-zosung";
+                    $saveEqModel = true;
+                    $eqLogic->setConfiguration('ab::fromDevice', null);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::fromDevice' moved to 'ab::eqModel['private']['ED00']");
+                }
                 // ab::signature content moved into 'ab::zigbee'
                 $sig = $eqLogic->getConfiguration('ab::signature', null);
                 if ($sig !== null) {

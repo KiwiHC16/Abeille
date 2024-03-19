@@ -15,13 +15,6 @@
             "mainEP": "01"
         },
         "commands": {
-            "Init 0": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0001&attrId=0020,0021",
-                "comment": "Might be required for init",
-                "logicalId": "readAttr-Volt-Percent",
-                "execAtCreation": "yes"
-            },
             "Start learning": {
                 "use": "act_zbCmdC-Generic",
                 "params": "ep=01&clustId=E004&cmd=00&data=7B227374756479223A307D",
@@ -41,7 +34,7 @@
                 "logicalId": "sendCode"
             }
         },
-        "fromDevice": {
+        "private": {
             "ED00": {
                 "type": "tuya-zosung"
             }

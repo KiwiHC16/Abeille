@@ -261,32 +261,32 @@
 
         /* OBSOLETE SOON: Tuya specific checks */
         // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
-        if (isset($dev[$devModName]['tuyaEF00'])) {
-            foreach ($dev[$devModName]['tuyaEF00'] as $key => $value) {
-                if ($key == 'fromDevice') {
-                    foreach ($dev[$devModName]['tuyaEF00']['fromDevice'] as $key2 => $value2) {
-                        if (!isset($value2['function'])) {
-                            $error = newDevError($devModName, "ERROR", "Missing 'function' for tuyaEF00/fromDevice");
-                            continue;
-                        }
-                        $func = $value2['function'];
-                        $supportedFunc = ['rcvValue', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
-                        if (!in_array($func, $supportedFunc)) {
-                            $error = newDevError($devModName, "ERROR", "Invalid function '".$func."' for tuyaEF00/fromDevice");
-                            continue;
-                        }
-                        if ($func == 'rcvValueDiv') {
-                            if (!isset($value2['div'])) {
-                                $error = newDevError($devModName, "ERROR", "Missing 'div' for DP '".$key2."' in tuyaEF00/fromDevice");
-                                continue;
-                            }
-                        }
-                    }
-                    continue;
-                }
-                newDevError($devModName, "ERROR", "Invalid Tuya key '".$key."'");
-            }
-        }
+        // if (isset($dev[$devModName]['tuyaEF00'])) {
+        //     foreach ($dev[$devModName]['tuyaEF00'] as $key => $value) {
+        //         if ($key == 'fromDevice') {
+        //             foreach ($dev[$devModName]['tuyaEF00']['fromDevice'] as $key2 => $value2) {
+        //                 if (!isset($value2['function'])) {
+        //                     $error = newDevError($devModName, "ERROR", "Missing 'function' for tuyaEF00/fromDevice");
+        //                     continue;
+        //                 }
+        //                 $func = $value2['function'];
+        //                 $supportedFunc = ['rcvValue', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
+        //                 if (!in_array($func, $supportedFunc)) {
+        //                     $error = newDevError($devModName, "ERROR", "Invalid function '".$func."' for tuyaEF00/fromDevice");
+        //                     continue;
+        //                 }
+        //                 if ($func == 'rcvValueDiv') {
+        //                     if (!isset($value2['div'])) {
+        //                         $error = newDevError($devModName, "ERROR", "Missing 'div' for DP '".$key2."' in tuyaEF00/fromDevice");
+        //                         continue;
+        //                     }
+        //                 }
+        //             }
+        //             continue;
+        //         }
+        //         newDevError($devModName, "ERROR", "Invalid Tuya key '".$key."'");
+        //     }
+        // }
 
         /* Custom cluster/attribute specific checks */
         // TODO: To be completed
@@ -409,12 +409,23 @@
                         }
                     }
                 }
+
+                /* Tuya Zosung case (ex: TS1201/IR remote controls)
+                    "private": {
+                        "ED00": {
+                            "type": "tuya-zosung"
+                        }
+                    }
+                 */
+                else if ($pType == "tuya-zosung") {
+                    // Currently no other key than 'type'
+                }
             }
         }
 
         /* Checking device model top level keys */
-        $validDevKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization', 'xiaomi'];
-        array_push($validDevKeys, 'genericType', 'fromDevice', 'private', 'variables');
+        $validDevKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'customization'];
+        array_push($validDevKeys, 'genericType', 'private', 'variables');
         foreach ($dev[$devModName] as $key => $value) {
             if (in_array($key, $validDevKeys))
                 continue;

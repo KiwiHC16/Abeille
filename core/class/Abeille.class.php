@@ -3126,8 +3126,8 @@ class Abeille extends eqLogic {
             $eqModelInfos['modelPath'] = $modelPath;
         if (isset($model['private'])) // Private cluster or command specific infos
             $eqModelInfos['private'] = $model['private'];
-        else if (isset($model['fromDevice'])) // OBSOLETE soon => replaced by 'private'
-            $eqModelInfos['fromDevice'] = $model['fromDevice'];
+        // else if (isset($model['fromDevice'])) // OBSOLETE soon => replaced by 'private'
+        //     $eqModelInfos['fromDevice'] = $model['fromDevice'];
         if (isset($model['variables'])) // Optional variables
             $eqModelInfos['variables'] = $model['variables'];
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);

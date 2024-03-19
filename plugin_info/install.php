@@ -984,16 +984,15 @@
                     $eqModel['private']['EF00']['type'] = "tuya";
                     $saveEqModel = true;
                     $eqLogic->setConfiguration('ab::tuyaEF00', null);
-                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::tuyaEF00' moved to 'ab::eqModel['private']['EF00']");
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::tuyaEF00' moved to 'ab::eqModel[private][EF00]'");
                 }
-                // eqLogic DB: 'ab::fromDevice' => 'ab::eqModel['private']['ED00']'
-                $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', 'nada');
-                if (($fromDevice != 'nada') && (isset($fromDevice['ED00']))) {
+                // eqLogic DB: 'ab::eqModel['fromDevice'} => 'ab::eqModel['private']['ED00']'
+                if (isset($eqModel['fromDevice']) && isset($eqModel['fromDevice']['ED00'])) {
                     $eqModel['private']['ED00'] = $fromDevice['ED00'];
                     $eqModel['private']['ED00']['type'] = "tuya-zosung";
+                    unset($eqModel['fromDevice']);
                     $saveEqModel = true;
-                    $eqLogic->setConfiguration('ab::fromDevice', null);
-                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::fromDevice' moved to 'ab::eqModel['private']['ED00']");
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::eqModel[fromDevice]' moved to 'ab::eqModel[private][ED00]'");
                 }
                 // ab::signature content moved into 'ab::zigbee'
                 $sig = $eqLogic->getConfiguration('ab::signature', null);

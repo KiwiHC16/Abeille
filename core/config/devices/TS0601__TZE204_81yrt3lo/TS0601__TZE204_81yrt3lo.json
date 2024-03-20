@@ -20,7 +20,7 @@
             "Power A": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "powerA",
-                "unit": "W",
+                "unit": "Wh",
                 "isVisible": 1
             },
             "Current A": {
@@ -35,10 +35,24 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
+            "Total power A": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "energyA",
+                "unit": "W",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Total produced A": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "energyProducedA",
+                "unit": "W",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
             "Power B": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "powerB",
-                "unit": "W",
+                "unit": "Wh",
                 "isVisible": 1
             },
             "Current B": {
@@ -50,6 +64,18 @@
             "Producing B": {
                 "use": "inf_generic-Binary",
                 "logicalId": "producingB",
+                "isVisible": 1
+            },
+            "Total power B": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "energyB",
+                "unit": "W",
+                "isVisible": 1
+            },
+            "Total produced B": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "energyProducedB",
+                "unit": "W",
                 "isVisible": 1,
                 "nextLine": "after"
             }
@@ -76,6 +102,26 @@
                     "function": "rcvValueDiv",
                     "div": 10,
                     "info": "powerB"
+                },
+                "6A": {
+                    "function": "rcvValueDiv",
+                    "div": 100,
+                    "info": "energyA"
+                },
+                "6B": {
+                    "function": "rcvValueDiv",
+                    "div": 100,
+                    "info": "energyProducedA"
+                },
+                "6C": {
+                    "function": "rcvValueDiv",
+                    "div": 100,
+                    "info": "energyB"
+                },
+                "6D": {
+                    "function": "rcvValueDiv",
+                    "div": 100,
+                    "info": "energyProducedB"
                 },
                 "71": {
                     "function": "rcvValueDiv",

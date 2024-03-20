@@ -48,6 +48,30 @@
     // See: https://www.zigbee2mqtt.io/advanced/support-new-devices/02_support_new_tuya_devices.html#_2-adding-your-device
     // See: https://developer.tuya.com/en/docs/iot-device-dev/tuya-zigbee-universal-docking-access-standard?id=K9ik6zvofpzql
 
+    // Data types reminder
+    // Type	    TypeId  LengthInBytes	Description
+    // raw	    0x00	N	            Corresponds to raw datapoint (module pass-through)
+    // bool	    0x01	1	            value range: 0x00/0x01
+    // value	0x02	4	            corresponds to int type, big end representation
+    // string	0x03	N	            corresponds to a specific string
+    // enum	    0x04	1	            Enumeration type, range 0-255
+    // bitmap	0x05	1/2/4	        Large end representation for lengths greater than 1 byte
+    function tuyaGetDpDataType($tData) {
+        $types = array(
+            "00" => "raw",
+            "01" => "bool",
+            "02" => "value",
+            "03" => "string",
+            "04" => "enum",
+            "05" => "bitmap"
+        );
+
+        $tData = strtoupper($tData); // Upper string just in case
+        if (isset($types[$tData]))
+            return($types[$tData]);
+        return "?";
+    }
+
     function tuyaGetDp($msg) {
         $tDpId = substr($msg, 0, 2);
         $tDataType = substr($msg, 2, 2);
@@ -55,7 +79,8 @@
         // $tLen = substr($msg, 6, 2);
         $tLen = substr($msg, 4, 4);
         $tData = substr($msg, 8, hexdec($tLen) * 2);
-        $m = "Dp=${tDpId}, Type=${tDataType}, Len=${tLen}, ValueHex=".$tData;
+        $tDataTypeTxt = tuyaGetDpDataType($tDataType);
+        $m = "Dp=${tDpId}, Type=${tDataType}/${tDataTypeTxt}, Len=${tLen}, ValueHex=".$tData;
 
         $dp = array(
             'id' => $tDpId,
@@ -67,14 +92,6 @@
         return $dp;
     }
 
-    // Types reminder
-    // Type	    TypeId  LengthInBytes	Description
-    // raw	    0x00	N	            Corresponds to raw datapoint (module pass-through)
-    // bool	    0x01	1	            value range: 0x00/0x01
-    // value	0x02	4	            corresponds to int type, big end representation
-    // string	0x03	N	            corresponds to a specific string
-    // enum	    0x04	1	            Enumeration type, range 0-255
-    // bitmap	0x05	1/2/4	        Large end representation for lengths greater than 1 byte
 
     // Receive a datapoint, map it to a specific function an decode it.
     // Mapping is defined "per device" directly in its model (private + type="tuya").

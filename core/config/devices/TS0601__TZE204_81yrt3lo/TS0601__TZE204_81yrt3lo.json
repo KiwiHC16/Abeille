@@ -20,22 +20,38 @@
             "Power A": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "powerA",
-                "unit": "W"
-            },            
-            "Power B": {
-                "use": "inf_generic-NumericBadge",
-                "logicalId": "powerB",
-                "unit": "W"
+                "unit": "W",
+                "isVisible": 1
             },
             "Current A": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "currentA",
-                "unit": "A"
-            },            
+                "unit": "A",
+                "isVisible": 1
+            },
+            "Producing A": {
+                "use": "inf_generic-Binary",
+                "logicalId": "producingA",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Power B": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "powerB",
+                "unit": "W",
+                "isVisible": 1
+            },
             "Current B": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "currentB",
-                "unit": "A"
+                "unit": "A",
+                "isVisible": 1
+            },
+            "Producing B": {
+                "use": "inf_generic-Binary",
+                "logicalId": "producingB",
+                "isVisible": 1,
+                "nextLine": "after"
             }
         },
         "private": {
@@ -45,6 +61,16 @@
                     "function": "rcvValueDiv",
                     "div": 10,
                     "info": "powerA"
+                },
+                "66": {
+                    "function": "rcvValue",
+                    "info": "producingA",
+                    "comment": "0=consuming, 1=producing"
+                },
+                "68": {
+                    "function": "rcvValue",
+                    "info": "producingB",
+                    "comment": "0=consuming, 1=producing"
                 },
                 "69": {
                     "function": "rcvValueDiv",

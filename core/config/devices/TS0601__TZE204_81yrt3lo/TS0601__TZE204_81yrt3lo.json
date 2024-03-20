@@ -20,7 +20,7 @@
             "Power A": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "powerA",
-                "unit": "Wh",
+                "unit": "W",
                 "isVisible": 1
             },
             "Current A": {
@@ -38,21 +38,21 @@
             "Total power A": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "energyA",
-                "unit": "W",
+                "unit": "KWh",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Total produced A": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "energyProducedA",
-                "unit": "W",
+                "unit": "KWh",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Power B": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "powerB",
-                "unit": "Wh",
+                "unit": "W",
                 "isVisible": 1
             },
             "Current B": {
@@ -69,13 +69,13 @@
             "Total power B": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "energyB",
-                "unit": "W",
+                "unit": "KWh",
                 "isVisible": 1
             },
             "Total produced B": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "energyProducedB",
-                "unit": "W",
+                "unit": "KWh",
                 "isVisible": 1,
                 "nextLine": "after"
             }

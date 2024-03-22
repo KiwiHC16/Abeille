@@ -26,3 +26,10 @@ Ref: https://software-dl.ti.com/simplelink/esd/plugins/simplelink_zigbee_sdk_plu
 Jeedom
 ======
 '/' char is forbidden in Jeedom command names (ex: 'Get Volt/Percent' is bad => lead to 'Get VoltPercent').
+
+Remotes
+=======
+Complex case as many capabilities.
+- BindToGroup: Ex Tradfri On/off switch. Need to use "set remote group" (what's inside ?) to set same group as target.
+- BindToDevice: Tradfri On/off switch was supposed to run in this mode with recent FW but point above is working.
+- How to deal with cluster 1000 (commissioning) ?

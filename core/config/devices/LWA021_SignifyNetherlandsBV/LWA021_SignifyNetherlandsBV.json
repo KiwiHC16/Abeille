@@ -2,13 +2,13 @@
     "LWA021_SignifyNetherlandsBV": {
         "manufacturer": "Philips",
         "model": "9290030514",
-        "type": "Philips E27 white bulb",
+        "type": "Philips Hue filament white E27 bulb",
         "genericType": "Light",
         "category": {
             "light": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "PhilipsHue-E27Bulb-White-Filament",
             "mainEP": "0B"
         },
         "commands": {

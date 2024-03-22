@@ -47,7 +47,9 @@ Lot's of issues around bind/unbind.
 https://github.com/Koenkk/zigbee2mqtt/issues/2924
 
 WARNING !!!!
-    Below 2.3.075: suppports binding to groups only, 2.3.075 and greater: supports binding to DEVICES ONLY
+    Below 2.3.075: suppports binding to groups only
+    2.3.075 and greater: supports binding to DEVICES ONLY
+        IS THAT TRUE ? Using "set remote group" is working with Trafri on/off switch.
 
 About configure reporting
 =========================

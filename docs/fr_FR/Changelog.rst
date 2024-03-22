@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Support Tuya: Amélioration msg debug.
 - Tuya compteur d'énergie: Mise-à-jour du modèle (2691).
+- Philips LWA021_SignifyNetherlandsBV: Ajout support préliminaire (2693).
 
 240319-BETA-3
 -------------

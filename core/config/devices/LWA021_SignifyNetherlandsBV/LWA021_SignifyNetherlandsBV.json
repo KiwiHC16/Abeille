@@ -1,0 +1,80 @@
+{
+    "LWA021_SignifyNetherlandsBV": {
+        "manufacturer": "Philips",
+        "model": "9290030514",
+        "type": "Philips E27 white bulb",
+        "genericType": "Light",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "?",
+            "mainEP": "0B"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=0B",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=0B",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=0B"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=0B",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=0B&clustId=0006&attrId=0000"
+            },
+            "Bind 0B-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=0B&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B-0006": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=0B&clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "yes"
+            },
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "params": "ep=0B",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "params": "ep=0B",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=0B&clustId=0008&attrId=0000"
+            },
+            "Bind 0B-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=0B&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B-0008-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=0B&clustId=0008&attrType=20&attrId=0000",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

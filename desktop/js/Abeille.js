@@ -62,48 +62,49 @@ function refreshEqInfos() {
             res = JSON.parse(json_res.result);
             eq = res.eq;
             console.log("eq=", eq);
+            curEq = res.eq;
 
             // Updating global infos
-            zgId = eq.zgId;
-            eqAddr = eq.addr;
-            eqIeee = eq.ieee;
-            eqBatteryType = eq.batteryType;
-            curEq = {
-                zigbee: {
-                    addr: eq.addr,
-                },
-                model: {
-                    modelName: eq.model.modelName,
-                },
-            };
+            zgId = curEq.zgId;
+            eqAddr = curEq.addr;
+            eqIeee = curEq.ieee;
+            eqBatteryType = curEq.batteryType;
+            // curEq = {
+            //     zigbee: {
+            //         addr: eq.addr,
+            //     },
+            //     model: {
+            //         modelName: eq.model.modelName,
+            //     },
+            // };
 
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
 
             // Updating main tab
-            document.getElementById("idModelManuf").value = eq.model.manuf;
-            document.getElementById("idModelModel").value = eq.model.model;
-            document.getElementById("idModelType").value = eq.model.type;
+            document.getElementById("idModelManuf").value = curEq.model.manuf;
+            document.getElementById("idModelModel").value = curEq.model.model;
+            document.getElementById("idModelType").value = curEq.model.type;
 
             // Updating advanced tab
-            document.getElementById("idEqName").value = eq.name;
+            document.getElementById("idEqName").value = curEq.name;
             document.getElementById("idEqId").value = curEqId;
-            document.getElementById("idEqAddr").value = eq.addr;
-            document.getElementById("idZgType").value = eq.zgType;
+            document.getElementById("idEqAddr").value = curEq.addr;
+            document.getElementById("idZgType").value = curEq.zgType;
 
-            rxOnWhenIdle = eq.zigbee.rxOnWhenIdle;
+            rxOnWhenIdle = curEq.zigbee.rxOnWhenIdle;
             document.getElementById("idZbRxOnWhenIdle").value = rxOnWhenIdle
                 ? "{{Oui}}"
                 : "{{Non}}";
-            document.getElementById("idZbModel").value = eq.zbModel;
-            document.getElementById("idZbManuf").value = eq.zbManuf;
+            document.getElementById("idZbModel").value = curEq.zbModel;
+            document.getElementById("idZbManuf").value = curEq.zbManuf;
 
-            document.getElementById("idModelSig").value = eq.model.modelSig;
-            document.getElementById("idModelName").value = eq.model.modelName;
+            document.getElementById("idModelSig").value = curEq.model.modelSig;
+            document.getElementById("idModelName").value = curEq.model.modelName;
             document.getElementById("idModelSource").value =
-                eq.model.modelSource;
+                curEq.model.modelSource;
             // Reset model choice to 'auto' if model has been forced
-            if (eq.model.modelForced) {
+            if (curEq.model.modelForced) {
                 var $pRestoreModelAuto = $(
                     "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>"
                 );
@@ -114,9 +115,9 @@ function refreshEqInfos() {
                     .append($aRestoreModelAuto)
                     .insertAfter("#idModelChangeBtn");
             }
-            if (typeof eq.model.variables != "undefined") {
+            if (typeof curEq.model.variables != "undefined") {
                 h = "";
-                for (const [vKey, vVal] of Object.entries(eq.model.variables)) {
+                for (const [vKey, vVal] of Object.entries(curEq.model.variables)) {
                     h += '<div class="form-group">';
                     h +=
                         '<label class="col-lg-3 control-label">' +
@@ -137,12 +138,12 @@ function refreshEqInfos() {
                 document.getElementById("idVariables").innerHTML = h;
             }
 
-            if (typeof eq.zigbee.manufCode != "undefined")
+            if (typeof curEq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
-                    eq.zigbee.manufCode;
+                curEq.zigbee.manufCode;
 
-            if (typeof eq.zigbee.endPoints != "undefined") {
-                for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
+            if (typeof curEq.zigbee.endPoints != "undefined") {
+                for (const [epId, ep] of Object.entries(curEq.zigbee.endPoints)) {
                     // console.log("LA epId=", epId + ", ep=", ep);
                     if (
                         typeof ep.dateCode != "undefined" &&
@@ -160,15 +161,15 @@ function refreshEqInfos() {
             }
 
             docUrl = document.getElementById("idDocUrl");
-            docUrl.setAttribute("href", js_urlProducts + "/" + eq.modelName);
-            if (eq.modelSource == "local") {
+            docUrl.setAttribute("href", js_urlProducts + "/" + curEq.modelName);
+            if (curEq.modelSource == "local") {
                 $("#idDelLocalBtn").show();
             }
-            if (eq.batteryType == "")
+            if (curEq.batteryType == "")
                 document.getElementById("idBatteryType").value = "{{Secteur}}";
             else
                 document.getElementById("idBatteryType").value =
-                    "{{Batterie}} " + eq.batteryType;
+                    "{{Batterie}} " + curEq.batteryType;
 
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
@@ -182,7 +183,7 @@ function refreshEqInfos() {
             }
 
             console.log("paramType: " + eq.paramType);
-            if (eq.paramType == "telecommande") {
+            if (curEq.paramType == "telecommande") {
                 document.getElementById("telecommande").style.display = "block";
             } else {
                 document.getElementById("telecommande").style.display = "none";
@@ -195,7 +196,7 @@ function refreshEqInfos() {
             //     document.getElementById("telecommande7groups").style.display =
             //         "none";
             // }
-            if (eq.paramType == "paramABC") {
+            if (curEq.paramType == "paramABC") {
                 document.getElementById("paramABC").style.display = "block";
             } else {
                 document.getElementById("paramABC").style.display = "none";
@@ -236,19 +237,19 @@ function refreshEqInfos() {
             // Settings default EP
             var items = document.getElementsByClassName("advEp");
             for (var i = 0; i < items.length; i++) {
-                items[i].value = eq.defaultEp;
+                items[i].value = curEq.defaultEp;
             }
 
             // Reset HW visible is type "PI"
-            if (eq.zgType == "PI" || eq.zgType == "PIv2") {
+            if (curEq.zgType == "PI" || curEq.zgType == "PIv2") {
                 resetHw = document.getElementById("idAdvResetHw");
                 resetHw.style.display = "block";
             }
 
             // Zigbee channel user choice
-            if (eq.zgChan != "") {
+            if (curEq.zgChan != "") {
                 select = document.getElementById("idZgChan");
-                select.value = eq.zgChan;
+                select.value = curEq.zgChan;
             }
         },
     });
@@ -471,26 +472,28 @@ function saveEqLogic(eqLogic) {
     console.log("saveEqLogic(), eqLogic=", eqLogic);
 
     // Note: Expecting 'eq' to be defined as global val
-    if (typeof eq == "undefined") {
-        console.log("OOOPS !! Unexpected case. Missing 'eq'");
+    if (typeof curEq == "undefined") {
+        console.log("OOOPS !! Unexpected case. Missing 'curEq'");
         return;
     }
+
+    console.log("curEq=", curEq);
 
     // Tcharp38: Don't understand how to save specific fields in eqLogic/configuration so custom way
     // Saving variables if any
     // TODO: Variables are initialized from equipment model but since user can change them, better to move
     //       them outside 'ab::eqModel'
-    if (typeof eq.model.variables != "undefined") {
+    if (typeof curEq.model.variables != "undefined") {
         varUpdated = false;
-        for (const [vKey, vVal] of Object.entries(eq.model.variables)) {
+        for (const [vKey, vVal] of Object.entries(curEq.model.variables)) {
             newVal = document.getElementById("idVar" + vKey).value;
             if (newVal != vVal) {
-                eq.model.variables[vKey] = newVal;
+                curEq.model.variables[vKey] = newVal;
                 varUpdated = true;
             }
         }
         if (varUpdated) {
-            console.log("VAR updated, eq.model=", eq.model);
+            console.log("VAR updated, curEq.model=", curEq.model);
             $.ajax({
                 type: "POST",
                 url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
@@ -498,7 +501,7 @@ function saveEqLogic(eqLogic) {
                     action: "saveEqConfig",
                     eqId: eqId,
                     eqConfKey: "ab::eqModel",
-                    eqConfVal: JSON.stringify(eq.model),
+                    eqConfVal: JSON.stringify(curEq.model),
                 },
                 dataType: "json",
                 global: false,

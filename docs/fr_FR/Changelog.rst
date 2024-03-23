@@ -5,6 +5,7 @@ ChangeLog
 - Tuya compteur d'énergie: Mise-à-jour du modèle (2691).
 - Philips LWA021_SignifyNetherlandsBV: Ajout support préliminaire (2693).
 - Interne: Abeille.js: Corrections erreur lors du changement de nom.
+- Ampoule E27 TS0505B__TZ3210_mja6r5ix: Ajout support (2694).
 
 240319-BETA-3
 -------------

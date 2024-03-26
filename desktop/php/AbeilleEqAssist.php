@@ -61,7 +61,7 @@
 ?>
 
 <!-- <div class="col-xs-12"> -->
-    <h3>Assistant de découverte d'équipement (beta)</h3>
+    <h3>Assistant de découverte d'équipement</h3>
     <br>
 
     <style>
@@ -985,11 +985,11 @@
                 // Note: If device is a light bulb, need to use 'act_setLevel-Light'
                 cmds["Set Level"+clustIdx] = newCmd("act_setLevel-Light", "ep="+epId);
                 cmds["Set Level"+clustIdx]["isVisible"] = 1;
+                cmds["Get Level"+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
 
                 cmds["Level"+clustIdx] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
                 cmds["Level"+clustIdx]["isVisible"] = 1;
                 cmds["Level"+clustIdx]["nextLine"] = "after";
-                cmds["Get Level"+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
                 cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
                 cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrType=20&attrId=0000", "yes");
             }

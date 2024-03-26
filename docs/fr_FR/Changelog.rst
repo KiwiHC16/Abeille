@@ -7,6 +7,7 @@ ChangeLog
 - Interne: Abeille.js: Corrections erreur lors du changement de nom.
 - Ampoule E27 TS0505B__TZ3210_mja6r5ix: Ajout support (2694).
 - Interne: Parser: Correction mineure.
+- Réparation d'équipement: Améliorations.
 
 240319-BETA-3
 -------------

@@ -244,7 +244,7 @@
         $saveEqModel = false;
         $saveEq = false;
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        logMessage('debug', '  ab::eqModel='.json_encode($eqModel));
+        logMessage('debug', '  ab::eqModel='.json_encode($eqModel, JSON_UNESCAPED_SLASHES));
 
         // Is model identification correct ?
         // ab::eqModel = array(
@@ -265,12 +265,15 @@
                 $eqModel['modelName'] = $modelContent['modelName'];
                 if (isset($modelContent['modelPath']))
                     $eqModel['modelPath'] = $modelContent['modelPath'];
-                // $eqModel['modelForced'] = false;
+                if (isset($eqModel['modelForced']))
+                    unset($eqModel['modelForced']); // In case it was previously forced but unknown
 
                 $eqModel['modelSig'] = $modelContent['modelSig'];
                 $saveEqModel = true;
+            } else {
+                // If returns false but modelName=='defaultUnknown', stay as it is
+                // TODO: Should switch to 'defaultUnknown' if not recognized
             }
-            // If returns false but modelName=='defaultUnknown', stay as it is
         }
         if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
             msgToCli("step", "Model file name", "ok");
@@ -285,6 +288,20 @@
                 if ($modelContent !== false) {
                     $eqModel['modelSig'] = $modelContent['modelSig'];
                     $saveEqModel = true;
+                } else {
+                    logMessage('debug', "  OOPS: Unexpected case ! 'modelSig' undefined and model not identified.");
+                }
+            } else {
+                // Checks that signature is the expected one
+                $modelContent = identifyModel($zigbee['modelId'], $zigbee['manufId']);
+                if ($modelContent !== false) {
+                    if ($eqModel['modelSig'] != $modelContent['modelSig']) {
+                        logMessage('debug', "  'modelSig' updated from '".$eqModel['modelSig']."' to '".$modelContent['modelSig']."'");
+                        $eqModel['modelSig'] = $modelContent['modelSig'];
+                        $saveEqModel = true;
+                    }
+                } else {
+                    logMessage('debug', "  OOPS: Unexpected case ! 'modelSig' can't be checked since model not identified.");
                 }
             }
             if (isset($eqModel['modelSig']) && ($eqModel['modelSig'] != ''))

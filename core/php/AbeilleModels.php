@@ -48,10 +48,10 @@
             if (!is_dir($fullPath))
                 continue;
 
-            /* Supporting multiple variant of a model (rare case)
-               <modelName>/<modelName>.json
-               <modelName>/<modelName>-<variantX>.json (can't be auto-detected)
-               <modelName>/<modelName>-<variantY>.json (can't be auto-detected) */
+            /* Supporting multiple variant of a model (rare case, can't be auto-detected => forced by user)
+               <modelName>/<modelName>.json (model used by auto-identification from Zigbee identifiers)
+               <modelName>/<modelName>-<variantX>.json
+               <modelName>/<modelName>-<variantY>.json */
             $dh2 = opendir($fullPath);
             $deLen = strlen($dirEntry);
             while (($dirEntry2 = readdir($dh2)) !== false) {

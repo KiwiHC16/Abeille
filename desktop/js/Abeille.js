@@ -96,8 +96,10 @@ function refreshEqInfos() {
             document.getElementById("idZbRxOnWhenIdle").value = rxOnWhenIdle
                 ? "{{Oui}}"
                 : "{{Non}}";
-            document.getElementById("idZbModel").value = curEq.zbModel;
-            document.getElementById("idZbManuf").value = curEq.zbManuf;
+            // document.getElementById("idZbModel").value = curEq.zbModel;
+            document.getElementById("idZbModel").value = curEq.zigbee.modelId;
+            // document.getElementById("idZbManuf").value = curEq.zbManuf;
+            document.getElementById("idZbManuf").value = curEq.zigbee.manufId;
 
             document.getElementById("idModelSig").value = curEq.model.modelSig;
             document.getElementById("idModelName").value =

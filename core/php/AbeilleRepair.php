@@ -78,13 +78,14 @@
         } else
             msgToCli("step", "IEEE", "ok");
 
+        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+        logMessage('debug', '  ab::zigbee='.json_encode($zigbee, JSON_UNESCAPED_SLASHES));
         $saveEqZigbee = false;
 
         // Zigbee endpoints list defined ?
-        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-        logMessage('debug', '  ab::zigbee='.json_encode($zigbee, JSON_UNESCAPED_SLASHES));
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) { // Checking current EP list
             if (($epId2 == '') || ($epId2 == '00')) {
+                logMessage('debug', "  Removing zigbee['endPoints'][${epId2}]");
                 unset($zigbee['endPoints'][$epId2]); // Removing unexpected content
                 $saveEqZigbee = true;
             }
@@ -103,7 +104,7 @@
         if (!isset($zigbee['manufCode'])) {
             msgToCli("step", "Manuf code");
             logMessage('debug', '  Requesting node descriptor');
-            msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
+            msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getNodeDescriptor");
             return;
         } else
             msgToCli("step", "Manuf code", "ok");
@@ -113,7 +114,7 @@
             if (!isset($ep2['servClusters'])) {
                 msgToCli("step", "EP${epId2} server clusters list");
                 logMessage('debug', '  Requesting simple descriptor for EP '.$epId2);
-                msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
+                msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getSimpleDescriptor", "ep=".$epId2);
                 return; // To reduce requests on first missing descriptor
             }
             msgToCli("step", "EP${epId2} server clusters list", "ok");
@@ -163,7 +164,7 @@
                 if ($missing != '') {
                     msgToCli("step", "EP${epId2} server cluster 0000 infos");
                     logMessage('debug', '  Requesting '.$missingTxt.' from EP '.$epId2);
-                    msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+                    msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/readAttribute", "ep=${epId2}&clustId=0000&attrId=".$missing);
 
                     // WARNING: At least a device (TS0001, _TZ3000_tqlv4ug4) is not responding if multiple attributes at the same time (ex: 0004,0005,0006,4000)
                     //          No solution so far. This will prevent to have the repair phase completed.
@@ -182,69 +183,68 @@
                 if (!isset($zigbee['groups']) || !isset($zigbee['groups'][$epId2])) {
                     msgToCli("step", "EP${epId2} server cluster 0004 infos");
                     logMessage('debug', '  Requesting groups membership for EP '.$epId2);
-                    msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
+                    msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getGroupMembership", "ep=".$epId2);
                     return; // To reduce requests on first missing groups membership
                 }
             }
             msgToCli("step", "EP${epId2} server cluster 0004 infos", "ok");
         }
 
-        // Zigbee main signature correct ?
-        // Should reflect the signature of the first EP supporting cluster 0000
-        // $zbSig = $eqLogic->getConfiguration('ab::signature', []);
-        // logMessage('debug', '  ab::signature='.json_encode($zbSig));
-        // $zbNewSig = [];
-        $saveEqZigbee = false;
-        foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
-            if (strpos($ep2['servClusters'], '0000') === false)
-                continue; // No basic cluster for this EP
-
-            if (!isset($ep2['manufId']) || !isset($ep2['modelId'])) {
-                logMessage('debug', '  ERROR: Missing model or manuf for EP '.$epId2);
-                return;
-            }
-
-            // model or manuf are now either known or unsupported
-            if (!isset($zigbee['manufId']) && ($ep2['manufId'] != '')) {
-                $zigbee['manufId'] = $ep2['manufId'];
-                $saveEqZigbee = true;
-            }
-            if (!isset($zigbee['modelId']) && ($ep2['modelId'] != '')) {
-                $zigbee['modelId'] = $ep2['modelId'];
-                $saveEqZigbee = true;
-            }
-
-            // Profalux specific case: using 'location' to get identifier
-            if (!isset($zigbee['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
-                logMessage('debug', "  Profalux case: Using 'location' info '".$ep2['location']."'");
-                $zigbee['modelId'] = $ep2['location'];
-                $zigbee['manufId'] = '';
-                $saveEqZigbee = true;
-            }
-        }
-        // if ($zbNewSig != $zbSig) {
-        //     $eqLogic->setConfiguration('ab::signature', $zbNewSig);
-        //     $eqLogic->save();
-        //     logMessage('debug', "  ab::signature updated to ".json_encode($zbNewSig));
-        //     $zbSig = $zbNewSig;
-        // }
-        if ($saveEqZigbee) {
-            saveEqConfig($eqLogic, "ab::zigbee", $zigbee);
-            logMessage('debug', "  ab::zigbee main signature updated to ".json_encode($zigbee));
-        }
-        if (!isset($zigbee['modelId'])) {
-            msgToCli("step", "Zigbee signature");
-            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($zigbee, JSON_UNESCAPED_SLASHES));
-            return;
-        }
-        msgToCli("step", "Zigbee signature", "ok");
-
         $error = false;
         $saveEqZigbee = false;
-        $saveEqModel = false;
         $saveEq = false;
+
+        // Zigbee main signature correct ?
+        // Should reflect the signature of the first EP supporting cluster 0000
+        if (!$error) {
+            foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
+                if (strpos($ep2['servClusters'], '0000') === false)
+                    continue; // No basic cluster for this EP
+
+                // Reminder: modelId & manufId could be empty, specifically for Profalux 1st gen
+                if (!isset($ep2['manufId']) || !isset($ep2['modelId'])) {
+                    logMessage('debug', "  ERROR: Missing modelId or manufId for EP ${epId2}");
+                    // return;
+                    $error = true;
+                    break;
+                }
+
+                // Main modelId or manufId are now either known or unsupported
+                if (!isset($zigbee['manufId']) && ($ep2['manufId'] != '')) {
+                    $zigbee['manufId'] = $ep2['manufId'];
+                    logMessage('debug', "  zigbee['manufId'] updated to ".$zigbee['manufId']);
+                    $saveEqZigbee = true;
+                }
+                if (!isset($zigbee['modelId']) && ($ep2['modelId'] != '')) {
+                    $zigbee['modelId'] = $ep2['modelId'];
+                    logMessage('debug', "  zigbee['modelId'] updated to ".$zigbee['modelId']);
+                    $saveEqZigbee = true;
+                }
+
+                // Profalux specific case: using 'location' to get identifier
+                if ((!isset($zigbee['modelId']) || ($zigbee['modelId'] == ""))
+                    && isset($ep2['location']) && ($ep2['location'] != '')) {
+                    logMessage('debug', "  Profalux case: Using 'location' info '".$ep2['location']."'");
+                    $zigbee['modelId'] = $ep2['location'];
+                    $zigbee['manufId'] = '';
+                    $saveEqZigbee = true;
+                }
+            }
+        }
+
+        if (!$error) {
+            if (!isset($zigbee['modelId']) || ($zigbee['modelId'] == "")) {
+                msgToCli("step", "Zigbee signature");
+                logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($zigbee, JSON_UNESCAPED_SLASHES));
+                $error = true;
+                // return;
+            } else
+                msgToCli("step", "Zigbee signature", "ok");
+        }
+
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
         logMessage('debug', '  ab::eqModel='.json_encode($eqModel, JSON_UNESCAPED_SLASHES));
+        $saveEqModel = false;
 
         // Is model identification correct ?
         // ab::eqModel = array(
@@ -257,28 +257,30 @@
         //     'model' => EQ model nam
         //     'type' => EQ model type
         // )
-        if (!isset($eqModel['modelName']) || ($eqModel['modelName'] == '') || ($eqModel['modelName'] == 'defaultUnknown')) {
-            msgToCli("step", "Model file name");
-            $modelContent = identifyModel($zigbee['modelId'], $zigbee['manufId']);
-            if ($modelContent !== false) {
-                $eqModel['modelSource'] = $modelContent['modelSource'];
-                $eqModel['modelName'] = $modelContent['modelName'];
-                if (isset($modelContent['modelPath']))
-                    $eqModel['modelPath'] = $modelContent['modelPath'];
-                if (isset($eqModel['modelForced']))
-                    unset($eqModel['modelForced']); // In case it was previously forced but unknown
+        if (!$error) {
+            if (!isset($eqModel['modelName']) || ($eqModel['modelName'] == '') || ($eqModel['modelName'] == 'defaultUnknown')) {
+                msgToCli("step", "Model file name");
+                $modelContent = identifyModel($zigbee['modelId'], $zigbee['manufId']);
+                if ($modelContent !== false) {
+                    $eqModel['modelSource'] = $modelContent['modelSource'];
+                    $eqModel['modelName'] = $modelContent['modelName'];
+                    if (isset($modelContent['modelPath']))
+                        $eqModel['modelPath'] = $modelContent['modelPath'];
+                    if (isset($eqModel['modelForced']))
+                        unset($eqModel['modelForced']); // In case it was previously forced but unknown
 
-                $eqModel['modelSig'] = $modelContent['modelSig'];
-                $saveEqModel = true;
-            } else {
-                // If returns false but modelName=='defaultUnknown', stay as it is
-                // TODO: Should switch to 'defaultUnknown' if not recognized
+                    $eqModel['modelSig'] = $modelContent['modelSig'];
+                    $saveEqModel = true;
+                } else {
+                    // If returns false but modelName=='defaultUnknown', stay as it is
+                    // TODO: Should switch to 'defaultUnknown' if not recognized
+                }
             }
+            if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
+                msgToCli("step", "Model file name", "ok");
+            else
+                $error = true;
         }
-        if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
-            msgToCli("step", "Model file name", "ok");
-        else
-            $error = true;
 
         if (!$error) {
             if (!isset($eqModel['modelSig']) || ($eqModel['modelSig'] == '')) {

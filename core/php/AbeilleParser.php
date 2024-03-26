@@ -393,7 +393,7 @@
         if (isset($eqModel['private'])) {
             $eq['private'] = $eqModel['private'];
             parserLog('debug', "  'private' updated to ".json_encode($eq['private'], JSON_UNESCAPED_SLASHES));
-        } else if ($GLOBALS['eqList'][$net][$addr]['private'])
+        } else if (isset($GLOBALS['eqList'][$net][$addr]['private']))
             unset($GLOBALS['eqList'][$net][$addr]['private']);
 
         // $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', null); // OBSOLETE soon. Replaced by 'private'

@@ -19,11 +19,11 @@
         ],
         meta: {
             tuyaDatapoints: [
-                [111, 'ac_frequency', tuya.valueConverter.divideBy100],
+                [111, 'ac_frequency', tuya.valueConverter.divideBy100], >> 0x6F
                 [101, 'power_a', tuya.valueConverter.divideBy10],
                 [105, 'power_b', tuya.valueConverter.divideBy10],
-                [115, 'power_ab', tuya.valueConverter.divideBy10],
-                [112, 'voltage', tuya.valueConverter.divideBy10],
+                [115, 'power_ab', tuya.valueConverter.divideBy10], >> 0x73
+                [112, 'voltage', tuya.valueConverter.divideBy10], >> 0x70
                 [113, 'current_a', tuya.valueConverter.divideBy1000], >> 0x71
                 [114, 'current_b', tuya.valueConverter.divideBy1000], >> 0x72
                 [110, 'power_factor_a', tuya.valueConverter.raw],
@@ -34,7 +34,38 @@
                 [108, 'energy_b', tuya.valueConverter.divideBy100],
                 [107, 'energy_produced_a', tuya.valueConverter.divideBy100],
                 [109, 'energy_produced_b', tuya.valueConverter.divideBy100],
-                [129, 'update_frequency', tuya.valueConverter.raw],
+                [129, 'update_frequency', tuya.valueConverter.raw], >> 0x81
             ],
         },
     },
+
+
+https://github.com/Koenkk/zigbee2mqtt/issues/18419
+
+1   115 DPID_POWER_TOTAL_ID         only report     4   1. report the total power (A+B)2. big-endian, 0.1W, X103. signed (32bits)
+2   101 DPID_POWER_ID_A             only report     4   1. report the total power (A)2. big-endian, 0.1W, X103. unsigned int (32bits)
+3   105 DPID_POWER_ID_B             only report     4   1. report the total power (B)2.big-endian, 0.1W, X103. unsigned int (32bits)
+4   102 DPID_POWER_DIRECTION_ID_A   only report     1   0: Forward, 1:Reverse
+5   104 DPID_POWER_DIRECTION_ID_B   only report     1   0: Forward, 1:Reverse
+6   106 DPID_FORWARD_ENERGY_TOTAL_A only report     4   1. report the forward energy (A)2. big-endian, X100,0.01KWH3. unsigned int (32bits)
+7   107 DPID_REVERSE_ENERGY_TOTAL_A only report     4   1. report the reverse energy (A)2. big-endian, X100, 0.01KWH3. unsigned int (32bits)
+8   108 DPID_FORWARD_ENERGY_TOTAL_B only report     4   1. report the forward energy (B)2. big-endian, X100,0.01KWH3. unsigned int (32bits)
+9   109 DPID_REVERSE_ENERGY_TOTAL_B only report     4   1. report the reverse energy (B)2. big-endian, X100, 0.01KWH3. unsigned int (32bits)
+10  110 DPID_POWER_FACTOR_A         only report     4   1. report the power factor (A)2. big-endian, X1003. unsigned int (32bits)
+11  121 DPID_POWER_FACTOR_B         only report     4   1. report the power factor (B)2. big-endian, X1003. unsigned int (32bits)
+12  111 DPID_POWER_FREQ             only report     4   1. report the AC freq 2. big-endian, X1003. unsigned int (32bits)
+13  112 DPID_VOLTAGE_A              only report     4   1. report the Voltage 2. big-endian, X1003. unsigned int (32bits)
+14  113 DPID_CURRENT_A              only report     4   1. report the Current(A) 2. big-endian, X1003. unsigned int (32bits)
+15  114 DPID_CURRENT_B              only report     4   1. report the Current(B) 2. big-endian, X1003. unsigned int (32bits)
+16  129 DPID_UPDATE_RATE            report/setting  4   1. report the update rate2. big-endian, (3-60s)3. unsigned int (32bits)
+17  116 DPID_VOLTAGE_A_COEF         report/setting  4   1. calibration Voltage2. big-endian, X10003. unsigned int (32bits)
+18  117 DPID_CURRENT_A_COEF         report/setting  4   1. Calibration current_A2. big-endian, X10003. unsigned int (32bits)
+19  118 DPID_POWER_A_COEF           report/setting  4   1. Calibration power_A2. big-endian, X10003. unsigned int (32bits)
+20  119 DPID_ENERGY_A_COEF          report/setting  4   1. Calibration forward energy_A2. big-endian, X10003. unsigned int (32bits)
+21  127 DPID_ENERGY_A_COEF_REV      report/setting  4   1. Calibration reverse energy_A2. big-endian, X10003. unsigned int (32bits)
+22  122 DPID_FREQ_COEF              report/setting  4   1. Calibration AC freq2. big-endian, X10003. unsigned int (32bits)
+23  123 DPID_CURRENT_B_COEF         report/setting  4   1. Calibration Current_B2. big-endian, X10003. unsigned int (32bits)
+24  124 DPID_POWER_B_COEF           report/setting  4   1. Calibration Power_B2. big-endian, X10003. unsigned int (32bits)
+25  125 DPID_ENERGY_B_COEF          report/setting  4   1. Calibration forward energy_B2. big-endian, X10003. unsigned int (32bits)
+26  128 DPID_ENERGY_B_COEF_REV      report/setting  4   1. Calibration Revese energy_B2. big-endian, X10003. unsigned int (32bits)
+

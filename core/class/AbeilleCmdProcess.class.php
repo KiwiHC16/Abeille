@@ -91,10 +91,10 @@
 
         // Generate ZCL header
         // hParams = array(
-        //     'clustSpecific' => false, // Optional: Frame type: false=general (default), true=cluster specific
+        //     'clustSpecific' => true, // Optional: Frame type: false=general (default), true=cluster specific
         //     'manufCode' => '', // Optional: Note: if != '' it enabled 'manufSpecific' flag
-        //     'toCli' => false, // Optional: Default direction = client to server
-        //     'disableDefaultRsp' => true, // Optional
+        //     'toCli' => true, // Optional: Direction: false=default=client2server, true=server2client
+        //     'disableDefaultRsp' => false, // Optional (default=true)
         //     'zclSqn' => 'xx', // Optional
         //     'cmdId' => 'xx' // Mandatory
         // )
@@ -1445,7 +1445,7 @@
                 $groupType              = "00";
 
                 $data2 = $zclControlField.$transactionSequence.$cmdId.$total.$startIndex.$count.$groupId.$groupType;
-                $dataLength = sprintf( "%02s", dechex(strlen($data2) / 2));
+                $dataLength = sprintf("%02X", strlen($data2) / 2);
                 $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                 $data = $data1.$data2;
 
@@ -1502,7 +1502,7 @@
 
                 $data2 = $zclControlField.$Manufacturer.$transactionSequence.$cmdId.$groupId ;
 
-                $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
+                $dataLength = sprintf( "%02X", strlen($data2) / 2);
 
                 $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
@@ -1511,8 +1511,6 @@
 
                 $data = $data1.$data2;
 
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data );
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                 return;
             }
@@ -3544,13 +3542,13 @@
 
                 // ZCL global: Discover commands received
                 // Mandatory params: 'addr', 'ep', 'clustId'
-                // Optional params: 'startId' (default=00), 'max' (default=FF)
+                // Optional params: 'startId' (default=00), 'max' (default=FF), 'dir' (00=toServer=default, 01=toClient)
                 else if ($cmdName == 'discoverCommandsReceived') {
                     $required = ['addr', 'ep', 'clustId'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -3576,28 +3574,25 @@
                     $clustId    = $Command['clustId'];
                     $secMode    = "02";
                     $radius     = "1E";
+                    $dir        = isset($Command['dir']) ? $Command['dir'] : '00'; // 00 = to server side, 01 = to client site
 
                     /* ZCL header */
-                    // $fcf        = "10"; // Frame Control Field
-                    // $sqn        = $this->genSqn();
-                    // $cmdId      = "11"; // Discover Commands Received
-                    // cmdLog('debug', '  fcf='.$fcf.', sqn='.$sqn.", cmdId=".$cmdId);
                     $hParams = array(
                         'cmdId' => '11', // Discover Commands Received
+                        'toCli' => ($dir == "00") ? false : true,
                     );
                     $zclHeader = $this->genZclHeader($hParams);
 
                     $startId    = isset($Command['startId']) ? $Command['startId'] : "00";
                     $max        = isset($Command['max']) ? $Command['max'] : "FF";
-
-                    // $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+                    cmdLog('debug', "  discoverCommandsReceived: startId=${startId}, max=${max}");
                     $data2 = $zclHeader.$startId.$max;
 
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End 'discoverCommandsReceived'
 
@@ -4139,7 +4134,7 @@
                     //<source endpoint: uint8_t>
                     //<destination endpoint: uint8_t>
                     //<group address: uint16_t>
-                    $zgCmd        = "0060";
+                    $zgCmd      = "0060";
                     $addrMode   = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
@@ -5150,6 +5145,9 @@
                 } // End $cmdName == 'cmd-0502'
 
                 // ZCL cluster 1000 specific: (received) commands
+                // Mandatory:
+                // Optional: 'dir' (00=toServer=default, 01=toClient)
+                //   Other optional parameters depending on 'cmd' & 'dir'.
                 else if ($cmdName == 'cmd-1000') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -5180,28 +5178,71 @@
                     $clustId    = '1000';
                     $secMode    = "02";
                     $radius     = "1E";
-
-                    /* ZCL header */
-                    $fcf        = "11"; // Frame Control Field
-                    $sqn        = $this->genSqn();
+                    $dir        = (isset($Command['dir']) ? $Command['dir'] : "00"); // 00 = to server side, 01 = to client site
                     $cmdId      = $Command['cmd'];
 
-                    if ($cmdId == "41") { // Get Group Identifiers Request Command
-                        $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
-                        $data2 = $fcf.$sqn.$cmdId.$startIdx;
-                    } else if ($cmdId == "42") { // Get endpoint list request
-                        $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
-                        $data2 = $fcf.$sqn.$cmdId.$startIdx;
-                    } else {
-                        cmdLog('debug', "  ERROR: Unsupported cluster 1000 command ".$cmdId);
-                        return;
-                    }
-                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+                    /* ZCL header */
+                    // $fcf        = "11"; // Frame Control Field
+                    // $sqn        = $this->genSqn();
+                    $hParams = array(
+                        'clustSpecific' => true,
+                        'toCli' => ($dir == "00") ? false : true,
+                        'cmdId' => $cmdId,
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
 
+                    if ($dir == "00") { // To server
+                        // 0x00 Scan request M 13.3.2.2.1
+                        // 0x02 Device information request M 13.3.2.2.2
+                        // 0x06 Identify request M 13.3.2.2.3
+                        // 0x07 Reset to factory new request M 13.3.2.2.4
+                        // 0x10 Network start request M 13.3.2.2.5
+                        // 0x12 Network join router request M 13.3.2.2.6
+                        // 0x14 Network join end device request M 13.3.2.2.7
+                        // 0x16 Network update request M 13.3.2.2.8
+                        // 0x41 Get group identifiers request O* 13.3.2.2.9
+                        // 0x42 Get endpoint list request O
+                        if ($cmdId == "41") { // Get Group Identifiers Request Command
+                            $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
+                            $data2 = $zclHeader.$startIdx;
+                        } else if ($cmdId == "42") { // Get endpoint list request
+                            $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
+                            $data2 = $zclHeader.$startIdx;
+                        } else {
+                            cmdLog('debug', "  ERROR: Unsupported cluster 1000 command ${cmdId} to SERVER");
+                            return;
+                        }
+                    } else { // To client
+                        // 0x01 Scan response Mandatory
+                        // 0x03 Device information response Mandatory
+                        // 0x11 Network start response Mandatory
+                        // 0x13 Network join router response Mandatory
+                        // 0x15 Network join end device response Mandatory
+                        // 0x40 Endpoint information Optional
+                        // 0x41 Get group identifiers response Mandatory if get group identifiers request command is generated; otherwise Optional
+                        // 0x42 Get endpoint list response
+                        if ($cmdId == "41") { // Get Group Identifiers Response
+                            $total = isset($Command['total']) ? $Command['total'] : "00";
+                            $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
+                            $count = isset($Command['count']) ? $Command['count'] : "01";
+                            if (!isset($Command['group'])) {
+                                cmdLog('error', "  Missing 'group' for cmd 1000-${cmdId} to CLIENT");
+                                return;
+                            }
+                            $group = $Command['group'];
+                            cmdLog('debug', "  cmd-1000-41 to client: total=${total}, startIdx=${startIdx}, count=${count}, group=${group}");
+                            $data2 = $zclHeader.$total.$startIdx.$count.$group.'00';
+                        } else {
+                            cmdLog('debug', "  ERROR: Unsupported cluster 1000 command ${cmdId} to CLIENT");
+                            return;
+                        }
+                    }
+
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 

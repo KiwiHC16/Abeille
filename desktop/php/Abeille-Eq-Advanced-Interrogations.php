@@ -240,6 +240,7 @@
             addButton("{{Interroger}}", "btn-default", "discoverCommandsReceived");
             addEpInput("idEpB");
             addClusterList("idClustIdB");
+            addDirList("idDir-DiscoverCmdRx");
         ?>
     </div>
 </div>
@@ -383,7 +384,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41)">ZCL: 1000 - Groupes</label>
+    <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41) to SERVER">ZCL: 1000 - Groupes req</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "1000-GetGroups");
@@ -392,7 +393,17 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Cluster 1000, Get endpont list (cmd 42)">ZCL: 1000 - End points</label>
+    <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers response (cmd 41) to CLIENT">ZCL: 1000 - Groupes resp</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Interroger}}", "btn-default", "1000-GetGroupsResp");
+            addEpInput("idEpC1000-41-Resp");
+            addGroupInput('idGrpC1000-41-Resp', 'Group');
+        ?>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 1000, Get endpont list (cmd 42) to SERVER">ZCL: 1000 - End points</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "1000-GetEndpoints");

@@ -8,6 +8,9 @@ ChangeLog
 - Ampoule E27 TS0505B__TZ3210_mja6r5ix: Ajout support (2694).
 - Interne: Parser: Correction mineure.
 - Réparation d'équipement: Améliorations.
+- Equipement/avancé/interrogations: Améliorations cluster 1000.
+- Interne: Cmd: Ajout support vers client pour 'discoverCommandsReceived'.
+- Equipement/avancé/interrogations: Découverte des commandes reçues vers client possible.
 
 240319-BETA-3
 -------------

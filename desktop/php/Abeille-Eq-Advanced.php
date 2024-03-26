@@ -124,6 +124,14 @@
     //     echo "}";
     //     echo "</script>";
     // }
+
+    // Create drop down list for possible directions (toServer=00, toClient=01)
+    function addDirList($id) {
+        echo '<select id="'.$id.'" style="width:100px; margin-left: 8px" title="{{Direction}}" />';
+        echo '<option value="00" selected>{{-> serveur}}</option>';
+        echo '<option value="01">{{-> client}}</option>';
+        echo '</select>';
+    }
 ?>
 
 <form class="form-horizontal">

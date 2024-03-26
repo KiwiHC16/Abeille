@@ -100,7 +100,8 @@ function refreshEqInfos() {
             document.getElementById("idZbManuf").value = curEq.zbManuf;
 
             document.getElementById("idModelSig").value = curEq.model.modelSig;
-            document.getElementById("idModelName").value = curEq.model.modelName;
+            document.getElementById("idModelName").value =
+                curEq.model.modelName;
             document.getElementById("idModelSource").value =
                 curEq.model.modelSource;
             // Reset model choice to 'auto' if model has been forced
@@ -117,7 +118,9 @@ function refreshEqInfos() {
             }
             if (typeof curEq.model.variables != "undefined") {
                 h = "";
-                for (const [vKey, vVal] of Object.entries(curEq.model.variables)) {
+                for (const [vKey, vVal] of Object.entries(
+                    curEq.model.variables
+                )) {
                     h += '<div class="form-group">';
                     h +=
                         '<label class="col-lg-3 control-label">' +
@@ -140,10 +143,12 @@ function refreshEqInfos() {
 
             if (typeof curEq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
-                curEq.zigbee.manufCode;
+                    curEq.zigbee.manufCode;
 
             if (typeof curEq.zigbee.endPoints != "undefined") {
-                for (const [epId, ep] of Object.entries(curEq.zigbee.endPoints)) {
+                for (const [epId, ep] of Object.entries(
+                    curEq.zigbee.endPoints
+                )) {
                     // console.log("LA epId=", epId + ", ep=", ep);
                     if (
                         typeof ep.dateCode != "undefined" &&
@@ -1944,6 +1949,7 @@ function interrogate(request) {
         clustId = document.getElementById("idClustIdB").value;
         // start = document.getElementById("idStartB").value;
         start = "00";
+        dir = document.getElementById("idDir-DiscoverCmdRx").value;
         payload =
             "addr=" +
             eqAddr +
@@ -1952,7 +1958,9 @@ function interrogate(request) {
             "_clustId=" +
             clustId +
             "_start=" +
-            start;
+            start +
+            "_dir=" +
+            dir;
     } else if (request == "discoverAttributesExt") {
         topic = "Cmd" + logicalId + "_discoverAttributesExt";
         ep = document.getElementById("idEpC").value;
@@ -2117,9 +2125,17 @@ function interrogate(request) {
         if (duration != "") payload += "_duration=" + duration;
         if (sirenl != "") payload += "_sirenl=" + sirenl;
     } else if (request == "1000-GetGroups") {
+        // Clust 1000, cmd 0x41 to SERVER
         topic = "Cmd" + logicalId + "_cmd-1000";
         ep = document.getElementById("idEpC1000-41").value;
         payload = "ep=" + ep + "_cmd=41_startIdx=00";
+    } else if (request == "1000-GetGroupsResp") {
+        // Clust 1000, cmd 0x41 to CLIENT
+        topic = "Cmd" + logicalId + "_cmd-1000";
+        ep = document.getElementById("idEpC1000-41-Resp").value;
+        group = document.getElementById("idGrpC1000-41-Resp").value;
+        payload =
+            "ep=" + ep + "_cmd=41_total=00_startIdx=00_count=01_group=" + group;
     } else if (request == "1000-GetEndpoints") {
         topic = "Cmd" + logicalId + "_cmd-1000";
         ep = document.getElementById("idEpC1000-42").value;

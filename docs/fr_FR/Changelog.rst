@@ -12,6 +12,8 @@ ChangeLog
 - Interne: Cmd: Ajout support vers client pour 'discoverCommandsReceived'.
 - Equipement/avancé/interrogations: Découverte des commandes reçues vers client possible.
 - powerCycleUsb: Améliorations du script de reboot USB.
+- Correction status équipement 'Zigate' si désactivé sur page de config.
+- Page santé: Correction: Equipements montrés désactivés si Zigate désactivée.
 
 240319-BETA-3
 -------------

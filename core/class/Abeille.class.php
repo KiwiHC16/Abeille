@@ -940,49 +940,22 @@ class Abeille extends eqLogic {
         // Tcharp38: Moved from deamon_start()
         $config = AbeilleTools::getConfig();
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
-            if (($config['ab::zgPort'.$zgId] == 'none') or ($config['ab::zgEnabled'.$zgId] != 'Y'))
-                continue; // Undefined or disabled
+            if ($config['ab::zgPort'.$zgId] == 'none')
+                continue; // Port undefined
 
-            // Create/update beehive equipment on Jeedom side
-            // Note: This will reset 'FW-Version' to '---------' to mark FW version invalid.
-            // Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
-            self::createRuche("Abeille".$zgId);
-
-            // Zigate configuration is now triggered from AbeilleCmd when receive channel is opened (serial=>parser)
-            // if (isset($config['ab::zgChan'.$zgId])) {
-            //     $chan = $config['ab::zgChan'.$zgId];
-            //     if ($chan == 0)
-            //         $mask = 0x7fff800; // All channels = auto
-            //     else
-            //         $mask = 1 << $chan;
-            //     $mask = sprintf("%08X", $mask);
-            //     log::add('Abeille', 'debug', "deamon(): Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
-            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetChannelMask", "mask=".$mask);
-            // }
-            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSoftReset", "");
-            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgStartNetwork", "");
-            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetTimeServer", "");
-            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgGetVersion", "");
-
-            // Set Zigate in 'hybrid' mode, (possible only since 3.1D).
-            // Tcharp38: Need to get current FW version first so this part if moved to 'msgFromParser' on 'zigateVersion' recept.
-            // $version = "0000";
-            // $ruche = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-            // if ($ruche) {
-            //     $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
-            //     if ($cmdLogic)
-            //         $version = $cmdLogic->execCmd();
-            //     else
-            //         log::add('Abeille', 'debug', "deamon(): ERROR: Missing 'SW-SDK' cmd for 'Ruche".$zgId."'");
-            // } else
-            //     log::add('Abeille', 'debug', "deamon(): ERROR: Missing 'Ruche".$zgId."'");
-            // if (hexdec($version) >= 0x031D) {
-            //     log::add('Abeille', 'debug', 'deamon(): FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
-            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
-            // } else {
-            //     log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$zgId.' in normal mode');
-            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=normal");
-            // }
+            if ($config['ab::zgEnabled'.$zgId] == 'Y') {
+                // Create/update beehive equipment on Jeedom side
+                // Note: This will reset 'FW-Version' to '---------' to mark FW version invalid.
+                // Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
+                self::createRuche("Abeille${zgId}");
+            } else {
+                // Zigate disabled. Ensure equipment is disabled too
+                $eqLogic = eqLogic::byLogicalId("Abeille${zgId}/0000", 'Abeille');
+                if (is_object($eqLogic) && ($eqLogic->getIsEnable() != 0)) {
+                    $eqLogic->setIsEnable(0);
+                    $eqLogic->save();
+                }
+            }
         }
 
         // Essaye de recuperer les etats des equipements
@@ -2617,6 +2590,9 @@ class Abeille extends eqLogic {
 
     // Beehive creation/update function. Called on daemon startup or new beehive creation.
     public static function createRuche($dest) {
+        $zgId = substr($dest, 7); // AbeilleX => X
+
+        $config = AbeilleTools::getConfig();
         $eqLogic = eqLogic::byLogicalId($dest."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
             message::add("Abeille", "Création de l'équipement 'Ruche' en cours. Rafraichissez votre dashboard dans qq secondes.", '');
@@ -2625,20 +2601,19 @@ class Abeille extends eqLogic {
             //id
             $eqLogic->setName("Ruche-".$dest);
             $eqLogic->setLogicalId($dest."/0000");
-            $config = AbeilleTools::getConfig();
             if ($config['ab::defaultParent'] > 0) {
                 $eqLogic->setObject_id($config['ab::defaultParent']);
             } else {
                 $eqLogic->setObject_id(jeeObject::rootObject()->getId());
             }
             $eqLogic->setEqType_name('Abeille');
-            $eqLogic->setConfiguration('topic', $dest."/0000");
+            // $eqLogic->setConfiguration('topic', $dest."/0000"); // Tcharp38: What for ?
             // $eqLogic->setConfiguration('type', 'topic'); // Tcharp38: What for ?
             // $eqLogic->setConfiguration('lastCommunicationTimeOut', '-1');
             $eqLogic->setIsVisible("0");
             $eqLogic->setConfiguration('ab::icon', "Ruche");
             $eqLogic->setTimeout(5); // timeout en minutes
-            $eqLogic->setIsEnable("1");
+            $eqLogic->setIsEnable(1);
         } else {
             // TODO: If already exist, should we update commands if required ?
             log::add('Abeille', 'debug', "createRuche(): '".$eqLogic->getLogicalId()."' already exists");
@@ -2646,13 +2621,20 @@ class Abeille extends eqLogic {
 
         $eqLogic->setConfiguration('mainEP', '01');
 
-        // JSON model infos
+        // For future.. if required
+        // // Zigate is a bridge: adding 'ab::bridge' array
+        // $bridge = array(
+        //     'type' => 'zigate',
+        //     'model' => $config['ab::zgType'.$zgId],
+        // );
+        // $eqLogic->setConfiguration('ab::bridge', $bridge);
+
+        // Zigate JSON model infos
         $eqModelInfos = array(
             'modelSig' => 'rucheCommand',
             'modelName' => 'rucheCommand', // Equipment model id
             'modelSource' => 'Abeille', // Equipment model location
             'type' => 'Zigate',
-            // 'lastUpdate' => time() // Store last update from model
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
@@ -2661,7 +2643,7 @@ class Abeille extends eqLogic {
         if (!isset($zigbee['groups']))
             $zigbee['groups'] = [];
         if (!isset($zigbee['groups']['01']))
-                $zigbee['groups']['01'] = '';
+            $zigbee['groups']['01'] = '';
         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
 
         $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));

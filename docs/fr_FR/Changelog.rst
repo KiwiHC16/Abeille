@@ -11,6 +11,7 @@ ChangeLog
 - Equipement/avancé/interrogations: Améliorations cluster 1000.
 - Interne: Cmd: Ajout support vers client pour 'discoverCommandsReceived'.
 - Equipement/avancé/interrogations: Découverte des commandes reçues vers client possible.
+- powerCycleUsb: Améliorations du script de reboot USB.
 
 240319-BETA-3
 -------------

@@ -5,7 +5,7 @@
 ### Tcharp38
 ###
 
-echo "powerCycleUsb.sh starting"
+echo -n "powerCycleUsb.sh starting: "
 date
 
 NBARGS=$#
@@ -35,13 +35,22 @@ if [ "${DMESG}" == "" ]; then
     dmesg
     exit 3
 fi
-echo "DMESG=$DMESG"
+#echo "DMESG=$DMESG"
 DMESG2=`echo ${DMESG} | sed 's/:.*//'`
 echo "DMESG2='$DMESG2'"
 PORT=${DMESG2#usb }
 echo "PORT='$PORT'"
 
 # Port identified. Let's do power cycling
-echo "$PORT" > /sys/bus/usb/drivers/usb/unbind
-sleep 2
-echo "$PORT" > /sys/bus/usb/drivers/usb/bind
+if [ -e "/sys/bus/usb/drivers/usb/unbind" ]; then
+    echo "Disconnecting ${PORT}"
+    echo "$PORT" > /sys/bus/usb/drivers/usb/unbind
+    sleep 2
+    echo "Reconnecting ${PORT}"
+    echo "$PORT" > /sys/bus/usb/drivers/usb/bind
+else
+    echo "ERROR: No solution found to power cycle ${PORT}"
+    exit 4
+fi
+
+exit 0

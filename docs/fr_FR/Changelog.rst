@@ -15,6 +15,7 @@ ChangeLog
 - Correction status équipement 'Zigate' si désactivé sur page de config.
 - Page santé: Correction: Equipements montrés désactivés si Zigate désactivée.
 - Dev: Améliorations 'switch_branch'.
+- Page santé: Une couleur par réseau pour plus de clareté.
 
 240319-BETA-3
 -------------

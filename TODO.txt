@@ -1,6 +1,3 @@
-Page santé
-    1 couleur differente par réseau pour + de clareté
-
 Collecte des routages
     Il peut etre tres utile de connaitre le dernier routage pour identifier cause de blocage du reseau
 
@@ -41,6 +38,7 @@ Lorsqu'un equipement quitte le réseau
 switch branch & update
     Les demons ne sont pas arretes pendant la mise à jour.
     Qqch n'est pas propre
+    => Changement fait 29/mar/24. A voir si Ok
 
 Canal Zigbee: memoriser choix user pour reappliquer redemarrage => 'ab::zgChanX'
     Ajouter choix du canal sur page de config => ok pour visu only

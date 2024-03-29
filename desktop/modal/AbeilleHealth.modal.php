@@ -91,134 +91,6 @@
         </tr>
     </thead>
     <tbody>
-    <!-- < ?php
-        // To identify duplicated objet with same IEEE
-        $IEEE_Table = array();
-
-        foreach ($eqLogics as $eqLogic) {
-            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
-
-            echo "\n\n\n<tr>";
-
-            // Network (AbeilleX)
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$net.'</span></td>';
-
-            // Device name
-            echo '<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
-
-            // Device type
-            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            $type = isset($eqModel['type']) ? $eqModel['type'] : '?';
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$type.'</span></td>';
-
-            // ID
-            // echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getId().'</span></td>';
-
-            // Short Address
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$addr.'</span></td>';
-
-            /* Extended address/IEEE
-               If present in config, taking it.
-               If not, asking IEEE adress */
-            if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
-                $addrIEEE = "-";
-            } else {
-                $addrIEEE = $eqLogic->getConfiguration('IEEE', 'none');
-                if ($addrIEEE == "none") {
-                    /* Get IEEE address from zigate */
-                    $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
-                    if ($commandIEEE) {
-                        $addrIEEE = strtoupper($commandIEEE->execCmd());
-                    }
-                }
-                if (strlen($addrIEEE) > 2) {
-                    if (array_key_exists($addrIEEE, $IEEE_Table)) {
-                        $IEEE_Table[$addrIEEE] += 1;
-                    }
-                    else {
-                        $IEEE_Table[$addrIEEE] = 1;
-                    }
-                }
-            }
-            if ((strlen($addrIEEE) == 16) || ($addrIEEE=="-")) {
-                echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$addrIEEE.'</span></td>';
-            } else {
-                echo '<td><span class="label label-warning" style="font-size: 1em; cursor: default;">Manquante</span></td>';
-            }
-
-            // Status: Updated every minutes by cron() (see Abeille.class.php)
-            if ($eqLogic->getIsEnable() == 0) // Disabled ?
-                $status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
-            // else if ($eqLogic->getStatus('state') == '-')
-            //     $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            else if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol")
-                $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            // else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > ((2*60*$eqLogic->getTimeout())))
-            //     $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">Time-out</span>';
-            // else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > (60*$eqLogic->getTimeout()))
-            //     $status = '<span class="label label-warning" style="font-size: 1em; cursor: default;">Time-out</span>';
-            else if ($eqLogic->getStatus('timeout') == 1)
-                $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{Time-out}}</span>';
-            else
-                $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
-            echo '<td>'.$status.'</td>';
-
-            // Status APS_ACK
-            // Tcharp38: Unreliable so far & no time to work on it.
-            // if (isset($dbgDeveloperMode)) {
-            //     if ($eqLogic->getIsEnable() == 0) // Disabled ?
-            //         $APS_ACK = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
-            //     else if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol")
-            //         $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            //     else if ($eqLogic->getStatus('APS_ACK') == '0')
-            //         $APS_ACK = $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{NOK}}</span>';
-            //     else if ($eqLogic->getStatus('APS_ACK') == '1')
-            //         $APS_ACK = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
-            //     else
-            //         $APS_ACK = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            //     echo '<td>'.$APS_ACK.'</td>';
-            // }
-
-            // Last comm.
-            if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
-                $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
-            } else if (strlen($eqLogic->getStatus('lastCommunication'))>2) {
-                $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
-            } else
-                $lastComm = '<span class="label label-warning" style="font-size: 1em; cursor: default;">No message received !!</span>';
-            echo '<td>'.$lastComm.'</td>';
-
-            // Time in H since last comm.
-            $since = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.(floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600)).'</span>';
-            if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
-                $since = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
-            }
-            //if ($eqLogic->getStatus('state') == '-') { $since = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>'; }
-            echo '<td>'.$since.'</td>';
-
-            // Last LQI
-            if ($addr == "0000")
-                $lastLqi = "-";
-            else {
-                $lqiCmd = $eqLogic->getCmd('info', 'Link-Quality');
-                if (is_object($lqiCmd))
-                    $lastLqi = $lqiCmd->execCmd();
-                else
-                    $lastLqi = "?";
-            }
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$lastLqi.'</span></td>';
-
-            // Last battery status
-            $bat = $eqLogic->getStatus('battery', '');
-            if ($bat == '')
-                $bat = '-';
-            else
-                $bat = $bat.'%';
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$bat.'</span></td>';
-
-            echo '</tr>';
-        }
-    ? > -->
     </tbody>
 </table>
 
@@ -226,6 +98,7 @@
     function refreshHealth() {
         console.log("refreshHealth()");
 
+        colors = ['lightcyan', 'lightblue', 'lightskyblue', 'gainsboro', 'ghostwhite', 'lightgrey	'];
         $.ajax({
             type: "POST",
             url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
@@ -245,7 +118,9 @@
 
                 let tr = '';
                 for (net in equipments) {
-                    // console.log("LA net=", net);
+                    zgId = parseInt(net.substring(7, 8)); // AbeilleX => X (integer)
+                    netColor = colors[zgId];
+                    console.log("net="+net+" => zgId="+zgId+", color="+netColor);
                     n = equipments[net];
                     parentBridge = equipments[net]['0000'];
                     bridgeEnabled = parentBridge.isEnabled;
@@ -263,19 +138,23 @@
                         tr += '<tr>';
 
                         // Network (AbeilleX)
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+net+dis2+'</span></td>';
+                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+net+dis2+'</span></td>';
+                        tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
 
                         // Device name
                         tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+dis1+e.hName+dis2+'</a></td>';
 
                         // Device type
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.type+dis2+'</span></td>';
+                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.type+dis2+'</span></td>';
+                        tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.type+dis2+'</span></td>';
 
                         // Short address
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+addr+dis2+'</span></td>';
+                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+addr+dis2+'</span></td>';
+                        tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default;">'+dis1+addr+dis2+'</span></td>';
 
                         // IEEE address
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.ieee+dis2+'</span></td>';
+                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.ieee+dis2+'</span></td>';
+                        tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default;">'+dis1+e.ieee+dis2+'</span></td>';
 
                         // Status: Updated every minutes by cron() (see Abeille.class.php)
                         if (e.isEnabled == 0) // Disabled ?
@@ -297,19 +176,24 @@
                         tr += '<td>'+status+'</td>';
 
                         // Last comm.
+                        // lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">';
+                        lastComm = '<span style="font-size:1em;cursor:default;background-color:'+netColor+'">';
                         if (addr.substr(2) == "rc") // Remote control ?
-                            lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
+                            lastComm += '-</span>';
                         else
-                            lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastComm+dis2+'</span>';
+                            lastComm += dis1+e.lastComm+dis2+'</span>';
                         tr += '<td>'+lastComm+'</td>';
 
                         // Time in H since last comm.
-                        since = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.since+dis2+'</span>';
+                        // since = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.since+dis2+'</span>';
+                        since = '<span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.since+dis2+'</span>';
                         tr += '<td>'+since+'</td>';
 
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastLqi+dis2+'</span></td>';
+                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastLqi+dis2+'</span></td>';
+                        tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.lastLqi+dis2+'</span></td>';
 
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastBat+dis2+'</span></td>';
+                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastBat+dis2+'</span></td>';
+                        tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default">'+dis1+e.lastBat+dis2+'</span></td>';
 
                         tr += '</tr>';
                     }
@@ -324,9 +208,9 @@
 
     refreshHealth();
 
-    setInterval(function () {
-        refreshHealth();
-    }, 2000);
+    // setInterval(function () {
+    //     refreshHealth();
+    // }, 2000);
 
     // $(function() {
     //     $("#table_healthAbeille").tablesorter();

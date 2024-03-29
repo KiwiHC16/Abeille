@@ -14,6 +14,7 @@ ChangeLog
 - powerCycleUsb: Améliorations du script de reboot USB.
 - Correction status équipement 'Zigate' si désactivé sur page de config.
 - Page santé: Correction: Equipements montrés désactivés si Zigate désactivée.
+- Dev: Améliorations 'switch_branch'.
 
 240319-BETA-3
 -------------

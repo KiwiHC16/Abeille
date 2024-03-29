@@ -836,33 +836,34 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'deamon_stop(): Ended');
     }
 
-    /* Temporary stop daemons and prevent auto-restart from Jeedom */
-    public static function pauseDaemons($start) {
-        $smId = shmop_open(12, "c", 0644, 50);
-        $smContent = [];
-        if ($start)
-            $smContent['daemonsPaused'] = true;
-        else
-            $smContent['daemonsPaused'] = false;
-        shmop_write($smId, json_encode($smContent), 0);
-        shmop_close($smId);
+    // Tcharp38: Removed. During Git update, auto-restart is disabled thru config/deamonAutoMode
+    // /* Temporary stop daemons and prevent auto-restart from Jeedom */
+    // public static function pauseDaemons($start) {
+    //     $smId = shmop_open(12, "c", 0644, 50);
+    //     $smContent = [];
+    //     if ($start)
+    //         $smContent['daemonsPaused'] = true;
+    //     else
+    //         $smContent['daemonsPaused'] = false;
+    //     shmop_write($smId, json_encode($smContent), 0);
+    //     shmop_close($smId);
 
-        log::add('Abeille', 'debug', 'pauseDaemons('.$start.')');
-        if ($start) {
-            $daemons = AbeilleTools::getRunningDaemons2();
-            if ($daemons['runBits'] == 0)
-                $GLOBALS['daemonsRunning'] = false; // No running daemon
-            else
-                $GLOBALS['daemonsRunning'] = true;
-            log::add('Abeille', 'debug', 'Stopping daemons');
-            self::deamon_stop(); // Stopping daemons
-        } else {
-            if ($GLOBALS['daemonsRunning']) {
-                log::add('Abeille', 'debug', 'Restarting daemons');
-                abeille::deamon_start(); // Restarting daemon
-            }
-        }
-    }
+    //     log::add('Abeille', 'debug', 'pauseDaemons('.$start.')');
+    //     if ($start) {
+    //         $daemons = AbeilleTools::getRunningDaemons2();
+    //         if ($daemons['runBits'] == 0)
+    //             $GLOBALS['daemonsRunning'] = false; // No running daemon
+    //         else
+    //             $GLOBALS['daemonsRunning'] = true;
+    //         log::add('Abeille', 'debug', 'Stopping daemons');
+    //         self::deamon_stop(); // Stopping daemons
+    //     } else {
+    //         if ($GLOBALS['daemonsRunning']) {
+    //             log::add('Abeille', 'debug', 'Restarting daemons');
+    //             abeille::deamon_start(); // Restarting daemon
+    //         }
+    //     }
+    // }
 
     /* Called from Jeedom to install dependencies */
     public static function dependancy_install() {

@@ -293,7 +293,13 @@
 
             // logMessage('debug', 'Arret des démons');
             // abeille::deamon_stop(); // Stopping daemon
-            Abeille::pauseDaemons(1);
+            // Abeille::pauseDaemons(1);
+            $daemonAutoMode = config::byKey('deamonAutoMode', 'Abeille', 0);
+            if ($daemonAutoMode == 1) {
+                logMessage('debug', 'Disabling daemons auto-startup');
+                config::save('deamonAutoMode', 0, 'Abeille');
+            }
+            Abeille::deamon_stop();
 
             $cmdToExec = "switchBranch.sh ".$branch.' "'.$prefix.'"';
             // $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
@@ -304,7 +310,13 @@
             // switch done in backbround but daemons are restarted BEFORE switch ended.
             // TODO: Wait for switch end ?
 
-            Abeille::pauseDaemons(0);
+            // Abeille::pauseDaemons(0);
+            // TODO: Should relaunch only if was already running
+            Abeille::deamon_start();
+            if ($daemonAutoMode == 1) {
+                logMessage('debug', 'Reenabling daemons auto-startup');
+                config::save('deamonAutoMode', 1, 'Abeille');
+            }
 
             /* Note: Returning immediately but switch not completed yet. Anyway server side code
             might be completely different after switch */

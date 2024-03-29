@@ -5,6 +5,8 @@
 ### Tcharp38
 ###
 
+# Note: https://www.kernel.org/doc/Documentation/usb/power-management.txt
+
 echo -n "powerCycleUsb.sh starting: "
 date
 
@@ -45,9 +47,14 @@ echo "PORT='$PORT'"
 if [ -e "/sys/bus/usb/drivers/usb/unbind" ]; then
     echo "Disconnecting ${PORT}"
     echo "$PORT" > /sys/bus/usb/drivers/usb/unbind
-    sleep 2
-    echo "Reconnecting ${PORT}"
-    echo "$PORT" > /sys/bus/usb/drivers/usb/bind
+    ERR=$?
+    if [ $ERR -ne 0 ]; then
+        sudo echo "= ERROR: 'unbind' failed ! Are you root ?"
+    else
+        sleep 2
+        echo "Reconnecting ${PORT}"
+        sudo echo "$PORT" > /sys/bus/usb/drivers/usb/bind
+    fi
 else
     echo "ERROR: No solution found to power cycle ${PORT}"
     exit 4

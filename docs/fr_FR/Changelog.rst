@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-240329-BETA-1
+240329-BETA-2
 -------------
 
 - Interne: Support Tuya: Amélioration msg debug.

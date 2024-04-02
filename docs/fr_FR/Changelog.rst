@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Correction regression support Xiaomi.
+
 240329-BETA-2
 -------------
 

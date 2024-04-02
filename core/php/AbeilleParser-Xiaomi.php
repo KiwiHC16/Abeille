@@ -369,11 +369,11 @@
         $private = $eq['private'][$clustId.'-'.$attrId];
         if (isset($private['info'])) {
             // 'CLUSTER-ATTRIB' + 'info' syntax
-            $value = AbeilleParser::decodeDataType($pl2, $attrType, true, 0, $attrSize, $valueHex);
+            $value = AbeilleParser::decodeDataType($attrData, $attrType, true, 0, $attrSize, $valueHex);
 
             $m = '  AttrId='.$attrId
                 .', AttrType='.$attrType
-                .', ValueHex='.$valueHex.' => '.$value.' ==> '.$fromDev['info'].'='.$value;
+                .', ValueHex='.$valueHex.' => '.$value.' ==> '.$private['info'].'='.$value;
             parserLog2('debug', $addr, $m);
 
             $attrReportN[] = array(

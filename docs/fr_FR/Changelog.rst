@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: Parser: Correction regression support Xiaomi.
+- Page santé: Amélioration robustesse.
 
 240329-BETA-2
 -------------

@@ -118,6 +118,11 @@
 
                 let tr = '';
                 for (net in equipments) {
+                    if (net == "") { // Just in case. Seen with bad Jeedom equipment
+                        console.log("WARNING: Unexpected empty net ignored.");
+                        continue;
+                    }
+
                     zgId = parseInt(net.substring(7, 8)); // AbeilleX => X (integer)
                     netColor = colors[zgId];
                     console.log("net="+net+" => zgId="+zgId+", color="+netColor);

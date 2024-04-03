@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240403-BETA-1
+-------------
+
 - Interne: Parser: Correction regression support Xiaomi.
 - Page santé: Amélioration robustesse.
 

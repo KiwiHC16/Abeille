@@ -34,9 +34,11 @@
         list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
         $zgId = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
         $eqId = $eqLogic->getId();
+
         $eq = [];
         $eq['id'] = $eqId;
         $eq['addr'] = $eqAddr;
+        $eq['isEnabled'] = $eqLogic->getIsEnable();
         $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
         $eq['jsonId'] = $eqModel ? $eqModel['modelName'] : '';

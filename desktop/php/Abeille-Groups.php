@@ -25,27 +25,8 @@
 		// $abeille = new Abeille();
 		// $commandIEEE = new AbeilleCmd();
 		foreach ($eqPerZigate[$zgId] as $eqId => $eq) {
-			// $eqId = $eq['id'];
 			$eqLogic = eqLogic::byId($eqId);
-
-			// $name= "";
-			// $groupServ = "";
-			// $groupCli = "";
-			// $print=0;
 			$eqHName = $eqLogic->getHumanName(true);
-
-			// $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
-			// if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
-			// 	if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
-			// 		$groupServ = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
-			// 		$print = 1;
-			// 	}
-			// }
-			// if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
-			// 	$groupCli = $eqLogic->getConfiguration('Groupe');
-			// 	$print = 1;
-			// }
-			// if ( $print ) echo '<tr><td class="one">'.$eqHName.'</td><td align="center" class="one">'.$groupCli.'</td><td align="center" class="one">'.$groupServ.'</td></tr>';
 
 			/* ab::zigbee reminder
 			   zigbee = array(
@@ -56,13 +37,23 @@
 			if (!isset($zigbee['groups']))
 				continue; // No 'groups' => not supported
 
+			if ($eq['isEnabled']) {
+				$dis1 = '';
+				$dis2 = '';
+			} else {
+				$dis1 = '<s>';
+				$dis2 = '</s>';
+			}
+
 			$groups = $zigbee['groups'];
 			foreach ($groups as $epId => $grps) {
-				echo '<tr><td>'.$eqHName.'</td>';
+				echo '<tr><td>'.$dis1.$eqHName.$dis2.'</td>';
 				echo '<td >'.$epId.'</td>';
 				echo '<td >';
-					echo '<a class="btn btn-default" onclick="sendToCmd(\'getGroups2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Raffraichissement des groupes}}"><i class="fas fa-sync"></i></a>';
-					echo '<a class="btn btn-default" onclick="sendToCmd(\'removeAllGroups\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Supprime tout les groupes}}"><i class="fas fa-trash-alt"></i></a>';
+					if ($eq['isEnabled']) {
+						echo '<a class="btn btn-default" onclick="sendToCmd(\'getGroups2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Raffraichissement des groupes}}"><i class="fas fa-sync"></i></a>';
+						echo '<a class="btn btn-default" onclick="sendToCmd(\'removeAllGroups\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Supprime tout les groupes}}"><i class="fas fa-trash-alt"></i></a>';
+					}
 				echo '</td>';
 				echo '<td >';
 				if ($grps != '') {

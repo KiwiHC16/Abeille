@@ -6,6 +6,7 @@ ChangeLog
 
 - Interne: Parser: Correction regression support Xiaomi.
 - Page santé: Amélioration robustesse.
+- Affichage des groupes: Equipement barré et pas d'action possible si désactivé.
 
 240329-BETA-2
 -------------

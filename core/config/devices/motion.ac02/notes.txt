@@ -1,0 +1,66 @@
+    {
+        zigbeeModel: ['lumi.motion.ac02'],
+        model: 'RTCGQ14LM',
+        vendor: 'Aqara',
+        whiteLabel: [{vendor: 'Aqara', model: 'MS-S02'}],
+        description: 'Motion sensor P1',
+        fromZigbee: [lumi.fromZigbee.lumi_occupancy_illuminance, lumi.fromZigbee.lumi_specific, fz.battery],
+        toZigbee: [lumi.toZigbee.lumi_detection_interval, lumi.toZigbee.lumi_motion_sensitivity, lumi.toZigbee.lumi_trigger_indicator],
+        exposes: [e.occupancy(), e.illuminance_lux().withProperty('illuminance'),
+            e.illuminance().withUnit('lx').withDescription('Measured illuminance in lux'),
+            e.motion_sensitivity_select(['low', 'medium', 'high'])
+                .withDescription('Select motion sensitivity to use. Press pairing button right before changing this otherwise it will fail.'),
+            e.detection_interval().withDescription('Time interval between action detection. ' +
+                'Press pairing button right before changing this otherwise it will fail.'),
+            e.trigger_indicator().withDescription('When this option is enabled then ' +
+                'blue LED will blink once when motion is detected. ' +
+                'Press pairing button right before changing this otherwise it will fail.'),
+            e.device_temperature(), e.battery(), e.battery_voltage()],
+        meta: {battery: {voltageToPercentage: '3V_2850_3000'}},
+        configure: async (device, coordinatorEndpoint) => {
+            const endpoint = device.getEndpoint(1);
+            await endpoint.read('genPowerCfg', ['batteryVoltage']);
+            await endpoint.read('manuSpecificLumi', [0x0102], {manufacturerCode: manufacturerCode});
+            await endpoint.read('manuSpecificLumi', [0x010c], {manufacturerCode: manufacturerCode});
+            await endpoint.read('manuSpecificLumi', [0x0152], {manufacturerCode: manufacturerCode});
+        },
+        extend: [quirkCheckinInterval('1_HOUR'), lumiZigbeeOTA()],
+    },
+
+    lumi_occupancy_illuminance: {
+        // This is for occupancy sensor that only send a message when motion detected,
+        // but do not send a motion stop.
+        // Therefore we need to publish the no_motion detected by ourselves.
+        cluster: 'manuSpecificLumi',
+        type: ['attributeReport', 'readResponse'],
+        options: [exposes.options.occupancy_timeout_2(), exposes.options.no_occupancy_since_true()],
+        convert: (model, msg, publish, options, meta) => {
+            if (msg.data.hasOwnProperty('illuminance')) {
+                // The occupancy sensor only sends a message when motion detected.
+                // Therefore we need to publish the no_motion detected by ourselves.
+                let timeout = meta && meta.state && meta.state.hasOwnProperty('detection_interval') ?
+                    Number(meta.state.detection_interval) : ['RTCGQ14LM'].includes(model.model) ? 30 : 60;
+                timeout = options && options.hasOwnProperty('occupancy_timeout') && Number(options.occupancy_timeout) >= timeout ?
+                    Number(options.occupancy_timeout) : timeout + 2;
+
+                // Stop existing timers because motion is detected and set a new one.
+                clearTimeout(globalStore.getValue(msg.endpoint, 'occupancy_timer', null));
+
+                if (timeout !== 0) {
+                    const timer = setTimeout(() => {
+                        publish({occupancy: false});
+                    }, timeout * 1000);
+
+                    globalStore.putValue(msg.endpoint, 'occupancy_timer', timer);
+                }
+
+                // Sometimes RTCGQ14LM reports high illuminance values in the dark
+                // https://github.com/Koenkk/zigbee2mqtt/issues/12596
+                const illuminance = msg.data['illuminance'] > 130536 ? 0 : msg.data['illuminance'] - 65536;
+
+                const payload = {occupancy: true, illuminance};
+                noOccupancySince(msg.endpoint, options, publish, 'start');
+                return payload;
+            }
+        },
+    } satisfies Fz.Converter,

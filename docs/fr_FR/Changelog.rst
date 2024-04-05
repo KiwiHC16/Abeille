@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Groupes: Améliorations ajout/suppression de groupe.
+
 240403-BETA-2
 -------------
 

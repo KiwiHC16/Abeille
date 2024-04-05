@@ -1061,18 +1061,18 @@
              * Cluster 0004/Groups support
              */
 
-            case "removeGroup":
-                // if ($parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
-                if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
-                $Command = array(
-                                    "removeGroup"              => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupAddress"             => $parameters['groupAddress'],
-                                    );
-                break;
+            // case "removeGroup":
+            //     // if ($parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
+            //     if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+            //     $Command = array(
+            //                         "removeGroup"              => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $parameters['address'],
+            //                         "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+            //                         "groupAddress"             => $parameters['groupAddress'],
+            //                         );
+            //     break;
 
             /*
              * Cluster 0005/Scenes support

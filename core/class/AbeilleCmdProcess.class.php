@@ -2178,36 +2178,6 @@
                 return;
             }
 
-            if (isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']))
-            {
-                cmdLog('debug', "  Remove a group to a device", $this->debug['processCmd']);
-                //echo "Remove a group to an IKEA bulb\n";
-
-                // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
-                // 15:24:36.087 <- 01 80 00 00 04 54 00 B0 00 60 03
-                // 15:24:36.164 <- 01 80 60 00 07 08 B0 01 00 04 00 C2 98 03
-                // Add Group
-                // Message Description
-                // Msg Type = 0x0060 Command ID = 0x00
-                $cmd = "0063";
-                $length = "0007";
-                // <address mode: uint8_t>
-                //<target short address: uint16_t>
-                //<source endpoint: uint8_t>
-                //<destination endpoint: uint8_t>
-                //<group address: uint16_t>
-                $addrMode = "02";
-                $address = $Command['address'];
-                $srcEp = "01";
-                $dstEp = $Command['DestinationEndPoint'] ;
-                $groupAddress = $Command['groupAddress'];
-
-                $data = $addrMode.$address.$srcEp.$dstEp.$groupAddress ;
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
-
             // Replace Equipement
             if (isset($Command['replaceEquipement']) && isset($Command['old']) && isset($Command['new']))
             {
@@ -4141,12 +4111,38 @@
                     $dstEp      = $Command['ep'];
                     $group      = $Command['group'];
 
-                    cmdLog('debug', '  addGroup: ep='.$dstEp.', group='.$group);
+                    cmdLog('debug', '  addGroup: Ep='.$dstEp.', Group='.$group);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$group;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End cluster 0004, $cmdName == 'addGroup'
+
+                // ZCL cluster 0004 specific: removeGroup, sent to server
+                // Mandatory params: 'addr', 'ep', & 'group'
+                else if ($cmdName == 'removeGroup') {
+                    $required = ['addr', 'ep', 'group']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0063";
+                    // <address mode: uint8_t>
+                    //<target short address: uint16_t>
+                    //<source endpoint: uint8_t>
+                    //<destination endpoint: uint8_t>
+                    //<group address: uint16_t>
+                    $addrMode = "02";
+                    $addr = $Command['addr'];
+                    $srcEp = "01";
+                    $dstEp = $Command['ep'] ;
+                    $group = $Command['group'];
+
+                    cmdLog('debug', '  removeGroup: Ep='.$dstEp.', Group='.$group);
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$group;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                } // End $cmdName == 'removeGroup'
 
                 // ZCL cluster 0004 specific: getGroupMembership, sent to server
                 // Mandatory params: 'addr', 'ep'

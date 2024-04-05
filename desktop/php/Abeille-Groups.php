@@ -51,8 +51,9 @@
 				echo '<td >'.$epId.'</td>';
 				echo '<td >';
 					if ($eq['isEnabled']) {
-						echo '<a class="btn btn-default" onclick="sendToCmd(\'getGroups2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Raffraichissement des groupes}}"><i class="fas fa-sync"></i></a>';
-						echo '<a class="btn btn-default" onclick="sendToCmd(\'removeAllGroups\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Supprime tout les groupes}}"><i class="fas fa-trash-alt"></i></a>';
+						echo '<a class="btn btn-default" onclick="sendToCmd(\'getGroups2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Raffraichir la liste des groupes}}"><i class="fas fa-sync"></i></a>';
+						echo '<a class="btn btn-default" onclick="sendToCmd(\'addGroup2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Ajouter un groupe}}"><i class="fas fa-plus"></i></a>';
+						echo '<a class="btn btn-default" onclick="sendToCmd(\'removeAllGroups\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Supprimer tout les groupes}}"><i class="fas fa-trash-alt"></i></a>';
 					}
 				echo '</td>';
 				echo '<td >';
@@ -87,10 +88,10 @@
 	<div id="leftThing" style="float: left; width:80%;">
 		<?php
 			echo '<br>';
-			echo '<a class="btn btn-warning" onclick="sendToCmd(\'getGroups\')">Get groups</a>';
+			// echo '<a class="btn btn-warning" onclick="sendToCmd(\'getGroups\')">Get groups</a>';
 			echo '<input type="text" id="idGroup" style="width:60px;margin-left:10px" placeholder="{{Groupe}}" title="Numéro de groupe (hexa 4 caracteres)">';
-			echo '<a class="btn btn-warning" onclick="sendToCmd(\'addGroup\')">Add group</a>';
-			echo '<a class="btn btn-warning" onclick="sendToCmd(\'removeGroup\')">Remove group</a>';
+			// echo '<a class="btn btn-warning" onclick="sendToCmd(\'addGroup\')">Add group</a>';
+			// echo '<a class="btn btn-warning" onclick="sendToCmd(\'removeGroup\')">Remove group</a>';
 			echo '<a class="btn btn-warning" onclick="sendToCmd(\'setGroupRemote\')">Set group remote</a>';
 			echo '<a class="btn btn-warning" onclick="sendToCmd(\'setGroupRemoteLegrand\')">Set group remote Legrand</a>';
 			echo '<br>';
@@ -104,46 +105,15 @@
 		?>
 	</div>
 
-	<!-- <div style="float: left; width:2%;">.
-	</div>
-	<div style="float: left; width:40%;">
-		<br>
-		<a class="btn btn-warning" onclick="sendToCmd('getGroups')">Get groups</a>
-		<br>
-
-		<input type="text" id="idGroup" style="width:60px" placeholder="{{Groupe}}" title="Numéro de groupe (hexa 4 caracteres)">
-		<a class="btn btn-warning" onclick="sendToCmd('addGroup')">Add group</a>
-		<a class="btn btn-warning" onclick="sendToCmd('removeGroup')">Remove group</a>
-		<a class="btn btn-warning" onclick="sendToCmd('setGroupRemote')">Set group remote</a>
-		<a class="btn btn-warning" onclick="sendToCmd('setGroupRemoteLegrand')">Set group remote Legrand</a>
-	</div> -->
-
-	<!-- <div id="rightMargin" style="float: left; width:2%;">.
-	</div>
-	<div id="rightThing" style="float: left; width:40%;">
-		<table style="margin: 10px 10px;">
-			<tr>
-				<td align="center">
-					<input type="submit" name="submitButton" value="Get Group">
-				</td>
-			</tr>
-			<tr>
-				<td><br/></td>
-			</tr>
-			<tr>
-				<td align="center">
-					<label control-label data-toggle="tooltip" title="en hex de 0000 a ffff, probablement celui que vous avez récuperé de votre télécommande.">Id</label>
-					<input type="text" name="group" placeholder="XXXX">
-					<br/>
-					<input type="submit" name="submitButton" value="Add Group">
-					<input type="submit" name="submitButton" value="Remove Group">
-					<br/>
-					<input type="submit" name="submitButton" value="Set Group Remote">
-					<input type="submit" name="submitButton" value="Set Group Remote Legrand">
-				</td>
-			</tr>
-		</table>
-	</div> -->
+    <!-- Group choice popup (will be cloned to bootbox.dialog) -->
+    <div id="idGroupChoicePopup" style="display:none">
+		<p>{{Entrez le groupe (format hexa 4 caractères) que vous souhaitez ajouter et cliquez OK}}</p>
+		<input type="text" id="idGroup2" style="width:60px;margin-left:10px" placeholder="{{Groupe}}" title="Numéro de groupe (hexa 4 caracteres)">
+        <p style="text-align:center; margin-top:30px">
+            <a class="btn btn-secondary">{{Annuler}}</a>
+            <a class="btn btn-success">{{OK}}</a>
+        </p>
+    </div>
 </div>
 <br/>
 

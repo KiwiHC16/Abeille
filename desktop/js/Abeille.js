@@ -1622,9 +1622,6 @@ function sendZigate(action, param) {
 function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
     console.log("sendToCmd(" + action + ")");
 
-    selected = getSelected();
-    console.log("selected=", selected);
-
     function sendCmd(topic, payload) {
         var xhr = new XMLHttpRequest();
         msg =
@@ -1643,76 +1640,25 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
     }
 
     switch (action) {
-        case "getGroups":
-            if (selected.length == 0)
-                return alert("Aucun équipement sélectionné");
-            selected.forEach((eq) => {
-                sendCmd(
-                    "CmdAbeille" +
-                        eq["zgId"] +
-                        "/" +
-                        eq["addr"] +
-                        "/getGroupMembership",
-                    "ep=" + eq["mainEp"]
-                );
-                setTimeout(function () {
-                    location.reload(true);
-                }, 1000);
-            });
-            break;
-        case "addGroup":
-            if (selected.length == 0)
-                return alert("Aucun équipement sélectionné");
-            group = document.getElementById("idGroup").value;
-            if (group == "") return alert("Groupe non renseigné");
-            selected.forEach((eq) => {
-                console.log("eq=", eq);
-                sendCmd(
-                    "CmdAbeille" + eq["zgId"] + "/" + eq["addr"] + "/addGroup",
-                    "ep=" + eq["mainEp"] + "&group=" + group
-                );
-                setTimeout(function () {
-                    sendCmd(
-                        "CmdAbeille" +
-                            eq["zgId"] +
-                            "/" +
-                            eq["addr"] +
-                            "/getGroupMembership",
-                        "ep=" + eq["mainEp"]
-                    );
-                    location.reload(true);
-                }, 1000);
-            });
-            break;
-        case "removeGroup":
-            if (selected.length == 0)
-                return alert("Aucun équipement sélectionné");
-            group = document.getElementById("idGroup").value;
-            if (group == "") return alert("Groupe non renseigné");
-            selected.forEach((eq) => {
-                console.log("eq=", eq);
-                sendCmd(
-                    "CmdAbeille" + eq["zgId"] + "/0000/removeGroup",
-                    "address=" +
-                        eq["addr"] +
-                        "&DestinationEndPoint=" +
-                        eq["mainEp"] +
-                        "&groupAddress=" +
-                        group
-                );
-                setTimeout(function () {
-                    sendCmd(
-                        "CmdAbeille" +
-                            eq["zgId"] +
-                            "/" +
-                            eq["addr"] +
-                            "/getGroupMembership",
-                        "ep=" + eq["mainEp"]
-                    );
-                    location.reload(true);
-                }, 1000);
-            });
-            break;
+        // case "getGroups": // OBSOLETE !! Replaced by 'getGroups2'
+        //     selected = getSelected();
+        //     console.log("selected=", selected);
+        //     if (selected.length == 0)
+        //         return alert("Aucun équipement sélectionné");
+        //     selected.forEach((eq) => {
+        //         sendCmd(
+        //             "CmdAbeille" +
+        //                 eq["zgId"] +
+        //                 "/" +
+        //                 eq["addr"] +
+        //                 "/getGroupMembership",
+        //             "ep=" + eq["mainEp"]
+        //         );
+        //         setTimeout(function () {
+        //             location.reload(true);
+        //         }, 1000);
+        //     });
+        //     break;
         case "getGroups2":
             zgId = param1;
             addr = param2;
@@ -1725,6 +1671,114 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                 location.reload(true);
             }, 1000);
             break;
+        // case "addGroup": // OBSOLETE !! Replaced by 'addGroup2'
+        //     selected = getSelected();
+        //     console.log("selected=", selected);
+        //     if (selected.length == 0)
+        //         return alert("Aucun équipement sélectionné");
+        //     group = document.getElementById("idGroup").value;
+        //     if (group == "") return alert("Groupe non renseigné");
+        //     selected.forEach((eq) => {
+        //         console.log("eq=", eq);
+        //         sendCmd(
+        //             "CmdAbeille" + eq["zgId"] + "/" + eq["addr"] + "/addGroup",
+        //             "ep=" + eq["mainEp"] + "&group=" + group
+        //         );
+        //         setTimeout(function () {
+        //             sendCmd(
+        //                 "CmdAbeille" +
+        //                     eq["zgId"] +
+        //                     "/" +
+        //                     eq["addr"] +
+        //                     "/getGroupMembership",
+        //                 "ep=" + eq["mainEp"]
+        //             );
+        //             location.reload(true);
+        //         }, 1000);
+        //     });
+        //     break;
+        case "addGroup2":
+            zgId = param1;
+            addr = param2;
+            ep = param3;
+
+            // Open empty dialog
+            var myPopup = bootbox.dialog({
+                message: "<p></p>", // must not be empty
+                title: "{{Ajouter un groupe}}",
+                className: "abeille_GroupChoicePopup",
+            });
+
+            // Content template is defined in Abeille-Eq-Advanced-Device.php
+            var $content = myPopup.find(".bootbox-body");
+            $content.empty().append($("#idGroupChoicePopup").clone().show());
+
+            // Cancel button
+            $content.find(".btn-secondary").on("click", function () {
+                myPopup.find(".bootbox-close-button").trigger("click");
+            });
+
+            // OK button
+            $content.find(".btn-success").on("click", function () {
+                // group = document.getElementById("idGroup2").value;
+                group = $content.find("#idGroup2").val();
+                console.log("Group=" + group);
+
+                // Test if not empty and if valid hex
+                var re = /[0-9A-Fa-f]{4}/g;
+                if (group == "" || !re.test(group)) {
+                    alert("{{Groupe invalide}}");
+                    return;
+                }
+
+                sendCmd(
+                    "CmdAbeille" + zgId + "/" + addr + "/addGroup",
+                    "ep=" + ep + "&group=" + group
+                );
+                setTimeout(function () {
+                    sendCmd(
+                        "CmdAbeille" +
+                            zgId +
+                            "/" +
+                            addr +
+                            "/getGroupMembership",
+                        "ep=" + ep
+                    );
+                    location.reload(true);
+                }, 1000);
+            });
+            break;
+        // case "removeGroup": // OBSOLETE !! Replaced by 'removeGroup2'
+        //     selected = getSelected();
+        //     console.log("selected=", selected);
+        //     if (selected.length == 0)
+        //         return alert("Aucun équipement sélectionné");
+        //     group = document.getElementById("idGroup").value;
+        //     if (group == "") return alert("Groupe non renseigné");
+        //     selected.forEach((eq) => {
+        //         console.log("eq=", eq);
+        //         sendCmd(
+        //             "CmdAbeille" + eq["zgId"] + "/0000/removeGroup",
+        //             "address=" +
+        //                 eq["addr"] +
+        //                 "&DestinationEndPoint=" +
+        //                 eq["mainEp"] +
+        //                 "&groupAddress=" +
+        //                 group
+        //         );
+        //         setTimeout(function () {
+        //             sendCmd(
+        //                 "CmdAbeille" +
+        //                     eq["zgId"] +
+        //                     "/" +
+        //                     eq["addr"] +
+        //                     "/getGroupMembership",
+        //                 "ep=" + eq["mainEp"]
+        //             );
+        //             location.reload(true);
+        //         }, 1000);
+        //     });
+        //     break;
         case "removeGroup2":
             zgId = param1;
             addr = param2;
@@ -1732,12 +1786,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             group = param4;
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/removeGroup",
-                "address=" +
-                    addr +
-                    "&DestinationEndPoint=" +
-                    ep +
-                    "&groupAddress=" +
-                    group
+                "address=" + addr + "&ep=" + ep + "&group=" + group
             );
             setTimeout(function () {
                 location.reload(true);
@@ -1760,6 +1809,8 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             }, 1000);
             break;
         case "setGroupRemote":
+            selected = getSelected();
+            console.log("selected=", selected);
             if (selected.length == 0)
                 return alert("Aucun équipement sélectionné");
             group = document.getElementById("idGroup").value;
@@ -1784,6 +1835,8 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             });
             break;
         case "setGroupRemoteLegrand":
+            selected = getSelected();
+            console.log("selected=", selected);
             if (selected.length == 0)
                 return alert("Aucun équipement sélectionné");
             group = document.getElementById("idGroup").value;

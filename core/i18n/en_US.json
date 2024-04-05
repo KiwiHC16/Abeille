@@ -88,6 +88,10 @@
         "Surveiller": "Monitor",
 
         "Groupes": "Groups",
+        "Raffraichir la liste des groupes": "Refresh groups list",
+        "Supprimer tout les groupes": "Remove all groups",
+        "Suppression du groupe": "Remove this group",
+        "Ajouter un groupe": "Add group",
 
         "Remplacement d'équipements": "Equipments replacement",
         "Equipement HS à remplacer": "Dead equipment to replace",

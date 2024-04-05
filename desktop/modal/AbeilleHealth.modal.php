@@ -95,6 +95,13 @@
 </table>
 
 <script>
+    $('body').attr('data-theme', jeedom.theme.currentTheme);
+    console.log("Current theme => "+jeedom.theme.currentTheme);
+
+    $('body').on('changeThemeEvent', function (event, theme) {
+        console.log("changeThemeEvent => theme="+theme);
+    });
+
     function refreshHealth() {
         console.log("refreshHealth()");
 
@@ -213,9 +220,9 @@
 
     refreshHealth();
 
-    // setInterval(function () {
-    //     refreshHealth();
-    // }, 2000);
+    setInterval(function () {
+        refreshHealth();
+    }, 2000);
 
     // $(function() {
     //     $("#table_healthAbeille").tablesorter();

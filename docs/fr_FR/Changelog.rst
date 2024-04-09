@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+240409-BETA-1
+-------------
+
 - Groupes: Améliorations ajout/suppression de groupe.
 - Page santé:
 

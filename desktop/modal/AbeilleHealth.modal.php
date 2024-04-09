@@ -96,19 +96,10 @@
 </table>
 
 <script>
-    // For test purposes to detect theme change. Not useful so far.
-    $('body').attr('data-theme', jeedom.theme.currentTheme);
-    console.log("Current theme => "+jeedom.theme.currentTheme);
-
-    // For test purposes to detect theme change. Not useful so far.
-    $('body').on('changeThemeEvent', function (event, theme) {
-        console.log("changeThemeEvent => theme="+theme);
-    });
-
     function refreshHealth() {
         console.log("refreshHealth()");
 
-        colors = ['lightcyan', 'lightblue', 'lightskyblue', 'gainsboro', 'ghostwhite', 'lightgrey'];
+        colors = ['lightcyan', 'gainsboro', 'lightblue', 'ghostwhite', 'lightskyblue', 'lightgrey'];
         $.ajax({
             type: "POST",
             url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
@@ -154,12 +145,12 @@
 
                         // Network (AbeilleX)
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+net+dis2+'</span></td>';
-                        // tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
-                        tr += '<td><span style="font-size:1em;cursor:default;color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
+                        tr += '<td><span style="font-size:1em;cursor:default;color:black;background-color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
+                        // tr += '<td><span style="font-size:1em;cursor:default;color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
 
                         // Device name
-                        // tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+dis1+e.hName+dis2+'</a></td>';
-                        tr += '<td><a href="'+e.link+'" style="text-decoration: none;color:'+netColor+'">'+dis1+e.hName+dis2+'</a></td>';
+                        tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+dis1+e.hName+dis2+'</a></td>';
+                        // tr += '<td><a href="'+e.link+'" style="font-size:1em;color:black;background-color:'+netColor+'">'+dis1+e.hName+dis2+'</a></td>';
 
                         // Jeedom ID
                         tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+e.jId+dis2+'</span></td>';
@@ -232,6 +223,17 @@
             }
         });
     }
+
+    // For test purposes to detect theme change. Not useful so far.
+    currentTheme = jeedom.theme.currentTheme;
+    // $('body').attr('data-theme', jeedom.theme.currentTheme);
+    console.log("Current theme => "+currentTheme);
+
+    // For test purposes to detect theme change. Not useful so far.
+    // Such event is not triggered for plugin part
+    // $('body').on('changeThemeEvent', function (event, theme) {
+    //     console.log("changeThemeEvent => theme="+theme);
+    // });
 
     refreshHealth();
 

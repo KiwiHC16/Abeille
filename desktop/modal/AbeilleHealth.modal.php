@@ -80,14 +80,15 @@
         <tr>
             <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Réseau}}</th>
             <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Equipement}}</th>
-            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Type}}</th>
-            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Adresse}}</th>
-            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{IEEE}}</th>
-            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Status}}</th>
-            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Dernière comm.}}</th>
+            <th class="header" data-toggle="tooltip" title="{{ID Jeedom}}">{{ID}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Type d'équipement}}">{{Type}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Adresse courte}}">{{Adresse}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Adresse IEEE}}">{{IEEE}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Status de l'équipement}}">{{Status}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Dernière communication}}">{{Dernière comm.}}</th>
             <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Depuis}} (H)</th>
             <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{LQI}}</th>
-            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Batterie}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Dernier niveau de batterie}}">{{Batterie}}</th>
         </tr>
     </thead>
     <tbody>
@@ -95,9 +96,11 @@
 </table>
 
 <script>
+    // For test purposes to detect theme change. Not useful so far.
     $('body').attr('data-theme', jeedom.theme.currentTheme);
     console.log("Current theme => "+jeedom.theme.currentTheme);
 
+    // For test purposes to detect theme change. Not useful so far.
     $('body').on('changeThemeEvent', function (event, theme) {
         console.log("changeThemeEvent => theme="+theme);
     });
@@ -105,7 +108,7 @@
     function refreshHealth() {
         console.log("refreshHealth()");
 
-        colors = ['lightcyan', 'lightblue', 'lightskyblue', 'gainsboro', 'ghostwhite', 'lightgrey	'];
+        colors = ['lightcyan', 'lightblue', 'lightskyblue', 'gainsboro', 'ghostwhite', 'lightgrey'];
         $.ajax({
             type: "POST",
             url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
@@ -151,22 +154,30 @@
 
                         // Network (AbeilleX)
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+net+dis2+'</span></td>';
-                        tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
+                        // tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
+                        tr += '<td><span style="font-size:1em;cursor:default;color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
 
                         // Device name
-                        tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+dis1+e.hName+dis2+'</a></td>';
+                        // tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+dis1+e.hName+dis2+'</a></td>';
+                        tr += '<td><a href="'+e.link+'" style="text-decoration: none;color:'+netColor+'">'+dis1+e.hName+dis2+'</a></td>';
+
+                        // Jeedom ID
+                        tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+e.jId+dis2+'</span></td>';
 
                         // Device type
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.type+dis2+'</span></td>';
-                        tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.type+dis2+'</span></td>';
+                        // tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.type+dis2+'</span></td>';
+                        tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+e.type+dis2+'</span></td>';
 
                         // Short address
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+addr+dis2+'</span></td>';
-                        tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default;">'+dis1+addr+dis2+'</span></td>';
+                        // tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default;">'+dis1+addr+dis2+'</span></td>';
+                        tr += '<td style=""><span style="font-size:1em;cursor:default;">'+dis1+addr+dis2+'</span></td>';
 
                         // IEEE address
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.ieee+dis2+'</span></td>';
-                        tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default;">'+dis1+e.ieee+dis2+'</span></td>';
+                        // tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default;">'+dis1+e.ieee+dis2+'</span></td>';
+                        tr += '<td style=""><span style="font-size:1em;cursor:default;">'+dis1+e.ieee+dis2+'</span></td>';
 
                         // Status: Updated every minutes by cron() (see Abeille.class.php)
                         if (e.isEnabled == 0) // Disabled ?
@@ -189,7 +200,8 @@
 
                         // Last comm.
                         // lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">';
-                        lastComm = '<span style="font-size:1em;cursor:default;background-color:'+netColor+'">';
+                        // lastComm = '<span style="font-size:1em;cursor:default;background-color:'+netColor+'">';
+                        lastComm = '<span style="font-size:1em;cursor:default;">';
                         if (addr.substr(2) == "rc") // Remote control ?
                             lastComm += '-</span>';
                         else
@@ -198,14 +210,17 @@
 
                         // Time in H since last comm.
                         // since = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.since+dis2+'</span>';
-                        since = '<span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.since+dis2+'</span>';
+                        // since = '<span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.since+dis2+'</span>';
+                        since = '<span style="font-size:1em;cursor:default;">'+dis1+e.since+dis2+'</span>';
                         tr += '<td>'+since+'</td>';
 
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastLqi+dis2+'</span></td>';
-                        tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.lastLqi+dis2+'</span></td>';
+                        // tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.lastLqi+dis2+'</span></td>';
+                        tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+e.lastLqi+dis2+'</span></td>';
 
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastBat+dis2+'</span></td>';
-                        tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default">'+dis1+e.lastBat+dis2+'</span></td>';
+                        // tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default">'+dis1+e.lastBat+dis2+'</span></td>';
+                        tr += '<td style=""><span style="font-size:1em;cursor:default">'+dis1+e.lastBat+dis2+'</span></td>';
 
                         tr += '</tr>';
                     }
@@ -220,8 +235,14 @@
 
     refreshHealth();
 
-    setInterval(function () {
-        refreshHealth();
+    // Refresh page every 2sec until modal is closed
+    timer = setInterval(function () {
+        if ($('#md_modal').is(':visible'))
+            refreshHealth();
+        else {
+            console.log("Health modal closed");
+            clearInterval(timer);
+        }
     }, 2000);
 
     // $(function() {

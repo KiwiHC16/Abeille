@@ -656,6 +656,7 @@
                 list($eqNet, $eqAddr) = explode("/", $eqLogicId);
 
                 $e = [];
+                $e['jId'] = $eqLogic->getId();
                 $e['link'] = $eqLogic->getLinkToConfiguration();
                 $e['hName'] = $eqLogic->getHumanName(true);
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);

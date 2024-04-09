@@ -2,7 +2,11 @@ ChangeLog
 =========
 
 - Groupes: Améliorations ajout/suppression de groupe.
-- Page santé: Travaille en cours pour amélioration avec thème 'dark'.
+- Page santé:
+
+  - Travaille en cours pour amélioration avec thème 'dark'.
+  - Ajout ID Jeedom.
+  - Corrections internes.
 
 240403-BETA-2
 -------------

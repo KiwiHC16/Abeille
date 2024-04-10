@@ -9,6 +9,19 @@
         "configuration": {
             "icon": "Moes-SmartDimmer-ZM-105-M",
             "mainEP": "01"
+        },
+        "commands": {
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya"
+            }
         }
     }
 }

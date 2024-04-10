@@ -1,0 +1,14 @@
+{
+    "TS0601__TZE204_dcnsggvz": {
+        "manufacturer": "Moes",
+        "model": "ZM-105-M",
+        "type": "Smart dimmer module",
+        "category": {
+            "energy": "1"
+        },
+        "configuration": {
+            "icon": "Moes-SmartDimmer-ZM-105-M",
+            "mainEP": "01"
+        }
+    }
+}

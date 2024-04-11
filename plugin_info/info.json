@@ -1,10 +1,10 @@
 {
     "id": "Abeille",
     "name": "Abeille",
-    "description": "Plugin pour la passerelle Zigate (https://zigate.fr).",
+    "description": "Plugin pour la passerelle Zigbee 'Zigate' (https://zigate.fr).",
     "usage": "Enjoy.",
     "licence": "AGPL",
-    "author": "kiwihc16",
+    "author": "Kiwihc16/Tcharp38",
     "require": "4.0",
     "category": "automation protocol",
     "mobile": "Abeille",
@@ -19,7 +19,6 @@
     "maxDependancyInstallTime": "45",
     "issue": "https://github.com/KiwiHC16/Abeille/issues",
     "link": {
-        "forum": "https://community.jeedom.com/tag/plugin-abeille",
-        "video": "https://m.youtube.com/channel/UCPLBWX8drp5_gzmxyL3mtow"
+        "forum": "https://community.jeedom.com/tag/plugin-abeille"
     }
 }

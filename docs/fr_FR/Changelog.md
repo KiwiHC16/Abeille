@@ -2854,7 +2854,6 @@ Ce dernières semaines le focus a été sur:
 -   Télécommande OSRAM
 -   Ajout ampoules INNR RF263 et RF265
 -   Corrections de bugs
--   .....
 
 ## 2019-03-19
 

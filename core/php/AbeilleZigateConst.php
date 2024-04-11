@@ -268,8 +268,14 @@
         "80A7" => array(
             "name" => "?",
         ),
+        "8100" => array(
+            "name" => "Read individual attribute response", // Unused by Abeille
+        ),
         "8101" => array(
             "name" => "Default response", // Unused by Abeille
+        ),
+        "8102" => array(
+            "name" => "Attribute report", // Unused by Abeille
         ),
         "8110" => array(
             "name" => "Write attribute response", // Unused by Abeille

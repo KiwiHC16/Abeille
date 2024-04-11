@@ -13,7 +13,7 @@
             "automatism": "1"
         },
         "commands": {
-            "etat": {
+            "Status": {
                 "use": "etatSwitchXiaomiCarre"
             },
             "multi": {

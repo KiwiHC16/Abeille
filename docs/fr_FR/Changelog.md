@@ -29,6 +29,8 @@
 -   Interne: Amélioration msg dbg OTA.
 -   Interne: powerCycleUsb: Améliorations mineures.
 -   Changelog: Migré au format markdown.
+-   sensor_switch.aq3: Mise-à-jour du modèle avec ajout section 'private'.
+-   Interne: Parser: Désactivation du support messages 8100 & 8102 (géré par 8002) pour migration mode 'raw'.
 
 ## 240409-BETA-1
 

@@ -21,10 +21,21 @@
                 "use": "etatSwitchDoublebSensorSwitchAq3"
             },
             "Battery-Volt": {
-                "use": "inf_zbAttr-0001-BatteryVolt"
+                "use": "inf_batteryVoltAndPercent-285-300"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
+            }
+        },
+        "private": {
+            "0000-FF01": {
+                "01-21": {
+                    "func": "numberDiv",
+                    "div": 1000,
+                    "info": "0001-01-0020",
+                    "comment": "Battery-Volt"
+                },
+                "type": "xiaomi"
             }
         }
     }

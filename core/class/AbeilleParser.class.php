@@ -4297,11 +4297,9 @@
                             $maxDataSize = AbeilleTools::reverseHex(substr($pl, 26, 2));
 
                             msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/otaImageBlockResponse", 'ep='.$srcEp.'&sqn='.$sqn.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
-                            // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
 
                             $m = "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$fileVersion.", fileOffset=".$fileOffset.", maxData=".$maxDataSize;
                             parserLog2('debug', $srcAddr, $m);
-                            // $toMon[] = $m;
                         } else if ($cmd == "06") { // Upgrade end request
                             $status = substr($pl, 0, 2);
                             $manufCode = substr($pl, 2, 4);
@@ -4314,14 +4312,13 @@
                                 .', ImgType='.$imgType
                                 .', FileVers='.$fileVersion;
                             parserLog2('debug', $srcAddr, $m);
-                            // $toMon[] = $m;
 
                             // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
                             $eqLogic = Abeille::byLogicalId($dest.'/'.$srcAddr, 'Abeille');
                             $eqHName = $eqLogic->getHumanName();
                             switch ($status) {
                             case "00":
-                                message::add("Abeille", $eqHName.": Mise-à-jour terminée");
+                                message::add("Abeille", $eqHName.": Mise-à-jour du firmware terminée");
                                 break;
                             case "95":
                                 message::add("Abeille", $eqHName.": Transfert du firmware annulé par l'équipement");

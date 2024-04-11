@@ -6,6 +6,7 @@
 ###
 
 # Note: https://www.kernel.org/doc/Documentation/usb/power-management.txt
+DISCONNECT_TIME=2
 
 echo -n "powerCycleUsb.sh starting: "
 date
@@ -37,22 +38,26 @@ if [ "${DMESG}" == "" ]; then
     dmesg
     exit 3
 fi
+
+# TODO: DMESG may contains a list of "now attached to". How to keep most recent/last one ?
+
 #echo "DMESG=$DMESG"
-DMESG2=`echo ${DMESG} | sed 's/:.*//'`
-echo "DMESG2='$DMESG2'"
+DMESG2=`echo ${DMESG} | sed 's/:.*//'` # Remove everything after ':'
+CONVERTOR=`echo ${DMESG} | awk '{ print $3 }'`
+# echo "DMESG2='$DMESG2'"
 PORT=${DMESG2#usb }
-echo "PORT='$PORT'"
+echo "CONVERTOR=${CONVERTOR}, PORT='${PORT}'"
 
 # Port identified. Let's do power cycling
 if [ -e "/sys/bus/usb/drivers/usb/unbind" ]; then
-    echo "Disconnecting ${PORT}"
+    echo "Disconnecting '${PORT}' ${DISCONNECT_TIME} sec"
     echo "$PORT" > /sys/bus/usb/drivers/usb/unbind
     ERR=$?
     if [ $ERR -ne 0 ]; then
         sudo echo "= ERROR: 'unbind' failed ! Are you root ?"
     else
-        sleep 2
-        echo "Reconnecting ${PORT}"
+        sleep ${DISCONNECT_TIME}
+        echo "Reconnecting '${PORT}'"
         sudo echo "$PORT" > /sys/bus/usb/drivers/usb/bind
     fi
 else

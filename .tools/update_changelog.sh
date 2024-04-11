@@ -2,8 +2,8 @@
 
 # Update changelog to add version
 
-CL=docs/fr_FR/changelog.rst
-TMP=docs/fr_FR/changelog.rst.tmp
+CL=docs/fr_FR/changelog.md
+TMP=docs/fr_FR/changelog.md.tmp
 
 echo "Updating changelog..."
 
@@ -12,16 +12,13 @@ STEP=0
 cat ${CL} |
 while IFS= read -r L
 do
-    # ChangeLog
-    # =========
+    # # ChangeLog (title)
     #
     # - JSON: Correction setReportTemp (#1918).
 
-    # ChangeLog
-    # =========
+    # # ChangeLog (title)
     #
-    # VERSION X
-    # ---------
+    # ## VERSION X
     #
     # - JSON: Correction setReportTemp (#1918).
 
@@ -30,7 +27,7 @@ do
 
     if [ ${STEP} -eq 0 ]; then
         echo "${L}" >> ${TMP}
-        if [[ ${L} == "==="* ]]; then
+        if [[ ${L} == "# "* ]]; then
             STEP=1 # Title found
         fi
     elif [ ${STEP} -eq 1 ]; then
@@ -53,14 +50,14 @@ do
                 continue
             fi
             # Assuming 'VERSION' line + '------'
-            if [[ "${L}" == *"${VERSION}"* ]]; then
+            if [[ "${L}" == "## ${VERSION}"* ]]; then
                 echo "- There is already correct version in changelog. Doing nothing"
                 echo
                 rm ${TMP}
                 break
             fi
             # Adding current version
-            echo "${VERSION}" >> ${TMP}
+            echo "## ${VERSION}" >> ${TMP}
         fi
         STEP=2 # Copy all remaining lines
     else # STEP==2

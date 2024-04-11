@@ -482,7 +482,7 @@ class Abeille extends eqLogic {
                 $zgPort = $config['ab::zgPort'.$zgId];
                 if (($zgType == "USB") || ($zgType == "USBv2")) {
                     if ($config['ab::preventUsbPowerCycle'] == 'Y')
-                        log::add('Abeille', 'Debug', 'Power cycle required for Zigate '.$zgId.' but disabled');
+                        log::add('Abeille', 'warning', 'Power cycle required for Zigate '.$zgId.' but disabled');
                     else {
                         $dir = __DIR__."/../scripts";
                         $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";

@@ -26,6 +26,9 @@
       - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
 -   Moes ZM-105-M: Support préliminaire (2697).
+-   Interne: Amélioration msg dbg OTA.
+-   Interne: powerCycleUsb: Améliorations mineures.
+-   Changelog: Migré au format markdown.
 
 ## 240409-BETA-1
 

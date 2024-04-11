@@ -4461,7 +4461,7 @@
                     // if (hexdec($dataSize) > 48)
                     //     $dataSize = "30"; // Required ?
                     $realOffset = $fw['startIdx'] + hexdec($imgOffset);
-                    cmdLog('debug', "  Reading data from real offset ".$realOffset, $this->debug['processCmd']);
+                    cmdLog('debug', "  otaImageBlockResponse: Offset=${realOffset}, ImgSize=${imgSize}");
                     fseek($fh, $realOffset, SEEK_SET);
                     $data = fread($fh, hexdec($dataSize));
                     $data = strtoupper(bin2hex($data));

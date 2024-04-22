@@ -435,7 +435,7 @@
                 /* Need to start AbeilleMonitor if not already running
                 and restart cmd & parser.
                 WARNING: If cron is not running, any (re)start should be avoided. */
-                $conf = AbeilleTools::getParameters();
+                $conf = AbeilleTools::getConfig();
                 AbeilleTools::restartDaemons($conf, "AbeilleMonitor AbeilleParser AbeilleCmd");
             }
 
@@ -803,6 +803,33 @@
             logDebug('configJson='.$configJson);
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'config' => $configJson)));
+        }
+
+        // Restart Abeille's daemons
+        if (init('action') == 'restartDaemons') {
+            $status = 0;
+            $error = "";
+
+            $config = AbeilleTools::getConfig();
+            AbeilleTools::restartDaemons($config, "");
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        // Return Abeille's running daemons
+        if (init('action') == 'getRunningDaemons') {
+            $status = 0;
+            $error = "";
+
+            $daemons = AbeilleTools::getRunningDaemons2();
+            /* 'daemons' reminder
+            $daemons = array(
+                'runningNb' => sizeof($daemons), // Nb of running daemons
+                'runBits' => $runBits, // 1 bit per running daemon
+                'daemons' => $daemons, // Detail on each daemon
+            ); */
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'daemons' => $daemons)));
         }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.

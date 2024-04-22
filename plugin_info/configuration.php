@@ -1460,6 +1460,34 @@
                 }
                 if (errors != '')
                     window.alert(errors);
+                else {
+                    // Restart daemons if already running
+                    $.ajax({
+                        type: 'POST',
+                        url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+                        data: {
+                            action: 'getRunningDaemons',
+                        },
+                        dataType: 'json',
+                        global: false,
+                        success: function (json_res) {
+                            // console.log(json_res);
+                            res = JSON.parse(json_res.result);
+                            deamons = res.daemons;
+                            running = deamons.runningNb;
+                            if (running > 0) {
+                                console.log(running+" daemons running => Restarting all");
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+                                    data: {
+                                        action: 'restartDaemons',
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
             }
         });
     }

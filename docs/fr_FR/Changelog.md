@@ -32,6 +32,7 @@
 -   sensor_switch.aq3: Mise-à-jour du modèle avec ajout section 'private'.
 -   Interne: Parser: Désactivation du support messages 8100 & 8102 (géré par 8002) pour migration mode 'raw'.
 -   Page de config: Les démons sont automatiquement redémarrés lors de la sauvegarde de la configuration.
+-   Page de gestion: 'Remplacement d'équipement' => 'Transfert d'historique'.
 
 ## 240409-BETA-1
 

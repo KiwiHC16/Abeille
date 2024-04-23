@@ -31,36 +31,58 @@ do
             STEP=1 # Title found
         fi
     elif [ ${STEP} -eq 1 ]; then
-        if [[ "${L}" == "- "* ]] || [[ "${L}" == " "* ]]; then
-            # It's a list (starts with '- ') or something starting with space
-            # => Need to add version title (# VERSION)
-            echo "${VERSION}" >> ${TMP}
-            S=${#VERSION}
-            UNDER=""
-            for (( c=1; c<=$S; c++ ))
-            do
-                UNDER="${UNDER}-"
-            done
-            echo ${UNDER} >> ${TMP}
-            echo "" >> ${TMP}
-            echo "${L}" >> ${TMP}
-        else
-            if [ "${L}" == "" ]; then
-                echo >> ${TMP}
-                continue
-            fi
-            # Assuming 'VERSION' line + '------'
-            if [[ "${L}" == "## ${VERSION}"* ]]; then
-                echo "- There is already correct version in changelog. Doing nothing"
-                echo
-                rm ${TMP}
-                break
-            fi
+        # Empty line ?
+        if [ "${L}" == "" ]; then
+            echo >> ${TMP}
+            continue # Continue until version updated
+        fi
+
+        # Anything but a version line
+        if [[ "${L}" != "## "* ]]; then
             # Adding current version
             echo "## ${VERSION}" >> ${TMP}
+            STEP=2 # Copy rest of the file
+            continue
         fi
-        STEP=2 # Copy all remaining lines
-    else # STEP==2
+
+        # Version line:
+        if [[ "${L}" == "## ${VERSION}"* ]]; then
+            echo "- There is already correct version in changelog. Doing nothing"
+            echo
+            rm ${TMP}
+            break
+        fi
+
+        # if [[ "${L}" == "- "* ]] || [[ "${L}" == " "* ]]; then
+        #     # It's a list (starts with '- ') or something starting with space
+        #     # => Need to add version title (# VERSION)
+        #     echo "${VERSION}" >> ${TMP}
+        #     S=${#VERSION}
+        #     UNDER=""
+        #     for (( c=1; c<=$S; c++ ))
+        #     do
+        #         UNDER="${UNDER}-"
+        #     done
+        #     echo ${UNDER} >> ${TMP}
+        #     echo "" >> ${TMP}
+        #     echo "${L}" >> ${TMP}
+        # else
+        #     if [ "${L}" == "" ]; then
+        #         echo >> ${TMP}
+        #         continue
+        #     fi
+        #     # Assuming 'VERSION' line + '------'
+        #     if [[ "${L}" == "## ${VERSION}"* ]]; then
+        #         echo "- There is already correct version in changelog. Doing nothing"
+        #         echo
+        #         rm ${TMP}
+        #         break
+        #     fi
+        #     # Adding current version
+        #     echo "## ${VERSION}" >> ${TMP}
+        # fi
+        # STEP=2
+    else # STEP==2: Copy all remaining lines
         echo "${L}" >> ${TMP}
     fi
 done

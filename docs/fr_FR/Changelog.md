@@ -37,6 +37,7 @@
 -   Page de gestion: 'Remplacement d'équipement' => 'Transfert d'historique'.
 -   Page maintenance: Améliorations package de logs & suppression du fichier zippé apres transfert.
 -   Interne: Correction 'update_changelog.sh'
+-   Page de config: Correction test de port pour USBv2.
 
 ## 240409-BETA-1
 

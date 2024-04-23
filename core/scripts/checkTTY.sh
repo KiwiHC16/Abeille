@@ -25,13 +25,24 @@ fi
 PORT=$1
 TYPE=$2
 GPIOLIB=$3
-if [ "${TYPE}" != "PI" ] && [ "${TYPE}" != "PIv2" ] && [ "${TYPE}" != "DIN" ]; then
-    echo "${PREFIX}= ERREUR: Type ${TYPE} invalide !"
-    exit 1
-fi
-if [ "${GPIOLIB}" != "WiringPi" ] && [ "${GPIOLIB}" != "PiGpio" ]; then
-    echo "${PREFIX}= ERREUR: Lib GPIO ${GPIOLIB} invalide !"
-    exit 1
+GPIOREQUIRED=0
+case $TYPE in
+    PI | PIv2)
+        GPIOREQUIRED=1
+    ;;
+    DIN | USB | USBv2)
+    ;;
+    *)
+        echo "${PREFIX}= ERREUR: Type ${TYPE} invalide !"
+        exit 1
+    ;;
+esac
+
+if [ "${GPIOREQUIRED}" -eq 1 ]; then
+    if [ "${GPIOLIB}" != "WiringPi" ] && [ "${GPIOLIB}" != "PiGpio" ]; then
+        echo "${PREFIX}= ERREUR: Lib GPIO ${GPIOLIB} invalide !"
+        exit 1
+    fi
 fi
 
 # Port exists ?
@@ -66,11 +77,11 @@ else
     echo "${PREFIX}=           PPid=${PPID2}, cmd='${CMD}'"
 
     echo
-    echo "${PREFIX}= Additional infos I"
+    echo "${PREFIX}= Additional infos I (dmesg | grep tty)"
     dmesg | grep tty
 
     echo
-    echo "${PREFIX}= Additional infos II"
+    echo "${PREFIX}= Additional infos II (ls -al /dev/serial*)"
     ls -al /dev/serial*
 
     # exit 3

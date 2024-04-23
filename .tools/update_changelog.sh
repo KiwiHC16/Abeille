@@ -37,24 +37,28 @@ do
             continue # Continue until version updated
         fi
 
-        # Anything but a version line
-        if [[ "${L}" != "## "* ]]; then
-            # Adding current version
+        # Version line
+        if [[ "${L}" == "## "* ]]; then
+            if [[ "${L}" == "## ${VERSION}"* ]]; then
+                echo "- Version is already correct in changelog. Doing nothing"
+                echo
+                rm ${TMP}
+                break
+            fi
+            echo "- Updating version to ${VERSION}"
             echo "## ${VERSION}" >> ${TMP}
-            # Adding current line
-            echo "" >> ${TMP}
-            echo "${L}" >> ${TMP}
             STEP=2 # Copy rest of the file
             continue
         fi
 
-        # Version line:
-        if [[ "${L}" == "## ${VERSION}"* ]]; then
-            echo "- There is already correct version in changelog. Doing nothing"
-            echo
-            rm ${TMP}
-            break
-        fi
+        # Anything but a version line
+        echo "- Adding version ${VERSION}"
+        # Adding current version
+        echo "## ${VERSION}" >> ${TMP}
+        # Adding current line
+        echo "" >> ${TMP}
+        echo "${L}" >> ${TMP}
+        STEP=2 # Copy rest of the file
 
         # if [[ "${L}" == "- "* ]] || [[ "${L}" == " "* ]]; then
         #     # It's a list (starts with '- ') or something starting with space

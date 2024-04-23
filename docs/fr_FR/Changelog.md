@@ -1,7 +1,8 @@
 # Plugin 'Abeille': changeLog
 
-
 ## 240423-BETA-2
+
+**Mise-à-jour de modèles**
 
     - Malgré la volonté de faire des évolutions les plus transparentes possibles, il se peut que certains équipements nécessitent d'être mis-à-jour à partir de leur dernier modèle pour à nouveau fonctionner correctement.
 

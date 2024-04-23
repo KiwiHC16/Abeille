@@ -41,6 +41,9 @@ do
         if [[ "${L}" != "## "* ]]; then
             # Adding current version
             echo "## ${VERSION}" >> ${TMP}
+            # Adding current line
+            echo "" >> ${TMP}
+            echo "${L}" >> ${TMP}
             STEP=2 # Copy rest of the file
             continue
         fi

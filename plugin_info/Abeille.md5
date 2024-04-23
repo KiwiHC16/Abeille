@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240423-BETA-4"
+# VERSION="240423-BETA-5"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1279,7 +1279,7 @@ e2b6a4cd856fc09bff24be60d72960c8 *core/python/AbeilleSerialRead.py
 58bd44a198ebcfbe1b49f2c462555e90 *core/scripts/checkPiGpio.py
 f29ff4abcd88db470a13a58615d69c81 *core/scripts/checkPiGpio.sh
 33091517c2fbbab6e5546154033a9362 *core/scripts/checkSocat.sh
-dd1019b2fcbc51920cb3f32de31eb295 *core/scripts/checkTTY.sh
+c8083894640c7e94c4c6166dfa79bea3 *core/scripts/checkTTY.sh
 0e976aa3c9dceb4638b16cd060c8e6f6 *core/scripts/checkWifi.sh
 1b851804e7181d85504c89f337f666be *core/scripts/checkWiringPi.sh
 e72e6255ef857e73c92574f31e10f468 *core/scripts/dumpZigate.sh
@@ -1333,7 +1333,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 ce32db08df86d3ff94f08d80d463b7f2 *desktop/php/AbeilleMaintenance.php
 0a565528c112db3a821f371e51a70cba *desktop/php/AbeilleNetworkMap.php
-e6ce215b6b57f3b4db8f43e7290cb41b *docs/fr_FR/Changelog.md
+76b115170544bdef7d44a016983803b5 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1676,10 +1676,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-f95458bd850c789ac93e3d3bad1b52b4 *plugin_info/Abeille.version
+a512c0e0e50b84e86766754cb279a310 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 a558a10100cf8b1c463371f749bd40b1 *plugin_info/configuration.php
-c2193441c52592f197668a379ef5d9d5 *plugin_info/info.json
+ada4e713acf9aac75b946851d0bed5a8 *plugin_info/info.json
 52b73b85f0ceea587fac9bd49bf94bd6 *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

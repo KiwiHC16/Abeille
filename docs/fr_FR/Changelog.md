@@ -1,6 +1,6 @@
 # Plugin 'Abeille': changeLog
 
-## 240423-BETA-4
+## 240423-BETA-5
 
 **Mise-à-jour de modèles**
 

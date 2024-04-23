@@ -33,6 +33,7 @@
 -   Interne: Parser: Désactivation du support messages 8100 & 8102 (géré par 8002) pour migration mode 'raw'.
 -   Page de config: Les démons sont automatiquement redémarrés lors de la sauvegarde de la configuration.
 -   Page de gestion: 'Remplacement d'équipement' => 'Transfert d'historique'.
+-   Page maintenance: Améliorations pacakge de logs. Suppression du fichier zippé apres transfert.
 
 ## 240409-BETA-1
 

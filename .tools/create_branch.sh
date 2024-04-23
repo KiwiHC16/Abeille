@@ -144,8 +144,8 @@ fi
 
 # Add+commit
 # Note about changelog: should be pushed to AbeilleDoc too & html generated.
-echo "Adding 'Abeille.version', 'info.json', 'Abeille.md5' & 'Changelog.rst'"
-git add plugin_info/Abeille.version plugin_info/info.json plugin_info/Abeille.md5 docs/fr_FR/Changelog.rst
+echo "Adding 'Abeille.version', 'info.json', 'Abeille.md5' & 'Changelog.md'"
+git add plugin_info/Abeille.version plugin_info/info.json plugin_info/Abeille.md5 docs/fr_FR/Changelog.md
 if [ $? -ne 0 ]; then
     echo "= ERROR: git add failed"
     exit 23

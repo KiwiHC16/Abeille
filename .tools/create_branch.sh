@@ -230,13 +230,15 @@ if [ "${TARG_BRANCH}" == "stable" ]; then
     fi
 fi
 
-# Delete target branch & push new one
-REM=`git branch -a | grep remotes/${TARG_REPO}/${TARG_BRANCH}`
-if [ $? -eq 0 ]; then
+# Delete target branch (origin/beta) & push new one
+#REM=`git branch -a | grep remotes/${TARG_REPO}/${TARG_BRANCH}`
+REM=`git ls-remote ${TARG_REPO} ${TARG_BRANCH}`
+#if [ $? -eq 0 ]; then
+if [ "${REM}" != "" ]; then
     echo "Deleting ${TARG_REPO}/${TARG_BRANCH} branch"
     git push -q ${TARG_REPO} --delete ${TARG_BRANCH}
     if [ $? -ne 0 ]; then
-        echo "= ERROR: git push --delete failed"
+        echo "= ERROR: git push ${TARG_REPO} --delete ${TARG_BRANCH} failed"
         exit 33
     fi
 fi

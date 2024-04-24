@@ -1,5 +1,7 @@
 # Plugin 'Abeille': changeLog
 
+- Page config: Corrections test de port.
+
 ## 240423-BETA-7
 
 **Mise-à-jour de modèles**

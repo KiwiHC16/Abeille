@@ -62,6 +62,35 @@
         return true;
     }
 
+    // stop=true (default) => Disable daemons auto-start and stop them
+    function pauseDaemons($stop = true, $dStatus = []) {
+        if ($stop) {
+            $dStatus['autoMode'] = config::byKey('deamonAutoMode', 'Abeille', 0);
+            if ($dStatus['autoMode'] == 1) {
+                logMessage('debug', 'Disabling daemons auto-startup');
+                config::save('deamonAutoMode', 0, 'Abeille');
+            }
+
+            $daemons = AbeilleTools::getRunningDaemons2();
+            /* 'daemons' reminder
+            $daemons = array(
+                'runningNb' => sizeof($daemons), // Nb of running daemons
+                'runBits' => $runBits, // 1 bit per running daemon
+                'daemons' => $daemons, // Detail on each daemon
+            ); */
+            $dStatus['running'] = ($daemons['runninNb'] > 0) ? true: false;
+            Abeille::deamon_stop();
+        } else {
+            if ($dStatus['running']) // Daemons were running
+                Abeille::deamon_start(); // Restarting daemons
+            if ($dStatus['autoMode'] == 1) {
+                logMessage('debug', 'Reenabling daemons auto-startup');
+                config::save('deamonAutoMode', 1, 'Abeille');
+            }
+        }
+        return $dStatus;
+    }
+
     try {
 
         require_once __DIR__.'/../../../../core/php/core.inc.php';
@@ -184,7 +213,7 @@
             logSetConf('AbeilleConfig.log', true);
             logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort.', GpioLib='.$zgGpioLib);
 
-            Abeille::pauseDaemons(1);
+            $dStatus = pauseDaemons(true); // Stop daemons if running
 
             /* Checks port exists and is not already used */
             $prefix = logGetPrefix(""); // Get log prefix
@@ -198,7 +227,7 @@
                 $status = zgGetVersion($zgPort, $version);
             }
 
-            Abeille::pauseDaemons(0);
+            pauseDaemons(false, $dStatus); // Restart daemons if were running
 
             ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
         }
@@ -233,7 +262,7 @@
 
             $version = 0; // FW version
             if ($status == 0) {
-                Abeille::pauseDaemons(1);
+                $dStatus = pauseDaemons(true); // Stop daemons if running
 
                 /* Updating FW and reset Zigate */
                 $cmdToExec = $script." flash ${zgPort} ${zgType} ${zgGpioLib} ${zgFwFile}";
@@ -248,7 +277,7 @@
                 //     $status = zgGetVersion($zgPort, $version);
                 // }
 
-                Abeille::pauseDaemons(0);
+                pauseDaemons(false, $dStatus); // Restart daemons if were running
 
                 if (($status == 0) && $erasePdm) {
                     logMessage('info', 'Effacement de la PDM');
@@ -291,15 +320,7 @@
             $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd);
 
-            // logMessage('debug', 'Arret des démons');
-            // abeille::deamon_stop(); // Stopping daemon
-            // Abeille::pauseDaemons(1);
-            $daemonAutoMode = config::byKey('deamonAutoMode', 'Abeille', 0);
-            if ($daemonAutoMode == 1) {
-                logMessage('debug', 'Disabling daemons auto-startup');
-                config::save('deamonAutoMode', 0, 'Abeille');
-            }
-            Abeille::deamon_stop();
+            $dStatus = pauseDaemons(true); // Stop daemons if running
 
             $cmdToExec = "switchBranch.sh ".$branch.' "'.$prefix.'"';
             // $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
@@ -310,13 +331,7 @@
             // switch done in backbround but daemons are restarted BEFORE switch ended.
             // TODO: Wait for switch end ?
 
-            // Abeille::pauseDaemons(0);
-            // TODO: Should relaunch only if was already running
-            Abeille::deamon_start();
-            if ($daemonAutoMode == 1) {
-                logMessage('debug', 'Reenabling daemons auto-startup');
-                config::save('deamonAutoMode', 1, 'Abeille');
-            }
+            pauseDaemons(false, $dStatus); // Restart daemons if were running
 
             /* Note: Returning immediately but switch not completed yet. Anyway server side code
             might be completely different after switch */

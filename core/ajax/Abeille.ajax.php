@@ -78,7 +78,7 @@
                 'runBits' => $runBits, // 1 bit per running daemon
                 'daemons' => $daemons, // Detail on each daemon
             ); */
-            $dStatus['running'] = ($daemons['runninNb'] > 0) ? true: false;
+            $dStatus['running'] = ($daemons['runningNb'] > 0) ? true: false;
             Abeille::deamon_stop();
         } else {
             if ($dStatus['running']) // Daemons were running

@@ -1,5 +1,7 @@
 # Plugin 'Abeille': changeLog
 
+## 240425-BETA-1
+
 - Page config: Corrections test de port.
 
 ## 240423-BETA-7

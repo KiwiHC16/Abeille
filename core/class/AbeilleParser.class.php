@@ -2055,7 +2055,7 @@
             parserLog2('debug', $srcAddr, $m);
 
             if ($status != "00") {
-                parserLog2('debug', $srcAddr, '  Status='.$status.' => Unknown error');
+                parserLog2('debug', $srcAddr, '  Status='.$status.'/'.zbGetZDPStatus($status));
                 // $unknown = $this->deviceUpdate($net, $addr, ''); // Useless
                 return;
             }
@@ -2080,14 +2080,13 @@
 
             $toAbeille[] = array(
                 // 'src' => 'parser',
-                'type' => 'ieeeAddrResponse',
+                'type' => 'nwkAddrResponse',
                 'net' => $net,
                 'addr' => $addr,
                 'ieee' => $ieee,
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            // msgToAbeille2($msg);
         } // End decode8002_NwkAddrRsp()
 
         /* Called from decode8002() to decode IEEE addr response (IEEE_addr_rsp) message.
@@ -5055,38 +5054,38 @@
                              .' => '.zgGetPDMEvent($PDMEvtCode), "8035");
         }
 
-        function decode8040($dest, $payload, $lqi) {
-            // Network address response
+        // function decode8040($dest, $payload, $lqi) {
+        //     // Network address response
 
-            // <Sequence number: uin8_t>
-            // <status: uint8_t>
-            // <IEEE address: uint64_t>
-            // <short address: uint16_t>
-            // <number of associated devices: uint8_t>
-            // <start index: uint8_t>
-            // <device list – data each entry is uint16_t>
-            $Addr = substr($payload,20, 4);
+        //     // <Sequence number: uin8_t>
+        //     // <status: uint8_t>
+        //     // <IEEE address: uint64_t>
+        //     // <short address: uint16_t>
+        //     // <number of associated devices: uint8_t>
+        //     // <start index: uint8_t>
+        //     // <device list – data each entry is uint16_t>
+        //     $Addr = substr($payload,20, 4);
 
-            $msgDecoded='8040/Network address response'
-               .', SQN='                                     .substr($payload, 0, 2)
-               .', Status='                                  .substr($payload, 2, 2)
-               .', ExtAddr='                                 .substr($payload, 4,16)
-               .', Addr='                               .$Addr
-               .', NumberOfAssociatedDevices='               .substr($payload,24, 2)
-               .', StartIndex='                              .substr($payload,26, 2);
-            parserLog('debug', $dest.', Type='.$msgDecoded, "8040");
+        //     $msgDecoded='8040/Network address response'
+        //        .', SQN='                                     .substr($payload, 0, 2)
+        //        .', Status='                                  .substr($payload, 2, 2)
+        //        .', ExtAddr='                                 .substr($payload, 4,16)
+        //        .', Addr='                               .$Addr
+        //        .', NumberOfAssociatedDevices='               .substr($payload,24, 2)
+        //        .', StartIndex='                              .substr($payload,26, 2);
+        //     parserLog('debug', $dest.', Type='.$msgDecoded, "8040");
 
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $Addr))
-                monMsgFromZigate($msgDecoded); // Send message to monitor
+        //     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $Addr))
+        //         monMsgFromZigate($msgDecoded); // Send message to monitor
 
-            if ( substr($payload, 2, 2) != "00" ) {
-                parserLog('debug', '  Don\'t use this data there is an error');
-            } else {
-                for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
-                    parserLog('debug', '  AssociatedDev='.substr($payload, (28 + $i), 4));
-                }
-            }
-        }
+        //     if ( substr($payload, 2, 2) != "00" ) {
+        //         parserLog('debug', '  Don\'t use this data there is an error');
+        //     } else {
+        //         for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
+        //             parserLog('debug', '  AssociatedDev='.substr($payload, (28 + $i), 4));
+        //         }
+        //     }
+        // }
 
         /**
          * 8048/Leave indication

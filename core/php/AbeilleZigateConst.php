@@ -202,6 +202,9 @@
         "8035" => array(
             "name" => "PDM event code",
         ),
+        "8040" => array(
+            "name" => "Network address response", // Unused by Abeille
+        ),
         "8041" => array(
             "name" => "IEEE address response", // Unused by Abeille
         ),

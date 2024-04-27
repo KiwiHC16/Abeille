@@ -1,5 +1,8 @@
 # Plugin 'Abeille': changeLog
 
+- Interne: Parser: Suppression support message 8040 pour compatibilité mode raw.
+- Interne: Zigbee const: Ajout zbGetZDPStatus().
+
 ## 240425-BETA-1
 
 - Page config: Corrections test de port.

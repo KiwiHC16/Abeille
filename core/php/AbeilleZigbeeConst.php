@@ -229,6 +229,63 @@
         return "Unknown-".$status;
     }
 
+    /* Returns Zigbee ZDP status from code. */
+    function zbGetZDPStatus($status) {
+        $status = strtolower($status);
+
+        /* ZCL statuses */
+        $statusesTable = array (
+            "00" => "Success",
+            "80" => "Invalid request type", // INV_REQUESTTYPE
+            "81" => "Device not found", // DEVICE_NOT_FOUND
+            // INVALID_EP
+            // 0x82
+            // The supplied endpoint was equal to 0x00 or 0xff.
+            // NOT_ACTIVE
+            // 0x83
+            // The requested endpoint is not described by a simple de-scriptor.
+            // NOT_SUPPORTED
+            // 0x84
+            // The requested optional feature is not supported on the target device.
+            // TIMEOUT
+            // 0x85
+            // A timeout has occurred with the requested operation.
+            // NO_MATCH
+            // 0x86
+            // The end device bind request was unsuccessful due to a failure to match any suitable clusters.
+            // -
+            // 0x87
+            // Reserved.
+            // NO_ENTRY
+            // 0x88
+            // The unbind request was unsuccessful due to the coordi-nator or source device not having an entry in its binding table to unbind.
+            // NO_DESCRIPTOR
+            // 0x89
+            // A child descriptor was not available following a discovery request to a parent.
+            // INSUFFICIENT_SPACE
+            // 0x8a
+            // The device does not have storage space to support the requested operation.
+            // NOT_PERMITTED
+            // 0x8b
+            // The device is not in the proper state to support the re-quested operation.
+            // TABLE_FULL
+            // 0x8c
+            // The device does not have table space to support the op-eration.
+            // NOT_AUTHORIZED
+            // 0x8d
+            // The device has rejected the command due to security restrictions.
+            // DEVICE_BINDING_TABLE_FULL
+            // 0x8e
+            // The device does not have binding table space to support the operation.
+            // INVALID_INDEX
+            // 0x8f
+        );
+
+        if (array_key_exists($status, $statusesTable))
+            return $statusesTable[$status];
+        return "Unknown-".$status;
+    }
+
     // Clusters definition
     //  'name' = Cluster name
     //  'attributes' = Array. Server attributes

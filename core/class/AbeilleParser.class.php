@@ -4771,9 +4771,6 @@
         /**
          * ACK DATA (since FW 3.1b) = ZPS_EVENT_APS_DATA_CONFIRM Note: NACK = 8702
          *
-         * This method process a Zigbee message coming from a zigate for Ack APS messages
-         *  Will first decode it.
-         *
          * @param $dest     Network (AbeilleX)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi

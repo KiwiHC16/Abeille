@@ -1,3 +1,9 @@
+Espace disque
+    Chaque fois que c'est possible, remonter info utilisateur si espace disque saturé (et /tmp)
+
+Droits ?
+    Des checks à faire pour informer utilisateur ?
+
 Collecte des routages
     Il peut etre tres utile de connaitre le dernier routage pour identifier cause de blocage du reseau
 

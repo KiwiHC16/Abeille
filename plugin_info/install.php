@@ -886,7 +886,7 @@
          * - Cmds DB: 'onGroupBroadcast'/'offGroupBroadcast' replaced by 'cmd-0006'
          * - Cmds DB: 'ab::trigOut' syntax updated to associative array
          */
-        if (intval($dbVersion) < 20240319) {
+        if (intval($dbVersion) < 20240430) {
             // 'eqLogic' + 'cmd' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -1154,7 +1154,7 @@
             }
             removeLogs($obsolete);
 
-            // config::save('ab::dbVersion', '20240312', 'Abeille');
+            config::save('ab::dbVersion', '20240430', 'Abeille');
         }
     }
 

@@ -3,6 +3,7 @@
 -   Interne: Parser: Suppression support message 8040 pour compatibilité mode raw.
 -   Interne: Zigbee const: Ajout zbGetZDPStatus().
 -   ZLinky: Mise-à-jour du modèle (2704).
+-   Interne: Version DB config gelée => '20240430'.
 
 ## 240425-BETA-1
 

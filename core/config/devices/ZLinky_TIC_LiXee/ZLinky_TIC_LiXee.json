@@ -113,6 +113,12 @@
                 "unit": "VA",
                 "logicalId": "0B04-01-050F"
             },
+            "Get-PAPP": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=050F",
+                "execAtCreation": 1,
+                "comment": "Really required ??? Why if reporting is functional"
+            },
             "SetReporting PAPP": {
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=0B04&attrId=050F&attrType=21",
@@ -203,7 +209,7 @@
                 "params": "clustId=FF66&attrId=0004",
                 "logicalId": "PEJP"
             },
-            
+
             "BBRHCJB": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0100",
@@ -239,7 +245,7 @@
                 "params": "clustId=FF66&attrId=0001",
                 "logicalId": "DEMAIN"
             },
-            
+
             "PTEC": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0020",

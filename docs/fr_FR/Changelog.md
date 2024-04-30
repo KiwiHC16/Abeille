@@ -1,15 +1,4 @@
-# Plugin 'Abeille': changeLog
-
--   Interne: Parser: Suppression support message 8040 pour compatibilité mode raw.
--   Interne: Zigbee const: Ajout zbGetZDPStatus().
--   ZLinky: Mise-à-jour du modèle (2704).
--   Interne: Version DB config gelée => '20240430'.
-
-## 240425-BETA-1
-
--   Page config: Corrections test de port.
-
-## 240423-BETA-7
+# ChangeLog
 
 **Mise-à-jour de modèles**
 
@@ -20,9 +9,9 @@
 
 **Zigates v2/+**
 
-    - Malheureusement ne vous attendez à rien de vraiment stable avec ce modèle.
+    - Malheureusement ce modèle montre de grosses instabilités et ne doit pas être considéré pour une solution robuste.
     - La maturité de la v2 n'est pas au niveau de la v1 et malgré ça, il n'y a pas eu de mises-à-jour depuis un moment. D'après differents retours le dernier FW dispo (3.A0) n'est pas le + stable mais le précédent (**3.22**). Nous vous conseillons de faire la mise-à-jour vers celui ci.
-    - FW **v3.22 FORTEMENT RECOMMANDE**.
+    - FW **v3.22 FORTEMENT RECOMMANDE** avec un **EFFACEMENT COMPLET** lors de la mise-à-jour.
 
 **Zigates v1**
 
@@ -35,6 +24,18 @@
       - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
       - Les firmwares avant 3.1e sont forcement 'legacy'.
       - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+-   Interne: Parser: Suppression support message 8040 pour compatibilité mode raw.
+-   Interne: Zigbee const: Ajout zbGetZDPStatus().
+-   ZLinky: Mise-à-jour du modèle (2704).
+-   Interne: Version DB config gelée => '20240430'.
+-   Page maintenance: Suppression du fichier zippé après transfert DESACTIVE. A revoir.
+
+## 240425-BETA-1
+
+-   Page config: Corrections test de port.
+
+## 240423-BETA-7
 
 -   Moes ZM-105-M: Support préliminaire (2697).
 -   Interne: Amélioration msg dbg OTA.

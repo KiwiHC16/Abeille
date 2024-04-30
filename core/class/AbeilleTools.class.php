@@ -1511,7 +1511,6 @@
                     return false;
                 }
 
-                log::add('Abeille', 'debug', 'AbeilleTools:setPIGpio(): Active PiZigate found => configuring GPIOs');
                 exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
                 return true;
             } else if ($gpioLib == "PiGpio") {

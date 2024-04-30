@@ -199,6 +199,7 @@
     })
 
     function createLogsZipFile() {
+        console.log("createLogsZipFile()");
         $.showLoading();
         $.ajax({
             type: 'POST',
@@ -219,18 +220,21 @@
                     var msg = "ERREUR: Quelque chose s'est mal passé.\n\n"+res.error;
                     alert(msg);
                 } else {
+                    console.log("Zip package must be ready. Downloading ...");
                     window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+js_tmpDir+'/'+res.zipFile, "_blank", null);
-                    $.ajax({
-                        type: 'POST',
-                        url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
-                        data: {
-                            action: 'delTmpFile',
-                            file : res.zipFile,
-                        },
-                        dataType: "json",
-                        global: false,
-                        cache: false
-                    });
+
+                    // WARNING: Wrong sequencing. Deleted before download
+                    // $.ajax({
+                    //     type: 'POST',
+                    //     url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+                    //     data: {
+                    //         action: 'delTmpFile',
+                    //         file : res.zipFile,
+                    //     },
+                    //     dataType: "json",
+                    //     global: false,
+                    //     cache: false
+                    // });
                 }
             }
         });

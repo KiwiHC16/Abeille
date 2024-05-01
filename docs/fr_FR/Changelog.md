@@ -2,6 +2,7 @@
 
 - Interne: Suppression fichiers obsoletes.
 - Zigates: Fonctionnement en mode 'brut' à partir de maintenant.
+- Interne: AbeilleTools::getParameters() => getConfig().
 
 ## 240501-STABLE-1
 

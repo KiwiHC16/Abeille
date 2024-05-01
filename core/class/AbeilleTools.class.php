@@ -812,9 +812,9 @@
          *
          * @return array
          */
-        public static function getParameters() { // OBSOLETE: Use getConfig() instead
-            return AbeilleTools::getConfig();
-        }
+        // public static function getParameters() { // OBSOLETE: Use getConfig() instead
+        //     return AbeilleTools::getConfig();
+        // }
 
         public static function getConfig() {
             $config = array();

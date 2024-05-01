@@ -1,6 +1,8 @@
 # ChangeLog
 
-## 240430-BETA-1
+- Interne: Suppression fichiers obsoletes.
+
+## 240501-STABLE-1
 
 **Mise-à-jour de modèles**
 

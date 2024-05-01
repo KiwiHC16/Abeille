@@ -3,6 +3,7 @@
 - Interne: Suppression fichiers obsoletes.
 - Zigates: Fonctionnement en mode 'brut' à partir de maintenant.
 - Interne: AbeilleTools::getParameters() => getConfig().
+- Support EmberZnet: C'est parti. Rien d'utile à ce stade.
 
 ## 240501-STABLE-1
 

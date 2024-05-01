@@ -833,8 +833,9 @@
                 $chan = config::byKey('ab::zgChan'.$zgId, 'Abeille', 'niet');
                 if ($chan != 'niet')
                     $config['ab::zgChan'.$zgId] = $chan;
-                $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
             }
+            $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
+            $config['ab::forceZigateHybridMode'] = config::byKey('ab::forceZigateHybridMode', 'Abeille', 'N');
             $config['ab::monitorId'] = config::byKey('ab::monitorId', 'Abeille', false);
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);
 

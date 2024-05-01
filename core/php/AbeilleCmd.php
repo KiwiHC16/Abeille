@@ -172,7 +172,7 @@
         cmdLog('debug', "configureZigate(${zgId})");
 
         msgToCmd("CmdAbeille".$zgId."/0000/zgSoftReset", "");
-        // 1sec delay to wait for chip reset
+        // Cmds delayed by 1sec to wait for chip reset
 
         global $config;
         if (isset($config['ab::zgChan'.$zgId])) {
@@ -186,8 +186,14 @@
             msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetChannelMask&tempo=".(time()+1), "mask=".$mask);
         }
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetTimeServer&tempo=".(time()+1), "");
-        cmdLog('debug', '  Configuring zigate '.$zgId.' in hybrid mode');
-        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetMode&tempo=".(time()+1), "mode=hybrid");
+
+        if (isset($config['ab::forceZigateHybridMode']) && ($config['ab::forceZigateHybridMode'] == "Y")) {
+            $mode = "hybrid";
+        } else
+            $mode = "raw";
+        cmdLog('debug', "  Configuring Zigate ${zgId} in ${mode} mode");
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetMode&tempo=".(time()+1), "mode=${mode}");
+
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgStartNetwork&tempo=".(time()+1), "");
 
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+1), "");

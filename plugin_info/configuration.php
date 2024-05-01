@@ -473,16 +473,6 @@
             </div>
             <?php } ?>
 
-            <!-- <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du de la récuperation d'équipements inconnus. Par défaut le laisser sur 'Oui'.}}">{{Blocage récuperation équipement inconnu : }}</label>
-                <div class="col-lg-5">
-                    <select class="configKey form-control" data-l1key="blocageRecuperationEquipement" style="width:150px" data-toggle="tooltip" title="{{Si un equipement se manifeste mais n est pas connu par Abeille, Abeille peut essayer de le recuperer. Dans certaine situation cela peut rendre Abeille instalble.}}">
-                        <option value="Oui">{{Oui}}</option>
-                        <option value="Non">{{Non}}</option>
-                    </select>
-                </div>
-            </div> -->
-
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage interrogation LQI à minuit}}">{{Blocage interrogation LQI à minuit}} : </label>
                 <div class="col-lg-5">
@@ -497,6 +487,16 @@
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Empêche un cycle off/on sur les Zigates USB plantées}}">{{Blocage cycle OFF/ON Zigates USB}} : </label>
                 <div class="col-lg-5">
                     <select class="configKey form-control" data-l1key="ab::preventUsbPowerCycle" style="width:150px" data-toggle="tooltip" title="{{Si 'Oui', empêche un cycle OFF/ON sur les Zigates USB plantées}}">
+                        <option value="Y">{{Oui}}</option>
+                        <option value="N" selected>{{Non}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Force le mode 'hybride' pour les Zigates}}">{{Zigates en mode 'hybride'}} : </label>
+                <div class="col-lg-5">
+                    <select class="configKey form-control" data-l1key="ab::forceZigateHybridMode" style="width:150px" data-toggle="tooltip" title="{{Si 'Oui', les Zigates fonctionnent en mode 'hybride' au lieu de 'brut'}}">
                         <option value="Y">{{Oui}}</option>
                         <option value="N" selected>{{Non}}</option>
                     </select>

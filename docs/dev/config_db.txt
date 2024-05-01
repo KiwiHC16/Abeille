@@ -1,0 +1,20 @@
+***
+*** Abeille developer internal doc
+*** Jeedom 'config' database notes
+***
+
+ab::defaultParent
+
+ab::monitorId
+
+ab::preventLQIAutoUpdate
+    Y => Prevent LQI interrogation during night.
+    N => Default
+
+ab::preventUsbPowerCycle
+    Y => Prevent USB power cycle attempt in case of Zigate not responding
+    N => Default
+
+ab::forceZigateHybridMode
+    Y => Force Zigate to use 'hybrid' mode instead of 'raw'
+    N => Default

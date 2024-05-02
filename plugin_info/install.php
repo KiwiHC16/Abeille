@@ -1156,6 +1156,30 @@
 
             config::save('ab::dbVersion', '20240430', 'Abeille');
         }
+
+        /* Internal changes
+         * - Config DB: 'ab::zgEnabledX' => 'ab::gtwEnabledX'.
+         * - Config DB: 'ab::zgTypeX' => 'ab::gtwSubTypeX'.
+         * - Config DB: 'ab::zgPortX' => 'ab::gtwPortX'.
+         */
+        if (intval($dbVersion) < 20240502) {
+            // 'config' DB updates
+            for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+                replaceConfigDB("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
+
+                $val = config::byKey("ab::zgType${gtwId}", 'Abeille', 'nada', true);
+                if ($val !== 'nada')
+                    replaceConfigDB("ab::zgType${gtwId}", "ab::gtwSubType${gtwId}");
+
+                $val = config::byKey("ab::gtwType${gtwId}", 'Abeille', 'nada', true);
+                if ($val === 'nada')
+                    config::save("ab::gtwType${gtwId}", "zigate", 'Abeille');
+
+                replaceConfigDB("ab::zgPort${gtwId}", "ab::gtwPort${gtwId}");
+            }
+
+            // config::save('ab::dbVersion', '20240502', 'Abeille');
+        }
     }
 
     /**

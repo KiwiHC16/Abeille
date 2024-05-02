@@ -105,35 +105,42 @@
         logIt("}\n\n");
     }
 
-    // Display Zigates informations
-    function zigatesInfos() {
-        logTitle("Zigates");
+    // Display gateways informations
+    function gatewaysInfos() {
+        logTitle("Gateways");
 
-        for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
-                continue; // Zigate disabled
+        for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+            if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
+                continue; // Disabled
 
-            $eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+            $gtwType = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate'); // 'zigate', 'ezsp'
+            $gtwSubType = config::byKey('ab::gtwSubType'.$gtwId, 'Abeille', '?');
+
+            $eqLogic = Abeille::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
             if (is_object($eqLogic)) {
                 $beehiveId = $eqLogic->getId();
 
-                $fwVersion = '????-????';
-                $channel = "?";
-                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'FW-Version');
-                if ($cmdLogic)
-                    $fwVersion = $cmdLogic->execCmd();
-                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'Network-Channel');
-                if ($cmdLogic)
-                    $channel = $cmdLogic->execCmd();
+                if ($gtwType == 'zigate') {
+                    $fwVersion = '????-????';
+                    $channel = "?";
+                    $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'FW-Version');
+                    if ($cmdLogic)
+                        $fwVersion = $cmdLogic->execCmd();
+                    $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'Network-Channel');
+                    if ($cmdLogic)
+                        $channel = $cmdLogic->execCmd();
 
-                $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '?');
-
-                logIt("Zigate ".$zgId."\n");
-                logIt("- FW version: ".$fwVersion."\n");
-                logIt("- Channel   : ".$channel."\n");
-                logIt("- Type      : ".$zgType."\n");
+                    logIt("Zigate ".$gtwId."\n");
+                    logIt("- FW version: ".$fwVersion."\n");
+                    logIt("- Channel   : ".$channel."\n");
+                    logIt("- Type      : ".$gtwSubType."\n");
+                } else if ($gtwType == 'ezsp') {
+                    logIt("EZSP ".$gtwId."\n");
+                    logIt("- Channel   : ".$channel."\n");
+                    logIt("- Type      : ".$gtwSubType."\n");
+                }
             } else
-                logIt("Zigate ".$zgId.": ERROR. No Jeedom registered device\n");
+                logIt("Gateway ${gtwId} (type ${gtwType}): ERROR. No Jeedom registered device\n");
         }
         logIt("\n");
     }
@@ -167,7 +174,7 @@
         logIt("Reminder: TO=timeout, NA=no-ack, DIS=disabled\n");
 
         for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+            if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
 
             logIt("Zigate ${zgId}\n");
@@ -237,7 +244,7 @@
     logIt("Abeille: Version ".$abeilleVersion."\n\n");
 
     // Zigate infos
-    zigatesInfos();
+    gatewaysInfos();
 
     // Devices status
     devicesInfos();

@@ -97,7 +97,7 @@
 			echo '<br>';
 
 			for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-				if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+				if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
 					continue; // This Zigate is disabled
 
 				displayGroups($zgId);

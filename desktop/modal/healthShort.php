@@ -45,17 +45,17 @@
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
     for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
-        if ($parameters['ab::zgEnabled'.$zgNb] != "Y")
+        if ($parameters['ab::gtwEnabled'.$zgNb] != "Y")
             continue; // Zigate disabled
         displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
-        if ($parameters['ab::zgType'.$zgNb] == "WIFI")
+        if ($parameters['ab::gtwSubType'.$zgNb] == "WIFI")
             displayDaemonStatus($diff, "Socat".$zgNb, $oneMissing);
     }
 
     echo "<hr>";
 
     for ($i = 1; $i <= maxNbOfZigate; $i++) {
-        if (config::byKey('ab::zgEnabled'.$i, 'Abeille', 'N', 1) == "Y") {
+        if (config::byKey('ab::gtwEnabled'.$i, 'Abeille', 'N', 1) == "Y") {
 ?>
         <div class="ui-block-a">
 

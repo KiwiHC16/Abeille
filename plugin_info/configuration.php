@@ -96,7 +96,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="ab::zgType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
+                echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
                     echo '<option value="USB" selected>{{USB v1}}</option>';
                     echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
                     echo '<option value="PI">{{PI v1}}</option>';
@@ -111,7 +111,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::zgPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN}}" disabled>';
+                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN}}" disabled>';
                     echo '<option value="none" selected>{{Aucun}}</option>';
                     echo '<option value="'.wifiLink.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
                     echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
@@ -209,7 +209,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="ab::zgEnabled'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
+                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwEnabled'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
                     echo '<option value="N" selected>{{Désactivée}}</option>';
                     echo '<option value="Y">{{Activée}}</option>';
                 echo '</select>';
@@ -405,7 +405,7 @@
             // How many zigates to display ? (check if enabled or not)
             $maxId = 1;
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $status = config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N');
+                $status = config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N');
                 if ($status == "Y")
                     $maxId = $zgId;
             }
@@ -1445,10 +1445,10 @@
 
                 errors = '';
                 for (zgId = 1; zgId < js_maxZigates; zgId++) {
-                    if (config['ab::zgEnabled'+zgId] != 'Y')
+                    if (config['ab::gtwEnabled'+zgId] != 'Y')
                         continue; // Disabled
 
-                    zgType = config['ab::zgType'+zgId];
+                    zgType = config['ab::gtwSubType'+zgId];
                     // console.log("Zigate "+zgId+" type "+zgType);
 
                     if (zgType == 'WIFI') {

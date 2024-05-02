@@ -598,7 +598,7 @@
                 $eq['logicId'] = $eqLogic->getLogicalId();
                 list($eqNet, $eqAddr) = explode("/", $eq['logicId']);
                 $eq['zgId'] = substr($eqNet, 7);
-                $eq['zgType'] = config::byKey('ab::zgType'.$eq['zgId'], 'Abeille', '', 1);
+                $eq['zgType'] = config::byKey('ab::gtwSubType'.$eq['zgId'], 'Abeille', '', 1);
                 $eq['zgChan'] = config::byKey('ab::zgChan'.$eq['zgId'], 'Abeille', '', 1);
                 $eq['addr'] = $eqAddr;
                 $eq['ieee'] = $eqLogic->getConfiguration('IEEE', '');

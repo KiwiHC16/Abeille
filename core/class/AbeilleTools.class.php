@@ -823,16 +823,17 @@
             $config['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.
             $config['parametersCheck_message'] = "";
 
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $config['ab::zgType'.$zgId] = config::byKey('ab::zgType'.$zgId, 'Abeille', '', 1);
-                $config['ab::zgPort'.$zgId] = config::byKey('ab::zgPort'.$zgId, 'Abeille', '', 1);
-                $config['ab::zgIpAddr'.$zgId] = config::byKey('ab::zgIpAddr'.$zgId, 'Abeille', '', 1);
-                $config['ab::zgEnabled'.$zgId] = config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N', 1);
-                $config['ab::zgIeeeAddrOk'.$zgId] = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
-                $config['ab::zgIeeeAddr'.$zgId] = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', '');
-                $chan = config::byKey('ab::zgChan'.$zgId, 'Abeille', 'niet');
+            for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+                $config['ab::gtwType'.$gtwId] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', '', 1);
+                $config['ab::gtwSubType'.$gtwId] = config::byKey('ab::gtwSubType'.$gtwId, 'Abeille', '', 1);
+                $config['ab::gtwPort'.$gtwId] = config::byKey('ab::gtwPort'.$gtwId, 'Abeille', '', 1);
+                $config['ab::zgIpAddr'.$gtwId] = config::byKey('ab::zgIpAddr'.$gtwId, 'Abeille', '', 1);
+                $config['ab::gtwEnabled'.$gtwId] = config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N', 1);
+                $config['ab::zgIeeeAddrOk'.$gtwId] = config::byKey('ab::zgIeeeAddrOk'.$gtwId, 'Abeille', 0);
+                $config['ab::zgIeeeAddr'.$gtwId] = config::byKey('ab::zgIeeeAddr'.$gtwId, 'Abeille', '');
+                $chan = config::byKey('ab::zgChan'.$gtwId, 'Abeille', 'niet');
                 if ($chan != 'niet')
-                    $config['ab::zgChan'.$zgId] = $chan;
+                    $config['ab::zgChan'.$gtwId] = $chan;
             }
             $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
             $config['ab::forceZigateHybridMode'] = config::byKey('ab::forceZigateHybridMode', 'Abeille', 'N');
@@ -936,14 +937,14 @@
             $nbZigates = 0;
             $expected = [];
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                if ($config['ab::zgEnabled'.$zgId] == "N")
+                if ($config['ab::gtwEnabled'.$zgId] == "N")
                     continue;
 
                 $nbZigates++;
                 $expected[] = 'SerialRead'.$zgId;
 
                 // If type 'WIFI', socat daemon required too
-                if ($config['ab::zgType'.$zgId] == "WIFI") {
+                if ($config['ab::gtwSubType'.$zgId] == "WIFI") {
                     $expected[] = 'Socat'.$zgId;
                 }
             }
@@ -1068,21 +1069,21 @@
 
             // Count number of processes we should have based on configuration, init $found['process x'] to 0.
             for ($n = 1; $n <= maxNbOfZigate; $n++) {
-                if ($parameters['ab::zgEnabled'.$n] == "Y") {
+                if ($parameters['ab::gtwEnabled'.$n] == "Y") {
                     $activedZigate++;
 
-                    // e.g. "ab::zgType2":"WIFI", "ab::zgPort2":"/tmp/zigateWifi2"
+                    // e.g. "ab::gtwSubType2":"WIFI", "ab::gtwPort2":"/tmp/zigateWifi2"
                     // SerialRead + Socat
-                    // if (stristr($parameters['ab::zgPort'.$n], '/tmp/zigateWifi')) {
-                    if ($parameters['ab::zgType'.$n] == "WIFI") {
+                    // if (stristr($parameters['ab::gtwPort'.$n], '/tmp/zigateWifi')) {
+                    if ($parameters['ab::gtwSubType'.$n] == "WIFI") {
                         $nbProcessExpected += 2;
                         $found['serialRead'.$n] = 0;
                         $found['socat'.$n] = 0;
                     }
 
-                    // e.g. "ab::zgType1":"USB", "ab::zgPort1":"/dev/ttyUSB3"
+                    // e.g. "ab::gtwSubType1":"USB", "ab::gtwPort1":"/dev/ttyUSB3"
                     // SerialRead
-                    if (preg_match("(tty|monit)", $parameters['ab::zgPort'.$n])) {
+                    if (preg_match("(tty|monit)", $parameters['ab::gtwPort'.$n])) {
                         $nbProcessExpected++;
                         $found['serialRead'.$n] = 0;
                     }
@@ -1120,7 +1121,7 @@
         /**
          * @param $isCron   is cron daemon for this plugin started
          * @param $parameters (parametersCheck, parametersCheck_message, ab::defaultParent,
-         * ab::zgType,ab::zgPortX, ab::zgIpAddrX, ab::zgEnabled
+         * ab::gtwSubType,ab::gtwPortX, ab::zgIpAddrX, ab::gtwEnabled
          * @param $running
          * return true if any missing daemons
          */
@@ -1325,10 +1326,10 @@
                 /* Note: starting input daemons first to not loose any returned
                 value/status as opposed to cmd being started first */
                 for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                    if ($config['ab::zgEnabled'.$zgId] != "Y")
+                    if ($config['ab::gtwEnabled'.$zgId] != "Y")
                         continue; // Zigate disabled
 
-                    if ($config['ab::zgType'.$zgId] == "WIFI") {
+                    if ($config['ab::gtwSubType'.$zgId] == "WIFI") {
                         if ($daemons != "")
                             $daemons .= " ";
                         $daemons .= "AbeilleSocat".$zgId;
@@ -1406,15 +1407,15 @@
             case 'serialread':
             case 'abeilleserialread':
                 $daemonPhp = "AbeilleSerialRead.php";
-                $daemonParams = 'Abeille'.$nb.' '.$config['ab::zgPort'.$nb].' ';
+                $daemonParams = 'Abeille'.$nb.' '.$config['ab::gtwPort'.$nb].' ';
                 $daemonLog = $logLevel." >>${tmpDir}/AbeilleSerialRead".$nb.".log 2>&1";
-                exec(system::getCmdSudo().'chmod 777 '.$config['ab::zgPort'.$nb].' > /dev/null 2>&1');
+                exec(system::getCmdSudo().'chmod 777 '.$config['ab::gtwPort'.$nb].' > /dev/null 2>&1');
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
             case 'socat':
             case 'abeillesocat':
                 $daemonPhp = "AbeilleSocat.php";
-                $daemonParams = $config['ab::zgPort'.$nb].' '.$config['ab::zgIpAddr'.$nb].' '.$logLevel;
+                $daemonParams = $config['ab::gtwPort'.$nb].' '.$config['ab::zgIpAddr'.$nb].' '.$logLevel;
                 $daemonLog = " >>".$logDir."AbeilleSocat".$nb.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
@@ -1458,7 +1459,7 @@
         public static function clearSystemMessage($parameters, $which = 'all') {
             if ($which == 'all') {
                 for ($n = 1; $n <= maxNbOfZigate; $n++) {
-                    if ($parameters['ab::zgEnabled'.$n] == "Y") {
+                    if ($parameters['ab::gtwEnabled'.$n] == "Y") {
                         // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$n);
                         AbeilleTools::sendMessageToRuche("daemon$n", "");
                     }

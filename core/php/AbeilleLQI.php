@@ -468,7 +468,7 @@
     $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
 
     for ($zgId = $zgStart; $zgId <= $zgEnd; $zgId++) {
-        if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y') {
+        if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y') {
             logMessage("", "Zigate ".$zgId." disabled => Ignored.");
             continue;
         }

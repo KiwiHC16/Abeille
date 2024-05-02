@@ -1,9 +1,15 @@
 # ChangeLog
 
-- Interne: Suppression fichiers obsoletes.
-- Zigates: Fonctionnement en mode 'brut' à partir de maintenant.
-- Interne: AbeilleTools::getParameters() => getConfig().
-- Support EmberZnet: C'est parti. Rien d'utile à ce stade.
+-   Interne: Suppression fichiers obsoletes.
+-   Zigates: Fonctionnement en mode 'brut' à partir de maintenant.
+-   Interne: AbeilleTools::getParameters() => getConfig().
+-   Support EmberZnet: C'est parti mais rien d'utile à ce stade.
+-   DB config: évolutions:
+
+    -   Ajout 'ab::gtwType' (zigate ou ezsp)
+    -   'ab::zgEnabledX' => 'ab::gtwEnabledX'
+    -   'ab::zgTypeX' => 'ab::gtwSubTypeX'
+    -   'ab::zgPortX' => 'ab::gtwPortX'
 
 ## 240501-STABLE-1
 

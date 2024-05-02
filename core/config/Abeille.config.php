@@ -3,7 +3,7 @@
      * Abeille's static config file
      */
 
-    define('lastDbVersion', 20240430);
+    define('lastDbVersion', 20240502);
     $in = "/tmp/AbeilleDeamonInput";
     $resourcePath = realpath(__DIR__.'/../../resources');
     define('wifiLink', '/tmp/zigateWifi'); // For WIFI: Socat output
@@ -48,6 +48,8 @@
 
     define('maxNbOfZigate', 6); // Number of supported zigates
     $GLOBALS['maxNbOfZigate'] = maxNbOfZigate;
+    define('maxGateways', 6); // Number of supported gateways (zigate/ezsp)
+    $GLOBALS['maxGateways'] = maxGateways;
 
     define('maxRetryDefault', 3);
 

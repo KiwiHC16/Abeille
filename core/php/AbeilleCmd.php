@@ -387,9 +387,9 @@
                 $GLOBALS['zigates'][$zgId] = [];
 
             $GLOBALS['zigates'][$zgId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
-            $GLOBALS['zigates'][$zgId]['enabled'] = ($config['ab::zgEnabled'.$zgId] == "Y") ? true : false;
+            $GLOBALS['zigates'][$zgId]['enabled'] = ($config['ab::gtwEnabled'.$zgId] == "Y") ? true : false;
             $GLOBALS['zigates'][$zgId]['ieeeOk'] = ($config['ab::zgIeeeAddrOk'.$zgId] == 1) ? true : false;
-            $GLOBALS['zigates'][$zgId]['port'] = $config['ab::zgPort'.$zgId];
+            $GLOBALS['zigates'][$zgId]['port'] = $config['ab::gtwPort'.$zgId];
             $GLOBALS['zigates'][$zgId]['available'] = true; // By default we consider the Zigate available to receive commands
             $GLOBALS['zigates'][$zgId]['status'] = 'waitParser'; // 'waitParser', 'ok'
             $GLOBALS['zigates'][$zgId]['hw'] = 0;           // HW version: 1=v1, 2=v2

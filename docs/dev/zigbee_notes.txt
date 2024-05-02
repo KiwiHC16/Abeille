@@ -1,10 +1,8 @@
-###
-### Abeille Jeedom, Zigbee & stuff knowledge base
-### Tcharp38
-###
+***
+*** Abeille developer internal doc
+*** Zigbee protocol notes
+***
 
-Zigbee
-======
 Ref: https://software-dl.ti.com/simplelink/esd/plugins/simplelink_zigbee_sdk_plugin/1.60.01.09/exports/docs/zigbee_user_guide/html/zigbee/developing_zigbee_applications/z_stack_developers_guide/z-stack-overview.html
 13.2.2 Channel Interference Resolution
 	Upon receipt of an unsolicited Mgmt_NWK_Update_notify, the Network Manager applies different methods to best determine when a channel change is required and how to select the most appropriate channel.
@@ -22,14 +20,3 @@ Ref: https://software-dl.ti.com/simplelink/esd/plugins/simplelink_zigbee_sdk_plu
 	Upon receipt of a Mgmt_NWK_Update_req with a change of channels from the Network Manager, a device sets a timer equal to the nwkNetworkBroadcastDeliveryTime and switches channels upon expiration of this timer. Each node stores the received nwkUpdateId in the NIB and beacon payload, and also resets the total transmit count and the transmit failure counters.
 
 	For devices with RxOnWhenIdle equals FALSE, any network channel change will not be received. On these devices or routers that have lost the network, an active scan is conducted on the channelList in the NIB (i.e., apsChannelMask) using the extended PAN ID (EPID) to find the network. If the extended PAN ID is found on different channels, the device selects the channel with the higher value in the nwkUpdateId parameter. If the extended PAN ID is not found using the apsChannelMask list, a scan is completed using all channels.
-
-Jeedom
-======
-'/' char is forbidden in Jeedom command names (ex: 'Get Volt/Percent' is bad => lead to 'Get VoltPercent').
-
-Remotes
-=======
-Complex case as many capabilities.
-- BindToGroup: Ex Tradfri On/off switch. Need to use "set remote group" (what's inside ?) to set same group as target.
-- BindToDevice: Tradfri On/off switch was supposed to run in this mode with recent FW but point above is working.
-- How to deal with cluster 1000 (commissioning) ?

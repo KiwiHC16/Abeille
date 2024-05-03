@@ -135,13 +135,19 @@
     </div>
 </div>
 
+<style>
+    .disabled-a {
+        pointer-events: none;
+    }
+</style>
+
 <?php if (isset($dbgDeveloperMode)) { ?>
     <div class="form-group">
         <label class="col-sm-3 control-label">DEV MODE: : {{Mode}}</label>
         <div class="col-sm-5">
-            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Normal')">{{Normal}}</a>
-            <a class="btn btn-warning" onclick="sendZigate('setMode', 'Hybride')">{{Hybride}}</a>
-            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
+            <a class="btn btn-danger disabled-a" onclick="sendZigate('setMode', 'Normal')">{{Normal}}</a>
+            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Hybride')">{{Hybride}}</a>
+            <a class="btn btn-warning" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
         </div>
     </div>
 <?php } ?>

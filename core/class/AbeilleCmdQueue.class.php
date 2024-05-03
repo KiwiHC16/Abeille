@@ -332,6 +332,10 @@
             // $this->zgId = $zgId;
 
             // Checking min parameters
+            if (!isset($GLOBALS['zigates'][$zgId])) {
+                cmdLog("debug", "    No Zigate ${zgId} => cmd IGNORED");
+                return;
+            }
             if (!$GLOBALS['zigates'][$zgId]['enabled']) {
                 cmdLog("debug", "    Zigate disabled => cmd IGNORED");
                 return;

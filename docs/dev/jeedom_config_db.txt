@@ -1,6 +1,7 @@
 ***
 *** Abeille developer internal doc
 *** Jeedom 'config' database notes
+*** Tcharp38
 ***
 
 ab::dbVersion
@@ -40,3 +41,11 @@ ab::gtwTypeX
 ab::gtwEnabledX
     Indicates if gateway X is enabled or not
     Values: 'Y' or 'N'
+
+ab::gtwChanX
+    Zigbee channel for gateway X
+    Values: 0=auto, 11 to ?
+
+ab::gtwPortX
+    Local port for gateway X
+    Ex: /dev/ttyUSB0

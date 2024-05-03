@@ -1161,8 +1161,10 @@
          * - Config DB: 'ab::zgEnabledX' => 'ab::gtwEnabledX'.
          * - Config DB: 'ab::zgTypeX' => 'ab::gtwSubTypeX'.
          * - Config DB: 'ab::zgPortX' => 'ab::gtwPortX'.
+         * - Config DB: 'ab::zgIpAddrX' => 'ab::gtwIpAddrX'
+         * - Config DB: 'ab::zgChanX' => 'ab::gtwChanX'
          */
-        if (intval($dbVersion) < 20240502) {
+        if (intval($dbVersion) < 20240503) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 replaceConfigDB("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
@@ -1176,9 +1178,13 @@
                     config::save("ab::gtwType${gtwId}", "zigate", 'Abeille');
 
                 replaceConfigDB("ab::zgPort${gtwId}", "ab::gtwPort${gtwId}");
+
+                replaceConfigDB("ab::zgIpAddr${gtwId}", "ab::gtwIpAddr${gtwId}");
+
+                replaceConfigDB("ab::zgChan${gtwId}", "ab::gtwChan${gtwId}");
             }
 
-            // config::save('ab::dbVersion', '20240502', 'Abeille');
+            // config::save('ab::dbVersion', '20240503', 'Abeille');
         }
     }
 

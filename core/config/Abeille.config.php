@@ -3,13 +3,16 @@
      * Abeille's static config file
      */
 
-    define('lastDbVersion', 20240502);
+    define('lastDbVersion', 20240503);
     $in = "/tmp/AbeilleDeamonInput";
     $resourcePath = realpath(__DIR__.'/../../resources');
     define('wifiLink', '/tmp/zigateWifi'); // For WIFI: Socat output
     define('otaDir', 'tmp/fw_ota'); // OTA FW location relative to Abeille's root
     define('modelsDir', __DIR__ . '/devices/'); // Abeille's supported devices
     define('modelsLocalDir', __DIR__ . '/devices_local/'); // Unsupported/user devices
+    define('corePhpDir', __DIR__.'/../php/');
+    define('corePythonDir', __DIR__.'/../python/');
+    define('logsDir', __DIR__.'/../../../../log/');
 
     /* Inter-daemons queues:
        array['<queueName>'] = array("id" => queueId, "max" => maxMsgSize) */

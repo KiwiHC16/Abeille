@@ -464,19 +464,21 @@
     }
 
     // In case parser only is restarted, let's get zigates IEEE if known */
-    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        // if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
-        if ($config['ab::gtwEnabled'.$zgId] != 'Y')
-            continue; // This Zigate is not enabled
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+        if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
+            continue; // Disabled
+        if ($config['ab::gtwType'.$gtwId] != 'zigate')
+            continue; // Not a Zigate network
+
         // $ieeeOk = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
-        $ieeeOk = $config['ab::zgIeeeAddrOk'.$zgId];
+        $ieeeOk = $config['ab::zgIeeeAddrOk'.$gtwId];
         if ($ieeeOk == 1) { // IEEE addr already verified & valid
             // $extAddr = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', "1212121212121212");
-            $extAddr = $config['ab::zgIeeeAddr'.$zgId];
-            $GLOBALS['zigate'.$zgId]['ieee'] = $extAddr;
-            logMessage("debug", "Zigate ".$zgId." already verified IEEE: ".$extAddr);
+            $extAddr = $config['ab::zgIeeeAddr'.$gtwId];
+            $GLOBALS['zigate'.$gtwId]['ieee'] = $extAddr;
+            logMessage("debug", "Zigate ".$gtwId." already verified IEEE: ".$extAddr);
         }
-        $GLOBALS['zigate'.$zgId]['ieeeStatus'] = $ieeeOk;
+        $GLOBALS['zigate'.$gtwId]['ieeeStatus'] = $ieeeOk;
     }
 
     // Reading available OTA firmwares
@@ -504,6 +506,10 @@
         foreach ($eqLogics as $eqLogic) {
             $eqLogicId = $eqLogic->getLogicalId();
             list($net, $addr) = explode("/", $eqLogicId);
+            $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
+
+            if ($config['ab::gtwType'.$gtwId] != 'zigate')
+                continue; // Not a Zigate network
 
             // $sig = $eqLogic->getConfiguration('ab::signature', '');
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);

@@ -417,22 +417,26 @@ class Abeille extends eqLogic {
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
-        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
-            if ($config['ab::gtwEnabled'.$zgId] != 'Y')
-                continue; // Zigate disabled
-            if ($config['ab::gtwPort'.$zgId] == "none")
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+            if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
+                continue; // Gateway disabled
+            if ($config['ab::gtwPort'.$gtwId] == "none")
                 continue; // Serial port undefined
             // TODO Tcharp38: Currently leads to PI zigate timeout. No sense since still alive.
-            // if ($config['ab::gtwSubType'.$zgId] != "WIFI")
+            // if ($config['ab::gtwSubType'.$gtwId] != "WIFI")
             //     continue; // Not a WIFI zigate. No polling required
 
+            // TODO: What to do for EZSP ?
+            if ($config['ab::gtwType'.$gtwId] != "zigate")
+                continue; // Not a Zigate
+
             // TODO: Better to read time to correct it if required, instead of version that rarely changes
-            Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$zgId."/0000/zgGetVersion");
+            Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$gtwId."/0000/zgGetVersion");
 
             // Checking that Zigate is still alive
-            $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+            $eqLogic = eqLogic::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'error', "La ruche ".$zgId." a été détruite. Veuillez redémarrer Abeille.");
+                log::add('Abeille', 'error', "La ruche ".$gtwId." a été détruite. Veuillez redémarrer Abeille.");
                 continue;
             }
             $lastComm = $eqLogic->getStatus('lastCommunication', '');
@@ -443,26 +447,26 @@ class Abeille extends eqLogic {
                 $lastComm = strtotime($lastComm);
             // log::add('Abeille', 'info', "lastComm2=".$lastComm);
             if ((time() - $lastComm) > (2 * 60)) {
-                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$zgId." depuis plus de 2min");
-                $zgType = $config['ab::gtwSubType'.$zgId];
-                $zgPort = $config['ab::gtwPort'.$zgId];
+                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$gtwId." depuis plus de 2min");
+                $zgType = $config['ab::gtwSubType'.$gtwId];
+                $zgPort = $config['ab::gtwPort'.$gtwId];
                 if (($zgType == "USB") || ($zgType == "USBv2")) {
                     if ($config['ab::preventUsbPowerCycle'] == 'Y')
-                        log::add('Abeille', 'warning', 'Power cycle required for Zigate '.$zgId.' but disabled');
+                        log::add('Abeille', 'warning', 'Power cycle required for Zigate '.$gtwId.' but disabled');
                     else {
                         $dir = __DIR__."/../scripts";
                         $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
                         log::add('Abeille', 'debug', 'Performing power cycle on port \''.$zgPort.'\'');
                         exec($cmd, $output, $exitCode);
                         if ($exitCode != 0)
-                            message::add("Abeille", "La Zigate ".$zgId." semble plantée mais impossible de lui faire un cycle OFF/ON.");
+                            message::add("Abeille", "La Zigate ".$gtwId." semble plantée mais impossible de lui faire un cycle OFF/ON.");
                     }
                 } else if (($zgType == "PI") || ($zgType == "PIv2")) {
-                    log::add('Abeille', 'Debug', 'Performing HW reset on Zigate '.$zgId);
+                    log::add('Abeille', 'Debug', 'Performing HW reset on Zigate '.$gtwId);
                     exec("python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py");
                 } else if (($zgType == "WIFI") || ($zgType == "WIFIv2")) {
-                    log::add('Abeille', 'Debug', 'Restarting socat for Zigate '.$zgId);
-                    AbeilleTools::restartDaemons($config, "Socat".$zgId." socat".$zgId);
+                    log::add('Abeille', 'Debug', 'Restarting socat for Zigate '.$gtwId);
+                    AbeilleTools::restartDaemons($config, "Socat".$gtwId." socat".$gtwId);
                 }
             }
         }
@@ -702,7 +706,7 @@ class Abeille extends eqLogic {
             }
             if ($error == "") {
                 if ($config['ab::gtwSubType'.$zgId] == "WIFI") {
-                    $wifiAddr = $config['ab::zgIpAddr'.$zgId];
+                    $wifiAddr = $config['ab::gtwIpAddr'.$zgId];
                     if (($wifiAddr == 'none') || ($wifiAddr == "")) {
                         $error = "Adresse Wifi de la zigate ".$zgId." INVALIDE";
                     }

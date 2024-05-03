@@ -10,6 +10,7 @@
     -   'ab::zgEnabledX' => 'ab::gtwEnabledX'
     -   'ab::zgTypeX' => 'ab::gtwSubTypeX'
     -   'ab::zgPortX' => 'ab::gtwPortX'
+    -   'ab::zgIpAddrX' => 'ab::gtwIpAddrX'
 
 -   Page de config: Ajout support prélim clef 'EZSP'.
 -   Onglet avancé Zigate: Mode 'normal' désactivé. Mode 'brut' par défaut.

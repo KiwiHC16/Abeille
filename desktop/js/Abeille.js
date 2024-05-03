@@ -1531,7 +1531,7 @@ function sendZigate(action, param) {
                     sendToZigate(topic, payload);
 
                     config = new Object();
-                    config["ab::zgChan" + zgId] = chan;
+                    config["ab::gtwChan" + zgId] = chan;
                     console.log("config=", config);
                     saveConfig(config);
 

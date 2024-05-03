@@ -175,8 +175,8 @@
         // Cmds delayed by 1sec to wait for chip reset
 
         global $config;
-        if (isset($config['ab::zgChan'.$zgId])) {
-            $chan = $config['ab::zgChan'.$zgId];
+        if (isset($config['ab::gtwChan'.$zgId])) {
+            $chan = $config['ab::gtwChan'.$zgId];
             if ($chan == 0)
                 $mask = 0x7fff800; // All channels = auto
             else
@@ -380,29 +380,34 @@
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
-        $zgId = substr($net, 7); // 'AbeilleX' => 'X'
+        $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
 
-        if ($addr == "0000") { // Zigate ?
-            if (!isset($GLOBALS['zigates'][$zgId]))
-                $GLOBALS['zigates'][$zgId] = [];
+        if ($config['ab::gtwType'.$gtwId] != 'zigate')
+            continue; // Not a Zigate network
 
-            $GLOBALS['zigates'][$zgId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
-            $GLOBALS['zigates'][$zgId]['enabled'] = ($config['ab::gtwEnabled'.$zgId] == "Y") ? true : false;
-            $GLOBALS['zigates'][$zgId]['ieeeOk'] = ($config['ab::zgIeeeAddrOk'.$zgId] == 1) ? true : false;
-            $GLOBALS['zigates'][$zgId]['port'] = $config['ab::gtwPort'.$zgId];
-            $GLOBALS['zigates'][$zgId]['available'] = true; // By default we consider the Zigate available to receive commands
-            $GLOBALS['zigates'][$zgId]['status'] = 'waitParser'; // 'waitParser', 'ok'
-            $GLOBALS['zigates'][$zgId]['hw'] = 0;           // HW version: 1=v1, 2=v2
-            $GLOBALS['zigates'][$zgId]['fw'] = 0;           // FW minor version (ex 0x321)
-            $GLOBALS['zigates'][$zgId]['nPDU'] = 0;         // Last NDPU
-            $GLOBALS['zigates'][$zgId]['aPDU'] = 0;         // Last APDU
-            $GLOBALS['zigates'][$zgId]['cmdQueue'] = [];    // Array of queues. One queue per priority from priorityMin to priorityMax.
+        if ($addr == "0000") { // Gateway ?
+            if (!isset($GLOBALS['zigates'][$gtwId]))
+                $GLOBALS['zigates'][$gtwId] = [];
+
+            $GLOBALS['zigates'][$gtwId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
+            $GLOBALS['zigates'][$gtwId]['enabled'] = ($config['ab::gtwEnabled'.$gtwId] == "Y") ? true : false;
+            $GLOBALS['zigates'][$gtwId]['ieeeOk'] = ($config['ab::zgIeeeAddrOk'.$gtwId] == 1) ? true : false;
+            $GLOBALS['zigates'][$gtwId]['port'] = $config['ab::gtwPort'.$gtwId];
+            $GLOBALS['zigates'][$gtwId]['available'] = true; // By default we consider the Zigate available to receive commands
+            $GLOBALS['zigates'][$gtwId]['status'] = 'waitParser'; // 'waitParser', 'ok'
+            $GLOBALS['zigates'][$gtwId]['hw'] = 0;           // HW version: 1=v1, 2=v2
+            $GLOBALS['zigates'][$gtwId]['fw'] = 0;           // FW minor version (ex 0x321)
+            $GLOBALS['zigates'][$gtwId]['nPDU'] = 0;         // Last NDPU
+            $GLOBALS['zigates'][$gtwId]['aPDU'] = 0;         // Last APDU
+            $GLOBALS['zigates'][$gtwId]['cmdQueue'] = [];    // Array of queues. One queue per priority from priorityMin to priorityMax.
             foreach(range(priorityMin, priorityMax) as $prio) {
-                $GLOBALS['zigates'][$zgId]['cmdQueue'][$prio] = [];
+                $GLOBALS['zigates'][$gtwId]['cmdQueue'][$prio] = [];
             }
-            $GLOBALS['zigates'][$zgId]['sentPri'] = 0;      // Last sent cmd priority
-            $GLOBALS['zigates'][$zgId]['sentIdx'] = 0;      // Last send cmd index
+            $GLOBALS['zigates'][$gtwId]['sentPri'] = 0;      // Last sent cmd priority
+            $GLOBALS['zigates'][$gtwId]['sentIdx'] = 0;      // Last send cmd index
         } else {
+            // Is the gateway a Zigate ?
+
             if (!isset($GLOBALS['devices'][$net]))
                 $GLOBALS['devices'][$net] = [];
 

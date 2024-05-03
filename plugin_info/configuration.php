@@ -159,7 +159,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port)}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="ab::zgIpAddr'.$zgId.'" placeholder="{{<adresse>:<port>}}" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
+                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwIpAddr'.$zgId.'" placeholder="{{<adresse>:<port>}}" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
             echo '</div>';
         echo '</div>';
 
@@ -212,7 +212,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Canal Zigbee}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelChan'.$zgId.'" class="configKey form-control" data-l1key="ab::zgChan'.$zgId.'" title="{{Canal Zigbee}}" disabled>';
+                echo '<select id="idSelChan'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwChan'.$zgId.'" title="{{Canal Zigbee}}" disabled>';
                     echo '<option value=0>auto</option>';
                     for ($i = 11; $i < 27; $i++) {
                         echo '<option value='.$i.'>'.$i.'</option>';
@@ -1487,7 +1487,7 @@
 
                     if (gtwType == "zigate") {
                         if (gtwSubType == 'WIFI') {
-                            if (config['ab::zgIpAddr'+gtwId] == '') {
+                            if (config['ab::gtwIpAddr'+gtwId] == '') {
                                 errors += "Zigate "+gtwId+": {{- Adresse IP manquante}}";
                             }
                         }

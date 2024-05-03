@@ -23,6 +23,7 @@
         $GLOBALS['dbgDeveloperMode'] = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
+
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../log/AbeillePHP.log');
@@ -96,15 +97,29 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
-                    echo '<option value="USB" selected>{{USB v1}}</option>';
-                    echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
-                    echo '<option value="PI">{{PI v1}}</option>';
-                    echo '<option value="DIN">{{DIN v1}}</option>';
-                    echo '<option value="USBv2">{{USB +/v2}}</option>';
-                    echo '<option value="PIv2">{{PI +/v2}}</option>';
-                    echo '<option value="DINv2">{{DIN +/v2}}</option>';
-                echo '</select>';
+                echo '<div class="form-group">';
+                    echo '<div class="col-lg-5">';
+                        echo '<select id="idSelGtwType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwType'.$zgId.'" onchange="checkGtwType('.$zgId.')"  title="{{Type de clef}}">';
+                            echo '<option value="zigate" selected>{{Zigate}}</option>';
+                            if (isset($dbgDeveloperMode))
+                            echo '<option value="ezsp">{{EmberZnet/EZSP}}</option>';
+                        echo '</select>';
+                    echo '</div>';
+                    echo '<div class="col-lg-7">';
+                        echo '<select id="idZigateSubType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="checkGtwSubType('.$zgId.')"  title="{{Modèle}}">';
+                            echo '<option value="USB" selected>{{USB v1}}</option>';
+                            echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
+                            echo '<option value="PI">{{PI v1}}</option>';
+                            echo '<option value="DIN">{{DIN v1}}</option>';
+                            echo '<option value="USBv2">{{USB +/v2}}</option>';
+                            echo '<option value="PIv2">{{PI +/v2}}</option>';
+                            echo '<option value="DINv2">{{DIN +/v2}}</option>';
+                        echo '</select>';
+                        echo '<select id="idEzspSubType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="checkGtwSubType('.$zgId.')"  title="{{Modèle}}" style="display:none">';
+                            echo '<option value="DEFAULT" selected>{{Aucun}}</option>';
+                        echo '</select>';
+                    echo '</div>';
+                echo '</div>';
             echo '</div>';
         echo '</div>';
 
@@ -614,98 +629,116 @@
     //     js_NbOfZigates = nbOfZigates;
     // });
 
-    /* Called when Zigate type (USB, WIFI, PI, DIN) is changed */
-    function checkZigateType(zgId) {
-        console.log("checkZigateType(zgId="+zgId+")");
+    /* Called when gateway type (zigate, ezsp) is changed */
+    function checkGtwType(gtwId) {
+        console.log("checkGtwType(zgId="+gtwId+")");
+        let gtwType = $("#idSelGtwType" + gtwId).val();
 
-        var zgType = $("#idSelZgType" + zgId).val();
-        var idSelSP = document.querySelector('#idSelSP'+zgId);
-        // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
-        var idFW = document.querySelector('#idFW' + zgId);
-        // var idUpdateFW = document.querySelector('#idUpdateFW' + zgId);
-        var idWifiAddr = document.querySelector('#idWifiAddr'+zgId);
-        // var idCheckWifi = document.querySelector('#idCheckWifi' + zgId);
-
-        // $("#idSocat"+zgId).hide();
-        // $("#idWiringPi"+zgId).hide();
-        // $("#idCommTest"+zgId).hide();
-
-        // Default: Type USBv1 => SelSP allowed, WifiAddr disallowed
-        idSelSP.removeAttribute('disabled'); // Serial port selection allowed by default
-        idWifiAddr.setAttribute('disabled', true); // Wifi addr disallowed by default
-        $("#idUpdFw"+zgId).hide(); // Update FW disallowed by default
-
-        if (zgType == "WIFI") {
-            console.log('Type changed to Wifi');
-            $("#idSelSP"+zgId).val(js_wifiLink+zgId);
-            checkSocatInstallation();
-
-            // idSelSP.setAttribute('disabled', true);
-            // idWifiAddr.removeAttribute('disabled');
-            // $("#idUpdFw"+zgId).hide();
-            // $("#idReadFwB"+zgId).hide();
-        } else { // USB, PI or DIN
-            console.log('Type changed to "'+zgType+'"');
-            // $("#idCommTest"+zgId).show();
-
-            if ((zgType == "PI") || (zgType == "PIv2")) {
-                // $("#idWiringPi"+zgId).show();
-                let zgGpioLib = $("#idZgGpioLib").val();
-                if (zgGpioLib == "WiringPi")
-                    checkWiringPi(); // Force WiringPi check
-                else
-                    checkPiGpio();
-            }
-            //     $("#idUpdFw"+zgId).show();
-            // } else if (zgType == "DIN") {
-            //     $("#idUpdFw"+zgId).show();
-            // }
-        }
-
-        allowSelSP = true; // Serial port selection ALLOWED by default
-        allowWifiAddr = false; // Wifi addr DISALLOWED by default
-        allowReadFw = false;
-        allowUpdFw = false; // Update FW disallowed by default
-        switch (zgType) {
-        case "USB":
-            allowReadFw = true;
-            break;
-        case "USBv2":
-            allowReadFw = true;
-            break;
-        case "PI":
-            allowReadFw = true;
-            allowUpdFw = true;
-            break;
-        case "PIv2":
-            allowReadFw = true;
-            allowUpdFw = true;
-            break;
-        case "WIFI":
-            allowSelSP = false;
-            allowWifiAddr = true;
-            break;
-        case "DIN":
-            allowReadFw = true;
-            allowUpdFw = true;
-            break;
-        case "DINv2":
-            allowReadFw = true;
-            break;
-        }
-        if (allowSelSP == false)
-            idSelSP.setAttribute('disabled', true);
-        if (allowWifiAddr)
-            idWifiAddr.removeAttribute('disabled');
-        if (allowReadFw) {
-            $("#idReadFwB"+zgId).show();
-            $("#idCommTest"+zgId).show();
+        if (gtwType == 'zigate') {
+            $("#idZigateSubType"+gtwId).show();
+            $("#idEzspSubType"+gtwId).hide();
         } else {
-            $("#idReadFwB"+zgId).hide();
-            $("#idCommTest"+zgId).hide();
+            $("#idEzspSubType"+gtwId).show();
+            $("#idZigateSubType"+gtwId).hide();
         }
-        if (allowUpdFw)
-            $("#idUpdFw"+zgId).show();
+    }
+
+    /* Called when gateway sub type (USB, WIFI, PI, DIN) is changed */
+    function checkGtwSubType(zgId) {
+        console.log("checkGtwSubType(zgId="+zgId+")");
+
+        let gtwType = $("#idSelGtwType" + zgId).val();
+        if (gtwType == "zigate") {
+            var zgType = $("#idSelGtwSubType" + zgId).val();
+            var idSelSP = document.querySelector('#idSelSP'+zgId);
+            // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
+            var idFW = document.querySelector('#idFW' + zgId);
+            // var idUpdateFW = document.querySelector('#idUpdateFW' + zgId);
+            var idWifiAddr = document.querySelector('#idWifiAddr'+zgId);
+            // var idCheckWifi = document.querySelector('#idCheckWifi' + zgId);
+
+            // $("#idSocat"+zgId).hide();
+            // $("#idWiringPi"+zgId).hide();
+            // $("#idCommTest"+zgId).hide();
+
+            // Default: Type USBv1 => SelSP allowed, WifiAddr disallowed
+            idSelSP.removeAttribute('disabled'); // Serial port selection allowed by default
+            idWifiAddr.setAttribute('disabled', true); // Wifi addr disallowed by default
+            $("#idUpdFw"+zgId).hide(); // Update FW disallowed by default
+
+            if (zgType == "WIFI") {
+                console.log('Type changed to Wifi');
+                $("#idSelSP"+zgId).val(js_wifiLink+zgId);
+                checkSocatInstallation();
+
+                // idSelSP.setAttribute('disabled', true);
+                // idWifiAddr.removeAttribute('disabled');
+                // $("#idUpdFw"+zgId).hide();
+                // $("#idReadFwB"+zgId).hide();
+            } else { // USB, PI or DIN
+                console.log('Type changed to "'+zgType+'"');
+                // $("#idCommTest"+zgId).show();
+
+                if ((zgType == "PI") || (zgType == "PIv2")) {
+                    // $("#idWiringPi"+zgId).show();
+                    let zgGpioLib = $("#idZgGpioLib").val();
+                    if (zgGpioLib == "WiringPi")
+                        checkWiringPi(); // Force WiringPi check
+                    else
+                        checkPiGpio();
+                }
+                //     $("#idUpdFw"+zgId).show();
+                // } else if (zgType == "DIN") {
+                //     $("#idUpdFw"+zgId).show();
+                // }
+            }
+
+            allowSelSP = true; // Serial port selection ALLOWED by default
+            allowWifiAddr = false; // Wifi addr DISALLOWED by default
+            allowReadFw = false;
+            allowUpdFw = false; // Update FW disallowed by default
+            switch (zgType) {
+            case "USB":
+                allowReadFw = true;
+                break;
+            case "USBv2":
+                allowReadFw = true;
+                break;
+            case "PI":
+                allowReadFw = true;
+                allowUpdFw = true;
+                break;
+            case "PIv2":
+                allowReadFw = true;
+                allowUpdFw = true;
+                break;
+            case "WIFI":
+                allowSelSP = false;
+                allowWifiAddr = true;
+                break;
+            case "DIN":
+                allowReadFw = true;
+                allowUpdFw = true;
+                break;
+            case "DINv2":
+                allowReadFw = true;
+                break;
+            }
+            if (allowSelSP == false)
+                idSelSP.setAttribute('disabled', true);
+            if (allowWifiAddr)
+                idWifiAddr.removeAttribute('disabled');
+            if (allowReadFw) {
+                $("#idReadFwB"+zgId).show();
+                $("#idCommTest"+zgId).show();
+            } else {
+                $("#idReadFwB"+zgId).hide();
+                $("#idCommTest"+zgId).hide();
+            }
+            if (allowUpdFw)
+                $("#idUpdFw"+zgId).show();
+
+        }
     }
 
     /* Called when 'IP:port' test button is pressed (Wifi case) */

@@ -11,6 +11,8 @@
     -   'ab::zgTypeX' => 'ab::gtwSubTypeX'
     -   'ab::zgPortX' => 'ab::gtwPortX'
 
+-   Page de config: Ajout support prélim clef 'EZSP'.
+
 ## 240501-STABLE-1
 
 **Mise-à-jour de modèles**

@@ -46,15 +46,15 @@ class Abeille extends eqLogic {
      */
     public static function health() {
         $result = '';
-        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
-            if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') == 'N')
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+            if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') == 'N')
                 continue; // Disabled
-            if (config::byKey('ab::gtwSubType'.$zgId, 'Abeille', '') == 'WIFI')
+            if (config::byKey('ab::gtwSubType'.$gtwId, 'Abeille', '') == 'WIFI')
                 continue; // WIFI does not use a physical port
 
             if ($result != '')
                 $result .= ", ";
-            $result .= config::byKey('ab::gtwPort'.$zgId, 'Abeille', '');
+            $result .= config::byKey('ab::gtwPort'.$gtwId, 'Abeille', '');
         }
 
         $return[] = array(
@@ -123,40 +123,6 @@ class Abeille extends eqLogic {
         }
         log::add('Abeille', 'debug', 'refreshCmd: end');
     }
-
-    // /**
-    //  * getIEEE
-    //  * get IEEE from the eqLogic
-    //  *
-    //  * @param   $address    logicalId of the eqLogic
-    //  *
-    //  * @return              Does not return anything as all action are triggered by sending messages in queues
-    //  */
-    // public static function getIEEE($address) {
-    //     if (strlen(eqLogic::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
-    //         return eqLogic::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
-    //     } else {
-    //         return AbeilleCmd::byEqLogicIdAndLogicalId(eqLogic::byLogicalId($address, 'Abeille')->getId(), 'IEEE-Addr')->execCmd();
-    //     }
-    // }
-
-    /**
-     * getEqFromIEEE
-     * get eqLogic from IEEE
-     *
-     * @param   $IEEE    IEEE of the device
-     *
-     * @return           eq with this IEEE or Null if not found
-     */
-    // public static function getEqFromIEEE($IEEE)
-    // {
-    //     foreach (self::searchConfiguration('IEEE', 'Abeille') as $eq) {
-    //         if ($eq->getConfiguration('IEEE') == $IEEE) {
-    //             return $eq;
-    //         }
-    //     }
-    //     return null;
-    // }
 
     /**
      * cronDaily
@@ -280,7 +246,7 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'cron15(): Interrogating devices silent for more than 15mins.');
         $config = AbeilleTools::getConfig();
         $i = 0;
-        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
             $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
             if (!is_object($zigate))
                 continue; // Does not exist on Jeedom side.
@@ -451,7 +417,7 @@ class Abeille extends eqLogic {
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
-        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
             if ($config['ab::gtwEnabled'.$zgId] != 'Y')
                 continue; // Zigate disabled
             if ($config['ab::gtwPort'.$zgId] == "none")
@@ -573,7 +539,7 @@ class Abeille extends eqLogic {
         // Si Inclusion status est à 1 on demande un Refresh de l information
         // Je regarde si j ai deux zigate en inclusion et si oui je genere une alarme.
         $count = array();
-        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
+        for ($i = 1; $i <= $GLOBALS['maxGateways']; $i++) {
             if (self::checkInclusionStatus("Abeille".$i) == 1) {
                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$i."/0000/permitJoin", "Status");
                 $count[] = $i;
@@ -646,7 +612,7 @@ class Abeille extends eqLogic {
         message::removeAll('Abeille');
 
         // Remove any remaining temporary files
-        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
             $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI-Abeille'.$zgId.'.json.lock';
             if (file_exists($lockFile)) {
                 unlink($lockFile);
@@ -658,7 +624,7 @@ class Abeille extends eqLogic {
         // ab::zgIeeeAddrOk=-1: Zigate IEEE is NOT the expected one (port switch ?)
         //     "         = 0: IEEE check to be done
         //     "         = 1: Zigate on the right port
-        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
             config::save("ab::zgIeeeAddrOk".$zgId, 0, 'Abeille');
         }
 
@@ -724,7 +690,7 @@ class Abeille extends eqLogic {
 
         /* Checking config */
         // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
-        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
             if ($config['ab::gtwEnabled'.$zgId] != 'Y')
                 continue; // Disabled
 
@@ -767,7 +733,7 @@ class Abeille extends eqLogic {
            This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
         // TODO Tcharp38: Note: This should not longer be required as the parser itself do the request on startup
         $expected = 0; // 1 bit per expected serial read daemon
-        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
             if (($config['ab::gtwPort'.$zgId] == 'none') or ($config['ab::gtwEnabled'.$zgId] != 'Y'))
                 continue; // Undefined or disabled
             $expected |= constant("daemonSerialRead".$zgId);
@@ -940,18 +906,17 @@ class Abeille extends eqLogic {
         // Send a message to Abeille to ask for behive creation/update.
         // Tcharp38: Moved from deamon_start()
         $config = AbeilleTools::getConfig();
-        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
-            if ($config['ab::gtwPort'.$zgId] == 'none')
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+            if ($config['ab::gtwPort'.$gtwId] == 'none')
                 continue; // Port undefined
 
-            if ($config['ab::gtwEnabled'.$zgId] == 'Y') {
+            if ($config['ab::gtwEnabled'.$gtwId] == 'Y') {
                 // Create/update beehive equipment on Jeedom side
                 // Note: This will reset 'FW-Version' to '---------' to mark FW version invalid.
-                // Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
-                self::createRuche("Abeille${zgId}");
+                self::createRuche("Abeille${gtwId}");
             } else {
                 // Zigate disabled. Ensure equipment is disabled too
-                $eqLogic = eqLogic::byLogicalId("Abeille${zgId}/0000", 'Abeille');
+                $eqLogic = eqLogic::byLogicalId("Abeille${gtwId}/0000", 'Abeille');
                 if (is_object($eqLogic) && ($eqLogic->getIsEnable() != 0)) {
                     $eqLogic->setIsEnable(0);
                     $eqLogic->save();
@@ -1032,13 +997,13 @@ class Abeille extends eqLogic {
     //     // return 1 si Ok, 0 si erreur
     //     $config = Abeille::getParameters();
 
-    //     if ( !isset($GLOBALS['maxNbOfZigate']) ) { return 0; }
-    //     if ( $GLOBALS['maxNbOfZigate'] < 1 ) { return 0; }
-    //     if ( $GLOBALS['maxNbOfZigate'] > 9 ) { return 0; }
+    //     if ( !isset($GLOBALS['maxGateways']) ) { return 0; }
+    //     if ( $GLOBALS['maxGateways'] < 1 ) { return 0; }
+    //     if ( $GLOBALS['maxGateways'] > 9 ) { return 0; }
 
     //     // Testons la validité de la configuration
     //     $atLeastOneZigateActiveWithOnePortDefined = 0;
-    //     for ( $i=1; $i<=$GLOBALS['maxNbOfZigate']; $i++ ) {
+    //     for ( $i=1; $i<=$GLOBALS['maxGateways']; $i++ ) {
     //         if ($return['ab::gtwEnabled'.$i ]=='Y') {
     //             if ($return['ab::gtwPort'.$i]!='none') {
     //                 $atLeastOneZigateActiveWithOnePortDefined++;
@@ -1052,7 +1017,7 @@ class Abeille extends eqLogic {
     //     }
 
     //     // Vérifions l existence des ports
-    //     for ( $i=1; $i<=$GLOBALS['maxNbOfZigate']; $i++ ) {
+    //     for ( $i=1; $i<=$GLOBALS['maxGateways']; $i++ ) {
     //         if ($return['ab::gtwEnabled'.$i ]=='Y') {
     //             if ($return['ab::gtwPort'.$i] != 'none') {
     //                 if (@!file_exists($return['ab::gtwPort'.$i])) {
@@ -1108,125 +1073,6 @@ class Abeille extends eqLogic {
 
         return -1;
     }
-
-    // Tcharp38: Seems no longer used
-    // public static function CmdAffichage($affichageType, $Visibility = "na")
-    // {
-    //     // $affichageType could be:
-    //     //  affichageNetwork
-    //     //  affichageTime
-    //     //  affichageCmdAdd
-    //     // $Visibilty command could be
-    //     // Y
-    //     // N
-    //     // toggle
-    //     // na
-
-    //     if ($Visibility == "na") {
-    //         return;
-    //     }
-
-    //     $config = AbeilleTools::getConfig();
-
-    //     $convert = array(
-    //         "affichageNetwork" => "Network",
-    //         "affichageTime" => "Time",
-    //         "affichageCmdAdd" => "additionalCommand"
-    //     );
-
-    //     log::add('Abeille', 'debug', 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility);
-    //     echo 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility;
-
-    //     switch ($Visibility) {
-    //         case 'Y':
-    //             break;
-    //         case 'N':
-    //             break;
-    //         case 'toggle':
-    //             if ($config[$affichageType] == 'Y') {
-    //                 $Visibility = 'N';
-    //             } else {
-    //                 $Visibility = 'Y';
-    //             }
-    //             break;
-    //     }
-    //     config::save($affichageType, $Visibility, 'Abeille');
-
-    //     $abeilles = self::byType('Abeille');
-    //     foreach ($abeilles as $key => $abeille) {
-    //         $cmds = $abeille->getCmd();
-    //         foreach ($cmds as $keyCmd => $cmd) {
-    //             if ($cmd->getConfiguration("visibilityCategory") == $convert[$affichageType]) {
-    //                 switch ($Visibility) {
-    //                     case 'Y':
-    //                         $cmd->setIsVisible(1);
-    //                         break;
-    //                     case 'N':
-    //                         $cmd->setIsVisible(0);
-    //                         break;
-    //                 }
-    //             }
-    //             $cmd->save();
-    //         }
-    //         $abeille->save();
-    //         $abeille->refresh();
-    //     }
-
-    //     log::add('Abeille', 'debug', 'Leaving CmdAffichage');
-    //     return;
-    // }
-
-    // // TODO: To be moved in AbeilleTools. Could be used by parser too
-    // // Attempt to find model corresponding to given zigbee signature.
-    // // Returns: associative array('modelName', 'modelSource') or false
-    // public static function findModel($zbModelId, $zbManufId) {
-
-    //     $identifier1 = $zbModelId.'_'.$zbManufId;
-    //     $identifier2 = $zbModelId;
-
-    //     // Search by <zbModelId>_<zbManufId>, starting from local models list
-    //     // $localModels = AbeilleTools::getDevicesList('local');
-    //     $localModels = getModelsList('local');
-    //     foreach ($localModels as $modelSig => $model) {
-    //         if ($modelSig == $identifier1) {
-    //             $identifier = $identifier1;
-    //             break;
-    //         }
-    //     }
-    //     if (!isset($identifier)) {
-    //         // Search by <zbModelId>_<zbManufId>, starting from offical models list
-    //         // $officialModels = AbeilleTools::getDevicesList('Abeille');
-    //         $officialModels = getModelsList('Abeille');
-    //         foreach ($officialModels as $modelSig => $model) {
-    //             if ($modelSig == $identifier1) {
-    //                 $identifier = $identifier1;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     if (!isset($identifier)) {
-    //         // Search by <zbModelId> in local models
-    //         foreach ($localModels as $modelSig => $model) {
-    //             if ($modelSig == $identifier2) {
-    //                 $identifier = $identifier2;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     if (!isset($identifier)) {
-    //         // Search by <zbModelId> in offical models
-    //         foreach ($officialModels as $modelSig => $model) {
-    //             if ($modelSig == $identifier2) {
-    //                 $identifier = $identifier2;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     if (!isset($identifier))
-    //         return false; // No model found
-
-    //     return $model;
-    // }
 
     public static function message($topic, $payload) {
         // KiwiHC16: Please leave this line log::add commented otherwise too many messages in log Abeille
@@ -1432,112 +1278,6 @@ class Abeille extends eqLogic {
         if (is_object($eqLogic)) {
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdId);
         }
-
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        /* If unknown eq and IEEE received, looking for eq with same IEEE to update logicalName & topic */
-        // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
-        // if (!is_object($eqLogic) && ($cmdId == "IEEE-Addr")) {
-        //     log::add('Abeille', 'debug', 'message(), !objet & IEEE: Recherche de l\'equipement correspondant');
-        //     // 0 : Short Address is aligned with the one received
-        //     // Short : Short Address is NOT aligned with the one received
-        //     // -1 : Error Nothing found
-        //     $ShortFound = Abeille::fetchShortFromIEEE($value, $addr);
-        //     log::add('Abeille', 'debug', 'message(), !objet & IEEE: Trouvé='.$ShortFound);
-        //     if ((strlen($ShortFound) == 4) && ($addr != "0000")) {
-
-        //         $eqLogic = eqLogic::byLogicalId($dest."/".$ShortFound, 'Abeille');
-        //         if (!is_object($eqLogic)) {
-        //             log::add('Abeille', 'debug', 'message(), !objet & IEEE: L\'équipement ne semble pas sur la bonne zigate. Abeille ne fait rien automatiquement. L\'utilisateur doit résoudre la situation.');
-        //             return;
-        //         }
-
-        //         // log::add('Abeille', 'debug', "message(), !objet & IEEE: Adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - ".$eqLogic->getName().", on fait la mise a jour automatique");
-        //         log::add('Abeille', 'debug', "message(), !objet & IEEE: $value correspond à '".$eqLogic->getHumanName()."'. Mise-à-jour de l'adresse courte $ShortFound vers $addr.");
-        //         // Comme c est automatique des que le retour d experience sera suffisant, on n alerte pas l utilisateur. Il n a pas besoin de savoir
-        //         // message::add("Abeille", "IEEE-Addr; adresse IEEE $value pour $addr qui remonte est deja dans l objet $ShortFound - ".$eqLogic->getName().", on fait la mise a jour automatique", '');
-        //         message::add("Abeille", "Nouvelle adresse '".$addr."' pour '".$eqLogic->getHumanName()."'. Mise à jour automatique.");
-
-        //         // Si on trouve l adresse dans le nom, on remplace par la nouvelle adresse
-        //         // log::add('Abeille', 'debug', "!objet&IEEE --> IEEE-Addr; Ancien nom: ".$eqLogic->getName().", nouveau nom: ".str_replace($ShortFound, $addr, $eqLogic->getName()));
-        //         // $eqLogic->setName(str_replace($ShortFound, $addr, $eqLogic->getName()));
-
-        //         $eqLogic->setLogicalId($dest."/".$addr);
-        //         $eqLogic->setConfiguration('topic', $dest."/".$addr);
-        //         $eqLogic->save();
-
-        //         // Il faut aussi mettre a jour la commande short address
-        //         Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, $dest."/".$addr."/Short-Addr", $addr);
-        //     } else {
-        //         log::add('Abeille', 'debug', 'message(), !objet & IEEE: Je n ai pas trouvé d Abeille qui corresponde.');
-        //         // self::interrogateUnknowNE( $dest, $addr );
-        //     }
-        //     // log::add('Abeille', 'debug', '!objet&IEEE --> fin du traitement');
-        //     return;
-        // }
-
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // Si l objet n existe pas et je recoie une commande => je drop la cmd but I try to get the device into Abeille
-        // e.g. un Equipement envoie des infos, mais l objet n existe pas dans Jeedom
-        // if (!is_object($eqLogic)) {
-
-        //     // Je ne fais les demandes que si les commandes ne sont pas Time-Time, Time-Stamp et Link-Quality
-        //     if (!preg_match("(Time|Link-Quality)", $topic)) {
-
-        //         if (!Abeille::checkInclusionStatus($dest)) {
-        //             log::add('Abeille', 'info', 'Des informations remontent pour un equipement inconnu d Abeille avec pour adresse '.$addr.' et pour la commande '.$cmdId );
-        //         }
-
-        //         // self::interrogateUnknowNE( $dest, $addr );
-        //     }
-
-        //     return;
-        // }
-
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // Si l objet exist et on recoie une IEEE
-        // e.g. Un NE renvoie son annonce
-        // if (is_object($eqLogic) && ($cmdId == "IEEE-Addr")) {
-
-        //     // Je rejete les valeur null (arrive avec les equipement xiaomi qui envoie leur nom spontanement alors que l IEEE n est pas recue.
-        //     if (strlen($value) < 2) {
-        //         log::add('Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=");
-        //         return;
-        //     }
-
-        //     // Je ne sais pas pourquoi des fois on recoit des IEEE null
-        //     if ($value == "0000000000000000") {
-        //         log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';IEEE recue est null, je ne fais rien.');
-        //         return;
-        //     }
-
-        //     // ffffffffffffffff remonte avec les mesures LQI si nouveau equipements.
-        //     if ($value == "FFFFFFFFFFFFFFFF") {
-        //         log::add('Abeille', 'debug', 'IEEE-Addr; =>'.$value.'<= ; IEEE non valable pour un equipement, valeur rejetée: '.$addr.": IEEE =>".$value."<=");
-        //         return;
-        //     }
-
-        //     // Update IEEE cmd
-        //     if (!is_object($cmdLogic)) {
-        //         log::add('Abeille', 'debug', 'IEEE-Addr commande n existe pas');
-        //         return;
-        //     }
-
-        //     // $IEEE = $cmdLogic->execCmd();
-        //     $IEEE = $eqLogic->getConfiguration('IEEE','None');
-        //     if ( ($IEEE!=$value) && (strlen($IEEE)==16) ) {
-        //         log::add('Abeille', 'debug', 'IEEE-Addr;'.$value.';Alerte changement de l adresse IEEE pour un equipement !!! '.$addr.": ".$IEEE." =>".$value."<=");
-        //         message::add("Abeille", "Alerte changement de l adresse IEEE pour un equipement !!! ( $addr : $IEEE =>$value<= )", '');
-        //     }
-
-        //     $eqLogic->checkAndUpdateCmd($cmdLogic, $value);
-        //     $eqLogic->setConfiguration('IEEE', $value);
-        //     $eqLogic->save();
-        //     $eqLogic->refresh();
-
-        //     log::add('Abeille', 'debug', '  IEEE-Addr cmd and eq updated: '.$eqLogic->getName().' - '.$eqLogic->getConfiguration('IEEE', 'Unknown') );
-
-        //     return;
-        // }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si equipement et cmd existe alors on met la valeur a jour

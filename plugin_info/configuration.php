@@ -47,7 +47,7 @@
     fclose($file);
 
     echo '<script>var js_wifiLink = "'.wifiLink.'";</script>'; // PHP to JS
-    echo '<script>var js_maxZigates = "'.maxNbOfZigate.'";</script>'; // PHP to JS
+    echo '<script>var js_maxGateways = "'.maxGateways.'";</script>'; // PHP to JS
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
     function getCmdValueByLogicId($eqId, $logicId) {
@@ -1477,17 +1477,22 @@
                 // console.log("config=", config);
 
                 errors = '';
-                for (zgId = 1; zgId < js_maxZigates; zgId++) {
-                    if (config['ab::gtwEnabled'+zgId] != 'Y')
+                for (gtwId = 1; gtwId < js_maxGateways; gtwId++) {
+                    if (config['ab::gtwEnabled'+gtwId] != 'Y')
                         continue; // Disabled
 
-                    zgType = config['ab::gtwSubType'+zgId];
-                    // console.log("Zigate "+zgId+" type "+zgType);
+                    gtwType = config['ab::gtwType'+gtwId];
+                    gtwSubType = config['ab::gtwSubType'+gtwId];
+                    // console.log("gtwType "+gtwId+" subType "+gtwSubType);
 
-                    if (zgType == 'WIFI') {
-                        if (config['ab::zgIpAddr'+zgId] == '') {
-                            errors += "Zigate "+zgId+": {{- Adresse IP manquante}}";
+                    if (gtwType == "zigate") {
+                        if (gtwSubType == 'WIFI') {
+                            if (config['ab::zgIpAddr'+gtwId] == '') {
+                                errors += "Zigate "+gtwId+": {{- Adresse IP manquante}}";
+                            }
                         }
+                    } else { // gtwType == "ezsp"
+
                     }
                     // TODO: Check type choice vs FW version
                 }

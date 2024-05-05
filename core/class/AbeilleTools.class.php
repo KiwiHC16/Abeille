@@ -470,7 +470,7 @@
             $config['parametersCheck_message'] = "";
 
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
-                $config['ab::gtwType'.$gtwId] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', '', 1);
+                $config['ab::gtwType'.$gtwId] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate', 1);
                 $config['ab::gtwSubType'.$gtwId] = config::byKey('ab::gtwSubType'.$gtwId, 'Abeille', '', 1);
                 $config['ab::gtwPort'.$gtwId] = config::byKey('ab::gtwPort'.$gtwId, 'Abeille', '', 1);
                 $config['ab::gtwIpAddr'.$gtwId] = config::byKey('ab::gtwIpAddr'.$gtwId, 'Abeille', '', 1);

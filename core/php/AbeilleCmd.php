@@ -377,10 +377,12 @@
     $GLOBALS['zigates'] = [];
     $GLOBALS['lastSqn'] = 1;
     $eqLogics = eqLogic::byType('Abeille');
+    cmdLog('debug', "TOTO config=".json_encode($config, JSON_UNESCAPED_SLASHES));
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
         $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
+        cmdLog('debug', "TOTO ${eqLogicId} gtwId=${gtwId}");
 
         if ($config['ab::gtwType'.$gtwId] != 'zigate')
             continue; // Not a Zigate network

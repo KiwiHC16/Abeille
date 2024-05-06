@@ -12,8 +12,8 @@
 		<!-- Remplacement d une zigate:
 		<br/>
 		<select name="zigateZ" style="width : 40%">
-		<?php
-			for ( $i=1; $i<= maxNbOfZigate; $i++ ) {
+		< ?php
+			for ( $i=1; $i<= maxGateways; $i++ ) {
 				echo '<option value="' . $i . '">Zigate' . $i . '</option>';
 			}
 		?>
@@ -23,7 +23,7 @@
 		</br><br/> -->
 	<!-- </form> -->
 
-	{{Vous avez remplacé une zigate ou il y a eu changement de port générant ainsi un changement de son adresse IEEE.}}
+	{{Vous avez ajouté ou remplacé une zigate, ou il y a eu changement de port générant ainsi un changement de son adresse IEEE.}}
 	<br/>
 	{{La Zigate est ignorée par mesure de sécurité.}}
 	<br/>
@@ -32,13 +32,13 @@
 	<br/>
 	<select id="idNewZigate" style="width : 40%">
 	<?php
-		for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-			if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+		for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+			if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
 				continue; // Disabled
-			$eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+			$eqLogic = Abeille::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
 			if (!is_object($eqLogic))
 				continue;
-			echo '<option value="'.$zgId.'">Zigate '.$zgId.' ('.$eqLogic->getHumanName().')</option>';
+			echo '<option value="'.$gtwId.'">Zigate '.$gtwId.' ('.$eqLogic->getHumanName().')</option>';
 		}
 	?>
 	</select>

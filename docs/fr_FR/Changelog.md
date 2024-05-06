@@ -14,6 +14,7 @@
 
 -   Page de config: Ajout support prélim clef 'EZSP'.
 -   Onglet avancé Zigate: Mode 'normal' désactivé. Mode 'brut' par défaut.
+-   Support multi-passerelles: Des tas de modifs internes.
 
 ## 240501-STABLE-1
 

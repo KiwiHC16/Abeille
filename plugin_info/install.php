@@ -53,11 +53,11 @@
     }
 
     // Config DB: replace 'oldKey' by 'newKey'
-    function replaceConfigDB($oldKey, $newKey) {
+    function renameConfigKey($oldKey, $newKey) {
         $val = config::byKey($oldKey, 'Abeille', 'nada', true);
         if ($val != 'nada') {
             config::save($newKey, $val, 'Abeille');
-            log::add('Abeille', 'debug', "  config DB: '".$oldKey."' changed to '".$newKey."'");
+            log::add('Abeille', 'debug', "  config DB: '${oldKey}' renamed to '${newKey}'");
         }
         // Note: If old key is defined to null then can't detect it so force remove anyway.
         config::remove($oldKey, 'Abeille');
@@ -663,20 +663,20 @@
 
             // 'config' DB updates
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                replaceConfigDB('AbeilleActiver'.$zgId, 'ab::zgEnabled'.$zgId);
-                replaceConfigDB('AbeilleType'.$zgId, 'ab::zgType'.$zgId);
-                replaceConfigDB('AbeilleSerialPort'.$zgId, 'ab::zgPort'.$zgId);
-                replaceConfigDB('IpWifiZigate'.$zgId, 'ab::zgIpAddr'.$zgId);
-                replaceConfigDB('AbeilleIEEE'.$zgId, 'ab::zgIeeeAddr'.$zgId);
-                replaceConfigDB('AbeilleIEEE_Ok'.$zgId, 'ab::zgIeeeAddrOk'.$zgId);
+                renameConfigKey('AbeilleActiver'.$zgId, 'ab::zgEnabled'.$zgId);
+                renameConfigKey('AbeilleType'.$zgId, 'ab::zgType'.$zgId);
+                renameConfigKey('AbeilleSerialPort'.$zgId, 'ab::zgPort'.$zgId);
+                renameConfigKey('IpWifiZigate'.$zgId, 'ab::zgIpAddr'.$zgId);
+                renameConfigKey('AbeilleIEEE'.$zgId, 'ab::zgIeeeAddr'.$zgId);
+                renameConfigKey('AbeilleIEEE_Ok'.$zgId, 'ab::zgIeeeAddrOk'.$zgId);
             }
-            replaceConfigDB('AbeilleParentId', 'ab::defaultParent');
-            replaceConfigDB('preventLQIRequest', 'ab::preventLQIAutoUpdate');
-            replaceConfigDB('monitor', 'ab::monitorId');
+            renameConfigKey('AbeilleParentId', 'ab::defaultParent');
+            renameConfigKey('preventLQIRequest', 'ab::preventLQIAutoUpdate');
+            renameConfigKey('monitor', 'ab::monitorId');
             config::remove('agressifTraitementAnnonce', 'Abeille');
             config::remove('blocageRecuperationEquipement', 'Abeille');
             config::remove('blocageTraitementAnnonce', 'Abeille');
-            replaceConfigDB('DbVersion', 'ab::dbVersion');
+            renameConfigKey('DbVersion', 'ab::dbVersion');
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
                 if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                     continue;
@@ -1167,21 +1167,21 @@
         if (intval($dbVersion) < 20240503) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
-                replaceConfigDB("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
+                renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
 
                 $val = config::byKey("ab::zgType${gtwId}", 'Abeille', 'nada', true);
                 if ($val !== 'nada')
-                    replaceConfigDB("ab::zgType${gtwId}", "ab::gtwSubType${gtwId}");
+                    renameConfigKey("ab::zgType${gtwId}", "ab::gtwSubType${gtwId}");
 
                 $val = config::byKey("ab::gtwType${gtwId}", 'Abeille', 'nada', true);
                 if ($val === 'nada')
                     config::save("ab::gtwType${gtwId}", "zigate", 'Abeille');
 
-                replaceConfigDB("ab::zgPort${gtwId}", "ab::gtwPort${gtwId}");
+                renameConfigKey("ab::zgPort${gtwId}", "ab::gtwPort${gtwId}");
 
-                replaceConfigDB("ab::zgIpAddr${gtwId}", "ab::gtwIpAddr${gtwId}");
+                renameConfigKey("ab::zgIpAddr${gtwId}", "ab::gtwIpAddr${gtwId}");
 
-                replaceConfigDB("ab::zgChan${gtwId}", "ab::gtwChan${gtwId}");
+                renameConfigKey("ab::zgChan${gtwId}", "ab::gtwChan${gtwId}");
             }
 
             // config::save('ab::dbVersion', '20240503', 'Abeille');

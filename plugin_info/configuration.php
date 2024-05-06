@@ -65,7 +65,7 @@
         return $cmd->getId();
     }
 
-    function displayZigate($zgId) {
+    function displayGateway($zgId) {
         global $dbgDeveloperMode;
 
         $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
@@ -75,7 +75,7 @@
         echo '<div class="form-group">';
             echo '<div class="col-lg-3">';
                 echo '<h4>';
-                    echo 'Zigate '.$zgId;
+                    echo 'Passerelle '.$zgId;
                 echo '</h4>';
             echo '</div>';
             echo '<div class="col-lg-9">';
@@ -99,14 +99,14 @@
             echo '<div class="col-lg-4">';
                 echo '<div class="form-group">';
                     echo '<div class="col-lg-5">';
-                        echo '<select id="idSelGtwType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwType'.$zgId.'" onchange="checkGtwType('.$zgId.')"  title="{{Type de clef}}">';
+                        echo '<select id="idSelGtwType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwType'.$zgId.'" onchange="gtwTypeChanged('.$zgId.')"  title="{{Type de clef}}">';
                             echo '<option value="zigate" selected>{{Zigate}}</option>';
                             if (isset($dbgDeveloperMode))
                             echo '<option value="ezsp">{{EmberZnet/EZSP}}</option>';
                         echo '</select>';
                     echo '</div>';
                     echo '<div class="col-lg-7">';
-                        echo '<select id="idZigateSubType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="checkGtwSubType('.$zgId.')"  title="{{Modèle}}">';
+                        echo '<select id="idZigateSubType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="gtwSubTypeChanged('.$zgId.')"  title="{{Modèle de clef}}">';
                             echo '<option value="USB" selected>{{USB v1}}</option>';
                             echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
                             echo '<option value="PI">{{PI v1}}</option>';
@@ -115,8 +115,8 @@
                             echo '<option value="PIv2">{{PI +/v2}}</option>';
                             echo '<option value="DINv2">{{DIN +/v2}}</option>';
                         echo '</select>';
-                        echo '<select id="idEzspSubType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="checkGtwSubType('.$zgId.')"  title="{{Modèle}}" style="display:none">';
-                            echo '<option value="DEFAULT" selected>{{Aucun}}</option>';
+                        echo '<select id="idEzspSubType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="gtwSubTypeChanged('.$zgId.')"  title="{{Modèle de clef}}" style="display:none">';
+                            echo '<option value="DEFAULT" selected>{{Défaut}}</option>';
                         echo '</select>';
                     echo '</div>';
                 echo '</div>';
@@ -186,7 +186,7 @@
             echo '</div>';
             echo '<div class="col-lg-5">';
                     echo '<div id="idUpdFw'.$zgId.'">';
-                    echo '<a id="idUpdateFW'.$zgId.'" class="btn btn-danger" onclick="updateFW('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre-à-jour}}</a>';
+                    echo '<a id="idupdateZigateFw'.$zgId.'" class="btn btn-danger" onclick="updateZigateFw('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre-à-jour}}</a>';
                     echo '<select id="idFW'.$zgId.'" style="width:160px; margin-left:4px" title="{{Firmwares disponibles}}">';
                     foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
                         $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
@@ -224,7 +224,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwEnabled'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
+                echo '<select id="idSelGtwStatus'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwEnabled'.$zgId.'" onchange="gtwStatusChanged('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
                     echo '<option value="N" selected>{{Désactivée}}</option>';
                     echo '<option value="Y">{{Activée}}</option>';
                 echo '</select>';
@@ -333,7 +333,7 @@
         </div>
 
         <legend>
-            <i class="fa fa-list-alt"></i><strong> {{Zigates}}</strong>
+            <i class="fa fa-list-alt"></i><strong> {{Passerelles}}</strong>
             <?php
             echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/PageConfig.html"><i class="fas fa-book"></i>{{Documentation}}</a>';
             ?>
@@ -401,7 +401,7 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser}} : </label>
                             <div class="col-lg-4" title="{{Librairie à utiliser pour le controle des GPIO pour la PiZigate.}}">
-                                <select id="idZgGpioLib" class="configKey form-control" data-l1key="ab::defaultGpioLib">
+                                <select id="idGpioLib" class="configKey form-control" data-l1key="ab::defaultGpioLib">
                                     <option value="PiGpio">PiGpio</option>
                                     <option value="WiringPi">WiringPi</option>
                                 </select>
@@ -419,33 +419,33 @@
             <?php
             // How many zigates to display ? (check if enabled or not)
             $maxId = 1;
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $status = config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N');
+            for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+                $status = config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N');
                 if ($status == "Y")
-                    $maxId = $zgId;
+                    $maxId = $gtwId;
             }
-            for ($zgId = 1, $zgG = 1; $zgId <= maxNbOfZigate; $zgId++, $zgG++) {
-                if ($zgId > $maxId)
-                    echo '<div id="idZigateGroup'.$zgG.'" class="form-group" style="display:none">';
+            for ($gtwId = 1, $zgG = 1; $gtwId <= maxGateways; $gtwId++, $zgG++) {
+                if ($gtwId > $maxId)
+                    echo '<div id="idGtwGroup'.$zgG.'" class="form-group" style="display:none">';
                 else {
-                    echo '<div id="idZigateGroup'.$zgG.'" class="form-group">';
+                    echo '<div id="idGtwGroup'.$zgG.'" class="form-group">';
                     $lastDisplayedG = $zgG;
                 }
                     echo '<div class="col-lg-6">';
-                        displayZigate($zgId);
+                        displayGateway($gtwId);
                     echo '</div>';
-                    $zgId++;
-                    if ($zgId <= maxNbOfZigate) {
+                    $gtwId++;
+                    if ($gtwId <= maxGateways) {
                         echo '<div class="col-lg-6">';
-                            displayZigate($zgId);
+                            displayGateway($gtwId);
                         echo '</div>';
                     }
                 echo '</div>';
             }
             echo '<script>lastDisplayedG = '.$lastDisplayedG.'</script>';
-            echo '<script>maxNbOfZigate = '.maxNbOfZigate.'</script>';
-            echo '<a id="idShowMoreZigatesB" class="btn btn-success" onclick="showMoreZigates()">{{Plus de zigates}}</a>';
-            echo '<a id="idShowLessZigatesB" class="btn btn-success" onclick="showLessZigates()" style="display:none;margin-left:8px">{{Moins de zigates}}</a>';
+            echo '<script>maxGateways = '.maxGateways.'</script>';
+            echo '<a id="idshowMoreGatewaysB" class="btn btn-success" onclick="showMoreGateways()">{{Plus de passerelles}}</a>';
+            echo '<a id="idshowLessGatewaysB" class="btn btn-success" onclick="showLessGateways()" style="display:none;margin-left:8px">{{Moins de passerelles}}</a>';
         ?>
         </div>
 
@@ -566,8 +566,8 @@
 <script>
     /* Show only groups in line with number of zigates (1 most of the time) */
     // for (z = 1; z <= js_NbOfZigates; z++) {
-    //     console.log("Showing idZigateGroup"+z);
-    //     $("#idZigateGroup"+z).show();
+    //     console.log("Showing idGtwGroup"+z);
+    //     $("#idGtwGroup"+z).show();
     // }
 
     // $("#idZigates").hide();
@@ -590,126 +590,125 @@
     //     }
     // });
 
-    function showMoreZigates() {
-        console.log("showMoreZigates(), lastDisplayedG="+lastDisplayedG);
+    function showMoreGateways() {
+        console.log("showMoreGateways(), lastDisplayedG="+lastDisplayedG);
         lastDisplayedG++;
-        $("#idZigateGroup"+lastDisplayedG).show();
-        if ((lastDisplayedG * 2) >= maxNbOfZigate)
-            $("#idShowMoreZigatesB").hide();
-        $("#idShowLessZigatesB").show();
+        $("#idGtwGroup"+lastDisplayedG).show();
+        if ((lastDisplayedG * 2) >= maxGateways)
+            $("#idshowMoreGatewaysB").hide();
+        $("#idshowLessGatewaysB").show();
     }
 
-    function showLessZigates() {
-        console.log("showLessZigates(), lastDisplayedG="+lastDisplayedG);
-        $("#idZigateGroup"+lastDisplayedG).hide();
+    function showLessGateways() {
+        console.log("showLessGateways(), lastDisplayedG="+lastDisplayedG);
+        $("#idGtwGroup"+lastDisplayedG).hide();
         lastDisplayedG--;
-        $("#idShowMoreZigatesB").show();
+        $("#idshowMoreGatewaysB").show();
         if (lastDisplayedG == 1) {
-            $("#idShowLessZigatesB").hide();
+            $("#idshowLessGatewaysB").hide();
         }
     }
 
-    /* Number of zigates changed. Display more or less 'idZigateGroup'
+    /* Number of zigates changed. Display more or less 'idGtwGroup'
        and be sure any new zigate is disabled by default */
     // $("#nbOfZigates").change(function() {
     //     var nbOfZigates = Number($("#nbOfZigates").val());
     //     console.log("Nb Zigates: now=" + nbOfZigates + ", prev=" + js_NbOfZigates);
     //     if (nbOfZigates > js_NbOfZigates) {
     //         for (z = js_NbOfZigates + 1; z <= nbOfZigates; z++) {
-    //             $("#idSelZgStatus" + z).val('N'); // Disabled
-    //             $("#idSelZgStatus" + z).change();
-    //             $("#idZigateGroup" + z).show();
+    //             $("#idSelGtwStatus" + z).val('N'); // Disabled
+    //             $("#idSelGtwStatus" + z).change();
+    //             $("#idGtwGroup" + z).show();
     //         }
     //     } else if (nbOfZigates < js_NbOfZigates) {
     //         for (z = nbOfZigates + 1; z <= js_NbOfZigates; z++) {
-    //             $("#idSelZgStatus" + z).val('N'); // To be saved as disabled
-    //             $("#idZigateGroup" + z).hide();
+    //             $("#idSelGtwStatus" + z).val('N'); // To be saved as disabled
+    //             $("#idGtwGroup" + z).hide();
     //         }
     //     }
     //     js_NbOfZigates = nbOfZigates;
     // });
 
     /* Called when gateway type (zigate, ezsp) is changed */
-    function checkGtwType(gtwId) {
-        console.log("checkGtwType(zgId="+gtwId+")");
+    function gtwTypeChanged(gtwId) {
         let gtwType = $("#idSelGtwType" + gtwId).val();
+        console.log("gtwTypeChanged(gtwId="+gtwId+") => type="+gtwType);
 
+        let zigateSubType = document.getElementById("idZigateSubType"+gtwId);
+        let ezspSubType = document.getElementById("idEzspSubType"+gtwId);
         if (gtwType == 'zigate') {
             $("#idZigateSubType"+gtwId).show();
+            zigateSubType.classList.add("configKey");
+
             $("#idEzspSubType"+gtwId).hide();
+            ezspSubType.classList.remove("configKey");
         } else {
             $("#idEzspSubType"+gtwId).show();
+            ezspSubType.classList.add("configKey");
+
             $("#idZigateSubType"+gtwId).hide();
+            zigateSubType.classList.remove("configKey");
         }
     }
 
     /* Called when gateway sub type (USB, WIFI, PI, DIN) is changed */
-    function checkGtwSubType(zgId) {
-        console.log("checkGtwSubType(zgId="+zgId+")");
+    function gtwSubTypeChanged(gtwId) {
+        console.log("gtwSubTypeChanged(gtwId="+gtwId+")");
+        let gtwType = $("#idSelGtwType" + gtwId).val();
 
-        let gtwType = $("#idSelGtwType" + zgId).val();
         if (gtwType == "zigate") {
-            var zgType = $("#idSelGtwSubType" + zgId).val();
-            var idSelSP = document.querySelector('#idSelSP'+zgId);
-            // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
-            var idFW = document.querySelector('#idFW' + zgId);
-            // var idUpdateFW = document.querySelector('#idUpdateFW' + zgId);
-            var idWifiAddr = document.querySelector('#idWifiAddr'+zgId);
-            // var idCheckWifi = document.querySelector('#idCheckWifi' + zgId);
+            var gtwSubType = $("#idZigateSubType" + gtwId).val();
+            console.log('Gtw '+gtwId+' ('+gtwType+') sub type changed to "'+gtwSubType+'"');
 
-            // $("#idSocat"+zgId).hide();
-            // $("#idWiringPi"+zgId).hide();
-            // $("#idCommTest"+zgId).hide();
+            var idSelSP = document.querySelector('#idSelSP'+gtwId);
+            // var idCheckSP = document.querySelector('#idCheckSP' + gtwId);
+            var idFW = document.querySelector('#idFW' + gtwId);
+            // var idupdateZigateFw = document.querySelector('#idupdateZigateFw' + gtwId);
+            var idWifiAddr = document.querySelector('#idWifiAddr'+gtwId);
+            // var idCheckWifi = document.querySelector('#idCheckWifi' + gtwId);
 
             // Default: Type USBv1 => SelSP allowed, WifiAddr disallowed
             idSelSP.removeAttribute('disabled'); // Serial port selection allowed by default
             idWifiAddr.setAttribute('disabled', true); // Wifi addr disallowed by default
-            $("#idUpdFw"+zgId).hide(); // Update FW disallowed by default
+            $("#idUpdFw"+gtwId).hide(); // Update FW disallowed by default
 
-            if (zgType == "WIFI") {
-                console.log('Type changed to Wifi');
-                $("#idSelSP"+zgId).val(js_wifiLink+zgId);
+            if (gtwSubType == "WIFI") {
+                $("#idSelSP"+gtwId).val(js_wifiLink+gtwId);
                 checkSocatInstallation();
-
-                // idSelSP.setAttribute('disabled', true);
-                // idWifiAddr.removeAttribute('disabled');
-                // $("#idUpdFw"+zgId).hide();
-                // $("#idReadFwB"+zgId).hide();
             } else { // USB, PI or DIN
-                console.log('Type changed to "'+zgType+'"');
-                // $("#idCommTest"+zgId).show();
+                // $("#idCommTest"+gtwId).show();
 
-                if ((zgType == "PI") || (zgType == "PIv2")) {
-                    // $("#idWiringPi"+zgId).show();
-                    let zgGpioLib = $("#idZgGpioLib").val();
+                if ((gtwSubType == "PI") || (gtwSubType == "PIv2")) {
+                    // $("#idWiringPi"+gtwId).show();
+                    let zgGpioLib = $("#idGpioLib").val();
                     if (zgGpioLib == "WiringPi")
                         checkWiringPi(); // Force WiringPi check
                     else
                         checkPiGpio();
                 }
-                //     $("#idUpdFw"+zgId).show();
-                // } else if (zgType == "DIN") {
-                //     $("#idUpdFw"+zgId).show();
+                //     $("#idUpdFw"+gtwId).show();
+                // } else if (gtwSubType == "DIN") {
+                //     $("#idUpdFw"+gtwId).show();
                 // }
             }
 
             allowSelSP = true; // Serial port selection ALLOWED by default
-            allowWifiAddr = false; // Wifi addr DISALLOWED by default
-            allowReadFw = false;
+            allowWifiAddr = false; // Wifi addr disallowed by default
+            allowReadFwV = false; // Read FW version
             allowUpdFw = false; // Update FW disallowed by default
-            switch (zgType) {
+            switch (gtwSubType) {
             case "USB":
-                allowReadFw = true;
+                allowReadFwV = true;
                 break;
             case "USBv2":
-                allowReadFw = true;
+                allowReadFwV = true;
                 break;
             case "PI":
-                allowReadFw = true;
+                allowReadFwV = true;
                 allowUpdFw = true;
                 break;
             case "PIv2":
-                allowReadFw = true;
+                allowReadFwV = true;
                 allowUpdFw = true;
                 break;
             case "WIFI":
@@ -717,26 +716,30 @@
                 allowWifiAddr = true;
                 break;
             case "DIN":
-                allowReadFw = true;
+                allowReadFwV = true;
                 allowUpdFw = true;
                 break;
             case "DINv2":
-                allowReadFw = true;
+                allowReadFwV = true;
                 break;
             }
             if (allowSelSP == false)
                 idSelSP.setAttribute('disabled', true);
             if (allowWifiAddr)
                 idWifiAddr.removeAttribute('disabled');
-            if (allowReadFw) {
-                $("#idReadFwB"+zgId).show();
-                $("#idCommTest"+zgId).show();
+            if (allowReadFwV) {
+                $("#idReadFwB"+gtwId).show();
+                $("#idCommTest"+gtwId).show();
             } else {
-                $("#idReadFwB"+zgId).hide();
-                $("#idCommTest"+zgId).hide();
+                $("#idReadFwB"+gtwId).hide();
+                $("#idCommTest"+gtwId).hide();
             }
             if (allowUpdFw)
-                $("#idUpdFw"+zgId).show();
+                $("#idUpdFw"+gtwId).show();
+        } else {
+            var gtwSubType = $("#idEzspSubType" + gtwId).val();
+            console.log('Gtw '+gtwId+' ('+gtwType+') sub type changed to "'+gtwSubType+'"');
+
 
         }
     }
@@ -948,57 +951,69 @@
         });
     })
 
-    $('#bt_checkTTY').on('click', function() {
-        $.ajax({
-            type: 'POST',
-            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
-            data: {
-                action: 'checkTTY',
-                zgport: document.getElementById("ZiGatePort").value,
-                zgtype: $("#idSelZgType" + zgId).val(),
-            },
-            dataType: 'json',
-            global: false,
-            error: function (request, status, error) {
-                bootbox.alert("ERREUR 'checkTTY' !<br>Votre installation semble corrompue.");
-            },
-            success: function (json_res) {
-                $res = JSON.parse(json_res.result);
-                if ($res.status == 0) {
-                    $('.TTYStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                    $fw = $res.fw;
-                    $label = '<span class="label label-success" style="font-size:1em;">' + $fw + '</span>';
-                    $('.CurrentFirmware').empty().append($label);
-                } else {
-                    $('.TTYStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
-                    $('.CurrentFirmware').empty().append('<span class="label label-danger" style="font-size:1em;">?</span>');
-                }
-            }
-        });
-    });
-    $('#bt_readFW').on('click', function() {
-        /* Click on 'read FW' as same effect than 'check TTY' */
-        $('#bt_checkTTY').click();
-    });
+    // $('#bt_checkTTY').on('click', function() {
+    //     let gtwType = $("#idSelGtwType" + gtwId).val();
+    //     if (gtwType == 'zigate')
+    //         gtwSubType = $("#idZigateSubType" + gtwId).val();
+    //     else
+    //         gtwSubType = $("#idEzspSubType" + gtwId).val();
+
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+    //         data: {
+    //             action: 'checkTTY',
+    //             zgport: document.getElementById("ZiGatePort").value,
+    //             zgtype: $("#idSelZgType" + zgId).val(),
+    //         },
+    //         dataType: 'json',
+    //         global: false,
+    //         error: function (request, status, error) {
+    //             bootbox.alert("ERREUR 'checkTTY' !<br>Votre installation semble corrompue.");
+    //         },
+    //         success: function (json_res) {
+    //             $res = JSON.parse(json_res.result);
+    //             if ($res.status == 0) {
+    //                 $('.TTYStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+    //                 $fw = $res.fw;
+    //                 $label = '<span class="label label-success" style="font-size:1em;">' + $fw + '</span>';
+    //                 $('.CurrentFirmware').empty().append($label);
+    //             } else {
+    //                 $('.TTYStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+    //                 $('.CurrentFirmware').empty().append('<span class="label label-danger" style="font-size:1em;">?</span>');
+    //             }
+    //         }
+    //     });
+    // });
+    // $('#bt_readFW').on('click', function() {
+    //     /* Click on 'read FW' as same effect than 'check TTY' */
+    //     $('#bt_checkTTY').click();
+    // });
 
     /* Called when serial port test button is pressed */
-    function checkSerialPort(zgId) {
-        console.log("checkSerialPort(zgId=" + zgId + ")");
+    function checkSerialPort(gtwId) {
+        console.log("checkSerialPort(gtwId=" + gtwId + ")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
         // var idCheckSP = document.querySelector('#idCheckSP'+zgId);
         // if (idCheckSP.getAttribute('disabled') != null) {
         //     console.log("=> DISABLED");
         //     return;
         // }
+        let gtwType = $("#idSelGtwType" + gtwId).val();
+        if (gtwType == 'zigate')
+            gtwSubType = $("#idZigateSubType" + gtwId).val();
+        else
+            gtwSubType = $("#idEzspSubType" + gtwId).val();
+
         $.showLoading()
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'checkTTY',
-                zgport: $("#idSelSP" + zgId).val(),
-                zgtype: $("#idSelZgType" + zgId).val(),
-                zgGpioLib: $("#idZgGpioLib").val(),
+                zgport: $("#idSelSP" + gtwId).val(),
+                zgtype: gtwSubType,
+                zgGpioLib: $("#idGpioLib").val(),
             },
             dataType: 'json',
             global: false,
@@ -1012,44 +1027,44 @@
                 if (res.status == 0) {
                     fw = res.fw;
                     console.log("FW="+fw)
-                    $('.serialPortStatus' + zgId).empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                    // $('#idFwVersion'+zgId).empty().append('<span class="label label-success" style="font-size:1em;">'+fw+'</span>');
-                    document.getElementById("idFwVersion"+zgId).value = fw;
+                    $('.serialPortStatus' + gtwId).empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    // $('#idFwVersion'+gtwId).empty().append('<span class="label label-success" style="font-size:1em;">'+fw+'</span>');
+                    document.getElementById("idFwVersion"+gtwId).value = fw;
                 } else {
-                    $('.serialPortStatus' + zgId).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    $('.serialPortStatus' + gtwId).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
                 }
             }
         });
     }
 
     /* Called when FW update button is pressed */
-    function updateFW(zgId) {
-        console.log("updateFW(zgId="+zgId+")");
+    function updateZigateFw(gtwId) {
+        console.log("updateZigateFw(gtwId="+gtwId+")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
         // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
         // if (idCheckSP.getAttribute('disabled') != null) {
         //     console.log("=> DISABLED");
         //     return;
         // }
-        let zgType = $("#idSelZgType"+zgId).val();
-        if ((zgType != "PI") && (zgType != "DIN")) {
+        let zgType = $("#idZigateSubType"+gtwId).val();
+        if ((zgType != "PI") && (zgType != "PIv2") &&(zgType != "DIN")) {
             console.log("=> Neither PI nor DIN type. UNEXPECTED !");
             return;
         }
 
-        let zgFW = $("#idFW"+zgId).val();
+        let zgFW = $("#idFW"+gtwId).val();
         if (zgFW == "CUSTOM") {
-            uploadCustomFw().then(response => updateFW2(zgId, zgType, "/tmp/jeedom/Abeille/" + response), error => console.log("uploadCustomFw() ERROR", error));
+            uploadCustomFw().then(response => updateZigateFw2(gtwId, zgType, "/tmp/jeedom/Abeille/" + response), error => console.log("uploadCustomFw() ERROR", error));
         } else
-            updateFW2(zgId, zgType, zgFW);
+            updateZigateFw2(gtwId, zgType, zgFW);
     }
 
     // Update FW
-    function updateFW2(zgId, zgType, zgFW) {
+    function updateZigateFw2(zgId, zgType, zgFW) {
         let zgPort = $("#idSelSP"+zgId).val();
-        let zgGpioLib = $("#idZgGpioLib").val();
+        let zgGpioLib = $("#idGpioLib").val();
         let curFw = document.getElementById("idFwVersion"+zgId).value;
-        console.log("updateFW2("+zgId+", "+zgType+", "+zgFW+"): curFw="+curFw);
+        console.log("updateZigateFw2("+zgId+", "+zgType+", "+zgFW+"): curFw="+curFw);
 
         msg = '{{Vous êtes sur le point de mettre à jour le firmware de la Zigate}}';
         msg += '<br> - {{Type}}    : '+zgType;
@@ -1093,7 +1108,7 @@
         bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});
-                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&zgGpioLib=\"'+zgGpioLib+'\"&fwfile=\"'+zgFW+'\"';
+                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateZigateFw&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&zgGpioLib=\"'+zgGpioLib+'\"&fwfile=\"'+zgFW+'\"';
                 if (erasePdm)
                     url += '&erasePdm=true&zgId='+zgId;
                 $('#md_modal2').load(url).dialog('open');
@@ -1151,6 +1166,13 @@
                 $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installTTY.abeille').dialog('open');
             }
         });
+    }
+
+    function gtwStatusChanged(gtwId) {
+        let enabled = $("#idSelGtwStatus"+gtwId).val();
+        console.log("gtwStatusChanged("+gtwId+"), enabled="+enabled)
+        // document.getElementById('optionID').style.color = '#000';
+        // How to change color to highlight it is DISABLED ?
     }
 
     /* Verify Abeille's integrity using 'Abeille.md5' file. */
@@ -1528,14 +1550,6 @@
                 }
             }
         });
-    }
-
-    function statusChange(zgId) {
-        console.log("statusChange("+zgId+")")
-        var enabled = $("#idSelZgStatus"+zgId).val();
-        console.log("enabled", enabled);
-        // document.getElementById('optionID').style.color = '#000';
-        // How to change color to highlight it is DISABLED ?
     }
 
 </script>

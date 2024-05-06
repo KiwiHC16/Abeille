@@ -507,6 +507,8 @@
             $eqLogicId = $eqLogic->getLogicalId();
             list($net, $addr) = explode("/", $eqLogicId);
             $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
+            if ($gtwId == '')
+                continue; // Incorrect case
 
             if ($config['ab::gtwType'.$gtwId] != 'zigate')
                 continue; // Not a Zigate network

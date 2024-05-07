@@ -110,21 +110,6 @@
         echo '<input id="'.$id.'" title="'.$title.'" placeholder="'.$ph.'" style="width:60px; margin-left:8px" />';
     }
 
-    // function addJsUpdateFunction($eqId, $cmdLogicId, $spanId, $isInput = false) {
-    //     echo "<script>";
-    //     echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";
-    //         echo "console.log('jeedom.cmd.update[".$cmdLogicId."] <= ' + _options.display_value);";
-    //         // console.log(_options);
-    //         echo "var element = document.getElementById('".$spanId."');";
-    //         echo "console.log('element=', element);";
-    //         if ($isInput)
-    //             echo "element.value = _options.display_value;";
-    //         else // Not <input>. Assuming <span>
-    //             echo "element.textContent = _options.display_value;";
-    //     echo "}";
-    //     echo "</script>";
-    // }
-
     // Create drop down list for possible directions (toServer=00, toClient=01)
     function addDirList($id) {
         echo '<select id="'.$id.'" style="width:100px; margin-left: 8px" title="{{Direction}}" />';

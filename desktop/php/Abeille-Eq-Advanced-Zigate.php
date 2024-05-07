@@ -6,13 +6,15 @@
 <?php
     if (isset($dbgDeveloperMode)) echo __FILE__;
 
-    function addZgButton($name, $class, $onclick, $onclick2 = "", $leftmargin = true, $title = "") {
+    function addZgButton($name, $class, $onclick, $onclick2 = "", $leftMargin = true, $title = "") {
         // echo '<a class="btn '.$class.'" style="width:80px" onclick="interrogate(\''.$interrogate.'\')">'.$name.'</a>';
         if ($leftMargin)
             $style = "margin-left:4px; width:80px";
         else
             $style = "width:80px";
-        echo '<a class="btn '.$class.'" style="'.$style.'" title="'.$title.'" onclick="sendZigate(\''.$onclick.'\', \''.$onclick2.'\')">'.$name.'</a>';
+        if ($title != "")
+            $title = "title=\"${title}\"";
+        echo '<a class="btn '.$class.'" style="'.$style.'" '.$title.' onclick="sendZigate(\''.$onclick.'\', \''.$onclick2.'\')">'.$name.'</a>';
     }
 
 ?>
@@ -164,8 +166,8 @@
         <label class="col-sm-3 control-label">DEV MODE: : {{Mode}}</label>
         <div class="col-sm-5">
             <a class="btn btn-danger disabled-a"  style="width:80px" onclick="sendZigate('setMode', 'Normal')">{{Normal}}</a>
-            <a class="btn btn-danger" style="width:80px" onclick="sendZigate('setMode', 'Hybride')">{{Hybride}}</a>
-            <a class="btn btn-default" style="width:80px" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
+            <a class="btn btn-danger" style="width:80px; margin-left:4px" onclick="sendZigate('setMode', 'Hybride')">{{Hybride}}</a>
+            <a class="btn btn-default" style="width:80px; margin-left:4px" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
         </div>
     </div>
 <?php } ?>

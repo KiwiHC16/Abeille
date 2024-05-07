@@ -123,6 +123,23 @@
         "0120" => array(
             "name" => "Configure reporting",
         ),
+
+        "0200" => array(
+            "name" => "Save record request",
+        ),
+        "0201" => array(
+            "name" => "Load record request",
+        ),
+        "0202" => array(
+            "name" => "Delete all records",
+        ),
+        "0300" => array(
+            "name" => "Host PDM available request", // Unused by Abeille
+        ),
+        "0302" => array(
+            "name" => "PDM loaded", // Unused by Abeille
+        ),
+
         "0530" => array(
             "name" => "?",
         ),
@@ -144,22 +161,6 @@
         ),
 
 
-        "0200" => array(
-            "name" => "Save record request",
-        ),
-        "0201" => array(
-            "name" => "Load record request",
-        ),
-        "0202" => array(
-            "name" => "Delete all records",
-        ),
-        "0300" => array(
-            "name" => "Host PDM available request", // Unused by Abeille
-        ),
-        "0302" => array(
-            "name" => "PDM loaded", // Unused by Abeille
-        ),
-
         "8001" => array(
             "name" => "Log message",
         ),
@@ -171,6 +172,9 @@
         ),
         "8007" => array(
             "name" => "“Factory New” Restart",
+        ),
+        "8008" => array(
+            "name" => "HeartBeat", // Zigate v2 >= 3.20: Unused by Abeille
         ),
         "8009" => array(
             "name" => "Network state response",

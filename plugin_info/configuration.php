@@ -1048,7 +1048,7 @@
         // }
         let zgType = $("#idZigateSubType"+gtwId).val();
         if ((zgType != "PI") && (zgType != "PIv2") &&(zgType != "DIN")) {
-            console.log("=> Neither PI nor DIN type. UNEXPECTED !");
+            console.log("=> Neither PI/PIv2 nor DIN type. UNEXPECTED !");
             return;
         }
 
@@ -1108,7 +1108,7 @@
         bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});
-                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateZigateFw&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&zgGpioLib=\"'+zgGpioLib+'\"&fwfile=\"'+zgFW+'\"';
+                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFw&zgType=\"'+zgType+'\"&zgPort=\"'+zgPort+'\"&zgGpioLib=\"'+zgGpioLib+'\"&fwFile=\"'+zgFW+'\"';
                 if (erasePdm)
                     url += '&erasePdm=true&zgId='+zgId;
                 $('#md_modal2').load(url).dialog('open');

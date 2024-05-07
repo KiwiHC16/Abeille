@@ -240,10 +240,10 @@
 
         /* Update FW but check parameters first, prior to shutdown daemon */
         if (init('action') == 'updateFirmware') {
-            $zgType = init('zgtype'); // "PI"/"PIv2" or "DIN"
-            $zgPort = init('zgport');
+            $zgType = init('zgType'); // "PI"/"PIv2" or "DIN"
+            $zgPort = init('zgPort');
             $zgGpioLib = init('zgGpioLib');
-            $zgFwFile = init('fwfile');
+            $zgFwFile = init('fwFile');
             $erasePdm = init('erasePdm');
             $zgId = init('zgId');
 

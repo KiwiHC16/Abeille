@@ -5,6 +5,16 @@
 
 <?php
     if (isset($dbgDeveloperMode)) echo __FILE__;
+
+    function addZgButton($name, $class, $onclick, $onclick2 = "", $leftmargin = true, $title = "") {
+        // echo '<a class="btn '.$class.'" style="width:80px" onclick="interrogate(\''.$interrogate.'\')">'.$name.'</a>';
+        if ($leftMargin)
+            $style = "margin-left:4px; width:80px";
+        else
+            $style = "width:80px";
+        echo '<a class="btn '.$class.'" style="'.$style.'" title="'.$title.'" onclick="sendZigate(\''.$onclick.'\', \''.$onclick2.'\')">'.$name.'</a>';
+    }
+
 ?>
 
 <div class="form-group">
@@ -27,7 +37,8 @@
     <label class="col-sm-3 control-label">{{Version du firmware}}</label>
     <div class="col-sm-5" advInfo="FW-Version">
         <input type="text" value="" readonly>
-        <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getZgVersion', '')">{{Lire}}</a>
+        <!-- <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getZgVersion', '')">{{Lire}}</a> -->
+        <?php addZgButton("{{Lire}}", "btn-default", 'getZgVersion'); ?>
     </div>
 </div>
 
@@ -36,11 +47,9 @@
     <div class="col-sm-5" advInfo="Network-Status">
         <input type="text" value="" readonly>
         <?php
-            // $res = getCmdValueByLogicId($eqId, 'Network-Status');
-            // echo '<input type="text" value="'.$res.'" readonly>';
             if (isset($dbgDeveloperMode)) {
-                echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetwork\', \'\')">{{Démarrer}}</a>';
-                // echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetworkScan\', \'\')">{{Démarrer scan}}</a>';
+                // echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetwork\', \'\')">{{Démarrer}}</a>';
+                addZgButton("{{Démarrer}}", "btn-warning", 'startNetwork');
             }
         ?>
     </div>
@@ -60,7 +69,8 @@
                 }
                 ?>
             </select>
-            <a class="btn btn-danger" style="margin-left:4px" onclick="sendZigate('setChannel', '')">{{Appliquer}}</a>
+            <!-- <a class="btn btn-danger" style="margin-left:4px" onclick="sendZigate('setChannel', '')">{{Appliquer}}</a> -->
+            <?php addZgButton("{{Appliquer}}", "btn-danger", 'setChannel'); ?>
         </div>
     </div>
 </div>
@@ -71,8 +81,10 @@
     </div>
     <div class="col-sm-5" advInfo="permitJoin-Status">
         <input type="text" id="idInclusionMode" value="" readonly>
-        <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setInclusion', 'start')">{{Démarrer}}</a>
-        <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setInclusion', 'stop')">{{Arrêter}}</a>
+        <!-- <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setInclusion', 'start')">{{Démarrer}}</a> -->
+        <?php addZgButton("{{Démarrer}}", "btn-warning", 'setInclusion', 'start'); ?>
+        <!-- <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setInclusion', 'stop')">{{Arrêter}}</a> -->
+        <?php addZgButton("{{Arrêter}}", "btn-warning", 'setInclusion', 'stop'); ?>
     </div>
 </div>
 
@@ -83,8 +95,10 @@
     </div>
     <div class="col-sm-7" advInfo="ZiGate-Time">
         <input type="text" id="idZgTime" value="" readonly>
-        <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getTime', '')">{{Lire}}</a>
-        <a class="btn btn-warning" onclick="sendZigate('setTime', '')">{{Mettre à l'heure}}</a>
+        <!-- <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getTime', '')">{{Lire}}</a> -->
+        <?php addZgButton("{{Lire}}", "btn-default", 'getTime', ''); ?>
+        <!-- <a class="btn btn-warning" onclick="sendZigate('setTime', '')">{{Mettre à l'heure}}</a> -->
+        <?php addZgButton("{{Régler}}", "btn-default", 'setTime', ''); ?>
     </div>
 </div>
 
@@ -114,24 +128,28 @@
     </div>
     <div class="col-sm-5" advInfo="ZiGate-Power">
         <input type="text" value="" readonly>
-        <a class="btn btn-warning" onclick="sendZigate('getTXPower', '')">{{Lire}}</a>
-        <!-- <a class="btn btn-warning" onclick="sendZigate('setTXPower', '')">Modifier</a> -->
+        <!-- <a class="btn btn-default" onclick="sendZigate('getTXPower', '')">{{Lire}}</a> -->
+        <?php addZgButton("{{Lire}}", "btn-default", 'getTXPower', ''); ?>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">LED</label>
     <div class="col-sm-5">
-        <a class="btn btn-warning" onclick="sendZigate('setLED', 'ON')">ON</a>
-        <a class="btn btn-warning" onclick="sendZigate('setLED', 'OFF')">OFF</a>
+        <!-- <a class="btn btn-default" onclick="sendZigate('setLED', 'ON')">ON</a> -->
+        <?php addZgButton("{{ON}}", "btn-default", 'setLED', 'ON', false); ?>
+        <!-- <a class="btn btn-default" onclick="sendZigate('setLED', 'OFF')">OFF</a> -->
+        <?php addZgButton("{{OFF}}", "btn-default", 'setLED', 'OFF'); ?>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">Certification</label>
     <div class="col-sm-5">
-        <a class="btn btn-warning" onclick="sendZigate('setCertif', 'CE')">CE</a>
-        <a class="btn btn-warning" onclick="sendZigate('setCertif', 'FCC')">FCC</a>
+        <!-- <a class="btn btn-warning" onclick="sendZigate('setCertif', 'CE')">CE</a> -->
+        <?php addZgButton("{{CE}}", "btn-warning", 'setCertif', 'CE', false); ?>
+        <!-- <a class="btn btn-warning" onclick="sendZigate('setCertif', 'FCC')">FCC</a> -->
+        <?php addZgButton("{{FCC}}", "btn-warning", 'setCertif', 'FCC'); ?>
     </div>
 </div>
 
@@ -145,9 +163,9 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">DEV MODE: : {{Mode}}</label>
         <div class="col-sm-5">
-            <a class="btn btn-danger disabled-a" onclick="sendZigate('setMode', 'Normal')">{{Normal}}</a>
-            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Hybride')">{{Hybride}}</a>
-            <a class="btn btn-warning" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
+            <a class="btn btn-danger disabled-a"  style="width:80px" onclick="sendZigate('setMode', 'Normal')">{{Normal}}</a>
+            <a class="btn btn-danger" style="width:80px" onclick="sendZigate('setMode', 'Hybride')">{{Hybride}}</a>
+            <a class="btn btn-default" style="width:80px" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
         </div>
     </div>
 <?php } ?>
@@ -155,7 +173,8 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Reset SW}}</label>
     <div class="col-sm-5">
-        <a class="btn btn-warning" onclick="sendZigate('resetZigate', '')" title="{{Reset SW (Commande 0011)}}"><i class="fas fa-sync"></i> {{Reset}}</a>
+        <!-- <a class="btn btn-warning" onclick="sendZigate('resetZigate', '')" title="{{Reset SW (Commande 0011)}}">{{Reset}}</a> -->
+        <?php addZgButton("{{Reset}}", "btn-warning", 'resetZigate', '', false, "{{Reset SW (Commande 0011)}}"); ?>
     </div>
 </div>
 
@@ -163,14 +182,14 @@
 <div class="form-group" id="idAdvResetHw" style="display:none;">
     <label class="col-sm-3 control-label">{{Reset HW}}</label>
     <div class="col-sm-5">
-        <a class="btn btn-warning" onclick="resetPiZigate()" title="{{Reset HW de la PiZigate}}"><i class="fas fa-sync"></i> {{Reset}}</a>
+        <a class="btn btn-warning" style="width:80px" onclick="resetPiZigate()" title="{{Reset HW de la PiZigate}}">{{Reset}}</a>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Effacement PDM}}</label>
     <div class="col-sm-5">
-        <a class="btn btn-danger" onclick="sendZigate('zgErasePdm', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">{{Effacer}}</a>
+        <a class="btn btn-danger" style="width:80px" onclick="sendZigate('zgErasePdm', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">{{Effacer}}</a>
     </div>
 </div>
 
@@ -179,13 +198,13 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">DEV MODE: {{Sauvegarde PDM}}</label>
         <div class="col-sm-5">
-            <a class="btn btn-default" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Sauver}}</a>
+            <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}">{{Sauver}}</a>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">DEV MODE: {{Restoration PDM}}</label>
         <div class="col-sm-5">
-            <a class="btn btn-danger" onclick="sendZigate('zgRestorePdm', '')" title="{{Restore le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Restorer}}</a>
+            <a class="btn btn-danger" style="width:80px" onclick="sendZigate('zgRestorePdm', '')" title="{{Restore le contenu PDM de la Zigate}}">{{Restorer}}</a>
         </div>
     </div>
 <?php } ?>

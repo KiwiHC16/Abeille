@@ -37,20 +37,20 @@
         echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" title="{{Code fabricant (Hexa 4 car; ex: 12AC)}}" placeholder="{{Code fabricant}}" />';
     }
 
-    // Create drop down list of IEEE addresses, excluding zigate by default
-    function addIeeeListButton($id, $withZigate = false) {
+    // Create drop down list of IEEE addresses, excluding gateway by default
+    function addIeeeListButton($id, $withGateway = false) {
         echo '<select id="'.$id.'" title="{{Equipements}}" style="width:140px; margin-left: 8px">';
         $eqLogics = eqLogic::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
             list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
-            if (($addr == '0000') && !$withZigate)
-                continue; // Excluding zigates
+            if (($addr == '0000') && !$withGateway)
+                continue; // Excluding gateways
 
             $ieee = $eqLogic->getConfiguration('IEEE', '');
             if ($ieee == '')
                 continue;
             $eqName = $eqLogic->getName();
-            echo '<option value="'.$ieee.'">'.$ieee.' / '.$eqName.'</option>';
+            echo '<option value="'.$ieee.'">'.$eqName.' / '.$ieee.'</option>';
         }
         echo '</select>';
     }

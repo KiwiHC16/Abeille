@@ -458,11 +458,11 @@ function getSelectedEqs(zgId) {
 // }
 
 /* Removes selected equipments for given zigate nb from Jeedom DB only. Zigate is untouched. */
-function removeSelectedEq(zgId) {
-    console.log("removeSelectedEq(zgId=" + zgId + ")");
+function removeSelectedEq(gtwId) {
+    console.log("removeSelectedEq(gtwId=" + gtwId + ")");
 
     /* Any selected ? */
-    var sel = getSelectedEqs(zgId);
+    var sel = getSelectedEqs(gtwId);
     console.log(sel);
     if (sel["nb"] == 0) {
         alert("{{Aucun équipement sélectionné !}}");
@@ -471,7 +471,54 @@ function removeSelectedEq(zgId) {
     var eqIdList = sel["ids"];
     console.log("eqIdList=" + eqIdList);
 
-    for (const eqId2 of eqIdList) removeEq(zgId, eqId2);
+    // TODO: Group messages and generate 1 remove action
+    // msg =
+    //     "{{Êtes-vous sûr de vouloir supprimer les équipements Abeille suivants}}<br><br>";
+    // eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
+    // for (const eqId2 of eqIdList) {
+    //     eqName = eqPerZigate[gtwId][eqId2]["name"];
+    //     msg += "- '<b>" + eqName + "</b>'<br>";
+
+    //     jeedom.eqLogic.getUseBeforeRemove({
+    //         id: eqId2,
+    //         error: function (error) {},
+    //         success: function (data) {
+    //             console.log("data=", data);
+    //             if (Object.keys(data).length == 0) {
+    //                 return;
+    //             }
+
+    //             msg += "  Utilisé par <br>";
+    //             var complement = null;
+    //             for (let i in data) {
+    //                 complement = "";
+    //                 if ("sourceName" in data[i]) {
+    //                     complement = " (" + data[i].sourceName + ")";
+    //                 }
+    //                 msg +=
+    //                     "- " +
+    //                     '<a href="' +
+    //                     data[i].url +
+    //                     '" target="_blank">' +
+    //                     data[i].type +
+    //                     "</a> : <b>" +
+    //                     data[i].name +
+    //                     "</b>" +
+    //                     complement +
+    //                     ' <sup><a href="' +
+    //                     data[i].url +
+    //                     '" target="_blank"><i class="fas fa-external-link-alt"></i></a></sup></br>';
+    //             }
+    //         },
+    //     });
+    // }
+
+    // bootbox.confirm(msg, function (result) {
+    //     if (result) {
+    //     }
+    // });
+
+    for (const eqId2 of eqIdList) removeEq(gtwId, eqId2);
 }
 
 /* saveEqLogic(): Called on equipement 'Save' button click */
@@ -1574,14 +1621,14 @@ function sendZigate(action, param) {
             break;
         case "zgErasePdm": // Erase PDM
             msg =
-                "{{Vous êtes sur le point de d'effacer la PDM de la zigate}} <b>" +
+                "{{Vous êtes sur le point d'effacer la PDM de la Zigate}} " +
                 zgId +
-                "</b>";
+                "<br><br>";
             msg +=
-                "{{<br>Tous les équipements connus de la zigate seront perdus et devront être réinclus.}}";
+                "{{Tous les équipements connus de la zigate seront perdus et devront être réinclus.}}<br>";
             msg +=
-                "{{<br>Si ils existent encore côté Jeedom ils passeront vite en time-out.}}";
-            msg += "{{<br><br>Etes vous sur de vouloir continuer ?}}";
+                "{{Si ils existent encore côté Jeedom ils passeront vite en time-out.}}<br><br>";
+            msg += "{{Etes vous sur de vouloir continuer ?}}";
             bootbox.confirm(msg, function (result) {
                 if (result)
                     sendToZigate("CmdAbeille" + zgId + "/0000/zgErasePdm", "");
@@ -1596,8 +1643,8 @@ function sendZigate(action, param) {
             file = "AbeillePdm-Abeille" + zgId + ".json";
             msg =
                 "{{Vous êtes sur le point d'écraser tout le contenu PDM de votre Zigate}}<br>";
-            msg += "{{à partir du fichier:}} '" + file + "'<br>";
-            msg += "<br>{{Etes vous sur de vouloir continuer ?}}";
+            msg += "{{à partir du fichier:}} '" + file + "'<br><br>";
+            msg += "{{Etes vous sur de vouloir continuer ?}}";
             bootbox.confirm(msg, function (result) {
                 if (result) {
                     // sendToZigate("CmdAbeille" + zgId + "/0000/zgErasePdm", "");

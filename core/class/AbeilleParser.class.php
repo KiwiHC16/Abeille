@@ -795,12 +795,12 @@
                 if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
                         parserLog('debug', '    Profalux v2: Requesting binding table size.');
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "");
                         return false; // Remote still not binded with curtain
                     }
                     if ($eq['bindingTableSize'] == 0) {
                         parserLog('debug', '    Profalux v2: Waiting remote to be binded.');
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "");
                         return false; // Remote still not binded with curtain
                     }
                     parserLog('debug', '    Profalux v2: Remote binded. Let\'s configure.');

@@ -2842,16 +2842,14 @@
                         return;
 
                     // Msg Type = 0x0530
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
                     // <source endpoint: uint8_t>
                     // <destination endpoint: uint8_t>
-
                     // <profile ID: uint16_t>
                     // <cluster ID: uint16_t>
-
                     // <security mode: uint8_t>
                     // <radius: uint8_t>
                     // <data length: uint8_t>
@@ -2874,20 +2872,20 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'getRoutingTable'
 
                 // Zigbee command: Get binding table (Mgmt_Bind_req)
-                // Mandatory params: 'address'
+                // Mandatory params: 'addr'
                 // Optional params: none
                 else if ($cmdName == 'getBindingTable') {
-                    $required = ['address'];
+                    $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
                     // Msg Type = 0x0530
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -2899,7 +2897,7 @@
                     // <radius: uint8_t>
 
                     $addrMode   = "02"; // Short addr mode
-                    $addr       = $Command['address'];
+                    $addr       = $Command['addr'];
                     $srcEp      = "00";
                     $dstEp      = "00";
                     $profId     = "0000";
@@ -2915,7 +2913,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 

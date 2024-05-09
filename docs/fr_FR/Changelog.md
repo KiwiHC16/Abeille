@@ -23,6 +23,7 @@
     -   Amélioration aspect visuel.
 
 -   Support multi-passerelles: Des tas de modifs internes.
+- Interne: Cmd: Mise-à-jour 'getBindingTable()' (suppression champ 'address')
 
 ## 240501-STABLE-1
 

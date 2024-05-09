@@ -1948,7 +1948,7 @@ function interrogate(request) {
         payload = "";
     } else if (request == "getBindingTable") {
         topic = "Cmd" + logicalId + "_getBindingTable";
-        payload = "address=" + eqAddr;
+        payload = "";
     } else if (request == "getNeighborTable") {
         topic = "Cmd" + logicalId + "_getNeighborTable";
         startIdx = document.getElementById("idStartIdx").value;

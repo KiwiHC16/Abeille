@@ -623,7 +623,9 @@
             exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
             /*  'pgrep -a socat' example:
                 16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
-            $processes = array_merge($running, $running2);
+            $cmd3 = "pgrep -a python3 | grep Abeille";
+            exec($cmd3, $running3); // Get all Abeille python3 daemons
+            $processes = array_merge($running, $running2, $running3);
 
             $daemons = [];
             $runBits = 0;
@@ -651,12 +653,12 @@
                 } else if (strstr($line, "socat") !== false) {
                     $pos = strpos($line, wifiLink);
                     // TO BE COMPLETED if required
-                    $zgId = substr($line, $pos + strlen(wifiLink), 1); // WARNING: Currently limited to 1 to 9. Zigate 10 missing
+                    $zgId = substr($line, $pos + strlen(wifiLink), 1);
                     $shortName = "socat".$zgId;
                 } else if (strstr($line, "AbeilleEzsp") !== false) {
-                    $net = $lineArr[3]; // Ex '/tmp/zigateWifiX'
-                    $zgId = substr($net, strlen(wifiLink));
-                    $shortName = "ezsp".$zgId;
+                    $pos = strpos($line, "--gtwid=");
+                    $gtwId = substr($line, $pos + 8, 1); // 'xxx --gtwid=Y' => Y
+                    $shortName = "ezsp".$gtwId;
                     // $runBits |= constant("daemonSocat".$zgId);
                 } else
                     $shortName = "Unknown";
@@ -969,6 +971,7 @@
             $daemonFile = (preg_match('/[a-zA-Z]*/', $daemonFile, $matches) != true ? "" : strtolower($matches[0]));
 
             switch ($daemonFile) {
+            // Zigate specific daemons
             case 'cmd':
             case 'abeillecmd':
                 $daemonPhp = "AbeilleCmd.php";
@@ -996,14 +999,15 @@
                 $daemonLog = " >>${logsDir}AbeilleSocat".$gtwId.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
+            // EmberZnet/EZSP daemon
             case 'ezsp':
             case 'abeilleezsp':
                 $daemon = "AbeilleEzsp.py";
-                // $daemonParams = "--gtwport=".$config['ab::gtwPort'.$gtwId].' '.$config['ab::gtwIpAddr'.$gtwId].' '.$logLevel;
-                $daemonParams = "--gtwport=".$config['ab::gtwPort'.$gtwId];
+                $daemonParams = "--gtwid=${gtwId} --gtwport=".$config['ab::gtwPort'.$gtwId];
                 $daemonLog = " >>${logsDir}AbeilleEzsp".$gtwId.'.log 2>&1';
                 $cmd = $nohup." python3 ".corePythonDir.$daemon." ".$daemonParams.$daemonLog;
                 break;
+            // General monitoring daemon
             case 'monitor':
             case 'abeillemonitor':
                 $log = " >>".log::getPathToLog("AbeilleMonitor.log")." 2>&1";

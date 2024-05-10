@@ -23,7 +23,7 @@ try:
     from collections.abc import Mapping
 except ImportError:
     from collections import Mapping
-# import serial
+import serial
 import os
 from os.path import join
 import socket

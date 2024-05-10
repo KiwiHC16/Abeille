@@ -15,6 +15,7 @@ from optparse import OptionParser
 from os.path import join
 import json
 import argparse
+import threading
 
 # Note: This daemon is launched from '/var/www/html/plugins/Abeille/core/ajax'
 # Adding "Abeille/core/python" to import path
@@ -22,12 +23,12 @@ abeilleCorePython = os.path.dirname(os.path.realpath(__file__))
 # print("acp=%s" % (abeilleCorePython))
 # print("path1: ", sys.path)
 sys.path.append(abeilleCorePython+"/jeedom")
-# print("path2: ", sys.path)
+print("path2: ", sys.path)
 
 # try:
 # 	from jeedom import *
 # except ImportError:
-# 	print("Error: importing module jeedom.jeedom")
+# 	print("Error: imserPortg module jeedom.jeedom")
 # 	sys.exit(1)
 
 def read_socket():
@@ -97,6 +98,7 @@ parser.add_argument("--cycle", help="Cycle to send event", type=str)
 parser.add_argument("--pid", help="Pid file", type=str)
 parser.add_argument("--socketport", help="Port for Zigbee server", type=str)
 parser.add_argument("--gtwport", help="Gateway port", type=str)
+parser.add_argument("--gtwid", help="Gateway ID", type=str)
 args = parser.parse_args()
 
 if args.device:
@@ -115,6 +117,8 @@ if args.socketport:
 	_socketport = args.socketport
 if args.gtwport:
 	_gtwport = args.gtwport
+if args.gtwid:
+	_gtwId = args.gtwid
 
 _socket_port = int(_socket_port)
 
@@ -131,6 +135,7 @@ logging.info('PID file: %s', _pidfile)
 logging.info('Apikey: %s', _apikey)
 logging.info('Device: %s', _device)
 logging.info('Port: %s', _gtwport)
+logging.info('Gtw ID: %s', _gtwId)
 
 signal.signal(signal.SIGINT, handler)
 signal.signal(signal.SIGTERM, handler)
@@ -143,3 +148,53 @@ signal.signal(signal.SIGTERM, handler)
 # 	logging.error('Fatal error: %s', e)
 # 	logging.info(traceback.format_exc())
 # 	shutdown()
+
+# https://pyserial.readthedocs.io/en/latest/pyserial_api.html
+import serial # pyserial
+# serPort = serial.Serial(port="/dev/ttyUSB0", baudrate=115200, timeout=1)
+serPort = serial.Serial(port="/dev/ttyUSB0", baudrate=115200, xonxoff=False)
+if (not serPort.isOpen()):
+	logging.info('Port PAS OUVERT')
+
+# reset = [0xC0, 0x38, 0xBC, 0x7E]
+# dataBytes = bytes(reset)
+# serPort.write(dataBytes)
+
+# version = [0x25, 0x00, 0x00, 0x00, 0x02, 0x1A, 0xAD, 0x7E]
+# dataBytes = bytes(version)
+# serPort.write(dataBytes)
+# serPort.write(dataBytes)
+# serPort.write(dataBytes)
+# serPort.write(dataBytes)
+
+from AbeilleEzspAnswers import *
+from AbeilleEzspCmds import *
+
+sendCmd(serPort, "RST")
+
+while True:
+	msg = bytes(0)
+	while True:
+		b = serPort.read(1)
+		msg += b
+		if (b[0] == 0x7e):
+			break
+
+	ashDecode(msg)
+	sendCmd(serPort, "RST")
+
+	# line = serPort.readline() # line is 'bytes' class
+	# l = len(line)
+	# print("len=%d" % l)
+	# if (l == 0):
+	# 	continue
+
+	# print("line=", line.hex())
+	# # print("type=", type(line))
+	# logging.info('line=%s' % line)
+	# # lineHex = join(format(x, '02x') for x in line)
+	# # logging.info('lineHex=%s' % lineHex)
+	# decodeFrame(line)
+	# sendCmd(serPort, "RST")
+
+logging.info('Exiting AbeilleEzsp')

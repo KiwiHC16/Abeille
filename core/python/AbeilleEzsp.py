@@ -176,9 +176,7 @@ from AbeilleEzspCmds import *
 # Host->NCP: version => Ask for desired protocol version (currently 13)
 
 sendCmd(serPort, "RST")
-
-rstAck = False
-while rstAck == False:
+while True: # Until RSTACK received
 	msg = bytes(0)
 	while True:
 		b = serPort.read(1)
@@ -187,8 +185,8 @@ while rstAck == False:
 			break
 
 	status, cmd = ashDecode(msg)
-	if (cmd['name'] == 'RSTACK'):
-		rstAck = True
+	if (cmd["name"] == 'RSTACK'):
+		break
 
 sendCmd(serPort, "version")
 msg = bytes(0)

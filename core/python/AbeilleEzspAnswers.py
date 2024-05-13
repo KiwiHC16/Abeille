@@ -11,7 +11,7 @@
 # 0x1A Cancel Byte: Terminates a frame in progress. A Cancel Byte causes all data received since the previous Flag Byte to be ignored. Note that as a special case, RST and RSTACK frames are preceded by Cancel Bytes to ignore any link startup noise.
 
 # Decode ASH message
-# Returns: status (True/False) + cmd
+# Returns: status (True/False) + cmd (dict)
 def ashDecode(msg):
 	print("ashDecode(%s)" % msg.hex())
 
@@ -45,7 +45,7 @@ def ashDecode(msg):
 				if (ctrlByte >> 5) == 0x4:
 					print("ctrlByte=0x%02X => ACK" % ctrlByte)
 				elif (ctrlByte >> 5) == 0x5:
-					print("ctrlByte=0x%02X => NACK" % ctrlByte)
+					print("ctrlByte=0x%02X => NAK" % ctrlByte)
 				elif ctrlByte == 0xC1:
 					print("ctrlByte=0x%02X => RSTACK" % ctrlByte)
 					dataFieldSize = 2
@@ -71,12 +71,21 @@ def ashDecode(msg):
 				if (crcSize == 0):
 					print("CRC=%s" % crc.hex())
 
-	if (ctrlByte == 0xC1):
-		return ashDecodeRSTACK(data)
+	status = True
+	if (ctrlByte >> 5) == 0x4:
+		cmd = {"name":"ACK", "ackNum":ctrlByte & 0x7}
+	elif (ctrlByte >> 5) == 0x5:
+		cmd = {"name":"NAK", "ackNum":ctrlByte & 0x7}
+	elif (ctrlByte == 0xC1):
+		status, cmd = ashDecodeRSTACK(data)
 	elif (ctrlByte == 0xC2):
-		return ashDecodeERROR(data)
+		status, cmd = ashDecodeERROR(data)
 	else:
-		return True, []
+		frmNum = (ctrlByte >> 4) & 0x7
+		ackNum = (ctrlByte >> 0) & 0x7
+		cmd = {"name":"DATA", "frmNum": frmNum, "ackNum":ackNum}
+	print("cmd=", cmd)
+	return status, cmd
 
 def ashDecodeRSTACK(data):
 	# data[0]: Supposed to be 0x2
@@ -90,8 +99,9 @@ def ashDecodeRSTACK(data):
 	# 	0x0B Reset: Software
 	# 	0x51 Error: Exceeded maximum ACK timeout count
 	# 	0x80 Chip-specific error reset code
-	cmd = []
-	print("RSTACK: ResetCode=0x%02X" % data[1])
+	resetCode = data[1]
+	cmd = {"name":"RSTACK", "resetCode":resetCode}
+	print("RSTACK: ResetCode=0x%02X" % resetCode)
 	return True, cmd
 
 def ashDecodeERROR(data):
@@ -106,6 +116,6 @@ def ashDecodeERROR(data):
 	# 	0x0B Reset: Software
 	# 	0x51 Error: Exceeded maximum ACK timeout count
 	# 	0x80 Chip-specific error reset code
-	cmd = []
+	cmd = {"name":"ERROR", "errCode":data[1]}
 	print("ERROR: ErrCode=0x%02X" % data[1])
 	return True, cmd

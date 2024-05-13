@@ -170,9 +170,15 @@ if (not serPort.isOpen()):
 from AbeilleEzspAnswers import *
 from AbeilleEzspCmds import *
 
+# Sequencing:
+# Host->NCP: RST frame
+# NCP->Host: RSTACK frame => CONNECTED state
+# Host->NCP: version => Ask for desired protocol version (currently 13)
+
 sendCmd(serPort, "RST")
 
-while True:
+rstAck = False
+while rstAck == False:
 	msg = bytes(0)
 	while True:
 		b = serPort.read(1)
@@ -180,21 +186,18 @@ while True:
 		if (b[0] == 0x7e):
 			break
 
-	ashDecode(msg)
-	sendCmd(serPort, "RST")
+	status, cmd = ashDecode(msg)
+	if (cmd['name'] == 'RSTACK'):
+		rstAck = True
 
-	# line = serPort.readline() # line is 'bytes' class
-	# l = len(line)
-	# print("len=%d" % l)
-	# if (l == 0):
-	# 	continue
+sendCmd(serPort, "version")
+msg = bytes(0)
+while True:
+	b = serPort.read(1)
+	msg += b
+	if (b[0] == 0x7e):
+		break
 
-	# print("line=", line.hex())
-	# # print("type=", type(line))
-	# logging.info('line=%s' % line)
-	# # lineHex = join(format(x, '02x') for x in line)
-	# # logging.info('lineHex=%s' % lineHex)
-	# decodeFrame(line)
-	# sendCmd(serPort, "RST")
+status, cmd = ashDecode(msg)
 
 logging.info('Exiting AbeilleEzsp')

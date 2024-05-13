@@ -10,6 +10,8 @@
 # 0x18 Substitute Byte: Replaces a byte received with a low-level communication error (e.g., framing error) from the UART. When a Substitute Byte is processed, the data between the previous and the next Flag Bytes is ignored.
 # 0x1A Cancel Byte: Terminates a frame in progress. A Cancel Byte causes all data received since the previous Flag Byte to be ignored. Note that as a special case, RST and RSTACK frames are preceded by Cancel Bytes to ignore any link startup noise.
 
+# Decode ASH message
+# Returns: status (True/False) + cmd
 def ashDecode(msg):
 	print("ashDecode(%s)" % msg.hex())
 
@@ -70,9 +72,11 @@ def ashDecode(msg):
 					print("CRC=%s" % crc.hex())
 
 	if (ctrlByte == 0xC1):
-		ashDecodeRSTACK(data)
+		return ashDecodeRSTACK(data)
 	elif (ctrlByte == 0xC2):
-		ashDecodeERROR(data)
+		return ashDecodeERROR(data)
+	else:
+		return True, []
 
 def ashDecodeRSTACK(data):
 	# data[0]: Supposed to be 0x2
@@ -86,7 +90,9 @@ def ashDecodeRSTACK(data):
 	# 	0x0B Reset: Software
 	# 	0x51 Error: Exceeded maximum ACK timeout count
 	# 	0x80 Chip-specific error reset code
+	cmd = []
 	print("RSTACK: ResetCode=0x%02X" % data[1])
+	return True, cmd
 
 def ashDecodeERROR(data):
 	# data[0]: Supposed to be 0x2
@@ -100,4 +106,6 @@ def ashDecodeERROR(data):
 	# 	0x0B Reset: Software
 	# 	0x51 Error: Exceeded maximum ACK timeout count
 	# 	0x80 Chip-specific error reset code
+	cmd = []
 	print("ERROR: ErrCode=0x%02X" % data[1])
+	return True, cmd

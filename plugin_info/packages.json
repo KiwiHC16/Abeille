@@ -2,6 +2,9 @@
     "apt": {
         "python3": {}
     },
+    "pip3": {
+        "pyserial": { "reinstall": true }
+    },
     "post-install": {
         "restart_apache": true
     }

@@ -175,27 +175,20 @@ from AbeilleEzspCmds import *
 # NCP->Host: RSTACK frame => CONNECTED state
 # Host->NCP: version => Ask for desired protocol version (currently 13)
 
+# Get IEEE addr: Read token 0x0002 (TOKEN_MFG_CUSTOM_EUI_64), size 8 bytes
+# Get board name: Read token 0x002A or 0x0020
+
 sendCmd(serPort, "RST")
 while True: # Until RSTACK received
-	msg = bytes(0)
-	while True:
-		b = serPort.read(1)
-		msg += b
-		if (b[0] == 0x7e):
-			break
-
-	status, cmd = ashDecode(msg)
+	status, cmd = ashRead(serPort)
 	if (cmd["name"] == 'RSTACK'):
 		break
 
 sendCmd(serPort, "version")
-msg = bytes(0)
-while True:
-	b = serPort.read(1)
-	msg += b
-	if (b[0] == 0x7e):
+while True: # Until transmitted
+	status, cmd = ashRead(serPort)
+	if (cmd["name"] != "NAK"):
 		break
-
-status, cmd = ashDecode(msg)
+	sendCmd(serPort, "version") # Retransmit
 
 logging.info('Exiting AbeilleEzsp')

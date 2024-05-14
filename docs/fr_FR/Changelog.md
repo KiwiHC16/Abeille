@@ -23,7 +23,8 @@
     -   Amélioration aspect visuel.
 
 -   Support multi-passerelles: Des tas de modifs internes.
-- Interne: Cmd: Mise-à-jour 'getBindingTable()' (suppression champ 'address')
+-   Interne: Cmd: Mise-à-jour 'getBindingTable()' (suppression champ 'address')
+-   Dépendance nécessaire: Ajout 'pyserial'.
 
 ## 240501-STABLE-1
 

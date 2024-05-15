@@ -99,10 +99,13 @@ def ashDecode(msg):
 		reTx = (ctrlByte >> 3) & 0x1
 		ackNum = (ctrlByte >> 0) & 0x7
 		cmd = {"name":"DATA", "frmNum": frmNum, "ackNum":ackNum, "reTx":reTx}
-	elif (ctrlByte >> 5) == 0x4:
-		cmd = {"name":"ACK", "ackNum":ctrlByte & 0x7}
-	elif (ctrlByte >> 5) == 0x5:
-		cmd = {"name":"NAK", "ackNum":ctrlByte & 0x7}
+	elif (ctrlByte >> 5) == 0x4: # ACK
+		ackNum = (ctrlByte >> 0) & 0x7
+		cmd = {"name":"ACK", "ackNum":ackNum}
+	elif (ctrlByte >> 5) == 0x5: # NAK
+		ackNum = (ctrlByte >> 0) & 0x7
+		nRdy = (ctrlByte >> 3) & 0x1
+		cmd = {"name":"NAK", "nRdy":nRdy, "ackNum":ackNum}
 	elif (ctrlByte == 0xC1):
 		status, cmd = ashDecodeRSTACK(data)
 	elif (ctrlByte == 0xC2):

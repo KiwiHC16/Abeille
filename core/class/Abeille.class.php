@@ -246,19 +246,19 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'cron15(): Interrogating devices silent for more than 15mins.');
         $config = AbeilleTools::getConfig();
         $i = 0;
-        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
-            $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+            $zigate = Abeille::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
             if (!is_object($zigate))
                 continue; // Does not exist on Jeedom side.
             if (!$zigate->getIsEnable())
                 continue; // Zigate disabled
-            if ($config['ab::gtwEnabled'.$zgId] != 'Y')
+            if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
                 continue; // Zigate disabled.
 
             $eqLogics = Abeille::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
-                if ($dest != 'Abeille'.$zgId)
+                if ($dest != 'Abeille'.$gtwId)
                     continue; // Not on current network
                 if (!$eqLogic->getIsEnable())
                     continue; // Equipment disabled
@@ -616,8 +616,8 @@ class Abeille extends eqLogic {
         message::removeAll('Abeille');
 
         // Remove any remaining temporary files
-        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
-            $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI-Abeille'.$zgId.'.json.lock';
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+            $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI-Abeille'.$gtwId.'.json.lock';
             if (file_exists($lockFile)) {
                 unlink($lockFile);
                 log::add('Abeille', 'debug', 'deamon_start_cleanup(): Removed '.$lockFile);
@@ -628,8 +628,8 @@ class Abeille extends eqLogic {
         // ab::zgIeeeAddrOk=-1: Zigate IEEE is NOT the expected one (port switch ?)
         //     "         = 0: IEEE check to be done
         //     "         = 1: Zigate on the right port
-        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
-            config::save("ab::zgIeeeAddrOk".$zgId, 0, 'Abeille');
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+            config::save("ab::zgIeeeAddrOk".$gtwId, 0, 'Abeille');
         }
 
         /* Check & update configuration DB if required. */
@@ -737,7 +737,7 @@ class Abeille extends eqLogic {
            This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
         // TODO Tcharp38: Note: This should not longer be required as the parser itself do the request on startup
         $expected = 0; // 1 bit per expected serial read daemon
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $zgId++) {
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
             if (($config['ab::gtwPort'.$gtwId] == 'none') or ($config['ab::gtwEnabled'.$gtwId] != 'Y'))
                 continue; // Undefined or disabled
 
@@ -1405,7 +1405,7 @@ class Abeille extends eqLogic {
     }
 
     public static function checkZgIeee($net, $ieee) {
-        $zgId = substr($net, 7);
+        $gtwId = substr($net, 7);
         $keyIeee = str_replace('Abeille', 'ab::zgIeeeAddr', $net); // AbeilleX => ab::zgIeeeAddrX
         $keyIeeeOk = str_replace('Abeille', 'ab::zgIeeeAddrOk', $net); // AbeilleX => ab::zgIeeeAddrOkX
         if (config::byKey($keyIeeeOk, 'Abeille', 0) == 0) {
@@ -1417,7 +1417,7 @@ class Abeille extends eqLogic {
                 config::save($keyIeeeOk, 1, 'Abeille');
             } else {
                 config::save($keyIeeeOk, -1, 'Abeille');
-                message::add("Abeille", "Attention: La zigate ".$zgId." semble nouvelle ou il y a eu échange de ports. Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
+                message::add("Abeille", "Attention: La zigate ".$gtwId." semble nouvelle ou il y a eu échange de ports. Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
             }
         }
     }
@@ -1953,23 +1953,23 @@ class Abeille extends eqLogic {
                 if ($savedVersion != $version)
                     log::add('Abeille', 'debug', '  FW saved version: '.$savedVersion);
                 if ($savedVersion == '---------') {
-                    $zgId = substr($net, 7);
+                    $gtwId = substr($net, 7);
                     // Zigate mode is now HYBRID in all cases. Abeille is no longer able to deal with older firmwares
                     if ($msg['major'] == 'AB01') { // Abeille's FW for Zigate v1
-                        // log::add('Abeille', 'debug', '  FW version AB01 => Configuring zigate '.$zgId.' in hybrid mode');
-                        // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
+                        // log::add('Abeille', 'debug', '  FW version AB01 => Configuring zigate '.$gtwId.' in hybrid mode');
+                        // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=hybrid");
                     } else {
                         if (hexdec($msg['minor']) >= 0x031D) {
-                            // log::add('Abeille', 'debug', '  FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
-                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
+                            // log::add('Abeille', 'debug', '  FW version >= 3.1D => Configuring zigate '.$gtwId.' in hybrid mode');
+                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=hybrid");
                         } else {
-                            // log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$zgId.' in normal mode');
-                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=normal");
+                            // log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$gtwId.' in normal mode');
+                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=normal");
                         }
                         // TODO: Different msg according to v1 or v2
                         if (hexdec($msg['minor']) < 0x0321) {
                             if (hexdec($msg['minor']) < 0x031E)
-                                message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec un trop vieux FW incompatible avec Abeille. Merci de faire une mise-à-jour en 3.21 ou supérieur.');
+                                message::add('Abeille', 'Attention: La zigate '.$gtwId.' fonctionne avec un trop vieux FW incompatible avec Abeille. Merci de faire une mise-à-jour en 3.21 ou supérieur.');
                             else
                                 message::add('Abeille', "Il est nécessaire de mettre à jour votre Zigate avec la version '3.23'.");
                         }
@@ -2336,7 +2336,7 @@ class Abeille extends eqLogic {
 
     // Beehive creation/update function. Called on daemon startup or new beehive creation.
     public static function createRuche($dest) {
-        $zgId = substr($dest, 7); // AbeilleX => X
+        $gtwId = substr($dest, 7); // AbeilleX => X
 
         $config = AbeilleTools::getConfig();
         $eqLogic = eqLogic::byLogicalId($dest."/0000", 'Abeille');
@@ -2371,7 +2371,7 @@ class Abeille extends eqLogic {
         // // Zigate is a bridge: adding 'ab::bridge' array
         // $bridge = array(
         //     'type' => 'zigate',
-        //     'model' => $config['ab::gtwSubType'.$zgId],
+        //     'model' => $config['ab::gtwSubType'.$gtwId],
         // );
         // $eqLogic->setConfiguration('ab::bridge', $bridge);
 

@@ -694,29 +694,29 @@ class Abeille extends eqLogic {
 
         /* Checking config */
         // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
-        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
-            if ($config['ab::gtwEnabled'.$zgId] != 'Y')
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+            if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
                 continue; // Disabled
 
             /* This zigate is enabled. Checking other parameters */
             $error = "";
-            $sp = $config['ab::gtwPort'.$zgId];
+            $sp = $config['ab::gtwPort'.$gtwId];
             if (($sp == 'none') || ($sp == "")) {
-                $error = "Port série de la zigate ".$zgId." INVALIDE";
+                $error = "Port série invalide pour la passerelle ${gtwId}";
             }
             if ($error == "") {
-                if ($config['ab::gtwSubType'.$zgId] == "WIFI") {
-                    $wifiAddr = $config['ab::gtwIpAddr'.$zgId];
+                if ($config['ab::gtwSubType'.$gtwId] == "WIFI") {
+                    $wifiAddr = $config['ab::gtwIpAddr'.$gtwId];
                     if (($wifiAddr == 'none') || ($wifiAddr == "")) {
-                        $error = "Adresse Wifi de la zigate ".$zgId." INVALIDE";
+                        $error = "Adresse Wifi invalide pour la Zigate ${gtwId}";
                     }
                 }
             }
             if ($error != "") {
-                $config['ab::gtwEnabled'.$zgId] = 'N';
-                config::save('ab::gtwEnabled'.$zgId, 'N', 'Abeille');
-                log::add('Abeille', 'error', $error." => Zigate désactivée.");
-            } else if (($config['ab::gtwSubType'.$zgId] == "PI") || ($config['ab::gtwSubType'.$zgId] == "PIv2")) {
+                $config['ab::gtwEnabled'.$gtwId] = 'N';
+                config::save('ab::gtwEnabled'.$gtwId, 'N', 'Abeille');
+                log::add('Abeille', 'error', $error." => Passerelle désactivée.");
+            } else if (($config['ab::gtwSubType'.$gtwId] == "PI") || ($config['ab::gtwSubType'.$gtwId] == "PIv2")) {
                 /* Configuring GPIO for PiZigate if one active found.
                     PiZigate reminder (using 'WiringPi'):
                     - port 0 = RESET
@@ -737,12 +737,13 @@ class Abeille extends eqLogic {
            This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
         // TODO Tcharp38: Note: This should not longer be required as the parser itself do the request on startup
         $expected = 0; // 1 bit per expected serial read daemon
-        for ($zgId = 1; $zgId <= $GLOBALS['maxGateways']; $zgId++) {
-            if (($config['ab::gtwPort'.$zgId] == 'none') or ($config['ab::gtwEnabled'.$zgId] != 'Y'))
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $zgId++) {
+            if (($config['ab::gtwPort'.$gtwId] == 'none') or ($config['ab::gtwEnabled'.$gtwId] != 'Y'))
                 continue; // Undefined or disabled
-            $expected |= constant("daemonSerialRead".$zgId);
-            if ($config['ab::gtwSubType'.$zgId] == 'WIFI')
-                $expected |= constant("daemonSocat".$zgId);
+
+            $expected |= constant("daemonSerialRead".$gtwId);
+            if ($config['ab::gtwSubType'.$gtwId] == 'WIFI')
+                $expected |= constant("daemonSocat".$gtwId);
         }
         $timeout = 10;
         for ($t = 0; $t < $timeout; $t++) {

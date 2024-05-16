@@ -540,16 +540,16 @@ class Abeille extends eqLogic {
             }
         }
 
-        // Si Inclusion status est à 1 on demande un Refresh de l information
-        // Je regarde si j ai deux zigate en inclusion et si oui je genere une alarme.
-        $count = array();
-        for ($i = 1; $i <= $GLOBALS['maxGateways']; $i++) {
-            if (self::checkInclusionStatus("Abeille".$i) == 1) {
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$i."/0000/permitJoin", "Status");
-                $count[] = $i;
+        // Checking how many gateways are in pairing mode
+        $count = 0;
+        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+            if (self::checkInclusionStatus("Abeille".$gtwId) == 1) {
+                Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "CmdAbeille".$gtwId."/0000/permitJoin", "Status");
+                $count++;
             }
         }
-        if (count($count) > 1) message::add("Abeille", "Danger vous avez plusieurs Zigate en mode inclusion: ".json_encode($count).". L equipement peut se joindre a l un ou l autre resau zigbee.", "Vérifier sur quel reseau se joint l equipement.");
+        if ($count > 1)
+            message::add("Abeille", "Attention !! Vous avez plusieurs (${count}) passerelles en mode inclusion.");
 
         // log::add( 'Abeille', 'debug', 'cron(): Fin ------------------------------------------------------------------------------------------------------------------------' );
     } // End cron()
@@ -656,6 +656,7 @@ class Abeille extends eqLogic {
         // $GLOBALS['toto'] = 12;
         // $pid = getmypid();
         // log::add('Abeille', 'debug', "deamon_start() PID=${pid} TOTO=".json_encode($GLOBALS['toto']));
+        log::add('Abeille', 'debug', '>>> deamon_start()');
 
         $smId = @shmop_open(12, "a", 0, 0);
         if ($smId !== false) {
@@ -998,51 +999,6 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'deamon(): Main daemon stopped');
     }
 
-    // public static function checkParameters() {
-    //     // return 1 si Ok, 0 si erreur
-    //     $config = Abeille::getParameters();
-
-    //     if ( !isset($GLOBALS['maxGateways']) ) { return 0; }
-    //     if ( $GLOBALS['maxGateways'] < 1 ) { return 0; }
-    //     if ( $GLOBALS['maxGateways'] > 9 ) { return 0; }
-
-    //     // Testons la validité de la configuration
-    //     $atLeastOneZigateActiveWithOnePortDefined = 0;
-    //     for ( $i=1; $i<=$GLOBALS['maxGateways']; $i++ ) {
-    //         if ($return['ab::gtwEnabled'.$i ]=='Y') {
-    //             if ($return['ab::gtwPort'.$i]!='none') {
-    //                 $atLeastOneZigateActiveWithOnePortDefined++;
-    //             }
-    //         }
-    //     }
-    //     if ( $atLeastOneZigateActiveWithOnePortDefined <= 0 ) {
-    //         log::add('Abeille','debug','checkParameters: aucun serialPort n est pas défini/actif.');
-    //         message::add('Abeille','Warning: Aucun port série n est pas défini/Actif dans la configuration.' );
-    //         return 0;
-    //     }
-
-    //     // Vérifions l existence des ports
-    //     for ( $i=1; $i<=$GLOBALS['maxGateways']; $i++ ) {
-    //         if ($return['ab::gtwEnabled'.$i ]=='Y') {
-    //             if ($return['ab::gtwPort'.$i] != 'none') {
-    //                 if (@!file_exists($return['ab::gtwPort'.$i])) {
-    //                     log::add('Abeille','debug','checkParameters: Le port série n existe pas: '.$return['ab::gtwPort'.$i]);
-    //                     message::add('Abeille','Warning: Le port série n existe pas: '.$return['ab::gtwPort'.$i],'' );
-    //                     $return['parametersCheck']="nok";
-    //                     $return['parametersCheck_message'] = __('Le port série '.$return['ab::gtwPort'.$i].' n existe pas (zigate déconnectée ?)', __FILE__);
-    //                     return 0;
-    //                 } else {
-    //                     if (substr(decoct(fileperms($return['ab::gtwPort'.$i])), -4) != "0777") {
-    //                         exec(system::getCmdSudo().'chmod 777 '.$return['ab::gtwPort'.$i].' > /dev/null 2>&1');
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return 1;
-    // }
-
     // Jeedom optional function: called before saving (create or update) an equipment
     public function preSave() {
         log::add('Abeille', 'debug', 'preSave()');
@@ -1063,8 +1019,7 @@ class Abeille extends eqLogic {
     }
 
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
-    public static function checkInclusionStatus($dest)
-    {
+    public static function checkInclusionStatus($dest) {
         // Return: Inclusion status or -1 if error
         $ruche = Abeille::byLogicalId($dest.'/0000', 'Abeille');
 

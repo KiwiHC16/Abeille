@@ -1472,6 +1472,7 @@ class Abeille extends eqLogic {
             log::add('Abeille', 'debug', "msgFromParser(): New device: ".$net.'/'.$addr.", ieee=".$ieee);
 
             Abeille::newJeedomDevice($net, $addr, $ieee);
+
             return;
         } // End 'newDevice'
 
@@ -2483,6 +2484,7 @@ class Abeille extends eqLogic {
         $eqLogic->setEqType_name('Abeille');
         $eqLogic->setName("newDevice-".$addr); // Temp name to have it non empty
         $eqLogic->save(); // Save to force Jeedom to assign an ID
+
         $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
         $eqLogic->setName($eqName);
         $eqLogic->setLogicalId($logicalId);
@@ -2492,6 +2494,14 @@ class Abeille extends eqLogic {
         $eqLogic->setIsVisible(0); // Hidden by default
         $eqLogic->setIsEnable(1);
         $eqLogic->save();
+
+        // Inform cmd that new device has been created
+        $msg = array(
+            'type' => "eqUpdated",
+            'id' => $eqLogic->getId()
+        );
+        Abeille::msgToCmd2($msg);
+
     } // End newJeedomDevice()
 
     /* Create or update Jeedom device based on its JSON model.

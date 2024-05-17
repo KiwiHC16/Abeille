@@ -543,13 +543,15 @@ class Abeille extends eqLogic {
         // Checking how many gateways are in pairing mode
         $count = 0;
         for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
-            if (self::checkInclusionStatus("Abeille".$gtwId) == 1) {
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "CmdAbeille".$gtwId."/0000/permitJoin", "Status");
+            $incStatus = self::checkInclusionStatus("Abeille${gtwId}");
+            log::add('Abeille', 'debug', "cron(): Abeille${gtwId} => inclusion status = ${incStatus}");
+            if ($incStatus === 1) {
+                Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "CmdAbeille${gtwId}/0000/permitJoin", "Status");
                 $count++;
             }
         }
         if ($count > 1)
-            message::add("Abeille", "Attention !! Vous avez plusieurs (${count}) passerelles en mode inclusion.");
+            message::add("Abeille", "Attention !! Vous avez plusieurs passerelles en mode inclusion.");
 
         // log::add( 'Abeille', 'debug', 'cron(): Fin ------------------------------------------------------------------------------------------------------------------------' );
     } // End cron()
@@ -1019,15 +1021,14 @@ class Abeille extends eqLogic {
     }
 
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
-    public static function checkInclusionStatus($dest) {
-        // Return: Inclusion status or -1 if error
-        $ruche = Abeille::byLogicalId($dest.'/0000', 'Abeille');
-
-        if ($ruche) {
-            // echo "Join status collection\n";
-            $cmdJoinStatus = $ruche->getCmd('Info', 'permitJoin-Status');
-            if ($cmdJoinStatus) {
-                return $cmdJoinStatus->execCmd();
+    public static function checkInclusionStatus($net) {
+        $eqLogic = eqLogic::byLogicalId($net.'/0000', 'Abeille');
+        if (is_object($eqLogic)) {
+            $cmdJoinStatus = $eqLogic->getCmd('info', 'permitJoin-Status');
+            if (is_object($cmdJoinStatus)) {
+                $incStatus = $cmdJoinStatus->execCmd();
+                if (($incStatus === 0) || ($incStatus === 1))
+                    return $incStatus;
             }
         }
 
@@ -1794,7 +1795,7 @@ class Abeille extends eqLogic {
             if (isset($eqLogic)) {
                 $eqLogic->setIsEnable(0);
                 /* Display message only if NOT in include mode */
-                if (self::checkInclusionStatus($net) != 1)
+                if (self::checkInclusionStatus($net) !== 1)
                     message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
                 $eqLogic->save();
                 $eqLogic->refresh();

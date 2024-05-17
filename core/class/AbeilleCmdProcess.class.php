@@ -338,123 +338,6 @@
             }
         }
 
-        // Tcharp38: Seems no longer used
-        // J'ai un probleme avec la command 0110, je ne parviens pas à l utiliser. Prendre setParam2 en atttendant.
-        // function setParam($dest,$address,$clusterId,$attributeId,$dstEp,$Param) {
-        //     /*
-        //         <address mode: uint8_t>
-        //         <target short address: uint16_t>
-        //         <source endpoint: uint8_t>
-        //         <destination endpoint: uint8_t>
-        //         <Cluster id: uint16_t>
-        //         <direction: uint8_t>
-        //         <manufacturer specific: uint8_t>
-        //         <manufacturer id: uint16_t>
-        //         <number of attributes: uint8_t>
-        //         <attributes list: data list of uint16_t  each>
-        //         Direction:
-        //         0 - from server to client
-        //         1 - from client to server
-        //         */
-
-        //     $priority               = $Command['priority'];
-
-        //     $cmd                    = "0110";
-        //     $length                  = "000E";
-
-        //     $addrMode            = "02";
-        //     // $address             = $Command['address'];
-        //     $srcEp         = "01";
-        //     // $dstEp = "01";
-        //     //$ClusterId            = "0006";
-        //     $Direction              = "01";
-        //     $manufacturerSpecific   = "00";
-        //     $manufacturerId         = "0000";
-        //     $numberOfAttributes     = "01";
-        //     $attributesList         = $attributeId;
-        //     $attributesList         = "Salon1         ";
-
-        //     $data = $addrMode.$address.$srcEp.$dstEp.$clusterId.$Direction.$manufacturerSpecific.$manufacturerId.$numberOfAttributes.$attributesList;
-
-        //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-        //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-        // }
-
-        // Tcharp38: No longer used
-        // /**
-        //  * setParam2: send the commande to zigate to send a write attribute on zigbee network
-        //  *
-        //  * @param dest
-        //  * @param address
-        //  * @param clusterId
-        //  * @param attributeId
-        //  * @param destinationEndPoint
-        //  * @param Param
-        //  * @param dataType
-        //  *
-        //  * @return none
-        //  */
-        // function setParam2( $dest, $address, $clusterId, $attributeId, $dstEp, $Param, $dataType) {
-        //     cmdLog('debug', "  command setParam2", $this->debug['processCmd']);
-
-        //     $priority = $Command['priority'];
-
-        //     $cmd = "0530";
-
-        //     // <address mode: uint8_t>              -> 1
-        //     // <target short address: uint16_t>     -> 2
-        //     // <source endpoint: uint8_t>           -> 1
-        //     // <destination endpoint: uint8_t>      -> 1
-
-        //     // <profile ID: uint16_t>               -> 2
-        //     // <cluster ID: uint16_t>               -> 2
-
-        //     // <security mode: uint8_t>             -> 1
-        //     // <radius: uint8_t>                    -> 1
-        //     // <data length: uint8_t>               -> 1  (22 -> 0x16)
-        //     // <data: auint8_t>
-        //     // APS Part <= data
-        //     // dummy 00 to align mesages                                            -> 1
-        //     // <target extended address: uint64_t>                                  -> 8
-        //     // <target endpoint: uint8_t>                                           -> 1
-        //     // <cluster ID: uint16_t>                                               -> 2
-        //     // <destination address mode: uint8_t>                                  -> 1
-        //     // <destination address:uint16_t or uint64_t>                           -> 8
-        //     // <destination endpoint (value ignored for group address): uint8_t>    -> 1
-        //     // => 34 -> 0x22
-
-        //     $addrMode            = "02";
-        //     $addr     = $address;
-        //     $srcEp         = "01";
-        //     $dstEp    = $dstEp;
-        //     $profId              = "0104";
-        //     $clustId              = $clusterId;
-        //     $secMode           = "02"; // ???
-        //     $radius                 = "30";
-        //     // $dataLength <- calculated later
-
-        //     $frameControl               = "00";
-        //     $transqactionSequenceNumber = "1A"; // to be reviewed
-        //     $commandWriteAttribute      = "02";
-
-        //     $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
-
-        //     $lengthAttribut = sprintf("%02s",dechex(strlen( $Param ))); // "0F";
-        //     $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
-
-        //     $data2 = $frameControl.$transqactionSequenceNumber.$commandWriteAttribute.$attributeId.$dataType.$lengthAttribut.$attributValue;
-
-        //     $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-
-        //     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
-
-        //     $data = $data1.$data2;
-
-        //     // $length = sprintf("%04s", dechex(strlen($data) / 2));
-        //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
-        //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
-        // }
-
         /**
          * setParam3: send the commande to zigate to send a write attribute on zigbee network with a proprio field
          *
@@ -1048,22 +931,22 @@
                 return;
             }
 
-            //----------------------------------------------------------------------
-            // https://github.com/fairecasoimeme/ZiGate/issues/145
-            // PHY_PIB_TX_POWER_DEF (default - 0x80)
-            // PHY_PIB_TX_POWER_MIN (minimum - 0)
-            // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
-            if (isset($Command['TxPower'])  ) {
-                cmdLog('debug', "  TxPower", $this->debug['processCmd']);
-                $cmd = "0806";
-                $data = $Command['TxPower'];
-                if ($data < 10 ) $data = '0'.$data;
 
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
+            // // https://github.com/fairecasoimeme/ZiGate/issues/145
+            // // PHY_PIB_TX_POWER_DEF (default - 0x80)
+            // // PHY_PIB_TX_POWER_MIN (minimum - 0)
+            // // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
+            // if (isset($Command['TxPower'])  ) { // Obsolete !! Replaced by zgSetTxPower
+            //     cmdLog('debug', "  TxPower", $this->debug['processCmd']);
+            //     $cmd = "0806";
+            //     $data = $Command['TxPower'];
+            //     if ($data < 10 ) $data = '0'.$data;
+
+            //     // $length = sprintf("%04s", dechex(strlen($data) / 2));
+            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
+            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
+            //     return;
+            // }
 
             if (isset($Command['setExtendedPANID'])) {
                 cmdLog('debug', "  setExtendedPANID", $this->debug['processCmd']);
@@ -2019,54 +1902,6 @@
                 return;
             }
 
-            // ReadAttributeRequest ------------------------------------------------------------------------------------
-            // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-            // if (isset($Command['ReadAttributeRequest'])) {
-            //     if (isset($Command['address']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) && isset($Command['Proprio']))
-            //         $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['EP'], $Command['clusterId'], $Command['attributeId'], $Command['Proprio'] );
-            //     else if ((isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']))
-            //         $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['EP'], $Command['clusterId'], $Command['attributeId']);
-            //     return;
-            // }
-
-            // if (isset($Command['readAttributeRequest'])) {
-            //     $this->readAttribute(PRIO_NORM, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId']);
-            //     return;
-            // }
-
-            // ReadAttributeRequestMulti ------------------------------------------------------------------------------------
-            // if ((isset($Command['ReadAttributeRequestMulti'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']))
-            // {
-            //     $this->getParamMulti( $Command );
-            //     return;
-            // }
-
-            // ReadAttributeRequest ------------------------------------------------------------------------------------
-            // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-            // if ((isset($Command['ReadAttributeRequestHue'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']))
-            // {
-            //     // echo "ReadAttributeRequest pour address: ".$Command['address']."\n";
-            //     // if ($Command['ReadAttributeRequest']==1 )
-            //     //{
-            //     // $this->getParamHue( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
-            //     $this->readAttribute($priority, $dest, $Command['address'], "0B", $Command['clusterId'], $Command['attributeId']);
-            //     //}
-            //     return;
-            // }
-
-            // ReadAttributeRequest ------------------------------------------------------------------------------------
-            // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-            // if ((isset($Command['ReadAttributeRequestOSRAM'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']))
-            // {
-            //     // echo "ReadAttributeRequest pour address: ".$Command['address']."\n";
-            //     // if ($Command['ReadAttributeRequest']==1 )
-            //     //{
-            //     // getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
-            //     $this->readAttribute($priority, $dest, $Command['address'], "03", $Command['clusterId'], $Command['attributeId']);
-            //     //}
-            //     return;
-            // }
-
             // Tcharp38 note: This is badly named. It is not a write attribute but
             // most probably a cluster 0502 cmd 00
             // OBSOLETE => Use 'cmd-0502' with 'cmd=00' instead
@@ -2263,99 +2098,6 @@
                 return;
             }
 
-            // // ON / OFF with no effects
-            // if (isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
-            // {
-            //     cmdLog('debug', '  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
-            //     // <address mode: uint8_t>
-            //     // <target short address: uint16_t>
-            //     // <source endpoint: uint8_t>
-            //     // <destination endpoint: uint8_t>
-            //     // <command ID: uint8_t>
-            //         // Command Id
-            //         // 0 - Off
-            //         // 1 - On
-            //         // 2 - Toggle
-
-            //     $zgCmd      = "0092";
-
-            //     $addrMode   = $Command['addressMode']; // 01: Group, 02: device
-            //     $address    = $Command['address'];
-            //     $srcEp      = "01";
-            //     $dstEp      = $Command['destinationEndpoint'];
-            //     $action     = $Command['action'];
-
-            //     $data = $addrMode.$address.$srcEp.$dstEp.$action;
-            //     $length = sprintf("%04X", strlen($data) / 2);
-
-            //     $priority = $Command['priority'];
-
-            //     $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $address, $addrMode);
-
-            //     // if ($addrMode == "02" ) {
-            //     //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-            //     //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
-            //     // }
-            //     return;
-            // }
-
-            // // ON / OFF with no effects RAW with no APS ACK
-            // // Not used as some eq have a strange behavior if the APS ACK is not set (e.g. Xiaomi Plug / should probably test again / bug from the eq ?)
-            // if (isset($Command['onoffraw']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
-            // {
-            //     cmdLog('debug', "  command setParam4", $this->debug['processCmd']);
-
-            //     $dest       = $Command['dest'];
-            //     $priority   = $Command['priority'];
-
-            //     $cmd = "0530";
-
-            //     // <address mode: uint8_t>              -> 1
-            //     // <target short address: uint16_t>     -> 2
-            //     // <source endpoint: uint8_t>           -> 1
-            //     // <destination endpoint: uint8_t>      -> 1
-
-            //     // <profile ID: uint16_t>               -> 2
-            //     // <cluster ID: uint16_t>               -> 2
-
-            //     // <security mode: uint8_t>             -> 1
-            //     // <radius: uint8_t>                    -> 1
-            //     // <data length: uint8_t>               -> 1  (22 -> 0x16)
-
-            //     // <data: auint8_t> APS Part <= data
-
-            //     $addrMode        = $Command['addressMode'];
-            //     $addr = $Command['address'];
-            //     $srcEp     = "01";
-            //     if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
-
-            //     $profId          = "0104";
-            //     $clustId          = "0006"; // $Command['clusterId'];
-
-            //     $secMode       = "02"; // ???
-            //     $radius             = "30";
-            //     // $dataLength <- calculated later
-
-            //     $frameControl               = "11"; // Ici dans cette commande c est ZCL qu'on control
-            //     $transqactionSequenceNumber = "1A"; // to be reviewed
-            //     $commandWriteAttribute      = $Command['action'];
-
-            //     $data2 = $frameControl.$transqactionSequenceNumber.$commandWriteAttribute;
-            //     $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-            //     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
-            //     $data = $data1.$data2;
-
-            //     $length = sprintf("%04s", dechex(strlen($data) / 2));
-
-            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
-            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
-
-            //     if ($addrMode == "02" ) {
-            //         $this->publishMosquitto( $abQueues["xToCmd"]['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$dstEp."&clusterId=0006&attributeId=0000" );
-            //     }
-            //     return;
-            // }
-
             // On / Off Timed Send
             if (isset($Command['OnOffTimed']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) && isset($Command['onTime']) && isset($Command['offWaitTime']))
             {
@@ -2547,8 +2289,6 @@
 
                 $data = $address.$IEEE ;
 
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                 return;
             }
@@ -2580,7 +2320,6 @@
                     } else // Normal
                         $modeVal = "00";
                     cmdLog('debug', "  Setting mode ".$mode."/".$modeVal);
-                    // $this->addCmdToQueue($priority, $dest, "0002", "0001", $modeVal);
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0002", $modeVal);
                     return;
                 }
@@ -2696,15 +2435,12 @@
                     WARNING: PHP time() is based on 1st of jan 1970 and NOT 2000 !! */
                     $cmd = "0016";
                     $data = sprintf("%08s", dechex($Command['time']));
-                    // $length = sprintf("%04s", dechex(strlen($data) / 2));
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                     return;
                 }
 
                 // Zigate specific command
                 else if ($cmdName == 'zgGetTimeServer') {
-                    // $data = "";
-                    // $length = sprintf("%04s", dechex(strlen($data) / 2));
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0017");
                     return;
                 }
@@ -2716,6 +2452,21 @@
                 // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
                 else if ($cmdName == 'zgGetTxPower') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0807");
+                    return;
+                }
+
+                // Zigate specific command: Set TX power
+                // Mandatory params: 'txPower' (2B hexa string)
+                else if ($cmdName == 'zgSetTxPower') {
+                    $required = ['txPower'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0806";
+                    $data = $Command['txPower'];
+
+                    cmdLog('debug', "  zgSetTxPower: txPower=${data}");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data);
                     return;
                 }
 
@@ -2810,13 +2561,13 @@
                  */
 
                 // Zigbee command: Mgmt_Lqi_req
+                // Mandatory: Expecting 2 parameters: 'addr' & 'startIndex'
                 else if ($cmdName == 'getNeighborTable') {
-                    /* Expecting 2 parameters: 'addr' & 'startIndex' */
                     $required = ['addr', 'startIndex'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "004E";
+                    $zgCmd = "004E";
 
                     // <target short address: uint16_t>
                     // <Start Index: uint8_t>
@@ -2827,7 +2578,7 @@
                     $data = $addr.$startIndex ;
 
                     // Note: 004E seems to be ACKed command.
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, "02");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, "02");
                     return;
                 }
 
@@ -2836,7 +2587,6 @@
                 // Mandatory params: 'addr'
                 // Optional params: 'startIdx' (hex byte, default='00')
                 else if ($cmdName == 'getRoutingTable') {
-                    /* Checking that mandatory infos are there */
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;

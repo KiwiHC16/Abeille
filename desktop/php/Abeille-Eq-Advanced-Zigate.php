@@ -130,8 +130,13 @@
     </div>
     <div class="col-sm-5" advInfo="ZiGate-Power">
         <input type="text" value="" readonly>
-        <!-- <a class="btn btn-default" onclick="sendZigate('getTXPower', '')">{{Lire}}</a> -->
         <?php addZgButton("{{Lire}}", "btn-default", 'getTXPower', ''); ?>
+        <select id="idZgTxPower" style="width:80px; margin-left:4px" title="{{Puissance TX}}">
+            <option value=00>{{Min}}</option>
+            <option value=80 selected>{{Défaut}}</option>
+            <option value=BF>{{Max}}</option>
+        </select>
+        <?php addZgButton("{{Appliquer}}", "btn-default", 'setTXPower', ''); ?>
     </div>
 </div>
 

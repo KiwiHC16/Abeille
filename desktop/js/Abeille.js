@@ -1595,8 +1595,9 @@ function sendZigate(action, param) {
             payload = "";
             break;
         case "setTXPower":
-            topic = "CmdAbeille" + zgId + "/0000/TxPower";
-            payload = "ff"; // TODO
+            topic = "CmdAbeille" + zgId + "/0000/zgSetTxPower";
+            var power = $("#idZgTxPower").val();
+            payload = "txPower=" + power; // TODO
             break;
         case "getTime":
             topic = "CmdAbeille" + zgId + "/0000/zgGetTimeServer";

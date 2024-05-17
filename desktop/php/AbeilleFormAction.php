@@ -149,38 +149,6 @@
                 }
                 break;
         }
-
-        // // TX Power
-        // foreach ( $zigateIds as $zigateId ) {
-        //     if ( $_POST['submitButton'] == 'TxPower Z'.$zigateId ) {
-        //         echo "TxPower request processing";
-        //         sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/TxPower', $_POST['TxPowerValue'] );
-        //     }
-        // }
-
-        // // Set Extended PANID
-        // foreach ( $zigateIds as $zigateId ) {
-        //     if ( $_POST['submitButton'] == 'Set Extended PANID Z'.$zigateId ) {
-        //         echo "Set Extended PANID request processing";
-        //         sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setExtendedPANID', $_POST['extendedPanId'] );
-        //     }
-        // }
-
-        // // Set Certification CE
-        // foreach ( $zigateIds as $zigateId ) {
-        //     if ( $_POST['submitButton'] == 'Set Certification CE Z'.$zigateId ) {
-        //         echo "Set Certification CE";
-        //         sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setCertificationCE', "");
-        //     }
-        // }
-
-        // // Set Certification FCC
-        // foreach ( $zigateIds as $zigateId ) {
-        //     if ( $_POST['submitButton'] == 'Set Certification FCC Z'.$zigateId ) {
-        //         echo "Set Certification FCC";
-        //         sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setCertificationFCC', "");
-        //     }
-        // }
     } catch (Exception $e) {
         echo '<br>error: '.$e->getMessage();
     }

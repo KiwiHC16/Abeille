@@ -94,32 +94,6 @@
         "invertBinary": "0",
         "template": ""
     },
-    "Set inclusion mode": {
-        "name": "Set inclusion mode",
-        "comment": "Readded this function for case #2476",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "zgSetPermitMode",
-            "request": "mode=start"
-        }
-    },
-    "Get Inclusion Status": {
-        "name": "Get Inclusion Status",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "permitJoin",
-            "request": "Status"
-        },
-        "display": {
-            "forceReturnLineAfter": "1"
-        }
-    },
     "permitJoin-Status": {
         "name": "Inclusion Status",
         "isHistorized": "0",
@@ -277,52 +251,9 @@
         "invertBinary": "0",
         "template": ""
     },
-    "Network Status Request": {
-        "name": "Network Status Request (Not implemented)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "networkStatus",
-            "request": "Request"
-        }
-    },
     "joinLeave-IEEE": {
         "name": "joinLeave",
         "isHistorized": "1",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Factory New Reset": {
-        "name": "Factory New Reset",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "FactoryNewReset",
-            "request": "FactoryNewReset"
-        },
-        "display": {
-            "forceReturnLineAfter": "1"
-        }
-    },
-    "Network-Bind": {
-        "name": "Last Bind",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Network-Report": {
-        "name": "Last Report",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "info",
         "subType": "string",
@@ -342,52 +273,8 @@
             "visibilityCategory": "Network"
         }
     },
-    "Set Power 0": {
-        "name": "Set Power (0dBm)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "TxPower",
-            "request": "00"
-        }
-    },
-    "Set Power 9": {
-        "name": "Set Power (-9dBm)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "TxPower",
-            "request": "34"
-        }
-    },
-    "Set Power 20": {
-        "name": "Set Power (-20dBm)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "TxPower",
-            "request": "28"
-        }
-    },
-    "Set Power 32": {
-        "name": "Set Power (-32dBm)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "TxPower",
-            "request": "20"
-        }
-    },
     "ZiGate-Power": {
-        "name": "ZiGate-Power",
+        "name": "TX power",
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "info",

@@ -184,11 +184,12 @@ while True: # Until RSTACK received
 	if (cmd["name"] == 'RSTACK'):
 		break
 
-sendCmd(serPort, "version")
+ezspSend(serPort, "nop")
+# sendCmd(serPort, "version")
 while True: # Until transmitted
 	status, cmd = ashRead(serPort)
-	if (cmd["name"] != "NAK"):
-		break
-	sendCmd(serPort, "version") # Retransmit
+# 	if (cmd["name"] != "NAK"):
+# 		break
+# 	sendCmd(serPort, "version") # Retransmit
 
 logging.info('Exiting AbeilleEzsp')

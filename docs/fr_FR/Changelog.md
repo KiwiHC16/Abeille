@@ -27,7 +27,7 @@
 -   Dépendances nécessaires: Ajout 'pyserial'.
 -   Interne: Cmd: 'TxPower' => 'zgSetTxPower'
 -   Zigate/avancé: Ajout controle puissance TX.
--   Interne: Correction: Cmd averti lors de la création d'un nouvel équipement.
+-   Interne: Corrections: Cmd averti lors de toute mise-à-jour d'un équipement.
 
 ## 240501-STABLE-1
 

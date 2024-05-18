@@ -1518,13 +1518,14 @@ class Abeille extends eqLogic {
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Addr updated from ${addr2} to ${addr}");
                     $eqLogic->setIsEnable(1);
                     $eqChanged = true;
-                    $informCmd = true;
+                    // $informCmd = true;
                     break;
                 }
             }
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
             $zigbeeChanged = false;
             foreach ($msg['updates'] as $updKey => $updVal) {
+                $jsonUpdVal = json_encode($updVal, JSON_UNESCAPED_SLASHES);
                 if ($updKey == 'ieee')
                     continue; // Already treated
                 else if ($updKey == 'macCapa') {
@@ -1546,13 +1547,13 @@ class Abeille extends eqLogic {
                             unset($zigbee['endPoints'][$epId2]);
                     }
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to ".json_encode($updVal));
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to ${jsonUpdVal}");
                 } else if ($updKey == 'servClusters') {
                     $zigbee['endPoints'][$ep]['servClusters'] = $updVal;
                     if (strpos($updVal, '0004') !== false)
                         $zigbee['groups'][$ep] = '';
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]['.$ep.']['servClusters']' updated to ".json_encode($updVal));
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][servClusters]' updated to ${jsonUpdVal}");
                 } else if ($updKey == 'manufId') {
                     if (!isset($zigbee['endPoints'][$ep]['manufId'])) {
                         $zigbee['endPoints'][$ep]['manufId'] = $updVal;
@@ -1589,9 +1590,9 @@ class Abeille extends eqLogic {
                 $eqLogic->setConfiguration('ab::zigbee', $zigbee);
                 $eqChanged = true;
             }
-            if ($eqChanged)
+            if ($eqChanged) {
                 $eqLogic->save();
-            if (isset($informCmd)) {
+            // if (isset($informCmd)) {
                 // Inform cmd that EQ config has changed
                 $msg = array(
                     'type' => "eqUpdated",

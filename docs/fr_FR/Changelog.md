@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 240519-BETA-1
+
 -   Interne: Suppression fichiers obsoletes.
 -   Zigates: Fonctionnement en mode 'brut' à partir de maintenant.
 -   Interne: AbeilleTools::getParameters() => getConfig().

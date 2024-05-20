@@ -178,16 +178,22 @@ if (not serPort.isOpen()):
 # Get IEEE addr: Read token 0x0002 (TOKEN_MFG_CUSTOM_EUI_64), size 8 bytes
 # Get board name: Read token 0x002A or 0x0020
 
+NCP_DISCONNECTED = 0
+NCP_CONNECTED = 1
+
+ncpStatus = NCP_DISCONNECTED
+
 ashSend(serPort, "RST")
 while True: # Until RSTACK received
 	status, cmd = ashRead(serPort)
 	if (cmd["name"] == 'RSTACK'):
+		ncpStatus = NCP_CONNECTED
 		break
 
 status = ezspSend(serPort, "version", bytes([13]))
 # status = ezspSend(serPort, "nop")
 while (status == True): # Until transmitted
-	status, cmd = ashRead(serPort)
+	status, cmd = ezspRead(serPort)
 # 	if (cmd["name"] != "NAK"):
 # 		break
 # 	sendCmd(serPort, "version") # Retransmit

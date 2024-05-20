@@ -4,6 +4,8 @@
 *** Tcharp38
 ***
 
+https://www.owon-smart.com/news/about-zigbee-ezsp-uart/
+
 EZSP_PROTOCOL_VERSION
     7.4.3.0 => 13
     7.4.2.0 => 13

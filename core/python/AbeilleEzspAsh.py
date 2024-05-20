@@ -3,7 +3,7 @@
 # Tcharp38
 
 ashFrmNum = 0 # Last transmitted ASH frame
-ashAckNum = 0
+ashAckNum = 1
 ashReservedBytes = [0x11, 0x13, 0x18, 0x1A, 0x7D, 0x7E]
 
 # Reminder: ASH reserved values
@@ -19,6 +19,36 @@ CANCELBYTE = 0x1A
 FLAGBYTE = 0x7E
 ESCAPEBYTE = 0x7D
 
+# Pseudo random sequence generation
+def ashGenRandom() -> bytes:
+
+	# • rand0 = 0x42
+	# • if bit 0 of randi is 0, randi+1 = randi >> 1
+	# • if bit 0 of randi is 1, randi+1 = (randi >> 1) ^ 0xB8
+
+    seq = bytearray()
+    rand = 0x42
+
+    for i in range(256):
+        seq.append(rand)
+        if (rand & 0x1) == 0:
+            rand = rand >> 1
+        else:
+            rand = (rand >> 1) ^ 0xB8
+
+    return seq
+
+ashPseudoRandomSeq = ashGenRandom()
+
+# Randomize given data field
+def ashRandomize(data: bytes) -> bytes:
+	out = bytes()
+	for i in range(len(data)):
+		# TODO: What if data len > 256 ?
+		b = data[i] ^ ashPseudoRandomSeq[i]
+		out += b.to_bytes(1, "big")
+	return out
+
 # Compute CRC on given data 'bytes' string
 # Return: CRC as int
 def ashCrc(data):
@@ -32,14 +62,12 @@ def ashCrc(data):
     return crc
 
 # Encapsulate EZSP data into ASH protocol
-# Returns: ashFrame (bytes, b'' if ERROR)
+# Returns: ashFrame (bytes) or b'' if ERROR
 def ashFormat(ashCmdName, data = b''):
 	if (ashCmdName == "DATA"):
-		frmNum = ashFrmNum + 1 # Last transmitted frame + 1
-		if (frmNum > 255):
-			frmNum = 0
+		frmNum = ashFrmNum # Last transmitted frame + 1
 		reTx = 0 # set to 1 in a retransmitted DATA frame
-		ackNum = 12
+		ackNum = ashAckNum
 		ctrlByte = (frmNum << 4) | (reTx << 3) | ackNum
 
 	elif (ashCmdName == "RST"):
@@ -50,15 +78,14 @@ def ashFormat(ashCmdName, data = b''):
 		print("ERROR: ashFormat(): Unknown cmd '%s'" % ashCmdName)
 		return b''
 
-	flagByte = FLAGBYTE
-
 	ashFrame = bytes()
 	ashFrame += ctrlByte.to_bytes(1, "big")
 	if (len(data) > 0):
 		# TODO: Randomization
-		ashFrame += data
+		ashFrame += ashRandomize(data)
 	crc = ashCrc(ashFrame)
 	ashFrame += crc.to_bytes(2, "big")
+
 	# Performing byte stuffing
 	ashFrame2 = bytes()
 	for c in ashFrame:
@@ -69,9 +96,13 @@ def ashFormat(ashCmdName, data = b''):
 			ashFrame2 += int_val.to_bytes(1, "big")
 		else:
 			ashFrame2 += c.to_bytes(1, "big")
+	flagByte = FLAGBYTE
 	ashFrame2 += flagByte.to_bytes(1, "big")
 
-	print("  ASH-frame=%s" % ashFrame2.hex())
+	if (ashCmdName == "DATA"):
+		print("  ASH-frame-%d=%s" % (frmNum, ashFrame2.hex()))
+	else:
+		print("  ASH-frame=%s" % (ashFrame2.hex()))
 	return ashFrame2
 
 # Send ASH cmd
@@ -94,10 +125,11 @@ def ashSend(serPort, cmdName, data = b''):
 
 	dataBytes = bytes(ashFrame)
 	serPort.write(dataBytes)
-	global ashFrmNum
-	ashFrmNum += 1
-	if (ashFrmNum > 255):
-		ashFrmNum = 0
+	if (cmdName == "DATA"):
+		global ashFrmNum
+		ashFrmNum += 1
+		if (ashFrmNum > 7):
+			ashFrmNum = 0
 	return True
 
 # Read then decode ASH frame
@@ -144,7 +176,7 @@ def ashDecode(msg):
 			return False
 		else:
 			msg3 += b.to_bytes(1, "big")
-	print("  msg3=%s" % msg3.hex())
+	# print("  msg3=%s" % msg3.hex())
 
 	# Checking CRC
 	msg4 = msg3[0:-2] # Removing CRC
@@ -163,7 +195,8 @@ def ashDecode(msg):
 		frmNum = (ctrlByte >> 4) & 0x7
 		reTx = (ctrlByte >> 3) & 0x1
 		ackNum = (ctrlByte >> 0) & 0x7
-		cmd = {"name":"DATA", "frmNum": frmNum, "ackNum":ackNum, "reTx":reTx}
+		data = ashRandomize(msg4[1:]) # Reverse randomization
+		cmd = {"name":"DATA", "frmNum": frmNum, "ackNum":ackNum, "reTx":reTx, "data": data}
 	elif (ctrlByte >> 5) == 0x4: # ACK
 		ackNum = (ctrlByte >> 0) & 0x7
 		cmd = {"name":"ACK", "ackNum":ackNum}
@@ -176,6 +209,8 @@ def ashDecode(msg):
 	elif (ctrlByte == 0xC2):
 		status, cmd = ashDecodeERROR(msg4[1:])
 	else:
+		status = False
+		print("ERROR: ashDecode(): Invalid CTRL byte (0x%X)" % ctrlByte)
 		cmd = {"name":"?"}
 	print("  rcvd=", cmd)
 	return status, cmd
@@ -196,6 +231,10 @@ def ashDecodeRSTACK(data):
 	resetCode = data[1]
 	cmd = {"name":"RSTACK", "version":version, "resetCode":resetCode}
 	# print("RSTACK: ResetCode=0x%02X" % resetCode)
+
+	global ashFrmNum, ashAckNum
+	ashFrmNum = 0
+	ashAckNum = 0
 	return True, cmd
 
 def ashDecodeERROR(data):

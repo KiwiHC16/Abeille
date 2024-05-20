@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Support EmberZnet/EZSP: Encore des tas de modifs
+
 ## 240519-BETA-1
 
 -   Interne: Suppression fichiers obsoletes.

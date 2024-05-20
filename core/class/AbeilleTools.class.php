@@ -1002,7 +1002,8 @@
             // EmberZnet/EZSP daemon
             case 'ezsp':
             case 'abeilleezsp':
-                $daemon = "AbeilleEzsp.py";
+            case 'abeilleezspd':
+                $daemon = "AbeilleEzspD.py";
                 $daemonParams = "--gtwid=${gtwId} --gtwport=".$config['ab::gtwPort'.$gtwId];
                 $daemonLog = " >>${logsDir}AbeilleEzsp".$gtwId.'.log 2>&1';
                 $cmd = $nohup." python3 ".corePythonDir.$daemon." ".$daemonParams.$daemonLog;

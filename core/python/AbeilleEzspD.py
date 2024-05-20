@@ -1,5 +1,5 @@
 # Abeille plugin for Jeedom
-# EmberZnet/EZSP daemon
+# EmberZnet/EZSP specific daemon
 # Tcharp38
 
 import logging
@@ -16,6 +16,8 @@ from os.path import join
 import json
 import argparse
 import threading
+
+from AbeilleEzspCmds import *
 
 # Note: This daemon is launched from '/var/www/html/plugins/Abeille/core/ajax'
 # Adding "Abeille/core/python" to import path
@@ -167,8 +169,6 @@ if (not serPort.isOpen()):
 # serPort.write(dataBytes)
 # serPort.write(dataBytes)
 
-from AbeilleEzspAnswers import *
-from AbeilleEzspCmds import *
 
 # Sequencing:
 # Host->NCP: RST frame
@@ -178,15 +178,15 @@ from AbeilleEzspCmds import *
 # Get IEEE addr: Read token 0x0002 (TOKEN_MFG_CUSTOM_EUI_64), size 8 bytes
 # Get board name: Read token 0x002A or 0x0020
 
-sendCmd(serPort, "RST")
+ashSend(serPort, "RST")
 while True: # Until RSTACK received
 	status, cmd = ashRead(serPort)
 	if (cmd["name"] == 'RSTACK'):
 		break
 
-ezspSend(serPort, "nop")
-# sendCmd(serPort, "version")
-while True: # Until transmitted
+status = ezspSend(serPort, "version", bytes([13]))
+# status = ezspSend(serPort, "nop")
+while (status == True): # Until transmitted
 	status, cmd = ashRead(serPort)
 # 	if (cmd["name"] != "NAK"):
 # 		break

@@ -13,3 +13,7 @@ EZSP_PROTOCOL_VERSION
     7.1.0.0 => 09
     6.7.0.0 => 8
         and Secure EZSP Protocol Version 2
+
+ASH protocol
+    CRC compute => CRC-16/CCITT-FALSE algo, Init=0xFFFF, Poly=0x1021
+    Online checker: https://crccalc.com/

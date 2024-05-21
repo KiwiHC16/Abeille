@@ -5,6 +5,7 @@
 ashFrmNum = 0 # Last transmitted ASH frame
 ashAckNum = 1
 ashReservedBytes = [0x11, 0x13, 0x18, 0x1A, 0x7D, 0x7E]
+ashCmdsList = ["DATA", "ACK", "NAK", "RST", "RSTACK", "ERROR"]
 
 # Reminder: ASH reserved values
 # 0x11 XON: Resume transmission. Used in XON/XOFF flow control. Always ignored if received by the NCP.
@@ -69,13 +70,16 @@ def ashFormat(ashCmdName, data = b''):
 		reTx = 0 # set to 1 in a retransmitted DATA frame
 		ackNum = ashAckNum
 		ctrlByte = (frmNum << 4) | (reTx << 3) | ackNum
-
+	elif (ashCmdName == "ACK"):
+		nRdy = 0 # ?
+		ackNum = data[0] # Expecting 'ackNum' as data[0]
+		ctrlByte = 0x80 | (nRdy << 3) | ackNum
 	elif (ashCmdName == "RST"):
 		ctrlByte = 0xC0
 	elif (ashCmdName == "RSTACK"):
 		ctrlByte = 0xC1
 	else:
-		print("ERROR: ashFormat(): Unknown cmd '%s'" % ashCmdName)
+		print("    ERROR: ashFormat(): Unknown cmd '%s'" % ashCmdName)
 		return b''
 
 	ashFrame = bytes()
@@ -100,24 +104,22 @@ def ashFormat(ashCmdName, data = b''):
 	ashFrame2 += flagByte.to_bytes(1, "big")
 
 	if (ashCmdName == "DATA"):
-		print("  ASH-frame-%d=%s" % (frmNum, ashFrame2.hex()))
+		print("    ASH-frame-Frm%u-Ack%u=%s" % (frmNum, ackNum, ashFrame2.hex()))
+	elif (ashCmdName == "ACK") or  (ashCmdName == "NAK"):
+		print("    ASH-frame-Ack%u=%s" % (ackNum, ashFrame2.hex()))
 	else:
-		print("  ASH-frame=%s" % (ashFrame2.hex()))
+		print("    ASH-frame=%s" % (ashFrame2.hex()))
 	return ashFrame2
 
 # Send ASH cmd
 # Returns: True=ok, False=error
 def ashSend(serPort, cmdName, data = b''):
-	print("ashSend(%s)" % cmdName)
+	print("  ashSend(%s)" % cmdName)
 
-	ashFrame = bytes()
-	if (cmdName == "RST"):
-		# ezsp = [0xC0, 0x38, 0xBC, 0x7E]
-		ashFrame = ashFormat("RST")
-	elif (cmdName == "DATA"):
-		ashFrame = ashFormat("DATA", data)
+	if (cmdName in ashCmdsList):
+		ashFrame = ashFormat(cmdName, data)
 	else:
-		print("ERROR: ashSend(%s): Unknown cmd" % cmdName)
+		print("    ERROR: ashSend(): Unknown cmd '%s'" % cmdName)
 		return False
 
 	if (len(ashFrame) == 0):
@@ -125,6 +127,7 @@ def ashSend(serPort, cmdName, data = b''):
 
 	dataBytes = bytes(ashFrame)
 	serPort.write(dataBytes)
+
 	if (cmdName == "DATA"):
 		global ashFrmNum
 		ashFrmNum += 1
@@ -141,16 +144,19 @@ def ashRead(serPort):
 		if (b[0] == 0x7e):
 			break
 	status, cmd = ashDecode(msg)
+	if (cmd["name"] == "DATA"):
+		ashSend(serPort, "ACK", ashAckNum.to_bytes(1, "big"))
+
 	return status, cmd
 
 # Decode ASH message
 # Returns: status (True/False) + cmd (dict)
 def ashDecode(msg):
-	print("ashDecode(%s)" % msg.hex())
+	print("  ashDecode(%s)" % msg.hex())
 
 	# Removing flag byte first
 	if (msg[-1] != FLAGBYTE):
-		print("ERROR: ashDecode(): Missing 'flag byte'")
+		print("    ERROR: ashDecode(): Missing 'flag byte'")
 		return False
 
 	msg2 = msg[0:-1] # Removing flag byte
@@ -167,12 +173,12 @@ def ashDecode(msg):
 		elif (b == ESCAPEBYTE):
 			escapedByte = True
 		elif (b == XONBYTE):
-			print("  XON byte")
+			print("    XON byte")
 		elif (b == CANCELBYTE):
-			print("  CANCEL byte (0x%X)" % CANCELBYTE)
+			print("    CANCEL byte (0x%X)" % CANCELBYTE)
 			msg3 = bytes() # Clear
 		elif (b in ashReservedBytes):
-			print("ERROR: ashDecode(): Missing 0x%x case support" % b)
+			print("    ERROR: ashDecode(): Missing 0x%x case support" % b)
 			return False
 		else:
 			msg3 += b.to_bytes(1, "big")
@@ -184,10 +190,10 @@ def ashDecode(msg):
 	crcExp = ashCrc(msg4)
 	# print("CRC: Got=0x%x Exp=0x%x" % (crcGot, crcExp))
 	if (crcGot != crcExp):
-		print("ERROR: ashDecode(): Invalid CRC")
+		print("    ERROR: ashDecode(): Invalid CRC")
 		return False
 
-	print("  msg4=%s" % msg4.hex())
+	# print("  msg4=%s" % msg4.hex())
 	ctrlByte = msg4[0]
 
 	status = True
@@ -210,9 +216,9 @@ def ashDecode(msg):
 		status, cmd = ashDecodeERROR(msg4[1:])
 	else:
 		status = False
-		print("ERROR: ashDecode(): Invalid CTRL byte (0x%X)" % ctrlByte)
+		print("    ERROR: ashDecode(): Invalid CTRL byte (0x%X)" % ctrlByte)
 		cmd = {"name":"?"}
-	print("  rcvd=", cmd)
+	print("    ASH-cmd=", cmd)
 	return status, cmd
 
 def ashDecodeRSTACK(data):

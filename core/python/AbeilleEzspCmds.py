@@ -7,6 +7,7 @@ from AbeilleEzspAsh import *
 ezspSeq = 0 	# Sequence number
 ezspQueue = [] 	# TX cmd queue
 
+# List of supported EZSP v13 commands
 ezspCmdsList = {
 	"version" : {
 		"cmdId": 0x0,
@@ -15,32 +16,68 @@ ezspCmdsList = {
 			"stackType": "uint8_t", # The type of stack running on the NCP (2).
 			"stackVersion": "uint16_t"
 		}
+	},
+	"invalidCommand": {
+		"cmdId": 0x0058,
+		"response": {
+			"reason": "EzspStatus"
+		}
+	},
+	"getEui64": { # Returns the EUI64 ID of the local node
+		"cmdId": 0x0026,
+		"response": {
+			"eui64": "EmberEUI64"
+		}
+	},
+	"joinNetwork": { # Returns the EUI64 ID of the local node
+		"cmdId": 0x001F,
+		"cmd": {
+			"nodeType": "EmberNodeType",
+			"parameters": "EmberNetworkParameters"
+		},
+		"response": {
+			"status": "EmberStatus"
+		}
 	}
 }
 
-def cmdName2Id(cmdName):
+ezspTypes = {
+	"EmberNetworkParameters": {
+		"extendedPanId": "uint8_t[8]",
+		"panId": "uint16_t",
+		"radioTxPower": "uint8_t",
+		"radioChannel": "uint8_t",
+		"joinMethod": "EmberJoinMethod",
+		"nwkManagerId": "EmberNodeId",
+		"nwkUpdateId": "uint8_t",
+		"channels": "uint32_t"
+	}
+}
+
+def ezspCmdIdByName(cmdName):
 	if cmdName in ezspCmdsList:
 		cmd = ezspCmdsList[cmdName]
 		cmdId = cmd['cmdId']
-	# if cmdName == "version":
-	# 	cmdId = 0x0000
-	# elif cmdName == "nop":
-	# 	cmdId = 0x0005
-	# elif cmdName == "getMfgToken":
-	# 	cmdId = 0x000B
 	else:
-		print("ERROR: cmdName2Id(): cmdName %s is unknown" % cmdName)
+		print("ERROR: ezspCmdIdByName(): Unknown cmd '%s'" % cmdName)
 		cmdId = 0xFFFF
 
 	return cmdId
 
+# Find cmd name according to its ID
+def ezspCmdNameById(cmdId):
+	for c in ezspCmdsList:
+		if (c["cmdId"] == cmdId):
+			return c
+	return ""
+
 # Send EZSP cmd
 # Returns: True=OK, False=ERROR
 def ezspSend(serPort, cmdName, params = b''):
-	print("ezspSend(%s)" % cmdName)
+	print("ezspSend(%s, params='%s')" % (cmdName, params.hex()))
 
 	# Initial checks
-	frameId = cmdName2Id(cmdName)
+	frameId = ezspCmdIdByName(cmdName)
 	if (frameId == 0xFFFF):
 		return False
 
@@ -55,7 +92,7 @@ def ezspSend(serPort, cmdName, params = b''):
 	frmFormatVersion = 0 # ?
 	fcHigh = (secEnabled << 7) | (padEnabled << 6) | frmFormatVersion
 	frmCtrl = (fcLow << 7) | fcHigh
-	# frameId = cmdName2Id(cmdName)
+	# frameId = ezspCmdIdByName(cmdName)
 
 	# Creating EZSP frame
 	ezspFrame = bytes()
@@ -69,7 +106,7 @@ def ezspSend(serPort, cmdName, params = b''):
 	# Adding parameters if any
 	if (len(params) != 0):
 		ezspFrame += params
-	print("  ezspFrame=%s" % ezspFrame.hex())
+	# print("  EZSP-frame=%s" % ezspFrame.hex())
 
 	# Storing cmd
 	cmd = {"seq": seq, "name":cmdName}
@@ -94,7 +131,7 @@ def ezspCmdBySeq(seq):
 	return False, {}
 
 # Decode received cmd
-def ezspDecode(cmd, params):
+def ezspDecodeParams(cmd, params):
 	if (params == b''):
 		return cmd # Nothing to decode
 
@@ -105,14 +142,14 @@ def ezspDecode(cmd, params):
 	for r in response:
 		# print("  r=", r)
 		t = response[r]
-		if (t == "uint8_t"):
+		if (t == "uint8_t") or (t == "EmberStatus"):
 			cmd[r] = params[pIdx]
 			pIdx += 1
 		elif (t == "uint16_t"):
 			cmd[r] = int.from_bytes(params[pIdx:pIdx+1], 'big')
 			pIdx += 2
 		else:
-			print("  ERROR: ezspDecode(): Unsupported type '%s'" % t)
+			print("  ERROR: ezspDecodeParams(): Unsupported type '%s'" % t)
 
 	return cmd
 
@@ -134,15 +171,16 @@ def ezspRead(serPort):
 		versionCmd = False # 'version' cmd is a special case
 		if (frmCtrlL >> 7): # Response ?
 			status, cmd = ezspCmdBySeq(seq)
-			if (status == True):
-				# print("  cmd=", cmd)
-				if (cmd["name"] == "version"):
-					versionCmd = True
-			else:
-				print("  Unknown response cmd seq=%d => Ignoring" % seq)
+			if (status == False):
+				print("  Unknown response with seq=%d => Ignoring" % seq)
+				return False, {}
+
+			# print("  cmd=", cmd)
+			if (cmd["name"] == "version"):
+				versionCmd = True
 		else:
 			print("  NOT a response")
-			pass # TODO
+
 		if (versionCmd):
 			frmCtrl = frmCtrlL
 			frmId = data[2]
@@ -152,9 +190,15 @@ def ezspRead(serPort):
 			frmId = int.from_bytes(data[3:4], 'big')
 			params = data[5:]
 		# print("  data=%s => seq=%d, frmCtrl=0x%X, frmId=0x%X" % (data.hex(), seq, frmCtrl, frmId))
-		cmd = ezspDecode(cmd, params)
+
+		# If not a response, building cmd
+		if (not (frmCtrlL >> 7)):
+			cmdName = ezspCmdNameById(frmId)
+			cmd = {"seq": seq, "name":cmdName}
+
+		cmd = ezspDecodeParams(cmd, params)
 		print("  EZSP-cmd=", cmd)
 		return status, cmd
 
-	print("  ERROR: ezspRead(): Unsupported msg")
+	print("  ERROR: ezspRead(): Unsupported msg '%s'" % msg['name'])
 	return False, {}

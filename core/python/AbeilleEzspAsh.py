@@ -2,8 +2,8 @@
 # EmberZnet/EZSP commands
 # Tcharp38
 
-ashFrmNum = 0 # Last transmitted ASH frame
-ashAckNum = 1
+ashFrmNum = 0 # Next ASH frame to be transmitted (0->7)
+ashAckNum = 1 # Acknowledges receipt of DATA frames up to, but not including, ackNum (0->7)
 ashReservedBytes = [0x11, 0x13, 0x18, 0x1A, 0x7D, 0x7E]
 ashCmdsList = ["DATA", "ACK", "NAK", "RST", "RSTACK", "ERROR"]
 
@@ -68,11 +68,12 @@ def ashFormat(ashCmdName, data = b''):
 	if (ashCmdName == "DATA"):
 		frmNum = ashFrmNum # Last transmitted frame + 1
 		reTx = 0 # set to 1 in a retransmitted DATA frame
-		ackNum = ashAckNum
+		ackNum = ashFrmNum
 		ctrlByte = (frmNum << 4) | (reTx << 3) | ackNum
 	elif (ashCmdName == "ACK"):
 		nRdy = 0 # ?
 		ackNum = data[0] # Expecting 'ackNum' as data[0]
+		data = b''
 		ctrlByte = 0x80 | (nRdy << 3) | ackNum
 	elif (ashCmdName == "RST"):
 		ctrlByte = 0xC0
@@ -114,7 +115,7 @@ def ashFormat(ashCmdName, data = b''):
 # Send ASH cmd
 # Returns: True=ok, False=error
 def ashSend(serPort, cmdName, data = b''):
-	print("  ashSend(%s)" % cmdName)
+	print("  ashSend(%s, data='%s')" % (cmdName, data.hex()))
 
 	if (cmdName in ashCmdsList):
 		ashFrame = ashFormat(cmdName, data)
@@ -128,6 +129,7 @@ def ashSend(serPort, cmdName, data = b''):
 	dataBytes = bytes(ashFrame)
 	serPort.write(dataBytes)
 
+	# If send successful
 	if (cmdName == "DATA"):
 		global ashFrmNum
 		ashFrmNum += 1
@@ -137,15 +139,18 @@ def ashSend(serPort, cmdName, data = b''):
 
 # Read then decode ASH frame
 def ashRead(serPort):
+	print("  ashRead()")
+
 	msg = bytes(0)
 	while True:
 		b = serPort.read(1)
 		msg += b
-		if (b[0] == 0x7e):
+		if (b[0] == FLAGBYTE):
 			break
 	status, cmd = ashDecode(msg)
 	if (cmd["name"] == "DATA"):
-		ashSend(serPort, "ACK", ashAckNum.to_bytes(1, "big"))
+		ackNum = cmd['frmNum'] + 1
+		ashSend(serPort, "ACK", ackNum.to_bytes(1, "big"))
 
 	return status, cmd
 

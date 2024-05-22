@@ -179,23 +179,34 @@ if (not serPort.isOpen()):
 # Get board name: Read token 0x002A or 0x0020
 
 NCP_DISCONNECTED = 0
-NCP_CONNECTED = 1
+NCP_CONNECTED = 1		# ASH connected state
 
 ncpStatus = NCP_DISCONNECTED
 
+# Initial reset
 ashSend(serPort, "RST")
 while True: # Until RSTACK received
 	status, cmd = ashRead(serPort)
 	if (cmd["name"] == 'RSTACK'):
 		ncpStatus = NCP_CONNECTED
 		break
+	print("Unexpected cmd ", cmd)
+ashVersion = cmd["version"]
+if (ashVersion != 2):
+	print("ERROR: Unsupported ASH version %u" % ashVersion)
 
 status = ezspSend(serPort, "version", bytes([13]))
 # status = ezspSend(serPort, "nop")
 while (status == True): # Until transmitted
 	status, cmd = ezspRead(serPort)
-# 	if (cmd["name"] != "NAK"):
-# 		break
-# 	sendCmd(serPort, "version") # Retransmit
+	if (status and (cmd['name'] == "version")):
+		break
+	print("Unexpected cmd ", cmd)
+ezspVersion = cmd['protocolVersion']
+if (ezspVersion != 12):
+	print("ERROR: Unsupported EZSP version %u" % ezspVersion)
+
+# params = bytes([0x01])
+# status = ezspSend(serPort, "joinNetwork", params)
 
 logging.info('Exiting AbeilleEzsp')

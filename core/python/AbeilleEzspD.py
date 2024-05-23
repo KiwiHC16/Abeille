@@ -195,7 +195,11 @@ ashVersion = cmd["version"]
 if (ashVersion != 2):
 	print("ERROR: Unsupported ASH version %u" % ashVersion)
 
-status = ezspSend(serPort, "version", bytes([13]))
+# status = ezspSend(serPort, "version", bytes([13]))
+txParams = {
+	"desiredProtocolVersion": 13
+}
+status = ezspSend2(serPort, "version", txParams)
 # status = ezspSend(serPort, "nop")
 while (status == True): # Until transmitted
 	status, cmd = ezspRead(serPort)
@@ -206,7 +210,7 @@ ezspVersion = cmd['protocolVersion']
 if (ezspVersion != 12):
 	print("ERROR: Unsupported EZSP version %u" % ezspVersion)
 
-# params = bytes([0x01])
-# status = ezspSend(serPort, "joinNetwork", params)
+status = ezspSend(serPort, "getNetworkParameters")
+status, cmd = ezspRead(serPort)
 
 logging.info('Exiting AbeilleEzsp')

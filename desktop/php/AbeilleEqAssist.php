@@ -955,10 +955,10 @@
                     cmds["Off"+clustIdx] = newCmd("act_zbCmdC-0006-Off", "ep="+epId);
                     cmds["Off"+clustIdx]["isVisible"] = 1;
                     cmds["Toggle"+clustIdx] = newCmd("act_zbCmdC-0006-Toggle", "ep="+epId);
+                    cmds["Get Status"+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0006&attrId=0000");
                     cmds["Status"+clustIdx] = newCmd("inf_zbAttr-0006-OnOff", "ep="+epId);
                     cmds["Status"+clustIdx]["isVisible"] = 1;
                     cmds["Status"+clustIdx]["nextLine"] = "after";
-                    cmds["Get Status"+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0006&attrId=0000");
                     // Adding bind + configureReporting but assuming supported
                     cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
                     cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000", "yes");

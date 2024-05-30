@@ -3,7 +3,9 @@
 -   Support EmberZnet/EZSP: Encore des tas de modifs
 -   GL-D-002P, GLEDOPTO: Ajour support preliminaire (2708).
 -   Assistant modèle: Améliorations mineures.
--   Nodon SIN-4-RS-20: Support préliminaire (2709).
+-   NodOn SIN-4-RS-20: Support préliminaire (2709).
+-   Interne: Corrections pour changement d'un modèle local à officiel.
+-   NodOn SIN-4-FP-21: Support préliminaire.
 
 ## 240519-BETA-1
 

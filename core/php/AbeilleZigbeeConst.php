@@ -893,11 +893,14 @@
         "EF00" => array(
             "name" => "Tuya private ?",
         ),
+        "FC00" => array(
+            "name" => "Private", // Used by NoOn (SIN-4-FP-21) & Philips Hue
+        ),
         "FC01" => array(
             "name" => "Legrand private ?",
         ),
         "FC02" => array(
-            "name" => "Private", // Used by multi_Samjin. Used by Profalux MOT-C1Z10C
+            "name" => "Private", // Used by multi_Samjin & Profalux (MOT-C1Z10C)
         ),
         "FC20" => array(
             "name" => "Profalux private ?",

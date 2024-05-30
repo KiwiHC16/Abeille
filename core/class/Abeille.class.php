@@ -1218,6 +1218,21 @@ class Abeille extends eqLogic {
                 return;
             }
 
+            // Was using a deleted local model ?
+            if ($modelSource == "local") {
+                $fullPath = __DIR__."/../config/devices_local/${modelName}/${modelName}.json";
+                if (!file_exists($fullPath)) {
+                    $fullPath = __DIR__."/../config/devices/${modelName}/${modelName}.json";
+                    if (file_exists($fullPath)) {
+                        log::add('Abeille', 'debug', "Local model not found => using official one instead");
+                        $modelSource = "Abeille";
+                    } else {
+                        log::add('Abeille', 'debug', "Local model not found but NO official one found.");
+                        return;
+                    }
+                }
+            }
+
             $dev = array(
                 'net' => $dest,
                 'addr' => $addr,
@@ -2650,7 +2665,7 @@ class Abeille extends eqLogic {
         }
 
         if ($modelSource == "local") {
-            $fullPath = __DIR__."/../config/devices/".$modelName."/".$modelName.".json";
+            $fullPath = __DIR__."/../config/devices/${modelName}/${modelName}.json";
             if (file_exists($fullPath))
                 message::add("Abeille", $eqHName.": Attention ! Modèle local (devices_local) utilisé alors qu'un modèle officiel existe.", '');
         }

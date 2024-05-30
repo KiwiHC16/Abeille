@@ -61,8 +61,8 @@ function refreshEqInfos() {
             // console.log("json_res=", json_res);
             res = JSON.parse(json_res.result);
             eq = res.eq;
-            console.log("eq=", eq);
             curEq = res.eq;
+            console.log("curEq=", curEq);
 
             // Updating global infos
             zgId = curEq.zgId;
@@ -168,8 +168,11 @@ function refreshEqInfos() {
             }
 
             docUrl = document.getElementById("idDocUrl");
-            docUrl.setAttribute("href", js_urlProducts + "/" + curEq.modelName);
-            if (curEq.modelSource == "local") {
+            docUrl.setAttribute(
+                "href",
+                js_urlProducts + "/" + curEq.model.modelName
+            );
+            if (curEq.model.modelSource == "local") {
                 $("#idDelLocalBtn").show();
             }
             if (curEq.batteryType == "")
@@ -1151,35 +1154,51 @@ function repairReturnChannel() {
 $("#idDelLocalBtn").on("click", function () {
     console.log("idDelLocalBtn click");
 
-    console.log("curEq=", curEq);
-    modelName = curEq.model.modelName;
-    path = "core/config/devices_local/" + modelName + "/" + modelName + ".json";
-    $.ajax({
-        type: "POST",
-        url: "plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
-        data: {
-            action: "delFile",
-            file: path,
-        },
-        dataType: "json",
-        global: false,
-        success: function (json_res) {
-            var msg = "{{Le modèle local a été supprimé}}.<br><br>";
-            msg +=
-                "L'équipement ayant été inclu avec ce modèle vous devez refaire une inclusion ou le recharger & reconfigurer pour être à jour.}}";
-            bootbox.confirm(msg, function (result) {
-                window.location.reload();
-            });
-        },
+    var msg =
+        "{{Vous êtes sur le point de supprimer le modèle local ayant servi à l'inclusion}}.<br>";
+    msg +=
+        "{{La réinitialisation à partir du modèle officiel est nécessaire}}.<br>";
+    msg += "<br>{{Etes vous sur de vouloir continuer ?}}";
+    bootbox.confirm(msg, function (result) {
+        if (result == false) return;
+
+        console.log("curEq=", curEq);
+        modelName = curEq.model.modelName;
+        path =
+            "core/config/devices_local/" +
+            modelName +
+            "/" +
+            modelName +
+            ".json";
+        $.ajax({
+            type: "POST",
+            url: "plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: {
+                action: "delFile",
+                file: path,
+            },
+            dataType: "json",
+            global: false,
+            success: function (json_res) {
+                // Local model removed
+                var xhttp = new XMLHttpRequest();
+                xhttp.open(
+                    "GET",
+                    "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
+                        curEqId,
+                    false
+                );
+                xhttp.send();
+            },
+        });
     });
 });
 
 // Update Jeedom equipement from model
 $("#idUpdateBtn").on("click", function () {
     console.log("update(" + curEqId + ")");
-    eqId = curEqId;
 
-    var msg = "{{Vous êtes sur le point de:<br>";
+    var msg = "{{Vous êtes sur le point de<br>";
     msg += "- Mettre à jour l'équipement Jeedom à partir de son modèle<br>";
     msg += "- Et reconfigurer l'équipement<br>";
     msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
@@ -1195,7 +1214,7 @@ $("#idUpdateBtn").on("click", function () {
         xhttp.open(
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=update&eqId=" +
-                eqId,
+                curEqId,
             false
         );
         xhttp.send();
@@ -1208,14 +1227,14 @@ $("#idReinitBtn").on("click", function () {
     console.log("reinit(" + curEqId + ")");
     eqId = curEqId;
 
-    var msg = "{{Vous êtes sur le point de:}}<br>";
+    var msg = "{{Vous êtes sur le point de}}<br>";
     msg +=
-        "- Réinitialiser cet équipement (équivalent à une nouvelle inclusion).<br>";
+        "- Réinitialiser cet équipement Jeedom à partir de son dernier modèle.<br>";
     msg += "- Et le reconfigurer.<br>";
     msg +=
-        "<br>Tout sera remis à jour à partir du modèle JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.<br>";
+        "<br>Tout sera remis à jour à partir du modèle excepté son nom, l'ID Jeedom ainsi que ses adresses.<br>";
     msg +=
-        "Le nom des commandes peut avoir changé et vous serez obligé de revoir les scénaris utilisant cet équipement.<br>";
+        "Attention ! Les commandes seront en ligne avec le dernier modèle, et vous pourriez être obligé de revoir les scénaris utilisant cet équipement.<br>";
 
     if (eqBatteryType != "") {
         msg +=

@@ -612,11 +612,11 @@
 
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
                 // logDebug('  eqModel='.json_encode($eqModel));
-                $eq['modelSig'] = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : ''; // TO BE REMOVED
-                $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : ''; // TO BE REMOVED
-                $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille'; // TO BE REMOVED
-                $eq['modelType'] = isset($eqModel['type']) ? $eqModel['type'] : ''; // TO BE REMOVED
-                $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false; // TO BE REMOVED
+                // $eq['modelSig'] = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : ''; // TO BE REMOVED
+                // $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : ''; // TO BE REMOVED
+                // $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille'; // TO BE REMOVED
+                // $eq['modelType'] = isset($eqModel['type']) ? $eqModel['type'] : ''; // TO BE REMOVED
+                // $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false; // TO BE REMOVED
                 $eq['model'] = array(
                     // Model infos
                     'modelSig' => isset($eqModel['modelSig']) ? $eqModel['modelSig'] : '',

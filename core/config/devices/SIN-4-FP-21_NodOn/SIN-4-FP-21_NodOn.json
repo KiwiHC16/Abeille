@@ -1,0 +1,83 @@
+{
+    "SIN-4-FP-21_NodOn": {
+        "manufacturer": "NodOn",
+        "model": "SIN-4-FP-21",
+        "type": "NodOn pilot wire heating module",
+        "category": {
+            "heating": "1"
+        },
+        "configuration": {
+            "icon": "Nodon-PilotWireHeating",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "yes"
+            },
+            "Mode": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FC00&attrId=0000&attrType=20&manufId=128B",
+                "listValue": "0|Off;1|Comfort;2|Eco;3|Frost_protection;4|Conformt-1;4|Conformt-2",
+                "value": "Current",
+                "isVisible": 1
+            },
+            "Get current mode": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FC00&attrId=0000&attrType=20&manufId=128B"
+            },
+            "Current": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FC00&attrId=0000&attrType=20&manufId=128B",
+                "logicalId": "FC00-01-0000",
+                "comment": "TODO: convert to human readable string",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "div=1000",
+                "unit": "KWh",
+                "isVisible": "1"
+            },
+            "Get Total power": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0702&attrId=0000"
+            }
+        }
+    }
+}

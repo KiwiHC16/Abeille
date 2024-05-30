@@ -1039,9 +1039,9 @@
                 cmds["Down"]["isVisible"] = 1;
                 if (isset(attributes['0008'])) {
                     // TODO: Take care if 'Level' already used (ex: by cluster 0008)
+                    cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0102&attrId=0008");
                     cmds["Level"] = newCmd("inf_zbAttr-0102-CurPosLiftPercent", "ep="+epId);
                     cmds["Level"]["isVisible"] = 1;
-                    cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0102&attrId=0008");
                     cmds["SetReporting "+epId+"-0102-0008"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0102&attrId=0008&attrType=20", "yes");
                 }
                 cmds["Bind "+epId+"-0102-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0102", "yes");

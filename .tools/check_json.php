@@ -94,23 +94,23 @@
         $devModel = $dev[$devModName]; // Removing top key
 
         // Checking 'type'
-        if (!isset($dev[$devModName]['type'])) {
+        if (!isset($devModel['type'])) {
             $error = newDevError($devModName, "ERROR", "No equipment 'type' defined");
         }
 
         // Checking 'genericType'
-        if (isset($dev[$devModName]['genericType'])) {
-            $genType = $dev[$devModName]['genericType'];
+        if (isset($devModel['genericType'])) {
+            $genType = $devModel['genericType'];
             if (!in_array($genType, $eqGenTypes))
                 $error = newDevError($devModName, "ERROR", "Invalid 'genericType' defined: ".$genType);
         } /* else
             $error = newDevError($devModName, "WARNING", "No equipment genericType' defined"); */
 
         // Checking 'category'
-        if (!isset($dev[$devModName]['category'])) {
+        if (!isset($devModel['category'])) {
             $error = newDevError($devModName, "ERROR", "No 'category' defined");
         } else {
-            $allCats = $dev[$devModName]['category'];
+            $allCats = $devModel['category'];
             // $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
             global $eqCategories;
             foreach($allCats as $cat => $catEn) {
@@ -121,10 +121,10 @@
         }
 
         // Checking 'configuration'
-        if (!isset($dev[$devModName]['configuration'])) {
+        if (!isset($devModel['configuration'])) {
             $error = newDevError($devModName, "WARNING", "No configuration defined");
         } else {
-            $config = $dev[$devModName]['configuration'];
+            $config = $devModel['configuration'];
 
             /* Checking icon */
             $icon = "";
@@ -177,10 +177,10 @@
         // Checking 'commands'
         $unusedCmds = &$GLOBALS['unusedCmds'];
         $logicIds = [];
-        if (!isset($dev[$devModName]['commands'])) {
+        if (!isset($devModel['commands'])) {
             $error = newDevError($devModName, "WARNING", "No commands defined");
         } else {
-            $commands = $dev[$devModName]['commands'];
+            $commands = $devModel['commands'];
             // echo "commands=".json_encode($commands)."\n";
             $logicIds = [];
             foreach ($commands as $cmdJName => $cmd) {
@@ -243,14 +243,7 @@
                 }
 
                 // Now loading cmd model
-                $cmdModJson = file_get_contents($cmdModPath);
-                $cmdMod = json_decode($cmdModJson, true);
-                if (json_last_error() != JSON_ERROR_NONE) {
-                    newCmdError($cmdModName, 'ERROR', 'Corrupted JSON file');
-                    continue;
-                }
-                $cmdMod = $cmdMod[$cmdModName]; // Removing top key
-                checkCmd($devModName, $devModel, $cmdJName, $logicIds, $cmd, $cmdMod);
+                checkCmd($devModName, $devModel, $cmdJName, $cmdModPath, $logicIds);
             }
 
             if ($error)
@@ -597,125 +590,125 @@
         return $cmd;
     }
 
-    /* Check use of commands */
-    function checkDeviceCommands($devModName, $fullPath) {
-        $jsonContent = file_get_contents($fullPath);
-        if ($jsonContent === false) {
-            step('E');
-            return;
-        }
-        $device = json_decode($jsonContent, true);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            step('E');
-            return;
-        }
+    // /* Check use of commands */
+    // function checkDeviceCommands($devModName, $fullPath) {
+    //     $jsonContent = file_get_contents($fullPath);
+    //     if ($jsonContent === false) {
+    //         step('E');
+    //         return;
+    //     }
+    //     $device = json_decode($jsonContent, true);
+    //     if (json_last_error() != JSON_ERROR_NONE) {
+    //         step('E');
+    //         return;
+    //     }
 
-        $device = $device[$devModName]; // Removing top key
+    //     $device = $device[$devModName]; // Removing top key
 
-        if (!isset($device['commands'])) {
-            step('.');
-            return;
-        }
+    //     if (!isset($device['commands'])) {
+    //         step('.');
+    //         return;
+    //     }
 
-        $cmds = $device['commands'];
-        $error = false;
-        $logicIds = [];
-        // echo "cmds=".json_encode($cmds)."\n";
-        foreach ($cmds as $cmdJName => $devCmd) {
-            /* New command JSON format:
-                "jeedom_cmd_name": {
-                    "use": "json_cmd_name",
-                    "params": "xxx"...
-                } */
-            $cmdFName = $devCmd['use']; // File name without '.json'
-            echo "cmdFName=".json_encode($cmdFName)."\n";
+    //     $cmds = $device['commands'];
+    //     $error = false;
+    //     $logicIds = [];
+    //     // echo "cmds=".json_encode($cmds)."\n";
+    //     foreach ($cmds as $cmdJName => $devCmd) {
+    //         /* New command JSON format:
+    //             "jeedom_cmd_name": {
+    //                 "use": "json_cmd_name",
+    //                 "params": "xxx"...
+    //             } */
+    //         $cmdFName = $devCmd['use']; // File name without '.json'
+    //         echo "cmdFName=".json_encode($cmdFName)."\n";
 
-            $newCmd = getCommandModel($cmdFName, $cmdJName);
-            if ($newCmd === false)
-                continue; // Cmd does not exist.
-            $newCmd = $newCmd[$cmdJName]; // Remove top key
+    //         $newCmd = getCommandModel($cmdFName, $cmdJName);
+    //         if ($newCmd === false)
+    //             continue; // Cmd does not exist.
+    //         $newCmd = $newCmd[$cmdJName]; // Remove top key
 
-            // Checking Jeedom cmd name
-            if (strpos($cmdJName, "/") !== false) {
-                newDevError($devModName, "ERROR", "Invalid Jeedom cmd name '".$cmdJName."' ('/' is fordidden)");
-                $error = true;
-            }
+    //         // Checking Jeedom cmd name
+    //         if (strpos($cmdJName, "/") !== false) {
+    //             newDevError($devModName, "ERROR", "Invalid Jeedom cmd name '".$cmdJName."' ('/' is fordidden)");
+    //             $error = true;
+    //         }
 
-            // Overload from device model
-            // echo "devCmd=".json_encode($devCmd)."\n";
-            if (isset($devCmd['logicalId']))
-                $newCmd['logicalId'] = $devCmd['logicalId'];
+    //         // Overload from device model
+    //         // echo "devCmd=".json_encode($devCmd)."\n";
+    //         if (isset($devCmd['logicalId']))
+    //             $newCmd['logicalId'] = $devCmd['logicalId'];
 
-            $newCmdText = json_encode($newCmd);
-            echo "  BEFORE newCmdText=".json_encode($newCmdText)."\n";
-            // echo "newCmdText=".$newCmdText."\n";
-            if (isset($devCmd['params']) && (trim($devCmd['params']) != '')) {
-                // Overwritting default settings with 'params' content
-                $params = explode('&', $devCmd['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
-                foreach ($params as $p) {
-                    list($pName, $pVal) = explode("=", $p);
-                    // $pName = strtoupper($pName);
-                    $newCmdText = str_ireplace('#'.$pName.'#', $pVal, $newCmdText);
-                }
-                $newCmd = json_decode($newCmdText, true);
-            }
-            echo "  Posst params newCmdText=".json_encode($newCmdText)."\n";
+    //         $newCmdText = json_encode($newCmd);
+    //         echo "  BEFORE newCmdText=".json_encode($newCmdText)."\n";
+    //         // echo "newCmdText=".$newCmdText."\n";
+    //         if (isset($devCmd['params']) && (trim($devCmd['params']) != '')) {
+    //             // Overwritting default settings with 'params' content
+    //             $params = explode('&', $devCmd['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
+    //             foreach ($params as $p) {
+    //                 list($pName, $pVal) = explode("=", $p);
+    //                 // $pName = strtoupper($pName);
+    //                 $newCmdText = str_ireplace('#'.$pName.'#', $pVal, $newCmdText);
+    //             }
+    //             $newCmd = json_decode($newCmdText, true);
+    //         }
+    //         echo "  Posst params newCmdText=".json_encode($newCmdText)."\n";
 
-            // Checking all remaining #var# cases
-            //  #EP# => replaced at Jeedom EQ creation (pairing)
-            //  #select# => dynamic variable, replaced at run time
-            //  #title# + #message# => dynamic variables, replaced at run time
-            // echo "newCmdText=".$newCmdText."\n";
-            while (true) {
-                $start = strpos($newCmdText, "#"); // Start
-                if ($start === false)
-                    break;
+    //         // Checking all remaining #var# cases
+    //         //  #EP# => replaced at Jeedom EQ creation (pairing)
+    //         //  #select# => dynamic variable, replaced at run time
+    //         //  #title# + #message# => dynamic variables, replaced at run time
+    //         // echo "newCmdText=".$newCmdText."\n";
+    //         while (true) {
+    //             $start = strpos($newCmdText, "#"); // Start
+    //             if ($start === false)
+    //                 break;
 
-                $len = strpos(substr($newCmdText, $start + 1), "#"); // Length
-                if ($len === false) {
-                    $error = newDevError($devModName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
-                    break;
-                }
-                $len += 2;
-                // echo "S=".$start.", L=".$len."\n";
-                $var = substr($newCmdText, $start, $len);
+    //             $len = strpos(substr($newCmdText, $start + 1), "#"); // Length
+    //             if ($len === false) {
+    //                 $error = newDevError($devModName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
+    //                 break;
+    //             }
+    //             $len += 2;
+    //             // echo "S=".$start.", L=".$len."\n";
+    //             $var = substr($newCmdText, $start, $len);
 
-                if ($var == "#EP#") {
-                    if (!isset($device['configuration']['mainEP'])) {
-                        $error = newDevError($devModName, "ERROR", "'#EP#' found but NO 'mainEP'");
-                    }
-                } else if ($var == "#select#") {
-                    if (!isset($devCmd['listValue']) && !isset($newCmd['listValue'])) {
-                        $error = newDevError($devModName, "ERROR", "Undefined 'listValue' for '#select#'");
-                    }
-                } else {
-                    $allowed = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#'];
-                    // Tcharp38 note: don't know purpose of slider/title/message/color/onTime/GroupeEPx
-                    if (!in_array($var, $allowed)) {
-                        if (substr($var, 0, 9) != "#GroupeEP") {
-                            $error = newDevError($devModName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
-                        }
-                    }
-                }
+    //             if ($var == "#EP#") {
+    //                 if (!isset($device['configuration']['mainEP'])) {
+    //                     $error = newDevError($devModName, "ERROR", "'#EP#' found but NO 'mainEP'");
+    //                 }
+    //             } else if ($var == "#select#") {
+    //                 if (!isset($devCmd['listValue']) && !isset($newCmd['listValue'])) {
+    //                     $error = newDevError($devModName, "ERROR", "Undefined 'listValue' for '#select#'");
+    //                 }
+    //             } else {
+    //                 $allowed = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#'];
+    //                 // Tcharp38 note: don't know purpose of slider/title/message/color/onTime/GroupeEPx
+    //                 if (!in_array($var, $allowed)) {
+    //                     if (substr($var, 0, 9) != "#GroupeEP") {
+    //                         $error = newDevError($devModName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
+    //                     }
+    //                 }
+    //             }
 
-                $newCmdText = substr($newCmdText, $start + $len);
-            }
-            echo "newCmdText=".json_encode($newCmdText)."\n";
+    //             $newCmdText = substr($newCmdText, $start + $len);
+    //         }
+    //         echo "newCmdText=".json_encode($newCmdText)."\n";
 
-            // Checking uniqness of logicalId
-            $logicId = isset($newCmd['logicalId']) ? $newCmd['logicalId']: '';
-            if ($logicId == '')
-                $error = newDevError($devModName, "ERROR", "Undefined logical ID for '".$cmdJName."' cmd (model ".$cmdFName.")");
-            else if (in_array($logicId, $logicIds))
-                $error = newDevError($devModName, "ERROR", "Duplicated logical ID '".$logicId."' (cmd ".$cmdJName.")");
-            else
-                $logicIds[] = $logicId;
-        }
-        if ($error)
-            step('E');
-        else
-            step('.');
-    }
+    //         // Checking uniqness of logicalId
+    //         $logicId = isset($newCmd['logicalId']) ? $newCmd['logicalId']: '';
+    //         if ($logicId == '')
+    //             $error = newDevError($devModName, "ERROR", "Undefined logical ID for '".$cmdJName."' cmd (model ".$cmdFName.")");
+    //         else if (in_array($logicId, $logicIds))
+    //             $error = newDevError($devModName, "ERROR", "Duplicated logical ID '".$logicId."' (cmd ".$cmdJName.")");
+    //         else
+    //             $logicIds[] = $logicId;
+    //     }
+    //     if ($error)
+    //         step('E');
+    //     else
+    //         step('.');
+    // }
 
     /* Check given command
        - devModName = Device model name (without '.json' ext)
@@ -724,7 +717,20 @@
        - logicIds = Array of cmd logic IDs
        - devCmd = Device model part of command
        - cmd = Command model */
-    function checkCmd($devModName, $devModel, $cmdJName, &$logicIds, $devCmd, $cmd) {
+    function checkCmd($devModName, $devModel, $cmdJName, $cmdModPath, &$logicIds) {
+
+        $devCmd = $devModel['commands'][$cmdJName];
+        $cmdModName = $devCmd['use'];
+
+        $cmdModJson = file_get_contents($cmdModPath);
+        $cmdMod = json_decode($cmdModJson, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            newCmdError($cmdModName, 'ERROR', 'Corrupted JSON file');
+            return;
+        }
+        $cmdMod = $cmdMod[$cmdModName]; // Removing top key
+        $cmd = $cmdMod;
+        // TODO: Cmd model should be overloaded by eq model customizations prior to check
 
         // echo "checkCmd devCmd=".json_encode($devCmd)."\n";
         // echo "  cmd=".json_encode($cmd)."\n";
@@ -750,10 +756,14 @@
             }
         }
 
-        // Overload from device model
+        // Overload cmd model from device model customizations
         // echo "devCmd=".json_encode($devCmd)."\n";
         if (isset($devCmd['logicalId']))
             $newCmd['logicalId'] = $devCmd['logicalId'];
+        if (isset($devCmd['listValue']))
+            $newCmd['listValue'] = $devCmd['listValue'];
+        if (isset($devCmd['subType']))
+            $newCmd['subType'] = $devCmd['subType'];
 
         $newCmdText = json_encode($newCmd, JSON_UNESCAPED_SLASHES);
         // echo "  BEFORE newCmdText=".$newCmdText."\n";
@@ -830,6 +840,11 @@
             $error = newDevError($devModName, "ERROR", "Duplicated logical ID '".$logicId."' (cmd ".$cmdJName.")");
         else
             $logicIds[] = $logicId;
+
+        // If 'listValue', 'subType' should be 'select'
+        if ((isset($newCmd["listValue"]) || isset($devCmd["listValue"])) && ($newCmd["subType"] != "select")) {
+            $error = newDevError($devModName, "ERROR", "Wrong sub-type for 'listValue' in cmd '${cmdJName}'");
+        }
 
         if ($error)
             step('E');

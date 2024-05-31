@@ -6,6 +6,7 @@
 -   NodOn SIN-4-RS-20: Support préliminaire (2709).
 -   Interne: Corrections pour changement d'un modèle local à officiel.
 -   NodOn SIN-4-FP-21: Support préliminaire.
+-   Interne: Améliorations 'check_json'.
 
 ## 240519-BETA-1
 

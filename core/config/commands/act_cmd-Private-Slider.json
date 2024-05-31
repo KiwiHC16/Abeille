@@ -1,5 +1,6 @@
 {
     "act_cmd-Private-Slider": {
+        "comment": "To use internal 'cmd-Private' with a slider",
         "type": "action",
         "subType": "slider",
         "genericType": "GENERIC_ACTION",

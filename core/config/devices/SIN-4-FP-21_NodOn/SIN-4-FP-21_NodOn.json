@@ -3,6 +3,7 @@
         "manufacturer": "NodOn",
         "model": "SIN-4-FP-21",
         "type": "NodOn pilot wire heating module",
+        "genericType": "Environment",
         "category": {
             "heating": "1"
         },
@@ -50,9 +51,10 @@
                 "execAtCreation": "yes"
             },
             "Mode": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=FC00&attrId=0000&attrType=20&manufId=128B",
-                "listValue": "0|Off;1|Comfort;2|Eco;3|Frost_protection;4|Conformt-1;4|Conformt-2",
+                "use": "act_zbCmdC-Generic",
+                "params": "clustId=FC00&cmd=00&manufId=128B&data=#value#",
+                "subType": "select",
+                "listValue": "00|Off;01|Comfort;02|Eco;03|Frost_protection;04|Conformt-1;05|Conformt-2",
                 "value": "Current",
                 "isVisible": 1
             },

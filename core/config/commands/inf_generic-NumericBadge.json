@@ -8,6 +8,6 @@
         },
         "type": "info",
         "unit": "",
-        "logicalId": "#EP#-GenericBadge"
+        "logicalId": "#CLUSTID#-#EP#-#ATTRID#"
     }
 }

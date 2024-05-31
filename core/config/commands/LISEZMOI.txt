@@ -146,7 +146,7 @@ Exemple de commande 'action'
     Delai d'execution en secondes apres l'annonce de la commande ayant le flag 'execAtCreation'.
 
   * trigOut: optionnel
-    Permet, pour une commande info, de définir une ou plusieurs commandes info à déclencher.
+    Permet, pour une commande info, de définir une ou plusieurs commandes à déclencher.
     Il est possible d'appliquer une formule sur la valeur au passage (valueOffset).
     Chaque commande à déclencher est définie par sont identifiant logique (logicalId).
     Exemple: "trigOut": {
@@ -162,11 +162,15 @@ Exemple de commande 'action'
 
   * calculValueOffset: optionnel (pour cmde info)
     Permet de modifier la valeur d'une cmde info.
+        Ex: "calculValueOffset": "intval(1000000/#value#)"
+        Ex: "calculValueOffset": "#value#/10"
+    Attention: Cette option est gérée par Jeedom et non pas par Abeille.
 
   * valueOffset: optionnel (pour cmde action)
     Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
-        // Ex: "valueOffset": "#value#*10"
-        // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+        Ex: "valueOffset": "#value#*10"
+        Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+        Ex: "valueOffset": "(#value#>>2)&1"
 
   * Polling: optionnel
     Défini si cette commande 'action' doit etre executée regulierement.

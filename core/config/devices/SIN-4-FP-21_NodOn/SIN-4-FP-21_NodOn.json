@@ -3,13 +3,23 @@
         "manufacturer": "NodOn",
         "model": "SIN-4-FP-21",
         "type": "NodOn pilot wire heating module",
-        "genericType": "Environment",
+        "genericType": "Heating",
         "category": {
             "heating": "1"
         },
         "configuration": {
             "icon": "Nodon-PilotWireHeating",
             "mainEP": "01"
+        },
+        "variables": {
+            "modesValToStr": {
+                "00": "Off",
+                "01": "Comfort",
+                "02": "Eco",
+                "03": "Frost protection",
+                "04": "Comfort-1",
+                "05": "Comfort-2"
+            }
         },
         "commands": {
             "Identify": {
@@ -45,30 +55,48 @@
                 "params": "ep=01&clustId=0006",
                 "execAtCreation": "yes"
             },
-            "SetReporting 01-0006": {
+            "SetReporting 01-0006-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
+                "params": "ep=01&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
             "Mode": {
                 "use": "act_zbCmdC-Generic",
-                "params": "clustId=FC00&cmd=00&manufId=128B&data=#value#",
+                "params": "clustId=FC00&cmd=00&manufCode=128B&data=#select#",
                 "subType": "select",
-                "listValue": "00|Off;01|Comfort;02|Eco;03|Frost_protection;04|Conformt-1;05|Conformt-2",
+                "listValue": "00|Off;01|Comfort;02|Eco;03|Frost_protection;04|Comfort-1;05|Comfort-2",
                 "value": "Current",
+                "trigOut": {
+                    "getCurrentMode": {}
+                },
                 "isVisible": 1
             },
             "Get current mode": {
                 "use": "act_zbReadAttribute",
-                "params": "clustId=FC00&attrId=0000&attrType=20&manufId=128B"
+                "logicalId": "getCurrentMode",
+                "params": "clustId=FC00&attrId=0000&attrType=20&manufId=128B",
+                "execAtCreation": "yes"
             },
             "Current": {
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=FC00&attrId=0000&attrType=20&manufId=128B",
-                "logicalId": "FC00-01-0000",
-                "comment": "TODO: convert to human readable string",
+                "trigOut": {
+                    "currentMode": {
+                        "valueOffset": "#valueswitch-modesValToStr#",
+                        "comment": "Convert to human readable string"
+                    }
+                }
+            },
+            "Current mode": {
+                "use": "inf_generic-String",
+                "logicalId": "currentMode",
                 "isVisible": 1,
                 "nextLine": "after"
+            },
+            "SetReporting 01-FC00-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=FC00&attrId=0000&attrType=20&manufCode=128B",
+                "execAtCreation": "yes"
             },
             "Total power": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",

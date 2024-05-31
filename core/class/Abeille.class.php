@@ -1306,22 +1306,47 @@ class Abeille extends eqLogic {
 
     /* Trig another command defined by 'trigLogicId'.
        The 'newValue' is computed with 'trigOffset' if required then applied to 'trigLogicId' */
-    public static function trigCommand($eqLogic, $newValue, $trigLogicId, $trigOffset = '') {
-        if ($trigOffset != '')
-            $trigValue = jeedom::evaluateExpression(str_replace('#value#', $newValue, $trigOffset));
-        else
-            $trigValue = $newValue;
-
+    public static function trigCommand($eqLogic, $value, $trigLogicId, $trigOffset = '') {
         $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
-        if ($trigCmd) {
-            $trigName = $trigCmd->getName();
-            log::add('Abeille', 'debug', "  Triggering cmd '".$trigName."' (".$trigLogicId.") with val=".$trigValue);
-            $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
+        if (!is_object($trigCmd)) {
+            log::add('Abeille', 'debug', "  trigCommand(): Unknown Jeedom command logicId='${trigLogicId}'");
+            return;
         }
 
+        log::add('Abeille', 'debug', "  trigCommand(): trigOffset=${trigOffset}");
+        if ($trigOffset != '') {
+            $vsPos = stripos($trigOffset, '#valueswitch-'); // Any #valueswitch-....# variable ?
+            if ($vsPos !== false) {
+                $vs = substr($trigOffset, $vsPos + 13);
+                $vsPos2 = strpos($vs, '#');
+                $varName = substr($vs, 0, $vsPos2);
+                log::add('Abeille', 'debug', "  'valueswitch' detected: Var='${varName}'");
+
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                if (!isset($eqModel['variables']) || !isset($eqModel['variables'][$varName])) {
+                    message::add("Abeille", "La variable '${varName}' n'est pas définie");
+                    return;
+                }
+                $var = $eqModel['variables'][$varName];
+                $varType = gettype($var);
+                if ($varType == "array")
+                    $newValue = $var[$value];
+                else
+                    $newValue = $var;
+                $trigValue = jeedom::evaluateExpression(str_replace("#valueswitch-${varName}#", $newValue, $trigOffset));
+            } else
+                $trigValue = jeedom::evaluateExpression(str_replace('#value#', $value, $trigOffset));
+        } else
+            $trigValue = $value;
+
+        $trigName = $trigCmd->getName();
+        log::add('Abeille', 'debug', "  Triggering cmd '${trigName}' (${trigLogicId}) with Val='${trigValue}'");
+        $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
+
+        // Is the triggered command a battery percent reporting ?
         if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
             $trigValue = round($trigValue, 0);
-            log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$trigValue);
+            log::add('Abeille', 'debug', "  Battery % reporting: ${trigLogicId}, Val=${trigValue}");
             $eqLogic->setStatus('battery', $trigValue);
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
         }
@@ -1843,13 +1868,13 @@ class Abeille extends eqLogic {
             */
 
             if ($msg['type'] == "attributesReportN")
-                log::add('Abeille', 'debug', "msgFromParser(): Attributes report by name from '".$net."/".$addr."/".$ep);
+                log::add('Abeille', 'debug', "msgFromParser(): Attributes report by name from '${net}/${addr}/${ep}'");
             else
-                log::add('Abeille', 'debug', "msgFromParser(): Read attributes response by name from '".$net."/".$addr."/".$ep);
+                log::add('Abeille', 'debug', "msgFromParser(): Read attributes response by name from '${net}/${addr}/${ep}'");
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', "  Unknown device '".$net."/".$addr."'");
+                log::add('Abeille', 'debug', "  Unknown device '${net}/${addr}'");
                 return; // Unknown device
             }
 
@@ -1870,11 +1895,11 @@ class Abeille extends eqLogic {
                         log::add('Abeille', 'debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." (calculValueOffset=".$cvo.")");
                     $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
-                    // Check if any action cmd must be executed triggered by this update
-                    Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
-
                     // Checking if battery info, only if registered command
                     Abeille::checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
+
+                    // Check if any action cmd must be executed triggered by this update
+                    Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
                 }
             }
 

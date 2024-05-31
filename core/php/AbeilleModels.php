@@ -391,7 +391,7 @@
                     // }
                     // $newCmd = json_decode($newCmdTxt, true);
 
-                    // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
+                    // log::add('Abeille', 'debug', 'getDeviceModel(): overloaded cmd='.json_encode($newCmd, JSON_UNESCAPED_SLASHES));
                     $deviceCmds += $newCmd;
                 }
 

@@ -30,14 +30,19 @@
                 "params": "ep=01",
                 "isVisible": "1"
             },
-            "Level": {
-                "use": "inf_zbAttr-0102-CurPosLiftPercent",
-                "params": "ep=01",
+            "Set level": {
+                "use": "act_zbCmdC-0102-GoToLiftPercentage",
+                "value": "Level",
                 "isVisible": "1"
             },
             "Get Level": {
                 "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0102&attrId=0008"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "params": "ep=01",
+                "isVisible": "1"
             },
             "SetReporting 01-0102-0008": {
                 "use": "act_zbConfigureReporting2",

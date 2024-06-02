@@ -1,0 +1,16 @@
+{
+    "act_zbCmdC-0102-GoToTiltPercentage": {
+        "subType": "slider",
+        "logicalId": "#EP#-0102-CmdGoToTiltPercent",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-0102",
+            "request": "ep=#EP#&cmd=08&value=#slider#",
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "type": "action",
+        "unit": "%",
+        "genericType": "FLAP_UP"
+    }
+}

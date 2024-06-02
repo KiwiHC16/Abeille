@@ -36,6 +36,11 @@
                 "value": "Level",
                 "isVisible": "1"
             },
+            "Set level tilt": {
+                "use": "act_zbCmdC-0102-GoToTiltPercentage",
+                "value": "Level",
+                "isVisible": "1"
+            },
             "Get Level": {
                 "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0102&attrId=0008"

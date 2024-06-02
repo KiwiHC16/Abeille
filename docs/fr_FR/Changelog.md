@@ -10,6 +10,7 @@
 -   Modèle d'équipement: Amélioration 'valueOffset': Ajout support '#valueswitch-XXXX#'
 - Assistant modèle: Ajout du type générique.
 - Modèles d'équipement: Suppression info 'Time-TimeStamp'.
+- Interne: Zigate cmd: Correction 'cmd-0102' pour 'set tilt percent'.
 
 ## 240519-BETA-1
 

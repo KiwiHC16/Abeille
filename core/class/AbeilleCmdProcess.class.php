@@ -2319,7 +2319,7 @@
                         $modeVal = "02";
                     } else // Normal
                         $modeVal = "00";
-                    cmdLog('debug', "  Setting mode ".$mode."/".$modeVal);
+                    cmdLog('debug', "  Setting mode ${modeVal}/${mode}");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0002", $modeVal);
                     return;
                 }
@@ -4502,15 +4502,15 @@
                     $dstEp      = $Command['ep'];
                     $extra      = '';
                     $value      = (isset($Command['value']) ? (int)$Command['value'] : 0);
-                    if ($cmdId == "04" || $cmdId == "06")
+                    if ($cmdId == "04" || $cmdId == "07")
                         $extra = sprintf("%04X", $value); // uint16
-                    else if ($cmdId == "05" || $cmdId == "07")
+                    else if ($cmdId == "05" || $cmdId == "08")
                         $extra = sprintf("%02X", $value); // uint8
 
-                    cmdLog('debug', '  cmd-0102: cmdId='.$cmdId.', extra='.$extra);
+                    cmdLog('debug', "  cmd-0102: CmdId=${cmdId}, Extra=${extra}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId.$extra;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-0102'
 

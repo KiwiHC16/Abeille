@@ -8,6 +8,7 @@
 -   NodOn SIN-4-FP-21: Support préliminaire.
 -   Interne: Améliorations 'check_json'.
 -   Modèle d'équipement: Amélioration 'valueOffset': Ajout support '#valueswitch-XXXX#'
+- Assistant modèle: Ajout du type générique.
 
 ## 240519-BETA-1
 

@@ -208,6 +208,33 @@
                         <input type="text" value="" id="idType">
                     </div>
                 </div>
+                <div class="row">
+                    <label class="col-lg-2 control-label" for="fname">{{Type générique}}:</label>
+                    <div class="col-lg-10">
+                    <select id="idGenericType" style="width:178px" title="{{Type générique}}">
+                        <option value="Other" selected>{{Autre}}</option>
+                        <option value="Battery">{{Batterie}}</option>
+                        <option value="Camera">{{Caméra}}</option>
+                        <option value="Heating">{{Chauffage}}</option>
+                        <option value="ac">{{Climatisation}}</option>
+                        <option value="Electricity">{{Electricité}}</option>
+                        <option value="Environment">{{Environnement}}</option>
+                        <option value="Generic">{{Générique}}</option>
+                        <option value="tracking">{{Géolocalisation}}</option>
+                        <option value="Light">{{Lumière}}</option>
+                        <option value="Multimedia">{{Multimédia}}</option>
+                        <option value="Weather">{{Météo}}</option>
+                        <option value="Opening">{{Ouvrant}}</option>
+                        <option value="Outlet">{{Prise}}</option>
+                        <option value="Robot">{{Robot}}</option>
+                        <option value="Security">{{Sécurité}}</option>
+                        <option value="Thermostat">{{Thermostat}}</option>
+                        <option value="Fan">{{Ventilateur}}</option>
+                        <option value="Shutter">{{Volet}}</option>
+                        <option value="Shutter">{{Volet}}</option>
+                    </select>
+                    </div>
+                </div>
 
                 <div class="row">
                     <label class="col-lg-2 control-label" for="fname">Timeout (min):</label>
@@ -1387,6 +1414,7 @@
         jeq2.manufacturer = document.getElementById("idManuf").value;
         jeq2.model = document.getElementById("idModel").value;
         jeq2.type = document.getElementById("idType").value;
+        jeq2.genericType = document.getElementById("idGenericType").value;
         timeout = document.getElementById("idTimeout").value;
         if (timeout != '')
             jeq2.timeout = timeout;
@@ -2377,6 +2405,7 @@ console.log(zEndPoints);
                 document.getElementById("idManuf").value = "";
                 document.getElementById("idModel").value = "";
                 document.getElementById("idType").value = "";
+                document.getElementById("idGenericType").value = "";
                 document.getElementById("idIcon").value = "";
                 document.getElementById("idBattery").value = "";
                 document.getElementById("idMainEP").value = "";

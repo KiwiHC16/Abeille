@@ -3,6 +3,7 @@
         "manufacturer": "Nodon",
         "model": "SIN-4-RS-20",
         "type": "NodOn roller shutter module",
+        "genericType": "Shutter",
         "category": {
             "opening": "1"
         },

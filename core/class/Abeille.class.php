@@ -272,12 +272,13 @@ class Abeille extends eqLogic {
                 $eqName = $eqLogic->getname();
 
                 /* Checking if received some news in the last 15mins */
-                $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
+                $cmd = $eqLogic->getCmd('info', 'Time-Time');
                 if (!is_object($cmd)) { // Cmd not found
-                    log::add('Abeille', 'warning', "cron15(): Commande 'Time-TimeStamp' manquante pour ".$eqName);
-                    continue; // No sense to interrogate EQ if Time-TimeStamp does not exists
+                    log::add('Abeille', 'warning', "cron15(): Commande 'Time-Time' manquante pour ".$eqName);
+                    continue; // No sense to interrogate EQ if Time-Time does not exists
                 }
                 $lastComm = $cmd->execCmd();
+                $lastComm = strtotime($lastComm);
                 if (!is_numeric($lastComm)) { // Does it avoid PHP warning ?
                     // No comm from EQ yet.
                     $daemonsStart = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
@@ -1085,7 +1086,8 @@ class Abeille extends eqLogic {
         $dest = $Filter;
 
         // log all messages except the one related to Time, which overload the log
-        if (!in_array($cmdId, array("Time-Time", "Time-TimeStamp", "Link-Quality"))) {
+        // if (!in_array($cmdId, array("Time-Time", "Time-TimeStamp", "Link-Quality"))) {
+        if (!in_array($cmdId, array("Time-Time", "Link-Quality"))) {
             log::add('Abeille', 'debug', "message(topic='".$topic."', payload='".$payload."')");
         }
 
@@ -1262,11 +1264,11 @@ class Abeille extends eqLogic {
             // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
             // if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
             // else
-            if ($cmdId == "Time-TimeStamp") {
-                // log::add('Abeille', 'debug', "  Updating 'online' status for '".$dest."/".$addr."'");
-                $cmdLogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'online');
-                $eqLogic->checkAndUpdateCmd($cmdLogicOnline, 1);
-            }
+            // if ($cmdId == "Time-TimeStamp") {
+            //     // log::add('Abeille', 'debug', "  Updating 'online' status for '".$dest."/".$addr."'");
+            //     $cmdLogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'online');
+            //     $eqLogic->checkAndUpdateCmd($cmdLogicOnline, 1);
+            // }
 
             // Traitement particulier pour rejeter certaines valeurs
             // exemple: le Xiaomi Wall Switch 2 Bouton envoie un On et un Off dans le même message donc Abeille recoit un ON/OFF consecutif et
@@ -3220,11 +3222,11 @@ class Abeille extends eqLogic {
            The cases hereafter could be removed. Using 'lastCommunication' allows to no longer
            use these 3 specific & redondant commands. To be discussed. */
 
-        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
-        if (!is_object($cmdLogic))
-            log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-TimeStamp'");
-        else
-            $eqLogic->checkAndUpdateCmd($cmdLogic, $timestamp);
+        // $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
+        // if (!is_object($cmdLogic))
+        //     log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-TimeStamp'");
+        // else
+        //     $eqLogic->checkAndUpdateCmd($cmdLogic, $timestamp);
 
         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
         if (!is_object($cmdLogic))

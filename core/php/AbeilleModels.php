@@ -402,7 +402,7 @@
                     'inf_linkQuality' => 'Link Quality',
                     'inf_online' => 'Online',
                     'inf_time-String' => 'Time-Time',
-                    'inf_time-Timestamp' => 'Time-TimeStamp'
+                    // 'inf_time-Timestamp' => 'Time-TimeStamp'
                 );
                 foreach ($baseCmds as $cFName => $cJName) {
                     $c = getCommandModel($modelName, $cFName, $cJName);

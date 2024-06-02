@@ -1163,8 +1163,9 @@
          * - Config DB: 'ab::zgPortX' => 'ab::gtwPortX'.
          * - Config DB: 'ab::zgIpAddrX' => 'ab::gtwIpAddrX'
          * - Config DB: 'ab::zgChanX' => 'ab::gtwChanX'
+         * - Cmd DB: Removed all 'Time-TimeStamp' info cmds.
          */
-        if (intval($dbVersion) < 20240503) {
+        if (intval($dbVersion) < 20240602) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
@@ -1182,6 +1183,33 @@
                 renameConfigKey("ab::zgIpAddr${gtwId}", "ab::gtwIpAddr${gtwId}");
 
                 renameConfigKey("ab::zgChan${gtwId}", "ab::gtwChan${gtwId}");
+            }
+
+            // 'eqLogic' + 'cmd' DB updates
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $eqId = $eqLogic->getId();
+                $eqHName = $eqLogic->getHumanName();
+                // $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                // $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
+                $saveEq = false;
+
+                // cmd
+                $cmds = Cmd::byEqLogicId($eqId);
+                foreach ($cmds as $cmdLogic) {
+                    $cmdLogicId = $cmdLogic->getLogicalId();
+                    $cmdHName = $cmdLogic->getHumanName();
+
+                    $saveCmd = false;
+                    // Time-TimeStamp is duplicate info of Time-Time. Just different format
+                    if ($cmdLogicId == 'Time-TimeStamp') {
+                        $cmdLogic->remove();
+                        log::add('Abeille', 'debug', "  ${cmdHName}: Removed");
+                    }
+
+                    if ($saveCmd)
+                        $cmdLogic->save();
+                }
             }
 
             // config::save('ab::dbVersion', '20240503', 'Abeille');

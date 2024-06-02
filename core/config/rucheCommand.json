@@ -37,15 +37,6 @@
         "invertBinary": "0",
         "template": ""
     },
-    "Time-TimeStamp": {
-        "name": "Last Stamps",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
     "ZiGate-Time": {
         "name": "ZiGate-Time",
         "isHistorized": "0",

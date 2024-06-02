@@ -127,7 +127,6 @@ $commands = array(
                   "Temperature"=>"All",
                   "Test"=>"Network",
                   "Time-Time"=>"Time",
-                  "Time-TimeStamp"=>"Time",
                   "Toggle"=>"All",
                   "Toggle1"=>"All",
                   "Toggle2"=>"All",

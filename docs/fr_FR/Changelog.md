@@ -9,6 +9,7 @@
 -   Interne: Améliorations 'check_json'.
 -   Modèle d'équipement: Amélioration 'valueOffset': Ajout support '#valueswitch-XXXX#'
 - Assistant modèle: Ajout du type générique.
+- Modèles d'équipement: Suppression info 'Time-TimeStamp'.
 
 ## 240519-BETA-1
 

@@ -350,6 +350,17 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0102/WindowCovering">ZCL: 0102 - Window covering</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Appliquer}}", "btn-danger", "0102-Apply");
+            addEpInput("idEp-0102");
+            add0102CmdsList("idCmd-0102");
+        ?>
+        <input id="idExtra-0102" title="{{Valeur}}" placeholder="{{Valeur}}" style="width:60px" />
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0201, Setpoint Raise/Lower (cmd 00)">ZCL: 0201 - Raise/lower</label>
     <div class="col-sm-5">
         <?php

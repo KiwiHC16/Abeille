@@ -2222,6 +2222,12 @@ function interrogate(request) {
         topic = "Cmd" + logicalId + "_removeAllGroups";
         ep = document.getElementById("idEp-RAG").value;
         payload = "ep=" + ep;
+    } else if (request == "0102-Apply") {
+        topic = "Cmd" + logicalId + "_cmd-0102";
+        ep = document.getElementById("idEp-0102").value;
+        cmdId = document.getElementById("idCmd-0102").value;
+        extra = document.getElementById("idExtra-0102").value;
+        payload = "ep=" + ep + "_cmd=" + cmdId;
     } else if (request == "0201-SetPoint") {
         topic = "Cmd" + logicalId + "_cmd-0201";
         ep = document.getElementById("idEpC0201-00").value;

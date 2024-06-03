@@ -4472,14 +4472,14 @@
 
                 // ZCL cluster 0102/Window covering specific cmds
                 // Mandatory params: addr, ep, cmd
-                //      + value (décimal) for cmd '04'/'05'/'06'/'07'
+                //      + value (décimal) for cmd '04'/'05'/'07'/'08'
                 // Optional params: none
                 else if ($cmdName == 'cmd-0102') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
                     $cmdId = $Command['cmd'];
-                    if ($cmdId == '04' || $cmdId == '05' || $cmdId == '06' || $cmdId == '07')
+                    if ($cmdId == '04' || $cmdId == '05' || $cmdId == '07' || $cmdId == '08')
                         if (!isset($Command['value'])) {
                             cmdLog('error', "  cmd-0102: Champ 'value' non renseigné");
                             return;

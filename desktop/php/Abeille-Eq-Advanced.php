@@ -101,6 +101,19 @@
         echo '</select>';
     }
 
+    // Create drop down list of cluster 0102/Window covering cmds
+    function add0102CmdsList($id) {
+        echo '<select id="'.$id.'" style="width:140px; margin-left: 8px" title="{{Commande}}" />';
+        echo '<option value="00" selected>Up/Open</option>';
+        echo '<option value="01">Down/Close</option>';
+        echo '<option value="02">Stop</option>';
+        echo '<option value="04">Go to lift value</option>';
+        echo '<option value="05">Go to lift percent</option>';
+        echo '<option value="07">Go to tilt value</option>';
+        echo '<option value="08">Go to tilt percent</option>';
+        echo '</select>';
+    }
+
     function addCheckbox($id, $title = '', $ph = '') {
         // Note: CHECKED by default
         echo '<input type="checkbox" id="'.$id.'" checked style="width:120px; margin-left: 8px" title="'.$title.'" placeholder="'.$ph.'"/>';

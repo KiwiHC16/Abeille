@@ -8,9 +8,11 @@
 -   NodOn SIN-4-FP-21: Support préliminaire.
 -   Interne: Améliorations 'check_json'.
 -   Modèle d'équipement: Amélioration 'valueOffset': Ajout support '#valueswitch-XXXX#'
-- Assistant modèle: Ajout du type générique.
-- Modèles d'équipement: Suppression info 'Time-TimeStamp'.
-- Interne: Zigate cmd: Correction 'cmd-0102' pour 'set tilt percent'.
+-   Assistant modèle: Ajout du type générique.
+-   Modèles d'équipement: Suppression info 'Time-TimeStamp'.
+-   Interne: Zigate cmd: Correction 'cmd-0102' pour 'set tilt percent'.
+-   Interne: Parser: Correction mineure pour fin OTA.
+-   Interne: Parser: Lecture attr 0006/DateCode & 4000/SWBuildId cluster 0000 si manquants.
 
 ## 240519-BETA-1
 

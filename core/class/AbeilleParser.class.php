@@ -467,7 +467,7 @@
             /* Default identification: need EP list.
                Tcharp38 note: Some devices may not answer to active endpoints request at all. */
             parserLog('debug', '  Requesting active end points list');
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getActiveEndpoints");
+            msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getActiveEndpoints");
 
             /* Special trick for NXP based devices.
                - Note: 00158D=Jennic Ltd.
@@ -477,7 +477,7 @@
             $nxp = (substr($ieee, 0, 9) == "00158D000") ? true : false;
             if ($nxp) {
                 parserLog('debug', '  NXP based device. Requesting modelIdentifier from EP 01');
-                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=0005");
+                msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/readAttribute", "ep=01&clustId=0000&attrId=0005");
             }
         }
 
@@ -515,7 +515,7 @@
 
         /* There are device infos updates (ex: endpoints, manufId, modelId, location, ...). */
         function deviceUpdates($net, $addr, $ep, $updates = []) {
-            parserLog('debug', "  deviceUpdates(${net}, ${addr}, EP=${ep}, upd=".json_encode($updates, JSON_UNESCAPED_SLASHES).")");
+            parserLog('debug', "  deviceUpdates(${net}, ${addr}, EP=${ep}, Upd=".json_encode($updates, JSON_UNESCAPED_SLASHES).")");
             if (isset($updates['ieee']))
                 $ieee = $updates['ieee'];
             else
@@ -652,14 +652,14 @@
 
             if (!$eq['ieee']) {
                 parserLog('debug', '    Requesting IEEE');
-                msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
+                msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getIeeeAddress");
                 return $ret;
             }
             // IEEE is available
 
             if (!$eq['endPoints']) {
                 parserLog('debug', '    Requesting active endpoints list');
-                msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
+                msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getActiveEndpoints");
                 return $ret;
             }
             // Endpoints list is available
@@ -668,21 +668,21 @@
             foreach ($eq['endPoints'] as $epId2 => $ep2) {
                 if (!isset($ep2['servClusters'])) {
                     parserLog('debug', '    Requesting simple descriptor for EP '.$epId2);
-                    msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
+                    msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getSimpleDescriptor", "ep=".$epId2);
                     break; // To reduce requests on first missing descriptor
                 } else if (strpos($ep2['servClusters'], '0004') !== false) {
                     if (isset($ep2['groups']))
                         parserLog('debug', '    Groups='.json_encode($ep2['groups']));
                     if (!isset($eq['groups']) || !isset($eq['groups'][$epId2])) {
                         parserLog('debug', '    Requesting groups membership for EP '.$epId2);
-                        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
+                        msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getGroupMembership", "ep=".$epId2);
                         break; // To reduce requests on first missing groups membership
                     }
                 }
             }
             if (!isset($eq['manufCode']) || ($eq['manufCode'] === null)) {
                 parserLog('debug', '    Requesting node descriptor');
-                msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
+                msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getNodeDescriptor");
             }
 
             // Check if main signature is missing but available in EP
@@ -735,14 +735,40 @@
                         $missingTxt .= 'location';
                     }
                     if ($missing != '') {
-                        parserLog('debug', '    Requesting '.$missingTxt.' from EP '.$epId2);
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+                        parserLog('debug', "    Requesting ${missingTxt} from EP ${epId2}");
+                        msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                         break; // Reducing requests on first missing stuff
                     }
                 }
             }
 
-            /* Trying to identify device with currently known infos:
+            // Check if attr 0006 & 4000 from cluster 0000 are known
+            foreach ($eq['endPoints'] as $epId2 => $ep2) {
+                if (!isset($eq['endPoints'][$epId2]['servClusters']['0000']))
+                    continue; // No basic cluster
+
+                $missing = '';
+                $missingTxt = '';
+                if (!isset($eq['endPoints'][$ep]['dateCode'])) {
+                    $missing .= '0006';
+                    $missingTxt .= 'dateCode';
+                }
+                if (!isset($eq['endPoints'][$ep]['swBuildId'])) {
+                    if ($missing != '') {
+                        $missing .= ',';
+                        $missingTxt .= '/';
+                    }
+                    $missing .= '4000';
+                    $missingTxt .= 'swBuildId';
+                }
+                if ($missing != '') {
+                    parserLog('debug', "    Requesting ${missingTxt} from EP ${epId2}");
+                    msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/readAttribute", "ep=${epId2}&clustId=0000&attrId=${missing}");
+                    break; // Reducing requests on first missing stuff
+                }
+            }
+
+            /* Trying to identify device model with currently known infos:
                 - if modelId is supported
                     - search for JSON with 'modelId_manuf' then 'modelId'
                 - else (modelId is not supported) if location is supported
@@ -795,12 +821,12 @@
                 if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
                         parserLog('debug', '    Profalux v2: Requesting binding table size.');
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "");
+                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getBindingTable", "");
                         return false; // Remote still not binded with curtain
                     }
                     if ($eq['bindingTableSize'] == 0) {
                         parserLog('debug', '    Profalux v2: Waiting remote to be binded.');
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "");
+                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getBindingTable", "");
                         return false; // Remote still not binded with curtain
                     }
                     parserLog('debug', '    Profalux v2: Remote binded. Let\'s configure.');
@@ -904,10 +930,10 @@
                 //     $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
                 //     parserLog('debug', '      topic='.$topic.", request='".$request."'");
                 //     if ($delay == 0)
-                //         msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/".$topic, $request);
+                //         msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/".$topic, $request);
                 //     else {
                 //         $delay = time() + $delay;
-                //         msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
+                //         msgToCmd(PRIO_NORM, "TempoCmd${net}/${addr}/".$topic.'&time='.$delay, $request);
                 //     }
                 // }
 
@@ -968,12 +994,12 @@
             // foreach ($epArr as $epId) {
             //     $eq['zigbee']['endPoints'][$epId] = [];
             //     parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-            //     msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getSimpleDescriptor", 'ep='.$epId);
+            //     msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getSimpleDescriptor", 'ep='.$epId);
             // }
             foreach ($eq['endPoints'] as $epId => $ep) {
                 $eq['discovery']['endPoints'][$epId] = [];
                 parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getSimpleDescriptor", 'ep='.$epId);
+                msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getSimpleDescriptor", 'ep='.$epId);
             }
 
             /* Discover ongoing. Informing Abeille for EQ creation/update */
@@ -1031,10 +1057,10 @@
 
                     /* Requesting list of supported attributes */
                     foreach ($val2['servClusters'] as $clustId => $clust) {
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
+                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
                     }
                     foreach ($val2['cliClusters'] as $clustId => $clust) {
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=01&startAttrId=0000&maxAttrId=FF');
+                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=01&startAttrId=0000&maxAttrId=FF');
                     }
                 }
             }
@@ -1063,12 +1089,12 @@
                     if ($missingAttrNb < 4)
                         continue;
 
-                    msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
                     $missingAttr = '';
                     $missingAttrNb = 0;
                 }
                 if ($missingAttrNb != 0)
-                    msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
             }
 
             // discoverUpdate($dest, $srcAddr, $srcEp, 'DiscoverAttributesExtResponse', $clustId, $isServer, $attributes);
@@ -1088,7 +1114,7 @@
                     if (isset($attr['access']))
                         $clust['attributes'][$attrId]['access'] = $attr['access'];
                     if (!isset($clust['attributes'][$attrId]['value']))
-                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
+                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
                 }
             }
 
@@ -4264,7 +4290,7 @@
                             // Responding to device: image found
                             $imgVers = $fw['fileVersion'];
                             $imgSize = $fw['fileSize'];
-                            parserLog2('debug', $srcAddr, "  FW version ".$imgVers." available. Response handled by Zigate server.");
+                            parserLog2('debug', $srcAddr, "  FW version ${imgVers} available. Response handled by Zigate server.");
                             // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
                         } else if ($cmd == "03") { // Image Block Request
                             $fieldControl = substr($msg, 0, 2);
@@ -4280,9 +4306,9 @@
                             parserLog2('debug', $srcAddr, $m);
                         } else if ($cmd == "06") { // Upgrade end request
                             $status = substr($pl, 0, 2);
-                            $manufCode = substr($pl, 2, 4);
-                            $imgType = substr($pl, 6, 4);
-                            $fileVersion = substr($pl, 10, 8);
+                            $manufCode = AbeilleTools::reverseHex(substr($pl, 2, 4));
+                            $imgType = AbeilleTools::reverseHex(substr($pl, 6, 4));
+                            $fileVersion = AbeilleTools::reverseHex(substr($pl, 10, 8));
 
                             $m = '  OTA upgrade end request'
                                 .', Status='.$status
@@ -4292,20 +4318,20 @@
                             parserLog2('debug', $srcAddr, $m);
 
                             // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
-                            $eqLogic = Abeille::byLogicalId($dest.'/'.$srcAddr, 'Abeille');
+                            $eqLogic = Abeille::byLogicalId("${dest}/${srcAddr}", 'Abeille');
                             $eqHName = $eqLogic->getHumanName();
                             switch ($status) {
                             case "00":
-                                message::add("Abeille", $eqHName.": Mise-à-jour du firmware terminée");
+                                message::add("Abeille", "${eqHName}: Mise-à-jour du firmware terminée avec succès");
                                 break;
                             case "95":
-                                message::add("Abeille", $eqHName.": Transfert du firmware annulé par l'équipement");
+                                message::add("Abeille", "${eqHName}: Transfert du firmware annulé par l'équipement");
                                 break;
                             case "96":
-                                message::add("Abeille", $eqHName.": Transfert du firmware terminé mais invalide");
+                                message::add("Abeille", "${eqHName}: Transfert du firmware terminé mais invalide");
                                 break;
                             case "99":
-                                message::add("Abeille", $eqHName.": Transfert du firmware terminé mais d'autres images sont requises pour la mise-à-jour");
+                                message::add("Abeille", "${eqHName}: Transfert du firmware terminé mais d'autres images sont requises pour la mise-à-jour");
                                 break;
                             }
                         }
@@ -5226,7 +5252,7 @@
 
         //     /* Forwarding to Abeille */
         //     $attributes = array();
-        //     // $this->msgToAbeille($dest.'/'.$srcAddr, "Click", "Middle", $status);
+        //     // $this->msgToAbeille("${dest}/${srcAddr}", "Click", "Middle", $status);
         //     // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".
         //     //           Moreover no sense since there may have no link with "middle". It's is just a OnOff cmd FROM a device to Zigate.
         //     $attr = array(

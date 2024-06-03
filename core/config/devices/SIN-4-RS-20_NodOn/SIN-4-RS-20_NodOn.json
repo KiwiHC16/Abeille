@@ -16,6 +16,12 @@
                 "use": "act_zbCmdC-Identify",
                 "nextLine": "after"
             },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes",
+                "comment": "Might be required for init purposes according to herdsamn converters"
+            },
             "Up": {
                 "use": "act_zbCmdC-0102-UpOpen",
                 "params": "ep=01",

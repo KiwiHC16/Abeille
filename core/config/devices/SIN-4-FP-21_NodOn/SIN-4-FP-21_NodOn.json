@@ -13,12 +13,12 @@
         },
         "variables": {
             "modesValToStr": {
-                "00": "Off",
-                "01": "Comfort",
-                "02": "Eco",
-                "03": "Frost protection",
-                "04": "Comfort-1",
-                "05": "Comfort-2"
+                "0": "Off",
+                "1": "Comfort",
+                "2": "Eco",
+                "3": "Frost protection",
+                "4": "Comfort-1",
+                "5": "Comfort-2"
             }
         },
         "commands": {
@@ -64,7 +64,8 @@
                 "use": "act_zbCmdC-Generic",
                 "params": "clustId=FC00&cmd=00&manufCode=128B&data=#select#",
                 "subType": "select",
-                "listValue": "00|Off;01|Comfort;02|Eco;03|Frost_protection;04|Comfort-1;05|Comfort-2",
+                "listValue": "0|Off;1|Comfort;2|Eco;3|Frost_protection;4|Comfort-1;5|Comfort-2",
+                "valueOffset": "#valueformat-%02X#",
                 "value": "Current",
                 "trigOut": {
                     "getCurrentMode": {}

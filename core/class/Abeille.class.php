@@ -1315,29 +1315,41 @@ class Abeille extends eqLogic {
             return;
         }
 
-        log::add('Abeille', 'debug', "  trigCommand(): trigOffset=${trigOffset}");
+        log::add('Abeille', 'debug', "  trigCommand(Val=${value}, TrigOffset='${trigOffset}')");
         if ($trigOffset != '') {
             $vsPos = stripos($trigOffset, '#valueswitch-'); // Any #valueswitch-....# variable ?
             if ($vsPos !== false) {
                 $vs = substr($trigOffset, $vsPos + 13);
                 $vsPos2 = strpos($vs, '#');
                 $varName = substr($vs, 0, $vsPos2);
-                log::add('Abeille', 'debug', "  'valueswitch' detected: Var='${varName}'");
+                log::add('Abeille', 'debug', "  'valueswitch' detected: VarName='${varName}'");
 
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                if (!isset($eqModel['variables']) || !isset($eqModel['variables'][$varName])) {
-                    message::add("Abeille", "La variable '${varName}' n'est pas définie");
+                $varUp = strtoupper($varName);
+                if (!isset($eqModel['variables']) || !isset($eqModel['variables'][$varUp])) {
+                    $eqHName = $eqLogic->getHumanName();
+                    message::add("Abeille", "${eqHName}: La variable '${varUp}' n'est pas définie");
                     return;
                 }
-                $var = $eqModel['variables'][$varName];
+                $var = $eqModel['variables'][$varUp];
+                log::add('Abeille', 'debug', "  Var=".json_encode($var, JSON_UNESCAPED_SLASHES));
                 $varType = gettype($var);
-                if ($varType == "array")
-                    $newValue = $var[$value];
-                else
+                log::add('Abeille', 'debug', "  varType=${varType}");
+                if ($varType == "array") {
+                    // Variable is an array so keys are string. If value is int => convert to hex string.
+                    log::add('Abeille', 'debug', "  valueType=".gettype($value));
+                    if (gettype($value) != "string") {
+                        $value2 = strval($value);
+                        log::add('Abeille', 'debug', "  value2=${value2}");
+                        $newValue = $var[$value2];
+                    } else
+                        $newValue = $var[$value];
+                } else
                     $newValue = $var;
-                $trigValue = jeedom::evaluateExpression(str_replace("#valueswitch-${varName}#", $newValue, $trigOffset));
+                log::add('Abeille', 'debug', "  newValue=".json_encode($newValue, JSON_UNESCAPED_SLASHES));
+                $trigValue = jeedom::evaluateExpression(str_ireplace("#valueswitch-${varName}#", $newValue, $trigOffset));
             } else
-                $trigValue = jeedom::evaluateExpression(str_replace('#value#', $value, $trigOffset));
+                $trigValue = jeedom::evaluateExpression(str_ireplace('#value#', $value, $trigOffset));
         } else
             $trigValue = $value;
 

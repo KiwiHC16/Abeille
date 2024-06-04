@@ -99,6 +99,8 @@
                     if (isset($_options['message']))
                         $request2 = str_replace('#message#', $_options['message'], $request2);
                     break;
+                default: // 'other'
+                    break;
                 }
             }
             // logMessage('debug', 'request - options: '.$request2);
@@ -126,7 +128,7 @@
             logMessage('debug', "-- execute(".$this->getHumanName().", type=".$this->getType().', options='.json_encode($_options).')');
 
             if ($this->getType() != 'action') {
-                logMessage('debug', "-- Unexpected info command");
+                logMessage('debug', "-- Unexpected info command => ignored");
                 return;
             }
 
@@ -193,6 +195,7 @@
             // Reminder: 'valueOffset' is equivalent to 'calculValueOffset' for action cmd.
             // Ex: "valueOffset": "#value#*10"
             // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+            // Ex: "valueOffset": "#valueformat-%02X#" (equiv 'sprintf("%02X", #value#)')
             $vo = $cmdLogic->getConfiguration('ab::valueOffset', null);
             if ($vo !== null) {
                 if (isset($_options['slider'])) {
@@ -237,6 +240,22 @@
                     $newValue = jeedom::evaluateExpression($vo); // Compute final formula
                     $request = str_replace('#value#', $newValue, $request);
                     logMessage('debug', "-- 'valueOffset' applied: newValue=${newValue}");
+                }
+
+                if (isset($_options['slider']))
+                    $value = $_options['slider'];
+                else if (isset($_options['select']))
+                    $value = $_options['select'];
+
+                // #valueformat-FMT# ?
+                $vFmtPos = stripos($vo, '#valueformat-'); // Any #valueformat-FMT# variable ?
+                if ($vFmtPos !== false) {
+                    $fmt = substr($vo, $vFmtPos + 13); // 'FMT#'
+                    $end = strpos($fmt, '#'); // '#' position
+                    $fmt = substr($fmt, 0, $end); // 'FMT'
+                    $newValue = sprintf($fmt, $value);
+                    $request = str_ireplace("#valueformat-${fmt}#", $newValue, $request);
+                    logMessage('debug', "-- 'valueformat': Replaced '${value}' by '${newValue}'");
                 }
             }
 

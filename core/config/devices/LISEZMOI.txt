@@ -145,11 +145,11 @@ Exemple: BASICZBR3.json
         Type generique de la commande (ex: FLAP_UP pour un bouton 'monter' de volet).
     unit: Surcharge de l'unité par defaut.
         Permet de définir l'unité affichée avec l'information (cmde 'info').
-    notStandard: optionnel
+    notStandard: Optionnel
         Permet d'indiquer que cette commande (attribut du standard Zigbee) n'est pas standard.
         Ex: Dans le cas 0400-0000 (illuminance value), certains Xiaomi renvoient directement une valeur en Lux.
-    valueOffset: Surcharge de la formule de calcul à appliquer avant commande action.
-        Permet d'appliquer une formule par ex sur la valeur d'un slider avant envoi.
+    valueOffset: Optionnel.
+        Permet d'appliquer une formule sur la valeur avant action.
         Ex: "valueOffset": "#value#*10"
         Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
     returnStateTime: X

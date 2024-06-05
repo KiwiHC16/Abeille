@@ -78,8 +78,21 @@
         echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" placeholder="{{Group}}" title="{{'.$title.' (4 chars hex, ex: 0001)}}" />';
     }
 
+    // Create drop down list of cluster 0102/Window covering cmds
+    function add0102CmdsList($id) {
+        echo '<select id="'.$id.'" style="width:140px; margin-left: 8px" title="{{Commande}}" />';
+        echo '<option value="00" selected>00-Up/Open</option>';
+        echo '<option value="01">01-Down/Close</option>';
+        echo '<option value="02">02-Stop</option>';
+        echo '<option value="04">04-Go to lift value</option>';
+        echo '<option value="05">05-Go to lift percent</option>';
+        echo '<option value="07">07-Go to tilt value</option>';
+        echo '<option value="08">08-Go to tilt percent</option>';
+        echo '</select>';
+    }
+
     // Create drop down list of 'Warning modes' (cluster 0502/Start Warning)
-    function addWarningModesList($id) {
+    function add0502WarningModesList($id) {
         echo '<select id="'.$id.'" style="width:90px; margin-left: 8px" title="{{Warning mode}}" />';
         echo '<option value="stop">Stop</option>';
         echo '<option value="burglar">Burglar</option>';
@@ -92,25 +105,12 @@
     }
 
     // Create drop down list of 'Siren levels' (cluster 0502/Start Warning)
-    function addSirenLevelList($id) {
+    function add0502SirenLevelList($id) {
         echo '<select id="'.$id.'" style="width:90px; margin-left: 8px" title="{{Siren level}}" />';
         echo '<option value="low">Low</option>';
         echo '<option value="medium">Medium</option>';
         echo '<option value="high" selected>High</option>';
         echo '<option value="veryhigh">Very high</option>';
-        echo '</select>';
-    }
-
-    // Create drop down list of cluster 0102/Window covering cmds
-    function add0102CmdsList($id) {
-        echo '<select id="'.$id.'" style="width:140px; margin-left: 8px" title="{{Commande}}" />';
-        echo '<option value="00" selected>Up/Open</option>';
-        echo '<option value="01">Down/Close</option>';
-        echo '<option value="02">Stop</option>';
-        echo '<option value="04">Go to lift value</option>';
-        echo '<option value="05">Go to lift percent</option>';
-        echo '<option value="07">Go to tilt value</option>';
-        echo '<option value="08">Go to tilt percent</option>';
         echo '</select>';
     }
 

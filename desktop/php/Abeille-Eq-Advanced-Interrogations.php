@@ -387,9 +387,9 @@
         <?php
             addButton("{{Appliquer}}", "btn-danger", "0502-StartWarning");
             addEpInput("idEp-SW");
-            addWarningModesList("idMode-SW");
+            add0502WarningModesList("idMode-SW");
             addCheckbox("idStrobe-SW", "Strobe");
-            addSirenLevelList("idSirenL-SW");
+            add0502SirenLevelList("idSirenL-SW");
             addInput("idDuration-SW", "Duration in sec", "Duration");
         ?>
     </div>

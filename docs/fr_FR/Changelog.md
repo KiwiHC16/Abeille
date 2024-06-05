@@ -13,7 +13,7 @@
 -   Interne: Zigate cmd: Correction 'cmd-0102' pour 'set tilt percent'.
 -   Interne: Parser: Correction mineure pour fin OTA.
 -   Interne: Parser: Lecture attr 0006/DateCode & 4000/SWBuildId cluster 0000 si manquants.
-- Equipement/avancé: Ajout support cmd-0102/WindowCovering.
+-   Equipement/avancé: Ajout support cmd-0102/WindowCovering.
 
 ## 240519-BETA-1
 

@@ -2227,7 +2227,13 @@ function interrogate(request) {
         ep = document.getElementById("idEp-0102").value;
         cmdId = document.getElementById("idCmd-0102").value;
         extra = document.getElementById("idExtra-0102").value;
+        // Check
+        if (cmdId > 2 && extra == "") {
+            alert("Valeur manquante pour cette commande");
+            return;
+        }
         payload = "ep=" + ep + "_cmd=" + cmdId;
+        if (extra != "") payload += "_value=" + extra;
     } else if (request == "0201-SetPoint") {
         topic = "Cmd" + logicalId + "_cmd-0201";
         ep = document.getElementById("idEpC0201-00").value;

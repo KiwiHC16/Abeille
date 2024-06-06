@@ -14,6 +14,7 @@
 -   Interne: Parser: Correction mineure pour fin OTA.
 -   Interne: Parser: Lecture attr 0006/DateCode & 4000/SWBuildId cluster 0000 si manquants.
 -   Equipement/avancé: Ajout support cmd-0102/WindowCovering.
+- GL-C-007P, GLEDOPTO: Modèle revu.
 
 ## 240519-BETA-1
 

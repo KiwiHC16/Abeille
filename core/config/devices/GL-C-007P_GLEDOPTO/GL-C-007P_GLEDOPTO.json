@@ -1,27 +1,20 @@
 {
     "GL-C-007P_GLEDOPTO": {
         "manufacturer": "Gledopto",
-        "model": "?",
-        "type": "Gledopto GL-C-007P",
+        "model": "GL-C-007P",
+        "type": "Gledopto RGBW Smart LED Strip Controller",
+        "genericType": "Light",
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "light": "1"
         },
         "configuration": {
             "icon": "Gledopto-GL-C-007P",
             "mainEP": "0B"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -34,14 +27,14 @@
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
             },
             "Bind 0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -57,14 +50,14 @@
                 "use": "act_setLevel-Light",
                 "isVisible": 1
             },
+            "Get Current Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "Current Level": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Current Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
             },
             "Bind 0008-ToZigate": {
                 "use": "act_zbBindToZigate",

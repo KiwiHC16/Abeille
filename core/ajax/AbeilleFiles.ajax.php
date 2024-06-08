@@ -186,6 +186,7 @@
                 $cmd .= "; sudo cp http.error event ".$logsDir;
                 // $cmd .= "; sudo cp update ".$logsDir;
                 $cmd .= "; sudo cp ".$tmpDir."/*.log ".$logsDir;
+                $cmd .= "; sudo cp ".$tmpDir."/*.json ".$logsDir;
                 // $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
                 exec($cmd, $out, $status);
                 if ($status != 0) {

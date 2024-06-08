@@ -21,10 +21,10 @@
 <div style="padding-top: 5px">
     <ul class="nav nav-tabs" role="tablist">
         <li role="tab" class="active"><a href="#idLogs"> {{Logs}} </a></li>
-        <?php
+        <!-- < ?php
         if (isset($dbgDeveloperMode))
             echo '<li role="tab"><a href="#idPhantoms"> {{Fantômes}} </a></li>';
-        ?>
+        ?> -->
         <!-- <li role="tab"               ><a href="#idModeles"> {{Modèles}} </a></li> -->
     </ul>
 

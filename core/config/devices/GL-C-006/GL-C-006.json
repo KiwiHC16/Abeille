@@ -2,6 +2,7 @@
     "GL-C-006": {
         "timeout": "60",
         "type": "Gledopto WW/CW LED Controller",
+        "genericType": "Light",
         "comment": "cluster 0300: bind + setReport under test",
         "manufacturer": "Gledopto",
         "model": "GL-C-006",
@@ -14,14 +15,6 @@
             "light": "1"
         },
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
@@ -30,8 +23,28 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
-            "Set Level": {
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "nextLine": "after"
+            },
+            "Get-Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
+            },
+            "Set brightness": {
                 "use": "act_setLevel-Light",
+                "isVisible": 1
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "Set 2200K": {
@@ -70,20 +83,8 @@
             "setReportLightColorSpectre": {
                 "use": "setReportLightColorSpectre"
             },
-            "Get-Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
-            },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
-            },
-            "Scenes": {
-                "use": "Scene-Membership"
+                "use": "act_zbCmdC-Identify"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -108,10 +109,6 @@
                 "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

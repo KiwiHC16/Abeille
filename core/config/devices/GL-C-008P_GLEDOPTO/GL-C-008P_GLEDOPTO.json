@@ -3,25 +3,18 @@
         "manufacturer": "Gledopto",
         "model": "GL-C-008P",
         "type": "Gledopto RGBW strip controller",
+        "genericType": "Light",
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "light": "1"
         },
         "configuration": {
             "icon": "Gledopto-GL-C-008P",
             "mainEP": "0B"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -34,14 +27,14 @@
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
             },
             "Bind 0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -53,16 +46,16 @@
                 "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
-            "Set Level": {
+            "Set brightness": {
                 "use": "act_setLevel-Light",
                 "isVisible": 1
             },
-            "Current Level": {
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Get Current Level": {
+            "Get brightness": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },

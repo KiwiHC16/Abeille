@@ -36,11 +36,11 @@
             ?>
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="idPhantoms" style="height:inherit">
-            <?php
+        <!-- <div role="tabpanel" class="tab-pane" id="idPhantoms" style="height:inherit">
+            < ?php
             include_once "AbeilleMaintenance-Phantoms.php";
             ?>
-        </div>
+        </div> -->
 
         <div role="tabpanel" class="tab-pane" id="idModeles">
             <table id="idModelesTable">

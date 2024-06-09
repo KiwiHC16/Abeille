@@ -329,6 +329,13 @@
     function refreshLqi() {
         console.log("refreshLqi()");
 
+        $("#md_modal").dialog({ title: "{{Analyse du réseau}}" });
+        $("#md_modal")
+            .load("index.php?v=d&plugin=Abeille&modal=AbeilleRefreshLQI.modal")
+            .dialog("open")
+            .dialog("option", "width", 700)
+            .dialog("option", "height", 350);
+
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {

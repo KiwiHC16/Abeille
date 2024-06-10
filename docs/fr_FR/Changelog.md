@@ -17,6 +17,8 @@
 -   GL-C-007P, GLEDOPTO: Modèle revu.
 -   Support: Fichiers JSON réseau ajoutés au package de logs.
 -   Placement réseau: Améliorations & corrections analyse réseau.
+-   Interne: Cmd: Taille queue 'xToCmd' augmentée à 1024.
+-   Support Moes UFO-R11: Correction regression.
 
 ## 240519-BETA-1
 

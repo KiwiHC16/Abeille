@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 240610-BETA-1
+
 -   Support EmberZnet/EZSP: Encore des tas de modifs
 -   GL-D-002P, GLEDOPTO: Ajour support preliminaire (2708).
 -   Assistant modèle: Améliorations mineures.

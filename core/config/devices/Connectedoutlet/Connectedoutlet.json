@@ -12,13 +12,6 @@
             "automatism": "1"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "isVisible": 1

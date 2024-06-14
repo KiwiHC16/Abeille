@@ -88,13 +88,6 @@
             "Identify": {
                 "use": "act_zbCmdC-Identify",
                 "isVisible": 1
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             }
         }
     }

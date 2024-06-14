@@ -145,6 +145,14 @@
                 $cmd = $value;
                 $oldSyntax = false;
 
+                // Removing some useless commands
+                $cmdsToRemove = ['SWBuildID', 'Get-SWBuildID'];
+                if (in_array($cmdJName, $cmdsToRemove)) {
+                    echo "  Cmd '${cmdJName}' REMOVED.\n";
+                    $devUpdated = true;
+                    continue;
+                }
+
                 if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
                     $new = "inf_zbAttr-".substr($cmdFName, 3);
                     $commands2[$key] = $value;

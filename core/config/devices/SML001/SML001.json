@@ -75,9 +75,6 @@
                 "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

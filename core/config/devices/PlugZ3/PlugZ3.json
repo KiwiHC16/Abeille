@@ -2,8 +2,8 @@
     "PlugZ3": {
         "manufacturer": "Ledvance",
         "model": "Plug Z3",
-        "alternateIds":{
-            "PlugValue": {}
+        "alternateIds": {
+            "PlugValue": []
         },
         "timeout": "60",
         "configuration": {
@@ -41,9 +41,6 @@
                 "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",

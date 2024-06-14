@@ -10,10 +10,6 @@
             "light": "1"
         },
         "type": "Template for ZigBee - Non Color Scene Controller",
-        "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            }
-        }
+        "commands": []
     }
 }

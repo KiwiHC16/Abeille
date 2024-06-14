@@ -31,9 +31,6 @@
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",
                 "nextLine": "after"

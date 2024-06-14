@@ -5,8 +5,7 @@
         "type": "Tuya temp and humidity",
         "genericType": "Environment",
         "alternateIds": {
-            "TS0201__TZ3000_bguser20": {
-            }
+            "TS0201__TZ3000_bguser20": []
         },
         "timeout": "62",
         "configuration": {
@@ -18,9 +17,6 @@
             "automatism": "1"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
             "Battery-Volt": {
                 "use": "inf_zbAttr-0001-BatteryVolt"
             },

@@ -13,9 +13,6 @@
             "batteryType": "2x1.5 AA"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
             "Get SWBuildID": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"

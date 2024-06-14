@@ -93,9 +93,6 @@
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         },
         "comment": "https://fr.aliexpress.com/item/4001148859962.html?spm=a2g0s.9042311.0.0.36c76c37kTDh6I"

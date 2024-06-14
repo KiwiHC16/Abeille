@@ -25,9 +25,6 @@
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

@@ -155,10 +155,6 @@
                 "maxValue": "6500",
                 "calculValueOffset": "intval(1000000\\/#value#)",
                 "isVisible": 1
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             }
         }
     }

@@ -26,9 +26,6 @@
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         },
         "comment": "thermom\u00e8tre zigbee ewelink (support) #1525"

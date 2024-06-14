@@ -21,13 +21,6 @@
             },
             "Stop": {
                 "use": "act_zbCmdC-0102-Stop"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             }
         },
         "comment": "https://github.com/KiwiHC16/Abeille/issues/1228"

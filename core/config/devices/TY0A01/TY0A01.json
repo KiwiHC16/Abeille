@@ -9,10 +9,6 @@
             "automatism": "1"
         },
         "type": "Wima Lock",
-        "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            }
-        }
+        "commands": []
     }
 }

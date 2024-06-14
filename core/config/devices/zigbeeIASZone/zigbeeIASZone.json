@@ -16,9 +16,6 @@
             },
             "Battery-Volt": {
                 "use": "inf_zbAttr-0001-BatteryVolt"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

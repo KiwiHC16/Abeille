@@ -12,9 +12,6 @@
             "batteryType": "1x battery pack"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
             "Get SWBuildID": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"

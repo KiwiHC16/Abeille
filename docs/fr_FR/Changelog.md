@@ -4,6 +4,7 @@
 -   Assistant modèles: Amélioration cluster 0008.
 -   Modèles d'équipement: Suppression des commands 'SWBuildID' & 'Get-SWBuildID' (dispo sur onglet 'avancé').
 -   Modèles TRAFRIbulbxxx: Mises-à-jour.
+-   Assistant de découverte: Ajout 'profile ID' + 'device ID'.
 
 ## 240610-BETA-1
 

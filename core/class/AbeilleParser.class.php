@@ -544,12 +544,27 @@
                     if (isset($endPointsUpdated)) {
                         $abUpdates["endPoints"] = $eq['endPoints'];
                     }
+                }
+
+                // Updates from simple descriptor response
+                else if ($updType == 'profId') { // Application profile ID
+                    if (!isset($eq['endPoints'][$ep]['profId'])) {
+                        $eq['endPoints'][$ep]['profId'] = $value;
+                        $abUpdates["profId"] = $value;
+                    }
+                } else if ($updType == 'devId') { // Application device ID
+                    if (!isset($eq['endPoints'][$ep]['devId'])) {
+                        $eq['endPoints'][$ep]['devId'] = $value;
+                        $abUpdates["devId"] = $value;
+                    }
                 } else if ($updType == 'servClusters') { // Server clusters for $ep
                     if (!isset($eq['endPoints'][$ep]['servClusters'])) {
                         $eq['endPoints'][$ep]['servClusters'] = $value;
                         $abUpdates["servClusters"] = $value;
                     }
-                } else if ($updType == 'groups') { // Group membership for $ep
+                }
+
+                else if ($updType == 'groups') { // Group membership for $ep
                     if (!isset($eq['groups']))
                         $eq['groups'] = [];
                     if (!isset($eq['groups'][$ep])) {
@@ -2216,15 +2231,15 @@
             $len        = substr($pl, 8, 2);
             $ep         = substr($pl, 10, 2);
             $profId     = substr($pl, 14, 2).substr($pl, 12, 2);
-            $deviceId   = substr($pl, 18, 2).substr($pl, 16, 2);
+            $devId      = substr($pl, 18, 2).substr($pl, 16, 2);
             $m = '  Simple descriptor response'
                 .': SQN='.$sqn
                 .', Status='.$status
                 .', Addr='.$srcAddr
                 .', Len='.$len
                 .', EP='.$ep
-                .', ProfId='.$profId.'/'.zgGetProfile($profId)
-                .', DevId='.$deviceId.'/'.zgGetDevice($profId, $deviceId);
+                .', ProfId='.$profId.'/'.zbGetProfile($profId)
+                .', DevId='.$devId.'/'.zbGetDevice($profId, $devId);
 
             $discovering = $this->discoveringState($net, $srcAddr);
             if ($status != "00") {
@@ -2278,6 +2293,8 @@
             // $discovering = $this->discoveringState($net, $srcAddr);
             $devUpdates = [];
             if (!$discovering) {
+                $devUpdates['profId'] = $profId;
+                $devUpdates['devId'] = $devId;
                 $devUpdates['servClusters'] = $inputClusters;
             } else {
                 $sdr = [];
@@ -2301,6 +2318,8 @@
                 'net' => $net,
                 'addr' => $srcAddr,
                 'ep' => $ep,
+                'profId' => $profId,
+                'devId' => $devId,
                 'inClustList' => $inputClusters, // Format: 'xxxx/yyyy/zzzz'
                 'outClustList' => $outputClusters // Format: 'xxxx/yyyy/zzzz'
             );

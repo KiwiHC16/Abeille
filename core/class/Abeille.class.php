@@ -1602,6 +1602,14 @@ class Abeille extends eqLogic {
                     }
                     $zigbeeChanged = true;
                     log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to ${jsonUpdVal}");
+                } else if ($updKey == 'profId') {
+                    $zigbee['endPoints'][$ep]['profId'] = $updVal;
+                    $zigbeeChanged = true;
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][profId]' updated to ${jsonUpdVal}");
+                } else if ($updKey == 'devId') {
+                    $zigbee['endPoints'][$ep]['devId'] = $updVal;
+                    $zigbeeChanged = true;
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][devId]' updated to ${jsonUpdVal}");
                 } else if ($updKey == 'servClusters') {
                     $zigbee['endPoints'][$ep]['servClusters'] = $updVal;
                     if (strpos($updVal, '0004') !== false)

@@ -1698,7 +1698,7 @@ console.log("missing value for "+attrId);
 
         if ($type == "epList") {
             zEndPoints = zigbee.endPoints;
-console.log(zEndPoints);
+            console.log(zEndPoints);
 
             changeClass("idEPListRB", "btn-warning", "btn-success");
             changeClass("idEPListRB2", "btn-warning", "btn-success");
@@ -1713,15 +1713,32 @@ console.log(zEndPoints);
                 h += '<br><br>';
                 h += '</div>';
 
+                h += '<div style="margin-left:30px">';
+                h += '  <div class="row">';
+                h += '      <label class="col-lg-2 control-label" for="fname">Profile ID:</label>';
+                h += '      <div class="col-lg-10">';
+                h += '          <a id="idZbProfId'+zEpId+'-RB" class="btn btn-warning" title="{{Relecture}}" onclick="requestInfos(\'clustersList\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
+                h += '          <input type="text" id="idZbProfId'+zEpId+'" value="" readonly>';
+                h += '      </div>';
+                h += '  </div>';
+                h += '  <div class="row">';
+                h += '      <label class="col-lg-2 control-label" for="fname">Device ID:</label>';
+                h += '      <div class="col-lg-10">';
+                h += '          <a id="idZbDevId'+zEpId+'-RB" class="btn btn-warning" title="{{Relecture}}" onclick="requestInfos(\'clustersList\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
+                h += '          <input type="text" id="idZbDevId'+zEpId+'" value="" readonly>';
+                h += '      </div>';
+                h += '  </div>';
+                h += '</div>';
+
                 /* Display manufacturer/modelId & location if cluster 0000 is supported */
                 h += '<div id="idEP'+zEpId+'Model" style="margin-left:30px; display: none">';
-                h += '<div class="row">';
-                h += '<label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
-                h += '<div class="col-lg-10">';
-                h += '<a id="idZbManuf'+zEpId+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZbManuf'+zEpId+'" value="" readonly>';
-                h += '</div>';
-                h += '</div>';
+                h += '  <div class="row">';
+                h += '      <label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
+                h += '      <div class="col-lg-10">';
+                h += '          <a id="idZbManuf'+zEpId+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
+                h += '          <input type="text" id="idZbManuf'+zEpId+'" value="" readonly>';
+                h += '      </div>';
+                h += '  </div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Modèle:</label>';
                 h += '<div class="col-lg-10">';
@@ -1808,6 +1825,8 @@ console.log(zEndPoints);
                 // 'net' => $dest,
                 // 'addr' => $SrcAddr,
                 // 'ep' => $EPoint,
+                // 'profId' => $profId,
+                // 'devId' => $deviceId,
                 // 'servClustList' => $inputClusters, // Format: 'xxxx/yyyy/zzzz'
                 // 'cliClustList' => $outputClusters // Format: 'xxxx/yyyy/zzzz'
                 sEp = msg.ep;
@@ -1821,6 +1840,8 @@ console.log(zEndPoints);
                     return;
                 }
                 ep = zigbee.endPoints[msg.ep];
+                ep.profId = msg.profId; // Application profile ID
+                ep.devId = msg.devId; // Device profile ID
                 ep.servClusters = new Object();
                 servClustArr.forEach((clustId) => {
                     ep.servClusters[clustId] = new Object();
@@ -1831,6 +1852,12 @@ console.log(zEndPoints);
                 });
 
                 /* Updating display */
+                field = document.getElementById("idZbProfId"+sEp);
+                field.value = ep.profId;
+                changeClass("idZbProfId"+sEp+"-RB", "btn-warning", "btn-success");
+                field = document.getElementById("idZbDevId"+sEp);
+                field.value = ep.devId;
+                changeClass("idZbDevId"+sEp+"-RB", "btn-warning", "btn-success");
                 var servClustTable = document.getElementById("idServClust"+sEp);
                 var cliClustTable = document.getElementById("idCliClust"+sEp);
                 /* Cleanup tables */

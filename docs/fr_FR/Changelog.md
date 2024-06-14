@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   GL-C-007P, GLEDOPTO: Ajout controle blanc chaud/froid (2710).
+-   Assistant modèles: Amélioration cluster 0008.
 
 ## 240610-BETA-1
 

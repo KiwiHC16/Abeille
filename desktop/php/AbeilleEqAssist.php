@@ -1010,8 +1010,10 @@
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
                 // Note: If device is a light bulb, need to use 'act_setLevel-Light'
+                // TODO: 'level' should be renamed to 'brightness' is device is a light control one (bulb or controler)
                 cmds["Set Level"+clustIdx] = newCmd("act_setLevel-Light", "ep="+epId);
                 cmds["Set Level"+clustIdx]["isVisible"] = 1;
+                cmds["Set Level"+clustIdx]["value"] = "Level"+clustIdx; // Slider default value
                 cmds["Get Level"+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
 
                 cmds["Level"+clustIdx] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);

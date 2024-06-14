@@ -133,12 +133,26 @@
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "ColorTemperature": {
-                "use": "inf_zbAttr-0300-ColorTemperatureMireds"
-            },
             "Get ColorTemperature": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0007"
+            },
+            "ColorTemperature": {
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds"
+            },
+            "Cool white": {
+                "use": "act_zbCmdC-0300-MoveToColorTemp",
+                "params": "slider=0",
+                "subType": "other",
+                "logicalId": "#EP#-Set-Cool",
+                "isVisible": 1
+            },
+            "Warm white": {
+                "use": "act_zbCmdC-0300-MoveToColorTemp",
+                "params": "slider=200",
+                "subType": "other",
+                "logicalId": "#EP#-Set-Warm",
+                "isVisible": 1
             },
             "Bind 0300-ToZigate": {
                 "use": "act_zbBindToZigate",

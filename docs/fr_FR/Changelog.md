@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   GL-C-007P, GLEDOPTO: Ajout controle blanc chaud/froid (2710).
+
 ## 240610-BETA-1
 
 -   Support EmberZnet/EZSP: Encore des tas de modifs

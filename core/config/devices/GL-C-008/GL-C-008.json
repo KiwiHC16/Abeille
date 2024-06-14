@@ -13,7 +13,15 @@
         },
         "type": "GLEDOPTO RGT+CCT LED Controller",
         "commands": {
-            "etat": {
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "isVisible": 1
+            },
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
@@ -27,14 +35,6 @@
             },
             "CurrentY": {
                 "use": "inf_zbAttr-0300-CurrentY",
-                "isVisible": 1
-            },
-            "On": {
-                "use": "act_zbCmdC-0006-On",
-                "isVisible": 1
-            },
-            "Off": {
-                "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
             "Set Level": {

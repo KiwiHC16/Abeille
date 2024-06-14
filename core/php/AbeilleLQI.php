@@ -440,6 +440,26 @@
         $zgEnd = $zgId;
     }
 
+    $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+
+    // Checking if LQI collector is already running
+    $lockFile = $tmpDir."/AbeilleLQI.lock";
+    if (file_exists($lockFile)) {
+        $content = file_get_contents($lockFile);
+        logMessage("", "Lock content: '${content}'");
+        if (substr($content, 0, 4) != "done") {
+            exec("pgrep -a php | grep AbeilleLQI", $running);
+            if (sizeof($running) != 0) {
+                echo 'ERROR: Collect already ongoing';
+                logMessage("", "LQI collect already ongoing (lock file found) => collect canceled");
+                exit;
+            } else {
+                logMessage("", "Previous LQI collect crashed. Removing lock file.");
+                unlink($lockFile);
+            }
+        }
+    }
+
     // Collecting known equipments list
     logMessage("", "Known Jeedom equipments:");
     $eqLogics = eqLogic::byType('Abeille');
@@ -465,7 +485,6 @@
     $queueParserToLQIMax = $abQueues["parserToLQI"]["max"];
     msgFromParserFlush(); // Flush the queue if not empty
 
-    $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
 
     for ($zgId = $zgStart; $zgId <= $zgEnd; $zgId++) {
         if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y') {
@@ -475,22 +494,7 @@
 
         $netName = "Abeille".$zgId; // Abeille network
         $newDataFile = $tmpDir."/AbeilleLQI-".$netName.".json"; // New format, replacing 'AbeilleLQI_MapDataAbeilleX.json'
-        $lockFile = $newDataFile.".lock";
-        if (file_exists($lockFile)) {
-            $content = file_get_contents($lockFile);
-            logMessage("", $netName." lock content: '".$content."'");
-            if (substr($content, 0, 4) != "done") {
-                exec("pgrep -a php | grep AbeilleLQI", $running);
-                if (sizeof($running) != 0) {
-                    echo 'ERROR: Collect already ongoing';
-                    logMessage("", "LQI collect already ongoing (lock file found) => collect canceled");
-                    exit;
-                } else {
-                    logMessage("", "Previous LQI collect crashed. Removing lock file.");
-                    unlink($lockFile);
-                }
-            }
-        }
+
         $nbwritten = file_put_contents($lockFile, "init");
         if ($nbwritten < 1) {
             unlink($lockFile);

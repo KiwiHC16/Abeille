@@ -33,7 +33,7 @@
             url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: 'getTmpFile',
-                file : "AbeilleLQI-Abeille1.json.lock",
+                file : "AbeilleLQI.lock",
             },
             dataType: "json",
             global: false,

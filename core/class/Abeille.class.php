@@ -619,12 +619,10 @@ class Abeille extends eqLogic {
         message::removeAll('Abeille');
 
         // Remove any remaining temporary files
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
-            $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI-Abeille'.$gtwId.'.json.lock';
-            if (file_exists($lockFile)) {
-                unlink($lockFile);
-                log::add('Abeille', 'debug', 'deamon_start_cleanup(): Removed '.$lockFile);
-            }
+        $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI.lock';
+        if (file_exists($lockFile)) {
+            unlink($lockFile);
+            log::add('Abeille', 'debug', 'deamon_start_cleanup(): Removed '.$lockFile);
         }
 
         // Clear zigate IEEE status to detect any port switch.

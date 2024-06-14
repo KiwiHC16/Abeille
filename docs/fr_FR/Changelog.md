@@ -6,6 +6,7 @@
 -   Modèles TRAFRIbulbxxx: Mises-à-jour.
 -   Assistant de découverte: Ajout 'profile ID' + 'device ID'.
 -   Réparation: Améliorations pour support 'profile ID' + 'device ID'.
+-   Interne: 'AbeilleLQI-AbeilleX.json.lock' => 'AbeilleLQI.lock'
 
 ## 240610-BETA-1
 

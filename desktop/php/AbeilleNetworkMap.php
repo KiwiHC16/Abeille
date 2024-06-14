@@ -381,8 +381,7 @@
             url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: 'getTmpFile',
-                // file : "AbeilleLQI_MapData"+Ruche+".json.lock",
-                file : "AbeilleLQI-"+Ruche+".json.lock",
+                file : "AbeilleLQI.lock",
             },
             dataType: "json",
             global: false,

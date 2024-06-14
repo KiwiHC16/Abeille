@@ -179,7 +179,7 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
         url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
         data: {
             action: "getTmpFile",
-            file: "AbeilleLQI-Abeille" + zgId + ".json.lock",
+            file: "AbeilleLQI.lock",
         },
         dataType: "json",
         global: false,

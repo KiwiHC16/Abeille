@@ -15,10 +15,6 @@
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
             "CurrentX": {
                 "use": "inf_zbAttr-0300-CurrentX",
                 "isVisible": 1
@@ -33,10 +29,6 @@
             },
             "Off": {
                 "use": "act_zbCmdC-0006-Off",
-                "isVisible": 1
-            },
-            "Set Level": {
-                "use": "act_setLevel-Light",
                 "isVisible": 1
             },
             "Colour": {
@@ -77,10 +69,6 @@
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
-            },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
@@ -140,7 +128,21 @@
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",
                 "nextLine": "after"
+            },
+            "Set brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1,
+                "value": "Brightness"
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
             }
-        }
+        },
+        "genericType": "Light"
     }
 }

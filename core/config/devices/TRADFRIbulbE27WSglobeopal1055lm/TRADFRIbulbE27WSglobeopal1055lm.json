@@ -47,18 +47,6 @@
                 "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
-            },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
             "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
@@ -105,7 +93,21 @@
             },
             "setReportLightColorSpectre": {
                 "use": "setReportLightColorSpectre"
+            },
+            "Set brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1,
+                "value": "Brightness"
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
             }
-        }
+        },
+        "genericType": "Light"
     }
 }

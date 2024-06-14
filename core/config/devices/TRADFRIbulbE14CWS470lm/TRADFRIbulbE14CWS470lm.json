@@ -48,10 +48,6 @@
                 "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
             "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
@@ -63,14 +59,6 @@
                 "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
             },
             "Current Hue": {
                 "use": "inf_zbAttr-0300-CurrentHue",
@@ -165,7 +153,21 @@
             },
             "setBleu": {
                 "use": "setBleu"
+            },
+            "Set brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1,
+                "value": "Brightness"
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
             }
-        }
+        },
+        "genericType": "Light"
     }
 }

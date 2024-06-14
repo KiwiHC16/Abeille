@@ -146,7 +146,7 @@
                 $oldSyntax = false;
 
                 // Removing some useless commands
-                $cmdsToRemove = ['SWBuildID', 'Get-SWBuildID'];
+                $cmdsToRemove = ['SWBuildID', 'Get-SWBuildID', 'Get SWBuildID'];
                 if (in_array($cmdJName, $cmdsToRemove)) {
                     echo "  Cmd '${cmdJName}' REMOVED.\n";
                     $devUpdated = true;
@@ -739,6 +739,58 @@
             unset($dev[$devName]['tuyaEF00']);
             $devUpdated = true;
             echo "  'tuyaEF00/fromDevice' updated to 'private/EF00'.\n";
+        }
+
+        // TRADFRIbulbxxx updates
+        if (preg_match('/^TRADFRIbulb*/', $devName)) {
+            if (!isset($dev[$devName]['genericType']) || ($dev[$devName]['genericType'] != "Light")) {
+                $dev[$devName]['genericType'] = "Light";
+                echo "  'genericType=light' ADDED.\n";
+                $devUpdated = true;
+            }
+            if (isset($dev[$devName]['commands']['Set Level'])) {
+                $dev[$devName]['commands']['Set brightness'] = $dev[$devName]['commands']['Set Level'];
+                unset($dev[$devName]['commands']['Set Level']);
+                $dev[$devName]['commands']['Set brightness']['value'] = "Brightness"; // Slider default value
+                echo "  'Set Level' renamed to 'Set brightness'.\n";
+                $devUpdated = true;
+            }
+            if (isset($dev[$devName]['commands']['Get-CurrentLevel'])) {
+                $dev[$devName]['commands']['Get brightness'] = $dev[$devName]['commands']['Get-CurrentLevel'];
+                unset($dev[$devName]['commands']['Get-CurrentLevel']);
+                echo "  'Get-CurrentLevel' renamed to 'Get brightness'.\n";
+                $devUpdated = true;
+            }
+            if (isset($dev[$devName]['commands']['Get Level'])) {
+                $dev[$devName]['commands']['Get brightness'] = $dev[$devName]['commands']['Get Level'];
+                unset($dev[$devName]['commands']['Get Level']);
+                echo "  'Get Level' renamed to 'Get brightness'.\n";
+                $devUpdated = true;
+            }
+            if (isset($dev[$devName]['commands']['Get Current Level'])) {
+                $dev[$devName]['commands']['Get brightness'] = $dev[$devName]['commands']['Get Current Level'];
+                unset($dev[$devName]['commands']['Get Current Level']);
+                echo "  'Get Current Level' renamed to 'Get brightness'.\n";
+                $devUpdated = true;
+            }
+            if (isset($dev[$devName]['commands']['CurrentLevel-0008'])) {
+                $dev[$devName]['commands']['Brightness'] = $dev[$devName]['commands']['CurrentLevel-0008'];
+                unset($dev[$devName]['commands']['CurrentLevel-0008']);
+                echo "  'CurrentLevel-0008' renamed to 'Brightness'.\n";
+                $devUpdated = true;
+            }
+            if (isset($dev[$devName]['commands']['Level'])) {
+                $dev[$devName]['commands']['Brightness'] = $dev[$devName]['commands']['Level'];
+                unset($dev[$devName]['commands']['Level']);
+                echo "  'Level' renamed to 'Brightness'.\n";
+                $devUpdated = true;
+            }
+            if (isset($dev[$devName]['commands']['Current Level'])) {
+                $dev[$devName]['commands']['Brightness'] = $dev[$devName]['commands']['Current Level'];
+                unset($dev[$devName]['commands']['Current Level']);
+                echo "  'Current Level' renamed to 'Brightness'.\n";
+                $devUpdated = true;
+            }
         }
 
         if ($devUpdated) {

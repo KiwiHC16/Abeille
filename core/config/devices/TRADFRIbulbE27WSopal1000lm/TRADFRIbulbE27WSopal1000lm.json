@@ -27,19 +27,6 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
-            "Level": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1,
-                "nextLine": "after"
-            },
             "Set 2200K": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "params": "slider=2200",
@@ -108,7 +95,22 @@
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",
                 "nextLine": "after"
+            },
+            "Set brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1,
+                "value": "Brightness"
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1,
+                "nextLine": "after"
             }
-        }
+        },
+        "genericType": "Light"
     }
 }

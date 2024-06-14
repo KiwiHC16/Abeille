@@ -12,10 +12,6 @@
             "icon": "Ikea-BulbE14-Candle"
         },
         "commands": {
-            "Get SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
                 "isVisible": 1
@@ -49,19 +45,6 @@
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
-            },
-            "Get Current Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
-            },
-            "Current Level": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": "1",
-                "nextLine": "after"
             },
             "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -114,7 +97,22 @@
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0300",
                 "execAtCreation": "yes"
+            },
+            "Set brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1,
+                "value": "Brightness"
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": "1",
+                "nextLine": "after"
             }
-        }
+        },
+        "genericType": "Light"
     }
 }

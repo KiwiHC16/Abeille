@@ -5,6 +5,7 @@
 -   Modèles d'équipement: Suppression des commands 'SWBuildID' & 'Get-SWBuildID' (dispo sur onglet 'avancé').
 -   Modèles TRAFRIbulbxxx: Mises-à-jour.
 -   Assistant de découverte: Ajout 'profile ID' + 'device ID'.
+-   Réparation: Améliorations pour support 'profile ID' + 'device ID'.
 
 ## 240610-BETA-1
 

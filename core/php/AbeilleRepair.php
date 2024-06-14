@@ -109,8 +109,19 @@
         } else
             msgToCli("step", "Manuf code", "ok");
 
-        // Checking Zigbee endpoints
+        // Checking Zigbee endpoints informations
+        // profId => Profile ID
+        // devId => Device ID
+        // servClusters => Server clusters
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
+            if (!isset($ep2['profId']) || !isset($ep2['devId'])) {
+                msgToCli("step", "EP${epId2} infos");
+                logMessage('debug', '  Requesting simple descriptor for EP '.$epId2);
+                msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getSimpleDescriptor", "ep=".$epId2);
+                return; // To reduce requests on first missing descriptor
+            }
+            msgToCli("step", "EP${epId2} infos", "ok");
+
             if (!isset($ep2['servClusters'])) {
                 msgToCli("step", "EP${epId2} server clusters list");
                 logMessage('debug', '  Requesting simple descriptor for EP '.$epId2);

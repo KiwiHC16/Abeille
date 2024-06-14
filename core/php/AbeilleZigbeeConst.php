@@ -1081,6 +1081,7 @@
                 '0053'=>'Meter Interface',
 
                 // Lighting
+                // List from ZigBee Lighting & Occupancy, Device Specification, Version 1.0
                 '0100'=>'On/Off Light',
                 '0101'=>'Dimmable Light',
                 '0102'=>'Color Dimmable Light',
@@ -1088,10 +1089,20 @@
                 '0104'=>'Dimmer Switch',
                 '0105'=>'Color Dimmer Switch',
                 '0106'=>'Light Sensor',
-                '0107'=>'Occupency Sensor',
-
-                // Legrand
-                '010A'=>'Legrand xxxx',
+                '0107'=>'Occupancy sensor',
+                '0108'=>'On/off ballast',
+                '0109'=>'Dimmable ballast',
+                '010A'=>'On/off plug-in unit',
+                '010B'=>'Dimmable plug-in unit',
+                '010C'=>'Color temperature light',
+                '010D'=>'Extended color light',
+                '010E'=>'Light level sensor',
+                '0800'=>'Color controller',
+                '0810'=>'Color scene controller',
+                '0820'=>'Non-color controller',
+                '0830'=>'Non-color scene controller',
+                '0840'=>'Control bridge',
+                '0850'=>'On/off sensor',
 
                 // Closures
                 '0200'=>'Shade',
@@ -1117,9 +1128,6 @@
 
                 // From Xiaomi
                 '5F01'=>'Xiaomi Temperature',
-
-                // From OSRAM investigation
-                '0810'=>'OSRAM Switch',
 
                 // From Legrand investigation
                 '0B04'=>'Electrical Measurement', // Attribut Id: 0x50B - Active Power

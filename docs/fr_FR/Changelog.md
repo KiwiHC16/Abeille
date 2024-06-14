@@ -1,12 +1,15 @@
 # ChangeLog
 
 -   GL-C-007P, GLEDOPTO: Ajout controle blanc chaud/froid (2710).
--   Assistant modèles: Amélioration cluster 0008.
+-   Assistant modèles:
+    -   Amélioration cluster 0008.
+    -   Amélioration nommage 'level' ou 'brightness' en fonction du type 'device ID'
 -   Modèles d'équipement: Suppression des commands 'SWBuildID' & 'Get-SWBuildID' (dispo sur onglet 'avancé').
 -   Modèles TRAFRIbulbxxx: Mises-à-jour.
 -   Assistant de découverte: Ajout 'profile ID' + 'device ID'.
 -   Réparation: Améliorations pour support 'profile ID' + 'device ID'.
 -   Interne: 'AbeilleLQI-AbeilleX.json.lock' => 'AbeilleLQI.lock'
+-   Interne: Zigbee const: Ajout 'device ID' pour lighting.
 
 ## 240610-BETA-1
 

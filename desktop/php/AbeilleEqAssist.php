@@ -1005,20 +1005,25 @@
             if (!isset(ep.servClusters))
                 continue;
 
+            // If device ID is defined let's check if lighting device (see devicesTable in Zigbee consts)
+            if ((typeof ep.devId !== "undefined") && (ep.devId >= 0x0100) && (ep.devId <= 0x0850))
+                name = "Brightness";
+            else
+                name = "Level";
+
             if (multipleCluster) // If multiple clusters adding index in name
                 clustIdx = " "+levelIdx;
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
                 // Note: If device is a light bulb, need to use 'act_setLevel-Light'
-                // TODO: 'level' should be renamed to 'brightness' is device is a light control one (bulb or controler)
-                cmds["Set Level"+clustIdx] = newCmd("act_setLevel-Light", "ep="+epId);
-                cmds["Set Level"+clustIdx]["isVisible"] = 1;
-                cmds["Set Level"+clustIdx]["value"] = "Level"+clustIdx; // Slider default value
-                cmds["Get Level"+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
+                cmds["Set "+name+clustIdx] = newCmd("act_setLevel-Light", "ep="+epId);
+                cmds["Set "+name+clustIdx]["isVisible"] = 1;
+                cmds["Set "+name+clustIdx]["value"] = name+clustIdx; // Slider default value
+                cmds["Get "+name+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
 
-                cmds["Level"+clustIdx] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
-                cmds["Level"+clustIdx]["isVisible"] = 1;
-                cmds["Level"+clustIdx]["nextLine"] = "after";
+                cmds[name+clustIdx] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
+                cmds[name+clustIdx]["isVisible"] = 1;
+                cmds[name+clustIdx]["nextLine"] = "after";
                 cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
                 cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrType=20&attrId=0000", "yes");
             }

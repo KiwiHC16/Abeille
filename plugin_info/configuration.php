@@ -23,6 +23,13 @@
         $GLOBALS['dbgDeveloperMode'] = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
+        if (isset($dbgConfig["defines"])) {
+            $arr = $dbgConfig["defines"];
+            foreach ($arr as $idx => $value) {
+                if ($value == "Tcharp38")
+                    $GLOBALS['dbgTcharp38'] = true;
+            }
+        }
 
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -66,7 +73,7 @@
     }
 
     function displayGateway($zgId) {
-        global $dbgDeveloperMode;
+        global $dbgTcharp38;
 
         $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         if ($eqLogic) {
@@ -101,8 +108,8 @@
                     echo '<div class="col-lg-5">';
                         echo '<select id="idSelGtwType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwType'.$zgId.'" onchange="gtwTypeChanged('.$zgId.')"  title="{{Type de clef}}">';
                             echo '<option value="zigate" selected>{{Zigate}}</option>';
-                            if (isset($dbgDeveloperMode))
-                            echo '<option value="ezsp">{{EmberZnet/EZSP}}</option>';
+                            if (isset($dbgTcharp38))
+                                echo '<option value="ezsp">{{EmberZnet/EZSP}}</option>';
                         echo '</select>';
                     echo '</div>';
                     echo '<div class="col-lg-7">';

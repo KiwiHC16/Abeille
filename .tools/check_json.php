@@ -805,11 +805,15 @@
 
             $validVars = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#select#']; // Jeedom variables
             array_push($validVars, '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#');
+            array_push($validVars, '#valueoffset#');
             if (in_array($var, $validVars)) {
                 $varOk = true;
                 if ($var == "#select#") {
                     if (!isset($devCmd['listValue']) && !isset($newCmd['listValue']))
                         $error = newDevError($devModName, "ERROR", "Undefined 'listValue' for '#select#'");
+                } else if ($var == "#valueoffset#") {
+                    if (!isset($devCmd['valueOffset']) && !isset($newCmd['valueOffset']))
+                        $error = newDevError($devModName, "ERROR", "Undefined 'valueOffset' for '#valueoffset#'");
                 }
             }
             if (!$varOk && ($var == "#EP#")) {

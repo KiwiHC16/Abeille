@@ -581,14 +581,14 @@
                 "0008" => array( "name" => "CurPosLiftPercent", "access" => "R", "dataType" => 0x20 ), // uint8
                 "0009" => array( "name" => "CurPosTiltPercent", "access" => "R", "dataType" => 0x20 ), // uint8
                 // Settings attributes
-                "0010" => array( "name" => "InstalledOpenLimitLift", "access" => "R" ),
-                "0011" => array( "name" => "InstalledClosedLimitLift", "access" => "R" ),
-                "0012" => array( "name" => "InstalledOpenLimitTilt", "access" => "R" ),
-                "0013" => array( "name" => "InstalledClosedLimitTilt", "access" => "R" ),
-                "0014" => array( "name" => "VelocityLift", "access" => "RW" ),
-                "0015" => array( "name" => "AccelTimeLift", "access" => "RW" ),
-                "0016" => array( "name" => "DecelTimeLift", "access" => "RW" ),
-                "0017" => array( "name" => "Mode", "access" => "RW" ),
+                "0010" => array( "name" => "InstalledOpenLimitLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0011" => array( "name" => "InstalledClosedLimitLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0012" => array( "name" => "InstalledOpenLimitTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0013" => array( "name" => "InstalledClosedLimitTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0014" => array( "name" => "VelocityLift", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0015" => array( "name" => "AccelTimeLift", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0016" => array( "name" => "DecelTimeLift", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0017" => array( "name" => "Mode", "access" => "RW", "dataType" => 0x18 ), // map8
                 "0018" => array( "name" => "IntermSetpointsLift", "access" => "RW" ),
                 "0019" => array( "name" => "IntermSetpointsTilt", "access" => "RW" ),
             ),

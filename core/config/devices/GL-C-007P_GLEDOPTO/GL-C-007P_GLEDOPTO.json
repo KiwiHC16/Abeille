@@ -54,7 +54,7 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "brightness": {
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1",
                 "nextLine": "after"
@@ -152,6 +152,10 @@
                 "params": "slider=200",
                 "subType": "other",
                 "logicalId": "#EP#-Set-Warm",
+                "isVisible": 1
+            },
+            "W": {
+                "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "isVisible": 1
             },
             "Bind 0300-ToZigate": {

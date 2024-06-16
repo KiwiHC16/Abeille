@@ -4,7 +4,7 @@
         "subType": "numeric",
         "genericType": "FLAP_STATE",
         "invertBinary": "0",
-        "template": "",
+        "template": "shutter",
         "configuration": {
             "minValue": "0",
             "maxValue": "100",

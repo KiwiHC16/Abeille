@@ -1,0 +1,10 @@
+{
+    "inf_zbAttr-0102-Mode": {
+        "comment": "Cluster 0102, attrib 0017, type 0x18/map8",
+        "subType": "numeric",
+        "genericType": "FLAP_STATE",
+        "template": "badge",
+        "type": "info",
+        "logicalId": "0102-#EP#-0017"
+    }
+}

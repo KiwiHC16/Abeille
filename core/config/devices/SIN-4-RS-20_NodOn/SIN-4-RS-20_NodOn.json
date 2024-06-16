@@ -35,15 +35,11 @@
             "Down": {
                 "use": "act_zbCmdC-0102-DownClose",
                 "params": "ep=01",
-                "isVisible": "1"
+                "isVisible": "1",
+                "nextLine": "after"
             },
             "Set level": {
                 "use": "act_zbCmdC-0102-GoToLiftPercentage",
-                "value": "Level",
-                "isVisible": "1"
-            },
-            "Set level tilt": {
-                "use": "act_zbCmdC-0102-GoToTiltPercentage",
                 "value": "Level",
                 "isVisible": "1"
             },
@@ -54,17 +50,31 @@
             "Level": {
                 "use": "inf_zbAttr-0102-CurPosLiftPercent",
                 "params": "ep=01",
-                "isVisible": "1"
-            },
-            "SetReporting 01-0102-0008": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0102&attrId=0008&attrType=20",
-                "execAtCreation": "yes"
+                "isVisible": "1",
+                "nextLine": "after"
             },
             "Bind 01-0102-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0102",
                 "execAtCreation": "yes"
+            },
+            "Calibration mode": {
+                "use": "act_zbWriteAttribute",
+                "comment2": "TOBEREVISITED: How to pass mode|(1<<1) ??",
+                "params": "ep=01&clustId=0102&attrId=0017&attrType=18&attrVal=#valueoffset#",
+                "comment": "Set bit 1 to enable Calibration mode",
+                "valueOffset": "#logicid0102-01-0017#|(1<<1)",
+                "isVisible": "1"
+            },
+            "Get Mode": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0102&attrId=0017",
+                "execAtCreation": 1
+            },
+            "Mode": {
+                "use": "inf_zbAttr-0102-Mode",
+                "params": "ep=01",
+                "isVisible": "1"
             }
         }
     }

@@ -2,7 +2,8 @@
     "SNZB-02D_SONOFF": {
         "manufacturer": "Sonoff",
         "model": "SNZB-02D",
-        "type": "Sonoff temp and humidity display",
+        "type": "Sonoff temperature & humidity display",
+        "genericType": "Environment",
         "timeout": "60",
         "category": {
             "energy": "1"
@@ -27,8 +28,7 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",

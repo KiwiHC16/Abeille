@@ -4,12 +4,16 @@
 -   Assistant modèles:
     -   Amélioration cluster 0008.
     -   Amélioration nommage 'level' ou 'brightness' en fonction du type 'device ID'
--   Modèles d'équipement: Suppression des commands 'SWBuildID' & 'Get-SWBuildID' (dispo sur onglet 'avancé').
+-   Modèles d'équipement
+    -   Suppression des commandes 'SWBuildID' & 'Get-SWBuildID' (dispo sur onglet 'avancé').
+    -   Ajout support variable '#valueoffset#'
 -   Modèles TRAFRIbulbxxx: Mises-à-jour.
 -   Assistant de découverte: Ajout 'profile ID' + 'device ID'.
 -   Réparation: Améliorations pour support 'profile ID' + 'device ID'.
 -   Interne: 'AbeilleLQI-AbeilleX.json.lock' => 'AbeilleLQI.lock'
 -   Interne: Zigbee const: Ajout 'device ID' pour lighting.
+- Interne: tools: Amélioration sync_all.sh
+- Interne: Zigbee consts: Mises-à-jour cluster 0102.
 
 ## 240610-BETA-1
 

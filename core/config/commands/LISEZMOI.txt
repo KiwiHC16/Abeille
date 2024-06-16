@@ -62,19 +62,14 @@ Exemple de commande 'action'
 * Clef d'entrée/identificateur: OBLIGATOIRE
   Doit être identique au nom de fichier.
 
-* name: OBLIGATOIRE si l'équipement utilise la directive "include", sinon optionnel
-  Nom par défaut de la commande vu par Jeedom.
-  Si le fichier est appelé avec la directive "include", c'est le nom officiel de la commande crée.
-  Si le fichier est appelé avec la directive "use", alors ce nom est ignoré.
-
 * type: OBLIGATOIRE
   Type de commande: 'info' ou 'action'
 
 * subType: OBLIGATOIRE
-  Type d'information: 'binary', 'numeric', 'string'
-  Type d'action: 'other' (pas de paramètre), 'message' (titre + message)
+  Pour 'information': 'binary', 'numeric', 'string'
+  Pour 'action': 'other' (pas de paramètre), 'message' (titre + message), 'select', 'slider', 'color'
 
-* logicalId: OBLIGATOIRE si commande INFO
+* logicalId: OBLIGATOIRE
   Ex: '0400-01-0000' pour définir l'information 'luminosité'.
 
 * unit: optionnel
@@ -91,7 +86,7 @@ Exemple de commande 'action'
   Non par défaut ("isHistorized":0).
   Ce parametre est à mettre dans le modele d'équipement pour personnaliser la commande.
 
-* genericType: RECOMMANDE
+* genericType: OBLIGATOIRE
   Permet d'associer un widget représentatif de la commande.
 
 * invertBinary: optionnel.
@@ -166,7 +161,7 @@ Exemple de commande 'action'
         Ex: "calculValueOffset": "#value#/10"
     Attention: Cette option est gérée par Jeedom et non pas par Abeille.
 
-  * valueOffset: optionnel (pour cmde action)
+  * valueOffset: optionnel (pour cmde action avec subType != 'other')
     Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
         Ex: "valueOffset": "#value#*10"
         Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"

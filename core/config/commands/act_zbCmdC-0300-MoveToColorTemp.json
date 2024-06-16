@@ -1,6 +1,6 @@
 {
     "act_zbCmdC-0300-MoveToColorTemp": {
-        "comment": "Cluster 0300, move to color temp",
+        "comment": "Cluster 0300, cmd 0x0A/Move to color temperatrure",
         "logicalId": "#EP#-0300-cmdMoveToColorTemp",
         "subType": "slider",
         "template": "",

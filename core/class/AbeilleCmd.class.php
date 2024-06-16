@@ -7,7 +7,7 @@
          * @param request to be modified
          * @return request modified
          */
-        public static function updateField($dest, $cmd, $request, $_options=NULL) {
+        public static function updateField($net, $cmd, $request, $_options=NULL) {
             $request2 = $request;
             $eqLogic = $cmd->getEqLogic();
 
@@ -44,7 +44,7 @@
 
             if (stripos($request2, '#ZiGateIEEE#') !== false) {
                 // Logical Id ruche de la forme: Abeille1/0000
-                $rucheIEEE = Abeille::byLogicalId($dest.'/0000', 'Abeille')->getConfiguration("IEEE", '');
+                $rucheIEEE = Abeille::byLogicalId($net.'/0000', 'Abeille')->getConfiguration("IEEE", '');
                 // logMessage('debug', 'Adresse IEEE de la ruche '.$rucheIEEE);
                 if ($rucheIEEE != '')
                     $request2 = str_ireplace('#ZiGateIEEE#', $rucheIEEE, $request2);
@@ -119,18 +119,28 @@
             return $request;
         }
 
-        /* Cmd execution.
-           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ?
-           KiwiHC16: It's part of Jeedom Structure. You have a class for Eq and a Class for Cmd. AbeilleCmd is child of Cmd Class, Abeille is child of eqLogic class.
+        /* Jeedom cmd execution.
+           This is a Jeedom required function. Called to execute an 'action' command.
         */
         public function execute($_options = null) {
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
-            logMessage('debug', "-- execute(".$this->getHumanName().", type=".$this->getType().', options='.json_encode($_options).')');
+            $cmdType = $this->getType();
+            $cmdHName = $this->getHumanName();
+            logMessage('debug', "-- execute(${cmdHName}, type=${cmdType}, options=".json_encode($_options).')');
 
-            if ($this->getType() != 'action') {
-                logMessage('debug', "-- Unexpected info command => ignored");
+            if ($cmdType != 'action') {
+                logMessage('error', "-- Unexpected info command => ignored");
                 return;
             }
+
+            /* If cmd sub type is not 'other', there is a value associated to cmd which depends on sub type
+               'select' => #select#
+               'slider' => #slider#
+               'message' => #title# (optional) + #message#
+               'color' => #color#
+
+               Value can be overloaded or updated thanks to 'valueOffset' for cases above except 'other'
+             */
 
             // TODO: A revoir, je ne sais plus ce qu'est ce truc.
             // cmdId : 12676 est le level d une ampoule
@@ -139,28 +149,18 @@
             // On le voit dans le log avec:
             // [2020-01-30 03:39:22][debug] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
             // Tcharp38: 'cmdIdUpdated' not found elsewhere in Abeille nor in Jeedom core.
-            if (isset($_options['cmdIdUpdated'])) {
-                logMessage('debug', '-- _options[cmdIdUpdated] received so stop here, don t process: '.json_encode($_options['cmdIdUpdated']));
-                return;
-            }
+            // if (isset($_options['cmdIdUpdated'])) {
+            //     logMessage('debug', '-- _options[cmdIdUpdated] received so stop here, don t process: '.json_encode($_options['cmdIdUpdated']));
+            //     return;
+            // }
 
             $eqLogic = $this->getEqLogic();
             $eqLogicId = $eqLogic->getLogicalId();
-            list($dest, $addr) = explode("/", $eqLogicId);
-            if ($dest == '' || $addr == '') {
+            list($net, $addr) = explode("/", $eqLogicId);
+            if ($net == '' || $addr == '') {
                 logMessage('error', $eqLogic->getHumanName().': DB corrompue. Cmde annulée.');
                 return;
             }
-
-            /* Value is coming from the following action subtypes
-               'select' => #select#
-               'slider' => #slider#
-               'message' => #title# (optional) + #message#
-               'color' => #color#
-
-               Value can be overloaded or updated thanks to 'valueOffset'
-             */
-
 
             // User command support
             // This is recognized with the following logical ID syntax 'logicalId::parameters'
@@ -196,47 +196,65 @@
             // Ex: "valueOffset": "#value#*10"
             // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
             // Ex: "valueOffset": "#valueformat-%02X#" (equiv 'sprintf("%02X", #value#)')
-            $vo = $cmdLogic->getConfiguration('ab::valueOffset', null);
-            if ($vo !== null) {
+            $vo = $cmdLogic->getConfiguration('ab::valueOffset', "");
+            if ($vo != "") {
+                // Replacing '#logicid...#
+                $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
+                if ($lop !== false) {
+                    // logMessage('debug', "-- execute(): logicId at pos ".$lop);
+                    $logicId = substr($vo, $lop + 8);
+                    $lop = strpos($logicId, '#');
+                    $logicId = substr($logicId, 0, $lop);
+                    // logMessage('debug', "-- execute(): logicId=".$logicId);
+                    $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
+                    if (!is_object($cmdLogic2)) {
+                        message::add("Abeille", "${cmdHName}: Commande '${logicId}' inconnue");
+                    } else {
+                        $cmdVal = $cmdLogic2->execCmd();
+                        logMessage('debug', "-- Cmd logicId='".$logicId."', val=".$cmdVal);
+                        $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
+                    }
+                }
+
                 if (isset($_options['slider'])) {
                     $vo = str_replace('#value#', $_options['slider'], $vo); // Replace #value# by slider value
-                    $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
-                    if ($lop != false) {
-                        // logMessage('debug', "-- execute(): logicId at pos ".$lop);
-                        $logicId = substr($vo, $lop + 8);
-                        $lop = strpos($logicId, '#');
-                        $logicId = substr($logicId, 0, $lop);
-                        // logMessage('debug', "-- execute(): logicId=".$logicId);
-                        $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
-                        if (!is_object($cmdLogic2)) {
-                            message::add("Abeille", $eqLogic->getHumanName().": Commande '".$logicId."' inconnue");
-                        } else {
-                            $cmdVal = $cmdLogic2->execCmd();
-                            logMessage('debug', "-- Cmd logicId='".$logicId."', val=".$cmdVal);
-                            $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
-                        }
-                    }
+                    // $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
+                    // if ($lop != false) {
+                    //     // logMessage('debug', "-- execute(): logicId at pos ".$lop);
+                    //     $logicId = substr($vo, $lop + 8);
+                    //     $lop = strpos($logicId, '#');
+                    //     $logicId = substr($logicId, 0, $lop);
+                    //     // logMessage('debug', "-- execute(): logicId=".$logicId);
+                    //     $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
+                    //     if (!is_object($cmdLogic2)) {
+                    //         message::add("Abeille", $eqLogic->getHumanName().": Commande '".$logicId."' inconnue");
+                    //     } else {
+                    //         $cmdVal = $cmdLogic2->execCmd();
+                    //         logMessage('debug', "-- Cmd logicId='".$logicId."', val=".$cmdVal);
+                    //         $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
+                    //     }
+                    // }
                     $newValue = jeedom::evaluateExpression($vo); // Compute final formula
                     logMessage('debug', "-- 'valueOffset' applied: ".$_options['slider']." => ".$newValue);
                     $_options['slider'] = $newValue;
                 } else if (strpos($request, '#value#') !== false) {
                     // #value# must be replaced by valueOffset result
-                    $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
-                    if ($lop != false) {
-                        // logMessage('debug', "-- execute(): logicId at pos ".$lop);
-                        $logicId = substr($vo, $lop + 8);
-                        $lop = strpos($logicId, '#');
-                        $logicId = substr($logicId, 0, $lop);
-                        // logMessage('debug', "-- execute(): logicId=".$logicId);
-                        $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
-                        if (!is_object($cmdLogic2)) {
-                            message::add("Abeille", $eqLogic->getHumanName().": Commande '".$logicId."' inconnue");
-                        } else {
-                            $cmdVal = $cmdLogic2->execCmd();
-                            logMessage('debug', "-- Cmd logicId='".$logicId."' => val=".$cmdVal);
-                            $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
-                        }
-                    }
+                    // $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
+                    // if ($lop != false) {
+                    //     // logMessage('debug', "-- execute(): logicId at pos ".$lop);
+                    //     $logicId = substr($vo, $lop + 8);
+                    //     $lop = strpos($logicId, '#');
+                    //     $logicId = substr($logicId, 0, $lop);
+                    //     // logMessage('debug', "-- execute(): logicId=".$logicId);
+                    //     $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
+                    //     if (!is_object($cmdLogic2)) {
+                    //         message::add("Abeille", $eqLogic->getHumanName().": Commande '".$logicId."' inconnue");
+                    //     } else {
+                    //         $cmdVal = $cmdLogic2->execCmd();
+                    //         logMessage('debug', "-- Cmd logicId='".$logicId."' => val=".$cmdVal);
+                    //         $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
+                    //     }
+                    // }
                     $newValue = jeedom::evaluateExpression($vo); // Compute final formula
                     $request = str_replace('#value#', $newValue, $request);
                     logMessage('debug', "-- 'valueOffset' applied: newValue=${newValue}");
@@ -263,18 +281,38 @@
             // Process topic
             // Needed for Telecommande: "topic":"CmdAbeille\/#addrGroup#\/OnOffGroup"
             if (strpos($cmdLogic->getConfiguration('topic'), "CmdAbeille") === 0) {
-                $topic = str_replace("Abeille", $dest, $cmdLogic->getConfiguration('topic'));
+                $topic = str_replace("Abeille", $net, $cmdLogic->getConfiguration('topic'));
             } else {
                 $topic = "Cmd".$eqLogicId."/".$cmdLogic->getConfiguration('topic');
             }
-            // Tcharp38: What must be replaced in 'topic' ?
-            $topic = $cmdLogic->updateField($dest, $cmdLogic, $topic, $_options);
 
-            // -------------------------------------------------------------------------
-            // Process Request
-            $request = $cmdLogic->updateField($dest, $cmdLogic, $request, $_options);
+            /* 'topic' replacement examples
+             "topic": "CmdAbeille/#addrGroup#/setColourGroup" => must replace #ADDRGROUP#
+             "topic": "CmdAbeille/#GROUPEP4#/OnOffGroup"  => must replace #GROUPEPx#
+             "topic": "CmdAbeille/#addrGroup#/setTemperatureGroup
+            */
+            $topic = $cmdLogic->updateField($net, $cmdLogic, $topic, $_options);
 
-            // -------------------------------------------------------------------------
+            /* 'request' replacement examples
+             "request": "Level=#slider#&duration=01"
+             "request": "targetEndpoint=#EP#&ClusterId=0300&AttributeId=0007&AttributeType=21"
+             "request": "EP=#EP#&color=#color#"
+             "request": "clusterId=0201&attributeId=4000&EP=01&Proprio=1037&attributeType=30&value=#message#"
+             "request": "groupID=#addrGroup#&sceneID=01"
+             "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=07&clusterID=0008&reportToGroup=#GROUPEP7#"
+             "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#&attrVal=#select#"
+             "request": "addr=#IEEE#&ep=#EP#&clustId=#CLUSTID#&destAddr=#ZigateIEEE#&destEp=01"
+            */
+            if (stripos($request, "#valueoffset#") !== false) {
+                if ($vo == "") {
+                    message::add("Abeille", "${cmdHName}: 'valueOffset' manquant");
+                    return;
+                }
+                $request = str_ireplace("#valueoffset#", $vo, $request);
+                logMessage('debug', "-- '#valueoffset#' => request='${request}'");
+            }
+            $request = $cmdLogic->updateField($net, $cmdLogic, $request, $_options);
+
             $msg = array();
             $msg['topic'] = $topic;
             $msg['payload'] = $request;

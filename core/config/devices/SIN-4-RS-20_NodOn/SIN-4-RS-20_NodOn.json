@@ -60,7 +60,6 @@
             },
             "Calibration mode": {
                 "use": "act_zbWriteAttribute",
-                "comment2": "TOBEREVISITED: How to pass mode|(1<<1) ??",
                 "params": "ep=01&clustId=0102&attrId=0017&attrType=18&attrVal=#valueoffset#",
                 "comment": "Set bit 1 to enable Calibration mode",
                 "valueOffset": "#logicid0102-01-0017#|(1<<1)",

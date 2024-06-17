@@ -1,0 +1,12 @@
+{
+    "inf_time-Timestamp": {
+        "subType": "numeric",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "Time"
+        },
+        "type": "info",
+        "logicalId": "Time-TimeStamp",
+        "genericType": "GENERIC_INFO"
+    }
+}

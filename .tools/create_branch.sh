@@ -225,6 +225,7 @@ if [ "${TARG_BRANCH}" == "stable" ]; then
         git commit -q -m "${VERSION} cleanup"
         if [ $? -ne 0 ]; then
             echo "= ERROR: Commit failed"
+            echo "=        cmd='git commit -q -m \"${VERSION} cleanup\"'"
             exit 32
         fi
     fi
@@ -238,7 +239,8 @@ if [ "${REM}" != "" ]; then
     echo "Deleting ${TARG_REPO}/${TARG_BRANCH} branch"
     git push -q ${TARG_REPO} --delete ${TARG_BRANCH}
     if [ $? -ne 0 ]; then
-        echo "= ERROR: git push ${TARG_REPO} --delete ${TARG_BRANCH} failed"
+        echo "= ERROR: git push failed"
+        echo "=        cmd='git push -q ${TARG_REPO} --delete ${TARG_BRANCH}'"
         exit 33
     fi
 fi
@@ -248,6 +250,7 @@ echo "Creating ${TARG_REPO}/${TARG_BRANCH} branch"
 git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git push failed"
+    echo "=        cmd='git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}'"
     exit 34
 fi
 
@@ -255,6 +258,7 @@ echo "Switching back to '${CUR_BRANCH}' branch"
 git checkout -q ${CUR_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git checkout failed"
+    echo "=        cmd='git checkout -q ${CUR_BRANCH}'"
     exit 34
 else
     echo "= Ok"

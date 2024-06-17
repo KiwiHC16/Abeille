@@ -198,6 +198,7 @@
             // Ex: "valueOffset": "#valueformat-%02X#" (equiv 'sprintf("%02X", #value#)')
             $vo = $cmdLogic->getConfiguration('ab::valueOffset', "");
             if ($vo != "") {
+                logMessage('debug', "-- 'ab::valueOffset'=${vo}");
                 // Replacing '#logicid...#
                 $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
                 if ($lop !== false) {
@@ -305,19 +306,19 @@
             */
             if (stripos($request, "#valueoffset#") !== false) {
                 if ($vo == "") {
-                    message::add("Abeille", "${cmdHName}: 'valueOffset' manquant");
+                    // message::add("Abeille", "${cmdHName}: 'valueOffset' manquant");
+                    logMessage('error', "${cmdHName}: 'valueOffset' manquant");
                     return;
                 }
-                /* NOT WORKING
-                [2024-06-16 22:05:20] -- execute([Test top][NodOn roller shutter module - 258][Calibration mode], type=action, options={"user_login":"admin","user_id":"1"})
+                /* Note: could not make it work with jeedom::evaluateExpression()
                 [2024-06-16 22:05:20] -- Cmd logicId='0102-01-0017', val=0
                 [2024-06-16 22:05:20] -- '#valueoffset#' => newValue='0|(1<<1)'
                 [2024-06-16 22:05:20] -- '#valueoffset#' => request='ep=01&clustId=0102&attrId=0017&attrVal=0|(1<<1)&attrType=18'
-                [2024-06-16 22:05:20] -- Msg sent: {"topic":"CmdAbeille1/1EFD/writeAttribute","payload":"ep=01&clustId=0102&attrId=0017&attrVal=0|(1<<1)&attrType=18"}
                 */
-                $newValue = jeedom::evaluateExpression($vo); // Compute final formula
-                logMessage('debug', "-- '#valueoffset#' => newValue='${newValue}'");
-                $request = str_ireplace("#valueoffset#", $newValue, $request);
+                $exp = "\$newVal = ${vo};";
+                eval($exp);
+                logMessage('debug', "-- '#valueoffset#' => newVal='${newVal}'");
+                $request = str_ireplace("#valueoffset#", $newVal, $request);
                 logMessage('debug', "-- '#valueoffset#' => request='${request}'");
             }
             $request = $cmdLogic->updateField($net, $cmdLogic, $request, $_options);
@@ -345,17 +346,19 @@
             }
 
             // Mise a jour de la commande info associée, necessaire pour les commande actions qui recupere des parametres des commandes infos.
-            if ($cmdLogic->getCmdValue()) {
-                logMessage('debug', '-- Will process cmdAction with cmd Info Ref if exist: '.$cmdLogic->getCmdValue()->getName());
-                // TODO: je suppose qu il n'y a qu une commande info associée
-                $cmdInfo = $cmdLogic->getCmdValue();
-                if ($cmdInfo) {
-                    if (isset($_options['slider'])) {
-                        logMessage('debug', '-- cmdAction with cmd Info Ref: '.$cmdLogic->getCmdValue()->getName().' with value slider: '.$_options['slider']);
-                        $cmdInfo->event($_options['slider']);
-                    }
-                }
-            }
+            // Tcharp38: DISABLED !! This is NOT the reality. Cmd info should reflect the real device status and therefore info
+            // update should either be reporting (best case) or polling
+            // if ($cmdLogic->getCmdValue()) {
+            //     logMessage('debug', '-- Will process cmdAction with cmd Info Ref if exist: '.$cmdLogic->getCmdValue()->getName());
+            //     // TODO: je suppose qu il n'y a qu une commande info associée
+            //     $cmdInfo = $cmdLogic->getCmdValue();
+            //     if ($cmdInfo) {
+            //         if (isset($_options['slider'])) {
+            //             logMessage('debug', '-- cmdAction with cmd Info Ref: '.$cmdLogic->getCmdValue()->getName().' with value slider: '.$_options['slider']);
+            //             $cmdInfo->event($_options['slider']);
+            //         }
+            //     }
+            // }
 
             // An action cmd can trig another action cmd with 'trigOut'
             // Syntax reminder

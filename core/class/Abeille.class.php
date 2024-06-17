@@ -3010,20 +3010,21 @@ class Abeille extends eqLogic {
             }
 
             // Search by topic/request if still not found & 'action'
-            if (($cmdId === null) && ($mCmdType == 'action')) {
-                $mTopic = $mCmd["configuration"]['topic'];
-                $mRequest = $mCmd["configuration"]['request'];
-                log::add('Abeille', 'debug', "  Searching by topic/request='".$mTopic."/".$mRequest."'");
-                foreach ($jeedomCmds as $jCmdId => $jCmd) {
-                    if ($jCmd['topic'] != $mTopic)
-                        continue;
-                    if ($jCmd['request'] != $mRequest)
-                        continue;
-                    $cmdId = $jCmdId;
-                    $jeedomCmds[$jCmdId]['obsolete'] = false;
-                    break;
-                }
-            }
+            // DISABLED !! Does not work when adding new commands (then no name nor logicId match) but same topic/request
+            // if (($cmdId === null) && ($mCmdType == 'action')) {
+            //     $mTopic = $mCmd["configuration"]['topic'];
+            //     $mRequest = $mCmd["configuration"]['request'];
+            //     log::add('Abeille', 'debug', "  Searching by topic/request='".$mTopic."/".$mRequest."'");
+            //     foreach ($jeedomCmds as $jCmdId => $jCmd) {
+            //         if ($jCmd['topic'] != $mTopic)
+            //             continue;
+            //         if ($jCmd['request'] != $mRequest)
+            //             continue;
+            //         $cmdId = $jCmdId;
+            //         $jeedomCmds[$jCmdId]['obsolete'] = false;
+            //         break;
+            //     }
+            // }
 
             if ($cmdId === null) { // Not found => new command
                 $newCmd = true;

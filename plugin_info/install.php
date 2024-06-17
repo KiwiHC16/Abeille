@@ -88,6 +88,7 @@
             config::save('ab::dbVersion', lastDbVersion, 'Abeille');
             $dbVersion = lastDbVersion;
         }
+        log::add('Abeille', 'debug', "dbVersion=${dbVersion}");
 
         /* Version 20200225 changes:
            - Added multi-zigate support

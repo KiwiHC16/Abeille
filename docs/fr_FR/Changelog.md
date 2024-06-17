@@ -22,6 +22,7 @@
 -   Onglet avancé: Ajout 'Type logique' & 'MAC capabilities'.
 -   Réparation: Améliorations.
 -   Carte réseau: Utilisation du 'logical type' du node descriptor au lieu de la réponse 'LQI mgmt rsp' souvent fausse.
+-   Modèles d'équipement: Réajout info 'Time-TimeStamp' + suppression 'Time-Time'.
 
 ## 240610-BETA-1
 

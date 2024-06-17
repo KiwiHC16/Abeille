@@ -1169,9 +1169,9 @@
          * - Config DB: 'ab::zgPortX' => 'ab::gtwPortX'.
          * - Config DB: 'ab::zgIpAddrX' => 'ab::gtwIpAddrX'
          * - Config DB: 'ab::zgChanX' => 'ab::gtwChanX'
-         * - Cmd DB: Removed all 'Time-TimeStamp' info cmds.
+         * - 20240617: CANCELED >>> Cmd DB: Removed all 'Time-TimeStamp' info cmds.
          */
-        if (intval($dbVersion) < 20240602) {
+        if (intval($dbVersion) < 20240617) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
@@ -1208,7 +1208,11 @@
 
                     $saveCmd = false;
                     // Time-TimeStamp is duplicate info of Time-Time. Just different format
-                    if ($cmdLogicId == 'Time-TimeStamp') {
+                    // if ($cmdLogicId == 'Time-TimeStamp') {
+                    //     $cmdLogic->remove();
+                    //     log::add('Abeille', 'debug', "  ${cmdHName}: Removed");
+                    // }
+                    if ($cmdLogicId == 'Time-Time') {
                         $cmdLogic->remove();
                         log::add('Abeille', 'debug', "  ${cmdHName}: Removed");
                     }
@@ -1216,6 +1220,18 @@
                     if ($saveCmd)
                         $cmdLogic->save();
                 }
+                // $cmdLogic = cmd::byLogicalId("Time-TimeStamp");
+                // if (!is_object($cmdLogic)) {
+                //     $cmdLogic = new cmd();
+                //     $cmdLogic->setEqLogic_id($eqId);
+                //     $cmdLogic->setEqType('Abeille');
+                //     $cmdLogic->setType('info');
+                //     $cmdLogic->setSubType('numeric');
+                //     $cmdLogic->setLogicalId("Time-TimeStamp");
+                //     $cmdLogic->setName("Time-TimeStamp");
+                //     $cmdLogic->save();
+                //     log::add('Abeille', 'debug', "  ${cmdHName}: 'Time-TimeStamp' ajouté");
+                // }
             }
 
             // config::save('ab::dbVersion', '20240503', 'Abeille');

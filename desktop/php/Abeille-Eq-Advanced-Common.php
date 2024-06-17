@@ -29,7 +29,7 @@
     <!-- <div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-version="dashboard" data-eqlogic_id="tofill" data-cmd_id="tofill" advInfo="Time-Time"> -->
     <!-- <div advInfo="Time-Time" class="col-sm-5 cmdX" data-type="info" data-subtype="string" data-version="dashboard" data-eqlogic_id="320" data-cmd_id="3222">
     </div> -->
-    <div advInfo="Time-Time" class="col-sm-5">
+    <div advInfo="Time-TimeStamp" class="col-sm-5">
         <input type="text" id="tofill" value="tofill" readonly>
     </div>
 </div>

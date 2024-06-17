@@ -28,13 +28,11 @@
             "request": ""
         }
     },
-    "Time-Time": {
+    "Time-TimeStamp": {
         "name": "Last",
-        "isHistorized": "0",
         "isVisible": "1",
         "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
+        "subType": "numeric",
         "template": ""
     },
     "ZiGate-Time": {

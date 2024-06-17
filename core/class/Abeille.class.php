@@ -272,13 +272,14 @@ class Abeille extends eqLogic {
                 $eqName = $eqLogic->getname();
 
                 /* Checking if received some news in the last 15mins */
-                $cmd = $eqLogic->getCmd('info', 'Time-Time');
+                // $cmd = $eqLogic->getCmd('info', 'Time-Time');
+                $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
                 if (!is_object($cmd)) { // Cmd not found
-                    log::add('Abeille', 'warning', "cron15(): Commande 'Time-Time' manquante pour ".$eqName);
+                    log::add('Abeille', 'warning', "cron15(): Commande 'Time-TimeStamp' manquante pour ".$eqName);
                     continue; // No sense to interrogate EQ if Time-Time does not exists
                 }
                 $lastComm = $cmd->execCmd();
-                $lastComm = strtotime($lastComm);
+                // $lastComm = strtotime($lastComm); // If 'Time-Time'
                 if (!is_numeric($lastComm)) { // Does it avoid PHP warning ?
                     // No comm from EQ yet.
                     $daemonsStart = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
@@ -1090,7 +1091,7 @@ class Abeille extends eqLogic {
 
         // log all messages except the one related to Time, which overload the log
         // if (!in_array($cmdId, array("Time-Time", "Time-TimeStamp", "Link-Quality"))) {
-        if (!in_array($cmdId, array("Time-Time", "Link-Quality"))) {
+        if (!in_array($cmdId, array("Time-TimeStamp", "Link-Quality"))) {
             log::add('Abeille', 'debug', "message(topic='".$topic."', payload='".$payload."')");
         }
 
@@ -3279,17 +3280,17 @@ class Abeille extends eqLogic {
            The cases hereafter could be removed. Using 'lastCommunication' allows to no longer
            use these 3 specific & redondant commands. To be discussed. */
 
-        // $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
-        // if (!is_object($cmdLogic))
-        //     log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-TimeStamp'");
-        // else
-        //     $eqLogic->checkAndUpdateCmd($cmdLogic, $timestamp);
-
-        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
+        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
         if (!is_object($cmdLogic))
-            log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-Time'");
+            log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-TimeStamp'");
         else
-            $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
+            $eqLogic->checkAndUpdateCmd($cmdLogic, $timestamp);
+
+        // $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
+        // if (!is_object($cmdLogic))
+        //     log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-Time'");
+        // else
+        //     $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
 
         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
         if (is_object($cmdLogic))

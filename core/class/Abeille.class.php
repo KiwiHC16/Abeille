@@ -3293,7 +3293,7 @@ class Abeille extends eqLogic {
         // else
             $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
 
-        if ($lqi != null) {
+        if ($lqi !== null) {
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Link-Quality');
             if (!is_object($cmdLogic))
                 log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Link-Quality'");

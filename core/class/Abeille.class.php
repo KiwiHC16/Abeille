@@ -1585,7 +1585,11 @@ class Abeille extends eqLogic {
                 $jsonUpdVal = json_encode($updVal, JSON_UNESCAPED_SLASHES);
                 if ($updKey == 'ieee')
                     continue; // Already treated
-                else if ($updKey == 'macCapa') {
+                else if ($updKey == 'logicalType') { // Node descriptor/logical type
+                    $zigbee['logicalType'] = $updVal;
+                    $zigbeeChanged = true;
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[logicalType]' updated to ${updVal}");
+                } else if ($updKey == 'macCapa') {
                     $zigbee['macCapa'] = $updVal;
                     $mc = hexdec($zigbee['macCapa']);
                     $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powered

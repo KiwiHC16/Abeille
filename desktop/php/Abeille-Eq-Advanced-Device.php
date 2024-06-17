@@ -8,11 +8,26 @@
 ?>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Type logique}}</label>
+    <div class="col-sm-5">
+        <input id="idZbLogicalType" type="text" readonly title="{{Node descriptor/Logical type}}" value="">
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">MAC capabilities</label>
+    <div class="col-sm-5">
+        <input id="idMacCapa" type="text" readonly title="{{Node descriptor/MAC capabilities}}" value="">
+        <input id="idZbRxOnWhenIdle" type="text" readonly title="{{'Oui' si l'équipement est toujours en écoute}}" value="{{Toujours en écoute}}" />
+    </div>
+</div>
+
+<!-- <div class="form-group">
     <label class="col-sm-3 control-label">{{Toujours en écoute}}</label>
     <div class="col-sm-5">
         <input id="idZbRxOnWhenIdle" readonly title="{{'Oui' si l'équipement est toujours en écoute}}" value="" />
     </div>
-</div>
+</div> -->
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Code fabricant}} (ManufCode)</label>

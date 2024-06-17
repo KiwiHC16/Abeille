@@ -100,14 +100,14 @@
         } else
             msgToCli("step", "Active end points", "ok");
 
-        // Zigbee manufCode defined ?
-        if (!isset($zigbee['manufCode'])) {
-            msgToCli("step", "Manuf code");
+        // Zigbee logicalType/macCapa/manufCode defined ?
+        if (!isset($zigbee['logicalType']) || !isset($zigbee['macCapa']) || !isset($zigbee['manufCode'])) {
+            msgToCli("step", "Logical type/MAC capa/manuf code");
             logMessage('debug', '  Requesting node descriptor');
             msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getNodeDescriptor");
             return;
         } else
-            msgToCli("step", "Manuf code", "ok");
+            msgToCli("step", "Logical type/MAC capa/manuf code", "ok");
 
         // Checking Zigbee endpoints informations
         // profId => Profile ID

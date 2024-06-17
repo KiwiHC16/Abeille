@@ -92,10 +92,6 @@ function refreshEqInfos() {
             document.getElementById("idEqAddr").value = curEq.addr;
             document.getElementById("idZgType").value = curEq.zgType;
 
-            rxOnWhenIdle = curEq.zigbee.rxOnWhenIdle;
-            document.getElementById("idZbRxOnWhenIdle").value = rxOnWhenIdle
-                ? "{{Oui}}"
-                : "{{Non}}";
             // document.getElementById("idZbModel").value = curEq.zbModel;
             document.getElementById("idZbModel").value = curEq.zigbee.modelId;
             // document.getElementById("idZbManuf").value = curEq.zbManuf;
@@ -143,10 +139,35 @@ function refreshEqInfos() {
                 document.getElementById("idVariables").innerHTML = h;
             }
 
+            switch (curEq.zigbee.logicalType) {
+                case 0x00:
+                    logicalType = "{{Coordinateur}}";
+                    break;
+                case 0x01:
+                    logicalType = "{{Routeur}}";
+                    break;
+                case 0x02:
+                    logicalType = "{{End device}}";
+                    break;
+                default:
+                    logicalType = curEq.zigbee.logicalType + "/?";
+                    break;
+            }
+            document.getElementById("idZbLogicalType").value = logicalType;
+            mc = parseInt(curEq.zigbee.macCapa, 16);
+            document.getElementById("idMacCapa").value = mc
+                .toString(16)
+                .toUpperCase();
+            console.log("maccap=", mc);
+            if ((mc >> 3) & 1) $("#idZbRxOnWhenIdle").show();
+            else $("#idZbRxOnWhenIdle").hide();
+            // rxOnWhenIdle = curEq.zigbee.rxOnWhenIdle;
+            // document.getElementById("idZbRxOnWhenIdle").value = rxOnWhenIdle
+            //     ? "{{Oui}}"
+            //     : "{{Non}}";
             if (typeof curEq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
                     curEq.zigbee.manufCode;
-
             if (typeof curEq.zigbee.endPoints != "undefined") {
                 for (const [epId, ep] of Object.entries(
                     curEq.zigbee.endPoints

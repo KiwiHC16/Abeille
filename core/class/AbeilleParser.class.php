@@ -571,6 +571,11 @@
                         $eq['groups'][$ep] = $value;
                         // getGroupMembership also sent to Abeille
                     }
+                } else if ($updType == 'logicalType') { // Node descriptor/logical type
+                    if (!isset($eq['logicalType']) || ($eq['logicalType'] != $value)) {
+                        $eq['logicalType'] = $value;
+                        $abUpdates["logicalType"] = $value;
+                    }
                 } else if ($updType == 'macCapa') { // MAC capa flags
                     if (!isset($eq['macCapa']) || ($eq['macCapa'] != $value)) {
                         $eq['macCapa'] = $value;
@@ -2189,17 +2194,17 @@
             $addr = AbeilleTools::reverseHex(substr($pl, 4, 4));
             $m = '  Node Descriptor Response: SQN='.$sqn.', Status='.$status;
             parserLog2('debug', $srcAddr, $m);
-            // $toMon[] = $m;
 
             // Node descriptor
             $b0 = substr($pl, 8, 2); // LogicalType/ComplexDescAvail/UserDescAvail/Reserved
+            $logicalType = hexdec($b0) & 0x7; // Logical type: 0=coordinator/1=router/2=end_device
             $b2 = substr($pl, 10, 2); // APS/freq band
             $macCapa = substr($pl, 12, 2); // Mac capa
             $manufCode = AbeilleTools::reverseHex(substr($pl, 14, 4));
 
-            parserLog2('debug', $srcAddr, '  MacCapa='.$macCapa.', ManufCode='.$manufCode);
+            parserLog2('debug', $srcAddr, "  LogicalType=${logicalType}, MacCapa=${macCapa}, ManufCode=${manufCode}");
 
-            // 2 infos to store: macCapa & manufCode
+            // Infos to collect & store: logicalType, macCapa & manufCode
             $eq = getDevice($net, $srcAddr);
             // WARNING: macCapa can be overloaded by customization
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
@@ -2207,7 +2212,8 @@
                 parserLog2('debug', $srcAddr, "  'macCapa' customization: ".$macCapa);
             }
 
-            // $updates = [];
+            if (!isset($eq['logicalType']) || ($logicalType != $eq['logicalType']))
+                $devUpdates['logicalType'] = $logicalType;
             if ($macCapa != $eq['macCapa'])
                 $devUpdates['macCapa'] = $macCapa;
             else {
@@ -2218,8 +2224,6 @@
             }
             if (!isset($eq['manufCode']) || ($manufCode != $eq['manufCode']))
                 $devUpdates['manufCode'] = $manufCode;
-            // if (count($updates) != 0)
-            //     $this->deviceUpdates($net, $addr, '', $updates);
         }
 
         /* Called from decode8002() to decode "Simple_Desc_rsp"

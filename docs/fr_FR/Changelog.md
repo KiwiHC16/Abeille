@@ -19,6 +19,8 @@
 -   Interne: createDevice() revu.
 -   Interne: Cmd 'info' n'est plus mise à jour systématiquement par valeur cmd 'action'.
 -   Support EmberZnet/EZSP: Qq avancées mineures.
+-   Onglet avancé: Ajout 'Type logique' & 'MAC capabilities'.
+-   Réparation: Améliorations.
 
 ## 240610-BETA-1
 

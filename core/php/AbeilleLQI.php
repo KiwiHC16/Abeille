@@ -193,10 +193,12 @@
                 $nName = $knownFromJeedom[$nLogicId]['name'];
                 $nParentName = $knownFromJeedom[$nLogicId]['parent'];
                 $nIcon = $knownFromJeedom[$nLogicId]['icon'];
+                $zigbee = $knownFromJeedom[$nLogicId]['zigbee'];
             } else {
                 $nName = "?";
                 $nParentName = "?";
                 $nIcon = 'defaultUnknown';
+                $zigbee = [];
             }
 
             $newNeighbor = array(
@@ -209,10 +211,12 @@
                 'icon' => $nIcon,
             );
 
-            // Decode bitmap
-            // $bitMap = hexdec($N->bitMap);
-            // $attrType = ($bitMap >> 0) & 0x3;
-            $attrType = $N->devType;
+            // Note: device type from router are often bad. Therefore using info from node descriptor instead, if device is known to Jeedom
+            if (isset($zigbee['logicalType'])) {
+                $attrType = $zigbee['logicalType']; // Node descriptor/logical type info
+                logMessage("", "  Using 'logicalType' for device type");
+            } else
+                $attrType = $N->devType; // Mgmt_lqi_rsp info
             if ($attrType == 0) {
                 $newNeighbor['type'] = "Coordinator";
             } else if ($attrType == 1) {
@@ -220,7 +224,7 @@
                 newRouter($nLogicId);
             } else if ($attrType== 2) {
                 $newNeighbor['type'] = "End Device";
-            } else { // $attrType== 3
+            } else { // other
                 $newNeighbor['type'] = "Unknown";
             }
 
@@ -476,8 +480,9 @@
         $knownFromJeedom[$eqLogicId]['parent'] = $objName;
         $knownFromJeedom[$eqLogicId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
         $knownFromJeedom[$eqLogicId]['icon'] = $eqLogic->getConfiguration('ab::icon', 'defaultUnknown');
-        // $objKnownFromAbeille[$eqLogicId] = $objName;
+        $knownFromJeedom[$eqLogicId]['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
         logMessage("", "  Eq='".$eqLogicId."', parent='".$objName."'");
+        logMessage("", "  zigbee=".json_encode($knownFromJeedom[$eqLogicId]['zigbee']));
     }
 
     $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);

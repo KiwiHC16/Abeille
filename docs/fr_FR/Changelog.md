@@ -21,6 +21,7 @@
 -   Support EmberZnet/EZSP: Qq avancées mineures.
 -   Onglet avancé: Ajout 'Type logique' & 'MAC capabilities'.
 -   Réparation: Améliorations.
+-   Carte réseau: Utilisation du 'logical type' du node descriptor au lieu de la réponse 'LQI mgmt rsp' souvent fausse.
 
 ## 240610-BETA-1
 

@@ -920,7 +920,10 @@ class Abeille extends eqLogic {
             if ($config['ab::gtwEnabled'.$gtwId] == 'Y') {
                 // Create/update beehive equipment on Jeedom side
                 // Note: This will reset 'FW-Version' to '---------' to mark FW version invalid.
-                self::createRuche("Abeille${gtwId}");
+                if ($config['ab::gtwType'.$gtwId] == "zigate")
+                    self::createRuche("Abeille${gtwId}");
+                else
+                    self::createEzspGateway("Abeille${gtwId}");
             } else {
                 // Zigate disabled. Ensure equipment is disabled too
                 $eqLogic = eqLogic::byLogicalId("Abeille${gtwId}/0000", 'Abeille');
@@ -1022,15 +1025,17 @@ class Abeille extends eqLogic {
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
     public static function checkInclusionStatus($net) {
         $eqLogic = eqLogic::byLogicalId($net.'/0000', 'Abeille');
-        if (is_object($eqLogic)) {
-            $cmdJoinStatus = $eqLogic->getCmd('info', 'permitJoin-Status');
-            if (is_object($cmdJoinStatus)) {
-                $incStatus = $cmdJoinStatus->execCmd();
-                if (($incStatus === 0) || ($incStatus === 1))
-                    return $incStatus;
-            }
-        }
+        if (!is_object($eqLogic) || ($eqLogic->getIsEnable() != 1))
+            return -1;
 
+        $cmdJoinStatus = $eqLogic->getCmd('info', 'permitJoin-Status');
+        if (!is_object($cmdJoinStatus))
+            return -1;
+
+        $incStatus = $cmdJoinStatus->execCmd();
+        // log::add('Abeille', 'debug', "incStatus=".$incStatus);
+        if (($incStatus === 0) || ($incStatus === 1))
+            return $incStatus;
         return -1;
     }
 
@@ -2352,7 +2357,7 @@ class Abeille extends eqLogic {
             log::add('Abeille', 'warning', "msgToCmd(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
     } // End msgToCmd()
 
-    // Beehive creation/update function. Called on daemon startup or new beehive creation.
+    // Zigate Jeedom equipment creation/update. Called on daemon startup or new beehive creation.
     public static function createRuche($dest) {
         $gtwId = substr($dest, 7); // AbeilleX => X
 
@@ -2371,9 +2376,6 @@ class Abeille extends eqLogic {
                 $eqLogic->setObject_id(jeeObject::rootObject()->getId());
             }
             $eqLogic->setEqType_name('Abeille');
-            // $eqLogic->setConfiguration('topic', $dest."/0000"); // Tcharp38: What for ?
-            // $eqLogic->setConfiguration('type', 'topic'); // Tcharp38: What for ?
-            // $eqLogic->setConfiguration('lastCommunicationTimeOut', '-1');
             $eqLogic->setIsVisible("0");
             $eqLogic->setConfiguration('ab::icon', "Ruche");
             $eqLogic->setTimeout(5); // timeout en minutes
@@ -2535,6 +2537,38 @@ class Abeille extends eqLogic {
             $cmdLogic->save();
         }
     } // End createRuche()
+
+    // EZSP gateway Jeedom equipment creation/update. Called on daemon startup or new beehive creation.
+    public static function createEzspGateway($net) {
+        $gtwId = substr($net, 7); // AbeilleX => X
+
+        $config = AbeilleTools::getConfig();
+        $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
+        if (!is_object($eqLogic)) {
+            message::add("Abeille", "Création de l'équipement 'EZSP' en cours. Rafraichissez votre dashboard dans qq secondes.", '');
+            log::add('Abeille', 'info', 'Ruche: Création de '.$net."/0000");
+            $eqLogic = new Abeille();
+            //id
+            $eqLogic->setName("EzspGtw-".$net);
+            $eqLogic->setLogicalId($net."/0000");
+            if ($config['ab::defaultParent'] > 0) {
+                $eqLogic->setObject_id($config['ab::defaultParent']);
+            } else {
+                $eqLogic->setObject_id(jeeObject::rootObject()->getId());
+            }
+            $eqLogic->setEqType_name('Abeille');
+            $eqLogic->setIsVisible("0"); // No need on dashboard
+            $eqLogic->setConfiguration('ab::icon', "Ruche");
+            $eqLogic->setTimeout(5); // timeout en minutes
+            $eqLogic->setIsEnable(1);
+        } else {
+            // TODO: If already exist, should we update commands if required ?
+            log::add('Abeille', 'debug', "createEzspGateway(): '".$eqLogic->getLogicalId()."' already exists");
+        }
+
+        // $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
+        $eqLogic->save();
+    } // End createEzspGateway()
 
     // Create a basic Jeedom device
     public static function newJeedomDevice($net, $addr, $ieee) {

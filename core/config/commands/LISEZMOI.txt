@@ -161,7 +161,7 @@ Exemple de commande 'action'
         Ex: "calculValueOffset": "#value#/10"
     Attention: Cette option est gérée par Jeedom et non pas par Abeille.
 
-  * valueOffset: optionnel (pour cmde action avec subType != 'other')
+  * valueOffset: optionnel (pour cmde action)
     Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
         Ex: "valueOffset": "#value#*10"
         Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
@@ -178,8 +178,8 @@ Exemple de commande 'action'
   * PollingOnCmdChangeDelay: optionnel
     ?
 
-  * listValue: optionnel
-    Dans le cas d'une commande action du type 'select', permet de définir la liste des cas.
+  * listValue: OBLIGATOIRE si cmd action de type 'select'
+    Permet de définir la liste des cas.
     Ex:
             "Set Sensitivity": {
                 "use": "act_zbWriteAttribute-list",
@@ -200,3 +200,17 @@ Exemple de commande 'action'
 
   * RefreshData: ??
     Ex: "RefreshData": "1"
+
+Variables
+=========
+
+#valueoffset#: Permet d'inserer le résultat de 'valueOffset'
+    Ex: "params": "ep=01&clustId=0102&attrId=0017&attrType=18&attrVal=#valueoffset#",
+        "valueOffset": "#logicid0102-01-0017#|(1<<1)",
+
+#logicid....#: Permet de récuperer la valeur d'une commande info via son 'logical ID'
+    Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+
+#slider#: Valeur fournie par Jeedom si sub type = 'slider'
+#select#: Valeur fournie par Jeedom si sub type = 'select'
+#message#: Valeur fournie par Jeedom si sub type = 'message'

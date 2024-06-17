@@ -16,6 +16,7 @@
 -   Interne: Zigbee consts: Mises-à-jour cluster 0102.
 -   Interne: createDevice() revu.
 -   Interne: Cmd 'info' n'est plus mise à jour systématiquement par valeur cmd 'action'.
+-   Support EmberZnet/EZSP: Qq avancées mineures.
 
 ## 240610-BETA-1
 

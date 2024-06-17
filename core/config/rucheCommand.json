@@ -49,42 +49,6 @@
             "forceReturnLineAfter": "1"
         }
     },
-    "Short-Addr": {
-        "name": "Short Addr",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "IEEE-Addr": {
-        "name": "IEEE Addr",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "PAN-ID": {
-        "name": "PAN ID",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Ext_PAN-ID": {
-        "name": "Ext PAN ID",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
     "permitJoin-Status": {
         "name": "Inclusion Status",
         "isHistorized": "0",
@@ -233,15 +197,6 @@
         "invertBinary": "0",
         "template": ""
     },
-    "Network-Channel": {
-        "name": "Network Channel",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
     "joinLeave-IEEE": {
         "name": "joinLeave",
         "isHistorized": "1",
@@ -250,30 +205,5 @@
         "subType": "string",
         "invertBinary": "0",
         "template": ""
-    },
-    "Group-Membership": {
-        "isVisible": 0,
-        "name": "Groups",
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge",
-        "configuration": {
-            "uniqId": "5c07c88621b88",
-            "visibilityCategory": "Network"
-        }
-    },
-    "ZiGate-Power": {
-        "name": "TX power",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "",
-        "display": {
-            "forceReturnLineAfter": "1"
-        }
     }
 }

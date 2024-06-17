@@ -317,9 +317,8 @@
                 */
                 $exp = "\$newVal = ${vo};";
                 eval($exp);
-                logMessage('debug', "-- '#valueoffset#' => newVal='${newVal}'");
                 $request = str_ireplace("#valueoffset#", $newVal, $request);
-                logMessage('debug', "-- '#valueoffset#' => request='${request}'");
+                logMessage('debug', "-- '#valueoffset#' => newVal='${newVal}', request='${request}'");
             }
             $request = $cmdLogic->updateField($net, $cmdLogic, $request, $_options);
 
@@ -346,8 +345,10 @@
             }
 
             // Mise a jour de la commande info associée, necessaire pour les commande actions qui recupere des parametres des commandes infos.
-            // Tcharp38: DISABLED !! This is NOT the reality. Cmd info should reflect the real device status and therefore info
-            // update should either be reporting (best case) or polling
+            /* Tcharp38: DISABLED !! This is NOT the reality and may display bad infos.
+               Cmd info should reflect the real device status and therefore info update should either be reporting (best case) or polling.
+               "value" field for action cmd is the opposite. Action is updated from info change.
+             */
             // if ($cmdLogic->getCmdValue()) {
             //     logMessage('debug', '-- Will process cmdAction with cmd Info Ref if exist: '.$cmdLogic->getCmdValue()->getName());
             //     // TODO: je suppose qu il n'y a qu une commande info associée
@@ -384,14 +385,6 @@
                     $trigCmd->execute();
                 }
             }
-            // $to = $cmdLogic->getConfiguration('ab::trigOut', null);
-            // if ($to !== null) {
-            //     $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $to);
-            //     if ($trigCmd) {
-            //         logMessage('debug', "-- Triggering '".$to."'");
-            //         $trigCmd->execute();
-            //     }
-            // }
 
             return;
         } // End public function execute()

@@ -4,6 +4,7 @@
 
 -   Modèles d'équipement: Réajout info 'Time-TimeStamp' si manquante.
 -   Onglet EQ/avancé: Qq mises-à-jour.
+-   Amélioration analyse réseau (Mgmt_lqi_req).
 
 ## 240618-BETA-2
 

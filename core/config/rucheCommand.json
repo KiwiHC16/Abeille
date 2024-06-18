@@ -8,26 +8,6 @@
         "invertBinary": "0",
         "template": ""
     },
-    "FW-Version": {
-        "name": "FW version",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Get FW version": {
-        "name": "Get FW version",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "zgGetVersion",
-            "request": ""
-        }
-    },
     "Time-TimeStamp": {
         "name": "Time-TimeStamp",
         "isVisible": "1",

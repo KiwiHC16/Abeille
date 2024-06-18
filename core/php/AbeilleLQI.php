@@ -38,6 +38,16 @@
         }
         // TODO: What to do if mesg received does not match interrogated eq ?
 
+        // Checking if router is ready to receive 'Mgmt_lqi_req'
+        // Note: This unfortunately happens because some router return bad informations
+        if (isset($knownFromJeedom[$logicId]['zigbee']['rxOnWhenIdle'])) {
+            $rxOn = $knownFromJeedom[$logicId]['zigbee']['rxOnWhenIdle'];
+            if ($rxOn != 1) {
+                logMessage("", "  New router but RX OFF: '${eqName}' (${logicId}) => Ignored as router");
+                return;
+            }
+        }
+
         if (isset($knownFromJeedom[$logicId]))
             $eqName = $knownFromJeedom[$logicId]['name'];
         else
@@ -50,7 +60,7 @@
             "tableEntries" => 0,    // Nb of entries in its table
             "tableIndex" => 0,      // Index to interrogate
         );
-        logMessage("", "  New router to interrogate: '".$eqName."' (".$logicId.")");
+        logMessage("", "  New router: '${eqName}' (${logicId})");
     }
 
     /* Remove any pending messages from parser */
@@ -471,7 +481,8 @@
     // $objKnownFromAbeille = array();
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();
-        $knownFromJeedom[$eqLogicId]['name'] = $eqLogic->getName();
+        $eqName = $eqLogic->getName();
+        $knownFromJeedom[$eqLogicId]['name'] = $eqName;
         $eqParent = $eqLogic->getObject();
         if (!is_object($eqParent))
             $objName = "";
@@ -481,8 +492,8 @@
         $knownFromJeedom[$eqLogicId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
         $knownFromJeedom[$eqLogicId]['icon'] = $eqLogic->getConfiguration('ab::icon', 'defaultUnknown');
         $knownFromJeedom[$eqLogicId]['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
-        logMessage("", "  Eq='".$eqLogicId."', parent='".$objName."'");
-        logMessage("", "  zigbee=".json_encode($knownFromJeedom[$eqLogicId]['zigbee']));
+        logMessage("", "  '${eqName}' (${eqLogicId}), Parent='${objName}'");
+        logMessage("", "  zigbee=".json_encode($knownFromJeedom[$eqLogicId]['zigbee'], JSON_UNESCAPED_SLASHES));
     }
 
     $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
@@ -564,7 +575,7 @@
         /* Write JSON cache only if collect completed successfully or on timeout */
         if ($collectStatus != -1) {
             // Storing also new output format
-            $json = json_encode($lqiTable);
+            $json = json_encode($lqiTable, JSON_UNESCAPED_SLASHES);
             if (file_put_contents($newDataFile, $json)) {
                 echo "Ok: ".$netName." collect ended successfully";
             } else {

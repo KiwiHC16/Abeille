@@ -29,7 +29,7 @@
         }
     },
     "Time-TimeStamp": {
-        "name": "Last",
+        "name": "Time-TimeStamp",
         "isVisible": "1",
         "Type": "info",
         "subType": "numeric",
@@ -185,23 +185,5 @@
             "title_placeholder": "Adresse courte de l equipement",
             "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY"
         }
-    },
-    "Network-Status": {
-        "name": "Network Status",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "joinLeave-IEEE": {
-        "name": "joinLeave",
-        "isHistorized": "1",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
     }
 }

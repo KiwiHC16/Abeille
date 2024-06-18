@@ -1171,7 +1171,7 @@
          * - Config DB: 'ab::zgChanX' => 'ab::gtwChanX'
          * - 20240617: CANCELED >>> Cmd DB: Removed all 'Time-TimeStamp' info cmds.
          */
-        if (intval($dbVersion) < 20240617) {
+        if (intval($dbVersion) < 20240618) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
@@ -1220,22 +1220,42 @@
                     if ($saveCmd)
                         $cmdLogic->save();
                 }
-                // $cmdLogic = cmd::byLogicalId("Time-TimeStamp");
-                // if (!is_object($cmdLogic)) {
-                //     $cmdLogic = new cmd();
-                //     $cmdLogic->setEqLogic_id($eqId);
-                //     $cmdLogic->setEqType('Abeille');
-                //     $cmdLogic->setType('info');
-                //     $cmdLogic->setSubType('numeric');
-                //     $cmdLogic->setLogicalId("Time-TimeStamp");
-                //     $cmdLogic->setName("Time-TimeStamp");
-                //     $cmdLogic->save();
-                //     log::add('Abeille', 'debug', "  ${cmdHName}: 'Time-TimeStamp' ajouté");
-                // }
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
+                if (!is_object($cmdLogic)) {
+                    if (addCmdFromModel($eqId, "inf_time-Timestamp", "Time-TimeStamp") == true)
+                        log::add('Abeille', 'debug', "  ${eqHName}[Time-TimeStamp]: Added");
+                }
             }
 
-            // config::save('ab::dbVersion', '20240503', 'Abeille');
+            // config::save('ab::dbVersion', '20240618', 'Abeille');
         }
+    } // End updateConfigDB()
+
+    // Returns: true or false
+    function addCmdFromModel($eqId, $cmdModelName, $cmdName) {
+        $fullPath = cmdsDir.$cmdModelName.'.json';
+        if (!file_exists($fullPath)) {
+            log::add('Abeille', 'error', "Modèle '${cmdModelName}': Fichier manquant.");
+            return false;
+        }
+        $jsonContent = file_get_contents($fullPath);
+        $cmd = json_decode($jsonContent, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            log::add('Abeille', 'error', "Modèle '${cmdModelName}': Fichier corrompu.");
+            return false;
+        }
+        log::add('Abeille', 'debug', "  cmd=".json_encode($cmd, JSON_UNESCAPED_SLASHES));
+
+        $cmd = $cmd[$cmdModelName]; // Removing top key
+        $cmdLogic = new cmd();
+        $cmdLogic->setEqLogic_id($eqId);
+        $cmdLogic->setEqType('Abeille');
+        $cmdLogic->setType($cmd['type']);
+        $cmdLogic->setSubType($cmd['subType']);
+        $cmdLogic->setLogicalId($cmd['logicalId']);
+        $cmdLogic->setName($cmdName);
+        $cmdLogic->save();
+        return true;
     }
 
     /**

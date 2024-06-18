@@ -444,17 +444,17 @@
      *  'newJCmdName' = cmd name to replace (coming from 'use')
      * Returns: array() or false if not found.
      */
-    function getCommandModel($modelName, $cmdFName, $newJCmdName = '') {
+    function getCommandModel($eqModelName, $cmdFName, $newJCmdName = '') {
         $fullPath = cmdsDir.$cmdFName.'.json';
         if (!file_exists($fullPath)) {
-            log::add('Abeille', 'error', "Modèle '".$modelName."': Le fichier de commande '".$cmdFName.".json' n'existe pas.");
+            log::add('Abeille', 'error', "Modèle '".$eqModelName."': Le fichier de commande '".$cmdFName.".json' n'existe pas.");
             return false;
         }
 
         $jsonContent = file_get_contents($fullPath);
         $cmd = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', "Modèle '".$modelName."': Fichier de commande '".$cmdFName.".json' corrompu.");
+            log::add('Abeille', 'error', "Modèle '".$eqModelName."': Fichier de commande '".$cmdFName.".json' corrompu.");
             return false;
         }
 

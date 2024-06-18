@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Modèles d'équipement: Réajout info 'Time-TimeStamp' si manquante.
+
 ## 240618-BETA-2
 
 -   GL-C-007P, GLEDOPTO: Ajout controle blanc chaud/froid (2710).

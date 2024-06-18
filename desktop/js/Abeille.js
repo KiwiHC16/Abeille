@@ -238,21 +238,18 @@ function refreshEqInfos() {
             for (let i = 0; i < advInfoCmds.length; i++) {
                 elm = advInfoCmds[i];
                 console.log("advInfoCmd=", advInfoCmds[i]);
-                // elm.classList.add('col-sm-5');
-                // elm.classList.add('cmd');
-                // elm.setAttribute('data-eqlogic_id', eqId);
                 cmdLogicId = elm.getAttribute("advInfo");
                 console.log("cmdLogicId=", cmdLogicId);
                 if (typeof eq.cmds[cmdLogicId] != "undefined") {
                     cmd = eq.cmds[cmdLogicId];
-                    console.log("cmd=", cmd);
+                    // console.log("cmd=", cmd);
                     cmdId = cmd.id;
                     cmdVal = cmd.val;
-                    console.log("cmdVal=", cmdVal);
+                    // console.log("cmdVal=", cmdVal);
                     // elm.setAttribute('data-cmd_id', cmdId);
                     child = elm.firstElementChild;
                     if (child != null) {
-                        console.log("child=", child);
+                        // console.log("child=", child);
                         child.id = "cmdId-" + cmdId;
                         child.setAttribute("value", cmdVal);
                     }
@@ -260,7 +257,9 @@ function refreshEqInfos() {
                     // jeedom.cmd.addUpdateFunction(cmdId, updateInfoCmd);
                     // Warning: addUpdateFunction() seems only available since v4.4 core
                     if (!isset(jeedom.cmd.update)) jeedom.cmd.update = [];
-                    jeedom.cmd.update[cmdId] = updateInfoCmd;
+                    if (cmdLogicId == "Time-TimeStamp")
+                        jeedom.cmd.update[cmdId] = updateInfoCmdTimestamp;
+                    else jeedom.cmd.update[cmdId] = updateInfoCmd;
                     console.log("jeedom.cmd.update=", jeedom.cmd.update);
                 }
             }
@@ -289,19 +288,37 @@ function refreshEqInfos() {
 // This function is called each time a corresponding info cmd has a value update.
 // Reminder: jeedom.cmd.update[cmdId] = updateInfoCmd()
 function updateInfoCmd(_options) {
-    console.log("updateInfoCmd(): options=", _options);
     cmdId = _options.cmd_id;
-    // var elm2 = document.getElementById('cmdId-9999');
-    // console.log('elm2=', elm2);
+    value = _options.display_value;
+    console.log("updateInfoCmd(cmdId=" + cmdId + ", val=" + value + ")");
     var elm = document.getElementById("cmdId-" + cmdId);
     if (elm == null) {
         console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
         return;
     }
     console.log("elm=", elm);
-    if (true /*$isInput*/) elm.value = _options.display_value;
+    if (true /*$isInput*/) elm.value = value;
     // Not <input>. Assuming <span>
-    else elm.textContent = _options.display_value;
+    else elm.textContent = value;
+}
+
+// Same as updateInfoCmd() but dedicated to 'Time-Timestamp' info display
+function updateInfoCmdTimestamp(_options) {
+    cmdId = _options.cmd_id;
+    value = _options.display_value;
+    console.log(
+        "updateInfoCmdTimestamp(cmdId=" + cmdId + ", val=" + value + ")"
+    );
+    var elm = document.getElementById("cmdId-" + cmdId);
+    if (elm == null) {
+        console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
+        return;
+    }
+    // console.log("elm=", elm);
+    // Convert PHP timestamp to human readable time
+    dt = new Date(value * 1000);
+    console.log("dt=", dt);
+    elm.value = dt;
 }
 
 $("#in_searchEqlogicB")

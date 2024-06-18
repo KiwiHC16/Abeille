@@ -8,6 +8,15 @@
 ?>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
+    <div class="col-sm-5">
+        <input id="idEqAddr" type="text" value="" readonly>
+        /
+        <input id="idEqIeee" type="text" class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE" readonly></input>
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Type logique}}</label>
     <div class="col-sm-5">
         <input id="idZbLogicalType" type="text" readonly title="{{Node descriptor/Logical type}}" value="">

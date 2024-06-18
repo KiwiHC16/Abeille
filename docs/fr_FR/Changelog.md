@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Modèles d'équipement: Réajout info 'Time-TimeStamp' si manquante.
+-   Onglet EQ/avancé: Qq mises-à-jour.
 
 ## 240618-BETA-2
 

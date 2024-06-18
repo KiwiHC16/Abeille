@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240618-BETA-3"
+# VERSION="240618-BETA-4"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1238,7 +1238,7 @@ df1aca4068e54c2b218f744b682ae9e3 *core/config/devices/zigbeeWindowCoveringDevice
 2261d07e5db7eb40b621b54973d81cb7 *core/config/devices_local/LISEZMOI.txt
 a03262b18f2d6fe7f9e99bb72ae4c38b *core/config/devices_local/README.txt
 3ab8135083575243b509c53cd24e47fe *core/config/ignore_on_push.txt
-68a3e189eda988deeb2088ba9a9226a8 *core/config/rucheCommand.json
+5cf3aaef452f6fef0a917248dd6c56de *core/config/rucheCommand.json
 bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 f3c14cd54c234f28d1f201bfb7517c25 *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
@@ -1340,7 +1340,7 @@ e44f0103a4943fca4a50c8d1c97599af *docs/dev/ezsp_notes.txt
 144d63e1b87b5860627f76ce4dd8515a *docs/dev/jeedom_notes.txt
 14eb89c802e96f0936988934ecc29cc8 *docs/dev/remote_controls.txt
 d827c7d36d32c0d792b21b956e60b6b8 *docs/dev/zigbee_notes.txt
-a2cb446e903b9ee8528506a6b91fccdd *docs/fr_FR/Changelog.md
+af22817fb684f842cdf26c7a225faba6 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1686,11 +1686,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-ab7a39d5bbbce1870a934eb88fcca4ea *plugin_info/Abeille.version
+c3cc11f11e46d3cf2deda032b896f212 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6adab21ab37842d9a2b35c454cd53ec6 *plugin_info/configuration.php
-dc1ff18be5a44d74d58b51277e09f6a6 *plugin_info/info.json
+d28d85fcb7473be123f47417342a69ca *plugin_info/info.json
 28e8f72734b6e7976679915aa37de08e *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

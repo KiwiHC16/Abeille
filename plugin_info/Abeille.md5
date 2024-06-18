@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240618-BETA-4"
+# VERSION="240618-BETA-5"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1238,7 +1238,7 @@ df1aca4068e54c2b218f744b682ae9e3 *core/config/devices/zigbeeWindowCoveringDevice
 2261d07e5db7eb40b621b54973d81cb7 *core/config/devices_local/LISEZMOI.txt
 a03262b18f2d6fe7f9e99bb72ae4c38b *core/config/devices_local/README.txt
 3ab8135083575243b509c53cd24e47fe *core/config/ignore_on_push.txt
-5cf3aaef452f6fef0a917248dd6c56de *core/config/rucheCommand.json
+ee2f7d8f2097d725743a060912366ac9 *core/config/rucheCommand.json
 bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 f3c14cd54c234f28d1f201bfb7517c25 *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
@@ -1250,7 +1250,7 @@ b980759053a60ac940b5aa0cef9f294a *core/php/AbeilleCmd.php
 e19dfc28fe5aab5966a0dcca176381ff *core/php/AbeilleGetEq.php
 da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
 cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
-bac3eca8b8c21c5295e8cc4802fa4df8 *core/php/AbeilleLQI.php
+b0125b8aa4e3f98a2702e8e2bf82ac06 *core/php/AbeilleLQI.php
 255a3cc9c2c67bf09cd584ffb2287b62 *core/php/AbeilleLog.php
 f5328a43981a4d11b99d9fa8f605cf25 *core/php/AbeilleModels.php
 7ac0ddf81520b8454be774cd6f940e6f *core/php/AbeilleMonitor.php
@@ -1340,7 +1340,7 @@ e44f0103a4943fca4a50c8d1c97599af *docs/dev/ezsp_notes.txt
 144d63e1b87b5860627f76ce4dd8515a *docs/dev/jeedom_notes.txt
 14eb89c802e96f0936988934ecc29cc8 *docs/dev/remote_controls.txt
 d827c7d36d32c0d792b21b956e60b6b8 *docs/dev/zigbee_notes.txt
-af22817fb684f842cdf26c7a225faba6 *docs/fr_FR/Changelog.md
+9627c42500709c7e3d1d6344498ba138 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1686,11 +1686,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-c3cc11f11e46d3cf2deda032b896f212 *plugin_info/Abeille.version
+966d73be18547887e26b907c299755fd *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6adab21ab37842d9a2b35c454cd53ec6 *plugin_info/configuration.php
-d28d85fcb7473be123f47417342a69ca *plugin_info/info.json
+659a1a620a6965d95dc1a8bbe29e6b9c *plugin_info/info.json
 28e8f72734b6e7976679915aa37de08e *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

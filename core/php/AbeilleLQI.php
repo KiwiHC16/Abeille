@@ -38,20 +38,21 @@
         }
         // TODO: What to do if mesg received does not match interrogated eq ?
 
+        if (isset($knownFromJeedom[$logicId]))
+            $eqName = $knownFromJeedom[$logicId]['name'];
+        else
+            $eqName = "Inconnu";
+
         // Checking if router is ready to receive 'Mgmt_lqi_req'
         // Note: This unfortunately happens because some router return bad informations
         if (isset($knownFromJeedom[$logicId]['zigbee']['rxOnWhenIdle'])) {
             $rxOn = $knownFromJeedom[$logicId]['zigbee']['rxOnWhenIdle'];
-            if ($rxOn != 1) {
+            if ($rxOn === 0) {
                 logMessage("", "  New router but RX OFF: '${eqName}' (${logicId}) => Ignored as router");
                 return;
             }
         }
 
-        if (isset($knownFromJeedom[$logicId]))
-            $eqName = $knownFromJeedom[$logicId]['name'];
-        else
-            $eqName = "Inconnu";
         list($netName, $addr) = explode('/', $logicId);
         $eqToInterrogate[] = array(
             "logicId" => $logicId,
@@ -478,7 +479,6 @@
     logMessage("", "Known Jeedom equipments:");
     $eqLogics = eqLogic::byType('Abeille');
     $knownFromJeedom = array();
-    // $objKnownFromAbeille = array();
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();
         $eqName = $eqLogic->getName();

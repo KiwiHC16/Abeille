@@ -1238,7 +1238,7 @@
                 break;
 
             default:
-                cmdLog("debug", '  No prepare function. Forwarding cmd to AbeilleCmdProcess.');
+                // cmdLog("debug", '  No prepare function. Forwarding cmd to AbeilleCmdProcess.');
                 // cmdLog("debug", '  msg='.json_encode($msg));
 
                 /* Tcharp38 notes:

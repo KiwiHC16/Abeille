@@ -4198,6 +4198,10 @@
                     $imgOffset = $Command['imgOffset'];
                     $maxData = $Command['maxData'];
 
+                    if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode]) || !isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
+                        cmdLog('debug', "  otaImageBlockResponse WARNING: ManufCode=${manufCode}, ImgType=${imgType} => NO FW. Request ignored");
+                        return;
+                    }
                     $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
                     $imgVers = $fw['fileVersion'];
                     $imgSize = $fw['fileSize'];
@@ -4241,8 +4245,8 @@
 
                     if ($imgOffset == "00000000") {
                         $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
-                        $eqPath = $eqLogic->getHumanName();
-                        message::add("Abeille", $eqPath.": Mise-à-jour du firmware démarrée", "");
+                        $eqHName = $eqLogic->getHumanName();
+                        message::add("Abeille", $eqHName.": Mise-à-jour du firmware démarrée", "");
                     }
                     return;
                 }

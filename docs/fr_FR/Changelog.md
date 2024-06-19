@@ -1,5 +1,9 @@
 # ChangeLog
 
+-   Analyse réseau: Corrections.
+-   Interne: Correction sauvegarde config dev.
+-   Mises-à-jour OTA: Amélioration interne.
+
 ## 240618-BETA-5
 
 -   Modèles d'équipement: Réajout info 'Time-TimeStamp' si manquante.

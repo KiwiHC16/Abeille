@@ -63,51 +63,10 @@
 
         ajax::init();
 
-//         /* Monitor equipment with given ID.
-//            Returns: status=0/-1, errors=<error message(s)> */
-//         if (init('action') == 'monitor') {
-//             $eqId = init('eqId');
-
-//             logSetConf("AbeilleMonitor.log", TRUE);
-//             // logMessage("debug", "AbeilleDev.ajax: action==monitor, eqId=".$eqId);
-
-//             $eqLogic = eqLogic::byId($eqId);
-//             $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/8362'
-//             list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
-
-//             /* Collecting IEEE address */
-//             $eqAddrExt = $eqLogic->getConfiguration('IEEE', '');
-//             if ($eqAddrExt == "")
-//                 $eqAddrExt = "xxxxxxxxxxxxxxxx";
-
-//             $status = 0;
-//             $error = "";
-
-//             if (file_exists($dbgFile))
-//                 $devConfig = json_decode(file_get_contents($dbgFile), TRUE);
-//             else
-//                 $devConfig = array();
-// // logDebug("BEFORE devConfig=".json_encode($devConfig));
-//             $devConfig["dbgMonitorAddr"] = $eqAddr."-".$eqAddrExt;
-// // logDebug("AFTER devConfig=".json_encode($devConfig));
-//             if (writeDevConfig($devConfig) != 0) {
-//                 logMessage("error", "Erreur writeDevConfig()");
-//                 ajax::success(json_encode(array('status' => -1, 'error' => "Erreur writeDevConfig()")));
-//             }
-
-//             /* Need to start AbeilleMonitor if not already running
-//                and restart cmd & parser.
-//                WARNING: If cron is not running, any (re)start should be avoided. */
-//             $conf = AbeilleTools::getParameters();
-//             AbeilleTools::restartDaemons($conf, "AbeilleMonitor AbeilleParser AbeilleCmd");
-
-//             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
-//         }
-
         /* Create/write developer config file ("tmp/debug.json")
            Returns: status=0/-1, errors=<error message(s)> */
         if (init('action') == 'writeDevConfig') {
-            $devConfig = init(devConfig); // JSON string
+            $devConfig = init('devConfig'); // JSON string
             $status = 0;
             $error = "";
 

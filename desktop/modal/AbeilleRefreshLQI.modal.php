@@ -11,6 +11,7 @@
     Ruche = "Abeille1";
 
     /* Start refresh status every 1sec */
+    analysisText = "";
     analysisStatus = setInterval(function() { analysisProgress(); }, 1000);  // ms
     textArea = document.getElementById('idLqiProgress');
 
@@ -72,7 +73,10 @@
                     } else
                         networkInformationProgress = data;
                         // document.getElementById("refreshInformation").value = data;
-                        textArea.innerHTML += data + "<br>";
+                        if (data != analysisText) {
+                            textArea.innerHTML += data + "<br>";
+                            analysisText = data;
+                        }
                 }
             }
         });

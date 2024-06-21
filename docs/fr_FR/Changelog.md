@@ -7,6 +7,7 @@
 -   Modèle d'équipement: Surcharge possible de 'request'.
 -   Interne: Cmd: execute() revu pour + de clareté.
 -   NodOn SIN-4-RS-20: Inversion du 'level' (2709).
+-   'Time-TimeStamp': Caché à la création.
 
 ## 240618-BETA-5
 

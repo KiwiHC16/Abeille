@@ -1171,7 +1171,7 @@
          * - Config DB: 'ab::zgChanX' => 'ab::gtwChanX'
          * - 20240617: CANCELED >>> Cmd DB: Removed all 'Time-TimeStamp' info cmds.
          */
-        if (intval($dbVersion) < 20240618) {
+        if (intval($dbVersion) < 20240621) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
@@ -1227,7 +1227,7 @@
                 }
             }
 
-            // config::save('ab::dbVersion', '20240618', 'Abeille');
+            // config::save('ab::dbVersion', '20240621', 'Abeille');
         }
     } // End updateConfigDB()
 
@@ -1254,6 +1254,7 @@
         $cmdLogic->setSubType($cmd['subType']);
         $cmdLogic->setLogicalId($cmd['logicalId']);
         $cmdLogic->setName($cmdName);
+        $cmdLogic->setIsVisible(0); // Hidden
         $cmdLogic->save();
         return true;
     }

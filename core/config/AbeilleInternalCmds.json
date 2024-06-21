@@ -28,7 +28,6 @@
         "setColourOSRAM": {},
         "setTemperatureGroup": {},
         "writeAttributeRequestIAS_WD": {},
-        "identifySendHue": {},
         "removeGroup": {},
         "viewScene": {},
         "storeScene": {},

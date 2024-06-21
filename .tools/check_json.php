@@ -5,12 +5,19 @@
     define('commandsDir', __DIR__.'/../core/config/commands');
     require_once __DIR__.'/../core/php/AbeilleZigbeeConst.php'; // Zigbee constants
 
-    // eqLogic categories
+    // EQ categories
     // {"heating":"1","security":"0","energy":"0","light":"0","opening":"0","automatism":"0","multimedia":"0","default":"0"}
     $eqCategories = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'default'];
 
-    // eqLogic generic types
+    // EQ generic types
     $eqGenTypes = ['Other', 'Battery', 'Camera', 'Heating', 'Electricity', 'Environment', 'Generic', 'Light', 'Mode', 'Multimedia', 'Weather', 'Opening', 'Outlet', 'Robot', 'Security', 'Thermostat', 'Fan', 'Shutter'];
+
+    // EQ top keys
+    $eqTopKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
+    array_push($eqTopKeys, 'repeatEventManagement', 'listValue');
+    array_push($eqTopKeys, 'returnStateTime', 'returnStateValue', 'Polling');
+    array_push($eqTopKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
+    array_push($eqTopKeys, 'value', 'request');
 
     // Cmd 'action' & 'info' subtypes
     $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
@@ -198,13 +205,14 @@
                     unset($unusedCmds[$i]); // $cmdModName is used
 
                 // Check command keys
-                $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
-                array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
-                array_push($validCmdKeys, 'returnStateTime', 'returnStateValue', 'Polling');
-                array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
-                array_push($validCmdKeys, 'value');
+                // $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
+                // array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
+                // array_push($validCmdKeys, 'returnStateTime', 'returnStateValue', 'Polling');
+                // array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
+                // array_push($validCmdKeys, 'value');
+                global $eqTopKeys;
                 foreach ($cmd as $key2 => $value2) {
-                    if (in_array($key2, $validCmdKeys)) {
+                    if (in_array($key2, $eqTopKeys)) {
                         // if ($key2 == 'subType') {
                         //     // TODO: How to know cmd type ?
                         //     if (!cmdSubTypeIsOk($type, $value2))

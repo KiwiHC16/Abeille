@@ -3,6 +3,10 @@
 -   Analyse réseau: Corrections.
 -   Interne: Correction sauvegarde config dev.
 -   Mises-à-jour OTA: Amélioration interne.
+-   Interne: Cmd: Suppression support obsolete 'identifySendHue'.
+-   Modèle d'équipement: Surcharge possible de 'request'.
+-   Interne: Cmd: execute() revu pour + de clareté.
+-   NodOn SIN-4-RS-20: Inversion du 'level' (2709).
 
 ## 240618-BETA-5
 

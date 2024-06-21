@@ -1045,17 +1045,17 @@
             //                         "DestinationEndPoint" => $parameters['EP'],
             //                         );
             //     break;
-            case "identifySendHue":
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "identifySend" => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "duration" => "0010",
-                                    "DestinationEndPoint" => "0B",
-                                    );
-                break;
+            // case "identifySendHue":
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "identifySend" => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "duration" => "0010",
+            //                         "DestinationEndPoint" => "0B",
+            //                         );
+            //     break;
 
             /*
              * Cluster 0004/Groups support

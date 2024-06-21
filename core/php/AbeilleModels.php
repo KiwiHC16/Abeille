@@ -346,6 +346,8 @@
                         $newCmd[$cmd1]['configuration']['listValue'] = $cmd2['listValue'];
                     if (isset($cmd2['Polling']))
                         $newCmd[$cmd1]['configuration']['Polling'] = $cmd2['Polling'];
+                    if (isset($cmd2['request']))
+                        $newCmd[$cmd1]['configuration']['request'] = $cmd2['request'];
 
                     // All overloads done. Let's check if any remaining variables
                     // #EP# => replaced by ['configuration']['mainEP']

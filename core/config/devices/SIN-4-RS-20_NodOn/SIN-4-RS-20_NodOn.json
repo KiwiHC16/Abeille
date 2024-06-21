@@ -40,6 +40,8 @@
             },
             "Set level": {
                 "use": "act_zbCmdC-0102-GoToLiftPercentage",
+                "comment": "Inverting #slider# value",
+                "valueOffset": "100-#slider#",
                 "value": "Level",
                 "isVisible": "1"
             },
@@ -63,14 +65,6 @@
                 "params": "ep=01&clustId=0102&attrId=0017&attrType=18&attrVal=#valueoffset#",
                 "comment": "Set bit 1 to enable Calibration mode",
                 "valueOffset": "#logicid0102-01-0017#|(1<<1)",
-                "isVisible": "1"
-            },
-            "Invert": {
-                "use": "act_zbWriteAttribute",
-                "params": "ep=01&clustId=0102&attrId=0017&attrType=18&attrVal=#valueoffset#",
-                "comment": "Xor on bit 0 to invert motor direction",
-                "valueOffset": "#logicid0102-01-0017# ^ 1",
-                "logicalId": "invert",
                 "isVisible": "1"
             },
             "Get Mode": {

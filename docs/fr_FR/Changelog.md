@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 240622-BETA-1
+
 -   Analyse réseau: Corrections.
 -   Interne: Correction sauvegarde config dev.
 -   Mises-à-jour OTA: Amélioration interne.

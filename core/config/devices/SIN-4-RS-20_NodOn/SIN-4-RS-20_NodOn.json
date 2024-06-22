@@ -51,6 +51,7 @@
             },
             "Level": {
                 "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "calculValueOffset": "100-#value#",
                 "params": "ep=01",
                 "isVisible": "1",
                 "nextLine": "after"

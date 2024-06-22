@@ -10,6 +10,7 @@
 -   Interne: Cmd: execute() revu pour + de clareté.
 -   NodOn SIN-4-RS-20: Inversion du 'level' (2709).
 -   'Time-TimeStamp': Caché à la création.
+-   Package de logs: Correction: Créé même si aucun 'json'.
 
 ## 240618-BETA-5
 

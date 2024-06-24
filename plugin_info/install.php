@@ -1201,24 +1201,21 @@
                 $saveEq = false;
 
                 // cmd
-                $cmds = Cmd::byEqLogicId($eqId);
-                foreach ($cmds as $cmdLogic) {
-                    $cmdLogicId = $cmdLogic->getLogicalId();
-                    $cmdHName = $cmdLogic->getHumanName();
+                // $cmds = Cmd::byEqLogicId($eqId);
+                // foreach ($cmds as $cmdLogic) {
+                //     $cmdLogicId = $cmdLogic->getLogicalId();
+                //     $cmdHName = $cmdLogic->getHumanName();
 
-                    $saveCmd = false;
-                    // Time-TimeStamp is duplicate info of 'Time-Time'. Just different format
-                    if ($cmdLogicId == 'Time-TimeStamp') {
-                        $cmdLogic->remove();
-                        log::add('Abeille', 'debug', "  ${cmdHName}: Removed");
-                    }
-                    // if ($cmdLogicId == 'Time-Time') {
-                    //     $cmdLogic->remove();
-                    //     log::add('Abeille', 'debug', "  ${cmdHName}: Removed");
-                    // }
+                //     $saveCmd = false;
 
-                    if ($saveCmd)
-                        $cmdLogic->save();
+                //     if ($saveCmd)
+                //         $cmdLogic->save();
+                // }
+                // Note: This is useless for Zigate since EQ & cmds updated on startup.
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
+                if (is_object($cmdLogic)) {
+                    $cmdLogic->remove();
+                    log::add('Abeille', 'debug', "  ${eqHName}[Time-TimeStamp]: Removed");
                 }
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
                 if (!is_object($cmdLogic)) {

@@ -8,11 +8,11 @@
         "invertBinary": "0",
         "template": ""
     },
-    "Time-TimeStamp": {
-        "name": "Time-TimeStamp",
+    "Time-Time": {
+        "name": "Time-Time",
         "isVisible": "1",
         "Type": "info",
-        "subType": "numeric",
+        "subType": "string",
         "template": ""
     },
     "ZiGate-Time": {

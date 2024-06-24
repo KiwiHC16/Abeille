@@ -3,6 +3,7 @@
 -   Corrections: Analyse réseau.
 -   Corrections: Modèles d'équipement: 'Time-Time' est de retour mais 'Time-TimeStamp' définitivement supprimé.
 -   Corrections: Status interne Zigate n'est pas 'rxOnWhenIdle'.
+-   Améliorations: Processus de réparation.
 
 ## 240622-BETA-2
 

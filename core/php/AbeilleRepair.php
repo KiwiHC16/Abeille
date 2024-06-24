@@ -101,7 +101,9 @@
             msgToCli("step", "Active end points", "ok");
 
         // Zigbee logicalType/macCapa/manufCode defined ?
-        if (!isset($zigbee['logicalType']) || !isset($zigbee['macCapa']) || !isset($zigbee['manufCode'])) {
+        if (!isset($zigbee['logicalType']) ||
+            !isset($zigbee['macCapa']) || ($zigbee['macCapa'] == "") ||
+            !isset($zigbee['manufCode'])) {
             msgToCli("step", "Logical type/MAC capa/manuf code");
             logMessage('debug', '  Requesting node descriptor');
             msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getNodeDescriptor");

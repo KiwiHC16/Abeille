@@ -2415,6 +2415,8 @@ class Abeille extends eqLogic {
             $zigbee['groups'] = [];
         if (!isset($zigbee['groups']['01']))
             $zigbee['groups']['01'] = '';
+        $zigbee['mainsPowered'] = 1;
+        $zigbee['rxOnWhenIdle'] = 1;
         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
 
         $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
@@ -2886,7 +2888,7 @@ class Abeille extends eqLogic {
                 $zigbee['macCapa'] = $dev['macCapa'];
             }
         }
-        if (isset($zigbee['macCapa'])) {
+        if (isset($zigbee['macCapa']) && ($zigbee['macCapa'] != '')) {
             $mc = hexdec($zigbee['macCapa']);
             $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powered
             $zigbee['rxOnWhenIdle'] = ($mc >> 3) & 0b1; // 1=Receiver enabled when idle

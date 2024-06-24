@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Analyse réseau: Corrections.
+
 ## 240622-BETA-2
 
 -   Analyse réseau: Corrections.

@@ -36,7 +36,6 @@
             if ($Eq['logicId'] == $logicId)
                 return; // Already there
         }
-        // TODO: What to do if mesg received does not match interrogated eq ?
 
         if (isset($knownFromJeedom[$logicId]))
             $eqName = $knownFromJeedom[$logicId]['name'];
@@ -383,11 +382,11 @@
         $msg['topic'] = "Cmd".$dest."/".$addr."/getNeighborTable";
         $msg['payload'] = "startIndex=".$index;
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-        logMessage("", "msgToCmd: ".$msgJson);
+        logMessage("", "  msgToCmd: ".$msgJson);
 
         global $queueLQIToCmd;
         if (msg_send($queueLQIToCmd, priorityInterrogation, $msgJson, false, false) == false) {
-            logMessage('error', "msgToCmd: Unable to send message to AbeilleCmd");
+            logMessage('error', "  msgToCmd: Unable to send message to AbeilleCmd");
             return -1;
         }
         return 0;
@@ -396,6 +395,7 @@
     /* Send 1 to several table requests thru AbeilleCmd to collect neighbour table entries.
        Returns: 0=OK, -1=ERROR (stops collect for current zigate), 1=timeout */
     function interrogateEq($netName, $addr, $eqIdx) {
+        logMessage("", "interrogateEq(${netName}, ${addr}, ${eqIdx})");
         global $eqToInterrogate;
 
         while (true) {
@@ -480,8 +480,15 @@
     $eqLogics = eqLogic::byType('Abeille');
     $knownFromJeedom = array();
     foreach ($eqLogics as $eqLogic) {
-        $eqLogicId = $eqLogic->getLogicalId();
+        $eqId = $eqLogic->getId();
         $eqName = $eqLogic->getName();
+        $eqLogicId = $eqLogic->getLogicalId();
+        list($net, $addr) = explode('/', $eqLogicId);
+        if (($net == "") || ($addr == "")) {
+            logMessage("", "  ${eqId}: '${eqName}' (${eqLogicId}) invalid => ignored");
+            continue;
+        }
+
         $knownFromJeedom[$eqLogicId]['name'] = $eqName;
         $eqParent = $eqLogic->getObject();
         if (!is_object($eqParent))
@@ -492,15 +499,14 @@
         $knownFromJeedom[$eqLogicId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
         $knownFromJeedom[$eqLogicId]['icon'] = $eqLogic->getConfiguration('ab::icon', 'defaultUnknown');
         $knownFromJeedom[$eqLogicId]['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
-        logMessage("", "  '${eqName}' (${eqLogicId}), Parent='${objName}'");
-        logMessage("", "  zigbee=".json_encode($knownFromJeedom[$eqLogicId]['zigbee'], JSON_UNESCAPED_SLASHES));
+        logMessage("", "  ${eqId}: '${eqName}' (${eqLogicId}), Parent='${objName}'");
+        logMessage("", "    Zigbee=".json_encode($knownFromJeedom[$eqLogicId]['zigbee'], JSON_UNESCAPED_SLASHES));
     }
 
     $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
     $queueParserToLQI = msg_get_queue($abQueues["parserToLQI"]["id"]);
     $queueParserToLQIMax = $abQueues["parserToLQI"]["max"];
     msgFromParserFlush(); // Flush the queue if not empty
-
 
     for ($zgId = $zgStart; $zgId <= $zgEnd; $zgId++) {
         if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y') {
@@ -536,6 +542,10 @@
             $total = count($eqToInterrogate);
             logMessage("", "Zigate ".$zgId." progress: ".$done."/".$total);
 
+            if (!isset($eqToInterrogate[$eqIdx])) {
+                logMessage("", "  ERR: eqToInterrogate[${eqIdx}] is undefined");
+                continue;
+            }
             $currentNeAddress = $eqToInterrogate[$eqIdx]['logicId'];
             list($netName, $addr) = explode('/', $currentNeAddress);
 

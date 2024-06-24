@@ -28,15 +28,15 @@
     /* Add to list a new eq (router or coordinator) to interrogate.
        Check first is not aleady in the list. */
     function newRouter($logicId) {
-        global $eqToInterrogate;
-        global $knownFromJeedom;
 
         /* Checking if not already in the list */
-        foreach ($eqToInterrogate as $Eq) {
-            if ($Eq['logicId'] == $logicId)
+        global $eqToInterrogate;
+        foreach ($eqToInterrogate as $eq) {
+            if ($eq['logicId'] == $logicId)
                 return; // Already there
         }
 
+        global $knownFromJeedom;
         if (isset($knownFromJeedom[$logicId]))
             $eqName = $knownFromJeedom[$logicId]['name'];
         else
@@ -52,7 +52,7 @@
             }
         }
 
-        list($netName, $addr) = explode('/', $logicId);
+        list($net, $addr) = explode('/', $logicId);
         $eqToInterrogate[] = array(
             "logicId" => $logicId,
             "name" => $eqName,
@@ -525,7 +525,6 @@
             exit;
         }
 
-        // $LQI = array(); // Result from interrogations (old format)
         $lqiTable = array(
             'signature' => 'Abeille LQI table',
             'net' => "Abeille".$zgId,
@@ -533,14 +532,18 @@
             'routers' => array()
         ); // Result from interrogations (new format)
         $eqToInterrogate = array();
-        newRouter("Abeille".$zgId."/0000");
+        newRouter("Abeille${zgId}/0000");
 
         $done = 0;
         $eqIdx = 0; // Index of eq to interrogate
         $collectStatus = 0;
         while (true) {
             $total = count($eqToInterrogate);
-            logMessage("", "Zigate ".$zgId." progress: ".$done."/".$total);
+            if ($total == 0) {
+                logMessage("", "Gateway ${zgId} progress: NO router to interrogate => abnormal.");
+                break;
+            }
+            logMessage("", "Gateway ${zgId} progress: ${done}/${total}");
 
             if (!isset($eqToInterrogate[$eqIdx])) {
                 logMessage("", "  ERR: eqToInterrogate[${eqIdx}] is undefined");
@@ -556,7 +559,7 @@
                     $name = "Inconnu-" . $currentNeAddress;
 
                 logMessage("", "Interrogating '".$name."' (".$addr.")");
-                $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
+                $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ${done}/${total} => interrogation de '".$name."' (".$addr.")");
                 if ($nbwritten < 1) {
                     echo "ERROR: Can't write lock file";
                     logMessage("", "Unable to write lock file.");

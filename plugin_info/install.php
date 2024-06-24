@@ -1169,9 +1169,9 @@
          * - Config DB: 'ab::zgPortX' => 'ab::gtwPortX'.
          * - Config DB: 'ab::zgIpAddrX' => 'ab::gtwIpAddrX'
          * - Config DB: 'ab::zgChanX' => 'ab::gtwChanX'
-         * - 20240617: CANCELED >>> Cmd DB: Removed all 'Time-TimeStamp' info cmds.
+         * - Cmd DB: Removed all 'Time-TimeStamp' info cmds.
          */
-        if (intval($dbVersion) < 20240621) {
+        if (intval($dbVersion) < 20240624) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
@@ -1207,27 +1207,27 @@
                     $cmdHName = $cmdLogic->getHumanName();
 
                     $saveCmd = false;
-                    // Time-TimeStamp is duplicate info of Time-Time. Just different format
-                    // if ($cmdLogicId == 'Time-TimeStamp') {
-                    //     $cmdLogic->remove();
-                    //     log::add('Abeille', 'debug', "  ${cmdHName}: Removed");
-                    // }
-                    if ($cmdLogicId == 'Time-Time') {
+                    // Time-TimeStamp is duplicate info of 'Time-Time'. Just different format
+                    if ($cmdLogicId == 'Time-TimeStamp') {
                         $cmdLogic->remove();
                         log::add('Abeille', 'debug', "  ${cmdHName}: Removed");
                     }
+                    // if ($cmdLogicId == 'Time-Time') {
+                    //     $cmdLogic->remove();
+                    //     log::add('Abeille', 'debug', "  ${cmdHName}: Removed");
+                    // }
 
                     if ($saveCmd)
                         $cmdLogic->save();
                 }
-                $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
                 if (!is_object($cmdLogic)) {
-                    if (addCmdFromModel($eqId, "inf_time-Timestamp", "Time-TimeStamp") == true)
-                        log::add('Abeille', 'debug', "  ${eqHName}[Time-TimeStamp]: Added");
+                    if (addCmdFromModel($eqId, "inf_time-String", "Time-Time") == true)
+                        log::add('Abeille', 'debug', "  ${eqHName}[Time-Time]: Added");
                 }
             }
 
-            // config::save('ab::dbVersion', '20240621', 'Abeille');
+            // config::save('ab::dbVersion', '20240624', 'Abeille');
         }
     } // End updateConfigDB()
 

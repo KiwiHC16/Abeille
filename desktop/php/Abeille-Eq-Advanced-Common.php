@@ -24,7 +24,7 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
-    <div advInfo="Time-TimeStamp" class="col-sm-5">
+    <div advInfo="Time-Time" class="col-sm-5">
         <input type="text" id="tofill" value="tofill" readonly>
     </div>
 </div>

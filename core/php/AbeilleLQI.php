@@ -544,42 +544,41 @@
 
             if (!isset($eqToInterrogate[$eqIdx])) {
                 logMessage("", "  ERR: eqToInterrogate[${eqIdx}] is undefined");
-                continue;
+            } else {
+                $currentNeAddress = $eqToInterrogate[$eqIdx]['logicId'];
+                list($netName, $addr) = explode('/', $currentNeAddress);
+
+                $NE = $currentNeAddress;
+
+                if (isset($knownFromJeedom[$currentNeAddress]))
+                    $name = $knownFromJeedom[$currentNeAddress]['name'];
+                else
+                    $name = "Inconnu-" . $currentNeAddress;
+
+                logMessage("", "Interrogating '".$name."' (".$addr.")");
+                $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
+                if ($nbwritten < 1) {
+                    echo "ERROR: Can't write lock file";
+                    logMessage("", "Unable to write lock file.");
+                    unlink($lockFile);
+                    exit;
+                }
+
+                $ret = interrogateEq($netName, $addr, $eqIdx);
+                $done++;
+                if ($ret == -1) {
+                    $collectStatus = -1; // Collect interrupted due to error
+                    logMessage("", "Collecte stopped on zigate ".$zgId." due to errors.");
+                    break;
+                }
+                if ($ret == 1) {
+                    $collectStatus = 1; // At least 1 interrogation canceled due to timeout
+                }
             }
-            $currentNeAddress = $eqToInterrogate[$eqIdx]['logicId'];
-            list($netName, $addr) = explode('/', $currentNeAddress);
 
-            $NE = $currentNeAddress;
-
-            if (isset($knownFromJeedom[$currentNeAddress]))
-                $name = $knownFromJeedom[$currentNeAddress]['name'];
-            else
-                $name = "Inconnu-" . $currentNeAddress;
-
-            logMessage("", "Interrogating '".$name."' (".$addr.")");
-            $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
-            if ($nbwritten < 1) {
-                echo "ERROR: Can't write lock file";
-                logMessage("", "Unable to write lock file.");
-                unlink($lockFile);
-                exit;
-            }
-
-            $ret = interrogateEq($netName, $addr, $eqIdx);
-            $done++;
-            if ($ret == -1) {
-                $collectStatus = -1; // Collect interrupted due to error
-                logMessage("", "Collecte stopped on zigate ".$zgId." due to errors.");
-                break;
-            }
-            if ($ret == 1) {
-                $collectStatus = 1; // At least 1 interrogation canceled due to timeout
-            }
-
-            /* End of list ? */
-            if (($eqIdx + 1) == count($eqToInterrogate))
-                break;
             $eqIdx++;
+            if ($eqIdx == count($eqToInterrogate)) // End of list ?
+                break;
         }
 
         /* Write JSON cache only if collect completed successfully or on timeout */

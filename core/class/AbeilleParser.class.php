@@ -689,20 +689,25 @@
                 if (!isset($ep2['servClusters'])) {
                     parserLog('debug', '    Requesting simple descriptor for EP '.$epId2);
                     msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getSimpleDescriptor", "ep=".$epId2);
-                    break; // To reduce requests on first missing descriptor
+                    // break; // To reduce requests on first missing descriptor
+                    return $ret;
                 } else if (strpos($ep2['servClusters'], '0004') !== false) {
                     if (isset($ep2['groups']))
                         parserLog('debug', '    Groups='.json_encode($ep2['groups']));
                     if (!isset($eq['groups']) || !isset($eq['groups'][$epId2])) {
                         parserLog('debug', '    Requesting groups membership for EP '.$epId2);
                         msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getGroupMembership", "ep=".$epId2);
-                        break; // To reduce requests on first missing groups membership
+                        // break; // To reduce requests on first missing groups membership
+                        return $ret;
                     }
                 }
             }
+            // servClusters & groups are known
+
             if (!isset($eq['manufCode']) || ($eq['manufCode'] === null)) {
                 parserLog('debug', '    Requesting node descriptor');
                 msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getNodeDescriptor");
+                return $ret;
             }
 
             // Check if main signature is missing but available in EP
@@ -731,6 +736,11 @@
                 //   the device does not support cluster 0000 in these cases.
                 //   Ex: Sonoff smart plug S26R2ZB (several EPs but the first one does not support modelId nor manufId)
                 foreach ($eq['endPoints'] as $epId2 => $ep2) {
+                    if (!isset($ep2['servClusters']))
+                        continue; // No servClusters list
+                    if (strpos($ep2['servClusters'], '0000') === false)
+                        continue; // No cluster 0000/basic in this EP
+
                     $missing = '';
                     $missingTxt = '';
                     if ((!isset($ep2['modelId']) || ($ep2['modelId'] !== false)) && !isset($ep2['manufId'])) {

@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Analyse réseau. Toujours pour contourner mauvaises infos remontées de certains routers.
+
 ## 240624-BETA-1
 
 -   Corrections: Analyse réseau.

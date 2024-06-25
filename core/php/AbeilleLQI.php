@@ -42,15 +42,15 @@
         else
             $eqName = "Inconnu";
 
-        // Checking if router is ready to receive 'Mgmt_lqi_req'
-        // Note: This unfortunately happens because some router return bad informations
-        if (isset($knownFromJeedom[$logicId]['zigbee']['rxOnWhenIdle'])) {
-            $rxOn = $knownFromJeedom[$logicId]['zigbee']['rxOnWhenIdle'];
-            if ($rxOn === 0) {
-                logMessage("", "  New router but RX OFF: '${eqName}' (${logicId}) => Ignored as router");
-                return;
-            }
-        }
+        // // Checking if router is ready to receive 'Mgmt_lqi_req'
+        // // Note: This unfortunately happens because some router return bad informations
+        // if (isset($knownFromJeedom[$logicId]['zigbee']['rxOnWhenIdle'])) {
+        //     $rxOn = $knownFromJeedom[$logicId]['zigbee']['rxOnWhenIdle'];
+        //     if ($rxOn === 0) {
+        //         logMessage("", "  New router but RX OFF: '${eqName}' (${logicId}) => Ignored as router");
+        //         return;
+        //     }
+        // }
 
         list($net, $addr) = explode('/', $logicId);
         $eqToInterrogate[] = array(
@@ -231,7 +231,19 @@
                 $newNeighbor['type'] = "Coordinator";
             } else if ($attrType == 1) {
                 $newNeighbor['type'] = "Router";
-                newRouter($nLogicId);
+
+                // Addition check: Router is ready to receive 'Mgmt_lqi_req' ?
+                // Note: This unfortunately happens because some router return bad informations on their childs
+                if (isset($zigbee['rxOnWhenIdle'])) {
+                    $rxOn = $zigbee['rxOnWhenIdle'];
+                    if ($rxOn === 0) {
+                        logMessage("", "  Router but RX OFF: '${nName}' (${nLogicId}) => Ignored as router");
+                        $newNeighbor['type'] = "End Device";
+                    }
+                }
+
+                if ($newNeighbor['type'] == "Router")
+                    newRouter($nLogicId);
             } else if ($attrType== 2) {
                 $newNeighbor['type'] = "End Device";
             } else { // other
@@ -395,9 +407,9 @@
     /* Send 1 to several table requests thru AbeilleCmd to collect neighbour table entries.
        Returns: 0=OK, -1=ERROR (stops collect for current zigate), 1=timeout */
     function interrogateEq($netName, $addr, $eqIdx) {
-        logMessage("", "interrogateEq(${netName}, ${addr}, ${eqIdx})");
-        global $eqToInterrogate;
+        // logMessage("", "  interrogateEq(${netName}, ${addr}, ${eqIdx})");
 
+        global $eqToInterrogate;
         while (true) {
             $eq = $eqToInterrogate[$eqIdx]; // Read eq status
             msgToCmd($netName, $addr, sprintf("%02X", $eq['tableIndex']));
@@ -558,7 +570,7 @@
                 else
                     $name = "Inconnu-" . $currentNeAddress;
 
-                logMessage("", "Interrogating '".$name."' (".$addr.")");
+                logMessage("", "Interrogating '${name}' (addr=${addr}, idx=${eqIdx})");
                 $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ${done}/${total} => interrogation de '".$name."' (".$addr.")");
                 if ($nbwritten < 1) {
                     echo "ERROR: Can't write lock file";

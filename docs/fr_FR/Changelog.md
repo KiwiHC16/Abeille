@@ -2,6 +2,7 @@
 
 -   Améliorations: Analyse réseau. Toujours pour contourner mauvaises infos remontées de certains routers.
 -   Corrections: Identification: Pas d'interrogation modelId/manufId si pas de cluster 0000.
+-   Améliorations: Analyse réseau: Indique si le routeur ne répond pas. Affichage par une tête de mort.
 
 ## 240624-BETA-1
 

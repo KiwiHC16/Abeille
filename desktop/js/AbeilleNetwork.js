@@ -760,6 +760,7 @@ function displayLinksGraph(zgId) {
                     name: nodeName,
                     type: router["type"],
                     icon: router["icon"],
+                    dead: typeof router["dead"] != "undefined" ? true : false,
                 });
 
                 for (nLogicId in router.neighbors) {
@@ -774,6 +775,7 @@ function displayLinksGraph(zgId) {
                         name: nodeName,
                         type: neighbor["type"],
                         icon: neighbor["icon"],
+                        dead: false,
                     });
 
                     console.log(
@@ -787,13 +789,15 @@ function displayLinksGraph(zgId) {
             var graphics = Viva.Graph.View.svgGraphics();
             var nodeSize = 50; // Node 50x50
             var imgSize = 40; // Image 40x40 centered in node
+            var deathSize = 20; // Death image in bottom-right corner
             graphics
                 .node(function (node) {
-                    console.log("node=", node);
+                    console.log("LAAAAA node=", node);
 
                     var nodeColor = "#E5E500";
                     var nodeName = "?";
                     var iconName = "defaultUnknown";
+                    let deadNode = false;
 
                     if (typeof node.data != "undefined") {
                         if (typeof node.data.type != "undefined") {
@@ -811,6 +815,7 @@ function displayLinksGraph(zgId) {
                         if (typeof node.data.icon != "undefined") {
                             iconName = node.data.icon;
                         }
+                        deadNode = node.data.dead;
                     }
 
                     svgText = Viva.Graph.svg("text")
@@ -829,11 +834,19 @@ function displayLinksGraph(zgId) {
                         .link(
                             "/plugins/Abeille/images/node_" + iconName + ".png"
                         );
-
                     var ui = Viva.Graph.svg("g");
                     ui.append(svgText);
                     ui.append(img1);
                     ui.append(img2);
+                    if (deadNode) {
+                        var img3 = Viva.Graph.svg("image")
+                            .attr("x", 31)
+                            .attr("y", 28)
+                            .attr("width", deathSize)
+                            .attr("height", deathSize)
+                            .link("/plugins/Abeille/images/death.png");
+                        ui.append(img3);
+                    }
 
                     return ui;
                 })

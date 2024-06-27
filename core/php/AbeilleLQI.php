@@ -78,10 +78,10 @@
         global $queueParserToLQI, $queueParserToLQIMax;
         global $eqToInterrogate;
         global $knownFromJeedom;
-        // global $objKnownFromAbeille;
 
-        $timeout = 10; // 10sec (useful when there is unknown eq interrogation during LQI collect)
-        for ($t = 0; $t < $timeout; ) {
+        $timeoutVal = 10; // 10sec (useful when there is unknown eq interrogation during LQI collect)
+        $timeout = false;
+        for ($t = 0; $t < $timeoutVal; ) {
             // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueParserToLQI)));
             $msgMax = $queueParserToLQIMax;
             if (msg_receive($queueParserToLQI, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == true) {
@@ -123,9 +123,10 @@
             logMessage("", "  msg_receive() ERROR: ".$errCode."/".posix_strerror($errCode));
             return -1;
         }
-        if ($t >= $timeout) {
+        if ($t >= $timeoutVal) {
             logMessage("", "  Time-out !");
-            return 1;
+            // return 1;
+            $timeout = true;
         }
         // Note: What to do if mesg received does not match interrogated eq ?
         //       This currently can't appear since requests are done sequentially
@@ -151,16 +152,18 @@
                 )
             ); */
 
-        logMessage("", "  msg=".json_encode($msg, JSON_UNESCAPED_SLASHES));
-        $tableEntries = $msg->tableEntries; // Total entries on interrogated eq
-        $tableListCount = $msg->tableListCount; // Number of neighbours listed in msg
-        $startIdx = $msg->startIdx;
-        $nList = $msg->nList; // List of neighbours
-        logMessage("", "  TableEntries=".$tableEntries.", TableListCount=".$tableListCount.", StartIdx=".$startIdx);
+        if ($timeout == false) {
+            logMessage("", "  msg=".json_encode($msg, JSON_UNESCAPED_SLASHES));
+            $tableEntries = $msg->tableEntries; // Total entries on interrogated eq
+            $tableListCount = $msg->tableListCount; // Number of neighbours listed in msg
+            $startIdx = $msg->startIdx;
+            $nList = $msg->nList; // List of neighbours
+            logMessage("", "  TableEntries=".$tableEntries.", TableListCount=".$tableListCount.", StartIdx=".$startIdx);
 
-        /* Updating collect infos for this coordinator/router */
-        $eqToInterrogate[$eqIdx]['tableEntries'] = hexdec($tableEntries);
-        $eqToInterrogate[$eqIdx]['tableIndex'] = hexdec($startIdx) + hexdec($tableListCount);
+            /* Updating collect infos for this coordinator/router */
+            $eqToInterrogate[$eqIdx]['tableEntries'] = hexdec($tableEntries);
+            $eqToInterrogate[$eqIdx]['tableIndex'] = hexdec($startIdx) + hexdec($tableListCount);
+        }
 
         $NE = $eqToInterrogate[$eqIdx]["logicId"]; // Ex: 'Abeille1/A3B4'
         list($netName, $addr) = explode('/', $NE);
@@ -184,7 +187,7 @@
             $router = $lqiTable['routers'][$NE];
         } else {
             $router = array(
-                'addr' => $msg->srcAddr,
+                'addr' => $addr,
                 'ieee' => $routerIeee,
                 'name' => $routerName,
                 'parentName' => $routerPName,
@@ -193,197 +196,111 @@
                 'icon' => $routerIcon,
             );
         }
-        $neighbors = $router['neighbors'];
-        /* Going thru neighbours list */
-        for ($nIdx = 0; $nIdx < hexdec($tableListCount); $nIdx++) {
-            $N = $nList[$nIdx];
+        if ($timeout == true) {
+            $router['dead'] = true;
+            logMessage("", "  ${NE} router is DEAD");
+        } else {
+            $neighbors = $router['neighbors'];
+            /* Going thru neighbours list */
+            for ($nIdx = 0; $nIdx < hexdec($tableListCount); $nIdx++) {
+                $N = $nList[$nIdx];
 
-            $nLogicId = $netName."/".$N->addr;
-            if (isset($knownFromJeedom[$nLogicId])) {
-                $nName = $knownFromJeedom[$nLogicId]['name'];
-                $nParentName = $knownFromJeedom[$nLogicId]['parent'];
-                $nIcon = $knownFromJeedom[$nLogicId]['icon'];
-                $zigbee = $knownFromJeedom[$nLogicId]['zigbee'];
-            } else {
-                $nName = "?";
-                $nParentName = "?";
-                $nIcon = 'defaultUnknown';
-                $zigbee = [];
-            }
-
-            $newNeighbor = array(
-                'addr' => $N->addr,
-                'ieee' => $N->extAddr,
-                'name' => $nName,
-                'parentName' => $nParentName,
-                'depth' => $N->depth,
-                'lqi' => hexdec($N->lqi),
-                'icon' => $nIcon,
-            );
-
-            // Note: device type from router are often bad. Therefore using info from node descriptor instead, if device is known to Jeedom
-            if (isset($zigbee['logicalType'])) {
-                $attrType = $zigbee['logicalType']; // Node descriptor/logical type info
-                logMessage("", "  Using 'logicalType' for device type");
-            } else
-                $attrType = $N->devType; // Mgmt_lqi_rsp info
-            if ($attrType == 0) {
-                $newNeighbor['type'] = "Coordinator";
-            } else if ($attrType == 1) {
-                $newNeighbor['type'] = "Router";
-
-                // Addition check: Router is ready to receive 'Mgmt_lqi_req' ?
-                // Note: This unfortunately happens because some router return bad informations on their childs
-                if (isset($zigbee['rxOnWhenIdle'])) {
-                    $rxOn = $zigbee['rxOnWhenIdle'];
-                    if ($rxOn === 0) {
-                        logMessage("", "  Router but RX OFF: '${nName}' (${nLogicId}) => Ignored as router");
-                        $newNeighbor['type'] = "End Device";
-                    }
+                $nLogicId = $netName."/".$N->addr;
+                if (isset($knownFromJeedom[$nLogicId])) {
+                    $nName = $knownFromJeedom[$nLogicId]['name'];
+                    $nParentName = $knownFromJeedom[$nLogicId]['parent'];
+                    $nIcon = $knownFromJeedom[$nLogicId]['icon'];
+                    $zigbee = $knownFromJeedom[$nLogicId]['zigbee'];
+                } else {
+                    $nName = "?";
+                    $nParentName = "?";
+                    $nIcon = 'defaultUnknown';
+                    $zigbee = [];
                 }
 
-                if ($newNeighbor['type'] == "Router")
-                    newRouter($nLogicId);
-            } else if ($attrType== 2) {
-                $newNeighbor['type'] = "End Device";
-            } else { // other
-                $newNeighbor['type'] = "Unknown";
-            }
+                $newNeighbor = array(
+                    'addr' => $N->addr,
+                    'ieee' => $N->extAddr,
+                    'name' => $nName,
+                    'parentName' => $nParentName,
+                    'depth' => $N->depth,
+                    'lqi' => hexdec($N->lqi),
+                    'icon' => $nIcon,
+                );
 
-            // $attrRx = ($bitMap >> 2) & 0x3;
-            $attrRx = $N->rxOnWhenIdle;
-            if ($attrRx == 0) {
-                $newNeighbor['rx'] = "Rx-Off";
-            } else if ($attrRx == 1) {
-                $newNeighbor['rx'] = "Rx-On";
-            } else { // 2 or 3
-                $newNeighbor['rx'] = "Rx-Unknown";
-            }
-
-            // $attrRel = ($bitMap >> 4) & 0x7;
-            $attrRel = $N->relationship;
-            if ($attrRel == 0) {
-                $newNeighbor['relationship'] = "Parent";
-            } else if ($attrRel == 1) {
-                $newNeighbor['relationship'] = "Child";
-
-                // Required by remove from zigbee feature (#1770)
-                // Tcharp38: It appears that in several cases we don't have any parent IEEE
-                //   might not be required if remove is using 004C cmd instead of 0026
-                $kid = Abeille::byLogicalId($netName.'/'.$N->addr, 'Abeille');
-                if ($kid) { // Saving parent IEEE address
-                    $kid->setConfiguration('parentIEEE', $routerIeee);
-                    $kid->save();
+                // Note: device type from router are often bad. Therefore using info from node descriptor instead, if device is known to Jeedom
+                if (isset($zigbee['logicalType'])) {
+                    $attrType = $zigbee['logicalType']; // Node descriptor/logical type info
+                    logMessage("", "  Using 'logicalType' for device type");
                 } else
-                    logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
-            } else if ($attrRel == 2) {
-                $newNeighbor['relationship'] = "Sibling";
-            } else if ($attrRel == 3) {
-                $newNeighbor['relationship'] = "None";
-            } else if ($attrRel == 4) {
-                $newNeighbor['relationship'] = "Previous";
-            } else {
-                $newNeighbor['relationship'] = "Unknown";
-            }
+                    $attrType = $N->devType; // Mgmt_lqi_rsp info
+                if ($attrType == 0) {
+                    $newNeighbor['type'] = "Coordinator";
+                } else if ($attrType == 1) {
+                    $newNeighbor['type'] = "Router";
 
-            $neighbors[$nLogicId] = $newNeighbor;
+                    // Addition check: Router is ready to receive 'Mgmt_lqi_req' ?
+                    // Note: This unfortunately happens because some router return bad informations on their childs
+                    if (isset($zigbee['rxOnWhenIdle'])) {
+                        $rxOn = $zigbee['rxOnWhenIdle'];
+                        if ($rxOn === 0) {
+                            logMessage("", "  Router but RX OFF: '${nName}' (${nLogicId}) => Ignored as router");
+                            $newNeighbor['type'] = "End Device";
+                        }
+                    }
+
+                    if ($newNeighbor['type'] == "Router")
+                        newRouter($nLogicId);
+                } else if ($attrType== 2) {
+                    $newNeighbor['type'] = "End Device";
+                } else { // other
+                    $newNeighbor['type'] = "Unknown";
+                }
+
+                // $attrRx = ($bitMap >> 2) & 0x3;
+                $attrRx = $N->rxOnWhenIdle;
+                if ($attrRx == 0) {
+                    $newNeighbor['rx'] = "Rx-Off";
+                } else if ($attrRx == 1) {
+                    $newNeighbor['rx'] = "Rx-On";
+                } else { // 2 or 3
+                    $newNeighbor['rx'] = "Rx-Unknown";
+                }
+
+                // $attrRel = ($bitMap >> 4) & 0x7;
+                $attrRel = $N->relationship;
+                if ($attrRel == 0) {
+                    $newNeighbor['relationship'] = "Parent";
+                } else if ($attrRel == 1) {
+                    $newNeighbor['relationship'] = "Child";
+
+                    // Required by remove from zigbee feature (#1770)
+                    // Tcharp38: It appears that in several cases we don't have any parent IEEE
+                    //   might not be required if remove is using 004C cmd instead of 0026
+                    $kid = Abeille::byLogicalId($netName.'/'.$N->addr, 'Abeille');
+                    if ($kid) { // Saving parent IEEE address
+                        $kid->setConfiguration('parentIEEE', $routerIeee);
+                        $kid->save();
+                    } else
+                        logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
+                } else if ($attrRel == 2) {
+                    $newNeighbor['relationship'] = "Sibling";
+                } else if ($attrRel == 3) {
+                    $newNeighbor['relationship'] = "None";
+                } else if ($attrRel == 4) {
+                    $newNeighbor['relationship'] = "Previous";
+                } else {
+                    $newNeighbor['relationship'] = "Unknown";
+                }
+
+                $neighbors[$nLogicId] = $newNeighbor;
+            }
+            $router['neighbors'] = $neighbors;
         }
-        $router['neighbors'] = $neighbors;
         $lqiTable['routers'][$NE] = $router;
 
-        // //
-        // // Old format support
-        // // TO BE REMOVED when AbeilleLQI_MapDataAbeilleX.json is no longer used.
-        // //
-        // $parameters = array();
-        // $parameters['NE'] = $NE; // Logical ID
-        // if (isset($knownFromJeedom[$NE])) {
-        //     $parameters['NE_Name'] = $knownFromJeedom[$NE]['name']; // Name
-        //     // $parameters['NE_Objet'] = $objKnownFromAbeille[$NE]; // Parent object
-        //     $parameters['NE_Objet'] = $knownFromJeedom[$NE]['parent']; // Parent object
-        //     $parent = Abeille::byLogicalId($NE, 'Abeille');
-        //     $parentIEEE = $parent->getConfiguration('IEEE', '');
-        //     $parameters['IEEE_Address'] = $parentIEEE;
-        // } else {
-        //     /* EQ is still in Zigbee network but is unknown to Jeedom/Abeille */
-        //     $parameters['NE_Name'] = "Inconnu";
-        //     $parameters['NE_Objet'] = "";
-        //     $parentIEEE = "";
-        // }
-
-        // /* Going thru neighbours list */
-        // for ($nIdx = 0; $nIdx < hexdec($tableListCount); $nIdx++ ) {
-        //     $N = $nList[$nIdx];
-        //     logMessage("", "  N=".json_encode($N));
-
-        //     // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
-
-        //     $parameters['Voisine'] = $netName."/".$N->addr;
-        //     if (isset($knownFromJeedom[$parameters['Voisine']])) {
-        //         $parameters['Voisine_Name'] = $knownFromJeedom[$parameters['Voisine']]['name'];
-        //         // $parameters['Voisine_Objet'] = $objKnownFromAbeille[$parameters['Voisine']];
-        //         $parameters['Voisine_Objet'] = $knownFromJeedom[$parameters['Voisine']]['parent'];
-        //     } else {
-        //         $parameters['Voisine_Name'] = $parameters['Voisine'];
-        //         $parameters['Voisine_Objet'] = "Inconnu";
-        //     }
-
-        //     $parameters['Depth'] = $N->depth;
-        //     $parameters['LinkQualityDec'] = hexdec($N->lqi);
-
-        //     // Decode Bitmap Attribut
-        //     // Bit map of attributes Described below: uint8_t
-        //     // bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)    => Process
-        //     // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
-        //     // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
-        //     // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
-        //     $attr = hexdec($N->bitMap);
-        //     $attrType = $attr & 0b00000011;
-        //     if ($attrType == 0) {
-        //         $parameters['Type'] = "Coordinator";
-        //     } else if ($attrType == 1) {
-        //         $parameters['Type'] = "Router";
-        //         newRouter($parameters['Voisine']);
-        //     } else if ($attrType== 2) {
-        //         $parameters['Type'] = "End Device";
-        //     } else { // $attrType== 3
-        //         $parameters['Type'] = "Unknown";
-        //     }
-
-        //     $attrRel = ($attr & 0b00110000) >> 4;
-        //     if ($attrRel == 0) {
-        //         $parameters['Relationship'] = "Parent";
-        //     } else if ($attrRel == 1) {
-        //         $parameters['Relationship'] = "Child";
-
-        //         // Required by remove from zigbee feature (#1770)
-        //         // Tcharp38: It appears that in several cases we don't have any parent IEEE
-        //         //   might not be required if remove is using 004C cmd instead of 0026
-        //         $kid = Abeille::byLogicalId($netName.'/'.$N->addr, 'Abeille');
-        //         if ($kid) { // Saving parent IEEE address
-        //             $kid->setConfiguration('parentIEEE', $parentIEEE);
-        //             $kid->save();
-        //         } else
-        //             logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
-        //     } else if ($attrRel == 2) {
-        //         $parameters['Relationship'] = "Sibling";
-        //     } else { // if ($attrRel == 3)
-        //         $parameters['Relationship'] = "Unknown";
-        //     }
-
-        //     $attrRx = ($attr & 0b11000000) >> 6;
-        //     if ($attrRx == 0) {
-        //         $parameters['Rx'] = "Rx-Off";
-        //     } else if ($attrRx == 1) {
-        //         $parameters['Rx'] = "Rx-On";
-        //     } else { // 2 or 3
-        //         $parameters['Rx'] = "Rx-Unknown";
-        //     }
-
-        //     global $LQI;
-        //     $LQI[] = $parameters;
-        // }
-
+        if ($timeout == true)
+            return 1;
         return 0;
     }
 

@@ -295,6 +295,10 @@
                         <td class="typeUndefined-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                         <td>{{Type inconnu}}</td>
                     </tr>
+                    <tr>
+                        <td style="width: 35px"><img src="/plugins/Abeille/images/death.png" height="30px"></td>
+                        <td>{{Sans vie}}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

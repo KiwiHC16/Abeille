@@ -293,7 +293,7 @@
                     </tr>
                     <tr>
                         <td class="typeUndefined-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
-                        <td>{{Inconnu}}</td>
+                        <td>{{Type inconnu}}</td>
                     </tr>
                     </tbody>
                 </table>

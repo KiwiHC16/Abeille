@@ -659,6 +659,55 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
         }
 
+        // Get equipments list
+        if (init('action') == 'getEqList') {
+            $gtwId = init('gtwId');
+
+            $status = 0;
+            $error = "";
+            $eqList = [];
+
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $eqLogicId = $eqLogic->getLogicalId();
+                list($eqNet, $eqAddr) = explode("/", $eqLogicId);
+
+                // Trying to identify zigbee device type
+                $zbType = "";
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                if (isset($zigbee['logicalType'])) {
+                    switch($zigbee['logicalType']) {
+                    case 0: $zbType = "Coordinator"; break;
+                    case 1: $zbType = "Router"; break;
+                    case 2: $zbType = "End Device"; break;
+                    default: $zbType = "?"; break;
+                    }
+                } else if (isset($zigbee['macCapa'])) {
+                    $mc = hexdec($zigbee['macCapa']);
+                    $devType = ($mc >> 1) & 0b1;
+                    if ($devType) {
+                        if ($eqAddr == "0000")
+                            $zbType = "Coordinator";
+                        else
+                        $zbType = "Router";
+                    } else
+                        $zbType = "End Device";
+                }
+
+                $eq = array(
+                    'net' => $eqNet,
+                    'addr' => $eqAddr,
+                    'name' => $eqLogic->getName(),
+                    'enabled' => $eqLogic->getIsEnable(),
+                    'zbType' => $zbType,
+                    'icon' => $eqLogic->getConfiguration('ab::icon', 'defaultUnknown'),
+                );
+                $eqList[$eqLogicId] = $eq;
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eqList' => $eqList)));
+        }
+
         // Retrieves all informations suitable to fill health page
         if (init('action') == 'getHealthDatas') {
             $status = 0;

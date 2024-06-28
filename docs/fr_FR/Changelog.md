@@ -5,6 +5,7 @@
 -   Améliorations: Analyse réseau: Indique si le routeur ne répond pas. Affichage par une tête de mort.
 -   Améliorations: Page EQ/avancé: Support extended pour 'getIeeeAddress'.
 -   Interne: Support 'Mgmt_ieee_req/rsp' pour type 'extended'.
+-   Améliorations: Graphique des liens. Affiche les équipements connus d'Abeille mais pas dans le réseau Zigbee (ou sans vie).
 
 ## 240624-BETA-1
 

@@ -3,6 +3,8 @@
 -   Améliorations: Analyse réseau. Toujours pour contourner mauvaises infos remontées de certains routers.
 -   Corrections: Identification: Pas d'interrogation modelId/manufId si pas de cluster 0000.
 -   Améliorations: Analyse réseau: Indique si le routeur ne répond pas. Affichage par une tête de mort.
+-   Améliorations: Page EQ/avancé: Support extended pour 'getIeeeAddress'.
+-   Interne: Support 'Mgmt_ieee_req/rsp' pour type 'extended'.
 
 ## 240624-BETA-1
 

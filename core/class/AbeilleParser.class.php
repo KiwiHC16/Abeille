@@ -2159,7 +2159,7 @@
                     .', Status='.$status
                     .', ExtAddr='.$ieee
                     .', Addr='.$addr;
-            parserLog2('debug', $srcAddr, $m);
+            // parserLog2('debug', $srcAddr, $m);
 
             if ($status != "00") {
                 parserLog2('debug', $srcAddr, '  Status='.$status.' => Unknown error');
@@ -2172,9 +2172,10 @@
             $startIdx = substr($pl, 26, 2);
             $m .= ', NbOfAssociatedDevices='.$nbDevices
                 .', StartIndex='.$startIdx;
+            parserLog2('debug', $srcAddr, $m);
 
             for ($i = 0; $i < (intval($nbDevices) * 4); $i += 4) {
-                parserLog2('debug', $srcAddr, '  AssociatedDev='.substr($pl, (28 + $i), 4));
+                parserLog2('debug', $srcAddr, '    Dev='.AbeilleTools::reverseHex(substr($pl, (28 + $i), 4)));
             }
 
             // $this->whoTalked[] = $net.'/'.$addr;

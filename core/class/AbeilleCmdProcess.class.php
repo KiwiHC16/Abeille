@@ -2781,13 +2781,15 @@
                 } // End $cmdName == 'unbind0031'
 
                 // Zigbee command: IEEE address request (IEEE_addr_req)
+                // Mandatory: 'addr'
+                // Optional: 'reqType' (default=00/single dev resp), 'priority'
                 else if ($cmdName == 'getIeeeAddress') { // IEEE_addr_req => IEEE_addr_rsp
                     /* Checking that mandatory infos are there */
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0041";
+                    $zgCmd = "0041";
 
                     // <target short address: uint16_t>
                     // <short address: uint16_t>
@@ -2797,14 +2799,15 @@
                     $priority       = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
                     // See https://github.com/fairecasoimeme/ZiGate/issues/386#
                     // Both address must be the same.
-                    $address        = $Command['addr'];
-                    $shortAddress   = $Command['addr'];
-                    $requestType    = "00"; // 00=single device response
+                    $addr           = $Command['addr'];
+                    $shortAddr      = $Command['addr'];
+                    $reqType        = isset($Command['reqType']) ? $Command['reqType'] : "00"; // 00=single device response, 01=extended
                     $startIndex     = "00";
 
-                    $data = $address.$shortAddress.$requestType.$startIndex ;
+                    cmdLog('debug', "  getIeeeAddress: addr=${addr}, type=${reqType}");
+                    $data = $addr.$shortAddr.$reqType.$startIndex ;
 
-                    $this->addCmdToQueue2($priority, $dest, $cmd, $data, $address);
+                    $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $addr);
                     return;
                 }
 

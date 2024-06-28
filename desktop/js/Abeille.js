@@ -2023,7 +2023,8 @@ function interrogate(request) {
         payload = "";
     } else if (request == "getIeeeAddress") {
         topic = "Cmd" + logicalId + "_getIeeeAddress";
-        payload = "";
+        reqType = document.getElementById("idMgmtIeeeReq-RT").value;
+        payload = "reqType=" + reqType;
     } else if (request == "getNwkAddress") {
         topic = "Cmd" + logicalId + "_getNwkAddress";
         ieee = document.getElementById("idEqIeee").innerText; // span case

@@ -75,7 +75,11 @@
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "getIeeeAddress");
-        ?>
+            echo '<select id="idMgmtIeeeReq-RT" style="width:90px; margin-left: 8px" title="{{Request type}}" />';
+            echo '<option value="00" selected>Single dev</option>';
+            echo '<option value="01">Extended</option>';
+            echo '</select>';
+            ?>
     </div>
 </div>
 <div class="form-group">

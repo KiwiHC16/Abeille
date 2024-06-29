@@ -661,7 +661,7 @@
 
         // Get equipments list
         if (init('action') == 'getEqList') {
-            $gtwId = init('gtwId');
+            $gtwId = init('gtwId', 0); // Default == all networks
 
             $status = 0;
             $error = "";
@@ -671,6 +671,11 @@
             foreach ($eqLogics as $eqLogic) {
                 $eqLogicId = $eqLogic->getLogicalId();
                 list($eqNet, $eqAddr) = explode("/", $eqLogicId);
+                if ($gtwId != 0) {
+                    $i = substr($eqNet, 7); // AbeilleX => X
+                    if ($i != $gtwId)
+                        continue; // Not under the requested network
+                }
 
                 // Trying to identify zigbee device type
                 $zbType = "";
@@ -680,7 +685,7 @@
                     case 0: $zbType = "Coordinator"; break;
                     case 1: $zbType = "Router"; break;
                     case 2: $zbType = "End Device"; break;
-                    default: $zbType = "?"; break;
+                    default: break;
                     }
                 } else if (isset($zigbee['macCapa'])) {
                     $mc = hexdec($zigbee['macCapa']);
@@ -694,13 +699,27 @@
                         $zbType = "End Device";
                 }
 
+                $eqParent = $eqLogic->getObject();
+                if (!is_object($eqParent))
+                    $objName = "";
+                else
+                    $objName = $eqParent->getName();
+
+                $settings = $eqLogic->getConfiguration('ab::settings', []);
+
                 $eq = array(
                     'net' => $eqNet,
                     'addr' => $eqAddr,
                     'name' => $eqLogic->getName(),
+                    'id' => $eqLogic->getId(),
+                    'logicId' => $eqLogicId,
+                    'objectName' => $objName,
                     'enabled' => $eqLogic->getIsEnable(),
                     'zbType' => $zbType,
                     'icon' => $eqLogic->getConfiguration('ab::icon', 'defaultUnknown'),
+                    'x' => isset($settings['physLocationX']) ? $settings['physLocationX'] : 0,
+                    'y' => isset($settings['physLocationY']) ? $settings['physLocationY'] : 0,
+                    'z' => isset($settings['physLocationZ']) ? $settings['physLocationZ'] : 0, // Level
                 );
                 $eqList[$eqLogicId] = $eq;
             }

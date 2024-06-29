@@ -145,12 +145,24 @@
             top: 60px;
             left: 10px;
         }
-   </style>
+        .typeCoordinator-color {
+        color: #a65ba6;
+        }
+        .typeEndDevice-color {
+            color: #7BCC7B;
+        }
+        .typeRouter-color {
+            color: #00a2e8;
+        }
+        .typeUndefined-color {
+            color: #E5E500;
+        }
+</style>
 
     <!-- <div class="row"> -->
     <div class="ab-container">
         <div class="ab-top">
-            Placement réseau (BETA, dev en cours)
+            Placement réseau
         </div>
         <div class="ab-bottom">
             <div class="column ab-left-column">
@@ -185,7 +197,37 @@
                 </div>
 
                 </br>
-                </br>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th colspan="2">{{Légende}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="typeCoordinator-color" style="width: 30px"><i class="fas fa-square fa-2x"></i></td>
+                        <td>{{Coordinateur}}</td>
+                    </tr>
+                    <tr>
+                        <td class="typeRouter-color" style="width: 30px"><i class="fas fa-square fa-2x"></i></td>
+                        <td>{{Routeur}}</td>
+                    </tr>
+                    <tr>
+                        <td class="typeEndDevice-color" style="width: 30px"><i class="fas fa-square fa-2x"></i></td>
+                        <td>{{Bout de chaine}}</td>
+                    </tr>
+                    <tr>
+                        <td class="typeUndefined-color" style="width: 30px"><i class="fas fa-square fa-2x"></i></td>
+                        <td>{{Type inconnu}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 30px"><img src="/plugins/Abeille/images/death.png" height="25px"></td>
+                        <td>{{Sans vie}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </br>
                 <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Mode config}}</button>
                 </br>
                 </br>
@@ -457,7 +499,7 @@
         if ((grpY + 50) > viewImageMaxY)
             grpY = viewImageMaxY - 50;
 
-        console.log("  grpX="+grpX+", grpY="+grpY);
+        // console.log("  grpX="+grpX+", grpY="+grpY);
         dev['posX'] = grpX + 25;
         dev['posY'] = grpY + 25;
     }
@@ -669,30 +711,6 @@
         }
     }
 
-    // /* Draw 'legend' area */
-    // function drawLegend(includeGroup) {
-    //     var legend = "";
-
-    //     if ( includeGroup ) { legend = legend + '<g id="legend">'; }
-
-    //     legend = legend + '<circle cx="100" cy="875" r="10" fill="red" />\n';
-    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="black" style="font-size: 8px;">Coordinator</text> </a>\n';
-
-    //     legend = legend + '<circle cx="100" cy="900" r="10" fill="blue" />\n';
-    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="black" style="font-size: 8px;">Routeur</a>\n';
-
-    //     legend = legend + '<circle cx="100" cy="925" r="10" fill="green" />\n';
-    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="black" style="font-size: 8px;">End Equipment</text> </a>\n';
-
-    //     legend = legend + '<circle cx="100" cy="950" r="10" fill="yellow" />\n';
-    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="black" style="font-size: 8px;">Dans Jeedom mais pas dans l audit du reseau</text> </a>\n';
-
-    //     if ( includeGroup ) { legend = legend + '</g>'; }
-
-    //     return legend;
-    // }
-
-
     // function selectSource(form) {
     //     Source = form.list.value;
     //     refreshAll();
@@ -852,17 +870,42 @@
         }
     }
 
+    // Retrieve list of devices registerd under Jeedom
+    // Note: BLOCKING function
     function getJeedomDevices() {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                jeedomDevices = JSON.parse(this.responseText);
-                console.log("jeedomDevices=", jeedomDevices);
-            }
-        };
+        // var xhr = new XMLHttpRequest();
+        // xhr.onreadystatechange = function() {
+        //     if (this.readyState == 4 && this.status == 200) {
+        //         jeedomDevices = JSON.parse(this.responseText);
+        //         console.log("jeedomDevices=", jeedomDevices);
+        //     }
+        // };
+        // xhr.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false);
+        // xhr.send();
 
-        xhr.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false);
-        xhr.send();
+        $.ajax({
+            type: 'POST',
+            url: "/plugins/Abeille/core/ajax/Abeille.ajax.php",
+            data: {
+                action: 'getEqList'
+            },
+            dataType: "json",
+            global: false,
+            cache: false,
+            async: false, // Blocking function
+            error: function (request, status, error) {
+                console.log("ERROR: Call to getEqList failed");
+            },
+            success: function (json_res) {
+                console.log("json_res=", json_res);
+                res = JSON.parse(json_res.result); // res.status, res.error, res.eqList
+                if (res.status != 0) {
+                } else {
+                    jeedomDevices = res.eqList;
+                    console.log("jeedomDevices=", jeedomDevices);
+                }
+            }
+        });
     }
 
     /* eqLogic/configuration settings (ab::settings) update */
@@ -917,6 +960,19 @@
         });
     }
 
+    // Returns color according to Zigbee device type
+    function getDevColor(zbType) {
+        if (zbType == "Coordinator")
+            color = "#a65ba6";
+        else if (zbType == "Router")
+            color = "#00a2e8";
+        else if (zbType == "End Device")
+            color = "#7BCC7B";
+        else
+            color = "#E5E500";
+        return color;
+    }
+
     // Combine LQI + Jeedom infos
     function buildDevList() {
         console.log("buildDevList()");
@@ -933,6 +989,8 @@
             netw.linksList = new Object();
 
             lineId = 0; // To identify lines connecting nodes
+
+            // Listing devices on the network
             for (rLogicId in netw.lqiTable.routers) {
                 router = netw.lqiTable.routers[rLogicId];
                 // console.log("router " + rLogicId + "=", router);
@@ -945,9 +1003,9 @@
                     devR['name'] = router['name'];
                     devR['icon'] = router['icon'];
                     if (devR['addr'] == '0000')
-                        devR['color'] = "Red"; // Coordinator
+                        devR['color'] = getDevColor("Coordinator"); // Coordinator
                     else
-                        devR['color'] = "Blue"; // Router
+                        devR['color'] = getDevColor("Router"); // Router
                     if (typeof jeedomDevices[rLogicId] !== "undefined") {
                         devR['posX'] = jeedomDevices[rLogicId].x;
                         devR['posY'] = jeedomDevices[rLogicId].y;
@@ -961,6 +1019,9 @@
                     netw.devListNb++;
                 }
 
+                if (typeof router['dead'] !== "undefined")
+                    devR['dead'] = true;
+
                 for (nLogicId in router.neighbors) {
                     neighbor = router.neighbors[nLogicId];
                     // console.log("neighbor=", neighbor);
@@ -972,10 +1033,11 @@
                         devN['addr'] = neighbor['addr'];
                         devN['name'] = neighbor['name'];
                         devN['icon'] = neighbor['icon'];
-                        if ( neighbor['type'] == "End Device" ) { devN['color'] = "Green"; }
-                        else if ( neighbor['type'] == "Router" ) { devN['color'] = "Blue"; }
-                        else if ( neighbor['type'] == "Coordinator" ) { devN['color'] = "Red"; }
-                        else devN['color'] = "Yellow";
+                        // if ( neighbor['type'] == "End Device" ) { devN['color'] = zbEndDeviceColor; }
+                        // else if ( neighbor['type'] == "Router" ) { devN['color'] = zbRouterColor; }
+                        // else if ( neighbor['type'] == "Coordinator" ) { devN['color'] = zbCoordinatorColor; }
+                        // else devN['color'] = "Yellow";
+                        devN['color'] = getDevColor(neighbor['type'])
                         if (typeof jeedomDevices[nLogicId] !== "undefined") {
                             devN['posX'] = jeedomDevices[nLogicId].x;
                             devN['posY'] = jeedomDevices[nLogicId].y;
@@ -989,12 +1051,40 @@
                         netw.devListNb++;
                     } // End for (nLogicId in router.neighbors)
 
+                    if (typeof neighbor['dead'] !== "undefined")
+                        devN['dead'] = true;
+
                     devN['links'][lineId] = rLogicId;
                     devR['links'][lineId] = nLogicId;
                     netw.linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId, 'lqi': neighbor['lqi'] };
                     lineId++;
                 }
             } // End 'for (rLogicId in lqiTable.routers)'
+
+            // Checking devices in Jeedom but not visible on the network
+            for (jLogicId in jeedomDevices) {
+                jDev = jeedomDevices[jLogicId];
+                if (jDev.enabled == 0)
+                    continue; // Disabled => ignoring
+                if (typeof netw.devList[jLogicId] !== "undefined")
+                    continue; // Already in the list
+
+                // Adding dead device
+                devJ = new Object();
+                devJ['addr'] = jDev.addr;
+                devJ['name'] = jDev.name;
+                devJ['icon'] = jDev.icon;
+                devJ['color'] = getDevColor(jDev.zbType);
+                devJ['posX'] = jDev.x;
+                devJ['posY'] = jDev.y;
+                devJ['posZ'] = jDev.z;
+                devJ['jeedomId'] = jDev.id;
+                devJ['dead'] = true;
+
+                netw.devList[jLogicId] = devJ;
+                netw.devListNb++;
+            }
+
             console.log("Net "+n+" devList=", netw.devList);
         }
     }
@@ -1083,7 +1173,7 @@
     function drawDevice(devLogicId) {
         console.log("drawDevice("+devLogicId+")");
         dev = devList[devLogicId];
-        // console.log("dev=", dev);
+        console.log("dev=", dev);
 
         nodeColor = dev['color'];
         addr = dev['addr'];
@@ -1138,6 +1228,12 @@
         // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
         // newG += '</g>';
 
+        if (typeof dev['dead'] !== 'undefined') {
+            deadX = 32;
+            deadY = 28;
+            newG += '<image xlink:href="/plugins/Abeille/images/death.png" x="'+deadX+'" y="'+deadY+'" height="20" />';
+        }
+
         // newG += '<g id="'+devLogicId+'-txt" transform="translate('+txtX+', '+txtY+')">';
         // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
         newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
@@ -1155,7 +1251,7 @@
         }
         newG += '</g>';
 
-        // console.log("newG=", newG);
+        console.log("newG=", newG);
 
         return newG;
     }

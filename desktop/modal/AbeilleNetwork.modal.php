@@ -87,15 +87,12 @@
     .typeCoordinator-color {
         color: #a65ba6;
     }
-
     .typeEndDevice-color {
         color: #7BCC7B;
     }
-
     .typeRouter-color {
         color: #00a2e8;
     }
-
     .typeUndefined-color {
         color: #E5E500;
     }

@@ -2,6 +2,7 @@
 ***
 *** Abeille developer internal doc
 *** Jeedom general notes
+*** Tcharp38
 ***
 
 '/' char is forbidden in Jeedom command names (ex: 'Get Volt/Percent' is bad => lead to 'Get VoltPercent').

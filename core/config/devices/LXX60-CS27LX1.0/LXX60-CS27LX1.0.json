@@ -3,6 +3,7 @@
         "manufacturer": "Zemismart",
         "model": "ZW-EC-01",
         "type": "Zemismart curtain switch",
+        "genericType": "Shutter",
         "comment": "NOT RECOMMENDED !! No way to get position reporting",
         "timeout": "",
         "configuration": {
@@ -10,12 +11,11 @@
             "icon": "Zemismart-LXX60-CS27LX1.0"
         },
         "category": {
-            "automatism": "1"
+            "opening": "1"
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "Up": {
                 "use": "act_zbCmdC-0102-UpOpen",

@@ -205,23 +205,23 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td class="typeCoordinator-color" style="width: 30px"><i class="fas fa-square fa-2x"></i></td>
+                        <td class="typeCoordinator-color"><i class="fas fa-square"></i></td>
                         <td>{{Coordinateur}}</td>
                     </tr>
                     <tr>
-                        <td class="typeRouter-color" style="width: 30px"><i class="fas fa-square fa-2x"></i></td>
+                        <td class="typeRouter-color"><i class="fas fa-square"></i></td>
                         <td>{{Routeur}}</td>
                     </tr>
                     <tr>
-                        <td class="typeEndDevice-color" style="width: 30px"><i class="fas fa-square fa-2x"></i></td>
+                        <td class="typeEndDevice-color"><i class="fas fa-square"></i></td>
                         <td>{{Bout de chaine}}</td>
                     </tr>
                     <tr>
-                        <td class="typeUndefined-color" style="width: 30px"><i class="fas fa-square fa-2x"></i></td>
+                        <td class="typeUndefined-color"><i class="fas fa-square"></i></td>
                         <td>{{Type inconnu}}</td>
                     </tr>
                     <tr>
-                        <td style="width: 30px"><img src="/plugins/Abeille/images/death.png" height="25px"></td>
+                        <td><img src="/plugins/Abeille/images/death.png" height="20px"></td>
                         <td>{{Sans vie}}</td>
                     </tr>
                     </tbody>
@@ -483,6 +483,7 @@
     }
 
     // Ensure that device coordinates are within background map size
+    // Note: Requires 'viewImageMaxX' set by 'refreshBackgroundMap()'
     function checkPosLimits(devLogicId) {
         dev = devList[devLogicId];
         posX = dev['posX'];
@@ -973,7 +974,7 @@
         return color;
     }
 
-    // Combine LQI + Jeedom infos
+    // Build a device list per network, combining LQI table + Jeedom infos
     function buildDevList() {
         console.log("buildDevList()");
 
@@ -990,7 +991,7 @@
 
             lineId = 0; // To identify lines connecting nodes
 
-            // Listing devices on the network
+            // Listing devices on the network (from lqiTable)
             for (rLogicId in netw.lqiTable.routers) {
                 router = netw.lqiTable.routers[rLogicId];
                 // console.log("router " + rLogicId + "=", router);
@@ -1002,16 +1003,21 @@
                     devR['addr'] = router['addr'];
                     devR['name'] = router['name'];
                     devR['icon'] = router['icon'];
-                    if (devR['addr'] == '0000')
+                    if (devR['addr'] == '0000') {
                         devR['color'] = getDevColor("Coordinator"); // Coordinator
-                    else
+                    } else {
                         devR['color'] = getDevColor("Router"); // Router
+                    }
                     if (typeof jeedomDevices[rLogicId] !== "undefined") {
                         devR['posX'] = jeedomDevices[rLogicId].x;
                         devR['posY'] = jeedomDevices[rLogicId].y;
                         devR['posZ'] = (typeof jeedomDevices[rLogicId].z !== "undefined") ? jeedomDevices[rLogicId].z : 0;
                         devR['jeedomId'] = jeedomDevices[rLogicId].id;
                         // devR['posChanged'] = false;
+                    } else {
+                        devR['posX'] = 0;
+                        devR['posY'] = 0;
+                        devR['posZ'] = 0;
                     }
                     devR['links'] = new Object();
 
@@ -1033,10 +1039,6 @@
                         devN['addr'] = neighbor['addr'];
                         devN['name'] = neighbor['name'];
                         devN['icon'] = neighbor['icon'];
-                        // if ( neighbor['type'] == "End Device" ) { devN['color'] = zbEndDeviceColor; }
-                        // else if ( neighbor['type'] == "Router" ) { devN['color'] = zbRouterColor; }
-                        // else if ( neighbor['type'] == "Coordinator" ) { devN['color'] = zbCoordinatorColor; }
-                        // else devN['color'] = "Yellow";
                         devN['color'] = getDevColor(neighbor['type'])
                         if (typeof jeedomDevices[nLogicId] !== "undefined") {
                             devN['posX'] = jeedomDevices[nLogicId].x;
@@ -1044,6 +1046,10 @@
                             devN['posZ'] = (typeof jeedomDevices[nLogicId].z !== "undefined") ? jeedomDevices[nLogicId].z : 0;
                             devN['jeedomId'] = jeedomDevices[nLogicId].id;
                             // devN['posChanged'] = false;
+                        } else {
+                            devN['posX'] = 0;
+                            devN['posY'] = 0;
+                            devN['posZ'] = 0;
                         }
                         devN['links'] = new Object();
 
@@ -1059,6 +1065,7 @@
                     netw.linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId, 'lqi': neighbor['lqi'] };
                     lineId++;
                 }
+
             } // End 'for (rLogicId in lqiTable.routers)'
 
             // Checking devices in Jeedom but not visible on the network
@@ -1085,6 +1092,27 @@
                 netw.devListNb++;
             }
 
+            // Checking & updating devices positions
+            devListNb = netw.devListNb;
+            for (devLogicId in netw.devList) {
+                dev = netw.devList[devLogicId];
+                if (dev['addr'] == '0000')
+                    isCoordinator = true;
+                else
+                    isCoordinator = false;
+
+                if (dev['posX'] == 0) // 0 is forbidden
+                    netw.devList[devLogicId]['posX'] = setAutoX(isCoordinator, devListNb);
+                if (dev['posY'] == 0) // 0 is forbidden
+                    netw.devList[devLogicId]['posY'] = setAutoY(isCoordinator, devListNb);
+                if (typeof dev['posZ'] === "undefined")
+                    netw.devList[devLogicId]['posZ'] = 0;
+
+                // Can't do it there since refreshBackgroundMap() is not executed yet
+                // devList = netw.devList;
+                // checkPosLimits(devLogicId);
+            }
+
             console.log("Net "+n+" devList=", netw.devList);
         }
     }
@@ -1100,37 +1128,22 @@
         refreshBackgroundMap(viewLevel);
 
         lesAbeilles = "";
-        for (n = 0; n < networks.length; n++) {
-            netw = networks[n];
+        for (netIdx = 0; netIdx < networks.length; netIdx++) {
+            netw = networks[netIdx];
 
             // Display of this network is enabled ?
-            elm = document.getElementById("idViewNet-"+n);
+            elm = document.getElementById("idViewNet-"+netIdx);
             if (!elm.checked)
                 continue;
 
-            devList = netw.devList;
-            devListNb = netw.devListNb;
-            for (devLogicId in devList) {
-                if (typeof devList[devLogicId]['posZ'] !== "undefined")
-                    posZ = devList[devLogicId]['posZ'];
-                else
-                    posZ = 0;
-                if (posZ != viewLevel) {
-                    console.log(devLogicId+" is not part of current level "+viewLevel);
-                    continue;
-                }
-                lesAbeilles += drawDevice(devLogicId);
-            }
-
-            // TEMP
-            // lesAbeilles += '<rect rx="10" ry="10" width="50" height="50" style="fill:green" />';
-            // END TEMP
-
             // Displaying links ?
             if (viewLinks)
-                drawLinks(n);
+                drawLinks(netIdx);
+
+            // Drawing devices after links to have them behind devices
+            lesAbeilles += drawDevices(netIdx);
         }
-        // document.getElementById("idDevices").innerHTML = lesAbeilles;
+
         document.getElementById("idGraph").innerHTML = lesAbeilles;
 
         // If config mode, add event listener on node menu
@@ -1154,110 +1167,127 @@
 
     // X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');
     // Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');
-    function setAutoX(isZigate) {
-        if (isZigate == true)
+    function setAutoX(isCoordinator, devListNb) {
+        if (isCoordinator == true)
             return centerX;
         posX = centerX + centerR * Math.cos(2 * Math.PI * autoXIdx / (devListNb - 1));
         autoXIdx++;
         return posX;
     }
 
-    function setAutoY(isZigate) {
-        if (isZigate == true)
+    function setAutoY(isCoordinator, devListNb) {
+        if (isCoordinator == true)
             return centerY;
         posY = centerY + centerR * Math.sin(2 * Math.PI * autoYIdx / (devListNb - 1));
         autoYIdx++;
         return posY;
     }
 
-    function drawDevice(devLogicId) {
-        console.log("drawDevice("+devLogicId+")");
-        dev = devList[devLogicId];
-        console.log("dev=", dev);
+    function drawDevices(netIdx) {
+        console.log("drawDevices(netIdx="+netIdx+")");
 
-        nodeColor = dev['color'];
-        addr = dev['addr'];
-        if (addr == '0000')
-            isZigate = true;
-        else
-            isZigate = false;
-        if (dev['posX'] == 0) // 0 is forbidden
-            dev['posX'] = setAutoX(isZigate);
-        if (dev['posY'] == 0) // 0 is forbidden
-            dev['posY'] = setAutoY(isZigate);
+        netw = networks[netIdx];
+        devList = netw.devList;
+        allDevices = "";
+        for (devLogicId in devList) {
+            // Set by buildDevList()
+            // if (typeof devList[devLogicId]['posZ'] !== "undefined")
+            //     posZ = devList[devLogicId]['posZ'];
+            // else
+            //     posZ = 0;
+            if (devList[devLogicId]['posZ'] != viewLevel) {
+                console.log(devLogicId+" is not part of current level "+viewLevel);
+                continue;
+            }
+            dev = devList[devLogicId];
+            console.log("dev=", dev);
 
-        // dev['posX'] = 25;
-        // dev['posY'] = 25; // TEMP
+            nodeColor = dev['color'];
+            // addr = dev['addr'];
+            // if (addr == '0000')
+            //     isZigate = true;
+            // else
+            //     isZigate = false;
+            // Set by buildDevList()
+            // if (dev['posX'] == 0) // 0 is forbidden
+            //     dev['posX'] = setAutoX(isZigate);
+            // if (dev['posY'] == 0) // 0 is forbidden
+            //     dev['posY'] = setAutoY(isZigate);
 
-        // Checking limits vs map size
-        checkPosLimits(devLogicId);
+            // dev['posX'] = 25;
+            // dev['posY'] = 25; // TEMP
 
-        // Computing positions based on node central coordinates
-        posX = dev['posX'];
-        posY = dev['posY'];
-        grpX = posX - 25;
-        grpY = posY - 25;
-        // imgX = posX - 20;
-        // imgY = posY - 20;
-        imgX = 5;
-        imgY = 5;
-        // Text is on top of the group
-        // txtX = posX + 22;
-        // txtY = posY + 0;
-        // txtX = 25;
-        // txtY = -5; // Placed on top of group
-        txtX = grpX;
-        txtY = grpY - 10;
+            // Checking limits vs map size
+            checkPosLimits(devLogicId);
 
-        // if (configMode)
-        //     newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
-        // else
-        //     newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
-        // newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
-        newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
-        newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
-        // if (configMode) {
-        //     // Add a button to select level
-        //     newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(\''+devLogicId+'\')" />';
-        //     // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu()" />';
-        // }
-        if (configMode)
-            newG += '<image class="draggable" xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
-        else
-            newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
-        // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
-        // newG += '</g>';
+            // Computing positions based on node central coordinates
+            posX = dev['posX'];
+            posY = dev['posY'];
+            grpX = posX - 25;
+            grpY = posY - 25;
+            // imgX = posX - 20;
+            // imgY = posY - 20;
+            imgX = 5;
+            imgY = 5;
+            // Text is on top of the group
+            // txtX = posX + 22;
+            // txtY = posY + 0;
+            // txtX = 25;
+            // txtY = -5; // Placed on top of group
+            txtX = grpX;
+            txtY = grpY - 10;
 
-        if (typeof dev['dead'] !== 'undefined') {
-            deadX = 32;
-            deadY = 28;
-            newG += '<image xlink:href="/plugins/Abeille/images/death.png" x="'+deadX+'" y="'+deadY+'" height="20" />';
-        }
-
-        // newG += '<g id="'+devLogicId+'-txt" transform="translate('+txtX+', '+txtY+')">';
-        // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
-        newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
-        // newG += '</g>';
-
-        // If config mode, add a button to select level
-        if (configMode) {
-            // btnX = grpX + 25;
-            // btnY = grpY;
-            // newG += '<g id="'+devLogicId+'-btn" transform="translate('+btnX+', '+btnY+')">';
-            // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(this, \''+devLogicId+'\')" />';
-            newG += '<rect x="50" rx="5" ry="5" width="25" height="25" class="nodeMenuBtn" />';
-
+            // if (configMode)
+            //     newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
+            // else
+            //     newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
+            // newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+            newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
+            newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+            // if (configMode) {
+            //     // Add a button to select level
+            //     newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(\''+devLogicId+'\')" />';
+            //     // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu()" />';
+            // }
+            if (configMode)
+                newG += '<image class="draggable" xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+            else
+                newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+            // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
             // newG += '</g>';
+
+            if (typeof dev['dead'] !== 'undefined') {
+                deadX = 32;
+                deadY = 28;
+                newG += '<image xlink:href="/plugins/Abeille/images/death.png" x="'+deadX+'" y="'+deadY+'" height="20" />';
+            }
+
+            // newG += '<g id="'+devLogicId+'-txt" transform="translate('+txtX+', '+txtY+')">';
+            // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
+            newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
+            // newG += '</g>';
+
+            // If config mode, add a button to select level
+            if (configMode) {
+                // btnX = grpX + 25;
+                // btnY = grpY;
+                // newG += '<g id="'+devLogicId+'-btn" transform="translate('+btnX+', '+btnY+')">';
+                // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(this, \''+devLogicId+'\')" />';
+                newG += '<rect x="50" rx="5" ry="5" width="25" height="25" class="nodeMenuBtn" />';
+
+                // newG += '</g>';
+            }
+            newG += '</g>';
+            console.log("newG=", newG);
+
+            allDevices += newG;
         }
-        newG += '</g>';
 
-        console.log("newG=", newG);
-
-        return newG;
+        return allDevices;
     }
 
     function drawLinks(n) {
-        console.log("drawLinks("+n+")");
+        console.log("drawLinks(netIdx="+n+")");
 
         netw = networks[n];
         linksList = netw.linksList;
@@ -1268,7 +1298,6 @@
             // Reminder: linksList[linkId] = { "src": ss, "dst": ddd }
             link = linksList[linkId];
             // console.log('link['+linkId+']=', link);
-            // linkId = link.id;
 
             srcDev = devList[link.src];
             x1 = srcDev['posX'];
@@ -1303,7 +1332,7 @@
                 }
             } else {
                 if (z1 != viewLevel) {
-                    console.log("Not corresonding view level => Link not displayed")
+                    console.log("Not corresponding view level => Link not displayed")
                     continue;
                 }
 
@@ -1418,9 +1447,6 @@
     //     1000  // ms
     // );
 
-    // Combine LQI + Jeedom infos
-    buildDevList();
-
     // Display options
     var viewLinks = true; // Set to false to hide links
 
@@ -1438,6 +1464,9 @@
     centerR = 400; // Radius
     autoXIdx = 0;
     autoYIdx = 0;
+
+    // Combine LQI + Jeedom infos
+    buildDevList();
 
     refreshPage();
     // console.log("End of script");

@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 240630-BETA-1
+## 240630-BETA-2
 
 -   Améliorations: Analyse réseau. Toujours pour contourner mauvaises infos remontées de certains routers.
 -   Corrections: Identification: Pas d'interrogation modelId/manufId si pas de cluster 0000.

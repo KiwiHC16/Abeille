@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240630-BETA-1"
+# VERSION="240630-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -777,7 +777,7 @@ beffd882e9cee85bbb94bac170d2d4f1 *core/config/devices/LWB006/LWB006.json
 6763c658a21947788032c2dfaa967e85 *core/config/devices/LWU001/discovery.json
 f316486f0b26d537f08a05b3a84c0dbf *core/config/devices/LXEK-1_Adeo/LXEK-1_Adeo.json
 c984e7f4e029552eb971ae85e985ce02 *core/config/devices/LXEK-1_Adeo/discovery.json
-e3c3cf6489b88dd02a9f371b94f7b595 *core/config/devices/LXX60-CS27LX1.0/LXX60-CS27LX1.0.json
+6b58b549a39ecee311c3a688d8055456 *core/config/devices/LXX60-CS27LX1.0/LXX60-CS27LX1.0.json
 2b626c0bb0a48cc6f35178d0c19e3d6e *core/config/devices/LXX60-CS27LX1.0/discovery-LXX60-CS27LX1.0_3ASmartHomeDE.json
 921f098a2f3968b6a015e288ae50df3e *core/config/devices/Lamp_01/Lamp_01.json
 a4482f9cf28e9b89471037de4062cb65 *core/config/devices/LightifySwitchMini_OSRAM/LightifySwitchMini_OSRAM.json
@@ -907,7 +907,7 @@ e02ccfc0422e9167152e84436b847ae3 *core/config/devices/TRADFRIbulbGU10W400lm/TRAD
 cef4c9ed5a6c28c694ea7ca457bfaeeb *core/config/devices/TRADFRIbulbGU10WS345lm/discovery.json
 5964489a37525d3b5305f0613199f6bb *core/config/devices/TRADFRIbulbGU10WS400lm/TRADFRIbulbGU10WS400lm.json
 d71e3fc0d64da4dee2b2c73713309545 *core/config/devices/TRADFRIbulbGU10WW400lm/TRADFRIbulbGU10WW400lm.json
-713a8cfe208095ce6fac5d1713cc5644 *core/config/devices/TRADFRIcontroloutlet/TRADFRIcontroloutlet.json
+be85bc8069bb04467808c002035e920c *core/config/devices/TRADFRIcontroloutlet/TRADFRIcontroloutlet.json
 b83d092b1b6623060343cdd3aa6690f9 *core/config/devices/TRADFRIcontroloutlet/discovery.json
 84e678e848ba5134457e2def86705857 *core/config/devices/TRADFRImotionsensor/TRADFRImotionsensor.json
 9f8c258b42d274763f5927927595a9cc *core/config/devices/TRADFRImotionsensor/notes.txt
@@ -1340,7 +1340,7 @@ e44f0103a4943fca4a50c8d1c97599af *docs/dev/ezsp_notes.txt
 efe23d9b46aa8efd0bdace8bfa5a8046 *docs/dev/jeedom_notes.txt
 14eb89c802e96f0936988934ecc29cc8 *docs/dev/remote_controls.txt
 ee5f03eaa76a54d018f27b08326961f6 *docs/dev/zigbee_notes.txt
-1e6f8f5ef62125a00103254eaee078aa *docs/fr_FR/Changelog.md
+0e3b9f2d2722b3f7a75b27d9ce0a3e2e *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1687,11 +1687,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-b6af705f021a9bc79bc13b58ac483bf8 *plugin_info/Abeille.version
+02a430c5d994412a2fb341d21a17aa13 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6adab21ab37842d9a2b35c454cd53ec6 *plugin_info/configuration.php
-5d517f3049bdb5cadda8b7c3276c1ed2 *plugin_info/info.json
+983b8a291587d2a3d155c1de769a49e5 *plugin_info/info.json
 af824a9ec9fbb61e5aa947b498d3c030 *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

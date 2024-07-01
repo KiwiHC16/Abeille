@@ -80,6 +80,7 @@
         }
 
         /* What is number of lines in current log ? */
+        $GLOBALS["logNbOfLines"] = 0;
         $logPath = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
         if (file_exists($logPath) == false)
             return;
@@ -89,7 +90,8 @@
             logMessage("warning", "AbeilleLog: Impossible de mesurer la taille du log.");
             return;
         }
-        $GLOBALS["logNbOfLines"] = intval($out[0]);
+        if (count($out) != 0) // Why/when would it be 0 ?
+            $GLOBALS["logNbOfLines"] = intval($out[0]);
     }
 
     /* Log given message to '$logFile' defined thru 'logSetConf()'.

@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Analyse réseau.
+
 ## 240630-BETA-2
 
 -   Améliorations: Analyse réseau. Toujours pour contourner mauvaises infos remontées de certains routers.

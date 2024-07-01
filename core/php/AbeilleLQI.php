@@ -73,7 +73,7 @@
     /* Treat request responses (804E) from parser.
        Returns: 0=OK, -1=fatal error, 1=timeout */
     function msgFromParser($eqIdx) {
-        logMessage("", "  msgFromParser(eqIndex=".$eqIdx.")");
+        // logMessage("", "  msgFromParser(eqIndex=".$eqIdx.")");
 
         global $queueParserToLQI, $queueParserToLQIMax;
         global $eqToInterrogate;
@@ -88,21 +88,21 @@
                 /* Message received. Let's check it is the expected one */
                 $msg = json_decode($msgJson);
                 if ($msg->type != "804E") {
-                    logMessage("", "  WARNING: Unsupported message type (".$msg->type.") => Ignored.");
+                    logMessage("", "  msgFromParser: Unsupported message type (".$msg->type.") => Ignored.");
                     continue;
                 }
                 if (hexdec($msg->startIdx) != $eqToInterrogate[$eqIdx]['tableIndex']) {
                     /* Note: this case is due to too many identical 004E messages sent to eq
                        leading to several identical 804E answers */
-                    logMessage("", "  WARNING: Unexpected start index (".$msg->startIdx.") => Ignored.");
+                    logMessage("", "  msgFromParser: Unexpected start index (".$msg->startIdx.") => Ignored.");
                     continue;
                 }
                 if ($msg->srcAddr != $eqToInterrogate[$eqIdx]['addr']) {
-                    logMessage("", "  WARNING: Unexpected source addr (".$msg->srcAddr.") => Ignored.");
+                    logMessage("", "  msgFromParser: Unexpected source addr (".$msg->srcAddr.") => Ignored.");
                     continue;
                 }
                 if ($msg->status != "00"){
-                    logMessage("", "  WARNING: Wrong message status (".$msg->status.") => Ignored.");
+                    logMessage("", "  msgFromParser: Wrong message status (".$msg->status.") => Ignored.");
                     continue;
                 }
                 break; // Valid message
@@ -115,16 +115,16 @@
             }
             if ($errCode == 7) { // Message too big
                 msg_receive($queueParserToLQI, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                logMessage("", "  WARNING: TOO BIG msg => ignored");
+                logMessage("", "  msgFromParser: TOO BIG msg => ignored");
                 continue;
             }
 
             /* It's an error */
-            logMessage("", "  msg_receive() ERROR: ".$errCode."/".posix_strerror($errCode));
+            logMessage("", "  msgFromParser: msg_receive() ERROR: ".$errCode."/".posix_strerror($errCode));
             return -1;
         }
         if ($t >= $timeoutVal) {
-            logMessage("", "  Time-out !");
+            logMessage("", "  msgFromParser: Time-out !");
             // return 1;
             $timeout = true;
         }
@@ -158,7 +158,7 @@
             $tableListCount = $msg->tableListCount; // Number of neighbours listed in msg
             $startIdx = $msg->startIdx;
             $nList = $msg->nList; // List of neighbours
-            logMessage("", "  TableEntries=".$tableEntries.", TableListCount=".$tableListCount.", StartIdx=".$startIdx);
+            // logMessage("", "  TableEntries=".$tableEntries.", TableListCount=".$tableListCount.", StartIdx=".$startIdx);
 
             /* Updating collect infos for this coordinator/router */
             $eqToInterrogate[$eqIdx]['tableEntries'] = hexdec($tableEntries);
@@ -460,6 +460,7 @@
             'collectTime' => time(), // Time here is start of collect
             'routers' => array()
         ); // Result from interrogations (new format)
+
         $eqToInterrogate = array();
         newRouter("Abeille${zgId}/0000");
 
@@ -482,12 +483,13 @@
 
                 $NE = $currentNeAddress;
 
-                if (isset($knownFromJeedom[$currentNeAddress]))
-                    $name = $knownFromJeedom[$currentNeAddress]['name'];
-                else
-                    $name = "Inconnu-" . $currentNeAddress;
+                // if (isset($knownFromJeedom[$currentNeAddress]))
+                //     $name = $knownFromJeedom[$currentNeAddress]['name'];
+                // else
+                //     $name = "Inconnu-" . $currentNeAddress;
+                $name = $eqToInterrogate[$eqIdx]['name'];
 
-                logMessage("", "Interrogating '${name}' (addr=${addr}, idx=${eqIdx})");
+                logMessage("", "Interrogating '${name}' (Addr=${addr}, EqIdx=${eqIdx})");
                 $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ${done}/${total} => interrogation de '".$name."' (".$addr.")");
                 if ($nbwritten < 1) {
                     echo "ERROR: Can't write lock file";

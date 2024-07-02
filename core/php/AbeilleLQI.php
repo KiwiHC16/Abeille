@@ -24,6 +24,7 @@
 
     include_once __DIR__."/../../../../core/php/core.inc.php";
     include_once "AbeilleLog.php"; // Log library
+    define('maxRetry', 3);
 
     /* Add to list a new eq (router or coordinator) to interrogate.
        Check first is not aleady in the list. */
@@ -59,6 +60,8 @@
             "addr" => $addr,
             "tableEntries" => 0,    // Nb of entries in its table
             "tableIndex" => 0,      // Index to interrogate
+            "retry" => maxRetry,
+            "completed" => false
         );
         logMessage("", "  New router: '${eqName}' (${logicId})");
     }
@@ -153,7 +156,7 @@
             ); */
 
         if ($timeout == false) {
-            logMessage("", "  msg=".json_encode($msg, JSON_UNESCAPED_SLASHES));
+            logMessage("", "  msgFromParser: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
             $tableEntries = $msg->tableEntries; // Total entries on interrogated eq
             $tableListCount = $msg->tableListCount; // Number of neighbours listed in msg
             $startIdx = $msg->startIdx;
@@ -321,12 +324,31 @@
         return 0;
     }
 
+    function updateLockFile($m) {
+        global $lockFile;
+        $lockStatus = file_put_contents($lockFile, $m);
+        if ($lockStatus === false) {
+            echo "ERROR: Can't write lock file";
+            logMessage("", "Unable to write lock file.");
+            unlink($lockFile);
+            exit;
+        }
+    }
+
     /* Send 1 to several table requests thru AbeilleCmd to collect neighbour table entries.
        Returns: 0=OK, -1=ERROR (stops collect for current zigate), 1=timeout */
-    function interrogateEq($netName, $addr, $eqIdx) {
+    function interrogateEq($eqIdx) {
         // logMessage("", "  interrogateEq(${netName}, ${addr}, ${eqIdx})");
 
         global $eqToInterrogate;
+        $logicId = $eqToInterrogate[$eqIdx]['logicId'];
+        $name = $eqToInterrogate[$eqIdx]['name'];
+
+        list($netName, $addr) = explode('/', $logicId);
+        logMessage("", "Interrogating '${name}' (Addr=${addr}, EqIdx=${eqIdx})");
+        global $done, $total;
+        updateLockFile("Analyse du réseau ".$netName.": ${done}/${total} => interrogation de '".$name."' (".$addr.")");
+
         while (true) {
             $eq = $eqToInterrogate[$eqIdx]; // Read eq status
             msgToCmd($netName, $addr, sprintf("%02X", $eq['tableIndex']));
@@ -334,7 +356,7 @@
             $ret = msgFromParser($eqIdx);
             if ($ret == 1) {
                 /* If time-out, cancel interrogation for current eq only */
-                logMessage("", "Time-out => Cancelling interrogation of '".$eq['name']."' (".$eq['addr'].").");
+                // logMessage("", "Time-out => Cancelling interrogation of '".$eq['name']."' (".$eq['addr'].").");
                 return 1;
             }
             if ($ret != 0) {
@@ -446,13 +468,14 @@
         $netName = "Abeille".$zgId; // Abeille network
         $newDataFile = $tmpDir."/AbeilleLQI-".$netName.".json"; // New format, replacing 'AbeilleLQI_MapDataAbeilleX.json'
 
-        $nbwritten = file_put_contents($lockFile, "init");
-        if ($nbwritten < 1) {
-            unlink($lockFile);
-            echo "ERROR: Can't write lock file";
-            logMessage("", "Unable to write lock file (".$lockFile.") => collect canceled");
-            exit;
-        }
+        // $nbwritten = file_put_contents($lockFile, "init");
+        // if ($nbwritten < 1) {
+        //     unlink($lockFile);
+        //     echo "ERROR: Can't write lock file";
+        //     logMessage("", "Unable to write lock file (".$lockFile.") => collect canceled");
+        //     exit;
+        // }
+        updateLockFile("init");
 
         $lqiTable = array(
             'signature' => 'Abeille LQI table',
@@ -467,6 +490,7 @@
         $done = 0;
         $eqIdx = 0; // Index of eq to interrogate
         $collectStatus = 0;
+        $retry = false;
         while (true) {
             $total = count($eqToInterrogate);
             if ($total == 0) {
@@ -477,42 +501,45 @@
 
             if (!isset($eqToInterrogate[$eqIdx])) {
                 logMessage("", "  ERR: eqToInterrogate[${eqIdx}] is undefined");
-            } else {
-                $currentNeAddress = $eqToInterrogate[$eqIdx]['logicId'];
-                list($netName, $addr) = explode('/', $currentNeAddress);
+            } else if (!$eqToInterrogate[$eqIdx]['completed']) {
+                // $routerLogicId = $eqToInterrogate[$eqIdx]['logicId'];
+                // list($netName, $addr) = explode('/', $routerLogicId);
 
-                $NE = $currentNeAddress;
+                // $NE = $routerLogicId;
 
-                // if (isset($knownFromJeedom[$currentNeAddress]))
-                //     $name = $knownFromJeedom[$currentNeAddress]['name'];
+                // if (isset($knownFromJeedom[$routerLogicId]))
+                //     $name = $knownFromJeedom[$routerLogicId]['name'];
                 // else
-                //     $name = "Inconnu-" . $currentNeAddress;
-                $name = $eqToInterrogate[$eqIdx]['name'];
+                //     $name = "Inconnu-" . $routerLogicId;
+                // $name = $eqToInterrogate[$eqIdx]['name'];
 
-                logMessage("", "Interrogating '${name}' (Addr=${addr}, EqIdx=${eqIdx})");
-                $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ${done}/${total} => interrogation de '".$name."' (".$addr.")");
-                if ($nbwritten < 1) {
-                    echo "ERROR: Can't write lock file";
-                    logMessage("", "Unable to write lock file.");
-                    unlink($lockFile);
-                    exit;
-                }
-
-                $ret = interrogateEq($netName, $addr, $eqIdx);
+                $ret = interrogateEq($eqIdx);
                 $done++;
                 if ($ret == -1) {
                     $collectStatus = -1; // Collect interrupted due to error
                     logMessage("", "Collecte stopped on zigate ".$zgId." due to errors.");
                     break;
-                }
-                if ($ret == 1) {
+                } else if ($ret == 1) { // Timeout
                     $collectStatus = 1; // At least 1 interrogation canceled due to timeout
+                    if ($eqToInterrogate[$eqIdx]['retry'] != 0) {
+                        $eqToInterrogate[$eqIdx]['retry']--;
+                        $retry = true; // This will be retried in next round
+                    }
+                } else if ($ret == 0) {
+                    $eqToInterrogate[$eqIdx]['completed'] = true;
                 }
             }
 
             $eqIdx++;
-            if ($eqIdx == count($eqToInterrogate)) // End of list ?
-                break;
+            if ($eqIdx == count($eqToInterrogate)) {
+                // End of list: New round for retry ?
+                if ($retry) {
+                    $eqIdx = 0;
+                    $retry = false;
+                    sleep(2); // Little pause before retrying
+                } else
+                    break;
+            }
         }
 
         /* Write JSON cache only if collect completed successfully or on timeout */
@@ -533,7 +560,8 @@
         case 1: $status = "partial"; break; // Ok but some eq may be missing
         default: $status = "error"; break; // Interrupted
         }
-        file_put_contents($lockFile, "done/".time()."/".$status);
+        // file_put_contents($lockFile, "done/".time()."/".$status);
+        updateLockFile("done/".time()."/".$status);
     }
 
     logMessage("", "<<< AbeilleLQI exiting.");

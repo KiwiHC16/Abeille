@@ -1,6 +1,8 @@
 # ChangeLog
 
--   Améliorations: Analyse réseau.
+-   Améliorations analyse réseau.
+-   Améliorations placement réseau
+    -   La télécommande virtuelle n'est pas affichée.
 
 ## 240630-BETA-2
 
@@ -10,11 +12,11 @@
 -   Améliorations: Page EQ/avancé: Support extended pour 'getIeeeAddress'.
 -   Interne: Support 'Mgmt_ieee_req/rsp' pour type 'extended'.
 -   Améliorations graphique des liens: Affiche les équipements connus d'Abeille mais pas dans le réseau Zigbee (ou sans vie).
-- Améliorations placement réseau
-  - Alignement des couleurs avec 'Graphique des liens'.
-  - Ajout légende.
-  - Ajout des équipements connus de Jeedom mais plus visibles sur le réseau (sans vie).
-  - Ajout tête de mort sur équipement sans vie.
+-   Améliorations placement réseau
+    -   Alignement des couleurs avec 'Graphique des liens'.
+    -   Ajout légende.
+    -   Ajout des équipements connus de Jeedom mais plus visibles sur le réseau (sans vie).
+    -   Ajout tête de mort sur équipement sans vie.
 
 ## 240624-BETA-1
 

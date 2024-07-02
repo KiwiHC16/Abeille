@@ -1075,6 +1075,8 @@
                     continue; // Disabled => ignoring
                 if (typeof netw.devList[jLogicId] !== "undefined")
                     continue; // Already in the list
+                if (jDev.addr.substring(0, 2) == "rc")
+                    continue; // Virtual remote control not displayed
 
                 // Adding dead device
                 devJ = new Object();

@@ -200,8 +200,8 @@
             );
         }
         if ($timeout == true) {
-            $router['dead'] = true;
-            logMessage("", "  ${NE} router is DEAD");
+            // $router['dead'] = true;
+            // logMessage("", "  ${NE} router is DEAD");
         } else {
             $neighbors = $router['neighbors'];
             /* Going thru neighbours list */
@@ -514,7 +514,6 @@
                 // $name = $eqToInterrogate[$eqIdx]['name'];
 
                 $ret = interrogateEq($eqIdx);
-                $done++;
                 if ($ret == -1) {
                     $collectStatus = -1; // Collect interrupted due to error
                     logMessage("", "Collecte stopped on zigate ".$zgId." due to errors.");
@@ -524,9 +523,19 @@
                     if ($eqToInterrogate[$eqIdx]['retry'] != 0) {
                         $eqToInterrogate[$eqIdx]['retry']--;
                         $retry = true; // This will be retried in next round
+                        updateLockFile("= Time-out => Nouvelle tentative");
+                    } else {
+                        $name = $eqToInterrogate[$eqIdx]['name'];
+                        logMessage("", "  ${name} router is DEAD");
+
+                        $eqToInterrogate[$eqIdx]['dead'] = true;
+                        $eqToInterrogate[$eqIdx]['completed'] = true;
+                        $done++;
+                        updateLockFile("= Time-out => Ce routeur est considéré comme mort.");
                     }
                 } else if ($ret == 0) {
                     $eqToInterrogate[$eqIdx]['completed'] = true;
+                    $done++;
                 }
             }
 

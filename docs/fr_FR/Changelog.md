@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 240704-BETA-1
+
 -   Améliorations analyse réseau.
 -   Améliorations placement réseau
     -   La télécommande virtuelle n'est pas affichée.

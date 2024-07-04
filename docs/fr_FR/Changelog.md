@@ -4,6 +4,7 @@
 -   Améliorations placement réseau
     -   La télécommande virtuelle n'est pas affichée.
     -   Affichage des équipements pas trouvés dans le réseau sans tête de mort jusqu'a mieux.
+-   Correction: Format padding base64 utilisé par télécommande universelle.
 
 ## 240630-BETA-2
 

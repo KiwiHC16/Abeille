@@ -1170,12 +1170,8 @@
             // Convert Base64URL to Base64 by replacing “-” with “+” and “_” with “/”
             $b64 = strtr($data, '-_', '+/');
 
-            // Adding padding if required to have length as multiple of 3 bytes
-            $len = strlen($b64) % 3;
-            if ($len)
-                $b64 .= '=';
-            if ($len > 1)
-                $b64 .= '=';
+            // Adding padding if required
+            $b64 = str_pad($b64, strlen($b64) % 4, '=', STR_PAD_RIGHT);
 
             return $b64;
         }

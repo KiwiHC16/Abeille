@@ -196,9 +196,9 @@
                 ),
             );
             $irMsgJson = json_encode($irMsg, JSON_UNESCAPED_SLASHES);
-            cmdLog2('debug', $addr, '  TEMPORARY: irMsgJson='.$irMsgJson);
+            cmdLog2('debug', $addr, '  irMsgJson='.$irMsgJson);
             $message = bin2hex($irMsgJson);
-            cmdLog2('debug', $addr, '  TEMPORARY: message='.$message);
+            cmdLog2('debug', $addr, '  irMsgHex='.$message);
             $seq = tuyaZosungSeq(); // For unknown reason, seq above 9 breaks the transfer
 
             // Saving message to send

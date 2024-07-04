@@ -3,6 +3,7 @@
 -   Améliorations analyse réseau.
 -   Améliorations placement réseau
     -   La télécommande virtuelle n'est pas affichée.
+    -   Affichage des équipements pas trouvés dans le réseau sans tête de mort jusqu'a mieux.
 
 ## 240630-BETA-2
 

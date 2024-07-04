@@ -1088,7 +1088,8 @@
                 devJ['posY'] = jDev.y;
                 devJ['posZ'] = jDev.z;
                 devJ['jeedomId'] = jDev.id;
-                devJ['dead'] = true;
+                // TO BE REVISITED. Some devices are not reported in mgmt_lqi_rsp while not dead
+                // devJ['dead'] = true;
 
                 netw.devList[jLogicId] = devJ;
                 netw.devListNb++;

@@ -545,7 +545,8 @@
                 if ($retry) {
                     $eqIdx = 0;
                     $retry = false;
-                    sleep(2); // Little pause before retrying
+                    sleep(3); // Little pause before retrying
+                    logMessage("", "New round for retry cases.");
                 } else
                     break;
             }

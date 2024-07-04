@@ -606,6 +606,7 @@
          */
         public static function getRunningDaemons(): array {
             exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Ezsp).php /'", $running);
+            // TODO: Ezsp is not php but python3
             return $running;
         }
 
@@ -684,33 +685,27 @@
          * @return array
          */
         public
-        static function diffExpectedRunningDaemons($parameters, $running): array
+        static function diffExpectedRunningDaemons($config, $running): array
         {
-            $nbProcessExpected = 2; // parser and cmd
-
-            $activedZigate = 0;
             $found['cmd'] = 0;
             $found['parser'] = 0;
+            $nbProcessExpected = 2; // parser and cmd
+
+            log::add('Abeille', 'debug', "config=".json_encode($config));
+            log::add('Abeille', 'debug', "running=".json_encode($running));
 
             // Count number of processes we should have based on configuration, init $found['process x'] to 0.
             for ($n = 1; $n <= maxGateways; $n++) {
-                if ($parameters['ab::gtwEnabled'.$n] == "Y") {
-                    $activedZigate++;
+                if ($config['ab::gtwEnabled'.$n] != "Y")
+                    continue;
 
-                    // e.g. "ab::gtwSubType2":"WIFI", "ab::gtwPort2":"/tmp/zigateWifi2"
-                    // SerialRead + Socat
-                    // if (stristr($parameters['ab::gtwPort'.$n], '/tmp/zigateWifi')) {
-                    if ($parameters['ab::gtwSubType'.$n] == "WIFI") {
-                        $nbProcessExpected += 2;
-                        $found['serialRead'.$n] = 0;
+                if ($config['ab::gtwType'.$n] == 'zigate') {
+                    $found['serialRead'.$n] = 0;
+                    $nbProcessExpected++;
+
+                    if ($config['ab::gtwSubType'.$n] == "WIFI") {
                         $found['socat'.$n] = 0;
-                    }
-
-                    // e.g. "ab::gtwSubType1":"USB", "ab::gtwPort1":"/dev/ttyUSB3"
-                    // SerialRead
-                    if (preg_match("(tty|monit)", $parameters['ab::gtwPort'.$n])) {
                         $nbProcessExpected++;
-                        $found['serialRead'.$n] = 0;
                     }
                 }
             }

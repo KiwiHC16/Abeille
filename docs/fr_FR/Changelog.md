@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Amélioration: OWON THS-317-ET: Lecture température avant premier reporting (2706).
+
 ## 240704-BETA-1
 
 -   Améliorations analyse réseau.

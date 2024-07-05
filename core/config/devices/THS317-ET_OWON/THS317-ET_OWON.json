@@ -23,6 +23,12 @@
                 "use": "act_zbCmdC-Identify",
                 "nextLine": "after"
             },
+            "Get Temperature": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0402&attrId=0000",
+                "comment": "1st report is 10min after inclusion",
+                "execAtCreation": "yes"
+            },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": "1"

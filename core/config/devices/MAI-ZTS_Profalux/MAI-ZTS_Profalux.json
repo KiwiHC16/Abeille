@@ -2,6 +2,10 @@
     "MAI-ZTS_Profalux": {
         "manufacturer": "Profalux",
         "model": "MAI-ZTS",
+        "alternateIds": {
+            "MAI-ZTP20F": { "model": "MAI-ZTP20F" },
+            "MAI-ZTP20C": { "model": "MAI-ZTP20C" }
+        },
         "type": "Profalux gen 2 remote control",
         "comment": "Profalux, gen 2 remote. Can't do anything with it so hidden",
         "isVisible": 0,
@@ -11,7 +15,7 @@
             "batteryType": "2x1.5V AAA"
         },
         "category": {
-            "automatism": "1"
+            "opening": "1"
         },
         "commands": []
     }

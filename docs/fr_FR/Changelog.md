@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Amélioration: OWON THS-317-ET: Lecture température avant premier reporting (2706).
+-   Profalux MAI-ZTP20F/C: Ajout modèle (2717).
 
 ## 240704-BETA-1
 

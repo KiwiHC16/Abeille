@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240704-BETA-1"
+# VERSION="240710-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -43,7 +43,7 @@ df6e0b93c50b28e32cc983a2b85dc19c *core/class/Abeille.class.php
 748bf5ca6187fb59d19e88f4de9dcce9 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 4725d94964080b5b9355c31c867cafe4 *core/class/AbeilleParser.class.php
-cd8bb4626464b0a09ecaee00a5933825 *core/class/AbeilleTools.class.php
+e160176ca43c86c3ef33c28930749da8 *core/class/AbeilleTools.class.php
 3fa1d5bfce4a4df76abd6f9ed84b8bbc *core/config/Abeille.config.php
 0f55c3bd58a1059f4e2fc07c94a6e8b5 *core/config/AbeilleInternalCmds.json
 d8fe59ba5c734449970615205f5a23cc *core/config/commands/BindToGroupLevelEP03.json
@@ -783,7 +783,7 @@ c984e7f4e029552eb971ae85e985ce02 *core/config/devices/LXEK-1_Adeo/discovery.json
 a4482f9cf28e9b89471037de4062cb65 *core/config/devices/LightifySwitchMini_OSRAM/LightifySwitchMini_OSRAM.json
 0f851ba6193f0c95885b2d2336557b96 *core/config/devices/LightifySwitchMini_OSRAM/discovery.json
 101e4b37d02d6fd7bf94712d54631c01 *core/config/devices/LightifySwitchMini_OSRAM/notes.txt
-de76629c5c68fb4cfd89c48cf9ca0742 *core/config/devices/MAI-ZTS_Profalux/MAI-ZTS_Profalux.json
+95e7198d86b3e1c43c8b90d9538a07bc *core/config/devices/MAI-ZTS_Profalux/MAI-ZTS_Profalux.json
 f9ad7a94df7aa8b0351c4f23c582418e *core/config/devices/MOT-C1Z06C/MOT-C1Z06C.json
 f9b2ae98e8feecce17087b0011a12468 *core/config/devices/MOT-C1Z06C/discovery-MOT-C1Z10C_Profalux.json
 ec4c365dfbcef22c285caa0cad6a210b *core/config/devices/MOT-C1Z06C/notes.txt
@@ -844,6 +844,8 @@ f9de5fb2611f9dc15e729d60db6ee34e *core/config/devices/SML004/SML004.json
 6d412d19c24f979bbbcf6228ef57a9bd *core/config/devices/SML004/discoverySLM004.json
 a348a8cc39563268011312608bbe437f *core/config/devices/SMSZB-120_frientAS/SMSZB-120_frientAS.json
 1a354adcb420a647302ea6c23f551e75 *core/config/devices/SMSZB-120_frientAS/discovery.json
+1488934ac07a39522004582716ecf4ee *core/config/devices/SNZB-01P_eWeLink/SNZB-01P_eWeLink.json
+b4cf34a49f4977b2af2a167c91750669 *core/config/devices/SNZB-01P_eWeLink/discovery-SNZB-01P_eWeLink.json
 b5d3a2bee0d3d11a471ac65e87c3fadc *core/config/devices/SNZB-02D_SONOFF/SNZB-02D_SONOFF.json
 6638da47cac1a93c227c8dabcc1ed433 *core/config/devices/SNZB-02D_SONOFF/discovery-SNZB-02D_SONOFF.json
 4fe7bd0912f54fc0f64ecc484a2f7790 *core/config/devices/SOCKETOUTLET1_SchneiderElectric/SOCKETOUTLET1_SchneiderElectric.json
@@ -862,7 +864,7 @@ e01e88dce276c42086b17ea69a1d6d7c *core/config/devices/Shutterswitchwithneutral/d
 614855aef557cd677c28146dd3090371 *core/config/devices/Switch4xEU-LIGHTIFY/Switch4xEU-LIGHTIFY.json
 7ea619ba6e07e804e70f3ba8a42f29b2 *core/config/devices/TH01/TH01.json
 261098b2a52fc4245280d68afb98c396 *core/config/devices/THS317-ET_OWON/THS317-ET_OWON-old.json
-d36708ecd928782e0c742b340b917c2c *core/config/devices/THS317-ET_OWON/THS317-ET_OWON.json
+9e85e9d1a462371a5d04b6582531a4d2 *core/config/devices/THS317-ET_OWON/THS317-ET_OWON.json
 d77dccb72789b078761c1df8b1c72fec *core/config/devices/THS317-ET_OWON/discovery-20211101.json
 17ff43aa35ccbae7b3892d64369d45a7 *core/config/devices/THS317-ET_OWON/discovery-THS317-ET_OWON-20221019.json
 a0f28f195bc5b4f38231dea38528b417 *core/config/devices/TI0001/TI0001.json
@@ -1340,7 +1342,7 @@ e44f0103a4943fca4a50c8d1c97599af *docs/dev/ezsp_notes.txt
 efe23d9b46aa8efd0bdace8bfa5a8046 *docs/dev/jeedom_notes.txt
 14eb89c802e96f0936988934ecc29cc8 *docs/dev/remote_controls.txt
 ee5f03eaa76a54d018f27b08326961f6 *docs/dev/zigbee_notes.txt
-58f116b4034ad8c84a9c7def88c8f76a *docs/fr_FR/Changelog.md
+2ece1d7d081b39a7cb8310ed41b52ca3 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1541,6 +1543,7 @@ b1973df4b6812978f494a4bea7974e6c *images/node_Silvercrest-SmartButton.png
 f7a65eca3cf57583929f4719e739eab9 *images/node_SmokeSensor-EM.png
 5efc0afe25f9647ee3abe6d5c49fc232 *images/node_Sonoff-01MINIZB.png
 b47b765a6640f32aaddadd58dfb4b1c4 *images/node_Sonoff-BASICZBR3.png
+da4acb14e31b31a09103c3eee5543af8 *images/node_Sonoff-Button.png
 c96fc06840975eee3783acb90901d321 *images/node_Sonoff-S26R2ZB.png
 3ec9a385b5a711c08bd1415b3bd2a41d *images/node_Sonoff-SNZB-01.png
 a60015fc47af1ce4f464ff2efc298291 *images/node_Sonoff-SNZB-02.png
@@ -1687,11 +1690,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-699a6fc0e4c6dd35d62f96a293c6e4b1 *plugin_info/Abeille.version
+3e00be7e46caecfaa88bd8b34fd10350 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6adab21ab37842d9a2b35c454cd53ec6 *plugin_info/configuration.php
-7624a9e1519371ef22e958c4cf4c6ae9 *plugin_info/info.json
+b7e35204974dcfa3b00cd8e44f5a0357 *plugin_info/info.json
 af824a9ec9fbb61e5aa947b498d3c030 *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

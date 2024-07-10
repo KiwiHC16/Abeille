@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240710-BETA-1"
+# VERSION="240710-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -925,6 +925,8 @@ ede2be083957ae1fd8e86aedddc4b29c *core/config/devices/TRADFRItransformer10W/TRAD
 86f7d4b9aeaaf5d76fc3115143f0230f *core/config/devices/TRADFRIwirelessdimmer/TRADFRIwirelessdimmer.json
 8ccf64397f7adb5fc127799065940380 *core/config/devices/TREDANSENblock-outcellulblind_IKEAofSweden/TREDANSENblock-outcellulblind_IKEAofSweden.json
 d224519a8d0ee684ad4b5b518c38ab35 *core/config/devices/TREDANSENblock-outcellulblind_IKEAofSweden/discovery.json
+4b6a56d65a6bc211cdb8fd0d88b4bc62 *core/config/devices/TRETAKTSmartplug_IKEAofSweden/TRETAKTSmartplug_IKEAofSweden.json
+189723065bc786ede44df50138214a95 *core/config/devices/TRETAKTSmartplug_IKEAofSweden/discovery-TRETAKTSmartplug_IKEAofSweden.json
 a20e93be3e8737ce82bfab119b6ade19 *core/config/devices/TS/TS.json
 93a77bf06c9dc5b4cec906a466e632d0 *core/config/devices/TS0001/TS0001.json
 01bdd74f0b0860765c254510b2e3def4 *core/config/devices/TS0001__TZ3000_hktqahrq/TS0001__TZ3000_hktqahrq.json
@@ -1342,7 +1344,7 @@ e44f0103a4943fca4a50c8d1c97599af *docs/dev/ezsp_notes.txt
 efe23d9b46aa8efd0bdace8bfa5a8046 *docs/dev/jeedom_notes.txt
 14eb89c802e96f0936988934ecc29cc8 *docs/dev/remote_controls.txt
 ee5f03eaa76a54d018f27b08326961f6 *docs/dev/zigbee_notes.txt
-2ece1d7d081b39a7cb8310ed41b52ca3 *docs/fr_FR/Changelog.md
+aadf147c59d93735271b1de8ab82fba2 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1419,6 +1421,7 @@ b353914359d596bba8a7175b5a1c859f *images/node_Ikea-BulbE27.png
 f9a8c83d05d66a5623fecb26b1b3a825 *images/node_Ikea-BulbGU10.png
 a52a78ab259c7da6eed259918aff650e *images/node_Ikea-Dimmer.png
 eb2b41927d722ea4c7ea819984872b5f *images/node_Ikea-OnOffSwitch.png
+036be9979709d30de6ed2cbf9f783925 *images/node_Ikea-Plug.png
 f14744505ef665856e0555565e38fcfa *images/node_Ikea-Remote-5buttons.png
 0b2cb21804f3f9f79d75c1e3607a521f *images/node_Ikea-SignalRepeater.png
 9c90f3dac1628d9b5e577a2124a1406a *images/node_Ikea-Tradfri-Dimmer.png
@@ -1690,11 +1693,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-3e00be7e46caecfaa88bd8b34fd10350 *plugin_info/Abeille.version
+68c50e3d7fefbc0dc3418fd164bf8a10 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6adab21ab37842d9a2b35c454cd53ec6 *plugin_info/configuration.php
-b7e35204974dcfa3b00cd8e44f5a0357 *plugin_info/info.json
+ee08bddcb6bd4c7c1287b775f16645da *plugin_info/info.json
 af824a9ec9fbb61e5aa947b498d3c030 *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

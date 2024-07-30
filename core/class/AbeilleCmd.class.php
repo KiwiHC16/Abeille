@@ -225,11 +225,11 @@
                     // logMessage('debug', "-- execute(): logicId at pos ".$pos);
                     $logicId = substr($vo, $pos + 8);
                     $lop = strpos($logicId, '#');
-                    $logicId = substr($logicId, 0, $pos);
+                    $logicId = substr($logicId, 0, $lop);
                     // logMessage('debug', "-- execute(): logicId=".$logicId);
                     $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
                     if (!is_object($cmdLogic2)) {
-                        logMessage("error", "${cmdHName}: Commande '${logicId}' inconnue");
+                        logMessage("error", "${cmdHName}: Commande '${logicId}' inconnue dans 'valueOffset'");
                     } else {
                         $cmdVal = $cmdLogic2->execCmd();
                         logMessage('debug', "-- Cmd logicId='".$logicId."', val=".$cmdVal);

@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Correction: 'Commande 0102-01- inconnue' (2719).
+
 ## 240710-BETA-2
 
 -   Amélioration: OWON THS-317-ET: Lecture température avant premier reporting (2706).

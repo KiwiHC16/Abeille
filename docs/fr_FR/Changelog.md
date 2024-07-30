@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Correction: 'Commande 0102-01- inconnue' (2719).
+-   Sonoff SNZB-01P: Mise-à-jour du modèle (2716).
 
 ## 240710-BETA-2
 

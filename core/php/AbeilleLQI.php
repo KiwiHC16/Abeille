@@ -6,7 +6,7 @@
      *
      * Starting from zigate (coordinator), send LQI request to get neighbour table
      * - Send request thru AbeilleCmd (004E cmd)
-     * - Get response from AbeilleParser (804E cmd)
+     * - Get response from AbeilleParser (Mgmt_lqi_rsp cmd)
      * - Identify each neighbour
      * - If neighbor is router, added to list for interrogation
      */
@@ -73,7 +73,7 @@
         while (msg_receive($queueParserToLQI, 0, $msgType, 2048, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR));
     }
 
-    /* Treat request responses (804E) from parser.
+    /* Treat request responses (Mgmt_lqi_rsp) from parser.
        Returns: 0=OK, -1=fatal error, 1=timeout */
     function msgFromParser($eqIdx) {
         // logMessage("", "  msgFromParser(eqIndex=".$eqIdx.")");
@@ -90,13 +90,13 @@
             if (msg_receive($queueParserToLQI, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == true) {
                 /* Message received. Let's check it is the expected one */
                 $msg = json_decode($msgJson);
-                if ($msg->type != "804E") {
+                if ($msg->type != "mgmtLqiRsp") {
                     logMessage("", "  msgFromParser: Unsupported message type (".$msg->type.") => Ignored.");
                     continue;
                 }
                 if (hexdec($msg->startIdx) != $eqToInterrogate[$eqIdx]['tableIndex']) {
                     /* Note: this case is due to too many identical 004E messages sent to eq
-                       leading to several identical 804E answers */
+                       leading to several identical mgmtLqiRsp answers */
                     logMessage("", "  msgFromParser: Unexpected start index (".$msg->startIdx.") => Ignored.");
                     continue;
                 }
@@ -104,7 +104,11 @@
                     logMessage("", "  msgFromParser: Unexpected source addr (".$msg->srcAddr.") => Ignored.");
                     continue;
                 }
-                if ($msg->status != "00"){
+                if ($msg->status == "C1") {
+                    logMessage("", "  msgFromParser: No devices.");
+                    break;
+                }
+                if ($msg->status != "00") {
                     logMessage("", "  msgFromParser: Wrong message status (".$msg->status.") => Ignored.");
                     continue;
                 }
@@ -137,7 +141,7 @@
 
         /* Message format reminder
             $msg = array(
-                'type' => '804E',
+                'type' => 'mgmtLqiRsp',
                 'srcAddr' => $srcAddr,
                 'tableEntries' => $nTableEntries,
                 'tableListCount' => $nTableListCount,
@@ -347,7 +351,7 @@
         list($netName, $addr) = explode('/', $logicId);
         logMessage("", "Interrogating '${name}' (Addr=${addr}, EqIdx=${eqIdx})");
         global $done, $total;
-        updateLockFile("Analyse du réseau ".$netName.": ${done}/${total} => interrogation de '".$name."' (".$addr.")");
+        updateLockFile("${netName} - ${done}/${total}: Interrogation de '".$name."' (".$addr.")");
 
         while (true) {
             $eq = $eqToInterrogate[$eqIdx]; // Read eq status
@@ -365,7 +369,7 @@
                 return -1;
             }
 
-            $eq = $eqToInterrogate[$eqIdx]; // Read eq status
+            $eq = $eqToInterrogate[$eqIdx]; // Reread eq status
             if ($eq['tableIndex'] >= $eq['tableEntries'])
                 break; // Exiting interrogation loop
         }
@@ -536,6 +540,8 @@
                 } else if ($ret == 0) {
                     $eqToInterrogate[$eqIdx]['completed'] = true;
                     $done++;
+                    if ($eqToInterrogate[$eqIdx]['tableEntries'] == 0)
+                        updateLockFile("= Aucun équipement en vie.");
                 }
             }
 
@@ -571,7 +577,7 @@
         default: $status = "error"; break; // Interrupted
         }
         // file_put_contents($lockFile, "done/".time()."/".$status);
-        updateLockFile("done/".time()."/".$status);
+        updateLockFile("= Collecte terminée: ".time()."/".$status);
     }
 
     logMessage("", "<<< AbeilleLQI exiting.");

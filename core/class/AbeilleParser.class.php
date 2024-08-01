@@ -2449,11 +2449,11 @@
             $pl = substr($pl, 10);
 
             $m = '  Management LQI response';
-            $m = $m.': SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', StartIdx='.$startIdx.', NTableListCount='.$nTableListCount;
+            $m .= ': SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', StartIdx='.$startIdx.', NTableListCount='.$nTableListCount;
             parserLog2('debug', $srcAddr, $m);
 
             $toLqiCollector = array(
-                'type' => '804E',
+                'type' => 'mgmtLqiRsp',
                 'srcAddr' => $srcAddr,
                 'status' => $status,
                 'tableEntries' => $nTableEntries,

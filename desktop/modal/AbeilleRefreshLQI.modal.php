@@ -57,26 +57,24 @@
                     // _autoUpdate = 0;
                     // setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
                 } else {
-                    var data = res.content;
-                    console.log("Status='"+data+"'");
-                    if (data.toLowerCase().includes("oops")) {
-                        // networkInformationProgress = data;
-                        // document.getElementById("refreshInformation").value = data;
-                        textArea.innerHTML += data + "<br>";
+                    var content = res.content;
+                    console.log("Status='"+content+"'");
+                    if (content.toLowerCase().includes("oops")) {
+                        textArea.innerHTML += content + "<br>";
                         clearInterval(analysisStatus);
-                    } else if (data.toLowerCase().includes("done")) {
-                        // Reminder: done/<timestamp>/<status
-                        // networkInformationProgress = "Collecte terminée";
-                        // document.getElementById("refreshInformation").value = "Collecte terminée";
+                    } else if (content.includes("= Collecte")) {
+                        // Reminder: '= Collecte terminée: <timestamp>/<status>'
                         textArea.innerHTML += "Collecte terminée<br>";
+                        textArea.innerHTML += "<br>Si aucun équipement n'est listé<br>";
+                        textArea.innerHTML += "- soit votre réseau est vide<br>";
+                        textArea.innerHTML += "- soit ils sont tous en timeout depuis un moment.<br>";
                         clearInterval(analysisStatus);
-                    } else
-                        networkInformationProgress = data;
-                        // document.getElementById("refreshInformation").value = data;
-                        if (data != analysisText) {
-                            textArea.innerHTML += data + "<br>";
-                            analysisText = data;
+                    } else {
+                        if (content != analysisText) {
+                            textArea.innerHTML += content + "<br>";
+                            analysisText = content;
                         }
+                    }
                 }
             }
         });

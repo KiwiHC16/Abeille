@@ -218,28 +218,28 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
                     $("#div_networkZigbeeAlert").hide();
                 }, 10000);
             } else {
-                var data = res.content;
-                console.log("Status='" + data + "'");
+                var content = res.content;
+                console.log("Status='" + content + "'");
                 var alertLevel = "success";
-                if (data.toLowerCase().includes("oops")) {
+                if (content.toLowerCase().includes("oops")) {
                     alertLevel = "danger";
                     _autoUpdate = 0;
-                } else if (data.toLowerCase().includes("done")) {
-                    // Reminder: done/<timestamp>/<status
-                    data = "Collecte terminée";
+                } else if (content.includes("= Collecte")) {
+                    // Reminder: '= Collecte terminée: <timestamp>/<status>'
+                    content = "Collecte terminée";
                     _autoUpdate = 0; // Stop status refresh
                 }
 
-                if (data != prevTrackingMsg) {
+                if (content != prevTrackingMsg) {
                     $("#div_networkZigbeeAlert").showAlert({
-                        message: data,
+                        message: content,
                         level: alertLevel,
                     });
-                    prevTrackingMsg = data;
+                    prevTrackingMsg = content;
                 }
 
                 /* Collect status display stops when "done" found */
-                // _autoUpdate = data.toLowerCase().includes("done")?0:1;
+                // _autoUpdate = content.toLowerCase().includes("done")?0:1;
                 if (_autoUpdate) {
                     // Next status update in 1s
                     setTimeout(function () {

@@ -1023,6 +1023,12 @@ class Abeille extends eqLogic {
         // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
     }
 
+    // Trying to capture log level change event
+    public static function postConfig_log_level_Abeille($value) {
+        log::add('Abeille', 'debug', 'postConfig_log_level_Abeille(): value='.json_encode($value));
+        // NOT WORKING: Might be a Jeedom bug.
+    }
+
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
     public static function checkInclusionStatus($net) {
         $eqLogic = eqLogic::byLogicalId($net.'/0000', 'Abeille');

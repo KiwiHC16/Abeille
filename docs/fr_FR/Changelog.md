@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 240802-BETA-1
+
 -   Correction: 'Commande 0102-01- inconnue' (2719).
 -   Sonoff SNZB-01P: Mise-à-jour du modèle (2716).
 -   Correction collecte LQI: Code C1 n'est plus un timeout mais 'aucun eq en vie'.

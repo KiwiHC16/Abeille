@@ -25,7 +25,7 @@
     */
     // $eqLogics = Abeille::byType('Abeille');
     $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
-    $logFile = $tmpDir.'/AbeilleKeyInfos.log';
+    $outputFile = $tmpDir.'/AbeilleKeyInfos.log';
 
     global $CONFIG;
 
@@ -38,14 +38,14 @@
      *
      * @return  none
      */
-    function logIt($msg, $append = 1) {
-        global $logFile;
+    function logIt($msg = "\n", $append = true) {
+        global $outputFile;
 
         // echo $msg;
-        if ($append == 1)
-            file_put_contents($logFile, $msg, FILE_APPEND);
+        if ($append)
+            file_put_contents($outputFile, $msg, FILE_APPEND);
         else
-            file_put_contents($logFile, $msg);
+            file_put_contents($outputFile, $msg);
     }
 
     /**
@@ -230,7 +230,9 @@
     $date = date('Y/m/d H:i:s');
     logIt("Date   : ".$date."\n");
     $jLines = log::getConfig('maxLineLog');
-    logIt("Logs   : ".$jLines." lines\n");
+    include_once __DIR__.'/AbeilleLog.php'; // logGetLevelName()
+    $jLogLevel = logGetLevelName();
+    logIt("Logs   : ".$jLines." lines (mode=${jLogLevel})\n");
 
     // Plateform infos
     exec('uname -a', $result2);

@@ -25,12 +25,18 @@
         // si aucun:  {"100":"0","200":"0","300":"0","400":"0","1000":"1","default":"0"}
         // si defaut: {"100":"0","200":"0","300":"0","400":"0","1000":"0","default":"1"}
         $logLevelPluginJson = config::getLogLevelPlugin()["log::level::Abeille"];
-        if ( $logLevelPluginJson[    '100'] ) return 4;
-        if ( $logLevelPluginJson[    '200'] ) return 3;
-        if ( $logLevelPluginJson[    '300'] ) return 2;
+        if ( $logLevelPluginJson[    '100'] ) return 4; // Debug
+        if ( $logLevelPluginJson[    '200'] ) return 3; // Info
+        if ( $logLevelPluginJson[    '300'] ) return 2; // Warning
         if ( $logLevelPluginJson[    '400'] ) return 1;
         if ( $logLevelPluginJson[   '1000'] ) return 0;
         if ( $logLevelPluginJson['default'] ) return 1; // This one is set to 1 but should be found from conf
+    }
+
+    function logGetLevelName() {
+        $levNumber = logGetPluginLevel();
+        $levelNames = ['none', 'default', 'warning', 'info', 'debug'];
+        return $levelNames[$levNumber];
     }
 
     /* Convert logLevel from string to number:

@@ -9,6 +9,7 @@
     -   Affichage PAN-ID & Ext PAN-ID.
     -   Affichage status réseau.
     -   Affichage TX power.
+-   Amélioration infos clefs: Affichage du mode de log courant.
 
 ## 240710-BETA-2
 

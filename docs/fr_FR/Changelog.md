@@ -2,7 +2,13 @@
 
 -   Correction: 'Commande 0102-01- inconnue' (2719).
 -   Sonoff SNZB-01P: Mise-à-jour du modèle (2716).
--   Correction: Collecte LQI: Code C1 n'est plus un timeout mais 'aucun eq en vie'.
+-   Correction collecte LQI: Code C1 n'est plus un timeout mais 'aucun eq en vie'.
+-   Corrections Zigate/avancé:
+    -   Affichage version FW Zigate (cmde 'FW-Version' manquante).
+    -   Affichage canal Zigate (cmde 'Network-Channel' manquante).
+    -   Affichage PAN-ID & Ext PAN-ID.
+    -   Affichage status réseau.
+    -   Affichage TX power.
 
 ## 240710-BETA-2
 

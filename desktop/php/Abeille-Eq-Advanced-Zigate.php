@@ -132,9 +132,9 @@
         <input type="text" value="" readonly>
         <?php addZgButton("{{Lire}}", "btn-default", 'getTXPower', ''); ?>
         <select id="idZgTxPower" style="width:80px; margin-left:4px" title="{{Puissance TX}}">
-            <option value=00>{{Min}}</option>
-            <option value=80 selected>{{Défaut}}</option>
-            <option value=BF>{{Max}}</option>
+            <option value=00>{{00/Min}}</option>
+            <option value=80 selected>{{80/Défaut}}</option>
+            <option value=BF>{{BF/Max}}</option>
         </select>
         <?php addZgButton("{{Appliquer}}", "btn-default", 'setTXPower', ''); ?>
     </div>

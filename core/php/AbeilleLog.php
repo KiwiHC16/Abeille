@@ -28,14 +28,14 @@
         if ( $logLevelPluginJson[    '100'] ) return 4; // Debug
         if ( $logLevelPluginJson[    '200'] ) return 3; // Info
         if ( $logLevelPluginJson[    '300'] ) return 2; // Warning
-        if ( $logLevelPluginJson[    '400'] ) return 1;
-        if ( $logLevelPluginJson[   '1000'] ) return 0;
+        if ( $logLevelPluginJson[    '400'] ) return 1; // Default or error
+        if ( $logLevelPluginJson[   '1000'] ) return 0; // Disabled
         if ( $logLevelPluginJson['default'] ) return 1; // This one is set to 1 but should be found from conf
     }
 
     function logGetLevelName() {
         $levNumber = logGetPluginLevel();
-        $levelNames = ['none', 'default', 'warning', 'info', 'debug'];
+        $levelNames = ['none', 'error', 'warning', 'info', 'debug'];
         return $levelNames[$levNumber];
     }
 

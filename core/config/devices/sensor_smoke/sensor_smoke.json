@@ -1,7 +1,7 @@
 {
     "sensor_smoke": {
         "manufacturer": "Xiaomi",
-        "model": "?",
+        "model": "JTYJ-GD-01LM/BW",
         "type": "Xiaomi Smoke Sensor",
         "genericType": "Environment",
         "timeout": "60",
@@ -14,11 +14,20 @@
             "security": "1"
         },
         "commands": {
-            "Etat": {
-                "use": "securitySafetySmoke"
+            "ZoneStatus Change": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "trigOut": {
+                    "01-smokeAlarm": {
+                        "valueOffset": "#value#&2"
+                    }
+                }
+            },
+            "Smoke alarm": {
+                "use": "inf_smoke-Alarm",
+                "isVisible": 1
             },
             "Battery-Volt": {
-                "use": "inf_zbAttr-0001-BatteryVolt"
+                 "use": "inf_batteryVoltAndPercent-285-300"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"

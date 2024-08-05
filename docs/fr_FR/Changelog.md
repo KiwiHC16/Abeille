@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Amélioration: Page santé. Satus des gateways raffraichi toutes les secondes.
+-   Corrections: Modele Xiaomi detecteur fumée (2723).
 
 ## 240802-BETA-1
 

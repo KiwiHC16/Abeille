@@ -925,7 +925,7 @@
             if (!isset($eqModel['commands'])) {
                 parserLog('debug', "    No cmds for configuration in JSON model.");
             } else {
-                parserLog('debug', "    Requesting device configuration.");
+                parserLog('debug', "    Configuring device.");
                 $msg = array(
                     'type' => 'configureDevice',
                     'net' => $net,

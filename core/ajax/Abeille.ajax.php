@@ -750,6 +750,8 @@
             foreach ($eqLogics as $eqLogic) {
                 $eqLogicId = $eqLogic->getLogicalId();
                 list($eqNet, $eqAddr) = explode("/", $eqLogicId);
+                if (($eqNet == "") || ($eqAddr == ""))
+                    continue; // Invalid
 
                 $e = [];
                 $e['jId'] = $eqLogic->getId();

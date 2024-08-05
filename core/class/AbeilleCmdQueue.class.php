@@ -964,6 +964,8 @@
                     updateDeviceFromDB($msg['id']); // Update device info from eqLogic
                 } else if ($msg['type'] == 'configureDevice') {
                     configureDevice($msg['net'], $msg['addr']); // Configure device (execAtCreation)
+                } else if ($msg['type'] == 'logLevelChanged') {
+                    logLevelChanged($msg['level']);
                 } else
                     cmdLog("error", "AbeilleCmd: Message inattendu: ".$msgJson);
             } else {

@@ -583,6 +583,39 @@
     // $("#UpdateCheck").hide();
     $("#idAdvOptions").hide();
 
+    // Install a way to monitor log level change
+    abConfig = {};
+    abConfig.logSaveWrapper = function () {
+        btSave = $('#bt_savePluginLogConfig');
+        if (!btSave.hasClass('ab::logLev')) { // Avoid multiple declaration of the event on the button
+            btSave.addClass('ab::logLev');
+            btSave.on('click', function() {
+                var level = $('input.configKey[data-l1key="log::level::Abeille"]:checked')
+                console.log('btSave click: level='+level.attr('data-l2key'));
+                if (level.length == 1) { // Found 1 log::level::Abeille input checked
+                    $.ajax({
+                        type: 'POST',
+                        url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+                        data: {
+                            action: 'logLevelChanged',
+                            level: level.attr('data-l2key') // 100, 200, ...
+                        },
+                        dataType: 'json',
+                        global: false,
+                        // error: function (request, status, error) {
+                        //     bootbox.alert("ERREUR 'checkWifi' !<br>Votre installation semble corrompue.");
+                        // },
+                        success: function (json_res) {
+                        }
+                    });
+                }
+            });
+        };
+    }
+
+    // Wrap Log Save button
+    abConfig.logSaveWrapper();
+
     // $('#idZigatesShowHide').on('click', function () {
     //     var Label = document.getElementById("idZigatesShowHide").innerText;
     //     console.log("ZigatesShowHide click: Label=" + Label);

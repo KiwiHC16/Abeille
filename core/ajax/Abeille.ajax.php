@@ -62,6 +62,19 @@
         return true;
     }
 
+    function sendToX($queueName, $msg) {
+        global $abQueues;
+
+        $queueId = $abQueues[$queueName]['id'];
+        $queue = msg_get_queue($queueId);
+        $msgJson = json_encode($msg);
+
+        if (msg_send($queue, 1, $msgJson, false, false) == false) {
+            return false;
+        }
+        return true;
+    }
+
     // stop=true (default) => Disable daemons auto-start and stop them
     function pauseDaemons($stop = true, $dStatus = []) {
         if ($stop) {
@@ -919,6 +932,24 @@
             ); */
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'daemons' => $daemons)));
+        }
+
+        // Log level may have changed. Informing daemons
+        if (init('action') == 'logLevelChanged') {
+            $jLevel = init('level'); // Jeedom level (100, 200, 400...)
+            $aLevel = logJtoA($jLevel); // Convert to Abeille level (0 to 4)
+
+            $status = 0;
+            $error = "";
+
+            $msg = array(
+                'type' => 'logLevelChanged',
+                'level' => $aLevel
+            );
+            sendToX('xToParser', $msg);
+            sendToX('xToCmd', $msg);
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.

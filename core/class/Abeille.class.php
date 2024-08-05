@@ -30,7 +30,7 @@
     include_once __DIR__.'/AbeilleTools.class.php';
     include_once __DIR__.'/AbeilleCmd.class.php';
     include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
-    include_once __DIR__.'/../php/AbeilleLog.php'; // logGetPluginLevel()
+    include_once __DIR__.'/../php/AbeilleLog.php'; // logGetLevelNumber()
     include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()
 
 class Abeille extends eqLogic {
@@ -766,7 +766,7 @@ class Abeille extends eqLogic {
         // self::refreshCmd();
 
         // If debug mode, let's check there is at least 5000 lines for support needs
-        if (logGetPluginLevel() == 4) {
+        if (logGetLevelNumber() == 4) {
             $jLines = log::getConfig('maxLineLog');
             if ($jLines < 5000)
                 message::add("Abeille", "Vous êtes en mode debug mais le nombre de lignes est inférieur à 5000 (".$jLines."). Il est recommandé d'augmenter ce nombre pour tout besoin de support.");

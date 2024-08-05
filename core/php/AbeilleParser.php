@@ -603,6 +603,8 @@
                 } else if ($msg['type'] == "serialRead") {
                     // Message from AbeilleSerialReadX
                     $AbeilleParser->protocolDatas($msg['net'], $msg['msg']);
+                } else if ($msg['type'] == "logLevelChanged") {
+                    logLevelChanged($msg['level']);
                 } else {
                     // Ctrl message
                     if ($msg['type'] == 'sendToCli') {

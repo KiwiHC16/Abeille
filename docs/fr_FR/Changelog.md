@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Amélioration: Page santé. Satus des gateways raffraichi toutes les secondes.
+
 ## 240802-BETA-1
 
 -   Correction: 'Commande 0102-01- inconnue' (2719).

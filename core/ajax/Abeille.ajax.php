@@ -774,13 +774,19 @@
                     $bat = $bat.'%';
                 $e['lastBat'] = $bat;
 
+                // Gateway
+                $gtwId = substr($eqNet, 7); // AbeilleX => X
+                $gtw = eqLogic::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
+                $e['gtwTimeout'] = $gtw->getStatus('timeout');
+                $e['gtwType'] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate');
+
                 if (!isset($eq[$eqNet]))
                     $eq[$eqNet] = [];
                 if (!isset($eq[$eqNet][$eqAddr]))
                     $eq[$eqNet][$eqAddr] = $e;
             }
 
-            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'equipments' => $eq)));
         } // End getHealthDatas
 
         // Read 'ab::settings' content

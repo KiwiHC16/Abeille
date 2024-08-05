@@ -37,30 +37,32 @@
     $oneMissing = false;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
-    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        if ($config['ab::gtwEnabled'.$zgId] != "Y")
+    for ($gtwId = 1; $gtwId <= maxNbOfZigate; $gtwId++) {
+        if ($config['ab::gtwEnabled'.$gtwId] != "Y")
             continue; // Zigate disabled
-        displayDaemonStatus($diff, "SerialRead".$zgId, $oneMissing);
-        if ($config['ab::gtwSubType'.$zgId] == "WIFI")
-            displayDaemonStatus($diff, "Socat".$zgId, $oneMissing);
+        displayDaemonStatus($diff, "SerialRead".$gtwId, $oneMissing);
+        if ($config['ab::gtwSubType'.$gtwId] == "WIFI")
+            displayDaemonStatus($diff, "Socat".$gtwId, $oneMissing);
     }
     if ($oneMissing)
         echo " Attention: Un ou plusieurs démons ne tournent pas !";
 
     /* Checking if active Zigates are not in timeout */
-    echo "    Zigates: ";
-    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        if ($config['ab::gtwEnabled'.$zgId] != "Y")
-            continue; // Zigate disabled
+    echo "    Gateways: ";
+    for ($gtwId = 1; $gtwId <= maxNbOfZigate; $gtwId++) {
+        if ($config['ab::gtwEnabled'.$gtwId] != "Y")
+            continue; // Disabled
 
-        $eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-        if (!is_object($eqLogic))
-            continue; // Abnormal
-        if ((strtotime($eqLogic->getStatus('lastCommunication')) + (60 * $eqLogic->getTimeout())) > time()) {
-            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">Zigate'.$zgId.'</span>';
-        } else {
-            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">Zigate '.$zgId.'</span>';
-        }
+        echo '<span id="idGtw'.$gtwId.'" class="label label-danger" style="font-size:1em; margin-left:4px">?</span>';
+
+        // $eqLogic = Abeille::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
+        // if (!is_object($eqLogic))
+        //     continue; // Abnormal
+        // if ((strtotime($eqLogic->getStatus('lastCommunication')) + (60 * $eqLogic->getTimeout())) > time()) {
+        //     echo '<span class="label label-success" style="font-size:1em; margin-left:4px">Zigate'.$gtwId.'</span>';
+        // } else {
+        //     echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">Zigate '.$gtwId.'</span>';
+        // }
     }
     echo '<br><br>';
 
@@ -114,7 +116,7 @@
             success: function (json_res) {
                 res = JSON.parse(json_res.result);
                 // console.log("res=", res);
-                equipments = res.eq; // equipments[net][addr] = object()
+                equipments = res.equipments; // equipments[net][addr] = object()
                 console.log("equipments=", equipments);
 
                 let tr = '';
@@ -124,9 +126,9 @@
                         continue;
                     }
 
-                    zgId = parseInt(net.substring(7, 8)); // AbeilleX => X (integer)
-                    netColor = colors[zgId];
-                    console.log("net="+net+" => zgId="+zgId+", color="+netColor);
+                    gtwId = parseInt(net.substring(7, 8)); // AbeilleX => X (integer)
+                    netColor = colors[gtwId];
+                    console.log("net="+net+" => gtwId="+gtwId+", color="+netColor);
                     n = equipments[net];
                     parentBridge = equipments[net]['0000'];
                     bridgeEnabled = parentBridge.isEnabled;
@@ -214,11 +216,23 @@
                         tr += '<td style=""><span style="font-size:1em;cursor:default">'+dis1+e.lastBat+dis2+'</span></td>';
 
                         tr += '</tr>';
+
+                        // Updating gateway status if coordinator (addr 0000)
+                        if (addr = '0000') {
+                            let gtwSpan = document.getElementById("idGtw"+gtwId);
+                            if (e.gtwType == 'zigate')
+                                gtwSpan.textContent = "Zigate " + gtwId;
+                            else
+                                gtwSpan.textContent = "Ezsp " + gtwId;
+                            if (e.gtwTimeout)
+                                gtwSpan.className = "label label-danger";
+                            else
+                                gtwSpan.className = "label label-success";
+                        }
                     }
                 }
 
                 $('#table_healthAbeille tbody').empty().append(tr);
-
                 $("#table_healthAbeille").tablesorter().trigger('update');
             }
         });

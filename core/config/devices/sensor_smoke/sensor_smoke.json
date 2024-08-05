@@ -41,8 +41,12 @@
             "High": {
                 "use": "setSmokeSensivityHigh"
             },
-            "Test": {
+            "Test old": {
                 "use": "testSmoke"
+            },
+            "Test new": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0500&attrId=fff1&attrType=23&attrVal=03010000&manufId=115f"
             }
         },
         "private": {

@@ -3125,9 +3125,10 @@
                     $attrVal = $this->formatAttribute($Command['attrVal'], $attrType);
                     if ($attrVal === false)
                         return;
-                    $attrList = $Command['attrId'].$attrType.$attrVal;
+                    $attrId = $Command['attrId'];
+                    $attrList = $attrId.$attrType.$attrVal;
 
-                    cmdLog('debug', "  writeAttribute: Dir=${dir}, ManufCode=${manufCode}, AttrType=${attrType}, AttrVal=${attrVal}");
+                    cmdLog('debug', "  writeAttribute: Dir=${dir}, ManufCode=${manufCode}, AttrId=${attrId}, AttrType=${attrType}, AttrVal=${attrVal}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufCode.$nbOfAttributes.$attrList;
 
                     $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode);

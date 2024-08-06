@@ -1476,6 +1476,13 @@ class Abeille extends eqLogic {
         else
             $ep = '';
 
+        /* Log level has changed */
+        if ($msg['type'] == "logLevelChanged") {
+            log::add('Abeille', 'debug', "msgFromParser(): log level changed to ".$msg['level']);
+            logLevelChanged($msg['level']);
+            return;
+        } // End 'logLevelChanged'
+
         /* Request to update EQ from given model (ex: user force model) */
         if ($msg['type'] == "setForcedModel") {
             log::add('Abeille', 'debug', "msgFromParser(): setForcedModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));

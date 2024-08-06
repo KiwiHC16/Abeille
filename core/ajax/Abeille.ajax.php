@@ -950,6 +950,7 @@
             );
             sendToX('xToParser', $msg);
             sendToX('xToCmd', $msg);
+            sendToX('xToAbeille', $msg);
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }

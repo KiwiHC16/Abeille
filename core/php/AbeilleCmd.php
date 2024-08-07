@@ -111,16 +111,14 @@
 
         // Whatever found or new... updating infos used by cmd process
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        // logMessage('debug', "  #2675: eqModel=".json_encode($eqModel));
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-        $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
         $eq = array(
             'ieee' => $ieee,
             'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
             'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
             'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
             // 'modelPath' => isset($eqModel['modelPath']) ? $eqModel['modelPath'] : "<modName>/<modName>.json",
-            'rxOnWhenIdle' => $rwOnWhenIdle ? true : false
+            'rxOnWhenIdle' => (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1)) ? true : false
         );
         if ($eq['jsonId'] != '') {
             if (isset($eqModel['modelPath']))

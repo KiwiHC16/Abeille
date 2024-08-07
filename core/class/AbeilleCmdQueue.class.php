@@ -836,27 +836,26 @@
                             cmdLog('debug', "  eq=".json_encode($eq, JSON_UNESCAPED_SLASHES));
                             // Note: TX status makes sense only if device is always listening (rxOnWhenIdle=TRUE)
                             //       For other devices any interrogation without waking up device may lead to NO-ACK which is normal
-                            if (isset($eq['rxOnWhenIdle']) && $eq['rxOnWhenIdle']) {
-                                $newTxStatus = '';
-                                if ($msg['status'] == '00') { // Ok ?
-                                    if ($eq['txStatus'] !== 'ok')
-                                        $newTxStatus = 'ok';
-                                } else { // NO ACK ?
-                                    if ($eq['txStatus'] !== 'noack')
-                                        $newTxStatus = 'noack';
-                                }
-                                if ($newTxStatus != '') {
-                                    $eq['txStatus'] = $newTxStatus;
-                                    $msg = array(
-                                        // 'src' => 'cmd',
-                                        'type' => 'eqTxStatusUpdate',
-                                        'net' => $net,
-                                        'addr' => $addr,
-                                        'txStatus' => $newTxStatus // 'ok', or 'noack'
-                                    );
-                                    msgToAbeille($msg);
-                                    cmdLog2('debug', $addr, "  ${net}-${addr} status changed to '${newTxStatus}'");
-                                }
+                            $newTxStatus = '';
+                            if ($msg['status'] == '00') { // OK
+                                // Restoring 'ok'' status whatever rxOnWhenIdle or not
+                                if ($eq['txStatus'] !== 'ok')
+                                    $newTxStatus = 'ok';
+                            } else { // NO ACK
+                                if (isset($eq['rxOnWhenIdle']) && $eq['rxOnWhenIdle'] && ($eq['txStatus'] !== 'noack'))
+                                    $newTxStatus = 'noack';
+                            }
+                            if ($newTxStatus != '') {
+                                $eq['txStatus'] = $newTxStatus;
+                                $msg = array(
+                                    // 'src' => 'cmd',
+                                    'type' => 'eqTxStatusUpdate',
+                                    'net' => $net,
+                                    'addr' => $addr,
+                                    'txStatus' => $newTxStatus // 'ok', or 'noack'
+                                );
+                                msgToAbeille($msg);
+                                cmdLog2('debug', $addr, "  ${net}-${addr} status changed to '${newTxStatus}'");
                             }
                         }
                     }

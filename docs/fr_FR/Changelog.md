@@ -5,6 +5,7 @@
 -   Module volet roulant TS130F: Modèle en cours de revue (2719).
 -   Amélioration: Plus besoin de redémarrer démons apres changement niveau de log.
 -   Amélioration: Maintenance/infos clefs.
+-   Correction: Cmd: Status TX corrigé en 'ok' meme si 'rx OFF when idle'.
 
 ## 240802-BETA-1
 

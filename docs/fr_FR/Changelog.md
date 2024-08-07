@@ -4,6 +4,7 @@
 -   Corrections: Modele Xiaomi detecteur fumée (2723).
 -   Module volet roulant TS130F: Modèle en cours de revue (2719).
 -   Amélioration: Plus besoin de redémarrer démons apres changement niveau de log.
+-   Amélioration: Maintenance/infos clefs.
 
 ## 240802-BETA-1
 

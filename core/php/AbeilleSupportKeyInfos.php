@@ -145,21 +145,56 @@
         logIt("\n");
     }
 
-    function printDeviceInfos($addr, $eqLogic) {
-        $eqHName = $eqLogic->getHumanName();
-        $eqId = $eqLogic->getId();
-        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+    function getDeviceInfos($eqLogic, $addr) {
+
+        $eq = [];
+        $eq['addr'] = $addr;
+        $eq['hName'] = $eqLogic->getHumanName();
+        $eq['id'] = $eqLogic->getId();
+        $eq['eqModel'] = $eqLogic->getConfiguration('ab::eqModel', []);
+        $eq['isEnabled'] = $eqLogic->getIsEnable();
+        $eq['timeout'] = $eqLogic->getStatus('timeout');
+        $eq['lastCom'] = $eqLogic->getStatus('lastCommunication');
+        $eq['txAck'] = $eqLogic->getStatus('ab::txAck', 'ok');
+
+        return $eq;
+
+        // $eqModelId = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+        // $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
+        // $extra = '';
+        // $status = 'ok ';
+        // if (!$eqLogic->getIsEnable())
+        //     $status = "DIS";
+        // else if ($eqLogic->getStatus('timeout') == 1) {
+        //     $lastComm = $eqLogic->getStatus('lastCommunication');
+        //     $extra = ", TIMEOUT (last comm ".$lastComm.")";
+        //     $status = "TO ";
+        // } else if ($eqLogic->getStatus('ab::txAck', 'ok') != 'ok') {
+        //     $extra = ", NO-ACK";
+        //     $status = "NA ";
+        // }
+
+        // logIt("- ${status}: ${eqHName}, Id=${eqId}${extra}\n");
+        // logIt("       Addr=${addr}, Model='${eqModelId}', Type='${eqType}'\n");
+    }
+
+    function printDeviceInfos($eq) {
+        $addr = $eq['addr'];
+        $eqHName = $eq['hName'];
+        $eqId = $eq['id'];
+        $eqModel = $eq['eqModel'];
         $eqModelId = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
         $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
         $extra = '';
         $status = 'ok ';
-        if (!$eqLogic->getIsEnable())
+        if (!$eq['isEnabled'])
             $status = "DIS";
-        else if ($eqLogic->getStatus('timeout') == 1) {
-            $lastComm = $eqLogic->getStatus('lastCommunication');
-            $extra = ", TIMEOUT (last comm ".$lastComm.")";
+        else if ($eq['timeout'] == 1) {
+            $lastComm = $eq['lastCom'];
+            $since =  floor((time() - strtotime($lastComm)) / 3600);
+            $extra = ", TIMEOUT (since ${since}H, last comm ".$lastComm.")";
             $status = "TO ";
-        } else if ($eqLogic->getStatus('ab::txAck', 'ok') != 'ok') {
+        } else if ($eq['txAck'] != 'ok') {
             $extra = ", NO-ACK";
             $status = "NA ";
         }
@@ -173,28 +208,50 @@
         logTitle("Devices");
         logIt("Reminder: TO=timeout, NA=no-ack, DIS=disabled\n");
 
-        for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+        for ($gtwId = 1; $gtwId <= maxNbOfZigate; $gtwId++) {
+            if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
 
-            logIt("Zigate ${zgId}\n");
+            $devices = [];
+            $nbTimeout = 0;
+            $nbNoAck = 0;
 
-            // Zigate first
-            $eqLogic = Abeille::byLogicalId("Abeille${zgId}/0000", 'Abeille');
-            printDeviceInfos("0000", $eqLogic);
+            // Gateway first
+            $eqLogic = Abeille::byLogicalId("Abeille${gtwId}/0000", 'Abeille');
+            // printDeviceInfos("0000", $eqLogic);
+            $dev = getDeviceInfos($eqLogic, "0000");
+            if ($dev['timeout'])
+                $nbTimeout++;
+            if ($dev['txAck'] != 'ok')
+                $nbNoAck++;
+            $devices[] = $dev;
 
             // Then equipments
             $eqLogics = Abeille::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 list($net, $addr) = explode("/", $eqLogic->getLogicalId());
                 if ($addr == "0000")
-                    continue; // It's a Zigate
+                    continue; // It's a gateway
 
-                $zgId2 = substr($net, 7); // AbeilleX => X
-                if ($zgId2 != $zgId)
+                $gtwId2 = substr($net, 7); // AbeilleX => X
+                if ($gtwId2 != $gtwId)
                     continue;
 
-                printDeviceInfos($addr, $eqLogic);
+                // printDeviceInfos($addr, $eqLogic);
+                $dev = getDeviceInfos($eqLogic, $addr);
+                if ($dev['timeout'])
+                    $nbTimeout++;
+                if ($dev['txAck'] != 'ok')
+                    $nbNoAck++;
+                $devices[] = $dev;
+            }
+
+            // Print
+            $gtwType = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate');
+            logIt("Abeille${gtwId} (${gtwType}): TO=${nbTimeout}, NA=${nbNoAck}\n");
+
+            foreach ($devices as $dev) {
+                printDeviceInfos($dev);
             }
         }
         logIt("\n");
@@ -210,11 +267,13 @@
             return;
         }
 
-        requestAndPrint($link, 'update', "Table 'update'");
-        requestAndPrint($link, 'cron', "Table 'cron'");
+        // Key tables
         requestAndPrint($link, 'config', "Table 'config'");
         requestAndPrint($link, 'eqLogic', "Table 'eqLogic'");
         requestAndPrint($link, 'cmd', "Table 'cmd'");
+        // Other tables
+        requestAndPrint($link, 'update', "Table 'update'");
+        requestAndPrint($link, 'cron', "Table 'cron'");
 
         mysqli_close($link);
     }

@@ -948,17 +948,6 @@
             //     return;
             // }
 
-            if (isset($Command['setExtendedPANID'])) {
-                cmdLog('debug', "  setExtendedPANID", $this->debug['processCmd']);
-                $cmd = "0020";
-                $data = $Command['setExtendedPANID'];
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
             //----------------------------------------------------------------------
             // Bind
             // Title => 000B57fffe3025ad (IEEE de l ampoule)
@@ -2509,6 +2498,23 @@
                     $mask = str_pad($mask, 8, '0', STR_PAD_LEFT); // Add any missing zeros
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0021", $mask);
+                    return;
+                }
+
+                // Zigate specific command: Set extended PAN-ID
+                // Mandatory params: 'extPanId'
+                else if ($cmdName == 'zgSetExtendedPanId') {
+                    $required = ['extPanId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0020";
+                    $extPanId = $Command['extPanId'];
+                    cmdLog('debug', "  zgSetExtendedPanId: extPanId=${extPanId}");
+
+                    // WARNING: This does not work. Network must not be running to change ext Pan ID but how to do that ??
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $extPanId, "0000");
                     return;
                 }
 

@@ -107,7 +107,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">PAN ID</label>
     <div class="col-sm-5" advInfo="PAN-ID">
-        <input type="text" id="idPanId" value="" readonly>
+        <input type="text" value="" readonly>
     </div>
 </div>
 
@@ -117,9 +117,9 @@
         <!-- <a class="btn btn-primary btn-xs" target="_blank" href="https://kiwihc16.github.io/AbeilleDoc/Radio.html"><i class="fas fa-book"></i> ?</a> -->
     </div>
     <div class="col-sm-5" advInfo="Ext_PAN-ID">
-        <input type="text" id="idExtPanId" value="" readonly>
-        <!-- TODO <input type="text" name="extendedPanId" placeholder="XXXXXXXX">
-        <button type="button" onclick="sendZigate('setExtPANId', '')">Modifier</button> -->
+        <input type="text" value="">
+        <!-- Does not work. Unable to set a different PAN ID. Need to find a way to stop network & apply before restarting
+        < ?php addZgButton("{{Appliquer}}", "btn-danger", 'setExtPANId', 'Ext_PAN-ID'); ?> -->
     </div>
 </div>
 

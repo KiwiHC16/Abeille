@@ -1598,10 +1598,15 @@ function sendZigate(action, param) {
             else if (param == "Raw") payload = "mode=raw";
             else payload = "mode=hybrid";
             break;
-        case "setExtPANId": // Not critical. No need so far.
-            topic = "CmdAbeille" + zgId + "/0000/setExtendedPANID";
-            payload = "";
-            break;
+        // case "setExtPANId":
+        //     topic = "CmdAbeille" + zgId + "/0000/zgSetExtendedPanId";
+        //     // Note: param = cmd logic id
+        //     cmd = eq.cmds[param];
+        //     cmdId = cmd.id;
+        //     extPanId = document.getElementById("cmdId-" + cmdId).value;
+        //     console.log("Ext PAN-ID=" + extPanId);
+        //     payload = "extPanId=" + extPanId;
+        //     break;
         case "setChannel":
             msg =
                 "{{Vous êtes sur le point de changer le canal Zigbee de la Zigate}}<b>" +

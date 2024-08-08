@@ -169,8 +169,17 @@
     function configureZigate($zgId) {
         cmdLog('debug', "configureZigate(${zgId})");
 
+        $gtwType = isset($config['ab::gtwType'.$zgId]) ? $config['ab::gtwType'.$zgId] : 'zigate';
+        if ($gtwType != 'zigate') {
+            cmdLog('error', "  Gateway ${zgId} is NOT a Zigate");
+            return;
+        }
+
         msgToCmd("CmdAbeille".$zgId."/0000/zgSoftReset", "");
-        // Cmds delayed by 1sec to wait for chip reset
+        // Following cmds delayed by 1sec to wait for chip reset
+
+        // Extended PAN ID change must be done BEFORE starting network
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetExtendedPanId&tempo=".(time()+1), "extPanId=21758D1900481200");
 
         global $config;
         if (isset($config['ab::gtwChan'.$zgId])) {
@@ -192,9 +201,9 @@
         cmdLog('debug', "  Configuring Zigate ${zgId} in ${mode} mode");
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetMode&tempo=".(time()+1), "mode=${mode}");
 
-        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgStartNetwork&tempo=".(time()+1), "");
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgStartNetwork&tempo=".(time()+10), "");
 
-        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+1), "");
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+10), "");
     }
 
     // Configure device

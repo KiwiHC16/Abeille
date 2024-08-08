@@ -529,7 +529,13 @@
                 // cmdLog("debug", __FUNCTION__." zgId=".$zgId.", zg=".json_encode($zg));
 
                 if (!$zg['enabled']) continue; // Disabled
-                if (!$zg['available']) continue;  // Already treating a command
+                if (!$zg['available']) {
+                    if (isset($zg['availTime']) && ($zg['availTime'] <= microtime(true))) {
+                        $GLOBALS['zigates'][$zgId]['available'] = 1; // Available again
+                        unset($GLOBALS['zigates'][$zgId]['availTime']);
+                    } else
+                        continue; // Still not available
+                }
 
                 // Throughput regulation
                 // $zg['tp_time'] gives time (in us) when Zigate can be considered available again.
@@ -559,7 +565,7 @@
                         $sendIdx = 0;
                     } else {
                         // Regulation required. Looking for Zigate only cmd
-                        cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}/Idx=${cmdIdx}, Cmd=".$cmd['cmd']." => ${regulation} regulation");
+                        cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}/Idx=${cmdIdx}, Cmd=".$cmd['cmd']." => '${regulation}' regulation");
                         foreach ($zg['cmdQueue'][$priority] as $cmdIdx => $cmd) {
                             if ($cmdIdx == 0)
                                 continue; // 1st cmd already checked
@@ -594,66 +600,6 @@
                         monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
                 }
             } // End zigates loop
-
-                    // Throughput limitation
-                    // $zg['tp_time'] gives time (in us) when Zigate can be considered available again.
-                    // $mt = microtime(true);
-                    // if (isset($zg['tp_time']) && ($zg['tp_time'] > $mt)) {
-                    //     cmdLog('debug', "processCmdQueues(): ZgId=${zgId} => Throughput limitation");
-                    //     break; // This zigate is not yet available
-                    // }
-
-                    // cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
-
-                    // $cmd = $zg['cmdQueue'][$priority][0]; // Takes first cmd
-                    // cmdLog('debug', "  cmd=".json_encode($cmd));
-                    // if ($cmd['status'] != '') {
-                    //     cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
-                    // }
-
-                    // NDPU limitation (NDPU too high leads to extended error due to lack of resources)
-                    // if (!$cmd['zgOnly']) { // Not a cmd for Zigate only
-                    //     if ($zg['nPDU'] > 7) {
-                    //         cmdLog('debug', "  NDPU limitation (NPDU=".$zg['nPDU'].")");
-                    //         break; // This zigate is not yet available
-                    //     }
-                    // }
-
-                    /* Additional flow control with nPDU/aPDU regulation to avoid zigate internal saturation.
-                        This must not prevent zigate internal commands (ex: read version).
-                        If HW v1
-                            If FW >= 3.1e, using NPDU/APDU regulation.
-                            If FW <  3.1e, regulation based on max cmd per sec => Throughput limitation
-                        If HW v2
-                            No flow control. Regulation based on max cmd per sec => Throughput limitation
-                    */
-                    // if (($zg['hw'] == 1) && !$cmd['zgOnly']) { // Not a cmd for Zigate only
-                    //     // cmdLog('debug', "processCmdQueues(): nPDU/aPDU regulation to be checked: ".json_encode($zg));
-                    //     if (($zg['nPDU'] > 7) || ($zg['aPDU'] > 2)) {
-                    //         cmdLog('debug', '  NPDU/APDU regulation for Zigate  '.$zgId.' (NPDU='.$zg['nPDU'].', APDU='.$zg['aPDU'].')');
-
-                    //         // Adding a "read version" cmd as FIRST CMD to force NDPU/APDU update
-                    //         $this->pushZigateCmd($zgId, $priority, "0010", "", "0000", "00", true);
-                    //         $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][0]; // Takes first cmd
-                    //     }
-                    // }
-
-                    // $GLOBALS['zigates'][$zgId]['available'] = 0; // Zigate no longer free
-                    // $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
-                    // $GLOBALS['zigates'][$zgId]['sentIdx'] = $cmdIdx;
-
-                    // $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
-
-                    // $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$cmdIdx]['status'] = "SENT";
-                    // $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$cmdIdx]['sentTime'] = time();
-                    // $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$cmdIdx]['try']--;
-                    // $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
-
-                    // if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
-                    //     monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
-
-                    // break; // This zigate is no longer idle so do not check other priorities now.
-                // }
         }
 
         // Process high priority queue from parser (8000, 8011, 8012 or 8702 messages)
@@ -798,18 +744,18 @@
                         // Status is: bad param, unhandled, failed (?), stack already started
                         // Status 06 = Unknown EP ? (Zigate v2)
                         // 14/E_ZCL_ERR_ZBUFFER_FAIL: Msg too big
-                        // $cmd['status'] = '8000';
-                        cmdLog("debug", "  WARNING: Zigate cmd failed (status=${msgStatus})");
+                        cmdLog("debug", "  WARNING: Zigate cmd failed (err ${msgStatus})");
                         $removeCmd = true;
                     }
                     else {
-                        // Something failed
+                        // Something failed: case 04/Busy
                         if ($cmd['try'] == 0) {
-                            cmdLog("debug", "  WARNING: Something failed and too many retries.");
+                            cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." to ".$cmd['addr']." failed and too many retries.");
                             $removeCmd = true;
                         }
                         else {
-                            cmdLog("debug", "  WARNING: Something failed. Cmd will be retried ".$cmd['try']." time(s) max.");
+                            cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." failed (err ${msgStatus}). Will be retried ".$cmd['try']." time(s) max.");
+                            $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0; // Zg will be free in 1sec
                         }
                     }
                 }

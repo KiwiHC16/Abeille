@@ -686,6 +686,9 @@
 
             // What about server clusters & groups ?
             foreach ($eq['endPoints'] as $epId2 => $ep2) {
+                if (($eqId2 == "") || ($eqId2 == "00"))
+                    continue; // Invalid case seen some times
+
                 if (!isset($ep2['servClusters'])) {
                     parserLog('debug', '    Requesting simple descriptor for EP '.$epId2);
                     msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getSimpleDescriptor", "ep=".$epId2);

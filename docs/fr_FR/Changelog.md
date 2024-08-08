@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 240808-BETA-1
+
 -   Amélioration: Page santé. Satus des gateways raffraichi toutes les secondes.
 -   Corrections: Modele Xiaomi detecteur fumée (2723).
 -   Module volet roulant TS130F: Modèle en cours de revue (2719).

@@ -2512,7 +2512,8 @@
                     $extPanId = $Command['extPanId'];
                     cmdLog('debug', "  zgSetExtendedPanId: extPanId=${extPanId}");
 
-                    // WARNING: This does not work. Network must not be running to change ext Pan ID but how to do that ??
+                    /* Note: This is NOT FUNCTIONAL.
+                       Zigate always answers 04/busy. Probably because network started automatically */
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $extPanId, "0000");
                     return;

@@ -8,6 +8,7 @@
 -   Correction: Cmd: Status TX corrigé en 'ok' meme si 'rx OFF when idle'.
 -   Amélioration: Zigate: Tentative d'ajout possibilité de changer 'Extended PAN ID' pour cas Livolo. Ne fonctionne pas !
 -   Amélioration: Cmd->Zigate: Cas Zigate 'busy'.
+-   Amélioration: Cmd/config Zigate.
 
 ## 240802-BETA-1
 

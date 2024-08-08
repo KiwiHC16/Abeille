@@ -175,33 +175,46 @@
             return;
         }
 
-        msgToCmd("CmdAbeille".$zgId."/0000/zgSoftReset", "");
+        // msgToCmd("CmdAbeille".$zgId."/0000/zgSoftReset", "");
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0011", "", "0000", null);
         // Following cmds delayed by 1sec to wait for chip reset
 
         // Extended PAN ID change must be done BEFORE starting network
-        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetExtendedPanId&tempo=".(time()+1), "extPanId=21758D1900481200");
+        // Note: STILL NOT FUNCTIONAL. Zigate always says "BUSY" !!! Network seems to be automatically started after soft reset even without 0024/Start cmd.
+        // Note: Experiement was done for Livolo TI0001 case with channel 26 and specific EPANID
+        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetExtendedPanId&tempo=".(time()+1), "extPanId=21758D1900481200");
+        // AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0020", "21758D1900481200", "0000", null);
 
         global $config;
-        if (isset($config['ab::gtwChan'.$zgId])) {
-            $chan = $config['ab::gtwChan'.$zgId];
-            if ($chan == 0)
-                $mask = 0x7fff800; // All channels = auto
-            else
-                $mask = 1 << $chan;
-            $mask = sprintf("%08X", $mask);
-            cmdLog('debug', "  Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
-            msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetChannelMask&tempo=".(time()+1), "mask=".$mask);
-        }
-        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetTimeServer&tempo=".(time()+1), "");
+        $chan = isset($config['ab::gtwChan'.$zgId]) ? $config['ab::gtwChan'.$zgId] : 0; // Default = auto (all channels)
+        if ($chan == 0)
+            $mask = 0x7fff800; // All channels = auto
+        else
+            $mask = 1 << $chan;
+        $mask = sprintf("%08X", $mask);
+        cmdLog('debug', "  Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
+        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetChannelMask&tempo=".(time()+1), "mask=".$mask);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0021", $mask, "0000", null);
+
+        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetTimeServer&tempo=".(time()+1), "");
+        $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
+        $zgTime = time() - $zgRef;
+        $data = sprintf("%08s", dechex($zgTime));
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0016", $data, "0000", null);
 
         if (isset($config['ab::forceZigateHybridMode']) && ($config['ab::forceZigateHybridMode'] == "Y")) {
             $mode = "hybrid";
-        } else
+            $mode2 = "02";
+        } else {
             $mode = "raw";
+            $mode2 = "01";
+        }
         cmdLog('debug', "  Configuring Zigate ${zgId} in ${mode} mode");
-        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetMode&tempo=".(time()+1), "mode=${mode}");
+        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetMode&tempo=".(time()+1), "mode=${mode}");
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0002", $mode2, "0000", null);
 
-        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgStartNetwork&tempo=".(time()+10), "");
+        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgStartNetwork&tempo=".(time()+10), "");
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0024", "", "0000", null);
 
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+10), "");
     }

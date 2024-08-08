@@ -595,6 +595,8 @@
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['sentTime'] = time();
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['try']--;
                     $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
+                    if ($cmd['cmd'] == "0011") // Special case: soft reset
+                        $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0; // Zg will be free in 1sec
 
                     if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
                         monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?

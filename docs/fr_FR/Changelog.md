@@ -1,5 +1,9 @@
 # ChangeLog
 
+-   Interne: Modifications pour future fusion cmd/parser:
+    -   Parser: $GLOBALS['eqList'] => $GLOBALS['devices']
+    -   Parser: ieee/macCapa/rxOnWhenIdle déplacé dans 'zigbee'.
+
 ## 240808-BETA-1
 
 -   Amélioration: Page santé. Satus des gateways raffraichi toutes les secondes.

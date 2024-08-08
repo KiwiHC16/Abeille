@@ -269,12 +269,12 @@
             [13:13:00]   Duplicated message for SQN 05 => ignoring >>> WRONG !!
          */
         function isDuplicated($net, $addr, $fcf, $sqn) {
-            if (!isset($GLOBALS['eqList'][$net]))
-                $GLOBALS['eqList'][$net] = [];
-            if (!isset($GLOBALS['eqList'][$net][$addr]))
+            if (!isset($GLOBALS['devices'][$net]))
+                $GLOBALS['devices'][$net] = [];
+            if (!isset($GLOBALS['devices'][$net][$addr]))
                 newDevice($net, $addr);
 
-            $eq = &$GLOBALS['eqList'][$net][$addr]; // Get EQ by ref
+            $eq = &$GLOBALS['devices'][$net][$addr]; // Get EQ by ref
             if (!isset($eq['sqnList']))
                 $eq['sqnList'] = [];
 
@@ -382,10 +382,12 @@
         } // End findModel()
 
         /* Cached EQ infos reminder:
-            $GLOBALS['eqList'][<network>][<addr>] = array(
-                'ieee' => $ieee,
-                'macCapa' => '', // MAC capa from device announce
-                'rxOnWhenIdle' => null/0/1, // If 1 then can always receive
+            $GLOBALS['devices'][<network>][<addr>] = array(
+                'zigbee' => array(
+                    'ieee' => $ieee,
+                    'macCapa' => '', // MAC capa from device announce
+                    'rxOnWhenIdle' => null/0/1, // If 1 then can always receive
+                ),
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => 'identifying', // identifying, configuring, discovering, idle
                 'time' => time(),
@@ -415,11 +417,11 @@
             parserLog('debug', '  eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
 
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
-                $eq['macCapa'] = $eq['customization']['macCapa'];
-                parserLog('debug', "  'macCapa' customized: ".$macCapa." => ".$eq['macCapa']);
+                $eq['zigbee']['macCapa'] = $eq['customization']['macCapa'];
+                parserLog('debug', "  'macCapa' customized: ".$macCapa." => ".$eq['zigbee']['macCapa']);
             } else
-                $eq['macCapa'] = $macCapa;
-            $eq['rxOnWhenIdle'] = (hexdec($eq['macCapa']) >> 3) & 0b1;
+                $eq['zigbee']['macCapa'] = $macCapa;
+            $eq['zigbee']['rxOnWhenIdle'] = (hexdec($eq['zigbee']['macCapa']) >> 3) & 0b1;
             $eq['rejoin'] = $rejoin;
 
             /* Checking if it's not a too fast consecutive device announce.
@@ -577,14 +579,14 @@
                         $abUpdates["logicalType"] = $value;
                     }
                 } else if ($updType == 'macCapa') { // MAC capa flags
-                    if (!isset($eq['macCapa']) || ($eq['macCapa'] != $value)) {
-                        $eq['macCapa'] = $value;
-                        $eq['rxOnWhenIdle'] = (hexdec($eq['macCapa']) >> 3) & 0b1;
+                    if (!isset($eq['zigbee']['macCapa']) || ($eq['zigbee']['macCapa'] != $value)) {
+                        $eq['zigbee']['macCapa'] = $value;
+                        $eq['zigbee']['rxOnWhenIdle'] = (hexdec($eq['zigbee']['macCapa']) >> 3) & 0b1;
                         $abUpdates["macCapa"] = $value;
                     }
                 } else if ($updType == 'rxOnWhenIdle') { // RX ON when idle flag only
-                    if (!isset($eq['rxOnWhenIdle']) || ($eq['rxOnWhenIdle'] != $value)) {
-                        $eq['rxOnWhenIdle'] = $value;
+                    if (!isset($eq['zigbee']['rxOnWhenIdle']) || ($eq['zigbee']['rxOnWhenIdle'] != $value)) {
+                        $eq['zigbee']['rxOnWhenIdle'] = $value;
                         $abUpdates["rxOnWhenIdle"] = $value;
                     }
                 } else if ($updType == 'manufCode') { // Manufacturer code
@@ -629,14 +631,16 @@
                         $eq['endPoints'][$ep]['swBuildId'] = $value;
                         $abUpdates["swBuildId"] = $value;
                     }
-                } else // 'ieee' or 'bindingTableSize'
+                } else if ($updType == 'ieee') {
+                    $eq['zigbee'][$updType] = $value;
+                } else // 'bindingTableSize'
                     $eq[$updType] = $value;
             } // End foreach($updates)
 
             // Any new info for Abeille.class ?
             // Note: Updates are transmitted only if IEEE address is already known to have unique identification
             // Note: if count($abUpdates) != 0 then there is a diff vs what was stored
-            if ((count($abUpdates) != 0) && ($eq['ieee'] !== null)) {
+            if ((count($abUpdates) != 0) && ($eq['zigbee']['ieee'] !== null)) {
                 parserLog('debug', '    Updated eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
                 $msg = array(
                     'type' => 'deviceUpdates',
@@ -670,7 +674,7 @@
             else
                 $ret = false;
 
-            if (!$eq['ieee']) {
+            if (!$eq['zigbee']['ieee']) {
                 parserLog('debug', '    Requesting IEEE');
                 msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getIeeeAddress");
                 return $ret;
@@ -850,7 +854,7 @@
             else if ($eq['status'] == 'identifying') {
                 // Special case: Profalux v2: waiting for non empty binding table before binding zigate.
                 //   If not, zigate binding would kill 'remote to curtain' binding.
-                $profalux = (substr($eq['ieee'], 0, 6) == "20918A") ? true : false;
+                $profalux = (substr($eq['zigbee']['ieee'], 0, 6) == "20918A") ? true : false;
                 if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
                         parserLog('debug', '    Profalux v2: Requesting binding table size.');
@@ -874,7 +878,7 @@
         /* Device has been identified and must be configured.
            Go thru EQ commands and execute all those marked 'execAtCreation' */
         function deviceConfigure($net, $addr) {
-            $eq = &$GLOBALS['eqList'][$net][$addr];
+            $eq = &$GLOBALS['devices'][$net][$addr];
             parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['modelName'].")");
 
             // Read JSON to get list of commands to execute
@@ -890,8 +894,8 @@
             if (isset($eqModel['customization'])) {
                 $eq['customization'] = $eqModel['customization'];
                 if (isset($eq['customization']['macCapa'])) {
-                    parserLog('debug', '  Customization: updating macCapa '.$eq['macCapa'].' => '.$eq['customization']['macCapa']);
-                    $eq['macCapa'] = $eq['customization']['macCapa'];
+                    parserLog('debug', '  Customization: updating macCapa '.$eq['zigbee']['macCapa'].' => '.$eq['customization']['macCapa']);
+                    $eq['zigbee']['macCapa'] = $eq['customization']['macCapa'];
                 }
             } else
                 $eq['customization'] = null;
@@ -911,14 +915,14 @@
                 'type' => 'eqAnnounce',
                 'net' => $net,
                 'addr' => $addr,
-                'ieee' => $eq['ieee'],
+                'ieee' => $eq['zigbee']['ieee'],
                 // 'ep' => $eq['epFirst'],
                 'ep' => $eq['mainEp'],
                 'modelId' => $eq['modelId'],
                 'manufId' => $eq['manufId'],
                 'modelName' => $eq['modelName'],
                 'modelSource' => $eq['modelSource'], // "Abeille" or "local"
-                'macCapa' => $eq['macCapa'],
+                'macCapa' => $eq['zigbee']['macCapa'],
                 'time' => time()
             );
             if (isset($eq['modelPath']))
@@ -957,8 +961,8 @@
                 //     //       defined in cmd use if different target EP
                 //     // $request = str_ireplace('#EP#', $eq['epFirst'], $request);
                 //     $request = str_ireplace('#EP#', $eq['mainEp'], $request);
-                //     $request = str_ireplace('#addrIEEE#', $eq['ieee'], $request);
-                //     $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
+                //     $request = str_ireplace('#addrIEEE#', $eq['zigbee']['ieee'], $request);
+                //     $request = str_ireplace('#IEEE#', $eq['zigbee']['ieee'], $request);
                 //     $zgId = substr($net, 7); // 'AbeilleX' => 'X'
                 //     $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
                 //     parserLog('debug', '      topic='.$topic.", request='".$request."'");
@@ -987,7 +991,7 @@
         /* Device has been identified and must be created in Jeedom.
            This is a phantom device. */
         function deviceCreate($net, $addr) {
-            $eq = &$GLOBALS['eqList'][$net][$addr];
+            $eq = &$GLOBALS['devices'][$net][$addr];
             parserLog('debug', "  deviceCreate(".$net.", ".$addr.", jsonId=".$eq['modelName'].")");
 
             /* Config ongoing. Informing Abeille for EQ creation/update */
@@ -996,14 +1000,14 @@
                 'type' => 'eqAnnounce',
                 'net' => $net,
                 'addr' => $addr,
-                'ieee' => $eq['ieee'],
+                'ieee' => $eq['zigbee']['ieee'],
                 // 'ep' => $eq['epFirst'],
                 'ep' => $eq['mainEp'],
                 'modelId' => $eq['modelId'],
                 'manufId' => $eq['manufId'],
                 'modelName' => $eq['modelName'],
                 'modelSource' => $eq['modelSource'], // "Abeille" or "local"
-                'macCapa' => $eq['macCapa'],
+                'macCapa' => $eq['zigbee']['macCapa'],
                 'time' => time()
             );
             msgToAbeille2($msg);
@@ -1016,7 +1020,7 @@
         function deviceDiscover($net, $addr) {
             parserLog('debug', "  deviceDiscover()");
 
-            // $eq = &$GLOBALS['eqList'][$net][$addr];
+            // $eq = &$GLOBALS['devices'][$net][$addr];
             $eq = &getDevice($net, $addr); // Get device by ref
             $eq['status'] = 'discovering';
 
@@ -1041,7 +1045,7 @@
                 'type' => 'eqAnnounce',
                 'net' => $net,
                 'addr' => $addr,
-                'ieee' => $eq['ieee'],
+                'ieee' => $eq['zigbee']['ieee'],
                 // 'ep' => $eq['epFirst'],
                 'ep' => $eq['mainEp'],
                 'modelId' => $eq['modelId'], // Zigbee model id (cluster 0000)
@@ -1049,7 +1053,7 @@
                 'modelSig' => $eq['modelSig'], // Signature used for model identification
                 'modelName' => $eq['modelName'],
                 'modelSource' => $eq['modelSource'], // "Abeille" or "local"
-                'macCapa' => $eq['macCapa'],
+                'macCapa' => $eq['zigbee']['macCapa'],
                 'time' => time()
             );
             msgToAbeille2($msg);
@@ -1057,15 +1061,15 @@
 
         /* Update received during discovering process */
         function discoverUpdate($net, $addr, $ep, $updType, $val1 = null, $val2 = null, $val3 = null) {
-            if (!isset($GLOBALS['eqList']))
+            if (!isset($GLOBALS['devices']))
                 return; // No dev announce before
-            if (!isset($GLOBALS['eqList'][$net]))
+            if (!isset($GLOBALS['devices'][$net]))
                 return; // No dev announce before
-            if (!isset($GLOBALS['eqList'][$net][$addr]))
+            if (!isset($GLOBALS['devices'][$net][$addr]))
                 return; // No dev announce before
 
             parserLog('debug', "  discoverUpdate(".$net.", ".$addr.", ".$updType.")");
-            $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
+            $eq = &$GLOBALS['devices'][$net][$addr]; // By ref
             if (!isset($eq['discovery']))
                 $eq['discovery'] = [];
             $discovery = &$eq['discovery'];
@@ -1189,13 +1193,13 @@
 
         /* Returns true if net/addr EQ is in "discovering" state, else false */
         function discoveringState($net, $addr) {
-            if (!isset($GLOBALS['eqList']))
+            if (!isset($GLOBALS['devices']))
                 return false;
-            if (!isset($GLOBALS['eqList'][$net]))
+            if (!isset($GLOBALS['devices'][$net]))
                 return false;
-            if (!isset($GLOBALS['eqList'][$net][$addr]))
+            if (!isset($GLOBALS['devices'][$net][$addr]))
                 return false;
-            $eq = $GLOBALS['eqList'][$net][$addr];
+            $eq = $GLOBALS['devices'][$net][$addr];
             if ($eq['status'] != 'discovering')
                 return false;
             return true;
@@ -1836,7 +1840,7 @@
 
             // $zgId = substr($dest, 7);
             // if (!isset($GLOBALS['zigate'.$zgId]['permitJoin']) || ($GLOBALS['zigate'.$zgId]['permitJoin'] != "01")) {
-            //     if (!isset($GLOBALS['eqList'][$dest]) || !isset($GLOBALS['eqList'][$dest][$addr]))
+            //     if (!isset($GLOBALS['devices'][$dest]) || !isset($GLOBALS['devices'][$dest][$addr]))
             //         parserLog('debug', '  Not in inclusion mode but trying to identify unknown device anyway.');
             //     else
             //         parserLog('debug', '  Not in inclusion mode and got a device announce for already known device.');
@@ -2228,12 +2232,12 @@
 
             if (!isset($eq['logicalType']) || ($logicalType != $eq['logicalType']))
                 $devUpdates['logicalType'] = $logicalType;
-            if ($macCapa != $eq['macCapa'])
+            if ($macCapa != $eq['zigbee']['macCapa'])
                 $devUpdates['macCapa'] = $macCapa;
             else {
                 // Check rxOn status even if macCapa is correct
                 $rxOnWhenIdle = (hexdec($macCapa) >> 3) & 0b1;
-                if ($rxOnWhenIdle != $eq['rxOnWhenIdle'])
+                if ($rxOnWhenIdle != $eq['zigbee']['rxOnWhenIdle'])
                     $devUpdates['rxOnWhenIdle'] = $rxOnWhenIdle;
             }
             if (!isset($eq['manufCode']) || ($manufCode != $eq['manufCode']))
@@ -2540,7 +2544,7 @@
             //     }
 
             //     $updates = [];
-            //     if ($eq['ieee'] != $N['extAddr'])
+            //     if ($eq['zigbee']['ieee'] != $N['extAddr'])
             //         $updates['ieee'] = $N['extAddr'];
             //     if ($eq['rxOnWhenIdle'] && ($eq['rxOnWhenIdle'] != $rxOn)) {
             //         parserLog('debug', "  ".$N['addr'].": WARNING, unexpected rxOn difference: rxOnWhenIdle=".$eq['rxOnWhenIdle'].", rxOn=".$rxOn);

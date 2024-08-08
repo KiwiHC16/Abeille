@@ -241,13 +241,20 @@
         msgToAbeille2($msg);
     }
 
-    // Create a new device in internal devices list => $GLOBALS['eqList'][$net][$addr]
+    // Create a new device in internal devices list => $GLOBALS['devices'][$net][$addr]
     function newDevice($net, $addr, $ieee = null) {
         // This is a new device
-        $GLOBALS['eqList'][$net][$addr] = array(
+        $zigbee = array(
             'ieee' => $ieee,
             'macCapa' => '',
             'rxOnWhenIdle' => null,
+        );
+        $GLOBALS['devices'][$net][$addr] = array(
+            // 'ieee' => $ieee,
+            // 'macCapa' => '',
+            // 'rxOnWhenIdle' => null,
+            'zigbee' => $zigbee,
+
             'rejoin' => '', // Rejoin info from device announce
             'status' => 'identifying', // identifying, configuring, discovering, idle
             'time' => time(),
@@ -278,25 +285,25 @@
         If not, add entry with given net/addr/ieee.
         Returns: device entry by reference */
     function &getDevice($net, $addr, $ieee = null, &$new = false) {
-        if (!isset($GLOBALS['eqList'][$net]))
-            $GLOBALS['eqList'][$net] = [];
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
 
-        if (isset($GLOBALS['eqList'][$net][$addr])) {
-            if (($GLOBALS['eqList'][$net][$addr]['ieee'] === null) && ($ieee !== null)) {
-                $GLOBALS['eqList'][$net][$addr]['ieee'] = $ieee;
+        if (isset($GLOBALS['devices'][$net][$addr])) {
+            if (($GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] === null) && ($ieee !== null)) {
+                $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] = $ieee;
                 addNewJeedomDevice($net, $addr, $ieee);
             }
-            return $GLOBALS['eqList'][$net][$addr];
+            return $GLOBALS['devices'][$net][$addr];
         }
 
         // Not found. If IEEE is given let's check if short addr has changed or if equipment has migrated from another network.
         if ($ieee) {
-            foreach ($GLOBALS['eqList'][$net] as $oldAddr => $eq) {
-                if (!isset($eq['ieee']) || ($eq['ieee'] !== $ieee))
+            foreach ($GLOBALS['devices'][$net] as $oldAddr => $eq) {
+                if (!isset($eq['zigbee']['ieee']) || ($eq['zigbee']['ieee'] !== $ieee))
                     continue;
 
-                $GLOBALS['eqList'][$net][$addr] = $eq;
-                unset($GLOBALS['eqList'][$net][$oldAddr]);
+                $GLOBALS['devices'][$net][$addr] = $eq;
+                unset($GLOBALS['devices'][$net][$oldAddr]);
                 parserLog('debug', "  EQ already known: Addr updated from ${oldAddr} to ${addr}");
 
                 // Removing any cmd pending message for old address since device would no longer answer
@@ -320,20 +327,20 @@
                 );
                 msgToAbeille2($msg);
 
-                return $GLOBALS['eqList'][$net][$addr];
+                return $GLOBALS['devices'][$net][$addr];
             }
 
             // Still not found. Checking if was in a different network but need IEEE for that.
-            foreach ($GLOBALS['eqList'] as $oldNet => $oldAddr) {
+            foreach ($GLOBALS['devices'] as $oldNet => $oldAddr) {
                 if ($oldNet == $net)
                     continue; // This network has already been checked
 
-                foreach ($GLOBALS['eqList'][$oldNet] as $oldAddr => $eq) {
-                    if ($eq['ieee'] !== $ieee)
+                foreach ($GLOBALS['devices'][$oldNet] as $oldAddr => $eq) {
+                    if ($eq['zigbee']['ieee'] !== $ieee)
                         continue;
 
-                    $GLOBALS['eqList'][$net][$addr] = $eq; // net & addr update
-                    unset($GLOBALS['eqList'][$oldNet][$oldAddr]);
+                    $GLOBALS['devices'][$net][$addr] = $eq; // net & addr update
+                    unset($GLOBALS['devices'][$oldNet][$oldAddr]);
                     parserLog('debug', '  EQ already known on network '.$oldNet.' with addr '.$oldAddr.' => migrated');
 
                     // Removing any cmd pending message for old net/address since device would no longer answer
@@ -356,7 +363,7 @@
                     );
                     msgToAbeille2($msg);
 
-                    return $GLOBALS['eqList'][$net][$addr];
+                    return $GLOBALS['devices'][$net][$addr];
                 }
             }
         }
@@ -364,7 +371,7 @@
         // This is a new device
         newDevice($net, $addr, $ieee);
         $new = true; // This is a new device
-        return $GLOBALS['eqList'][$net][$addr];
+        return $GLOBALS['devices'][$net][$addr];
     } // End getDevice()
 
     // Reread Jeedom useful infos on eqLogic DB update
@@ -378,11 +385,11 @@
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
 
-        if (!isset($GLOBALS['eqList'][$net]))
-            $GLOBALS['eqList'][$net] = [];
-        if (!isset($GLOBALS['eqList'][$net][$addr]))
-            $GLOBALS['eqList'][$net][$addr] = [];
-        $eq = &$GLOBALS['eqList'][$net][$addr];
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+        if (!isset($GLOBALS['devices'][$net][$addr]))
+            $GLOBALS['devices'][$net][$addr] = [];
+        $eq = &$GLOBALS['devices'][$net][$addr];
 
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
         $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
@@ -393,15 +400,15 @@
         if (isset($eqModel['private'])) {
             $eq['private'] = $eqModel['private'];
             parserLog('debug', "  'private' updated to ".json_encode($eq['private'], JSON_UNESCAPED_SLASHES));
-        } else if (isset($GLOBALS['eqList'][$net][$addr]['private']))
-            unset($GLOBALS['eqList'][$net][$addr]['private']);
+        } else if (isset($GLOBALS['devices'][$net][$addr]['private']))
+            unset($GLOBALS['devices'][$net][$addr]['private']);
 
         // $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', null); // OBSOLETE soon. Replaced by 'private'
         // if ($fromDevice !== null) { // OBSOLETE soon. Replaced by 'private'
         //     $eq['fromDevice'] = $fromDevice;
         //     parserLog('debug', "  'fromDevice' updated to ".json_encode($eq['fromDevice']));
         // } else if (isset($eq['fromDevice']))
-        //     unset($GLOBALS['eqList'][$net][$addr]['fromDevice']);
+        //     unset($GLOBALS['devices'][$net][$addr]['fromDevice']);
         // $eq['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null); // OBSOLETE soon. Replaced by 'private'
         // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($eq['tuyaEF00'])); // OBSOLETE soon. Replaced by 'private'
         // $eq['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null); // OBSOLETE soon. Replaced by 'private'
@@ -502,7 +509,7 @@
 
         /* Init known devices list */
         $eqLogics = eqLogic::byType('Abeille');
-        $GLOBALS['eqList'] = [];
+        $GLOBALS['devices'] = [];
         foreach ($eqLogics as $eqLogic) {
             $eqLogicId = $eqLogic->getLogicalId();
             list($net, $addr) = explode("/", $eqLogicId);
@@ -521,10 +528,12 @@
             else
                 $status = 'identifying';
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            $zigbee['ieee'] = $eqLogic->getConfiguration('IEEE', null);
             $eq = array(
-                'ieee' => $eqLogic->getConfiguration('IEEE', null),
-                'macCapa' => isset($zigbee['macCapa']) ? $zigbee['macCapa'] : '',
-                'rxOnWhenIdle' => isset($zigbee['rxOnWhenIdle']) ? $zigbee['rxOnWhenIdle'] : null,
+                // 'ieee' => $eqLogic->getConfiguration('IEEE', null),
+                // 'macCapa' => isset($zigbee['macCapa']) ? $zigbee['macCapa'] : '',
+                // 'rxOnWhenIdle' => isset($zigbee['rxOnWhenIdle']) ? $zigbee['rxOnWhenIdle'] : null,
+                'zigbee' => $zigbee,
                 'manufCode' => isset($zigbee['manufCode']) ? $zigbee['manufCode'] : null,
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => $status, // identifying, configuring, discovering, idle
@@ -578,7 +587,7 @@
             //     }
             // }
 
-            $GLOBALS['eqList'][$net][$addr] = $eq;
+            $GLOBALS['devices'][$net][$addr] = $eq;
         }
 
         logMessage('debug', 'Reading messages queues');
@@ -617,20 +626,20 @@
                         logMessage('debug', 'Some equipments removed from Jeedom');
                         // Some equipments removed from Jeedom => phantoms if still in network
                         // $msg['net'] = Abeille network (AbeilleX)
-                        // $msg['eqList'] = Eq addr separated by ','
+                        // $msg['devices'] = Eq addr separated by ','
                         $net = $msg['net'];
-                        $arr = explode(',', $msg['eqList']);
+                        $arr = explode(',', $msg['devices']);
                         foreach ($arr as $idx => $addr) {
-                            if (!isset($GLOBALS['eqList'][$net])) {
+                            if (!isset($GLOBALS['devices'][$net])) {
                                 logMessage('debug', "  ERROR: Unknown network ".$net);
                                 continue;
                             }
-                            if (!isset($GLOBALS['eqList'][$net][$addr])) {
+                            if (!isset($GLOBALS['devices'][$net][$addr])) {
                                 logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
                                 continue;
                             }
-                            $ieee = $GLOBALS['eqList'][$net][$addr]['ieee'];
-                            unset($GLOBALS['eqList'][$net][$addr]);
+                            $ieee = $GLOBALS['devices'][$net][$addr]['ieee'];
+                            unset($GLOBALS['devices'][$net][$addr]);
                             logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");
                         }
                     } else if ($msg['type'] == 'eqUpdated') {

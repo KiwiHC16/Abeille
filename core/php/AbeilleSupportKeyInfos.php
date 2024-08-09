@@ -156,6 +156,11 @@
         $eq['timeout'] = $eqLogic->getStatus('timeout');
         $eq['lastCom'] = $eqLogic->getStatus('lastCommunication');
         $eq['txAck'] = $eqLogic->getStatus('ab::txAck', 'ok');
+        $lqiCmd = $eqLogic->getCmd('info', 'Link-Quality');
+        if (is_object($lqiCmd))
+            $eq['lastLqi'] = $lqiCmd->execCmd();
+        else
+            $eq['lastLqi'] = "?";
 
         return $eq;
 
@@ -198,9 +203,10 @@
             $extra = ", NO-ACK";
             $status = "NA ";
         }
+        $lastLqi = isset($eq['lastLqi']) ? $eq['lastLqi'] : '?';
 
         logIt("- ${status}: ${eqHName}, Id=${eqId}${extra}\n");
-        logIt("       Addr=${addr}, Model='${eqModelId}', Type='${eqType}'\n");
+        logIt("       Addr=${addr}, LastLQI=${lastLqi}, Model='${eqModelId}', Type='${eqType}'\n");
     }
 
     // Display devices status

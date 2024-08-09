@@ -947,41 +947,15 @@ class Abeille extends eqLogic {
             $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
             $queueXToAbeilleMax = $abQueues["xToAbeille"]["max"];
 
-            $max_msg_size = 512;
-
             // https: github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
             // const int EINVAL = 22;
             // const int ENOMSG = 42; /* No message of desired type */
 
-            // while (true) {
-            //     /* New path parser to Abeille */
-            //     $msgMax = $queueParserToAbeille2Max;
-            //     if (msg_receive($queueParserToAbeille2, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
-            //         self::msgFromParser(json_decode($msgJson, true));
-            //     } else { // Error
-            //         if ($errCode == 7) {
-            //             msg_receive($queueParserToAbeille2, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-            //             log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille2 ERROR: msg TOO BIG ignored.');
-            //         } else if ($errCode != 42)
-            //             log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille2 error '.$errCode);
-            //     }
-
-            //     if (msg_receive($queueXToAbeille, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
-            //         $msg = json_decode($msgJson, true);
-            //         self::message($msg['topic'], $msg['payload']);
-            //     } else { // Error
-            //         if ($errCode != 42)
-            //             log::add('Abeille', 'debug', 'deamon(): msg_receive queueXToAbeille error '.$errCode);
-            //     }
-
-            //     time_nanosleep(0, 10000000); // 1/100s
-            // }
-
             // Blocking queue read
-            $msgMax = $queueXToAbeilleMax;
             log::add('Abeille', 'debug', 'deamon(): Infinite listening to queueXToAbeille');
             while (true) {
-                if (msg_receive($queueXToAbeille, 0, $msgType, $msgMax, $msgJson, false, 0, $errCode)) {
+                log::add('Abeille', 'debug', 'deamon(): msg_receive, msg_qnum='.msg_stat_queue($queueXToAbeille)["msg_qnum"]);
+                if (msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, 0, $errCode)) {
                     $msg = json_decode($msgJson, true);
                     if (isset($msg['topic']))
                         self::message($msg['topic'], $msg['payload']);
@@ -989,11 +963,9 @@ class Abeille extends eqLogic {
                         self::msgFromParser($msg);
                 } else { // Error
                     if ($errCode == 7) {
-                        msg_receive($queueXToAbeille, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                        msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
                         log::add('Abeille', 'error', "Message (xToAbeille) trop grand ignoré: ".$msgJson);
-                    } else if ($errCode != 42)
-                        log::add('Abeille', 'error', 'deamon(): msg_receive(xToAbeille) erreur '.$errCode.', msg='.$msgJson);
-                        else
+                    } else
                         log::add('Abeille', 'debug', 'deamon(): msg_receive(xToAbeille) erreur '.$errCode.', msg='.$msgJson);
                 }
             }
@@ -1023,11 +995,11 @@ class Abeille extends eqLogic {
         // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
     }
 
-    // Trying to capture log level change event
-    public static function postConfig_log_level_Abeille($value) {
-        log::add('Abeille', 'debug', 'postConfig_log_level_Abeille(): value='.json_encode($value));
-        // NOT WORKING: Might be a Jeedom bug.
-    }
+    // // Trying to capture log level change event
+    // public static function postConfig_log_level_Abeille($value) {
+    //     log::add('Abeille', 'debug', 'postConfig_log_level_Abeille(): value='.json_encode($value));
+    //     // NOT WORKING: Might be a Jeedom bug.
+    // }
 
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
     public static function checkInclusionStatus($net) {
@@ -3313,18 +3285,20 @@ class Abeille extends eqLogic {
         // else
             $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
 
-        if ($lqi !== null) {
-            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Link-Quality');
-            if (!is_object($cmdLogic))
-                log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Link-Quality'");
-            else
-                $eqLogic->checkAndUpdateCmd($cmdLogic, $lqi);
-        }
-
-        // Updating corresponding Zigate alive status too
         list($net, $addr) = explode("/", $eqLogicId);
-        $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
-        $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
-        // Warning: lastCommunication update is not transmitted not client as not an info cmd
+        if ($addr != "0000") { // Not a gateway
+            if ($lqi !== null) {
+                $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Link-Quality');
+                if (!is_object($cmdLogic))
+                    log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Link-Quality'");
+                else
+                    $eqLogic->checkAndUpdateCmd($cmdLogic, $lqi);
+            }
+
+            // Updating corresponding Zigate alive status too
+            $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
+            $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+            // Warning: lastCommunication update is not transmitted to client as not an info cmd
+        }
     }
 }

@@ -3,6 +3,7 @@
 -   Interne: Modifications pour future fusion cmd/parser:
     -   Parser: $GLOBALS['eqList'] => $GLOBALS['devices']
     -   Parser: ieee/macCapa/rxOnWhenIdle déplacé dans 'zigbee'.
+-   Amélioration: Infos clefs: Ajout 'last LQI'.
 
 ## 240808-BETA-1
 

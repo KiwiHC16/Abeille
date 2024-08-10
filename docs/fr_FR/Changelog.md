@@ -4,6 +4,8 @@
     -   Parser: $GLOBALS['eqList'] => $GLOBALS['devices']
     -   Parser: ieee/macCapa/rxOnWhenIdle déplacé dans 'zigbee'.
 -   Amélioration: Infos clefs: Ajout 'last LQI'.
+-   Correction: Parser: Erreur interne.
+-   Livolo TI0001: Amélioration modèle.
 
 ## 240808-BETA-1
 

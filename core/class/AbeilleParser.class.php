@@ -690,7 +690,7 @@
 
             // What about server clusters & groups ?
             foreach ($eq['endPoints'] as $epId2 => $ep2) {
-                if (($eqId2 == "") || ($eqId2 == "00"))
+                if (($epId2 == "") || ($epId2 == "00"))
                     continue; // Invalid case seen some times
 
                 if (!isset($ep2['servClusters'])) {

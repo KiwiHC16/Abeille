@@ -31,23 +31,23 @@
                 "isVisible": 1
             },
             "Not Closed": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "nextLine": "after"
+                "use": "inf_zbAttr-0006-OnOff"
             },
             "Set Level": {
                 "use": "setLevelVolet",
                 "value": "Level",
-                "isVisible": 1
+                "isVisible": 1,
+                "nextLine": "before"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
             },
             "Level": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",
                 "template": "shutter",
                 "isVisible": 1
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

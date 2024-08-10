@@ -5,6 +5,7 @@
         "type": "Livolo switch",
         "genericType": "Light",
         "comment": "Needs to be paired on Channel 26! Then you can eventually switch the channel to 11 and Livolo devices will be switching automatically",
+        "comment2": "Uses transition field to define switch number",
         "timeout": "80",
         "configuration": {
             "mainEP": "06",
@@ -56,10 +57,6 @@
                 "logicalId": "off-2",
                 "nextLine": "after"
             },
-            "Get-Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
-            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
@@ -84,17 +81,12 @@
             },
             "SetReporting-0006-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0006&attrType=10&attrId=0000",
+                "params": "clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "Yes"
             },
-            "Bind-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0008",
-                "execAtCreation": "Yes"
-            },
-            "SetReporting-0008-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=0008&attrId=0000&attrType=20",
+            "Get-Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000",
                 "execAtCreation": "Yes"
             }
         }

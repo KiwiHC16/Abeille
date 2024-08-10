@@ -1,0 +1,20 @@
+***
+*** Livolo TI0001 switch notes
+*** Tcharp38
+***
+
+Needs to be paired on Channel 26! Then you can eventually switch the channel to 11 and Livolo devices will be switching automatically
+Uses transition field to define switch number
+
+May need a specific Ext PAN ID
+    [ 0x21, 0x75, 0x8d, 0x19, 0x00, 0x4b, 0x12, 0x00 ] - Original livolo gateway extPanId
+    or extPanId must be 0x00124b00198d7521
+    
+Useful link: https://github.com/Koenkk/zigbee2mqtt/issues/592
+    - We need to use the specific channelId and extPanId.
+    - We need to send ZCL OnOff: Toggle after the device is connected to the coordinator (only once).
+    - Poll the device ZCL OnOff: Read to get the current state of buttons.
+
+Useful links:
+    https://github.com/zigbeefordomoticz/wiki/blob/master/fr-fr/Les-objets_Livolo.md
+    https://github.com/KiwiHC16/Abeille/issues/570

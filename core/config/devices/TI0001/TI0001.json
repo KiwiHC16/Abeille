@@ -3,7 +3,7 @@
         "manufacturer": "Livolo",
         "model": "TI0001",
         "type": "Livolo switch",
-        "genericType": "Outlet",
+        "genericType": "Light",
         "comment": "Needs to be paired on Channel 26! Then you can eventually switch the channel to 11 and Livolo devices will be switching automatically",
         "timeout": "80",
         "configuration": {
@@ -20,8 +20,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "On 1": {
                 "use": "act_zbCmdC-0008-MoveToLevelWithOnOff",
@@ -57,43 +56,46 @@
                 "logicalId": "off-2",
                 "nextLine": "after"
             },
-            "Status": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
+            },
             "LivoloSwitchTrick1": {
-                "use": "LivoloSwitchTrick1"
+                "use": "act_zbCmdC-0006-Toggle",
+                "execAtCreation": "Yes"
             },
             "LivoloSwitchTrick2": {
-                "use": "LivoloSwitchTrick2"
+                "use": "act_zbCmdC-0006-On",
+                "execAtCreation": "Yes"
             },
             "LivoloSwitchTrick3": {
-                "use": "LivoloSwitchTrick3"
+                "use": "act_zbCmdC-0006-On",
+                "logicalId": "trick-3",
+                "execAtCreation": "Yes"
             },
             "LivoloSwitchTrick4": {
-                "use": "LivoloSwitchTrick4"
+                "use": "act_zbCmdC-0006-On",
+                "logicalId": "trick-4",
+                "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=0006&attrType=10&attrId=0000",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
+                "execAtCreation": "Yes"
             },
             "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
+                "execAtCreation": "Yes"
             },
             "SetReporting-0008-0000": {
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=0008&attrId=0000&attrType=20",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
+                "execAtCreation": "Yes"
             }
         }
     }

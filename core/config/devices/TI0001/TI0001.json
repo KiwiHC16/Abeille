@@ -87,6 +87,8 @@
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000",
+                "comment": "Polling every 5min to prevent Livolo to shut down",
+                "Polling": "cron5",
                 "execAtCreation": "Yes"
             }
         }

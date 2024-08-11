@@ -46,7 +46,8 @@
             },
             "Test new": {
                 "use": "act_zbWriteAttribute",
-                "params": "clustId=0500&attrId=fff1&attrType=23&attrVal=03010000&manufId=115f"
+                "params": "clustId=0500&attrId=fff1&attrType=23&attrVal=50397184&manufId=115f",
+                "comment": "value=0x03010000"
             }
         },
         "private": {

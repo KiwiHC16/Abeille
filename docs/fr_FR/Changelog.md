@@ -5,7 +5,9 @@
     -   Parser: ieee/macCapa/rxOnWhenIdle déplacé dans 'zigbee'.
 -   Amélioration: Infos clefs: Ajout 'last LQI'.
 -   Correction: Parser: Erreur interne.
--   Livolo TI0001: Amélioration modèle.
+-   Amélioration: Livolo TI0001: Amélioration modèle.
+- Amélioration: Xiaomi sensor smoke. Modèle revu (2723).
+- Amélioration: Cmd: Support valeur préfixée par '0x'.
 
 ## 240808-BETA-1
 

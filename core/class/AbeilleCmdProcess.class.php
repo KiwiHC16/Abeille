@@ -221,6 +221,8 @@
             } else if (substr($valIn, 0, 7) == "#select") {
                 // $valIn = $this->sliderToHex($valIn, $type);
                 $valIn = substr($valIn, 7, -1); // Extracting decimal value
+            } else if (substr($valIn, 0, 2) == "0x") {
+                $valIn = hexdec($valIn);
             }
             if ($valIn === false)
                 return false;

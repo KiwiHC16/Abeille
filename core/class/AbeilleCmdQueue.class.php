@@ -601,6 +601,8 @@
 
                     if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
                         monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
+
+                    cmdLog('debug', "  Zigate=".json_encode($GLOBALS['zigates'][$zgId]));
                 }
             } // End zigates loop
         }
@@ -794,12 +796,16 @@
                                 if (isset($eq['zigbee']['rxOnWhenIdle']) && $eq['zigbee']['rxOnWhenIdle'] && ($eq['zigbee']['txStatus'] !== 'noack'))
                                     $newTxStatus = 'noack';
 
-                                    // If 'repeat' is set, checking if cmd must be retried
-                                    if (isset($cmd['repeat']) && ($cmd['repeat'] != 0)) {
+                                // If 'repeat' is set, checking if cmd must be retried
+                                if (isset($cmd['repeat'])) {
+                                    if ($cmd['repeat'] != 0) {
                                         cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) but will be repeated.");
                                         $cmd['repeat'] -= 1;
                                         $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
-                                    }
+                                        $removeCmd = false; // Keep the cmd to be repeated
+                                    } else
+                                        cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) even if Repeat=${repeat}.");
+                                }
                             }
                             if ($newTxStatus != '') {
                                 $eq['zigbee']['txStatus'] = $newTxStatus;
@@ -856,6 +862,7 @@
                     cmdLog('debug', "  Queue count after=${count}");
 
                     $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
+                    unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
                 }
             }
 
@@ -893,6 +900,7 @@
                 // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
                 array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
                 $GLOBALS['zigates'][$zgId]['available'] = 1;
+                unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
             }
         } // End checkZigatesStatus()
 

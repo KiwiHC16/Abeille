@@ -599,7 +599,7 @@
         }
 
         // Generate a 'Read attribute request'
-        function readAttribute($priority, $dest, $addr, $dstEp, $clustId, $attribId, $manufId = '') {
+        function readAttribute($priority, $dest, $addr, $dstEp, $clustId, $attribId, $manufId = '', $repeat = 0) {
             /*
                 <address mode: uint8_t>
                 <target short address: uint16_t>
@@ -617,7 +617,7 @@
                 <attributes list: data list of uint16_t  each>
             */
 
-            $cmd = "0100"; // Cmd 100 request AckAPS based on ZigBee traces.
+            $zgCmd = "0100"; // Cmd 100 request AckAPS based on ZigBee traces.
 
             $addrMode = "02";
             // TODO: Check 'addr' size
@@ -652,7 +652,7 @@
             $nbOfAttrib = sprintf("%02X", $nbAttr);
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
 
-            $this->addCmdToQueue2($priority, $dest, $cmd, $data, $addr, $addrMode);
+            $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $addr, $addrMode, $repeat);
         }
 
         /**
@@ -3002,11 +3002,9 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    if (isset($Command['cmdParams']['manufId']))
-                        $manufId = $Command['cmdParams']['manufId'];
-                    else
-                        $manufId = '';
-                    $this->readAttribute(PRIO_NORM, $dest, $Command['cmdParams']['addr'], $Command['cmdParams']['ep'], $Command['cmdParams']['clustId'], $Command['cmdParams']['attrId'], $manufId);
+                    $manufId = isset($Command['cmdParams']['manufId']) ? $Command['cmdParams']['manufId'] : '';
+                    $repeat = isset($Command['repeat']) ? $Command['repeat']: 0;
+                    $this->readAttribute(PRIO_NORM, $dest, $Command['cmdParams']['addr'], $Command['cmdParams']['ep'], $Command['cmdParams']['clustId'], $Command['cmdParams']['attrId'], $manufId, $repeat);
                     return;
                 }
 
@@ -3042,6 +3040,7 @@
                     // Write attribute record X
 
                     $priority   = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
+                    $repeat   = isset($Command['repeat']) ? $Command['repeat'] : 0;
 
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
@@ -3075,7 +3074,7 @@
                     $dataLength = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
-                    $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode);
+                    $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode, $repeat);
                     return;
                 } // End 'readAttribute2'
 
@@ -3116,6 +3115,7 @@
                     */
 
                     $priority   = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
+                    $repeat   = isset($Command['repeat']) ? $Command['repeat'] : 0;
 
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
@@ -3140,7 +3140,7 @@
                     cmdLog('debug', "  writeAttribute: Dir=${dir}, ManufCode=${manufCode}, AttrId=${attrId}, AttrType=${attrType}, AttrVal=${attrVal}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufCode.$nbOfAttributes.$attrList;
 
-                    $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode);
+                    $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode, $repeat);
                     return;
                 } // cmdName == 'writeAttribute'
 
@@ -3187,6 +3187,7 @@
                     // Write attribute record X
 
                     $priority   = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
+                    $repeat   = isset($Command['repeat']) ? $Command['repeat'] : 0;
 
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
@@ -3217,7 +3218,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode);
+                    $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode, $repeat);
                     return;
                 }
 

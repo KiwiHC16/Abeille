@@ -109,13 +109,15 @@
                                     "BindToGroup"              => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
-                                    "targetEndpoint"           => $parameters['targetEndpoint'],
-                                    "clusterID"                => $parameters['clusterID'],
-                                    "reportToGroup"            => $parameters['reportToGroup'],
-                                    "destinationEndpoint"      => "01",
-                                    );
+                                    "cmdParams" => array(
+                                        "address"                  => $address,
+                                        "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
+                                        "targetEndpoint"           => $parameters['targetEndpoint'],
+                                        "clusterID"                => $parameters['clusterID'],
+                                        "reportToGroup"            => $parameters['reportToGroup'],
+                                        "destinationEndpoint"      => "01",
+                                    )
+                                );
                 break;
 
             /*
@@ -220,17 +222,19 @@
                                 "setReport"         => "1",
                                 "priority"          => $priority,
                                 "dest"              => $dest,
-                                "address"           => $address,
-                                "targetEndpoint"    => $parameters['targetEndpoint'],
-                                "ClusterId"         => $parameters['ClusterId'],
-                                "AttributeId"       => $parameters['AttributeId'],
-                                "MinInterval"       => $parameters['MinInterval']
-                                );
-                if (isset($parameters["AttributeDirection"]))      { $Command['AttributeDirection']    = $parameters['AttributeDirection']; }
-                if (isset($parameters["AttributeType"]))           { $Command['AttributeType']         = $parameters['AttributeType']; }
-                if (isset($parameters["MaxInterval"]))             { $Command['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
-                if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
-                if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
+                                "cmdParams" => array(
+                                    "address"           => $address,
+                                    "targetEndpoint"    => $parameters['targetEndpoint'],
+                                    "ClusterId"         => $parameters['ClusterId'],
+                                    "AttributeId"       => $parameters['AttributeId'],
+                                    "MinInterval"       => $parameters['MinInterval']
+                                )
+                            );
+                if (isset($parameters["AttributeDirection"]))      { $Command['cmdParams']['AttributeDirection']    = $parameters['AttributeDirection']; }
+                if (isset($parameters["AttributeType"]))           { $Command['cmdParams']['AttributeType']         = $parameters['AttributeType']; }
+                if (isset($parameters["MaxInterval"]))             { $Command['cmdParams']['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
+                if (isset($parameters["Change"]))                  { $Command['cmdParams']['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
+                if (isset($parameters["Timeout"]))                 { $Command['cmdParams']['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
 
             // case "setReportRaw": // OBSOLETE: Use 'configureReporting2' instead
@@ -442,23 +446,27 @@
             case "UpGroup":
                 $Command = array(
                     "UpGroup" => "1",
-                    "addressMode" => "01",
                     "priority" => $priority,
                     "dest" => $dest,
-                    "address" => $address,
-                    "destinationEndpoint" => "01", // Set but not send on radio
-                    "step" => $msg,
+                    "cmdParams" => array(
+                        "addressMode" => "01",
+                        "address" => $address,
+                        "destinationEndpoint" => "01", // Set but not send on radio
+                        "step" => $msg,
+                    )
                 );
                 break;
             case "DownGroup":
                 $Command = array(
                     "DownGroup" => "1",
-                    "addressMode" => "01",
                     "priority" => $priority,
                     "dest" => $dest,
-                    "address" => $address,
-                    "destinationEndpoint" => "01", // Set but not send on radio
-                    "step" => $msg,
+                    "cmdParams" => array(
+                        "addressMode" => "01",
+                        "address" => $address,
+                        "destinationEndpoint" => "01", // Set but not send on radio
+                        "step" => $msg,
+                    )
                 );
                 break;
             // case "OnOffGroup": // Obsolete. Replaced by 'cmd-0006'
@@ -511,14 +519,16 @@
 
                 $Command = array(
                                 "OnOffTimed"           => "1",
-                                "addressMode"          => "01",
                                 "priority"             => $priority,
                                 "dest"                 => $dest,
-                                "address"              => $address,
-                                "destinationEndpoint"  => "01", // Set but not send on radio
-                                "action"               => $actionId,
-                                "onTime"               => $parameters['onTime'],
-                                "offWaitTime"          => $parameters['offWaitTime'],
+                                "cmdParams" => array(
+                                    "address"              => $address,
+                                    "addressMode"          => "01",
+                                    "destinationEndpoint"  => "01", // Set but not send on radio
+                                    "action"               => $actionId,
+                                    "onTime"               => $parameters['onTime'],
+                                    "offWaitTime"          => $parameters['offWaitTime'],
+                                )
                             );
                 break;
             case "WriteAttributeRequest":
@@ -530,13 +540,14 @@
                                 "WriteAttributeRequest" => "1",
                                 "priority"          => $priority,
                                 "dest"              => $dest,
-                                "address"           => $address,
-
-                                "Proprio"           => $parameters['Proprio'],
-                                "clusterId"         => $parameters['clusterId'],
-                                "attributeId"       => $parameters['attributeId'],
-                                "attributeType"     => $parameters['attributeType'],
-                                "value"             => $parameters['value'],
+                                "cmdParams" => array(
+                                    "address"           => $address,
+                                    "Proprio"           => $parameters['Proprio'],
+                                    "clusterId"         => $parameters['clusterId'],
+                                    "attributeId"       => $parameters['attributeId'],
+                                    "attributeType"     => $parameters['attributeType'],
+                                    "value"             => $parameters['value'],
+                                )
                             );
                 break;
             case "WriteAttributeRequestVibration":
@@ -548,16 +559,16 @@
                                     "WriteAttributeRequestVibration" => "1",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
-                                    "address"          => $address,
-
-                                    "Proprio"          => $parameters['Proprio'],
-                                    "clusterId"        => $parameters['clusterId'],
-                                    "attributeId"      => $parameters['attributeId'],
-                                    "attributeType"    => $parameters['attributeType'],
-                                    "value"            => $parameters['value'],
-                                    "repeat"           => $parameters['repeat'],
-
-                                    );
+                                    "cmdParams" => array(
+                                        "address"          => $address,
+                                        "Proprio"          => $parameters['Proprio'],
+                                        "clusterId"        => $parameters['clusterId'],
+                                        "attributeId"      => $parameters['attributeId'],
+                                        "attributeType"    => $parameters['attributeType'],
+                                        "value"            => $parameters['value'],
+                                        "repeat"           => $parameters['repeat'],
+                                    )
+                                );
                 break;
             case "WriteAttributeRequestHostFlag":
                 $fields = preg_split("/[=&]+/", $msg);
@@ -570,14 +581,15 @@
                                     "WriteAttributeRequest" => "1",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
-                                    "address"          => $address,
-
-                                    "Proprio"          => $parameters['Proprio'],
-                                    "clusterId"        => $parameters['clusterId'],
-                                    "attributeId"      => $parameters['attributeId'],
-                                    "attributeType"    => $parameters['attributeType'],
-                                    "value"            => $consigneHex,
-                                    );
+                                    "cmdParams" => array(
+                                        "address"          => $address,
+                                        "Proprio"          => $parameters['Proprio'],
+                                        "clusterId"        => $parameters['clusterId'],
+                                        "attributeId"      => $parameters['attributeId'],
+                                        "attributeType"    => $parameters['attributeType'],
+                                        "value"            => $consigneHex,
+                                    )
+                                );
                 break;
             case "WriteAttributeRequestTemperatureSpiritConsigne":
                 $fields = preg_split("/[=&]+/", $msg);
@@ -590,14 +602,15 @@
                                     "WriteAttributeRequest"    => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "Proprio"                  => $parameters['Proprio'],
-                                    "clusterId"                => $parameters['clusterId'],
-                                    "attributeId"              => $parameters['attributeId'],
-                                    "attributeType"            => $parameters['attributeType'],
-                                    "value"                    => $consigneHex,
-
-                                    );
+                                    "cmdParams" => array(
+                                        "address"                  => $address,
+                                        "Proprio"                  => $parameters['Proprio'],
+                                        "clusterId"                => $parameters['clusterId'],
+                                        "attributeId"              => $parameters['attributeId'],
+                                        "attributeType"            => $parameters['attributeType'],
+                                        "value"                    => $consigneHex,
+                                    )
+                                );
                 break;
             case "WriteAttributeRequestValveSpiritConsigne":
             case "WriteAttributeRequestTrvSpiritMode":
@@ -611,13 +624,15 @@
                                     "WriteAttributeRequest" => "1",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
-                                    "address"          => $address,
-                                    "Proprio"          => $parameters['Proprio'],
-                                    "clusterId"        => $parameters['clusterId'],
-                                    "attributeId"      => $parameters['attributeId'],
-                                    "attributeType"    => $parameters['attributeType'],
-                                    "value"            => $consigneHex,
-                                    );
+                                    "cmdParams" => array(
+                                        "address"          => $address,
+                                        "Proprio"          => $parameters['Proprio'],
+                                        "clusterId"        => $parameters['clusterId'],
+                                        "attributeId"      => $parameters['attributeId'],
+                                        "attributeType"    => $parameters['attributeType'],
+                                        "value"            => $consigneHex,
+                                    )
+                                );
                 break;
             case "WriteAttributeRequestGeneric":
                 $fields = preg_split("/[=&]+/", $msg);
@@ -639,14 +654,16 @@
                                     "WriteAttributeRequestGeneric" => "1",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
-                                    "address"          => $address,
-                                    "EP"               => $parameters['EP'],
-                                    "Proprio"          => $parameters['Proprio'],
-                                    "clusterId"        => $parameters['clusterId'],
-                                    "attributeId"      => $parameters['attributeId'],
-                                    "attributeType"    => $parameters['attributeType'],
-                                    "value"            => $valuePrepared,
-                                    );
+                                    "cmdParams" => array(
+                                        "address"          => $address,
+                                        "EP"               => $parameters['EP'],
+                                        "Proprio"          => $parameters['Proprio'],
+                                        "clusterId"        => $parameters['clusterId'],
+                                        "attributeId"      => $parameters['attributeId'],
+                                        "attributeType"    => $parameters['attributeType'],
+                                        "value"            => $valuePrepared,
+                                    )
+                                );
                 break;
             case "WriteAttributeRequestActivateDimmer":
                 $fields = preg_split("/[=&]+/", $msg);
@@ -657,12 +674,14 @@
                                     "WriteAttributeRequestActivateDimmer" => "1",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
-                                    "address"          => $address,
-                                    "clusterId"        => $parameters['clusterId'],
-                                    "attributeId"      => $parameters['attributeId'],
-                                    "attributeType"    => $parameters['attributeType'],
-                                    "value"            => $parameters['value'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address"          => $address,
+                                        "clusterId"        => $parameters['clusterId'],
+                                        "attributeId"      => $parameters['attributeId'],
+                                        "attributeType"    => $parameters['attributeType'],
+                                        "value"            => $parameters['value'],
+                                    )
+                                );
                 break;
 
             case "setLevelRaw":
@@ -673,10 +692,12 @@
                         "name"      => "setLevelRaw",
                         "priority"  => $priority,
                         "dest"      => $dest,
-                        "addr"      => $address,
-                        "EP"        => $parameters['EP'],
-                        "Level"     => $parameters['Level'],
-                        "duration"  => $parameters['duration'],
+                        "cmdParams" => array(
+                            "addr"      => $address,
+                            "EP"        => $parameters['EP'],
+                            "Level"     => $parameters['Level'],
+                            "duration"  => $parameters['duration'],
+                        )
                     );
                 }
                 break;
@@ -686,12 +707,14 @@
                                     "name" => "setLevel",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "addr" => $address,
-                                    "EP" => "03",
-                                    // "Level" => intval($keywords[1] * 255 / 100),
-                                    "Level" => $keywords[1],
-                                    "duration" => $keywords[3],
-                                    );
+                                    "cmdParams" => array(
+                                        "addr" => $address,
+                                        "EP" => "03",
+                                        // "Level" => intval($keywords[1] * 255 / 100),
+                                        "Level" => $keywords[1],
+                                        "duration" => $keywords[3],
+                                    )
+                                );
                 break;
             case "setLevelVolet":
                 $eqLogic = eqLogic::byLogicalId($dest."/".$address, "Abeille" );
@@ -737,15 +760,17 @@
                     }
                     $Command = array(
                                     "moveToLiftAndTiltBSO" => "1",
-                                    "addressMode" => "02",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "destinationEndpoint" => "01",
-                                    "lift"        => $parameters['lift'],
-                                    "inclinaison" => $parameters['inclinaison'],        // Valeur entre 0 et 90
-                                    "duration"    => $parameters['duration'],              // FFFF to have max speed of tilt
-                                    );
+                                    "cmdParams" => array(
+                                        "addressMode" => "02",
+                                        "address" => $address,
+                                        "destinationEndpoint" => "01",
+                                        "lift"        => $parameters['lift'],
+                                        "inclinaison" => $parameters['inclinaison'],        // Valeur entre 0 et 90
+                                        "duration"    => $parameters['duration'],              // FFFF to have max speed of tilt
+                                    )
+                                );
                 break;
             // Obsolete: Use 'cmd-0008' + 'cmd=07'
             // case "setLevelStop":
@@ -779,12 +804,14 @@
                                     "name" => "setLevel",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "addr" => $address,
-                                    "EP" => "0B",
-                                    // "Level" => intval($keywords[1] * 255 / 100),
-                                    "Level" => $keywords[1],
-                                    "duration" => $keywords[3],
-                                    );
+                                    "cmdParams" => array(
+                                        "addr" => $address,
+                                        "EP" => "0B",
+                                        // "Level" => intval($keywords[1] * 255 / 100),
+                                        "Level" => $keywords[1],
+                                        "duration" => $keywords[3],
+                                    )
+                                );
                 break;
             case "setLevelGroup":
                 $fields = preg_split("/[=&]+/", $msg);
@@ -793,14 +820,16 @@
                 }
                 $Command = array(
                                     "name"                 => "setLevel",
-                                    "addressMode"          => "01",
                                     "priority"             => priorityUserCmd,
                                     "dest"                 => $dest,
-                                    "addr"                 => $address,
-                                    "EP"                   => "01",
-                                    "Level"                => intval($parameters['Level']),
-                                    "duration"             => $parameters['duration'],
-                                    );
+                                    "cmdParams" => array(
+                                        "addressMode"          => "01",
+                                        "addr"                 => $address,
+                                        "EP"                   => "01",
+                                        "Level"                => intval($parameters['Level']),
+                                        "duration"             => $parameters['duration'],
+                                    )
+                                );
                 break;
             // case "setColour":
             //     $fields = preg_split("/[=&]+/", $msg);
@@ -825,14 +854,16 @@
                         $parameters = $this->proper_parse_str($msg);
                         $Command = array(
                                             "name"                 => "setColour",
-                                            "addressMode"          => "01",
                                             "priority"             => priorityUserCmd,
                                             "dest"                 => $dest,
-                                            "addr"                 => $address,
-                                            "X"                    => $parameters['X'],
-                                            "Y"                    => $parameters['Y'],
-                                            "destinationEndPoint"  => "01", // not needed as group
-                                            );
+                                            "cmdParams" => array(
+                                                "addr"                 => $address,
+                                                "addressMode"          => "01",
+                                                "X"                    => $parameters['X'],
+                                                "Y"                    => $parameters['Y'],
+                                                "destinationEndPoint"  => "01", // not needed as group
+                                            )
+                                        );
                     }
                     break;
             case "setColourRGB":
@@ -859,12 +890,14 @@
                                     "setColourRGB" => "1",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "R" => $rouge,
-                                    "G" => $vert,
-                                    "B" => $bleu,
-                                    "destinationEndPoint" => $parameters['EP'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address" => $address,
+                                        "R" => $rouge,
+                                        "G" => $vert,
+                                        "B" => $bleu,
+                                        "destinationEndPoint" => $parameters['EP'],
+                                    )
+                                );
                 break;
             case "setRouge":
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
@@ -888,12 +921,14 @@
                                     "setColourRGB" => "1",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "R" => $parameters['color']/100*255,
-                                    "G" => $vert/100*255,
-                                    "B" => $bleu/100*255,
-                                    "destinationEndPoint" => $parameters['EP'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address" => $address,
+                                        "R" => $parameters['color']/100*255,
+                                        "G" => $vert/100*255,
+                                        "B" => $bleu/100*255,
+                                        "destinationEndPoint" => $parameters['EP'],
+                                    )
+                                );
                 break;
             case "setVert":
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
@@ -917,12 +952,14 @@
                                     "setColourRGB" => "1",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "R" => $rouge/100*255,
-                                    "G" => $parameters['color']/100*255,
-                                    "B" => $bleu/100*255,
-                                    "destinationEndPoint" => $parameters['EP'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address" => $address,
+                                        "R" => $rouge/100*255,
+                                        "G" => $parameters['color']/100*255,
+                                        "B" => $bleu/100*255,
+                                        "destinationEndPoint" => $parameters['EP'],
+                                    )
+                                );
                 break;
             case "setBleu":
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
@@ -946,12 +983,14 @@
                                     "setColourRGB" => "1",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "R" => $rouge/100*255,
-                                    "G" => $vert/100*255,
-                                    "B" => $parameters['color']/100*255,
-                                    "destinationEndPoint" => $parameters['EP'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address" => $address,
+                                        "R" => $rouge/100*255,
+                                        "G" => $vert/100*255,
+                                        "B" => $parameters['color']/100*255,
+                                        "destinationEndPoint" => $parameters['EP'],
+                                    )
+                                );
                 break;
             case "setColourHue":
                 $keywords = preg_split("/[=&]+/", $msg);
@@ -959,11 +998,13 @@
                                     "setColour" => "1",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "X" => $keywords[1],
-                                    "Y" => $keywords[3],
-                                    "destinationEndPoint" => "0B",
-                                    );
+                                    "cmdParams" => array(
+                                        "address" => $address,
+                                        "X" => $keywords[1],
+                                        "Y" => $keywords[3],
+                                        "destinationEndPoint" => "0B",
+                                    )
+                                );
                 break;
             case "setColourOSRAM":
                 $keywords = preg_split("/[=&]+/", $msg);
@@ -971,11 +1012,13 @@
                                     "setColour" => "1",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "X" => $keywords[1],
-                                    "Y" => $keywords[3],
-                                    "destinationEndPoint" => "03",
-                                    );
+                                    "cmdParams" => array(
+                                        "address" => $address,
+                                        "X" => $keywords[1],
+                                        "Y" => $keywords[3],
+                                        "destinationEndPoint" => "03",
+                                    )
+                                );
                 break;
             // case "setTemperature":
             //     // T°K   Hex sent  Dec eq
@@ -1009,13 +1052,15 @@
                 }
                 $Command = array(
                                     "name"                 => "setTemperature",
-                                    "addressMode"          => "01",
                                     "priority"             => $priority,
                                     "dest"                 => $dest,
-                                    "addr"                 => $address,
-                                    "slider"               => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
-                                    "EP"                   => $parameters['EP'],
-                                    );
+                                    "cmdParams" => array(
+                                        "addressMode"          => "01",
+                                        "addr"                 => $address,
+                                        "slider"               => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
+                                        "EP"                   => $parameters['EP'],
+                                    )
+                                );
                 break;
 
 
@@ -1029,9 +1074,11 @@
                                     "writeAttributeRequestIAS_WD"     => "1",
                                     "priority"                        => $priority,
                                     "dest"                            => $dest,
-                                    "address"                         => $address,
-                                    "mode"                            => $parameters['mode'],
-                                    "duration"                        => $parameters['duration'],
+                                    "cmdParams" => array(
+                                        "address"                         => $address,
+                                        "mode"                            => $parameters['mode'],
+                                        "duration"                        => $parameters['duration'],
+                                    )
                 );
                 break;
 
@@ -1092,11 +1139,13 @@
                                     "viewScene"                => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupID"                  => $parameters['groupID'],
-                                    "sceneID"                  => $parameters['sceneID'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address"                  => $parameters['address'],
+                                        "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                        "groupID"                  => $parameters['groupID'],
+                                        "sceneID"                  => $parameters['sceneID'],
+                                    )
+                                );
                 break;
 
             case "storeScene":
@@ -1105,11 +1154,13 @@
                                     "storeScene"               => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupID"                  => $parameters['groupID'],
-                                    "sceneID"                  => $parameters['sceneID'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address"                  => $parameters['address'],
+                                        "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                        "groupID"                  => $parameters['groupID'],
+                                        "sceneID"                  => $parameters['sceneID'],
+                                    )
+                                );
                 break;
 
             case "recallScene":
@@ -1119,10 +1170,12 @@
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupID"                  => $parameters['groupID'],
-                                    "sceneID"                  => $parameters['sceneID'],
-                                    );
+                                    "cmdParams" => array(
+                                        "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                        "groupID"                  => $parameters['groupID'],
+                                        "sceneID"                  => $parameters['sceneID'],
+                                    )
+                                );
                 break;
 
             case "sceneGroupRecall":
@@ -1136,9 +1189,11 @@
                                     "sceneGroupRecall"         => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "groupID"                  => $parameters['groupID'],
-                                    "sceneID"                  =>  $parameters['sceneID'],
-                                    );
+                                    "cmdParams" => array(
+                                        "groupID"                  => $parameters['groupID'],
+                                        "sceneID"                  =>  $parameters['sceneID'],
+                                    )
+                                );
                 break;
 
             // case "sceneGroupRecall":
@@ -1163,12 +1218,14 @@
                                     "addScene"                 => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupID"                  => $parameters['groupID'],
-                                    "sceneID"                  => $parameters['sceneID'],
-                                    "sceneName"                => $parameters['sceneName'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address"                  => $parameters['address'],
+                                        "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                        "groupID"                  => $parameters['groupID'],
+                                        "sceneID"                  => $parameters['sceneID'],
+                                        "sceneName"                => $parameters['sceneName'],
+                                    )
+                                );
                 break;
 
             case "getSceneMembership":
@@ -1177,10 +1234,12 @@
                                     "getSceneMembership"       => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupID"                  => $parameters['groupID'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address"                  => $parameters['address'],
+                                        "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                        "groupID"                  => $parameters['groupID'],
+                                    )
+                                );
                 break;
 
             case "removeSceneAll":
@@ -1189,10 +1248,12 @@
                                     "removeSceneAll"           => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupID"                  => $parameters['groupID'],
-                                    );
+                                    "cmdParams" => array(
+                                        "address"                  => $parameters['address'],
+                                        "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+                                        "groupID"                  => $parameters['groupID'],
+                                    )
+                                );
                 break;
 
             /*
@@ -1224,9 +1285,11 @@
                                     "WindowsCoveringLevel"     => "1",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "clusterCommand"           => $parameters['clusterCommand'],
-                                    "liftValue"                => sprintf("%02s",dechex($parameters['liftValue'])),
+                                    "cmdParams" => array(
+                                        "address"                  => $address,
+                                        "clusterCommand"           => $parameters['clusterCommand'],
+                                        "liftValue"                => sprintf("%02s",dechex($parameters['liftValue'])),
+                                    )
                 );
                 break;
 
@@ -1240,8 +1303,10 @@
                                     "WindowsCoveringGroup"     => "1",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address"                  => $address,
-                                    "clusterCommand"           => $parameters['clusterCommand'],
+                                    "cmdParams" => array(
+                                        "address"                  => $address,
+                                        "clusterCommand"           => $parameters['clusterCommand'],
+                                    )
                 );
                 break;
 

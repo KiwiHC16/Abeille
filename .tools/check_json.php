@@ -16,7 +16,7 @@
     $eqTopKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
     array_push($eqTopKeys, 'repeatEventManagement', 'listValue');
     array_push($eqTopKeys, 'returnStateTime', 'returnStateValue', 'Polling');
-    array_push($eqTopKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
+    array_push($eqTopKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset', 'repeat');
     array_push($eqTopKeys, 'value', 'request');
 
     // Cmd 'action' & 'info' subtypes

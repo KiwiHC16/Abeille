@@ -173,14 +173,14 @@
     // Cmd 00: 'message'=IR code to send (base64 URL encoded format)
     // Cmd 03: 'message'=JSON encoded {'seq' => hex string, 'pos' => binary, 'maxLen' => binary}
     function tuyaZosung($net, $addr, $ep, $command) {
-        $cmd = $command['cmd'];
+        $cmd = $command['cmdParams']['cmd'];
         cmdLog2('debug', $addr, "  tuyaZosung(Net=${net}, Addr=${addr}, EP=${ep}, Cmd=${cmd})");
 
-        if (!isset($command['message'])) {
+        if (!isset($command['cmdParams']['message'])) {
             cmdLog2('error', $addr, "tuyaZosung: 'message' manquant");
             return;
         }
-        $data = $command['message'];
+        $data = $command['cmdParams']['message'];
         if ($cmd == '00') { // Send IR code
             // Data is base64 URL encoded
             $dataB64 = AbeilleTools::base64url2base64($data);

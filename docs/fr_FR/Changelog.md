@@ -14,6 +14,7 @@
 -   Amélioration: Cmd: Support valeur préfixée par '0x'.
 -   Amélioration: Cmd: Ajout support 'repeat' pour repeter une action jusqu'a acquittement (Attention !! Limiter son usage).
 -   Améliorations: Interne cmd.
+-   Améliorations: Interne main daemon: Config sauvé en global.
 
 ## 240808-BETA-1
 

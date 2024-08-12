@@ -914,6 +914,7 @@ class Abeille extends eqLogic {
         // Send a message to Abeille to ask for behive creation/update.
         // Tcharp38: Moved from deamon_start()
         $config = AbeilleTools::getConfig();
+        $GLOBALS['config'] = $config;
         for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
             if ($config['ab::gtwPort'.$gtwId] == 'none')
                 continue; // Port undefined
@@ -1030,7 +1031,8 @@ class Abeille extends eqLogic {
             return;
         }
 
-        $config = AbeilleTools::getConfig();
+        // $config = AbeilleTools::getConfig();
+        $config = $GLOBALS['config']; // Present as global since main daemon
 
         // if (!preg_match("(Time|Link-Quality)", $topic)) {
         //    log::add('Abeille', 'debug', "fct message Topic: ->".$topic."<- Value ->".$payload."<-");
@@ -2290,8 +2292,6 @@ class Abeille extends eqLogic {
             }
         }
 
-        // $config = AbeilleTools::getConfig();
-
         $msg = array();
         $msg['topic'] = $topic;
         $msg['payload'] = $payload;
@@ -2333,8 +2333,6 @@ class Abeille extends eqLogic {
             }
         }
 
-        // $config = AbeilleTools::getConfig();
-
         $msg = array();
         $msg['topic'] = $topic;
         $msg['payload'] = $payload;
@@ -2351,7 +2349,8 @@ class Abeille extends eqLogic {
     public static function createRuche($dest) {
         $gtwId = substr($dest, 7); // AbeilleX => X
 
-        $config = AbeilleTools::getConfig();
+        // $config = AbeilleTools::getConfig();
+        $config = $GLOBALS['config']; // Present as global since main daemon
         $eqLogic = eqLogic::byLogicalId($dest."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
             message::add("Abeille", "Création de l'équipement 'Ruche' en cours. Rafraichissez votre dashboard dans qq secondes.", '');
@@ -2534,7 +2533,8 @@ class Abeille extends eqLogic {
     public static function createEzspGateway($net) {
         $gtwId = substr($net, 7); // AbeilleX => X
 
-        $config = AbeilleTools::getConfig();
+        // $config = AbeilleTools::getConfig();
+        $config = $GLOBALS['config']; // Present as global since main daemon
         $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
             message::add("Abeille", "Création de l'équipement 'EZSP' en cours. Rafraichissez votre dashboard dans qq secondes.", '');
@@ -2575,8 +2575,9 @@ class Abeille extends eqLogic {
         $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
         $eqLogic->setName($eqName);
         $eqLogic->setLogicalId($logicalId);
-        $abeilleConfig = AbeilleTools::getConfig();
-        $eqLogic->setObject_id($abeilleConfig['ab::defaultParent']);
+        // $config = AbeilleTools::getConfig();
+        $config = $GLOBALS['config']; // Present as global since main daemon
+        $eqLogic->setObject_id($config['ab::defaultParent']);
         $eqLogic->setConfiguration('IEEE', $ieee);
         $eqLogic->setIsVisible(0); // Hidden by default
         $eqLogic->setIsEnable(1);
@@ -2697,8 +2698,9 @@ class Abeille extends eqLogic {
             $eqName = $eqType." - ".$eqId; // Default name (ex: '<eqType> - 12')
             $eqLogic->setName($eqName);
             $eqLogic->setLogicalId($eqLogicId);
-            $abeilleConfig = AbeilleTools::getConfig();
-            $eqLogic->setObject_id($abeilleConfig['ab::defaultParent']);
+            // $config = AbeilleTools::getConfig();
+            $config = $GLOBALS['config']; // Present as global since main daemon
+            $eqLogic->setObject_id($config['ab::defaultParent']);
             if (isset($dev['ieee'])) $eqLogic->setConfiguration('IEEE', $dev['ieee']); // No IEEE for virtual remote
         } else {
             $newEq = false;

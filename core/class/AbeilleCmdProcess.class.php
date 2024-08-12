@@ -3424,12 +3424,12 @@
                     $cmdId          = "01"; // Read Attributes Response
                     $data2 = $fcf.$sqn.$cmdId;
 
-                    // if (!isset($Command['cmdParams']['attrId']) || !isset($Command['status']) || !isset($Command['cmdParams']['attrType'])) {}
+                    // if (!isset($Command['cmdParams']['attrId']) || !isset($Command['cmdParams']['status']) || !isset($Command['cmdParams']['attrType'])) {}
                     //     cmdLog('debug', "  ERROR: Missing '".$param."'");
                     //     return;
                     // }
                     $attrId = AbeilleTools::reverseHex($Command['cmdParams']['attrId']);
-                    $status = $Command['status'];
+                    $status = $Command['cmdParams']['status'];
                     $attrType = $Command['cmdParams']['attrType'];
                     $attrVal = AbeilleTools::reverseHex($Command['cmdParams']['attrVal']);
                     $data2 = $data2.$attrId.$status.$attrType.$attrVal;
@@ -4327,7 +4327,7 @@
                     //     $required = ['status', 'manufCode', 'imgType', 'imgVersion', 'imgSize']; // Mandatory infos
                     //     if (!$this->checkRequiredParams($required, $Command))
                     //         return;
-                    //     $status = $Command['status'];
+                    //     $status = $Command['cmdParams']['status'];
                     //     if ($status != '00')
                     //         $data2 = $fcf.$sqn.$cmdId.$status;
                     //     else {

@@ -4017,10 +4017,10 @@
                 // Mandatory params: addr, EP, Level (in dec, %), duration (dec)
                 // Optional params: duration (default=0001)
                 else if ($cmdName == 'setLevel') {
-                    $required = ['addr', 'Level']; // Mandatory infos
+                    $required = ['addr', 'level']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
-                    if (($Command['cmdParams']['Level'] < 0) || ($Command['cmdParams']['Level'] > 100)) {
+                    if (($Command['cmdParams']['Level'] < 0) || ($Command['cmdParams']['level'] > 100)) {
                         cmdLog('error', "  setLevel: 'Level' en dehors de la plage 0->100");
                         return;
                     }
@@ -4127,7 +4127,7 @@
                             $onOff = "00";
                         else
                             $onOff = "01";
-                        $level      = sprintf("%02X", intval($Command['cmdParams']['Level']));
+                        $level      = sprintf("%02X", intval($Command['cmdParams']['level']));
                         $duration   = isset($Command['cmdParams']['duration']) ? sprintf("%04X", $Command['cmdParams']['duration']) : "0001";
                         cmdLog('debug', '  cmd-0008: onOff='.$onOff.', level='.$level.', duration='.$duration);
 

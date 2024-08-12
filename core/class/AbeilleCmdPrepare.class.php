@@ -721,11 +721,13 @@
                     "name" => "cmd-0008",
                     "priority" => $priority,
                     "dest" => $dest,
-                    "addr" => $address,
-                    "ep" => "01",
-                    "cmd" => "04", // Move to Level with On/Off
-                    "level" => $level,
-                    "duration" => $parameters['duration'],
+                    "cmdParams" => array(
+                        "addr" => $address,
+                        "ep" => "01",
+                        "cmd" => "04", // Move to Level with On/Off
+                        "level" => $level,
+                        "duration" => $parameters['duration'],
+                    )
                 );
                 break;
             case "moveToLiftAndTiltBSO":

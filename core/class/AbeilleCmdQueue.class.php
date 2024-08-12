@@ -377,7 +377,7 @@
             // If priority is not PRIO_LOW & device TX status is 'NO ACK', moving to low priority queue to not delay cmds to other devices
             if ($priority != PRIO_LOW) {
                 $dev = &getDevice($net, $addr);
-                if (isset($dev['txStatus']) && ($dev['txStatus'] == 'noack')) {
+                if (isset($dev['zigbee']['txStatus']) && ($dev['zigbee']['txStatus'] == 'noack')) {
                     cmdLog('debug', "    Device is NO-ACK: Moving cmd to low priority queue");
                     $priority = PRIO_LOW;
                 }
@@ -787,14 +787,14 @@
                             $newTxStatus = '';
                             if ($msg['status'] == '00') { // OK
                                 // Restoring 'ok'' status whatever rxOnWhenIdle or not
-                                if ($eq['txStatus'] !== 'ok')
+                                if ($eq['zigbee']['txStatus'] !== 'ok')
                                     $newTxStatus = 'ok';
                             } else { // NO ACK
-                                if (isset($eq['rxOnWhenIdle']) && $eq['rxOnWhenIdle'] && ($eq['txStatus'] !== 'noack'))
+                                if (isset($eq['zigbee']['rxOnWhenIdle']) && $eq['zigbee']['rxOnWhenIdle'] && ($eq['zigbee']['txStatus'] !== 'noack'))
                                     $newTxStatus = 'noack';
                             }
                             if ($newTxStatus != '') {
-                                $eq['txStatus'] = $newTxStatus;
+                                $eq['zigbee']['txStatus'] = $newTxStatus;
                                 $msg = array(
                                     // 'src' => 'cmd',
                                     'type' => 'eqTxStatusUpdate',

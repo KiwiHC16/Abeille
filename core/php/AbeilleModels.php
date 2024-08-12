@@ -148,8 +148,9 @@
         // log::add('Abeille', 'debug', "BACKTRACE: ".json_encode($dbg, JSON_UNESCAPED_SLASHES));
 
         if ($modelPath == '') {
-            log::add('Abeille', 'error', "  getDeviceModel(): 'modelPath' vide !");
-            return false;
+            // log::add('Abeille', 'error', "  getDeviceModel(): 'modelPath' vide !");
+            // return false;
+            $modelPath = "${modelName}/${modelName}.json";
         }
 
         if (($src == 'Abeille') || ($src == ''))

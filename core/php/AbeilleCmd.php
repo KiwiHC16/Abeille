@@ -83,7 +83,7 @@
         if ($found == false) {
             // Unknown: Address may have changed following new 'device announce'
             foreach ($GLOBALS['devices'][$net] as $addr2 => $eq2) {
-                if ($eq2['ieee'] == $ieee) {
+                if ($eq2['zigbee']['ieee'] == $ieee) {
                     $found = true;
                     $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net][$addr2];
                     unset($GLOBALS['devices'][$net][$addr2]);
@@ -98,7 +98,7 @@
                 if ($net2 == $net)
                     continue; // This network has already been checked
                 foreach ($GLOBALS['devices'][$net2] as $addr2 => $eq2) {
-                    if ($eq2['ieee'] == $ieee) {
+                    if ($eq2['zigbee']['ieee'] == $ieee) {
                         $found = true;
                         $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net2][$addr2];
                         unset($GLOBALS['devices'][$net2][$addr2]);
@@ -110,24 +110,31 @@
         }
 
         // Whatever found or new... updating infos used by cmd process
-        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+        $zigbee['ieee'] = $ieee;
+        $zigbee['txStatus'] = $eqLogic->getStatus('ab::txAck', 'ok'); // Transmit status: 'ok' or 'noack'
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
         $eq = array(
-            'ieee' => $ieee,
-            'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
-            'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
-            'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
+            // 'ieee' => $ieee,
+            // 'rxOnWhenIdle' => (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1)) ? true : false
+            // 'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
+            'zigbee' => $zigbee,
+
+            // 'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
+            // 'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
             // 'modelPath' => isset($eqModel['modelPath']) ? $eqModel['modelPath'] : "<modName>/<modName>.json",
-            'rxOnWhenIdle' => (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1)) ? true : false
+            'eqModel' => $eqModel
         );
-        if ($eq['jsonId'] != '') {
-            if (isset($eqModel['modelPath']))
-                $eq['modelPath'] = $eqModel['modelPath'];
-            else
-                $eq['modelPath'] = $eq['jsonId']."/".$eq['jsonId'].".json";
+        if ($eq['eqModel']['modelName'] != '') {
+            // if (isset($eqModel['modelPath']))
+            //     $eq['modelPath'] = $eqModel['modelPath'];
+            // else
+            //     $eq['modelPath'] = $eq['eqModel']['modelName']."/".$eq['eqModel']['modelName'].".json";
+            if (!isset($eq['eqModel']['modelPath']))
+                $eq['eqModel']['modelPath'] = "";
 
             // Read JSON to get list of commands to execute
-            $model = getDeviceModel($eq['jsonLocation'], $eq['modelPath'], $eq['jsonId']);
+            $model = getDeviceModel($eq['eqModel']['modelSource'], $eq['eqModel']['modelPath'], $eq['eqModel']['modelName']);
             if ($model !== false) {
                 $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
                 $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
@@ -255,8 +262,8 @@
             $topic = $c['topic'];
             $request = $c['request'];
 
-            $request = str_ireplace('#addrIEEE#', $eq['ieee'], $request);
-            $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
+            $request = str_ireplace('#addrIEEE#', $eq['zigbee']['ieee'], $request);
+            $request = str_ireplace('#IEEE#', $eq['zigbee']['ieee'], $request);
             $request = str_ireplace('#EP#', $eq['mainEp'], $request);
             $zgId = substr($net, 7); // 'AbeilleX' => 'X'
             $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigates'][$zgId]['ieee'], $request);
@@ -375,10 +382,12 @@
 
     /* Init known devices list:
        $GLOBALS['devices'][net][addr]
-          ieee => from device config
+          zigee => []
+              ieee => from device config
           mainEp => from model
-          jsonId =>
-          jsonLocation =>
+          eqModel => []
+            modelName =>
+            modelSource =>
           commands => from model
        $GLOBALS['zigates'][zgId]
           ieee => '' or IEEE address
@@ -433,27 +442,35 @@
             if (!isset($GLOBALS['devices'][$net]))
                 $GLOBALS['devices'][$net] = [];
 
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            $zigbee['ieee'] = $eqLogic->getConfiguration('IEEE', '');
+            $zigbee['txStatus'] = $eqLogic->getStatus('ab::txAck', 'ok'); // Transmit status: 'ok' or 'noack'
+
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             // cmdLog('debug', "    eqModel for '$eqLogicId'=".json_encode($eqModel, JSON_UNESCAPED_SLASHES));
-            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
 
             $eq = array(
-                'ieee' => $eqLogic->getConfiguration('IEEE', ''),
-                'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
-                'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
-                'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
+                // 'ieee' => $eqLogic->getConfiguration('IEEE', ''),
+                // 'rxOnWhenIdle' => (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1)) ? true : false
+                // 'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
+                'zigbee' => $zigbee,
+
+                // 'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
+                // 'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
                 // 'modelPath' => isset($eqModel['modelPath']) ? $eqModel['modelPath'] : "<modName>/<modName>.json",
-                'rxOnWhenIdle' => (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1)) ? true : false
+                'eqModel' => $eqModel,
                 // 'variables' // Optional
             );
-            if ($eq['jsonId'] != '') {
-                if (isset($eqModel['modelPath']))
-                    $eq['modelPath'] = $eqModel['modelPath'];
-                else
-                    $eq['modelPath'] = $eq['jsonId']."/".$eq['jsonId'].".json";
+            if ($eq['eqModel']['modelName'] != '') {
+                // if (isset($eqModel['modelPath']))
+                //     $eq['modelPath'] = $eqModel['modelPath'];
+                // else
+                //     $eq['modelPath'] = $eq['eqModel']['modelName']."/".$eq['eqModel']['modelName'].".json";
+                if (!isset($eq['eqModel']['modelPath']))
+                    $eq['eqModel']['modelPath'] = "";
 
                 // Read JSON to get list of commands to execute
-                $model = getDeviceModel($eq['jsonLocation'], $eq['modelPath'], $eq['jsonId']);
+                $model = getDeviceModel($eq['eqModel']['modelSource'], $eq['eqModel']['modelPath'], $eq['eqModel']['modelName']);
                 if ($model !== false) {
                     $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
                     $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];

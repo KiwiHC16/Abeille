@@ -2,7 +2,11 @@
 
 -   Interne: Modifications pour future fusion cmd/parser:
     -   Parser: $GLOBALS['eqList'] => $GLOBALS['devices']
-    -   Parser: ieee/macCapa/rxOnWhenIdle déplacé dans 'zigbee'.
+    -   Parser: ieee/macCapa/rxOnWhenIdle/endPoints déplacé dans 'eq[zigbee]'.
+    -   Cmd: ieee/rxOnWhenIdle/txStatus déplacé dans 'eq[zigbee]'.
+    -   Cmd: jsonId remplacé par 'eq[eqModel][modelName]'.
+    -   Cmd: jsonLocation remplacé par 'eq[eqModel][modelSource]'.
+    -   Cmd: modelForced/modelPath déplacé dans 'eq[eqModel]'.
 -   Amélioration: Infos clefs: Ajout 'last LQI'.
 -   Correction: Parser: Erreur interne.
 -   Amélioration: Livolo TI0001: Amélioration modèle.

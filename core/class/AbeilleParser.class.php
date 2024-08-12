@@ -299,15 +299,15 @@
            Returns: true if supported, else false */
         function findModel(&$eq, $by='modelId') {
             $ma = ($eq['manufId'] === false) ? 'false' : "'".$eq['manufId']."'";
-            $mo = ($eq['modelId'] === false) ? 'false' : "'".$eq['modelId']."'";
+            $mo = ($eq['eqModel']['modelId'] === false) ? 'false' : "'".$eq['eqModel']['modelId']."'";
             $lo = ($eq['location'] === false) ? 'false' : "'".$eq['location']."'";
             parserLog('debug', "  findModel(), manufId=".$ma.", modelId=".$mo.", loc=".$lo);
 
             /* If forced model, do not attempt to auto-detect proper model unless forced model is not valid */
-            if (isset($eq['modelForced']) && $eq['modelForced']) {
-                $modelSource = ($eq['modelSource'] != '') ? $eq['modelSource'] : 'Abeille';
-                $modelPath = isset($eq['modelPath']) ? $eq['modelPath'] : $eq['modelName'].'/'.$eq['modelName'].'.json';
-                $modelSig = isset($eq['modelSig']) ? $eq['modelSig'] : $eq['modelName'];
+            if (isset($eq['eqModel']['modelForced']) && $eq['eqModel']['modelForced']) {
+                $modelSource = ($eq['eqModel']['modelSource'] != '') ? $eq['eqModel']['modelSource'] : 'Abeille';
+                $modelPath = isset($eq['eqModel']['modelPath']) ? $eq['eqModel']['modelPath'] : $eq['eqModel']['modelName'].'/'.$eq['eqModel']['modelName'].'.json';
+                $modelSig = isset($eq['eqModel']['modelSig']) ? $eq['eqModel']['modelSig'] : $eq['eqModel']['modelName'];
                 $fullPath = ($modelSource == "Abeille") ? modelsDir : modelsLocalDir;
                 $fullPath .= $modelPath;
                 if (is_file($fullPath)) {
@@ -325,10 +325,10 @@
             $modelSig = ''; // Successful identifier (<modelId_manuf> or <modelId> or <location>)
             $modelSource = "Abeille"; // Default location
 
-            if (($eq['modelId'] !== false) && ($eq['modelId'] != '')) {
+            if (($eq['eqModel']['modelId'] !== false) && ($eq['eqModel']['modelId'] != '')) {
                 if (($eq['manufId'] !== false) && ($eq['manufId'] != '')) {
                     /* Search by modelId AND manufacturer */
-                    $identifier = $eq['modelId'].'_'.$eq['manufId'];
+                    $identifier = $eq['eqModel']['modelId'].'_'.$eq['manufId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
                         $modelSig = $identifier;
                         $modelSource = "local";
@@ -340,7 +340,7 @@
                 }
                 if ($modelSig == '') {
                     /* Search by modelId */
-                    $identifier = $eq['modelId'];
+                    $identifier = $eq['eqModel']['modelId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
                         $modelSig = $identifier;
                         $modelSource = "local";
@@ -364,20 +364,20 @@
             }
 
             if ($modelSig == '') {
-                $eq['modelSig'] = "";
-                $eq['modelName'] = "defaultUnknown";
-                $eq['modelSource'] = "Abeille";
+                $eq['eqModel']['modelSig'] = "";
+                $eq['eqModel']['modelName'] = "defaultUnknown";
+                $eq['eqModel']['modelSource'] = "Abeille";
                 parserLog('debug', "  EQ is UNsupported. 'defaultUnknown' config will be used");
                 return false;
             }
 
-            $eq['modelSig'] = $modelSig;
+            $eq['eqModel']['modelSig'] = $modelSig;
             if ($modelSource == "Abeille")
-                $eq['modelName'] = $GLOBALS['supportedEqList'][$modelSig]['modelName'];
+                $eq['eqModel']['modelName'] = $GLOBALS['supportedEqList'][$modelSig]['modelName'];
             else
-                $eq['modelName'] = $GLOBALS['customEqList'][$modelSig]['modelName'];
-            $eq['modelSource'] = $modelSource;
-            parserLog('debug', "  ModelName='".$eq['modelName']."', Source='${modelSource}'");
+                $eq['eqModel']['modelName'] = $GLOBALS['customEqList'][$modelSig]['modelName'];
+            $eq['eqModel']['modelSource'] = $modelSource;
+            parserLog('debug', "  ModelName='".$eq['eqModel']['modelName']."', Source='${modelSource}'");
             return true;
         } // End findModel()
 
@@ -387,13 +387,13 @@
                     'ieee' => $ieee,
                     'macCapa' => '', // MAC capa from device announce
                     'rxOnWhenIdle' => null/0/1, // If 1 then can always receive
+                    'endPoints' => [], // End points
                 ),
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => 'identifying', // identifying, configuring, discovering, idle
                 'time' => time(),
                 // 'epList' => null, // List of end points (ex: '01/02') OBSOLETE: Replaced by 'endPoints'
                 // 'epFirst' => '', // First end point (usually 01) OBSOLETE: Replaced by 'mainEp'
-                'endPoints' => [], // End points
                 'mainEp' => '', // Default EP = the one giving signature (modelId/manufId)
                 'manufId' => null (undef)/false (unsupported)/'xx'
                 'modelId' => null (undef)/false (unsupported)/'xx'
@@ -439,10 +439,10 @@
             $eq['time'] = time();
 
             // if ($eq['epList'] != '') {
-            if ($eq['endPoints'] !== null) {
+            if ($eq['zigbee']['endPoints'] !== null) {
                 /* 'endPoints' is already known => trig next step */
                 $epList = "";
-                foreach ($eq['endPoints'] as $epId => $ep) {
+                foreach ($eq['zigbee']['endPoints'] as $epId => $ep) {
                     if ($epList != "")
                         $epList .= "/";
                     $epList .= $epId;
@@ -538,30 +538,30 @@
                 if ($updType == 'epList') { // Active end points response
                     $epArr = explode('/', $value);
                     foreach ($epArr as $epId2) {
-                        if (!isset($eq['endPoints'][$epId2])) {
-                            $eq['endPoints'][$epId2] = [];
+                        if (!isset($eq['zigbee']['endPoints'][$epId2])) {
+                            $eq['zigbee']['endPoints'][$epId2] = [];
                             $endPointsUpdated = true;
                         }
                     }
                     if (isset($endPointsUpdated)) {
-                        $abUpdates["endPoints"] = $eq['endPoints'];
+                        $abUpdates["endPoints"] = $eq['zigbee']['endPoints'];
                     }
                 }
 
                 // Updates from simple descriptor response
                 else if ($updType == 'profId') { // Application profile ID
-                    if (!isset($eq['endPoints'][$ep]['profId'])) {
-                        $eq['endPoints'][$ep]['profId'] = $value;
+                    if (!isset($eq['zigbee']['endPoints'][$ep]['profId'])) {
+                        $eq['zigbee']['endPoints'][$ep]['profId'] = $value;
                         $abUpdates["profId"] = $value;
                     }
                 } else if ($updType == 'devId') { // Application device ID
-                    if (!isset($eq['endPoints'][$ep]['devId'])) {
-                        $eq['endPoints'][$ep]['devId'] = $value;
+                    if (!isset($eq['zigbee']['endPoints'][$ep]['devId'])) {
+                        $eq['zigbee']['endPoints'][$ep]['devId'] = $value;
                         $abUpdates["devId"] = $value;
                     }
                 } else if ($updType == 'servClusters') { // Server clusters for $ep
-                    if (!isset($eq['endPoints'][$ep]['servClusters'])) {
-                        $eq['endPoints'][$ep]['servClusters'] = $value;
+                    if (!isset($eq['zigbee']['endPoints'][$ep]['servClusters'])) {
+                        $eq['zigbee']['endPoints'][$ep]['servClusters'] = $value;
                         $abUpdates["servClusters"] = $value;
                     }
                 }
@@ -595,18 +595,18 @@
                         $abUpdates["manufCode"] = $value;
                     }
                 } else if (($updType == 'modelId') || ($updType == '0000-0005')) { // Model identifier
-                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['modelId'])) {
-                        $eq['endPoints'][$ep]['modelId'] = $value;
+                    if (!isset($eq['zigbee']['endPoints'][$ep]) || !isset($eq['zigbee']['endPoints'][$ep]['modelId'])) {
+                        $eq['zigbee']['endPoints'][$ep]['modelId'] = $value;
                         $abUpdates["modelId"] = $value;
                     }
-                    if (($eq['modelId'] === null) || ($eq['modelId'] === false)) {
-                        $eq['modelId'] = $value;
+                    if (($eq['eqModel']['modelId'] === null) || ($eq['eqModel']['modelId'] === false)) {
+                        $eq['eqModel']['modelId'] = $value;
                         if ($eq['mainEp'] == '')
                             $eq['mainEp'] = $ep;
                     }
                 } else if (($updType == 'manufId') || ($updType == '0000-0004')) { // Manufacturer name
-                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['manufId'])) {
-                        $eq['endPoints'][$ep]['manufId'] = $value;
+                    if (!isset($eq['zigbee']['endPoints'][$ep]) || !isset($eq['zigbee']['endPoints'][$ep]['manufId'])) {
+                        $eq['zigbee']['endPoints'][$ep]['manufId'] = $value;
                         $abUpdates["manufId"] = $value;
                     }
                     if (($eq['manufId'] === null) || ($eq['manufId'] === false)) {
@@ -615,20 +615,20 @@
                             $eq['mainEp'] = $ep;
                     }
                 } else if (($updType == "location") || ($updType == "0000-0010")) { // Location
-                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['location'])) {
-                        $eq['endPoints'][$ep]['location'] = $value;
+                    if (!isset($eq['zigbee']['endPoints'][$ep]) || !isset($eq['zigbee']['endPoints'][$ep]['location'])) {
+                        $eq['zigbee']['endPoints'][$ep]['location'] = $value;
                         $abUpdates["location"] = $value;
                     }
                     if (($eq['location'] === null) || ($eq['location'] === false))
                         $eq['location'] = $value;
                 } else if ($updType == '0000-0006') { // Cluster 0000, attrib 0006/DateCode
-                    if (!isset($eq['endPoints'][$ep]['dateCode']) || ($eq['endPoints'][$ep]['dateCode'] !== $value)) {
-                        $eq['endPoints'][$ep]['dateCode'] = $value;
+                    if (!isset($eq['zigbee']['endPoints'][$ep]['dateCode']) || ($eq['zigbee']['endPoints'][$ep]['dateCode'] !== $value)) {
+                        $eq['zigbee']['endPoints'][$ep]['dateCode'] = $value;
                         $abUpdates["dateCode"] = $value;
                     }
                 } else if ($updType == '0000-4000') { // Cluster 0000, attrib 4000/SWBuildID
-                    if (!isset($eq['endPoints'][$ep]['swBuildId']) || ($eq['endPoints'][$ep]['swBuildId'] !== $value)) {
-                        $eq['endPoints'][$ep]['swBuildId'] = $value;
+                    if (!isset($eq['zigbee']['endPoints'][$ep]['swBuildId']) || ($eq['zigbee']['endPoints'][$ep]['swBuildId'] !== $value)) {
+                        $eq['zigbee']['endPoints'][$ep]['swBuildId'] = $value;
                         $abUpdates["swBuildId"] = $value;
                     }
                 } else if ($updType == 'ieee') {
@@ -681,7 +681,7 @@
             }
             // IEEE is available
 
-            if (!$eq['endPoints']) {
+            if (!$eq['zigbee']['endPoints']) {
                 parserLog('debug', '    Requesting active endpoints list');
                 msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getActiveEndpoints");
                 return $ret;
@@ -689,7 +689,7 @@
             // Endpoints list is available
 
             // What about server clusters & groups ?
-            foreach ($eq['endPoints'] as $epId2 => $ep2) {
+            foreach ($eq['zigbee']['endPoints'] as $epId2 => $ep2) {
                 if (($epId2 == "") || ($epId2 == "00"))
                     continue; // Invalid case seen some times
 
@@ -720,16 +720,16 @@
             // Check if main signature is missing but available in EP
             // Note that this is unexpected. Some bug somewhere else leads to that.
             // TODO: Better to include this part in next 'if' code block
-            if (($eq['modelId'] === null) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
-                foreach ($eq['endPoints'] as $epId2 => $ep2) {
-                    if (($eq['modelId'] === null) && isset($ep2['modelId']))
-                        $eq['modelId'] = $ep2['modelId'];
+            if (($eq['eqModel']['modelId'] === null) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
+                foreach ($eq['zigbee']['endPoints'] as $epId2 => $ep2) {
+                    if (($eq['eqModel']['modelId'] === null) && isset($ep2['modelId']))
+                        $eq['eqModel']['modelId'] = $ep2['modelId'];
                     if (($eq['manufId'] === null) && isset($ep2['manufId']))
                         $eq['manufId'] = $ep2['manufId'];
                     if (($eq['location'] === null) && isset($ep2['location']))
                         $eq['location'] = $ep2['location'];
 
-                    if (($eq['modelId'] !== null) || ($eq['manufId'] !== null) || ($eq['location'] !== null))
+                    if (($eq['eqModel']['modelId'] !== null) || ($eq['manufId'] !== null) || ($eq['location'] !== null))
                         break;
                 }
             }
@@ -737,12 +737,12 @@
             // TODO: Do not request modelId/manuf.. if there is no cluster 0000 server
 
             // IEEE & EP list are available. Any missing info to identify device ?
-            if (($eq['modelId'] === null) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
+            if (($eq['eqModel']['modelId'] === null) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
                 // Interrogating all EP
                 // Note: in most of the cases interrogating either first EP or EP 01 is ok but sometimes
                 //   the device does not support cluster 0000 in these cases.
                 //   Ex: Sonoff smart plug S26R2ZB (several EPs but the first one does not support modelId nor manufId)
-                foreach ($eq['endPoints'] as $epId2 => $ep2) {
+                foreach ($eq['zigbee']['endPoints'] as $epId2 => $ep2) {
                     if (!isset($ep2['servClusters']))
                         continue; // No servClusters list
                     if (strpos($ep2['servClusters'], '0000') === false)
@@ -780,17 +780,17 @@
             }
 
             // Check if attr 0006 & 4000 from cluster 0000 are known
-            foreach ($eq['endPoints'] as $epId2 => $ep2) {
-                if (!isset($eq['endPoints'][$epId2]['servClusters']['0000']))
+            foreach ($eq['zigbee']['endPoints'] as $epId2 => $ep2) {
+                if (!isset($eq['zigbee']['endPoints'][$epId2]['servClusters']['0000']))
                     continue; // No basic cluster
 
                 $missing = '';
                 $missingTxt = '';
-                if (!isset($eq['endPoints'][$ep]['dateCode'])) {
+                if (!isset($eq['zigbee']['endPoints'][$ep]['dateCode'])) {
                     $missing .= '0006';
                     $missingTxt .= 'dateCode';
                 }
-                if (!isset($eq['endPoints'][$ep]['swBuildId'])) {
+                if (!isset($eq['zigbee']['endPoints'][$ep]['swBuildId'])) {
                     if ($missing != '') {
                         $missing .= ',';
                         $missingTxt .= '/';
@@ -811,17 +811,17 @@
                 - else (modelId is not supported) if location is supported
                     - search for JSON with 'location'
             */
-            if ($eq['modelId'] === null)
+            if ($eq['eqModel']['modelId'] === null)
                 return false; // 'modelId' must be set to a value or 'false' (unsupported).
-            if ($eq['modelId'] !== false) {
+            if ($eq['eqModel']['modelId'] !== false) {
                 if (!isset($eq['manufId'])) {
                     /* Checking if device is supported without manufacturer attribute for those who do not respond to such request
                        but if not, default config is not accepted since manufacturer may not be arrived yet.
                        For Tuya case (model=TSxxxx), manufacturer is MANDATORY. */
-                    if ((substr($eq['modelId'], 0, 2) == "TS") && (strlen($eq['modelId']) == 6))
+                    if ((substr($eq['eqModel']['modelId'], 0, 2) == "TS") && (strlen($eq['eqModel']['modelId']) == 6))
                         return false; // Tuya case. Waiting for manufacturer to return.
                     if ($this->findModel($eq, 'modelId') === false) {
-                        $eq['modelName'] = ''; // 'defaultUnknown' case not accepted there
+                        $eq['eqModel']['modelName'] = ''; // 'defaultUnknown' case not accepted there
                         return false;
                     }
                 } else {
@@ -835,10 +835,10 @@
                 $this->findModel($eq, 'location');
             } else { // Neither modelId nor location supported ?! Ouahhh...
                 parserLog('debug', "    WARNING: Neither modelId nor location supported => using default config.");
-                $eq['modelName'] = 'defaultUnknown';
-                $eq['modelSource'] = "Abeille";
+                $eq['eqModel']['modelName'] = 'defaultUnknown';
+                $eq['eqModel']['modelSource'] = "Abeille";
             }
-            if ($eq['modelName'] == '') {
+            if ($e['eqModel']['modelName'] == '') {
                 // Still not identified
                 if ($eq['status'] == 'unknown_ident')
                     return true;
@@ -849,13 +849,13 @@
             // Tcharp38: If new dev announce of already known device, should we reconfigure it anyway ?
             // TODO: No reconfigure if rejoin = 02
             // Note: rejoin seems not reliable as generated by this bad NXP stack.
-            if ($eq['modelName'] == 'defaultUnknown')
+            if ($eq['eqModel']['modelName'] == 'defaultUnknown')
                 $this->deviceDiscover($net, $addr);
             else if ($eq['status'] == 'identifying') {
                 // Special case: Profalux v2: waiting for non empty binding table before binding zigate.
                 //   If not, zigate binding would kill 'remote to curtain' binding.
                 $profalux = (substr($eq['zigbee']['ieee'], 0, 6) == "20918A") ? true : false;
-                if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
+                if ($profalux && ($eq['eqModel']['modelId'] !== false) && ($eq['eqModel']['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
                         parserLog('debug', '    Profalux v2: Requesting binding table size.');
                         msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getBindingTable", "");
@@ -879,14 +879,14 @@
            Go thru EQ commands and execute all those marked 'execAtCreation' */
         function deviceConfigure($net, $addr) {
             $eq = &$GLOBALS['devices'][$net][$addr];
-            parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['modelName'].")");
+            parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", ModelName=".$eq['eqModel']['modelName'].")");
 
             // Read JSON to get list of commands to execute
-            if (isset($eq['modelPath']))
-                $modelPath = $eq['modelPath'];
-            else
-                $modelPath = $eq['modelName']."/".$eq['modelName'].".json";
-            $eqModel = getDeviceModel($eq['modelSource'], $modelPath, $eq['modelName']);
+            // if (isset($eq['eqModel']['modelPath']))
+            //     $modelPath = $eq['eqModel']['modelPath'];
+            // else
+            //     $modelPath = $eq['eqModel']['modelName']."/".$eq['eqModel']['modelName'].".json";
+            $eqModel = getDeviceModel($eq['eqModel']['modelSource'], $eq['eqModel']['modelPath'], $eq['eqModel']['modelName']);
             if ($eqModel === false)
                 return;
 
@@ -918,15 +918,15 @@
                 'ieee' => $eq['zigbee']['ieee'],
                 // 'ep' => $eq['epFirst'],
                 'ep' => $eq['mainEp'],
-                'modelId' => $eq['modelId'],
+                'modelId' => $eq['eqModel']['modelId'],
                 'manufId' => $eq['manufId'],
-                'modelName' => $eq['modelName'],
-                'modelSource' => $eq['modelSource'], // "Abeille" or "local"
+                'modelName' => $eq['eqModel']['modelName'],
+                'modelSource' => $eq['eqModel']['modelSource'], // "Abeille" or "local"
                 'macCapa' => $eq['zigbee']['macCapa'],
                 'time' => time()
             );
-            if (isset($eq['modelPath']))
-                $msg['modelPath'] = $eq['modelPath'];
+            if (isset($eq['eqModel']['modelPath']))
+                $msg['modelPath'] = $eq['eqModel']['modelPath'];
             msgToAbeille2($msg);
 
             if (!isset($eqModel['commands'])) {
@@ -992,7 +992,7 @@
            This is a phantom device. */
         function deviceCreate($net, $addr) {
             $eq = &$GLOBALS['devices'][$net][$addr];
-            parserLog('debug', "  deviceCreate(".$net.", ".$addr.", jsonId=".$eq['modelName'].")");
+            parserLog('debug', "  deviceCreate(".$net.", ".$addr.", ModelName=".$eq['eqModel']['modelName'].")");
 
             /* Config ongoing. Informing Abeille for EQ creation/update */
             $msg = array(
@@ -1003,10 +1003,10 @@
                 'ieee' => $eq['zigbee']['ieee'],
                 // 'ep' => $eq['epFirst'],
                 'ep' => $eq['mainEp'],
-                'modelId' => $eq['modelId'],
+                'modelId' => $eq['eqModel']['modelId'],
                 'manufId' => $eq['manufId'],
-                'modelName' => $eq['modelName'],
-                'modelSource' => $eq['modelSource'], // "Abeille" or "local"
+                'modelName' => $eq['eqModel']['modelName'],
+                'modelSource' => $eq['eqModel']['modelSource'], // "Abeille" or "local"
                 'macCapa' => $eq['zigbee']['macCapa'],
                 'time' => time()
             );
@@ -1033,7 +1033,7 @@
             //     parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
             //     msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getSimpleDescriptor", 'ep='.$epId);
             // }
-            foreach ($eq['endPoints'] as $epId => $ep) {
+            foreach ($eq['zigbee']['endPoints'] as $epId => $ep) {
                 $eq['discovery']['endPoints'][$epId] = [];
                 parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
                 msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getSimpleDescriptor", 'ep='.$epId);
@@ -1048,11 +1048,11 @@
                 'ieee' => $eq['zigbee']['ieee'],
                 // 'ep' => $eq['epFirst'],
                 'ep' => $eq['mainEp'],
-                'modelId' => $eq['modelId'], // Zigbee model id (cluster 0000)
+                'modelId' => $eq['eqModel']['modelId'], // Zigbee model id (cluster 0000)
                 'manufId' => $eq['manufId'], // Zigbee manuf id (cluster 0000)
-                'modelSig' => $eq['modelSig'], // Signature used for model identification
-                'modelName' => $eq['modelName'],
-                'modelSource' => $eq['modelSource'], // "Abeille" or "local"
+                'modelSig' => $eq['eqModel']['modelSig'], // Signature used for model identification
+                'modelName' => $eq['eqModel']['modelName'],
+                'modelSource' => $eq['eqModel']['modelSource'], // "Abeille" or "local"
                 'macCapa' => $eq['zigbee']['macCapa'],
                 'time' => time()
             );
@@ -1176,7 +1176,7 @@
             parserLog('debug', '    discovery='.json_encode($discovery, JSON_UNESCAPED_SLASHES));
 
             // Saving 'discovery.json' in local (unsupported yet) devices
-            $jsonId = $eq['modelId'].'_'.$eq['manufId'];
+            $jsonId = $eq['eqModel']['modelId'].'_'.$eq['manufId'];
             // parserLog('debug', '    jsonId='.$jsonId);
             $fullPath = __DIR__."/../config/devices_local/".$jsonId;
             // parserLog('debug', '    fullPath='.$fullPath);

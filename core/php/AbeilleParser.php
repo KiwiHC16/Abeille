@@ -248,6 +248,12 @@
             'ieee' => $ieee,
             'macCapa' => '',
             'rxOnWhenIdle' => null,
+            'endPoints' => null,
+        );
+        $eqModel = array(
+            'modelName' => '', // JSON file name without extension
+            'modelSource' => '', // ''/'Abeille' or 'local'
+            'modelForced' => false
         );
         $GLOBALS['devices'][$net][$addr] = array(
             // 'ieee' => $ieee,
@@ -258,14 +264,14 @@
             'rejoin' => '', // Rejoin info from device announce
             'status' => 'identifying', // identifying, configuring, discovering, idle
             'time' => time(),
-            'endPoints' => null,
             'mainEp' => '',
             'manufId' => null, // Zigbee manufacturer: null(undef)/false(unsupported)/'xx'
             'modelId' => null, // Zigmee model: null(undef)/false(unsupported)/'xx'
             'location' => null, // Zigbee location: null(undef)/false(unsupported)/'xx'
-            'modelName' => '', // Model file name WITHOUT '.json'
-            'modelSource' => '', // Model source ('Abeille' or 'local')
-            'modelForced' => false, // Model forced by user if 'true'
+            // 'modelName' => '', // Model file name WITHOUT '.json'
+            // 'modelSource' => '', // Model source ('Abeille' or 'local')
+            // 'modelForced' => false, // Model forced by user if 'true'
+            'eqModel' => $eqModel,
             // Optional 'private'
             // Optional 'notStandard-0400-0000'
         );
@@ -392,11 +398,15 @@
         $eq = &$GLOBALS['devices'][$net][$addr];
 
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
-        $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
-        $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
-        if (isset($eqModel['modelPath'])) // Forced model variant case
-            $eq['modelPath'] = $eqModel['modelPath'];
+        // $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+        // $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
+        // $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
+        // if (isset($eqModel['modelPath'])) // Forced model variant case
+        //     $eq['modelPath'] = $eqModel['modelPath'];
+        if (!isset($eqModel['modelSource']))
+            $eqModel['modelSource'] = ''; // Default
+        if (!isset($eqModel['modelPath']))
+            $eqModel['modelPath'] = ''; // Default
         if (isset($eqModel['private'])) {
             $eq['private'] = $eqModel['private'];
             parserLog('debug', "  'private' updated to ".json_encode($eq['private'], JSON_UNESCAPED_SLASHES));
@@ -533,12 +543,12 @@
                 // 'ieee' => $eqLogic->getConfiguration('IEEE', null),
                 // 'macCapa' => isset($zigbee['macCapa']) ? $zigbee['macCapa'] : '',
                 // 'rxOnWhenIdle' => isset($zigbee['rxOnWhenIdle']) ? $zigbee['rxOnWhenIdle'] : null,
+                // 'endPoints' => isset($zigbee['endPoints']) ? $zigbee['endPoints'] : null, // null(undef)
                 'zigbee' => $zigbee,
                 'manufCode' => isset($zigbee['manufCode']) ? $zigbee['manufCode'] : null,
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => $status, // identifying, configuring, discovering, idle
                 'time' => time(),
-                'endPoints' => isset($zigbee['endPoints']) ? $zigbee['endPoints'] : null, // null(undef)
                 'mainEp' => '',
                 // Cluster 0000 infos
                 'manufId' => null, // Zigbee manufacturer: null(undef)/false(unsupported)/'xx'
@@ -547,9 +557,10 @@
                 'dateCode' => null,
                 'swBuildId' => null,
                 // Abeille's model infos
-                'modelName' => $jsonId,
-                'modelSource' => '',
-                'modelForced' => isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false,
+                // 'modelName' => $jsonId,
+                // 'modelSource' => '',
+                // 'modelForced' => isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false,
+                'eqModel' => $eqModel,
                 'customization' => $eqLogic->getConfiguration('ab::customization', null),
                 //'private' => // Optional: Set if 'private' section exists in model
                 // Optional 'notStandard-0400-0000'

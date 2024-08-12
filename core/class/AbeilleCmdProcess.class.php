@@ -954,10 +954,9 @@
             // Bind
             // Title => 000B57fffe3025ad (IEEE de l ampoule)
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006
-            if (isset($Command['bind'])) // Tcharp38: OBSOLETE !! Use "bind0030" instead
-            {
+            if ($Command['name'] == 'bind') {
+
                 cmdLog('debug', "  command bind", $this->debug['processCmd']);
-                // Msg Type = 0x0030
                 $cmd = "0030";
 
                 // <target extended address: uint64_t>                                  -> 16
@@ -996,8 +995,8 @@
             // BindToGroup
             // Pour Telecommande RC110
             // Tcharp38: Why the need of a 0530 based function ?
-            if (isset($Command['BindToGroup']))
-            {
+            if ($Command['name'] == 'BindToGroup') {
+
                 cmdLog('debug', "  command BindToGroup", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1134,8 +1133,8 @@
             // setReport
             // Title => setReport
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
-            if (isset($Command['setReport'])) // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
-            {
+            if ($Command['name'] == 'setReport') { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
+
                 cmdLog('debug', "  WARNING: OBSOLETE: command setReport", $this->debug['processCmd']);
                 // Configure Reporting request
                 // Msg Type = 0x0120
@@ -1207,7 +1206,8 @@
             // Title => setReportRaw
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
             // For the time being hard coded to run tests but should replace setReport due to a bug on Timeout of command 0120. See my notes.
-            if (isset($Command['setReportRaw'])) { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
+            if ($Command['name'] == 'setReportRaw') { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
+
                 cmdLog('debug', "  WARNING: OBSOLETE: command setReportRaw", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1271,8 +1271,8 @@
 
             // CmdAbeille/0000/commissioningGroupAPS -> address=a048&groupId=AA00
             // Commission group for Ikea Telecommande On/Off still interrupteur
-            if (isset($Command['commissioningGroupAPS']))
-            {
+            if ($Command['name'] == 'commissioningGroupAPS') {
+
                 cmdLog('debug', "  commissioningGroupAPS", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1331,8 +1331,8 @@
 
             // CmdAbeille/0000/commissioningGroupAPSLegrand -> address=a048&groupId=AA00
             // Commission group for Legrand Telecommande On/Off still interrupteur Issue #1290
-            if (isset($Command['commissioningGroupAPSLegrand']))
-            {
+            if ($Command['name'] == 'commissioningGroupAPSLegrand') {
+
                 cmdLog('debug', "  commissioningGroupAPSLegrand", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1389,8 +1389,8 @@
                 return;
             }
 
-            if (isset($Command['viewScene']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['groupId']) && isset($Command['cmdParams']['sceneID']))
-            {
+            if ($Command['name'] == 'viewScene') {
+
                 $cmd = "00A0";
 
                 // <address mode: uint8_t>
@@ -1416,8 +1416,8 @@
                 return;
             }
 
-            if (isset($Command['storeScene']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['groupId']) && isset($Command['cmdParams']['sceneID']))
-            {
+            if ($Command['name'] == 'storeScene') {
+
                 $cmd = "00A4";
 
                 // <address mode: uint8_t>
@@ -1443,8 +1443,8 @@
                 return;
             }
 
-            if (isset($Command['recallScene']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['groupId']) && isset($Command['cmdParams']['sceneID']))
-            {
+            if ($Command['name'] == 'recallScene') {
+
                 $cmd = "00A5";
 
                 // <address mode: uint8_t>
@@ -1470,8 +1470,8 @@
                 return;
             }
 
-            if (isset($Command['sceneGroupRecall']) && isset($Command['cmdParams']['groupId']) && isset($Command['cmdParams']['sceneID']))
-            {
+            if ($Command['name'] == 'sceneGroupRecall') {
+
                 $cmd = "00A5";
 
                 // <address mode: uint8_t>
@@ -1497,8 +1497,8 @@
                 return;
             }
 
-            if (isset($Command['addScene']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['groupId']) && isset($Command['cmdParams']['sceneID']) && isset($Command['cmdParams']['sceneName']))
-            {
+            if ($Command['name'] == 'addScene') {
+
                 $cmd = "00A1";
 
                 // <address mode: uint8_t>
@@ -1534,8 +1534,8 @@
                 return;
             }
 
-            if (isset($Command['getSceneMembership']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']))
-            {
+            if ($Command['name'] == 'getSceneMembership') {
+
                 $cmd = "00A6";
 
                 // <address mode: uint8_t>
@@ -1559,8 +1559,8 @@
                 return;
             }
 
-            if (isset($Command['removeScene']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['groupId']) && isset($Command['cmdParams']['sceneID']))
-            {
+            if ($Command['name'] == 'removeScene') {
+
                 $cmd = "00A2";
 
                 //0x00A2
@@ -1587,8 +1587,8 @@
                 return;
             }
 
-            if (isset($Command['removeSceneAll']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['groupId']))
-            {
+            if ($Command['name'] == 'removeSceneAll') {
+
                 $cmd = "00A3";
 
                 //0x00A3
@@ -1613,8 +1613,8 @@
                 return;
             }
 
-            if (isset($Command['sceneLeftIkea']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['groupId']))
-            {
+            if ($Command['name'] == 'sceneLeftIkea') {
+
                 cmdLog('debug', "  Specific Command to simulate Ikea Telecommand < and >");
 
                 // Msg Type = 0x0530
@@ -1651,9 +1651,7 @@
                 return;
             }
 
-            if (isset($Command['WindowsCoveringLevel']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['clusterCommand']))
-            {
-                // echo "Windows Covering test for Store Ikea: lift to %\n";
+            if ($Command['name'] == 'WindowsCoveringLevel') {
 
                 $cmd = '0530';
 
@@ -1685,8 +1683,8 @@
             }
 
             // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
-            if (isset($Command['WindowsCoveringGroup']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['clusterCommand']))
-            {
+            if ($Command['name'] == 'WindowsCoveringGroup') {
+
                 // 0x00FA    Windows covering (v3.0f only)
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
@@ -1768,8 +1766,8 @@
             // }
 
             // Don't know how to make it works
-            if (isset($Command['touchLinkFactoryResetTarget']))
-            {
+            if ($Command['name'] == 'touchLinkFactoryResetTarget') {
+
                 if ($Command['touchLinkFactoryResetTarget']=="DO")
                 {
                     // $this->addCmdToQueue($priority,$priority,$dest,"00D2","0000");
@@ -1779,8 +1777,8 @@
             }
 
             // OBSOLETE !! Replaced by cmd-Private + fct=profaluxSetTiltLift
-            if (isset($Command['moveToLiftAndTiltBSO']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['addressMode']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['inclinaison']) && isset($Command['cmdParams']['duration']))
-            {
+            if ($Command['name'] == 'moveToLiftAndTiltBSO') {
+
                 cmdLog('debug', "  command moveToLiftAndTiltBSO", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1860,24 +1858,24 @@
             // }
 
             // WriteAttributeRequest ------------------------------------------------------------------------------------
-            if ((isset($Command['WriteAttributeRequest'])) && (isset($Command['cmdParams']['address'])) && isset($Command['cmdParams']['Proprio']) && isset($Command['cmdParams']['clusterId']) && isset($Command['cmdParams']['attributeId']) && isset($Command['cmdParams']['value']))
-            {
+            if ($Command['name'] == 'WriteAttributeRequest') {
+
                 cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequest' command");
                 $this->setParam3( $dest, $Command );
                 return;
             }
 
             // WriteAttributeRequest ------------------------------------------------------------------------------------
-            if ((isset($Command['WriteAttributeRequestGeneric'])) && (isset($Command['cmdParams']['address'])) && isset($Command['cmdParams']['Proprio']) && isset($Command['cmdParams']['clusterId']) && isset($Command['cmdParams']['attributeId']) && isset($Command['cmdParams']['attributeType']) && isset($Command['cmdParams']['value']))
-            {
+            if ($Command['name'] == 'WriteAttributeRequestGeneric') {
+
                 cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestGeneric' command");
                 $this->setParamGeneric( $dest, $Command );
                 return;
             }
 
             // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
-            if ((isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['cmdParams']['address'])) && isset($Command['cmdParams']['Proprio']) && isset($Command['cmdParams']['clusterId']) && isset($Command['cmdParams']['attributeId']) && isset($Command['cmdParams']['value']))
-            {
+            if ($Command['name'] == 'WriteAttributeRequestVibration') {
+
                 cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestVibration' command");
                 // Tcharp38: WHere is this code ??? $this->setParamXiaomi($dest, $Command);
                 // cmdLog('debug', "ERROR: WriteAttributeRequestVibration() CAN'T be executed. Missing setParamXiaomi()", $this->debug['processCmd']);
@@ -1886,8 +1884,8 @@
             }
 
             // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
-            if ((isset($Command['WriteAttributeRequestActivateDimmer'])) && (isset($Command['cmdParams']['address'])) && isset($Command['cmdParams']['clusterId']) && isset($Command['cmdParams']['attributeId']) && isset($Command['cmdParams']['value']))
-            {
+            if ($Command['name'] == 'WriteAttributeRequestActivateDimmer') {
+
                 cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestActivateDimmer' command");
                 $this->setParam4( $dest, $Command );
                 return;
@@ -1896,8 +1894,7 @@
             // Tcharp38 note: This is badly named. It is not a write attribute but
             // most probably a cluster 0502 cmd 00
             // OBSOLETE => Use 'cmd-0502' with 'cmd=00' instead
-            if (isset($Command['writeAttributeRequestIAS_WD'])) {
-                // Parameters: EP=#EP&mode=Flash&duration=#slider#
+            if ($Command['name'] == 'writeAttributeRequestIAS_WD') {
 
                     cmdLog('debug', "  command writeAttributeRequestIAS_WD", $this->debug['processCmd']);
                     // Msg Type = 0x0111
@@ -1943,8 +1940,8 @@
             // Title => 000B57fffe3025ad (IEEE de l ampoule) <= to be reviewed
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
 
-            if (isset($Command['addGroupAPS'])  )
-            {
+            if ($Command['name'] == 'addGroupAPS') {
+
                 cmdLog('debug', "  command add group with APS", $this->debug['processCmd']);
                 // Msg Type = 0x0530
                 $cmd = "0530";
@@ -2005,8 +2002,8 @@
             }
 
             // Replace Equipement
-            if (isset($Command['replaceEquipement']) && isset($Command['old']) && isset($Command['new']))
-            {
+            if ($Command['name'] == 'replaceEquipement') {
+
                 cmdLog('debug', "  Replace an Equipment", $this->debug['processCmd']);
 
                 $old = $Command['old'];
@@ -2029,8 +2026,8 @@
             }
 
             //
-            if (isset($Command['UpGroup']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['step']))
-            {
+            if ($Command['name'] == 'UpGroup') {
+
                 cmdLog('debug', '  UpGroup for: '.$Command['cmdParams']['address'], $this->debug['processCmd']);
                 // <address mode: uint8_t>          -> 2
                 // <target short address: uint16_t> -> 4
@@ -2059,8 +2056,8 @@
                 return;
             }
 
-            if (isset($Command['DownGroup']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['step']))
-            {
+            if ($Command['name'] == 'DownGroup') {
+
                 cmdLog('debug', '  DownGroup for: '.$Command['cmdParams']['address'], $this->debug['processCmd']);
                 // <address mode: uint8_t>          -> 2
                 // <target short address: uint16_t> -> 4
@@ -2090,8 +2087,8 @@
             }
 
             // On / Off Timed Send
-            if (isset($Command['OnOffTimed']) && isset($Command['cmdParams']['addressMode']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['destinationEndpoint']) && isset($Command['cmdParams']['action']) && isset($Command['cmdParams']['onTime']) && isset($Command['cmdParams']['offWaitTime']))
-            {
+            if ($Command['name'] == 'OnOffTimed') {
+
                 cmdLog('debug', '  OnOff for: '.$Command['cmdParams']['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['cmdParams']['action'].' - '.$Command['cmdParams']['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd']);
                 // <address mode: uint8_t>    Status
                 // <target short address: uint16_t>
@@ -2129,8 +2126,8 @@
             }
 
             // Take RGB (0-255) convert to X, Y and send the color
-            if (isset($Command['setColourRGB']))
-            {
+            if ($Command['name'] == 'setColourRGB') {
+
                 // The reverse transformation
                 // https://en.wikipedia.org/wiki/SRGB
 
@@ -2217,8 +2214,8 @@
             //     return;
             // }
 
-            if (isset($Command['MgtLeave']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['IEEE']))
-            {
+            if ($Command['name'] == 'MgtLeave') {
+
                 // Zigbee specification
                 // 2.4.3.3.5   Mgmt_Leave_req
                 // (ClusterID=0x0034)
@@ -2254,8 +2251,8 @@
 
             // if (isset($Command['Remove']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['IEEE']))
             // https://github.com/KiwiHC16/Abeille/issues/332
-            if (isset($Command['Remove']) && isset($Command['cmdParams']['ParentAddressIEEE']) && isset($Command['cmdParams']['ChildAddressIEEE']))
-            {
+            if ($Command['name'] == 'Remove') {
+
                 // <target short address: uint64_t>
                 // <extended address: uint64_t>
                 $cmd = "0026";

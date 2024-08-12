@@ -106,7 +106,7 @@
                     $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
-                                    "BindToGroup"              => "1",
+                                    "name" => "BindToGroup",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -219,7 +219,7 @@
                     $parameters['MinInterval'] = str_pad(dechex($parameters['MinInterval']), 4, 0, STR_PAD_LEFT);
 
                 $Command = array(
-                                "setReport"         => "1",
+                                "name" => "setReport",
                                 "priority"          => $priority,
                                 "dest"              => $dest,
                                 "cmdParams" => array(
@@ -445,7 +445,7 @@
             //     break;
             case "UpGroup":
                 $Command = array(
-                    "UpGroup" => "1",
+                    "name" => "UpGroup",
                     "priority" => $priority,
                     "dest" => $dest,
                     "cmdParams" => array(
@@ -458,7 +458,7 @@
                 break;
             case "DownGroup":
                 $Command = array(
-                    "DownGroup" => "1",
+                    "name" => "DownGroup",
                     "priority" => $priority,
                     "dest" => $dest,
                     "cmdParams" => array(
@@ -518,7 +518,7 @@
                 }
 
                 $Command = array(
-                                "OnOffTimed"           => "1",
+                                "name" => "OnOffTimed",
                                 "priority"             => $priority,
                                 "dest"                 => $dest,
                                 "cmdParams" => array(
@@ -537,7 +537,7 @@
                     $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
-                                "WriteAttributeRequest" => "1",
+                                "name" => "WriteAttributeRequest",
                                 "priority"          => $priority,
                                 "dest"              => $dest,
                                 "cmdParams" => array(
@@ -556,7 +556,7 @@
                     $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
-                                    "WriteAttributeRequestVibration" => "1",
+                                    "name" => "WriteAttributeRequestVibration",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
                                     "cmdParams" => array(
@@ -578,7 +578,7 @@
                 $consigne = $parameters['value'];
                 $consigneHex = $consigne[4].$consigne[5].$consigne[2].$consigne[3].$consigne[0].$consigne[1];
                 $Command = array(
-                                    "WriteAttributeRequest" => "1",
+                                    "name" => "WriteAttributeRequest",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
                                     "cmdParams" => array(
@@ -599,7 +599,7 @@
                 $consigne = sprintf("%04X", $parameters['value']*100 );
                 $consigneHex = $consigne[2].$consigne[3].$consigne[0].$consigne[1];
                 $Command = array(
-                                    "WriteAttributeRequest"    => "1",
+                                    "name" => "WriteAttributeRequest",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -621,7 +621,7 @@
                 $consigne = sprintf("%02X", $parameters['value'] );
                 $consigneHex = $consigne;
                 $Command = array(
-                                    "WriteAttributeRequest" => "1",
+                                    "name" => "WriteAttributeRequest",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
                                     "cmdParams" => array(
@@ -651,7 +651,7 @@
                     return;
                 }
                 $Command = array(
-                                    "WriteAttributeRequestGeneric" => "1",
+                                    "name" => "WriteAttributeRequestGeneric",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
                                     "cmdParams" => array(
@@ -671,7 +671,7 @@
                     $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
-                                    "WriteAttributeRequestActivateDimmer" => "1",
+                                    "name" => "WriteAttributeRequestActivateDimmer",
                                     "priority"         => $priority,
                                     "dest"             => $dest,
                                     "cmdParams" => array(
@@ -759,7 +759,7 @@
                         $parameters = $this->proper_parse_str($msg);
                     }
                     $Command = array(
-                                    "moveToLiftAndTiltBSO" => "1",
+                                    "name" => "moveToLiftAndTiltBSO",
                                     "priority" => $priority,
                                     "dest" => $dest,
                                     "cmdParams" => array(
@@ -887,7 +887,7 @@
                 $this->msgToAbeille('Abeille/'.$address.'/ColourRGB',  $parameters['color']);
 
                 $Command = array(
-                                    "setColourRGB" => "1",
+                                    "name" => "setColourRGB",
                                     "priority" => $priority,
                                     "dest" => $dest,
                                     "cmdParams" => array(
@@ -918,7 +918,7 @@
                 }
 
                 $Command = array(
-                                    "setColourRGB" => "1",
+                                    "name" => "setColourRGB",
                                     "priority" => $priority,
                                     "dest" => $dest,
                                     "cmdParams" => array(
@@ -949,17 +949,17 @@
                 }
 
                 $Command = array(
-                                    "setColourRGB" => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "cmdParams" => array(
-                                        "address" => $address,
-                                        "R" => $rouge/100*255,
-                                        "G" => $parameters['color']/100*255,
-                                        "B" => $bleu/100*255,
-                                        "destinationEndPoint" => $parameters['EP'],
-                                    )
-                                );
+                    "name" => "setColourRGB",
+                    "priority" => $priority,
+                    "dest" => $dest,
+                    "cmdParams" => array(
+                        "address" => $address,
+                        "R" => $rouge/100*255,
+                        "G" => $parameters['color']/100*255,
+                        "B" => $bleu/100*255,
+                        "destinationEndPoint" => $parameters['EP'],
+                    )
+                );
                 break;
             case "setBleu":
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
@@ -980,7 +980,7 @@
                 }
 
                 $Command = array(
-                                    "setColourRGB" => "1",
+                    "name" => "setColourRGB",
                                     "priority" => $priority,
                                     "dest" => $dest,
                                     "cmdParams" => array(
@@ -995,7 +995,7 @@
             case "setColourHue":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                                    "setColour" => "1",
+                    "name" => "setColour",
                                     "priority" => $priority,
                                     "dest" => $dest,
                                     "cmdParams" => array(
@@ -1009,7 +1009,7 @@
             case "setColourOSRAM":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                                    "setColour" => "1",
+                    "name" => "setColour",
                                     "priority" => $priority,
                                     "dest" => $dest,
                                     "cmdParams" => array(
@@ -1071,7 +1071,7 @@
                     }
 
                 $Command = array(
-                                    "writeAttributeRequestIAS_WD"     => "1",
+                                    "name" => "writeAttributeRequestIAS_WD",
                                     "priority"                        => $priority,
                                     "dest"                            => $dest,
                                     "cmdParams" => array(
@@ -1136,7 +1136,7 @@
             case "viewScene":
                 if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
-                                    "viewScene"                => "1",
+                                    "name" => "viewScene",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -1151,7 +1151,7 @@
             case "storeScene":
                 if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
-                                    "storeScene"               => "1",
+                                    "name" => "storeScene",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -1166,7 +1166,7 @@
             case "recallScene":
                 if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
-                                    "recallScene"              => "1",
+                                    "name" => "recallScene",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "address"                  => $parameters['address'],
@@ -1186,7 +1186,7 @@
                 }
 
                 $Command = array(
-                                    "sceneGroupRecall"         => "1",
+                                    "name" => "sceneGroupRecall",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -1215,7 +1215,7 @@
             case "addScene":
                 if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
-                                    "addScene"                 => "1",
+                                    "name" => "addScene",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -1231,7 +1231,7 @@
             case "getSceneMembership":
                 if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
-                                    "getSceneMembership"       => "1",
+                                    "name" => "getSceneMembership",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -1245,7 +1245,7 @@
             case "removeSceneAll":
                 if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
-                                    "removeSceneAll"           => "1",
+                                    "name" => "removeSceneAll",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -1282,7 +1282,7 @@
                     }
 
                 $Command = array(
-                                    "WindowsCoveringLevel"     => "1",
+                                    "name" => "WindowsCoveringLevel",
                                     "priority"                 => $priority,
                                     "dest"                     => $dest,
                                     "cmdParams" => array(
@@ -1300,7 +1300,7 @@
                     }
 
                 $Command = array(
-                                    "WindowsCoveringGroup"     => "1",
+                                    "name" => "WindowsCoveringGroup",
                                     "priority" => $priority,
                                     "dest" => $dest,
                                     "cmdParams" => array(
@@ -1328,7 +1328,7 @@
                  $net = str_replace('Cmd', '',  $type); // Remove 'Cmd' prefix
 
                  $Command = array(
-                    $action => $action, // Tcharp38: Legacy. Replaced by 'name' field. To be removed at some point.
+                    // $action => $action, // Tcharp38: Legacy. Replaced by 'name' field. To be removed at some point.
                     "name" => $action,
                     "cmdParams" => [],
                     "priority" => isset($cmdMsg['priority']) ? $cmdMsg['priority']: PRIO_NORM,

@@ -270,7 +270,7 @@
 
         // Push a new zigate cmd to be sent
         // If 'begin' is set to true, cmd is added in front of queue to be the first one
-        public static function pushZigateCmd($zgId, $pri, $zgCmd, $payload, $addr, $addrMode, $begin = false) {
+        public static function pushZigateCmd($zgId, $pri, $zgCmd, $payload, $repeat, $addr, $addrMode, $begin = false) {
             if (($addrMode == "02") || ($addrMode == "03"))
                 $ackAps = true;
             else
@@ -291,6 +291,7 @@
                 'sqnAps'    => '', // Network SQN
                 'ackAps'    => $ackAps, // True if ACK, false else => OBSOLETE. Replaced by 'waitFor'
                 'waitFor'   => $ackAps ? "ACK": "8000",
+                'repeat'    => $repeat, // Repeat cmd until ACKed
             );
 
             // Abeille PDM restore cmd can be slow
@@ -325,8 +326,8 @@
          *
          * @return  none
          */
-        public static function addCmdToQueue2($priority, $net, $zgCmd, $payload = '', $addr = '', $addrMode = null) {
-            cmdLog("debug", "    addCmdToQueue2(Pri=${priority}, Net=${net}, ZgCmd=${zgCmd}, Payload=${payload}, Addr=${addr}, AddrMode=${addrMode})");
+        public static function addCmdToQueue2($priority, $net, $zgCmd, $payload = '', $addr = '', $addrMode = null, $repeat = 0) {
+            cmdLog("debug", "    addCmdToQueue2(Pri=${priority}, Net=${net}, ZgCmd=${zgCmd}, Payload=${payload}, Addr=${addr}, AddrMode=${addrMode}, Repeat=${repeat})");
 
             $zgId = substr($net, 7);
             // $this->zgId = $zgId;
@@ -385,7 +386,7 @@
 
             // $this->incStatCmd($cmd);
 
-            AbeilleCmdQueue::pushZigateCmd($zgId, $priority, $zgCmd, $payload, $addr, $addrMode);
+            AbeilleCmdQueue::pushZigateCmd($zgId, $priority, $zgCmd, $payload, $repeat, $addr, $addrMode);
 
             // TEST
             // if ($addr == '85B1') {
@@ -792,6 +793,13 @@
                             } else { // NO ACK
                                 if (isset($eq['zigbee']['rxOnWhenIdle']) && $eq['zigbee']['rxOnWhenIdle'] && ($eq['zigbee']['txStatus'] !== 'noack'))
                                     $newTxStatus = 'noack';
+
+                                    // If 'repeat' is set, checking if cmd must be retried
+                                    if (isset($cmd['repeat']) && ($cmd['repeat'] != 0)) {
+                                        cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) but will be repeated.");
+                                        $cmd['repeat'] -= 1;
+                                        $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
+                                    }
                             }
                             if ($newTxStatus != '') {
                                 $eq['zigbee']['txStatus'] = $newTxStatus;
@@ -916,11 +924,11 @@
                 } else
                     cmdLog("error", "AbeilleCmd: Message inattendu: ".$msgJson);
             } else {
-                $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
-                $topic = $msg['topic'];
-                $payload = $msg['payload'];
-                // cmdLog("debug", "Msg from 'xToCmd': Pri=".$prio.", topic='".$topic."', payload='".$payload."'", $this->debug['AbeilleCmdClass']);
-                $this->prepareCmd($prio, $topic, $payload);
+                // $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
+                // $topic = $msg['topic'];
+                // $payload = $msg['payload'];
+                // $this->prepareCmd($prio, $topic, $payload);
+                $this->prepareCmd($msg);
             }
         }
     }

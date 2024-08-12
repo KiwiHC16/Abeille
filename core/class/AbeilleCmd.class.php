@@ -383,12 +383,16 @@
             }
             $request = $cmdLogic->updateField($net, $cmdLogic, $request, $_options);
 
+            $repeat = $cmdLogic->getConfiguration('ab::repeat', 0);
+
             $msg = array();
             $msg['topic'] = $topic;
             $msg['payload'] = $request;
+            if ($repeat != 0)
+                $msg['repeat'] = $repeat;
             $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-            global $abQueues;
 
+            global $abQueues;
             if (strpos($topic, "CmdCreate") === 0) {
                 $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
                 if (msg_send($queueXToAbeille, 1, $msgJson, false, false)) {

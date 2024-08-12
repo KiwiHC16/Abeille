@@ -201,6 +201,10 @@ Exemple de commande 'action'
   * RefreshData: ??
     Ex: "RefreshData": "1"
 
+  * repeat: optionnel
+    Permet de repeter la commande X fois si pas acquittée par le destinataire.
+    Ex: "repeat": 3
+
 Variables
 =========
 

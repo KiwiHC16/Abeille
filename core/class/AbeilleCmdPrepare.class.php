@@ -48,7 +48,13 @@
          * @return none
          *
          */
-        function prepareCmd($priority, $topic, $payload, $phpunit=0) {
+        // function prepareCmd($priority, $topic, $payload, $phpunit=0) {
+        function prepareCmd($cmdMsg, $phpunit=0) {
+
+            $priority = isset($cmdMsg['priority']) ? $cmdMsg['priority']: PRIO_NORM;
+            $topic = $cmdMsg['topic'];
+            $payload = $cmdMsg['payload'];
+
 
             // cmdLog("debug", "  prepareCmd(".$priority.", ".$topic.", ".$payload.")", $this->debug['prepareCmd']);
 
@@ -1251,28 +1257,36 @@
                    part of parameters.
                  */
 
-                $Command = array(
+                 list ($type, $address, $action) = explode('/', $topic);
+                 $net = str_replace('Cmd', '',  $type); // Remove 'Cmd' prefix
+
+                 $Command = array(
                     $action => $action, // Tcharp38: Legacy. Replaced by 'name' field. To be removed at some point.
                     "name" => $action,
-                    "priority" => $priority,
-                    "dest" => $dest,
+                    "cmdParams" => [],
+                    "priority" => isset($cmdMsg['priority']) ? $cmdMsg['priority']: PRIO_NORM,
+                    "repeat" => isset($cmdMsg['repeat']) ? $cmdMsg['repeat']: 0,
+                    "dest" => $net,
                 );
-                // Splitting by '&' then by '='
-                $couples = preg_split("/[&]+/", $msg);
-                // cmdLog("debug", '  couples='.json_encode($couples));
+
+                // Splitting payload by '&' then by '='
                 $addrFound = false;
-                for($i = 0; $i < count($couples); $i++) {
-                    $keywords = preg_split("/[=]+/", $couples[$i]);
-                    // cmdLog("debug", '  keywords='.json_encode($keywords));
-                    if (isset($keywords[1]))
-                        $Command[$keywords[0]] = $keywords[1];
-                    else
-                        $Command[$keywords[0]] = 1; // Special case. Ex: CmdAbeille1/0000/SetPermit -> Inclusion
-                    if ($keywords[0] == "addr")
-                        $addrFound = true;
+                if ($payload != "") {
+                    $couples = preg_split("/[&]+/", $payload);
+                    // cmdLog("debug", '  couples='.json_encode($couples));
+                    for($i = 0; $i < count($couples); $i++) {
+                        $keywords = preg_split("/[=]+/", $couples[$i]);
+                        // cmdLog("debug", '  keywords='.json_encode($keywords));
+                        if (isset($keywords[1]))
+                            $Command['cmdParams'][$keywords[0]] = $keywords[1];
+                        else
+                            $Command['cmdParams'][$keywords[0]] = 1; // Special case. Ex: CmdAbeille1/0000/SetPermit -> Inclusion
+                        if ($keywords[0] == "addr")
+                            $addrFound = true;
+                    }
                 }
                 if ($addrFound == false)
-                    $Command['addr'] = $address;
+                    $Command['cmdParams']['addr'] = $address;
 
                 break;
             } // switch action

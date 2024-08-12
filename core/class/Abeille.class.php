@@ -3145,11 +3145,11 @@ class Abeille extends eqLogic {
                They are removed if not defined in JSON model. */
             $toRemove = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'topic', 'Polling', 'RefreshData', 'listValue'];
             array_push($toRemove, 'ab::trigOut', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
-            array_push($toRemove, 'ab::valueOffset');
+            array_push($toRemove, 'ab::valueOffset', 'ab::repeat');
             $rmOnlyIfReset = $toRemove;
             array_push($rmOnlyIfReset, 'minValue', 'maxValue', 'calculValueOffset', 'repeatEventManagement');
             // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)
-            $toRename = ['trigOut', 'notStandard', 'valueOffset'];
+            $toRename = ['trigOut', 'notStandard', 'valueOffset', 'repeat'];
             if (isset($mCmd["configuration"])) {
                 $mCmdConf = $mCmd["configuration"];
 

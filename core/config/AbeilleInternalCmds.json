@@ -40,8 +40,6 @@
         "WindowsCoveringGroup": {},
 
         "abeilleList": {},
-        "setCertificationCE": {},
-        "setCertificationFCC": {},
         "setExtendedPANID": {},
         "bind": {},
         "setReportRaw": {},
@@ -56,6 +54,7 @@
         "MgtLeave": {},
         "Remove": {},
         "zgSetMode": {},
+        "zgSetCertification": {},
         "zgSetPermitMode": {},
         "permitJoin": {},
         "zgGetNetworkStatus": {},

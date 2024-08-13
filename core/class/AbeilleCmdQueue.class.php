@@ -602,7 +602,7 @@
                     if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
                         monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
 
-                    cmdLog('debug', "  Zigate=".json_encode($GLOBALS['zigates'][$zgId]));
+                    // cmdLog('debug', "  Zigate=".json_encode($GLOBALS['zigates'][$zgId]));
                 }
             } // End zigates loop
         }

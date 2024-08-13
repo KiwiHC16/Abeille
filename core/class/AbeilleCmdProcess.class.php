@@ -787,60 +787,6 @@
         //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
         // }
 
-        /**
-         * reviewPriority()
-         *
-         * See if we need to change the priority reaquested for a message
-         *
-         * @param Command
-         * @return priority re-evaluated
-         *
-         */
-        // function reviewPriority($Command) {
-        //     if (isset($Command['priority'])) {
-        //         // TODO: Eq Address and Group Address can't be distingueshed here. Probability to have a group address = eq address is low but exist.
-        //         if (isset($Command['cmdParams']['address'])) {
-        //             if ($NE = Abeille::byLogicalId($Command['dest'].'/'.$Command['cmdParams']['address'], 'Abeille')) {
-        //                 if ($NE->getIsEnable()) {
-        //                     if (( time() - strtotime($NE->getStatus('lastCommunication'))) < (60*$NE->getTimeout()) ) {
-        //                         if ($NE->getStatus('APS_ACK', '1') == '1') {
-        //                             return $Command['priority'];
-        //                         }
-        //                         else {
-        //                             cmdLog('debug', "  NE n a pas repondu lors de precedente commande alors je mets la priorite au minimum.");
-        //                             return priorityLostNE;
-        //                         }
-        //                     }
-        //                     else {
-        //                         cmdLog('debug', "  NE en Time Out alors je mets la priorite au minimum.");
-        //                         return priorityLostNE;
-        //                     }
-        //                 }
-        //                 else {
-        //                     /* Tcharp38: Preventing cmd to be sent if EQ is disabled is not good here.
-        //                     If EQ was disabled but now under pairing process (dev announce)
-        //                     this prevents interrogation of EQ and therefore reinclusion.
-        //                     This check should be done at source not here. At least don't filter
-        //                     requests from parser. */
-        //                     // cmdLog('debug', "  NE desactive, je n envoie pas de commande.");
-        //                     // return -1;
-        //                     return $Command['priority'];
-        //                 }
-        //             }
-        //             else {
-        //                 cmdLog('debug', "  NE n existe pas dans Abeille, une annonce/une commande de groupe, je ne touche pas à la priorite.");
-        //                 return $Command['priority'];
-        //             }
-        //         }
-        //         else {
-        //             return $Command['priority'];
-        //         }
-        //     }
-        //     else {
-        //         cmdLog('debug', "  priority not defined !!!");
-        //         return priorityInterrogation;
-        //     }
-        // }
 
         /**
          * processCmd()
@@ -904,51 +850,13 @@
             // }
 
             // abeilleList abeilleListAll
-            if (isset($Command['abeilleList'])) {
+            if ($Command['name'] == 'abeilleList') {
+
                 cmdLog('debug', "  Get Abeilles List", $this->debug['processCmd']);
                 // $this->addCmdToQueue($priority,$dest,"0015","0000","");
                 $this->addCmdToQueue2(PRIO_NORM, $dest, "0015");
                 return;
             }
-
-            if (isset($Command['setCertificationCE'])) {
-                cmdLog('debug', "  setCertificationCE", $this->debug['processCmd']);
-                $cmd = "0019";
-                $data = "01";
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
-            if (isset($Command['setCertificationFCC'])) {
-                cmdLog('debug', "  setCertificationFCC", $this->debug['processCmd']);
-                $cmd = "0019";
-                $data = "02";
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
-
-            // // https://github.com/fairecasoimeme/ZiGate/issues/145
-            // // PHY_PIB_TX_POWER_DEF (default - 0x80)
-            // // PHY_PIB_TX_POWER_MIN (minimum - 0)
-            // // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
-            // if (isset($Command['cmdParams']['txPower'])  ) { // Obsolete !! Replaced by zgSetTxPower
-            //     cmdLog('debug', "  TxPower", $this->debug['processCmd']);
-            //     $cmd = "0806";
-            //     $data = $Command['cmdParams']['txPower'];
-            //     if ($data < 10 ) $data = '0'.$data;
-
-            //     // $length = sprintf("%04s", dechex(strlen($data) / 2));
-            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-            //     return;
-            // }
 
             //----------------------------------------------------------------------
             // Bind
@@ -1716,55 +1624,6 @@
                 return;
             }
 
-            // /* Expected format:
-            // net/0000 ActiveEndpointRequest address=<addr>*/
-            // if (isset($Command['ActiveEndPoint'])) // OBSOLETE: Use getActiveEndpoints instead
-            // {
-            //     $cmd = "0045";
-
-            //     // <target short address: uint16_t>
-
-            //     $address = $Command['cmdParams']['address']; // -> 4
-
-            //     //  4 = 4/2 => 2
-            //     // $length = "0002";
-
-            //     $data = $address;
-
-            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-            //     return;
-            // }
-
-            //----------------------------------------------------------------------------
-            // OBSOLETE: Replaced by getNwkAddress()
-            // if (isset($Command['Network_Address_request']))
-            // {
-            //     $cmd = "0040";
-
-            //     // <target short address: uint16_t> -> 4
-            //     // <extended address:uint64_t>      -> 16
-            //     // <request type: uint8_t>          -> 2
-            //     // <start index: uint8_t>           -> 2
-            //     // Request Type:
-            //     // 0 = Single Request 1 = Extended Request
-            //     // -> 24 / 2 = 12 => 0x0C
-
-            //     $address = $Command['cmdParams']['address'];
-            //     $IeeeAddress = $Command['IEEEAddress'];
-            //     $requestType = "01";
-            //     $startIndex = "00";
-
-            //     $data = $address.$IeeeAddress.$requestType.$startIndex ;
-            //     // $length = "000C"; // A verifier
-
-            //     cmdLog('debug', '  Network_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
-
-            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-            //     return;
-            // }
-
             // Don't know how to make it works
             if ($Command['name'] == 'touchLinkFactoryResetTarget') {
 
@@ -2183,37 +2042,6 @@
                 return;
             }
 
-            // if (isset($Command['getManufacturerName']) && isset($Command['cmdParams']['address']))
-            // {
-            //     if ($Command['cmdParams']['destinationEndpoint'] == "" ) { $Command['cmdParams']['destinationEndpoint'] = "01"; }
-            //     $this->readAttribute(PRIO_NORM, $dest, $Command['cmdParams']['address'], $Command['cmdParams']['destinationEndpoint'], "0000", "0004");
-            //     return;
-            // }
-
-            // if (isset($Command['getName']) && isset($Command['cmdParams']['address']))
-            // {
-            //     if ($Command['cmdParams']['destinationEndpoint'] == "" ) { $Command['cmdParams']['destinationEndpoint'] = "01"; }
-            //     $this->readAttribute(PRIO_NORM, $dest, $Command['cmdParams']['address'], $Command['cmdParams']['destinationEndpoint'], "0000", "0005");
-            //     return;
-            // }
-
-            // if (isset($Command['getLocation']) && isset($Command['cmdParams']['address']))
-            // {
-            //     if ($Command['cmdParams']['destinationEndpoint'] == "" ) { $Command['cmdParams']['destinationEndpoint'] = "01"; }
-            //     $this->readAttribute(PRIO_NORM, $dest, $Command['cmdParams']['address'], $Command['cmdParams']['destinationEndpoint'], "0000", "0010");
-            //     return;
-            // }
-
-            // Tcharp38: Seems no longer used
-            // if (isset($Command['setLocation']) && isset($Command['cmdParams']['address']))
-            // {
-            //     if ($Command['location'] == "" ) { $Command['location'] = "Not Def"; }
-            //     if ($Command['cmdParams']['destinationEndpoint'] == "" ) { $Command['cmdParams']['destinationEndpoint'] = "01"; }
-
-            //     $this->setParam2( $dest, $Command['cmdParams']['address'], "0000", "0010",$Command['cmdParams']['destinationEndpoint'],$Command['location'], "42" );
-            //     return;
-            // }
-
             if ($Command['name'] == 'MgtLeave') {
 
                 // Zigbee specification
@@ -2298,7 +2126,7 @@
                  * Zigate specific commands
                  */
 
-                // Zigate specific command
+                // Zigate specific command: Set mode (raw, hybrid, normal)
                 if ($cmdName == 'zgSetMode') {
                     $mode = $Command['cmdParams']['mode'];
                     if ($mode == "raw") {
@@ -2312,8 +2140,34 @@
                     return;
                 }
 
+                // Zigate specific command: Set certfication (CE, FCC)
+                else if ($cmdName == 'zgSetCertification') {
+                    $required = ['certif'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0019";
+                    $certif = $Command['cmdParams']['certif'];
+                    if ($certif == "CE")
+                        $data = "01";
+                    else if ($certif == "FCC")
+                        $data = "02";
+                    else {
+                        cmdLog('error', '  zgSetCertification: Certification invalide ! ('.$certif.')');
+                        return;
+                    }
+
+                    cmdLog('debug', "  zgSetCertification: Certif=${data}/${certif}");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data);
+                    return;
+                }
+
                 // Zigate specific command
                 else if ($cmdName == 'zgSetPermitMode') {
+                    $required = ['mode'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
                     $mode = $Command['cmdParams']['mode'];
                     if ($mode == "start") {
                         $cmd = "0049";

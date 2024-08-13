@@ -16,7 +16,6 @@
 
     /* Developers mode ? */
     if (file_exists(dbgFile)) {
-        // include_once dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');

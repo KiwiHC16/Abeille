@@ -412,8 +412,10 @@ class Abeille extends eqLogic {
                 log::add('Abeille', 'info', "cron(): ERREUR: Pb d'accès à la queue '".$queueName."' (id ".$queueId.")");
                 continue;
             }
-            if (msg_stat_queue($queue)["msg_qnum"] > 100)
-                log::add('Abeille', 'info', "cron(): ERREUR: La queue '".$queueName."' (id ".$queueId.") contient plus de 100 messages.");
+            if (msg_stat_queue($queue)["msg_qnum"] > 50) {
+                log::add('Abeille', 'error', "cron(): La queue '".$queueName."' (id ".$queueId.") contient plus de 50 messages => redémarrage des démons.");
+                self::deamon_start();
+            }
         }
 
         // https://github.com/jeelabs/esp-link
@@ -449,7 +451,7 @@ class Abeille extends eqLogic {
                 $lastComm = strtotime($lastComm);
             // log::add('Abeille', 'info', "lastComm2=".$lastComm);
             if ((time() - $lastComm) > (2 * 60)) {
-                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$gtwId." depuis plus de 2min");
+                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$gtwId." depuis plus de 2min => reset");
                 $zgType = $config['ab::gtwSubType'.$gtwId];
                 $zgPort = $config['ab::gtwPort'.$gtwId];
                 if (($zgType == "USB") || ($zgType == "USBv2")) {

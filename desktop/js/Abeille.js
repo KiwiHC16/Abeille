@@ -1576,9 +1576,8 @@ function sendZigate(action, param) {
             else payload = "value=0";
             break;
         case "setCertif":
-            if (param == "CE")
-                topic = "CmdAbeille" + zgId + "/0000/setCertificationCE";
-            else topic = "CmdAbeille" + zgId + "/0000/setCertificationFCC";
+            topic = "CmdAbeille" + zgId + "/0000/zgSetCertification";
+            payload = param; // 'CE' or 'FCC'
             break;
         case "startNetwork": // Not required for end user but for developper.
             topic = "CmdAbeille" + zgId + "/0000/zgStartNetwork";

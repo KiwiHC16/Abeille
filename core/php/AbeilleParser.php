@@ -201,9 +201,15 @@
         Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
         into several messages to Abeille. */
     function msgToAbeille2($msg) {
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
         global $queueXToAbeille;
-        if (msg_send($queueXToAbeille, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
-            parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queueXToAbeille, 1, $msgJson, false, false, $errCode) == false) {
+            // Err 11 = EAGAIN = Queue full ?
+            $errDesc = "";
+            if ($errCode == 11)
+                $errDesc = "/queue FULL";
+            parserLog("debug", "msgToAbeille2(): ERROR ${errCode}${errDesc}");
         }
     }
 

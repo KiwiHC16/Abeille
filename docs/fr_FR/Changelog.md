@@ -15,6 +15,9 @@
 -   Amélioration: Cmd: Ajout support 'repeat' pour repeter une action jusqu'a acquittement (Attention !! Limiter son usage).
 -   Améliorations: Interne cmd.
 -   Améliorations: Interne main daemon: Config sauvé en global.
+-   Amélioration: Interne parser: Suppression warning si queue 'main' pleine.
+-   Amélioration: Redémarrage de tous les démons si une des queues est saturée (>50 messages).
+-   Amélioration: Interne cmd: setCertificationCE/FCC => 'zgSetCertification'.
 
 ## 240808-BETA-1
 

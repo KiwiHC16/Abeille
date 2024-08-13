@@ -408,16 +408,15 @@
         } // End addCmdToQueue2()
 
         /**
-         * Find cmd corresponding to SQNAPS
+         * Find cmd (by ref) corresponding to SQNAPS
          * Returns: Found matching cmd, or null
          *  'lastSent' is true if cmd is the last sent one for this zigate.
          */
-        function getCmd($zgId, $sqnAps, &$lastSent = false) {
-            $zg = $GLOBALS['zigates'][$zgId];
+        function &getCmd($zgId, $sqnAps, &$lastSent = false) {
             $sentPri = $GLOBALS['zigates'][$zgId]['sentPri'];
             $sentIdx = $GLOBALS['zigates'][$zgId]['sentIdx'];
             foreach (range(priorityMax, priorityMin) as $prio) {
-                foreach ($zg['cmdQueue'][$prio] as $cmdIdx => $cmd) {
+                foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio] as $cmdIdx => $cmd) {
                     if ($cmd['sqnAps'] == $sqnAps) {
                         // Is it the last sent cmd ?
                         if (($cmdIdx == $sentIdx) && ($prio == $sentPri))
@@ -427,7 +426,8 @@
                 }
             }
 
-            return null;
+            static $error = [];
+            return $error;
         }
 
         function writeToDest($f, $port, $cmd, $datas) {
@@ -766,8 +766,8 @@
                 }
 
                 else if ($msg['type'] == "8011") {
-                    $cmd = $this->getCmd($zgId, $msg['sqnAps'], $lastSent);
-                    if ($cmd == null) {
+                    $cmd = &$this->getCmd($zgId, $msg['sqnAps'], $lastSent); // By ref
+                    if ($cmd === []) {
                         cmdLog('debug', '  Corresponding cmd not found.');
                         continue;
                     }
@@ -798,7 +798,8 @@
 
                                 // If 'repeat' is set, checking if cmd must be retried
                                 if (isset($cmd['repeat'])) {
-                                    if ($cmd['repeat'] != 0) {
+                                    $repeat = $cmd['repeat'];
+                                    if ($repeat != 0) {
                                         cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) but will be repeated.");
                                         $cmd['repeat'] -= 1;
                                         $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again

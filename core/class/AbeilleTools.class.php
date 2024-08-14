@@ -1170,5 +1170,17 @@
 
             return $b64;
         }
+
+        // Returns 'msg_send' error description
+        public static function getMsgSendErr($errCode) {
+            $errDesc = array(
+                '11' => 'Queue full',
+                '13' => 'Permission denied'
+            );
+            if (isset($errDesc[$errCode]))
+                return $errDesc[$errCode];
+            else
+                return "?";
+        }
     }
 ?>

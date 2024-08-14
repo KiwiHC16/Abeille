@@ -156,8 +156,9 @@
 
         global $abQueues;
         $queue = msg_get_queue($abQueues["xToCmd"]["id"]);
-        if (msg_send($queue, 1, $msgJson, false, false, $errCode) == false) {
-            cmdLog("debug", "msgToCmd(): ERROR ".$errCode);
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queue, 1, $msgJson, false, false, $errCode) == false) {
+            cmdLog("debug", "  msgToCmd(xToCmd) ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
@@ -166,8 +167,9 @@
         global $abQueues;
 
         $queue = msg_get_queue($abQueues["xToAbeille"]["id"]);
-        if (msg_send($queue, 1, json_encode($msg), false, false, $errCode) == false) {
-            cmdLog("debug", "msgToAbeille(): ERROR ".$errCode);
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queue, 1, json_encode($msg), false, false, $errCode) == false) {
+            cmdLog("debug", "  msgToAbeille() ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 

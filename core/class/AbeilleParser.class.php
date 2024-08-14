@@ -483,38 +483,6 @@
             }
         }
 
-        // /* Update device infos.
-        //    As opposed to 'deviceUpdate()', info is NOT coming from the device himself. */
-        // function updateDevice($net, $addr, $updates) {
-        //     parserLog('debug', '  updateDevice('.$net.', '.$addr.', '.json_encode($updates).')');
-        //     if (isset($updates['ieee']))
-        //         $ieee = $updates['ieee'];
-        //     else
-        //         $ieee = null;
-        //     $eq = &getDevice($net, $addr, $ieee, $newDev); // By ref
-
-        //     $confirmed = array();
-        //     foreach ($updates as $updKey => $updVal) {
-        //         if ($updKey == 'ieee')
-        //             continue; // This is already covered
-        //         if (!isset($eq[$updKey]) || ($eq[$updKey] != $updVal)) {
-        //             $eq[$updKey] = $updVal;
-        //             $confirmed[$updKey] = $updVal;
-        //         }
-        //     }
-
-        //     // Any changes to report to Abeille ?
-        //     if (count($confirmed) > 0) {
-        //         $msg = array(
-        //             'type' => 'deviceUpdates',
-        //             'net' => $net,
-        //             'addr' => $addr,
-        //             'updates' => $confirmed,
-        //         );
-        //         msgToAbeille2($msg);
-        //     }
-        // }
-
         /* There are device infos updates (ex: endpoints, manufId, modelId, location, ...). */
         function deviceUpdates($net, $addr, $ep, $updates = []) {
             parserLog('debug', "  deviceUpdates(${net}, ${addr}, EP=${ep}, Upd=".json_encode($updates, JSON_UNESCAPED_SLASHES).")");

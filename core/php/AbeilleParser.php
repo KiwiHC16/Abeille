@@ -205,11 +205,7 @@
         global $queueXToAbeille;
         // Note: '@' to suppress PHP warning message.
         if (@msg_send($queueXToAbeille, 1, $msgJson, false, false, $errCode) == false) {
-            // Err 11 = EAGAIN = Queue full ?
-            $errDesc = "";
-            if ($errCode == 11)
-                $errDesc = "/queue FULL";
-            parserLog("debug", "msgToAbeille2(): ERROR ${errCode}${errDesc}");
+            parserLog("debug", "msgToAbeille2() ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
@@ -223,16 +219,18 @@
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
         global $queueXToCmd;
-        if (msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
-            parserLog("debug", "  ERROR: msgToCmd(): Can't write to 'queueXToCmd', error=".$errCode);
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
+            parserLog("debug", "  msgToCmd(queueXToCmd) ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
     function msgToCmdAck($msg) {
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
         global $queueParserToCmdAck;
-        if (msg_send($queueParserToCmdAck, 1, $msgJson, false, false) == false) {
-            parserLog("error", "  ERROR: Can't send msg to 'queueParserToCmdAck'. msg=".$msgJson);
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queueParserToCmdAck, 1, $msgJson, false, false, $errCode) == false) {
+            parserLog("debug", "  msgToCmd(queueParserToCmdAck) ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 

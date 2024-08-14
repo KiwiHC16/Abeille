@@ -412,8 +412,9 @@ class Abeille extends eqLogic {
                 log::add('Abeille', 'info', "cron(): ERREUR: Pb d'accès à la queue '".$queueName."' (id ".$queueId.")");
                 continue;
             }
-            if (msg_stat_queue($queue)["msg_qnum"] > 50) {
+            if (msg_stat_queue($queue)["msg_qnum"] >= 5) {
                 log::add('Abeille', 'error', "cron(): La queue '".$queueName."' (id ".$queueId.") contient plus de 50 messages => redémarrage des démons.");
+                self::deamon_stop();
                 self::deamon_start();
             }
         }
@@ -944,10 +945,14 @@ class Abeille extends eqLogic {
 
         try {
             $abQueues = $GLOBALS['abQueues'];
-            // Tcharp38: Merge all the followings queues. Would be more efficient & more reactive.
-            // $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
-            // $queueParserToAbeille2Max = $abQueues["parserToAbeille2"]["max"];
-            $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+            while(true) {
+                $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+                if ($queueXToAbeille !== false)
+                    break;
+
+                log::add('Abeille', 'debug', 'deamon(): msg_get_queue(xToAbeille) ERROR');
+                usleep(500000); // Sleep 500ms
+            }
             $queueXToAbeilleMax = $abQueues["xToAbeille"]["max"];
 
             // https: github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
@@ -958,19 +963,23 @@ class Abeille extends eqLogic {
             log::add('Abeille', 'debug', 'deamon(): Infinite listening to queueXToAbeille');
             while (true) {
                 log::add('Abeille', 'debug', 'deamon(): msg_receive, msg_qnum='.msg_stat_queue($queueXToAbeille)["msg_qnum"]);
-                if (msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, 0, $errCode)) {
-                    $msg = json_decode($msgJson, true);
-                    if (isset($msg['topic']))
-                        self::message($msg['topic'], $msg['payload']);
-                    else
-                        self::msgFromParser($msg);
-                } else { // Error
+                if (@msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, 0, $errCode) == false) {
                     if ($errCode == 7) {
                         msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
                         log::add('Abeille', 'error', "Message (xToAbeille) trop grand ignoré: ".$msgJson);
-                    } else
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive(xToAbeille) erreur '.$errCode.', msg='.$msgJson);
+                        continue; // Continue without sleeping
+                    }
+
+                    log::add('Abeille', 'debug', 'deamon(): msg_receive(xToAbeille) erreur '.$errCode);
+                    usleep(500000); // Sleep 500ms
+                    continue;
                 }
+
+                $msg = json_decode($msgJson, true);
+                if (isset($msg['topic']))
+                    self::message($msg['topic'], $msg['payload']);
+                else
+                    self::msgFromParser($msg);
             }
         } catch (Exception $e) {
             log::add('Abeille', 'error', 'deamon(): Exception '.$e->getMessage());

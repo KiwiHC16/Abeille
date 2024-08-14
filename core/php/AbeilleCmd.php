@@ -154,21 +154,19 @@
         );
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
-        global $abQueues;
-        $queue = msg_get_queue($abQueues["xToCmd"]["id"]);
+        global $queueXToCmd;
         // Note: '@' to suppress PHP warning message.
-        if (@msg_send($queue, 1, $msgJson, false, false, $errCode) == false) {
+        if (@msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
             cmdLog("debug", "  msgToCmd(xToCmd) ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
     /* Send msg to Abeille ('xToAbeille' queue) */
     function msgToAbeille($msg) {
-        global $abQueues;
 
-        $queue = msg_get_queue($abQueues["xToAbeille"]["id"]);
+        global $queueXToAbeille;
         // Note: '@' to suppress PHP warning message.
-        if (@msg_send($queue, 1, json_encode($msg), false, false, $errCode) == false) {
+        if (@msg_send($queueXToAbeille, 1, json_encode($msg), false, false, $errCode) == false) {
             cmdLog("debug", "  msgToAbeille() ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
@@ -337,7 +335,7 @@
     }
 
     logSetConf("AbeilleCmd.log", true);
-    logMessage('info', ">>> {{Démarrage d'AbeilleCmd}}");
+    logMessage('info', ">>> Démarrage d'AbeilleCmd");
 
     // ***********************************************************************************************
     // MAIN
@@ -348,7 +346,7 @@
     $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
     if ($daemons["cmd"] > 1){
-        logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
+        logMessage('error', "Un démon 'cmd' est déja lancé ! ".json_encode($daemons));
         exit(3);
     }
 
@@ -356,8 +354,25 @@
     pcntl_signal(SIGTERM, 'signalHandler', false);
     function signalHandler($signal) {
         logMessage('info', '<<< Arret du démon AbeilleCmd');
-        exit;
+        exit(0);
     }
+
+    // Creating queues
+    $queueXToAbeille        = msg_get_queue($abQueues["xToAbeille"]["id"]);
+    if ($queueXToAbeille === false)
+        logMessage("error", "msg_get_queue(xToAbeille) ERROR");
+    $queueXToCmd            = msg_get_queue($abQueues["xToCmd"]["id"]);
+    if ($queueXToCmd === false)
+        logMessage("error", "msg_get_queue(xToCmd) ERROR");
+    $queueParserToCmdAck    = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
+    if ($queueParserToCmdAck === false)
+        logMessage("error", "msg_get_queue(ParserToCmdAck) ERROR");
+    if (($queueXToAbeille === false) || ($queueXToCmd === false) || ($queueParserToCmdAck === false)) {
+        logMessage('info', '<<< Pb de création de queues => Arret du démon AbeilleCmd');
+        exit(4);
+    }
+    $queueXToCmdMax         = $abQueues["xToCmd"]["max"];
+    $queueParserToCmdAckMax = $abQueues["parserToCmdAck"]["max"];
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */
@@ -378,9 +393,6 @@
 
     // Reading available OTA firmwares
     otaReadFirmwares();
-
-    // $queueCtrlToCmd = msg_get_queue($abQueues["ctrlToCmd"]["id"]);
-    // $queueCtrlToCmdMax = $abQueues["ctrlToCmd"]["max"];
 
     /* Init known devices list:
        $GLOBALS['devices'][net][addr]

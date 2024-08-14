@@ -940,6 +940,8 @@
          * @param string $daemons Deamons list to restart, space separated
          */
         public static function restartDaemons($config, $daemons = "") {
+
+            log::add('Abeille', 'debug', "  restartDaemons(daemons=${daemons})");
             if (AbeilleTools::stopDaemons($daemons) == false)
                 return false; // Error
 

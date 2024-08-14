@@ -20,6 +20,8 @@
 -   Amélioration: Interne cmd: setCertificationCE/FCC => 'zgSetCertification'.
 -   Correction: Interrogation 'nwk_addr_req'.
 -   Amélioration: Ajout type de requete pour 'nwk_addr_req'.
+-   Amélioration: Interne: Clefs queues prefixées par '0xAB'.
+-   Amélioration: Interne moniteur: 1 seule queue de lecture.
 
 ## 240808-BETA-1
 

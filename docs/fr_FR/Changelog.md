@@ -18,6 +18,8 @@
 -   Amélioration: Interne parser: Suppression warning si queue 'main' pleine.
 -   Amélioration: Redémarrage de tous les démons si une des queues est saturée (>50 messages).
 -   Amélioration: Interne cmd: setCertificationCE/FCC => 'zgSetCertification'.
+-   Correction: Interrogation 'nwk_addr_req'.
+-   Amélioration: Ajout type de requete pour 'nwk_addr_req'.
 
 ## 240808-BETA-1
 

@@ -2673,23 +2673,27 @@
 
                 // Zigbee command: Network address request (NWK_addr_req)
                 // Mandatory: 'ieee'
+                // Optional: 'reqType' (00=single=default, 01=extended)
                 else if ($cmdName == 'getNwkAddress') {
+                    $required = ['ieee'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
                     $zgCmd = "0040";
 
                     // <target short address: uint16_t> // Tcharp38: What for ??
                     // <extended address:uint64_t>
-                    // <request type: uint8_t>
+                    // <request type: uint8_t> 0 = Single Request 1 = Extended Request
                     // <start index: uint8_t>
-                    // Request Type: 0 = Single Request 1 = Extended Request
 
                     $addr = '0000'; // What for ?
-                    $ieee = $Command['cmdParams']['IEEE'];
-                    $requestType = "01";
+                    $ieee = $Command['cmdParams']['ieee'];
+                    $reqType = isset($Command['cmdParams']['reqType']) ? $Command['cmdParams']['reqType'] : "00";
                     $startIndex = "00";
 
-                    $data = $addr.$ieee.$requestType.$startIndex ;
+                    $data = $addr.$ieee.$reqType.$startIndex ;
 
-                    cmdLog('debug', "  getNwkAddress: IEEE=${ieee}");
+                    cmdLog('debug', "  getNwkAddress: IEEE=${ieee}, ReqType=${reqType}");
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
@@ -2699,7 +2703,6 @@
                 // Mandatory params: 'addr'
                 // Optional: 'priority'
                 else if ($cmdName == 'getActiveEndpoints') {
-                    /* Checking that mandatory infos are there */
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;

@@ -2073,20 +2073,15 @@
             $ieee = AbeilleTools::reverseHex(substr($pl, 4, 16));
             $addr = AbeilleTools::reverseHex(substr($pl, 20, 4));
 
-            // TODO: TO BE REVISITED NOT TESTED YET
-
-
-
             // Log
             $m = '  NWK address response'
                     .': SQN='.$sqn
-                    .', Status='.$status
+                    .', Status='.$status.'/'.zbGetZDPStatus($status)
                     .', ExtAddr='.$ieee
                     .', Addr='.$addr;
-            parserLog2('debug', $srcAddr, $m);
 
             if ($status != "00") {
-                parserLog2('debug', $srcAddr, '  Status='.$status.'/'.zbGetZDPStatus($status));
+                parserLog2('debug', $srcAddr, $m);
                 // $unknown = $this->deviceUpdate($net, $addr, ''); // Useless
                 return;
             }
@@ -2095,8 +2090,8 @@
             $nbDevices = substr($pl, 24, 2);
             $startIdx = substr($pl, 26, 2);
             $m .= ', NbOfAssociatedDevices='.$nbDevices
-                .', StartIndex='.$startIdx;
-
+                .', StartIdx='.$startIdx;
+            parserLog2('debug', $srcAddr, $m);
             for ($i = 0; $i < (intval($nbDevices) * 4); $i += 4) {
                 parserLog2('debug', $srcAddr, '  AssociatedDev='.substr($pl, (28 + $i), 4));
             }
@@ -2105,9 +2100,6 @@
 
             // If device is unknown, may have pending messages for him
             $devUpdates['ieee'] = $ieee;
-            // $unknown = $this->deviceUpdates($net, $addr, '', $updates);
-            // if ($unknown)
-            //     return;
 
             $toAbeille[] = array(
                 // 'src' => 'parser',

@@ -2031,8 +2031,10 @@ function interrogate(request) {
         payload = "reqType=" + reqType;
     } else if (request == "getNwkAddress") {
         topic = "Cmd" + logicalId + "_getNwkAddress";
-        ieee = document.getElementById("idEqIeee").innerText; // span case
+        ieee = document.getElementById("idEqIeee").value;
         payload = "ieee=" + ieee;
+        reqType = document.getElementById("idNwkAddrReq-RT").value;
+        payload += "_reqType=" + reqType;
     } else if (request == "mgmtNetworkUpdateReq") {
         topic = "Cmd" + logicalId + "_mgmtNetworkUpdateReq";
         scanChan = document.getElementById("idMgmtNwkUpdReqSC").value;

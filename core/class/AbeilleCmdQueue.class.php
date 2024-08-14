@@ -815,8 +815,10 @@
                     logMessage('error', 'processXToCmdQueue() ERROR: msg TOO BIG ignored.');
                     logMessage('debug', "  msg=${msgJson}");
                     msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                } else if ($errCode != 42) // 42 = No message
+                } else if ($errCode != 42) { // 42 = No message
                     logMessage("error", "processXToCmdQueue() ERROR ".$errCode." reading queue 'xToCmd'");
+                    usleep(500000); // Small delay after error
+                }
                 return;
             }
 

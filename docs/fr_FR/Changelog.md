@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 240819-BETA-1
+
 -   Interne: Modifications pour future fusion cmd/parser:
     -   Parser: $GLOBALS['eqList'] => $GLOBALS['devices']
     -   Parser: ieee/macCapa/rxOnWhenIdle/endPoints déplacé dans 'eq[zigbee]'.

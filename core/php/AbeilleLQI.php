@@ -321,8 +321,8 @@
         logMessage("", "  msgToCmd: ".$msgJson);
 
         global $queueLQIToCmd;
-        if (msg_send($queueLQIToCmd, priorityInterrogation, $msgJson, false, false) == false) {
-            logMessage('error', "  msgToCmd: Unable to send message to AbeilleCmd");
+        if (@msg_send($queueLQIToCmd, 0, $msgJson, false, false, $errCode) == false) {
+            logMessage('error', "  msgToCmd() ERROR ${errCode} in AbeilleLQI");
             return -1;
         }
         return 0;

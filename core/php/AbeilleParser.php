@@ -455,12 +455,11 @@
     declare(ticks = 1);
     pcntl_signal(SIGTERM, 'signalHandler', false);
     function signalHandler($signal) {
-        logMessage('info', '<<< Arret du démon AbeilleParser');
-        exit;
+        logMessage('info', '<<< SIGTERM => Arret du démon AbeilleParser');
+        exit(0);
     }
 
     // Inits
-    // $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
     $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
     $queueParserToCmdAck = msg_get_queue($abQueues["parserToCmdAck"]["id"]);

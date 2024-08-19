@@ -412,10 +412,9 @@ class Abeille extends eqLogic {
                 log::add('Abeille', 'info', "cron(): ERREUR: Pb d'accès à la queue '".$queueName."' (id ".$queueId.")");
                 continue;
             }
-            if (msg_stat_queue($queue)["msg_qnum"] >= 5) {
+            if (msg_stat_queue($queue)["msg_qnum"] >= 50) {
                 log::add('Abeille', 'error', "cron(): La queue '".$queueName."' (id ".$queueId.") contient plus de 50 messages => redémarrage des démons.");
-                self::deamon_stop();
-                self::deamon_start();
+                self::deamon_start(); // Start is doing a stop first
             }
         }
 
@@ -803,12 +802,16 @@ class Abeille extends eqLogic {
 
         /* Removing all queues */
         $abQueues = $GLOBALS['abQueues'];
-        foreach ($abQueues as $q) {
-            $queueId = $q['id'];
-            $queue = msg_get_queue($queueId);
-            if ($queue !== false)
-                msg_remove_queue($queue);
+        foreach ($abQueues as $qName => $q) {
+            $qKey = $q['id'];
+            if (msg_queue_exists($qKey) === true) {
+                if (msg_remove_queue(msg_get_queue($qKey)) === false)
+                    log::add('Abeille', 'debug', "deamon_stop(): msg_remove_queue(${qName}) FAILED");
+            }
         }
+        // $ret = shell_exec("ipcs -q");
+        // if ($ret !== false)
+        //     log::add('Abeille', 'debug', "deamon_stop(): ipcs -q => ".$ret);
 
         log::add('Abeille', 'debug', 'deamon_stop(): Ended');
     }
@@ -930,7 +933,7 @@ class Abeille extends eqLogic {
                 else
                     self::createEzspGateway("Abeille${gtwId}");
             } else {
-                // Zigate disabled. Ensure equipment is disabled too
+                // Gateway disabled. Ensure equipment is disabled too
                 $eqLogic = eqLogic::byLogicalId("Abeille${gtwId}/0000", 'Abeille');
                 if (is_object($eqLogic) && ($eqLogic->getIsEnable() != 0)) {
                     $eqLogic->setIsEnable(0);
@@ -2320,7 +2323,7 @@ class Abeille extends eqLogic {
 
         $abQueues = $GLOBALS['abQueues'];
         $queueId = $abQueues['xToCmd']['id'];
-        $queue = msg_get_queue($queueId, JSON_UNESCAPED_SLASHES);
+        $queue = msg_get_queue($queueId);
         if ($queue === false) {
             log::add('Abeille', 'error', "msgToCmd(): La queue ".$queueId." n'existe pas => Message ignoré.");
             return;

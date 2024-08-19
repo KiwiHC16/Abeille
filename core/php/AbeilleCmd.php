@@ -353,7 +353,7 @@
     declare(ticks = 1);
     pcntl_signal(SIGTERM, 'signalHandler', false);
     function signalHandler($signal) {
-        logMessage('info', '<<< Arret du démon AbeilleCmd');
+        logMessage('info', '<<< SIGTERM => Arret du démon AbeilleCmd');
         exit(0);
     }
 

@@ -1432,11 +1432,6 @@ class Abeille extends eqLogic {
 
     // Check if received attribute is a battery information
     public static function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
-        // if ($attrName == "Battery-Volt") { // Obsolete
-        //     $attrVal = round($attrVal, 0);
-        //     $eqLogic->setStatus('battery', self::volt2pourcent($attrVal));
-        //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-        // } else
         if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
             $attrVal = round($attrVal, 0);
             log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);

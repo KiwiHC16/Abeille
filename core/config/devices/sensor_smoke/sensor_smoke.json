@@ -19,6 +19,9 @@
                 "trigOut": {
                     "01-smokeAlarm": {
                         "valueOffset": "#value#&2"
+                    },
+                    "01-batteryLow": {
+                        "valueOffset": "#value#&8"
                     }
                 }
             },
@@ -31,6 +34,10 @@
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Battery-Low": {
+                "use": "inf_battery-Low",
+                "isVisible": 1
             },
             "Low": {
                 "use": "setSmokeSensivityLow"

@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Amélioration: Xiaomi smoke sensor: Ajout 'Battery low' (2723).
+
 ## 240819-BETA-1
 
 -   Interne: Modifications pour future fusion cmd/parser:

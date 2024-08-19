@@ -65,6 +65,16 @@
         "subType": "string",
         "template": ""
     },
+    "Set inclusion mode": {
+        "name": "Set inclusion mode",
+        "isVisible": "1",
+        "Type": "action",
+        "subType": "other",
+        "configuration": {
+            "topic": "zgSetPermitMode",
+            "request": "mode=start"
+        }
+    },
     "permitJoin-Status": {
         "name": "Inclusion Status",
         "isVisible": "1",

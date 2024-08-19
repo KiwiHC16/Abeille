@@ -22,6 +22,7 @@
 -   Amélioration: Ajout type de requete pour 'nwk_addr_req'.
 -   Amélioration: Interne: Clefs queues prefixées par '0xAB'.
 -   Amélioration: Interne moniteur: 1 seule queue de lecture.
+-   Correction: Cmde Zigate 'Set inclusion mode' de retour pour cas spécific Livolo TI0001 (2609).
 
 ## 240808-BETA-1
 

@@ -2162,7 +2162,8 @@
                     return;
                 }
 
-                // Zigate specific command
+                // Zigate specific command: Enable/disable pairing mode
+                // Mandatory: 'mode' ('start' or 'stop')
                 else if ($cmdName == 'zgSetPermitMode') {
                     $required = ['mode'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -2171,7 +2172,6 @@
                     $mode = $Command['cmdParams']['mode'];
                     if ($mode == "start") {
                         $cmd = "0049";
-                        $length = "0004";
                         $data = "FFFCFE00";
                         // <target short address: uint16_t>
                         // <interval: uint8_t>
@@ -2183,26 +2183,11 @@
                         // TCsignificance:
                         // 0 = No change in authentication 1 = Authentication policy as spec
 
-                        // 09:08:29.156 -> 01 02 10 49 02 10 02 14 50 FF FC 1E 02 10 03
-                        // 01 : Start
-                        // 02 10 49: 00 49: Permit Joining request Msg Type = 0x0049
-                        // 02 10 02 14: Length:
-                        // 50: Chrksum
-                        // FF FC:<target short address: uint16_t>
-                        // 1E: <interval: uint8_t>
-                        // 02 10: <TCsignificance: uint8_t> 00
-
-                        // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
-                        // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data); //1E = 30 secondes
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
 
-                        // $CommandAdditionelle['permitJoin'] = "permitJoin";
-                        // $CommandAdditionelle['permitJoin'] = "Status";
-                        // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
                     } elseif ($mode == "stop") {
                         $cmd = "0049";
-                        $length = "0004";
                         $data = "FFFC0000";
                         // <target short address: uint16_t>
                         // <interval: uint8_t>
@@ -2214,26 +2199,12 @@
                         // TCsignificance:
                         // 0 = No change in authentication 1 = Authentication policy as spec
 
-                        // 09:08:29.156 -> 01 02 10 49 02 10 02 14 50 FF FC 1E 02 10 03
-                        // 01 : Start
-                        // 02 10 49: 00 49: Permit Joining request Msg Type = 0x0049
-                        // 02 10 02 14: Length:
-                        // 50: Chrksum
-                        // FF FC:<target short address: uint16_t>
-                        // 1E: <interval: uint8_t>
-                        // 02 10: <TCsignificance: uint8_t> 00
-
-                        // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
-                        // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data); //1E = 30 secondes
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
 
-                        // $CommandAdditionelle['permitJoin'] = "permitJoin";
-                        // $CommandAdditionelle['permitJoin'] = "Status";
-                        // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status");
                     }
                     return;
-                }
+                } // End cmdName == 'zgSetPermitMode'
 
                 // Zigate specific command
                 else if ($cmdName == 'permitJoin') {

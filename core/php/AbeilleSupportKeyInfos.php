@@ -219,6 +219,7 @@
                 continue; // Zigate disabled
 
             $devices = [];
+            $nbOk = 0;
             $nbTimeout = 0;
             $nbNoAck = 0;
 
@@ -230,6 +231,8 @@
                 $nbTimeout++;
             if ($dev['txAck'] != 'ok')
                 $nbNoAck++;
+            if (($dev['timeout'] == 0) && ($dev['txAck'] == 'ok'))
+                $nbOk++;
             $devices[] = $dev;
 
             // Then equipments
@@ -249,12 +252,14 @@
                     $nbTimeout++;
                 if ($dev['txAck'] != 'ok')
                     $nbNoAck++;
+                if (($dev['timeout'] == 0) && ($dev['txAck'] == 'ok'))
+                    $nbOk++;
                 $devices[] = $dev;
             }
 
             // Print
             $gtwType = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate');
-            logIt("Abeille${gtwId} (${gtwType}): TO=${nbTimeout}, NA=${nbNoAck}\n");
+            logIt("Abeille${gtwId} (${gtwType}): Ok=${nbOk}, TO=${nbTimeout}, NA=${nbNoAck}\n");
 
             foreach ($devices as $dev) {
                 printDeviceInfos($dev);

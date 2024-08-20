@@ -1,6 +1,7 @@
 # ChangeLog
 
-- Amélioration: Xiaomi smoke sensor: Ajout 'Battery low' (2723).
+-   Amélioration: Xiaomi smoke sensor: Ajout 'Battery low' (2723).
+-   Amélioration: Maintenance/infos clefs
 
 ## 240819-BETA-1
 

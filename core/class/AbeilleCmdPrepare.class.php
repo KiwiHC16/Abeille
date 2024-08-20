@@ -711,7 +711,7 @@
                                         "addr" => $address,
                                         "EP" => "03",
                                         // "Level" => intval($keywords[1] * 255 / 100),
-                                        "Level" => $keywords[1],
+                                        "level" => $keywords[1],
                                         "duration" => $keywords[3],
                                     )
                                 );
@@ -808,7 +808,7 @@
                                         "addr" => $address,
                                         "EP" => "0B",
                                         // "Level" => intval($keywords[1] * 255 / 100),
-                                        "Level" => $keywords[1],
+                                        "level" => $keywords[1],
                                         "duration" => $keywords[3],
                                     )
                                 );
@@ -826,7 +826,7 @@
                                         "addressMode"          => "01",
                                         "addr"                 => $address,
                                         "EP"                   => "01",
-                                        "Level"                => intval($parameters['Level']),
+                                        "level"                => intval($parameters['Level']),
                                         "duration"             => $parameters['duration'],
                                     )
                                 );

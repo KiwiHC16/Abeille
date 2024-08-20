@@ -3840,14 +3840,14 @@
                 } // End cluster 0004, $cmdName == 'removeAllGroups'
 
                 // ZCL cluster 0008/Level control specific: (received) commands
-                // Mandatory params: addr, EP, Level (in dec, %), duration (dec)
+                // Mandatory params: addr, EP, level (in dec, %), duration (dec)
                 // Optional params: duration (default=0001)
                 else if ($cmdName == 'setLevel') {
                     $required = ['addr', 'level']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
-                    if (($Command['cmdParams']['Level'] < 0) || ($Command['cmdParams']['level'] > 100)) {
-                        cmdLog('error', "  setLevel: 'Level' en dehors de la plage 0->100");
+                    if (($Command['cmdParams']['level'] < 0) || ($Command['cmdParams']['level'] > 100)) {
+                        cmdLog('error', "  setLevel: 'level' en dehors de la plage 0->100");
                         return;
                     }
                     $zgCmd = "0081"; // Move to level with/without on/off
@@ -3865,7 +3865,7 @@
                     $srcEp      = "01";
                     $dstEp      = $Command['cmdParams']['ep'];
                     $onOff      = "01";
-                    $l          = intval($Command['cmdParams']['Level'] * 255 / 100);
+                    $l          = intval($Command['cmdParams']['level'] * 255 / 100);
                     $level      = sprintf("%02X", $l);
                     $duration   = isset($Command['cmdParams']['duration']) ? sprintf("%04X", $Command['cmdParams']['duration']) : "0001";
                     cmdLog('debug', "  setLevel: onOff=".$onOff.", level=".$level.", duration=".$duration);

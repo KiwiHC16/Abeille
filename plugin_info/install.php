@@ -1170,8 +1170,9 @@
          * - Config DB: 'ab::zgIpAddrX' => 'ab::gtwIpAddrX'
          * - Config DB: 'ab::zgChanX' => 'ab::gtwChanX'
          * - Cmd DB: Removed all 'Time-TimeStamp' info cmds.
+         * - Cmd DB: 'setLevel' update: 'Level' renamed to 'level'
          */
-        if (intval($dbVersion) < 20240624) {
+        if (intval($dbVersion) < 20240820) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
@@ -1201,16 +1202,28 @@
                 $saveEq = false;
 
                 // cmd
-                // $cmds = Cmd::byEqLogicId($eqId);
-                // foreach ($cmds as $cmdLogic) {
-                //     $cmdLogicId = $cmdLogic->getLogicalId();
-                //     $cmdHName = $cmdLogic->getHumanName();
+                $cmds = Cmd::byEqLogicId($eqId);
+                foreach ($cmds as $cmdLogic) {
+                    $cmdLogicId = $cmdLogic->getLogicalId();
+                    $cmdHName = $cmdLogic->getHumanName();
 
-                //     $saveCmd = false;
+                    $saveCmd = false;
 
-                //     if ($saveCmd)
-                //         $cmdLogic->save();
-                // }
+                    $cmdTopic = $cmdLogic->getConfiguration('topic', '');
+                    // 'setLevel' update: 'Level' renamed to 'level'
+                    if ($cmdTopic == "setLevel") {
+                        $cmdRequest = $cmdLogic->getConfiguration('request', '');
+                        if (strpos($cmdRequest, "Level=") !== false) {
+                            $cmdRequest = str_replace("Level=", "level=", $cmdRequest);
+                            $cmdLogic->setConfiguration('request', $cmdRequest);
+                            log::add('Abeille', 'debug', '  '.$eqName.": 'setLevel' cmd updated ('Level' => 'level')");
+                            $saveCmd = true;
+                        }
+                    }
+
+                    if ($saveCmd)
+                        $cmdLogic->save();
+                }
                 // Note: This is useless for Zigate since EQ & cmds updated on startup.
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
                 if (is_object($cmdLogic)) {

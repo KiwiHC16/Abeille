@@ -3,7 +3,7 @@
      * Abeille's static config file
      */
 
-    define('lastDbVersion', 20240624);
+    define('lastDbVersion', 20240820);
     $in = "/tmp/AbeilleDeamonInput";
     $resourcePath = realpath(__DIR__.'/../../resources');
     define('wifiLink', '/tmp/zigateWifi'); // For WIFI: Socat output

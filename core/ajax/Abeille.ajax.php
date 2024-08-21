@@ -112,6 +112,7 @@
         include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()/getRunningDaemons2()
         require_once __DIR__.'/../php/AbeilleInstall.php'; // checkIntegrity()
         include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
+        include_once __DIR__.'/../php/AbeilleGit.php'; // gitFetchAll()
 
         include_file('core', 'authentification', 'php');
         if (!isConnect('admin')) {
@@ -322,10 +323,10 @@
             $prefix = logGetPrefix(""); // Get log prefix
 
             /* Creating temp dir */
-            $tmp = __DIR__.'/../../tmp';
-            $doneFile = $tmp.'/switchBranch.done';
-            if (file_exists($tmp) == false)
-                mkdir($tmp);
+            $tmpDir = jeedom::getTmpFolder("Abeille");
+            $doneFile = $tmpDir.'/switchBranch.done';
+            if (file_exists($tmpDir) == false)
+                mkdir($tmpDir);
             else if (file_exists($doneFile))
                 unlink($doneFile); // Removing 'switchBranch.done' file
 
@@ -333,11 +334,13 @@
             $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd);
 
+            gitFetchAll(0);
+
             $dStatus = pauseDaemons(true); // Stop daemons if running
 
             $cmdToExec = "switchBranch.sh ".$branch.' "'.$prefix.'"';
             // $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
-            $cmd = '/bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
+            $cmd = '/bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd);
 
             // TODO: There is something to be revisited there

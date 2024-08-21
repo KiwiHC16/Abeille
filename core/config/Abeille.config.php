@@ -32,15 +32,7 @@
     $abQueues["xToAbeille"] = array( "id" => 0xAB026D, "max" => 1024 ); // All messages to 'Abeille.class'
     $GLOBALS['abQueues'] = $abQueues;
 
-    // Tcharp38 note: WARNING: TOP PRIORITY is 1, not 5
-    // define('priorityMax',           1);
-    // define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
-    // define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
-    // define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
-    // define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
-    // define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
-    // define('priorityMin',           5); // est egale aux max des priorités définies.
-    // 3 priorities only
+    // 3 priorities only: 1=MAX, 2=normal, 3=MIN
     define('priorityMax',           1);
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
     define('priorityInterrogation', 2); // Message pour recuperer des etats, valeurs

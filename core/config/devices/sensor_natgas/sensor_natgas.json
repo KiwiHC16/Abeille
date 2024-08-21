@@ -1,6 +1,8 @@
 {
     "sensor_natgas": {
         "manufacturer": "Xiaomi",
+        "type": "Xiaomi Gaz Sensor",
+        "genericType": "Environment",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,7 +11,6 @@
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Gaz Sensor",
         "commands": {
             "Status": {
                 "use": "securitySafetySmoke"
@@ -24,7 +25,10 @@
                 "use": "setSmokeSensivityHigh"
             },
             "Test": {
-                "use": "testSmoke"
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0500&attrId=fff1&attrType=23&attrVal=50397184&manufId=115f",
+                "comment": "value=0x03010000. Repeat if no ACK since device not RX always ON",
+                "repeat": 3
             }
         }
     }

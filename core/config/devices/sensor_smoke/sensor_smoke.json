@@ -48,10 +48,7 @@
             "High": {
                 "use": "setSmokeSensivityHigh"
             },
-            "Test old": {
-                "use": "testSmoke"
-            },
-            "Test new": {
+            "Test": {
                 "use": "act_zbWriteAttribute",
                 "params": "clustId=0500&attrId=fff1&attrType=23&attrVal=50397184&manufId=115f",
                 "comment": "value=0x03010000. Repeat if no ACK since device not RX always ON",

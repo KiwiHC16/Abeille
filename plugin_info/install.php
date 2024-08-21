@@ -1171,8 +1171,9 @@
          * - Config DB: 'ab::zgChanX' => 'ab::gtwChanX'
          * - Cmd DB: Removed all 'Time-TimeStamp' info cmds.
          * - Cmd DB: 'setLevel' update: 'Level' renamed to 'level'
+         * - Cmd DB: 'setLevel' update: 'EP' renamed to 'ep'
          */
-        if (intval($dbVersion) < 20240820) {
+        if (intval($dbVersion) < 20240821) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");

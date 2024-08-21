@@ -396,7 +396,7 @@
 
     /* Init known devices list:
        $GLOBALS['devices'][net][addr]
-          zigee => []
+          zigbee => []
               ieee => from device config
           mainEp => from model
           eqModel => []

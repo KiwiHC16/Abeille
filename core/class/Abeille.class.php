@@ -1862,12 +1862,14 @@ class Abeille extends eqLogic {
 
             if (isset($eqLogic)) {
                 $eqLogic->setIsEnable(0);
+
                 /* Display message only if NOT in include mode */
                 if (self::checkInclusionStatus($net) !== 1)
                     message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
+
                 $eqLogic->save();
                 $eqLogic->refresh();
-                log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().' has left the network => DISABLED');
+                log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().' ('.$eqLogic->getLogicalId().') has left the network => DISABLED');
 
                 Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             } else

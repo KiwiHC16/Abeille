@@ -5925,18 +5925,18 @@
 
             $nwkStatus = substr($payload, 0, 2);
             $status = substr($payload, 2, 2);
-            $Addr = substr($payload, 4, 4);
+            $addr = substr($payload, 4, 4);
 
             $msg = '8701/Route discovery confirm'
                 //    .', MACStatus='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                    .', MACStatus='.$status.'/'.$allErrorCode[$status][0]
                 //    .', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'
                    .', NwkStatus='.$nwkStatus.'/'.$allErrorCode[$nwkStatus][0]
-                   .', Addr='.$Addr;
+                   .', Addr='.$addr;
 
             parserLog('debug', $dest.', Type='.$msg, "8701");
 
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $Addr))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
                 monMsgFromZigate($msg); // Send message to monitor
         }
 

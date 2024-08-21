@@ -4,6 +4,8 @@
 -   Amélioration: Maintenance/infos clefs
 -   Correction: Interne cmd 'setLevel': 'Level' => 'level'
 -   Correction: Virtual remoten cmd on/off group (2724).
+-   Correction: Xiaomi smoke sensor: Nettoyage modèle (2723).
+-   Correction: Xiaomi gaz sensor: Nettoyage modèle.
 
 ## 240819-BETA-1
 

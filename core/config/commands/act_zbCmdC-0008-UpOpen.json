@@ -8,7 +8,7 @@
         "genericType": "FLAP_UP",
         "configuration": {
             "topic": "setLevel",
-            "request": "Level=100&duration=0000&EP=#EP#",
+            "request": "level=100&duration=0000&ep=#EP#",
             "visibilityCategory": "All"
         }
     }

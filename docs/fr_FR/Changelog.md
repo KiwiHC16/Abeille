@@ -6,6 +6,7 @@
 -   Correction: Virtual remoten cmd on/off group (2724).
 -   Correction: Xiaomi smoke sensor: Nettoyage modèle (2723).
 -   Correction: Xiaomi gaz sensor: Nettoyage modèle.
+-   Correction: Interne cmd 'setLevel': 'EP' => 'ep'
 
 ## 240819-BETA-1
 

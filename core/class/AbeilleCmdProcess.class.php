@@ -3840,18 +3840,18 @@
                 } // End cluster 0004, $cmdName == 'removeAllGroups'
 
                 // ZCL cluster 0008/Level control specific: (received) commands
-                // Mandatory params: addr, EP, level (in dec, %), duration (dec)
+                // Mandatory params: addr, ep, level (decimal, %), duration (decimal)
                 // Optional params: duration (default=0001)
                 else if ($cmdName == 'setLevel') {
-                    $required = ['addr', 'level']; // Mandatory infos
+                    $required = ['addr', 'ep', 'level']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
                     if (($Command['cmdParams']['level'] < 0) || ($Command['cmdParams']['level'] > 100)) {
                         cmdLog('error', "  setLevel: 'level' en dehors de la plage 0->100");
                         return;
                     }
-                    $zgCmd = "0081"; // Move to level with/without on/off
 
+                    $zgCmd = "0081"; // Move to level with/without on/off
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
                     // <source endpoint: uint8_t>
@@ -3860,7 +3860,7 @@
                     // <Level: uint8_t >
                     // <Transition Time: uint16_t>
 
-                    if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
+                    if (isset($Command['cmdParams']['addrMode'])) $addrMode = $Command['cmdParams']['addrMode']; else $addrMode = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
                     $dstEp      = $Command['cmdParams']['ep'];
@@ -3868,7 +3868,7 @@
                     $l          = intval($Command['cmdParams']['level'] * 255 / 100);
                     $level      = sprintf("%02X", $l);
                     $duration   = isset($Command['cmdParams']['duration']) ? sprintf("%04X", $Command['cmdParams']['duration']) : "0001";
-                    cmdLog('debug', "  setLevel: onOff=".$onOff.", level=".$level.", duration=".$duration);
+                    cmdLog('debug', "  setLevel: OnOff=".$onOff.", Level=".$level.", Duration=".$duration);
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
 

@@ -1219,6 +1219,12 @@
                             log::add('Abeille', 'debug', '  '.$eqName.": 'setLevel' cmd updated ('Level' => 'level')");
                             $saveCmd = true;
                         }
+                        if (strpos($cmdRequest, "EP=") !== false) {
+                            $cmdRequest = str_replace("EP=", "ep=", $cmdRequest);
+                            $cmdLogic->setConfiguration('request', $cmdRequest);
+                            log::add('Abeille', 'debug', '  '.$eqName.": 'setLevel' cmd updated ('EP' => 'ep')");
+                            $saveCmd = true;
+                        }
                     }
 
                     if ($saveCmd)

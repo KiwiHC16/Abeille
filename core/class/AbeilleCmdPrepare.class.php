@@ -709,7 +709,7 @@
                                     "dest" => $dest,
                                     "cmdParams" => array(
                                         "addr" => $address,
-                                        "EP" => "03",
+                                        "ep" => "03",
                                         // "Level" => intval($keywords[1] * 255 / 100),
                                         "level" => $keywords[1],
                                         "duration" => $keywords[3],
@@ -806,7 +806,7 @@
                                     "dest" => $dest,
                                     "cmdParams" => array(
                                         "addr" => $address,
-                                        "EP" => "0B",
+                                        "ep" => "0B",
                                         // "Level" => intval($keywords[1] * 255 / 100),
                                         "level" => $keywords[1],
                                         "duration" => $keywords[3],
@@ -823,11 +823,11 @@
                                     "priority"             => priorityUserCmd,
                                     "dest"                 => $dest,
                                     "cmdParams" => array(
-                                        "addressMode"          => "01",
-                                        "addr"                 => $address,
-                                        "EP"                   => "01",
-                                        "level"                => intval($parameters['Level']),
-                                        "duration"             => $parameters['duration'],
+                                        "addrMode"  => "01",
+                                        "addr"      => $address,
+                                        "ep"        => "01",
+                                        "level"     => intval($parameters['Level']),
+                                        "duration"  => $parameters['duration'],
                                     )
                                 );
                 break;

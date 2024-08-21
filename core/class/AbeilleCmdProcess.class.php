@@ -3789,12 +3789,12 @@
                     if (($cmdId == '00') || ($cmdId == '01') || ($cmdId == '02')) { // Off, on, or toggle
                         $zgCmd      = "0092";
 
-                        $addr       = ($addrMode == '02') ? $Command['cmdParams']['addr'] : (($addrMode == '01') ? $Command['addrGroup'] : 'DEAD');
+                        $addr       = ($addrMode == '02') ? $Command['cmdParams']['addr'] : (($addrMode == '01') ? $Command['cmdParams']['addrGroup'] : 'DEAD');
                         $srcEp      = "01";
                         $dstEp      = ($addrMode == '02') ? $Command['cmdParams']['ep'] : '01';
                         $cmdId      = $Command['cmdParams']['cmd'];
 
-                        cmdLog('debug', "  cmd-0006: addrMode=${addrMode}, addr=${addr}, cmd=${cmdId}");
+                        cmdLog('debug', "  cmd-0006: AddrMode=${addrMode}, Addr=${addr}, CmdId=${cmdId}");
                         $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId;
 
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);

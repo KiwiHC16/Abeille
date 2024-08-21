@@ -3,6 +3,7 @@
 -   Amélioration: Xiaomi smoke sensor: Ajout 'Battery low' (2723).
 -   Amélioration: Maintenance/infos clefs
 -   Correction: Interne cmd 'setLevel': 'Level' => 'level'
+-   Correction: Virtual remoten cmd on/off group (2724).
 
 ## 240819-BETA-1
 

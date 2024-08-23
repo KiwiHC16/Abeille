@@ -24,6 +24,7 @@
 
     include_once __DIR__."/../../../../core/php/core.inc.php";
     include_once "AbeilleLog.php"; // Log library
+    include_once __DIR__.'/../class/AbeilleTools.class.php'; // getMsgSendErr()
     define('maxRetry', 3);
 
     /* Add to list a new eq (router or coordinator) to interrogate.
@@ -320,9 +321,10 @@
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
         logMessage("", "  msgToCmd: ".$msgJson);
 
-        global $queueLQIToCmd;
-        if (@msg_send($queueLQIToCmd, 0, $msgJson, false, false, $errCode) == false) {
-            logMessage('error', "  msgToCmd() ERROR ${errCode} in AbeilleLQI");
+        global $queueXToCmd;
+        if (@msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
+            $errMsg = AbeilleTools::getMsgSendErr($errCode);
+            logMessage('error', "  msgToCmd() ERROR ${errCode}/${errMsg} in AbeilleLQI");
             return -1;
         }
         return 0;
@@ -458,7 +460,7 @@
         logMessage("", "    Zigbee=".json_encode($knownFromJeedom[$eqLogicId]['zigbee'], JSON_UNESCAPED_SLASHES));
     }
 
-    $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
+    $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
     $queueParserToLQI = msg_get_queue($abQueues["parserToLQI"]["id"]);
     $queueParserToLQIMax = $abQueues["parserToLQI"]["max"];
     msgFromParserFlush(); // Flush the queue if not empty

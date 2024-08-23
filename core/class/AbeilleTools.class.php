@@ -1177,7 +1177,8 @@
         public static function getMsgSendErr($errCode) {
             $errDesc = array(
                 '11' => 'Queue full',
-                '13' => 'Permission denied'
+                '13' => 'Permission denied',
+                '22' => 'Invalid argument' // EINVAL
             );
             if (isset($errDesc[$errCode]))
                 return $errDesc[$errCode];

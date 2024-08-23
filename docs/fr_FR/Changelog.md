@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Correction: Collecte LQI erreur ' msgToCmd() ERROR 22 in AbeilleLQI'.
+
 ## 240821-BETA-1
 
 -   Amélioration: Xiaomi smoke sensor: Ajout 'Battery low' (2723).

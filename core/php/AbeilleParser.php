@@ -245,6 +245,26 @@
         msgToAbeille2($msg);
     }
 
+    /* Devices list reminder
+    $GLOBALS['devices'][net][addr]
+        zigbee => []
+            ieee =>
+            macCapa
+            rxOnWhenIdle
+            endPoints => []
+                XX => []
+                    profId
+                    devId
+                    servClusters
+                    modelId
+                    manufId
+        mainEp => from model
+        eqModel => []
+        modelName =>
+        modelSource =>
+        commands => from model
+    */
+
     // Create a new device in internal devices list => $GLOBALS['devices'][$net][$addr]
     function newDevice($net, $addr, $ieee = null) {
         // This is a new device

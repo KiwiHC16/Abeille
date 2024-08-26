@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Amélioration: Support préliminaire Sonoff SNZB-06P capteur de présence (2726).
+
 ## 240823-BETA-1
 
 -   Correction: Collecte LQI erreur ' msgToCmd() ERROR 22 in AbeilleLQI'.

@@ -1,0 +1,55 @@
+{
+    "SNZB-06P_SONOFF": {
+        "manufacturer": "Sonoff",
+        "model": "SNZB-06P",
+        "type": "Sonoff Human Presence Sensor",
+        "genericType": "Security",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Sonoff-PresenceSensor",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Occupancy": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "isVisible": "1"
+            },
+            "Bind 01-0406-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0406",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0406-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0406&attrId=0000&attrType=18",
+                "execAtCreation": "yes"
+            },
+            "Zone Alarm1": {
+                "use": "inf_zone-Alarm1",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Zone Status Changed": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "params": "ep=01",
+                "trigOut": {
+                    "01-0500-alarm1": {
+                        "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
+                        "valueOffset": "#value#&1"
+                    }
+                }
+            },
+            "Bind 01-0500-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0500",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

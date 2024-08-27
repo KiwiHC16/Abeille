@@ -688,9 +688,9 @@
             // Check if main signature is missing but available in EP
             // Note that this is unexpected. Some bug somewhere else leads to that.
             // TODO: Better to include this part in next 'if' code block
-            if (($eq['eqModel']['modelId'] === null) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
+            if (!isset($eq['eqModel']['modelId']) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
                 foreach ($eq['zigbee']['endPoints'] as $epId2 => $ep2) {
-                    if (($eq['eqModel']['modelId'] === null) && isset($ep2['modelId']))
+                    if (!isset($eq['eqModel']['modelId']) && isset($ep2['modelId']))
                         $eq['eqModel']['modelId'] = $ep2['modelId'];
                     if (($eq['manufId'] === null) && isset($ep2['manufId']))
                         $eq['manufId'] = $ep2['manufId'];
@@ -806,7 +806,7 @@
                 $eq['eqModel']['modelName'] = 'defaultUnknown';
                 $eq['eqModel']['modelSource'] = "Abeille";
             }
-            if ($e['eqModel']['modelName'] == '') {
+            if ($eq['eqModel']['modelName'] == '') {
                 // Still not identified
                 if ($eq['status'] == 'unknown_ident')
                     return true;
@@ -850,11 +850,11 @@
             parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", ModelName=".$eq['eqModel']['modelName'].")");
 
             // Read JSON to get list of commands to execute
-            // if (isset($eq['eqModel']['modelPath']))
-            //     $modelPath = $eq['eqModel']['modelPath'];
-            // else
-            //     $modelPath = $eq['eqModel']['modelName']."/".$eq['eqModel']['modelName'].".json";
-            $eqModel = getDeviceModel($eq['eqModel']['modelSource'], $eq['eqModel']['modelPath'], $eq['eqModel']['modelName']);
+            if (isset($eq['eqModel']['modelPath']))
+                $modelPath = $eq['eqModel']['modelPath'];
+            else
+                $modelPath = $eq['eqModel']['modelName']."/".$eq['eqModel']['modelName'].".json";
+            $eqModel = getDeviceModel($eq['eqModel']['modelSource'], $modelPath, $eq['eqModel']['modelName']);
             if ($eqModel === false)
                 return;
 

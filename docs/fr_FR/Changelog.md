@@ -1,6 +1,7 @@
 # ChangeLog
 
-- Amélioration: Support préliminaire Sonoff SNZB-06P capteur de présence (2726).
+-   Amélioration: Support préliminaire Sonoff SNZB-06P capteur de présence (2726).
+-   Corrections: Interne parser.
 
 ## 240823-BETA-1
 

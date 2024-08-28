@@ -3,6 +3,7 @@
 -   Amélioration: Support préliminaire Sonoff SNZB-06P capteur de présence (2726).
 -   Corrections: Interne parser.
 -   Amélioration: Modèle Sonoff TH01 revu pour réduire fréquence reporting.
+-   Sirene iAlarm: Mises-à-jour du modèle (2629).
 
 ## 240823-BETA-1
 

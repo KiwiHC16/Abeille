@@ -1,0 +1,49 @@
+***
+*** Abeille developer internal doc
+*** Jeedom 'eqLogic' database notes for Abeille
+*** Tcharp38
+***
+
+id => Jeedom ID
+
+name => Jeedom equipment name
+
+logicalId => Logical ID (ex: 'Abeille1/C14B')
+
+oject_id => Parent ID
+
+eqType_name => 'Abeille'
+
+configuration
+    IEEE => to be moved in ab::zigbee
+    mainEP
+    ab::icon
+
+    ab::zigbee
+        endPoints
+            01
+                servClusters => ex '0000/0003/FFFF/0006'
+                modelId => from cluster 0000 if supported
+                manufId => from cluster 0000 if supported
+                dateCode => from cluster 0000 if supported
+                swBuildId => from cluster 0000 if supported
+        macCapa
+        mainsPowered
+        rxOnWhenIdle
+        manufCode
+        modelId => from first supported cluster 0000
+        manufId => from first supported cluster 0000
+
+    ab::eqModel
+        modelSource => optional: 'Abeille' or 'local'
+        modelName
+        modelForced
+        modelSig
+        modelPath => optional (for variant): default='<modelName>/<modelName>.json'
+        manuf
+        model
+        type
+        private
+
+
+

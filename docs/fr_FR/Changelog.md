@@ -4,6 +4,7 @@
 -   Corrections: Interne parser.
 -   Amélioration: Modèle Sonoff TH01 revu pour réduire fréquence reporting.
 -   Sirene iAlarm: Mises-à-jour du modèle (2629).
+-   Tuya detecteur fumée Tuya TS0205: Mise-à-jour du modèle (2658).
 
 ## 240823-BETA-1
 

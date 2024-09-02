@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="240823-BETA-1"
+# VERSION="240902-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -42,7 +42,7 @@ ac41165b22042f9e16b3fcae3d99e4b6 *core/class/Abeille.class.php
 d457afbfc3fe01d1c716b37a1af9b431 *core/class/AbeilleCmdProcess.class.php
 978d668a0ed61b04aa0c2133b486efc1 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-986f476b27118dd67d292e4b0e58e1f3 *core/class/AbeilleParser.class.php
+db8e51fa9cf640af4dfb45e0cbd0f3d0 *core/class/AbeilleParser.class.php
 455817c9ae8f7799a7e8003e8fdcb0da *core/class/AbeilleTools.class.php
 bb680bb5b69614eb83289386eb4c41af *core/config/Abeille.config.php
 603640a07e5e022e4d4f1b6eb9d91d5c *core/config/AbeilleInternalCmds.json
@@ -848,6 +848,8 @@ a348a8cc39563268011312608bbe437f *core/config/devices/SMSZB-120_frientAS/SMSZB-1
 b4cf34a49f4977b2af2a167c91750669 *core/config/devices/SNZB-01P_eWeLink/discovery-SNZB-01P_eWeLink.json
 b5d3a2bee0d3d11a471ac65e87c3fadc *core/config/devices/SNZB-02D_SONOFF/SNZB-02D_SONOFF.json
 6638da47cac1a93c227c8dabcc1ed433 *core/config/devices/SNZB-02D_SONOFF/discovery-SNZB-02D_SONOFF.json
+bbfc4ee5f7896335488fca0348b42f5b *core/config/devices/SNZB-06P_SONOFF/SNZB-06P_SONOFF.json
+4a7b445403d8b084f479f69ba85928aa *core/config/devices/SNZB-06P_SONOFF/discovery-SNZB-06P_SONOFF.json
 4fe7bd0912f54fc0f64ecc484a2f7790 *core/config/devices/SOCKETOUTLET1_SchneiderElectric/SOCKETOUTLET1_SchneiderElectric.json
 35e86781b989807b96971b43f057324b *core/config/devices/SOCKETOUTLET1_SchneiderElectric/discovery-SOCKETOUTLET1_SchneiderElectric.json
 174bee7608f0de1febd510ca3790b23a *core/config/devices/SP220/SP220.json
@@ -862,7 +864,7 @@ e01e88dce276c42086b17ea69a1d6d7c *core/config/devices/Shutterswitchwithneutral/d
 399db46c33865fea091c9e9e686d6eed *core/config/devices/SmokeSensor-EM/SmokeSensor-EM.json
 91ef8cd4f3d7c455200f3e2218b3d4aa *core/config/devices/SmokeSensor-N-3.0/SmokeSensor-N-3.0.json
 614855aef557cd677c28146dd3090371 *core/config/devices/Switch4xEU-LIGHTIFY/Switch4xEU-LIGHTIFY.json
-7ea619ba6e07e804e70f3ba8a42f29b2 *core/config/devices/TH01/TH01.json
+30b3ac19f2ea8f770e5b097c9ee2e859 *core/config/devices/TH01/TH01.json
 261098b2a52fc4245280d68afb98c396 *core/config/devices/THS317-ET_OWON/THS317-ET_OWON-old.json
 9e85e9d1a462371a5d04b6582531a4d2 *core/config/devices/THS317-ET_OWON/THS317-ET_OWON.json
 d77dccb72789b078761c1df8b1c72fec *core/config/devices/THS317-ET_OWON/discovery-20211101.json
@@ -1016,7 +1018,7 @@ f3e966029b235af971122e5a92bad89f *core/config/devices/TS0201__TZ3000_ywagc4rj/TS
 f1e93658b039b5c13583b353401927ea *core/config/devices/TS0203__TYZB01_xph99wvr/TS0203__TYZB01_xph99wvr.json
 9de2c4261653f35074351331f85b7c73 *core/config/devices/TS0203__TZ3000_f1hmoyj4/TS0203__TZ3000_f1hmoyj4.json
 4fd13e1246a575965ffecc793427c22c *core/config/devices/TS0203__TZ3000_f1hmoyj4/discovery.json
-90481733a2286548e544feef424cbdf0 *core/config/devices/TS0205__TZ3210_up3pngle/TS0205__TZ3210_up3pngle.json
+ad5f6bed526cc95c831023822ec0807b *core/config/devices/TS0205__TZ3210_up3pngle/TS0205__TZ3210_up3pngle.json
 c2f5c646b7ab62f8a538c764b412f9b5 *core/config/devices/TS0205__TZ3210_up3pngle/discovery-TS0205__TZ3210_up3pngle_detecteur-fumee.json
 3239b8195515676bcfea1fe9114e4612 *core/config/devices/TS0207__TZ3000_m0vaazab/TS0207__TZ3000_m0vaazab.json
 6fb842b232f13a5fdd8b12ceaf162b1e *core/config/devices/TS0207__TZ3000_m0vaazab/discovery-TS0207__TZ3000_m0vaazab.json
@@ -1026,7 +1028,7 @@ aefad1cd77e5f77cad0e04b41002ffa6 *core/config/devices/TS0210__TZ3000_bmfw9ykl/di
 b60f49328f22cfe80f0f4a8fbc92580d *core/config/devices/TS0222__TYZB01_ftdkanlj/TS0222__TYZB01_ftdkanlj.json
 dd3a70c6b60a996a44062f18513685d8 *core/config/devices/TS0222__TYZB01_ftdkanlj/discovery.json
 c08e375af91591a6bee28a1b82924221 *core/config/devices/TS0222__TYZB01_kvwjujy9/TS0222__TYZB01_kvwjujy9.json
-219a25fa3ef694a5d0f743f17e289c6e *core/config/devices/TS0224__TZ3000_cipibmnp/TS0224__TZ3000_cipibmnp.json
+0323e70e68e4efc7db54da4332d9bb20 *core/config/devices/TS0224__TZ3000_cipibmnp/TS0224__TZ3000_cipibmnp.json
 53112c079dea79be14e25f931005c611 *core/config/devices/TS0224__TZ3000_cipibmnp/discovery-TS0224__TZ3000_cipibmnp_alarme.json
 62a4fbbd742df90979e43bda032d35ee *core/config/devices/TS0225__TZE200_2aaelwxk/TS0225__TZE200_2aaelwxk.json
 738146152d3df0a5354ab43b7943e2a4 *core/config/devices/TS0225__TZE200_2aaelwxk/discovery-TS0225__TZE200_2aaelwxk.json
@@ -1250,7 +1252,7 @@ fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 d890c66fbabc7506ab5583b8808339c1 *core/php/AbeilleCliToQueue.php
 82e8ed32afaf8f4157cd6478951a0831 *core/php/AbeilleCmd-Profalux.php
 ede38b947043b91cc5a92c231b194e51 *core/php/AbeilleCmd-Tuya.php
-9d92f6e5fa218bc160b352cdcba4bf66 *core/php/AbeilleCmd.php
+60ca0030cd23630799ae64e60cf20685 *core/php/AbeilleCmd.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
 e19dfc28fe5aab5966a0dcca176381ff *core/php/AbeilleGetEq.php
 da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
@@ -1263,7 +1265,7 @@ cc37ca2690f411bd5dfcab4b520934bb *core/php/AbeilleMonitor.php
 9ab85f33787d42bdae75985d3e3b4d69 *core/php/AbeilleOTA.php
 d9ad623ae1a268c4e51936575c1791f8 *core/php/AbeilleParser-Tuya.php
 ef74b40e32bebf93fe870df9b4aa45f5 *core/php/AbeilleParser-Xiaomi.php
-7af290179d7209b88550b11fdc861926 *core/php/AbeilleParser.php
+da9a591ad1779e3b195573dffc70b098 *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 bff8b2ccb60725680d50c00e0b84415c *core/php/AbeilleRepair.php
 875ae0bb9f3ffa4e1f4863f58ad6147a *core/php/AbeilleRoutes.php
@@ -1302,7 +1304,7 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 56ed2d6a626cf57f866bfdd1012a84a1 *core/scripts/switchBranch.sh
 5ccabc6e17725abec6a093b9ba2feeef *core/scripts/updateZigate.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
-d965a3b2da40d32bd35dfcfd502d2e0c *desktop/js/Abeille.js
+d7308c6de4a0e59dc9c0d4bd7a880129 *desktop/js/Abeille.js
 0b3789b65c5d1687d7dbd6769eb599b6 *desktop/js/AbeilleNetwork.js
 d0d1ca56ff2c7b9b33e3f9e1b392e3ba *desktop/modal/Abeille-OTA.modal.php
 65de456a79b820dd9307d1d50d21137d *desktop/modal/AbeilleCompatibility.modal.php
@@ -1342,10 +1344,11 @@ bb4f1f9ed4a7865cf3f52f24d9d14186 *desktop/php/Abeille-Eq-Cmds.php
 986f877d0fa8442a65d1146072a3ed87 *desktop/php/AbeilleNetworkMap.php
 e44f0103a4943fca4a50c8d1c97599af *docs/dev/ezsp_notes.txt
 46c7b16e4fb265876c42b4d1975646e9 *docs/dev/jeedom_config_db.txt
+5f43f625039542b8903b28e977aec2d2 *docs/dev/jeedom_eqlogic_db.txt
 efe23d9b46aa8efd0bdace8bfa5a8046 *docs/dev/jeedom_notes.txt
 14eb89c802e96f0936988934ecc29cc8 *docs/dev/remote_controls.txt
 ee5f03eaa76a54d018f27b08326961f6 *docs/dev/zigbee_notes.txt
-3db7c43570f1768516404aa4b0dc621f *docs/fr_FR/Changelog.md
+ae3e141d082859da97ed5a3b65bebc66 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1548,6 +1551,7 @@ f7a65eca3cf57583929f4719e739eab9 *images/node_SmokeSensor-EM.png
 5efc0afe25f9647ee3abe6d5c49fc232 *images/node_Sonoff-01MINIZB.png
 b47b765a6640f32aaddadd58dfb4b1c4 *images/node_Sonoff-BASICZBR3.png
 da4acb14e31b31a09103c3eee5543af8 *images/node_Sonoff-Button.png
+37cb6776b64bd0c016034b6c0af13d94 *images/node_Sonoff-PresenceSensor.png
 c96fc06840975eee3783acb90901d321 *images/node_Sonoff-S26R2ZB.png
 3ec9a385b5a711c08bd1415b3bd2a41d *images/node_Sonoff-SNZB-01.png
 a60015fc47af1ce4f464ff2efc298291 *images/node_Sonoff-SNZB-02.png
@@ -1694,11 +1698,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-5d76430035f71296f5f1446f1edd3591 *plugin_info/Abeille.version
+2e8ca2e38bada37e1f78fc3de7f9e3e3 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 3d041c403affa3480638403832fd67f8 *plugin_info/configuration.php
-b597fcad3f5c1d70f328d7960eb7b8b2 *plugin_info/info.json
+f98bea332b979f7db575f49c4ab473ff *plugin_info/info.json
 4021c6efa44cdc9026d07ffc1153101f *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

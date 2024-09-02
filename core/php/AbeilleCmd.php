@@ -125,7 +125,7 @@
             // 'modelPath' => isset($eqModel['modelPath']) ? $eqModel['modelPath'] : "<modName>/<modName>.json",
             'eqModel' => $eqModel
         );
-        if ($eq['eqModel']['modelName'] != '') {
+        if (isset($eq['eqModel']['modelName']) && ($eq['eqModel']['modelName'] != '')) {
             // if (isset($eqModel['modelPath']))
             //     $eq['modelPath'] = $eqModel['modelPath'];
             // else
@@ -475,7 +475,7 @@
                 'eqModel' => $eqModel,
                 // 'variables' // Optional
             );
-            if ($eq['eqModel']['modelName'] != '') {
+            if (isset($eq['eqModel']['modelName']) && ($eq['eqModel']['modelName'] != '')) {
                 // if (isset($eqModel['modelPath']))
                 //     $eq['modelPath'] = $eqModel['modelPath'];
                 // else

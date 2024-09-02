@@ -250,18 +250,28 @@
         zigbee => []
             ieee =>
             macCapa
-            rxOnWhenIdle
+            rxOnWhenIdle => undef or true/false
             endPoints => []
                 XX => []
                     profId
                     devId
                     servClusters
-                    modelId
-                    manufId
+                    modelId => From cluster 0000: unset, set to false, or set to proper value
+                    manufId => From cluster 0000: unset, set to false, or set to proper value
+                    location => From cluster 0000: unset, set to false, or set to proper value
+                    swBuildId => From cluster 0000: unset, set to false, or set to proper value
+                    dateCode => From cluster 0000: unset, set to false, or set to proper value
+            modelId => copy from the 1st cluster 0000
+            manufId => copy from the 1st cluster 0000
+            location => copy from the 1st cluster 0000
+            manufCode
+            logicalType
+            groups => [], Only if cluster 0004 supported
+                XX => 'GGGG/YYYY'
         mainEp => from model
         eqModel => []
-        modelName =>
-        modelSource =>
+            modelName => JSON file name without extension
+            modelSource => '' = 'Abeille' or 'local'
         commands => from model
     */
 
@@ -271,30 +281,24 @@
         $zigbee = array(
             'ieee' => $ieee,
             'macCapa' => '',
-            'rxOnWhenIdle' => null,
-            'endPoints' => null,
+            // 'rxOnWhenIdle' => undef or true/false
+            // 'endPoints' => undef or []
+            // 'modelId' => Zigmee model: undef/false(unsupported)/'xx' from 1st cluser 0000
+            // 'manufId' => Zigbee manufacturer: undef/false(unsupported)/'xx' from 1st cluser 0000
+            // 'location' => Zigbee location: undef/false(unsupported)/'xx' from 1st cluser 0000
         );
         $eqModel = array(
             'modelName' => '', // JSON file name without extension
             'modelSource' => '', // ''/'Abeille' or 'local'
-            'modelForced' => false
+            'modelForced' => false // Model forced by user if 'true'
         );
         $GLOBALS['devices'][$net][$addr] = array(
-            // 'ieee' => $ieee,
-            // 'macCapa' => '',
-            // 'rxOnWhenIdle' => null,
             'zigbee' => $zigbee,
 
             'rejoin' => '', // Rejoin info from device announce
             'status' => 'identifying', // identifying, configuring, discovering, idle
             'time' => time(),
             'mainEp' => '',
-            'manufId' => null, // Zigbee manufacturer: null(undef)/false(unsupported)/'xx'
-            'modelId' => null, // Zigmee model: null(undef)/false(unsupported)/'xx'
-            'location' => null, // Zigbee location: null(undef)/false(unsupported)/'xx'
-            // 'modelName' => '', // Model file name WITHOUT '.json'
-            // 'modelSource' => '', // Model source ('Abeille' or 'local')
-            // 'modelForced' => false, // Model forced by user if 'true'
             'eqModel' => $eqModel,
             // Optional 'private'
             // Optional 'notStandard-0400-0000'
@@ -560,25 +564,19 @@
                 $status = 'idle';
             else
                 $status = 'identifying';
+
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-            $zigbee['ieee'] = $eqLogic->getConfiguration('IEEE', null);
+            $ieee = $eqLogic->getConfiguration('IEEE', '');
+            if ($ieee != '')
+                $zigbee['ieee'] = $ieee;
+
             $eq = array(
-                // 'ieee' => $eqLogic->getConfiguration('IEEE', null),
-                // 'macCapa' => isset($zigbee['macCapa']) ? $zigbee['macCapa'] : '',
-                // 'rxOnWhenIdle' => isset($zigbee['rxOnWhenIdle']) ? $zigbee['rxOnWhenIdle'] : null,
-                // 'endPoints' => isset($zigbee['endPoints']) ? $zigbee['endPoints'] : null, // null(undef)
                 'zigbee' => $zigbee,
-                'manufCode' => isset($zigbee['manufCode']) ? $zigbee['manufCode'] : null,
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => $status, // identifying, configuring, discovering, idle
                 'time' => time(),
                 'mainEp' => '',
-                // Cluster 0000 infos
-                'manufId' => null, // Zigbee manufacturer: null(undef)/false(unsupported)/'xx'
-                'modelId' => null, // Zigmee model: null(undef)/false(unsupported)/'xx'
-                'location' => null, // Zigbee location: null(undef)/false(unsupported)/'xx'
-                'dateCode' => null,
-                'swBuildId' => null,
+
                 // Abeille's model infos
                 // 'modelName' => $jsonId,
                 // 'modelSource' => '',
@@ -660,10 +658,10 @@
                         logMessage('debug', 'Some equipments removed from Jeedom');
                         // Some equipments removed from Jeedom => phantoms if still in network
                         // $msg['net'] = Abeille network (AbeilleX)
-                        // $msg['devices'] = Eq addr separated by ','
+                        // $msg['addrList'] = Eq addr separated by ','
                         $net = $msg['net'];
-                        $arr = explode(',', $msg['devices']);
-                        foreach ($arr as $idx => $addr) {
+                        $arr = explode(',', $msg['addrList']);
+                        foreach ($arr as $addr) {
                             if (!isset($GLOBALS['devices'][$net])) {
                                 logMessage('debug', "  ERROR: Unknown network ".$net);
                                 continue;
@@ -672,8 +670,9 @@
                                 logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
                                 continue;
                             }
-                            $ieee = $GLOBALS['devices'][$net][$addr]['ieee'];
+                            $ieee = $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'];
                             unset($GLOBALS['devices'][$net][$addr]);
+                            // TODO: Instead of removing, might be worth flaging it to not loose infos if rejoin
                             logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");
                         }
                     } else if ($msg['type'] == 'eqUpdated') {

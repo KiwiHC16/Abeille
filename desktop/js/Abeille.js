@@ -433,72 +433,6 @@ function getSelectedEqs(zgId) {
 }
 
 /* Removes selected equipments for given zigate nb from Jeedom DB only. Zigate is untouched. */
-// function removeBeesJeedom(zgId) {
-//     console.log("removeBeesJeedom(zgId=" + zgId + ")");
-
-//     /* Any selected ? */
-//     var sel = getSelectedEqs(zgId);
-//     console.log(sel);
-//     if (sel["nb"] == 0) {
-//         alert("Aucun équipement sélectionné !");
-//         return;
-//     }
-//     var eqIdList = sel["ids"];
-//     console.log("eqIdList=" + eqIdList);
-
-//     var msg =
-//         "{{Vous êtes sur le point de supprimer les équipements selectionnés de Jeedom.";
-//     msg +=
-//         "<br><br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement au fur et à mesure de leur reveil et ce, tant qu'on ne les force pas à quitter le réseau.";
-//     msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
-//     bootbox.confirm(msg, function (result) {
-//         if (result == false) return;
-
-//         // Collecting addresses before EQ is removed
-//         var eqAddrList = sel["addrs"];
-//         console.log("eqAddrList=" + eqAddrList);
-
-//         $.ajax({
-//             type: "POST",
-//             url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
-//             data: {
-//                 action: "removeEqJeedom",
-//                 eqList: eqIdList,
-//             },
-//             dataType: "json",
-//             global: false,
-//             error: function (request, status, error) {
-//                 bootbox.alert("ERREUR 'removeEqJeedom' !");
-//             },
-//             success: function (json_res) {
-//                 window.location.reload();
-//                 res = JSON.parse(json_res.result);
-//                 if (res.status != 0) {
-//                     var msg =
-//                         "ERREUR ! Quelque chose s'est mal passé.\n" +
-//                         res.errors;
-//                     alert(msg);
-//                 } else {
-//                     // Informing parser that some equipements have to be considered "phantom"
-//                     var xhr = new XMLHttpRequest();
-//                     xhr.open(
-//                         "GET",
-//                         "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
-//                             js_queueXToParser +
-//                             "&msg=type:eqRemoved_net:Abeille" +
-//                             zgId +
-//                             "_eqList:" +
-//                             eqAddrList,
-//                         true
-//                     );
-//                     xhr.send();
-//                 }
-//             },
-//         });
-//     });
-// }
-
-/* Removes selected equipments for given zigate nb from Jeedom DB only. Zigate is untouched. */
 function removeSelectedEq(gtwId) {
     console.log("removeSelectedEq(gtwId=" + gtwId + ")");
 
@@ -698,7 +632,7 @@ function removeEq(zgId, eqId) {
                                     js_queueXToParser +
                                     "&msg=type:eqRemoved_net:Abeille" +
                                     zgId +
-                                    "_eqList:" +
+                                    "_addrList:" +
                                     eqAddrList,
                                 true
                             );

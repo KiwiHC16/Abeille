@@ -5,6 +5,9 @@
 -   Amélioration: Modèle Sonoff TH01 revu pour réduire fréquence reporting.
 -   Sirene iAlarm: Mises-à-jour du modèle (2629).
 -   Tuya detecteur fumée Tuya TS0205: Mise-à-jour du modèle (2658).
+-   Corrections: Equipement mal supprimé (parser).
+-   Améliorations: Interne (parser): eqModel['modelId'/'manufId'/'location'] => eq['zigbee']
+-   Améliorations: Interne parser: eq['manufCode'/'logicalType'] => eq['zigbee']
 
 ## 240823-BETA-1
 

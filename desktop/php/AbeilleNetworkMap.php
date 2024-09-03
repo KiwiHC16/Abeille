@@ -157,6 +157,21 @@
         .typeUndefined-color {
             color: #E5E500;
         }
+        .ab-popup {
+            position: absolute;  <!-- Relative to parent -->
+            display: none;
+            cursor: pointer;
+            z-index: 1;
+            width: 160px;
+            background-color: #fff;
+            color: #555;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px 0;
+            top: 0px;
+            left: 0px;
+            margin-left: -80px;
+        }
 </style>
 
     <!-- <div class="row"> -->
@@ -263,6 +278,13 @@
                     }
                 ?>
                 </select>
+
+                <!-- Device infos pop up -->
+                <div id="idDevInfosPU" class="ab-popup">
+                    <span id="idDevName">Nom</span><br>
+                    <span id="idNetName">Réseau</span><br>
+                    <span id="idAddr">Adresse</span><br>
+                </div>
             </div>
         </div>
     </div>
@@ -1246,7 +1268,7 @@
             //     newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
             // newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
             newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
-            newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+            newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" onmouseover="displayDevInfos(\''+devLogicId+'\')" />';
             // if (configMode) {
             //     // Add a button to select level
             //     newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(\''+devLogicId+'\')" />';
@@ -1387,6 +1409,31 @@
         // Refresh display
         refreshPage();
     });
+
+    // Called when mouse is on a device to display its infos
+    function displayDevInfos(devLogicId) {
+        console.log("displayDevInfos(" + devLogicId + ")");
+
+        return; // Currently disabled (work ongoing)
+
+        netIdx = devLogicId2Net(devLogicId); // Extract network index
+        dev = networks[netIdx].devList[devLogicId];
+        // console.log("networks=", networks);
+        // console.log("dev=", dev);
+
+        // Get device infos
+        devName = document.getElementById('idDevName');
+        devName.textContent = dev.name;
+        netName = document.getElementById('idNetName');
+        netName.textContent = "Abeille" + networks[netIdx].zgId;
+        addr = document.getElementById('idAddr');
+        addr.textContent = dev.addr;
+
+        // Display pop-up
+        devInfosPU = document.getElementById('idDevInfosPU');
+        devInfosPU.style.display = 'inline-block';
+        // devInfosPU.style.visibility = 'visible';
+    }
 
     //-----------------------------------------------------------------------
     // MAIN

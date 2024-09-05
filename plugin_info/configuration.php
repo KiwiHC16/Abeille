@@ -18,11 +18,11 @@
     /* Developers debug features */
     require_once __DIR__.'/../core/config/Abeille.config.php';
     if (file_exists(dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         $dbgDeveloperMode = true;
         $GLOBALS['dbgDeveloperMode'] = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
-        include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
+
+        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         if (isset($dbgConfig["defines"])) {
             $arr = $dbgConfig["defines"];
             foreach ($arr as $idx => $value) {
@@ -30,6 +30,8 @@
                     $GLOBALS['dbgTcharp38'] = true;
             }
         }
+
+        include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
 
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -73,7 +75,7 @@
     }
 
     function displayGateway($zgId) {
-        global $dbgTcharp38;
+        global $dbgTcharp38, $dbgDeveloperMode;
 
         $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         if ($eqLogic) {
@@ -195,16 +197,26 @@
                     echo '<div id="idUpdFw'.$zgId.'">';
                     echo '<a id="idupdateZigateFw'.$zgId.'" class="btn btn-danger" onclick="updateZigateFw('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre-à-jour}}</a>';
                     echo '<select id="idFW'.$zgId.'" style="width:160px; margin-left:4px" title="{{Firmwares disponibles}}">';
-                    foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
+
+                    // Which Zigate version ?
+                    $zgType = config::byKey('ab::gtwSubType'.$zgId, 'Abeille', 'USB');
+                    if (($zgType == "PIv2") || ($zgType == "DINv2")) {
+                        $z = "2";
+                        $defaultFw = "0005-0322-opdm";
+                    } else {
+                        $z = "1";
+                        $defaultFw = "0004-0323-opdm";
+                    }
+                    foreach (ls(__DIR__.'/../resources/fw_zigate', 'zigatev'.$z.'*.bin') as $fwName) {
                         $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
                         if (substr($fwVers, -4) == "-dev") {
                             /* FW for developer mode only */
-                            if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == FALSE))
+                            if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == false))
                                 continue; // Not in developer mode. Ignoring this FW
                             $fwVers = substr($fwVers, 0, -4); // Removing "-dev" suffix
                         }
                         $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
-                        if ($fwVers == "0004-0323-opdm")
+                        if ($fwVers == $defaultFw) // Default firwmare
                             echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                         else
                             echo '<option value='.$fwName.'>'.$fwVers.'</option>';

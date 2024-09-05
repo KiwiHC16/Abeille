@@ -1,5 +1,8 @@
 # ChangeLog
 
+-   Corrections: Page config & mode dev.
+-   Amélioration: Page config. Firmware proposé en fonction de la version de Zigate (v1 ou v2).
+
 ## 240902-BETA-1
 
 -   Amélioration: Support préliminaire Sonoff SNZB-06P capteur de présence (2726).

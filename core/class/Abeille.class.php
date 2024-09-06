@@ -637,7 +637,7 @@ class Abeille extends eqLogic {
         }
 
         /* Check & update configuration DB if required. */
-        $dbVersion = config::byKey('ab::dbVersion', 'Abeille', '');
+        $dbVersion = config::byKey('ab::dbVersion', 'Abeille', '0');
         $dbVersionLast = lastDbVersion;
         if (($dbVersion == '') || (intval($dbVersion) < $dbVersionLast)) {
             log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' < v'.$dbVersionLast.' => Update required.');

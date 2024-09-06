@@ -615,7 +615,7 @@
                 list($eqNet, $eqAddr) = explode("/", $eq['logicId']);
                 $eq['zgId'] = substr($eqNet, 7);
                 $eq['zgType'] = config::byKey('ab::gtwSubType'.$eq['zgId'], 'Abeille', '', 1);
-                $eq['zgChan'] = config::byKey('ab::gtwChan'.$eq['zgId'], 'Abeille', '', 1);
+                $eq['zgChan'] = config::byKey('ab::gtwChan'.$eq['zgId'], 'Abeille', 0, 1); // 0=auto
                 $eq['addr'] = $eqAddr;
                 $eq['ieee'] = $eqLogic->getConfiguration('IEEE', '');
                 $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');

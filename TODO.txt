@@ -23,11 +23,6 @@ RefreshData
     Supprimer ce support ? Voir #2580 => ERROR bind0030
     En lien avec le point suivant (updateField)
 
-Voir ou/quand faire updateField
-    cas Jeedom vers Abeille (donc execute())
-    cas configure (venant de parser)
-    cas autre ?
-
 Cluster 0004
     La cmde 'addGroup' devrait sauver le groupe qq part => ab::groups ?
     ab::groups={'01': '1001', '02': '2002'}
@@ -58,3 +53,8 @@ Doc: Améliorer support de nouveau equipements
     Demander image PNG SANS arriere plan
     Demander type et nomber de batteries
     Demander ref/modele fabricant
+
+Canal Zigbee
+    Si changement de canal via onglet avancé et que page config ouverte avec ancien canal => PB !!
+    Page de config doit etre raffraichie une fois le changement de canal fait
+    => Déplacer choix Zigbee dans la page de config ?

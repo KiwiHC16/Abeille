@@ -477,9 +477,7 @@
                 $config['ab::gtwEnabled'.$gtwId] = config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N', 1);
                 $config['ab::zgIeeeAddrOk'.$gtwId] = config::byKey('ab::zgIeeeAddrOk'.$gtwId, 'Abeille', 0);
                 $config['ab::zgIeeeAddr'.$gtwId] = config::byKey('ab::zgIeeeAddr'.$gtwId, 'Abeille', '');
-                $chan = config::byKey('ab::gtwChan'.$gtwId, 'Abeille', 'niet');
-                if ($chan != 'niet')
-                    $config['ab::gtwChan'.$gtwId] = $chan;
+                $config['ab::gtwChan'.$gtwId] = config::byKey('ab::gtwChan'.$gtwId, 'Abeille', 0); // 0=auto
             }
             $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
             $config['ab::forceZigateHybridMode'] = config::byKey('ab::forceZigateHybridMode', 'Abeille', 'N');

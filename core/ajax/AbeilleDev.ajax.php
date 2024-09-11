@@ -22,34 +22,34 @@
 
     /* Developers debug features */
     require_once __DIR__.'/../config/Abeille.config.php';
-    // $dbgFile = __DIR__."/../../tmp/debug.json";
     if (file_exists(dbgFile)) {
         $dbgConfig = json_decode(file_get_contents(dbgFile), TRUE);
         $dbgDeveloperMode = TRUE;
+
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
-    /* Write/create developer config.
-       '$devConfig' = associative array
-       Returns: 0=OK, -1=ERROR */
-    function writeDevConfig($devConfig) {
-        // global $dbgFile;
+    // /* Write/create developer config.
+    //    '$devConfig' = associative array
+    //    Returns: 0=OK, -1=ERROR */
+    // function writeDevConfig($devConfig) {
+    //     // global $dbgFile;
 
-        $tmp = __DIR__."/../../tmp";
-        if (!file_exists($tmp))
-            mkdir($tmp);
-        if (file_exists(dbgFile) && !is_writable(dbgFile)) {
-            logMessage('error', "'tmp/debug.json' n'est pas accessible en écriture.");
-            return -1;
-        }
+    //     $tmp = __DIR__."/../../tmp";
+    //     if (!file_exists($tmp))
+    //         mkdir($tmp);
+    //     if (file_exists(dbgFile) && !is_writable(dbgFile)) {
+    //         logMessage('error', "'tmp/debug.json' n'est pas accessible en écriture.");
+    //         return -1;
+    //     }
 
-        file_put_contents(dbgFile, json_encode($devConfig));
-        chmod(dbgFile, 0666); // Allow read & write
-        return 0;
-    }
+    //     file_put_contents(dbgFile, json_encode($devConfig));
+    //     chmod(dbgFile, 0666); // Allow read & write
+    //     return 0;
+    // }
 
     try {
         require_once __DIR__.'/../../../../core/php/core.inc.php';
@@ -63,17 +63,35 @@
 
         ajax::init();
 
+        logDebug('AbeilleDev.ajax.php: action='.init('action'));
+
         /* Create/write developer config file ("tmp/debug.json")
            Returns: status=0/-1, errors=<error message(s)> */
         if (init('action') == 'writeDevConfig') {
             $devConfig = init('devConfig'); // JSON string
-            $status = 0;
-            $error = "";
-
             if ($devConfig == "")
                 $devConfig = "{}";
 
-            writeDevConfig(json_decode($devConfig));
+            $status = 0;
+            $error = "";
+
+            $tmp = __DIR__."/../../tmp";
+            if (!file_exists($tmp)) {
+                if (mkdir($tmp) == false) {
+                    $status = -1;
+                    $error = "mkdir(${tmp}) failed. Rights issues ?";
+                }
+            }
+            if ($status == 0) {
+                if (file_exists(dbgFile) && !is_writable(dbgFile)) {
+                    $status = -1;
+                    $error = "'tmp/debug.json' n'est pas accessible en écriture.";
+                }
+            }
+            if ($status == 0) {
+                file_put_contents(dbgFile, json_encode($devConfig));
+                chmod(dbgFile, 0666); // Allow read & write
+            }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }

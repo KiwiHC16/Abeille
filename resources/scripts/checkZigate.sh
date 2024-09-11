@@ -194,6 +194,9 @@ fi
 if [ "${TYPE}" == "PI" ] || [ "${TYPE}" == "PIv2" ]; then
     echo "Configuring PI Zigate for 'prod' mode (lib=${GPIOLIB})"
     python3 core/python/AbeilleZigate.py zgSetPiMode prod ${GPIOLIB}
+    if [ $? -ne 0 ]; then
+        exit 6
+    fi
 fi
 
 echo "Reading FW version"

@@ -273,13 +273,18 @@ def zgSetPIMode(mode, gpioLib):
 
     if gpioLib == "WiringPi":
         import subprocess
+        result = subprocess.run("gpio -v &>/dev/null", shell=True)
+        if (result.returncode != 0):
+            return -1, "zgSetPIMode: 'gpio' cmd not found. Is 'WiringPi' properly installed ?"
         if mode == "prod":
             result = subprocess.run("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 1; gpio write 0 1", shell=True)
         else: # "flash" mode
             result = subprocess.run("gpio mode 0 out; gpio mode 2 out; gpio write 2 0; gpio write 0 0; sleep 1; gpio write 0 1", shell=True)
         # print("result=", result)
         if (result.returncode != 0):
-            return -1, "zgSetPIMode: gpio config failed"
+            return -1, "zgSetPIMode: gpio config failed with WiringPi"
+
+        # TODO: We could check proper GPIO state with 'gpio read x'
 
     elif gpioLib == "PiGpio":
         # WARNING !!! This part has NOT been approved yet !
@@ -348,6 +353,7 @@ if __name__ == '__main__':
             err, msg = zgSetPIMode(mode, sys.argv[3])
             if err != 0:
                 print("ERROR: "+msg)
+                exit(2)
         elif (action == "isPortFree"):
             if (nbArgs < 3):
                 print("ERROR: Missing port name")
@@ -357,19 +363,25 @@ if __name__ == '__main__':
             err, msg = zgIsPortFree(port)
             if err != 0:
                 print("ERROR: "+msg)
+                exit(2)
         elif (action == "readFwVersion"):
             port = sys.argv[2]
             # print("Testing Zigate access on port "+port)
             zgDebug = 1
             err, f = zgOpenPort(port)
+            if err != 0:
+                print("ERROR: zgOpenPort() failed")
+                exit(2)
             fW = open(port, "wb")
             version = zgGetFwVersion(f, fW, 5)
             f.close()
             fW.close()
             if (version == ""):
                 print("ERROR: Timeout !")
-                exit(-1)
+                exit(2)
             exit(0)
         else:
             print("ERROR: Unsupported action "+action)
+            exit(1)
 
+    exit(0)

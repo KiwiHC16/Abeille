@@ -18,7 +18,7 @@ echo "Démarrage de '$(basename $0)' $@"
 #       It is then '/var/www/html/plugins/Abeille/core/ajax'
 ABEILLEROOT=${PWD}/../..
 PROG_PIv1=${PWD}/../../tmp/JennicModuleProgrammer
-BUILD_DIR=${PWD}/../../resources/prog_jennic-0.7/build
+COMPILE_DIR=${PWD}/../../resources/prog_jennic-0.7-Abeille
 PROG_PIv2=${PWD}/../../resources/DK6Programmer
 FW_DIR=${PWD}/../../resources/fw_zigate
 DIN_SCRIPT=${PWD}/../scripts/flash_ZiGate-DIN.py
@@ -102,11 +102,16 @@ if [ ${ZGTYPE} == "PI" ]; then
 
     # (Re)Compiling Jennic programmer v0.7-Abeille
     echo "- Compilation du programmateur"
-    pushd ${BUILD_DIR} >/dev/null
-    sudo make
+    pushd ${COMPILE_DIR} >/dev/null
+    sudo make all
     if [ $? -ne 0 ]; then
         echo "= ERREUR: Compilation ratée !"
         ERROR=3
+    else
+        if [ ! -e "../../tmp" ]; then
+            mkdir ../../tmp
+        fi
+        cp build/JennicModuleProgrammer ../../tmp
     fi
     # echo "= ERREUR: Programmateur Jennic manquant !"
     # echo "=         ${PROG_PIv1}"

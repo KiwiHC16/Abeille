@@ -6,6 +6,7 @@
 -   Améliorations: Scripts ligne de commande 'dumpZigate.sh' + 'flashZigate.sh'
 -   Corrections: Interne: Syntaxe PHP8.
 -   Corrections: Interne: install.php & AbeilleTools.class.php
+-   Amélioration: Flasher PI Zigate: Création package standalone.
 
 ## 240902-BETA-1
 

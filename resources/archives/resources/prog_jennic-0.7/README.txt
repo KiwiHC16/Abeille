@@ -1,5 +1,6 @@
 ***
 *** Jennic module programmer v0.7
+*** Tcharp38 updated version for Abeille
 ***
 
 From: https://github.com/fairecasoimeme/ZiGate/tree/master/Tools/JennicModuleProgrammer

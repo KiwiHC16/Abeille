@@ -2,7 +2,8 @@
 
 -   Corrections: Page config & mode dev.
 -   Amélioration: Page config. Firmware proposé en fonction de la version de Zigate (v1 ou v2).
--   Améliorations: Script 'checkZigate.sh'. Meilleur support de certaines erreurs.
+-   Améliorations: Script ligne de commande 'checkZigate.sh'. Meilleur support de certaines erreurs.
+-   Améliorations: Scripts ligne de commande 'dumpZigate.sh' + 'flashZigate.sh'
 
 ## 240902-BETA-1
 

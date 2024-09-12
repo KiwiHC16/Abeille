@@ -1,17 +1,10 @@
 #! /bin/bash
+# Note: This script is launched from Abeille/core/ajax directory
+# Note: The port must NOT be used during this script execution. This is NOT CHECKED so far.
 
-###
-### Check TTY port and proper access to Zigate.
-### WARNING: This script expects that daemon is stoppped to
-###          not disturb communication with Zigate but option '-k' allows to kill using process if any.
-###
-
-# Usage
-# checkZigate.sh [options] <zgPort> <zgType> [<gpioLib>]
-# Possible options
-# -k => kill process using port
-# ex: checkZigate.sh /dev/ttyUSB0 USB
-# ex: checkZigate.sh /dev/ttyAMA0 Piv2 PiGpio
+ABEILLEROOT=${PWD}
+V2PROG=${ABEILLEROOT}/resources/DK6Programmer
+V1PROG=${ABEILLEROOT}/tmp/JennicModuleProgrammer
 
 # Display process ($1=Process ID)
 displayProcess() {
@@ -77,6 +70,7 @@ checkPort() {
 PORT=""
 TYPE=""
 GPIOLIB=""
+DUMPFILE=""
 KILLIFUSED=0
 while [[ $# -gt 0 ]]; do
     if [[ "$1" == "-"* ]]; then
@@ -96,6 +90,8 @@ while [[ $# -gt 0 ]]; do
             TYPE=$1
         elif [ "${GPIOLIB}" == "" ]; then
             GPIOLIB=$1
+        elif [ "${DUMPFILE}" == "" ]; then
+            DUMPFILE=$1
         else
             echo "ERROR: Unexpected arg '$1'"
             exit 1
@@ -104,15 +100,16 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 if [ "${PORT}" == "" ]; then
-    echo "ERROR: Missing port name (ex: /dev/ttyUSB0)"
+    echo "ERROR: Missing port name (ex: /dev/ttyS1)"
     exit 1
 fi
 if [ "${TYPE}" == "" ]; then
-    echo "ERROR: Missing Zigate type (PI, PIv2 or USB)"
+    echo "ERROR: Missing Zigate type (PIv2 only so far)"
     exit 1
 fi
-if [ "${TYPE}" != "PI" ] && [ "${TYPE}" != "PIv2" ] && [ "${TYPE}" != "USB" ]; then
-    echo "ERROR: Invalid Zigate type (PI, PIv2 or USB)"
+if [ ${TYPE} != "PIv2" ]; then
+    echo "= ERREUR: Type de Zigate invalide ! (PIv2 seulement)"
+    echo "=         dumpZigate.sh <zigatePort> <zigateType> <gpioLib> <dumpFile>"
     exit 1
 fi
 if [ "${TYPE}" == "PI" ] || [ "${TYPE}" == "PIv2" ]; then
@@ -192,25 +189,43 @@ if [ $? -ne 0 ]; then
 fi
 
 if [ "${TYPE}" == "PI" ] || [ "${TYPE}" == "PIv2" ]; then
-    echo "Configuring PI Zigate for 'prod' mode (lib=${GPIOLIB})"
-    python3 core/python/AbeilleZigate.py zgSetPiMode prod ${GPIOLIB}
+    echo "Configuring PI Zigate for 'flash' mode (lib=${GPIOLIB})"
+    python3 core/python/AbeilleZigate.py zgSetPiMode flash ${GPIOLIB}
     if [ $? -ne 0 ]; then
         exit 6
     fi
 fi
 
-echo "Reading FW version"
-python3 core/python/AbeilleZigate.py readFwVersion ${PORT}
-STATUS=$?
-if [ "${STATUS}" -ne 0 ]; then
-    echo "- ERROR: Can't read FW version."
-    # Check if port is free and kill if required
-    checkPort ${PORT}
-    if [ "${PORTISFREE}" -ne 1 ]; then
-        echo "= ERROR: Port is already in use"
-    fi
-    echo "Retrying reading FW version"
-    python3 core/python/AbeilleZigate.py readFwVersion ${PORT}
+echo "Dumping Zigate content"
+echo "- Port tty: ${PORT}"
+echo "- Type    : ${TYPE}"
+echo "- Lib GPIO: ${GPIOLIB}"
+echo "- File    : ${DUMPFILE}"
+#echo "  Prog    : ${PROG}"
+echo
+
+if [ ${TYPE} == "PI" ]; then
+    # JN5168: Flash appli from 0x00080000 to 0x000C0000
+    # NOTE: Current version DOES NOT support 'dump' option
+    ${V1PROG} -V 3 -s ${PORT} -P 115200 -d FLASH:0xC0000@0x80000=${DUMPFILE}
+elif [ ${TYPE} == "PIv2" ]; then
+    # JN5189: Flash area (640KB) from 0x0000_0000 to 0x0009_FFFF
+    ${V2PROG} -V 3 -s ${PORT} -P 115200 -d FLASH:0x9FFFF@0=${DUMPFILE}
+fi
+ERROR=$?
+
+# Switch back to 'prod' mode
+if [ ${TYPE} == "PI" ] || [ ${TYPE} == "PIv2" ]; then
+    echo "Restoring PI Zigate GPIOs config for prod mode"
+    python3 core/python/AbeilleZigate.py zgSetPiMode prod ${GPIOLIB}
+    ERROR=$?
 fi
 
-exit 0
+# Final status
+if [ $ERROR -eq 0 ]; then
+    echo "= Tout s'est bien passé. Vous pouvez fermer ce log."
+else
+    echo "= ATTENTION !!! "
+    echo "= Quelque chose s'est mal passé. Veuillez vérifier le log ci-dessus."
+fi
+exit $ERROR

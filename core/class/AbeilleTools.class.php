@@ -1089,7 +1089,7 @@
                 - port 2 = FLASH
                 - Production mode: FLASH=1, RESET=0 then 1 */
             $gpioLib = config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1);
-            log::add('Abeille', 'debug', "  setPIGpio(): gpioLib='{$gpiolib}'");
+            log::add('Abeille', 'debug', "  setPIGpio(): gpioLib='$gpioLib'");
             if ($gpioLib == "WiringPi") {
                 exec("command gpio -v", $out, $ret);
                 if ($ret != 0) {
@@ -1105,8 +1105,8 @@
                 return true;
             }
 
-            log::add('Abeille', 'error', "Librairie GPIO {$gpiolib} invalide pour la PiZigate.");
-            message::add('Abeille', "Librairie GPIO {$gpiolib} invalide pour la PiZigate.");
+            log::add('Abeille', 'error', "Librairie GPIO $gpioLib invalide pour la PiZigate.");
+            message::add('Abeille', "Librairie GPIO $gpioLib invalide pour la PiZigate.");
         }
 
         /**

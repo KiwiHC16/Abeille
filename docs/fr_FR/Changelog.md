@@ -5,6 +5,7 @@
 -   Améliorations: Script ligne de commande 'checkZigate.sh'. Meilleur support de certaines erreurs.
 -   Améliorations: Scripts ligne de commande 'dumpZigate.sh' + 'flashZigate.sh'
 -   Corrections: Interne: Syntaxe PHP8.
+-   Corrections: Interne: install.php & AbeilleTools.class.php
 
 ## 240902-BETA-1
 

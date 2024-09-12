@@ -792,7 +792,7 @@
                         $cmdLogic->setConfiguration('calculValueOffset', null);
                         $trigOutOffset = $cmdLogic->getConfiguration('trigOutOffset', '');
                         if (($trigOutOffset != '') && ($trigOutOffset != '#value#*100/3')) {
-                            $trigOutOffset = $cmdLogic->setConfiguration('trigOutOffset', '#value#*100/3');
+                            $cmdLogic->setConfiguration('trigOutOffset', '#value#*100/3');
                             log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated trigOutOffset to '#value#*100/3'");
                             $saveCmd = true;
                         }
@@ -807,7 +807,7 @@
                     // 'WindowsCovering' => 'cmd-0102' + 'cmd=XX'
                     else if ($cmdTopic == 'WindowsCovering') {
                         $cmdLogic->setConfiguration('topic', 'cmd-0102');
-                        $c = $cmdLogic->setConfiguration('request', ''); // Expecting something like 'clusterCommand=02'
+                        $c = $cmdLogic->getConfiguration('request', ''); // Expecting something like 'clusterCommand=02'
                         if ($c != '') {
                             $c = substr($c, 15); // Removing 'clusterCommand='
                             $cmdLogic->setConfiguration('request', 'ep=01&cmd='.$c);

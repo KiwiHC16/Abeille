@@ -57,7 +57,7 @@
         $val = config::byKey($oldKey, 'Abeille', 'nada', true);
         if ($val != 'nada') {
             config::save($newKey, $val, 'Abeille');
-            log::add('Abeille', 'debug', "  config DB: '${oldKey}' renamed to '${newKey}'");
+            log::add('Abeille', 'debug', "  config DB: '{$oldKey}' renamed to '{$newKey}'");
         }
         // Note: If old key is defined to null then can't detect it so force remove anyway.
         config::remove($oldKey, 'Abeille');
@@ -88,7 +88,7 @@
             config::save('ab::dbVersion', lastDbVersion, 'Abeille');
             $dbVersion = lastDbVersion;
         }
-        log::add('Abeille', 'debug', "dbVersion=${dbVersion}");
+        log::add('Abeille', 'debug', "dbVersion={$dbVersion}");
 
         /* Version 20200225 changes:
            - Added multi-zigate support
@@ -953,7 +953,7 @@
                         continue;
                     $eqModel[$newK] = $eqModel[$oldK];
                     unset($eqModel[$oldK]);
-                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::eqModel' update '${oldK}' to '${newK}");
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::eqModel' update '{$oldK}' to '{$newK}");
                     $saveEqModel = true;
                 }
                 // ab::xiaomi replaced by ab::eqModel['private'] + type=xiaomi
@@ -1011,23 +1011,23 @@
                 }
                 // eqLogic DB: 'groupEPx' => 'ab::eqModel['variables']'
                 for ($g = 1; $g <= 8; $g++) {
-                    $tmp = $eqLogic->getConfiguration("groupEP${g}", 'nada');
+                    $tmp = $eqLogic->getConfiguration("groupEP{$g}", 'nada');
                     if ($tmp == '') { // 'groupEPx' defined to ''
-                        $eqLogic->setConfiguration("groupEP${g}", null);
+                        $eqLogic->setConfiguration("groupEP{$g}", null);
                         $saveEq = true;
-                        log::add('Abeille', 'debug', '  '.$eqHName.": 'groupEP${g}' removed (empty)");
+                        log::add('Abeille', 'debug', '  '.$eqHName.": 'groupEP{$g}' removed (empty)");
                     } else if ($tmp != 'nada') {
                         if (!isset($eqModel['variables']))
                             $eqModel['variables'] = [];
-                        $eqModel['variables']["groupEP${g}"] = $tmp;
+                        $eqModel['variables']["groupEP{$g}"] = $tmp;
                         $saveEqModel = true;
-                        $eqLogic->setConfiguration("groupEP${g}", null);
+                        $eqLogic->setConfiguration("groupEP{$g}", null);
                         $saveEq = true;
-                        log::add('Abeille', 'debug', '  '.$eqHName.": 'groupEP${g}' moved to 'ab::eqModel[variables]'");
+                        log::add('Abeille', 'debug', '  '.$eqHName.": 'groupEP{$g}' moved to 'ab::eqModel[variables]'");
                     }
                 }
                 // for ($g = 1; $g <= 8; $g++) { // Removing GroupeEPx keys
-                //     $tmp = $eqLogic->getConfiguration("GroupeEP${g}", 'nada');
+                //     $tmp = $eqLogic->getConfiguration("GroupeEP{$g}", 'nada');
                 // }
 
                 if ($saveEqZigbee) {
@@ -1056,21 +1056,21 @@
                     if ($cmdLogicId == 'online') {
                         if ($cmdLogic->getConfiguration('repeatEventManagement', '') == '') {
                             $cmdLogic->setConfiguration('repeatEventManagement', "always");
-                            log::add('Abeille', 'debug', "  ${cmdHName}: Added 'repeatEventManagement'='always'");
+                            log::add('Abeille', 'debug', "  {$cmdHName}: Added 'repeatEventManagement'='always'");
                             $saveCmd = true;
                         }
                     // '0201-#EP#-0000': Removing 'calculValueOffset'
                     } else if (preg_match("/^0201-[0-9A-F]*-0000/", $cmdLogicId)) {
                         if ($cmdLogic->getConfiguration('calculValueOffset', null) !== null) {
                             $cmdLogic->setConfiguration('calculValueOffset', null);
-                            log::add('Abeille', 'debug', "  ${cmdHName}: Removed 'calculValueOffset'");
+                            log::add('Abeille', 'debug', "  {$cmdHName}: Removed 'calculValueOffset'");
                             $saveCmd = true;
                         }
                     // '0201-#EP#-0012': Removing 'calculValueOffset'
                     } else if (preg_match("/^0201-[0-9A-F]*-0012/", $cmdLogicId)) {
                         if ($cmdLogic->getConfiguration('calculValueOffset', null) !== null) {
                             $cmdLogic->setConfiguration('calculValueOffset', null);
-                            log::add('Abeille', 'debug', "  ${cmdHName}: Removed 'calculValueOffset'");
+                            log::add('Abeille', 'debug', "  {$cmdHName}: Removed 'calculValueOffset'");
                             $saveCmd = true;
                         }
                     } else if ($topic == 'OnOff') {
@@ -1081,7 +1081,7 @@
                         $request = str_replace("EP=", "ep=", $request);
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
-                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced 'OnOff' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  {$cmdHName}: Replaced 'OnOff' by 'cmd-0006'");
                         $saveCmd = true;
                     } else if ($topic == 'OnOffGroup') {
                         $request = $cmdLogic->getConfiguration('request', '');
@@ -1098,7 +1098,7 @@
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
                         $cmdLogic->setLogicalId($lId);
-                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced 'OnOffGroup' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  {$cmdHName}: Replaced 'OnOffGroup' by 'cmd-0006'");
                         $saveCmd = true;
                     } else if (($topic == 'onGroupBroadcast') || ($topic == 'offGroupBroadcast')) {
                         $request = $cmdLogic->getConfiguration('request', '');
@@ -1109,13 +1109,13 @@
                             $request = "cmd=01&addrMode=04";
                             $lId = "0006-CmdOnGroup";
                         } else { // assuming toggle
-                            log::add('Abeille', 'debug', "  ${cmdHName}: ERROR: topic=${topic}, req=${request}");
+                            log::add('Abeille', 'debug', "  {$cmdHName}: ERROR: topic={$topic}, req={$request}");
                             continue;
                         }
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
                         $cmdLogic->setLogicalId($lId);
-                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced '${topic}' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  {$cmdHName}: Replaced '{$topic}' by 'cmd-0006'");
                         $saveCmd = true;
                     }
 
@@ -1131,7 +1131,7 @@
                             $cmdLogic->setConfiguration('ab::trigOutOffset', null);
                         }
                         $cmdLogic->setConfiguration('ab::trigOut', $to);
-                        log::add('Abeille', 'debug', "  ${cmdHName}: 'ab::trigOut' updated to associative array");
+                        log::add('Abeille', 'debug', "  {$cmdHName}: 'ab::trigOut' updated to associative array");
                         $saveCmd = true;
                     }
                     $cmdLogic->setConfiguration('trigOut', null); // Removing obsolete
@@ -1144,19 +1144,19 @@
 
             // 'config' DB updates
             for ($zgId = 7; $zgId <= 10; $zgId++) {
-                config::remove("ab::zgChan${zgId}", 'Abeille');
-                config::remove("ab::zgEnabled${zgId}", 'Abeille');
-                config::remove("ab::zgIeeeAddr${zgId}", 'Abeille');
-                config::remove("ab::zgIeeeAddrOk${zgId}", 'Abeille');
-                config::remove("ab::zgPort${zgId}", 'Abeille');
-                config::remove("ab::zgType${zgId}", 'Abeille');
-                config::remove("ab::zgIpAddr${zgId}", 'Abeille');
+                config::remove("ab::zgChan{$zgId}", 'Abeille');
+                config::remove("ab::zgEnabled{$zgId}", 'Abeille');
+                config::remove("ab::zgIeeeAddr{$zgId}", 'Abeille');
+                config::remove("ab::zgIeeeAddrOk{$zgId}", 'Abeille');
+                config::remove("ab::zgPort{$zgId}", 'Abeille');
+                config::remove("ab::zgType{$zgId}", 'Abeille');
+                config::remove("ab::zgIpAddr{$zgId}", 'Abeille');
             }
 
             // Remove obsolete logs
             $obsolete = [];
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $obsolete[] = "AbeilleSerialRead${zgId}.log";
+                $obsolete[] = "AbeilleSerialRead{$zgId}.log";
             }
             removeLogs($obsolete);
 
@@ -1176,21 +1176,21 @@
         if (intval($dbVersion) < 20240821) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
-                renameConfigKey("ab::zgEnabled${gtwId}", "ab::gtwEnabled${gtwId}");
+                renameConfigKey("ab::zgEnabled{$gtwId}", "ab::gtwEnabled{$gtwId}");
 
-                $val = config::byKey("ab::zgType${gtwId}", 'Abeille', 'nada', true);
+                $val = config::byKey("ab::zgType{$gtwId}", 'Abeille', 'nada', true);
                 if ($val !== 'nada')
-                    renameConfigKey("ab::zgType${gtwId}", "ab::gtwSubType${gtwId}");
+                    renameConfigKey("ab::zgType{$gtwId}", "ab::gtwSubType{$gtwId}");
 
-                $val = config::byKey("ab::gtwType${gtwId}", 'Abeille', 'nada', true);
+                $val = config::byKey("ab::gtwType{$gtwId}", 'Abeille', 'nada', true);
                 if ($val === 'nada')
-                    config::save("ab::gtwType${gtwId}", "zigate", 'Abeille');
+                    config::save("ab::gtwType{$gtwId}", "zigate", 'Abeille');
 
-                renameConfigKey("ab::zgPort${gtwId}", "ab::gtwPort${gtwId}");
+                renameConfigKey("ab::zgPort{$gtwId}", "ab::gtwPort{$gtwId}");
 
-                renameConfigKey("ab::zgIpAddr${gtwId}", "ab::gtwIpAddr${gtwId}");
+                renameConfigKey("ab::zgIpAddr{$gtwId}", "ab::gtwIpAddr{$gtwId}");
 
-                renameConfigKey("ab::zgChan${gtwId}", "ab::gtwChan${gtwId}");
+                renameConfigKey("ab::zgChan{$gtwId}", "ab::gtwChan{$gtwId}");
             }
 
             // 'eqLogic' + 'cmd' DB updates
@@ -1235,12 +1235,12 @@
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
                 if (is_object($cmdLogic)) {
                     $cmdLogic->remove();
-                    log::add('Abeille', 'debug', "  ${eqHName}[Time-TimeStamp]: Removed");
+                    log::add('Abeille', 'debug', "  {$eqHName}[Time-TimeStamp]: Removed");
                 }
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
                 if (!is_object($cmdLogic)) {
                     if (addCmdFromModel($eqId, "inf_time-String", "Time-Time") == true)
-                        log::add('Abeille', 'debug', "  ${eqHName}[Time-Time]: Added");
+                        log::add('Abeille', 'debug', "  {$eqHName}[Time-Time]: Added");
                 }
             }
 
@@ -1252,13 +1252,13 @@
     function addCmdFromModel($eqId, $cmdModelName, $cmdName) {
         $fullPath = cmdsDir.$cmdModelName.'.json';
         if (!file_exists($fullPath)) {
-            log::add('Abeille', 'error', "Modèle '${cmdModelName}': Fichier manquant.");
+            log::add('Abeille', 'error', "Modèle '{$cmdModelName}': Fichier manquant.");
             return false;
         }
         $jsonContent = file_get_contents($fullPath);
         $cmd = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', "Modèle '${cmdModelName}': Fichier corrompu.");
+            log::add('Abeille', 'error', "Modèle '{$cmdModelName}': Fichier corrompu.");
             return false;
         }
         log::add('Abeille', 'debug', "  cmd=".json_encode($cmd, JSON_UNESCAPED_SLASHES));

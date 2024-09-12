@@ -219,7 +219,7 @@
                 if (substr($key, 0, 7) != "comment")
                     continue;
 
-                // log::add('Abeille', 'debug', "REMOVING '${key}' '${val}'");
+                // log::add('Abeille', 'debug', "REMOVING '{$key}' '{$val}'");
                 unset($tree[$key]);
             }
         }
@@ -270,7 +270,7 @@
         // Returns: associative array('modelSig', 'modelName, 'modelSource') or false
         // OBSOLETE: Use identifyModel() from AbeilleModels.php lib
         public static function findModel($zbModelId, $zbManufId) {
-            log::add('Abeille', 'debug', "  OBSOLETE findModel(${zbModelId}, ${zbManufId})");
+            log::add('Abeille', 'debug', "  OBSOLETE findModel({$zbModelId}, {$zbManufId})");
 
             $identifier1 = $zbModelId.'_'.$zbManufId;
             $identifier2 = $zbModelId;
@@ -939,7 +939,7 @@
          */
         public static function restartDaemons($config, $daemons = "") {
 
-            log::add('Abeille', 'debug', "  restartDaemons(daemons=${daemons})");
+            log::add('Abeille', 'debug', "  restartDaemons(daemons={$daemons})");
             if (AbeilleTools::stopDaemons($daemons) == false)
                 return false; // Error
 
@@ -970,20 +970,20 @@
             case 'cmd':
             case 'abeillecmd':
                 $daemonPhp = "AbeilleCmd.php";
-                $logCmd = " >>${logsDir}AbeilleCmd.log 2>&1";
+                $logCmd = " >>{$logsDir}AbeilleCmd.log 2>&1";
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$logCmd;
                 break;
             case 'parser':
             case 'abeilleparser':
                 $daemonPhp = "AbeilleParser.php";
-                $daemonLog = " >>${logsDir}AbeilleParser.log 2>&1";
+                $daemonLog = " >>{$logsDir}AbeilleParser.log 2>&1";
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$daemonLog;
                 break;
             case 'serialread':
             case 'abeilleserialread':
                 $daemonPhp = "AbeilleSerialRead.php";
                 $daemonParams = 'Abeille'.$gtwId.' '.$config['ab::gtwPort'.$gtwId].' ';
-                $daemonLog = $logLevel." >>${tmpDir}/AbeilleSerialRead".$gtwId.".log 2>&1";
+                $daemonLog = $logLevel." >>{$tmpDir}/AbeilleSerialRead".$gtwId.".log 2>&1";
                 exec(system::getCmdSudo().'chmod 777 '.$config['ab::gtwPort'.$gtwId].' > /dev/null 2>&1');
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
@@ -991,7 +991,7 @@
             case 'abeillesocat':
                 $daemonPhp = "AbeilleSocat.php";
                 $daemonParams = $config['ab::gtwPort'.$gtwId].' '.$config['ab::gtwIpAddr'.$gtwId].' '.$logLevel;
-                $daemonLog = " >>${logsDir}AbeilleSocat".$gtwId.'.log 2>&1';
+                $daemonLog = " >>{$logsDir}AbeilleSocat".$gtwId.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
             // EmberZnet/EZSP daemon
@@ -999,8 +999,8 @@
             case 'abeilleezsp':
             case 'abeilleezspd':
                 $daemon = "AbeilleEzspD.py";
-                $daemonParams = "--gtwid=${gtwId} --gtwport=".$config['ab::gtwPort'.$gtwId];
-                $daemonLog = " >>${logsDir}AbeilleEzsp".$gtwId.'.log 2>&1';
+                $daemonParams = "--gtwid={$gtwId} --gtwport=".$config['ab::gtwPort'.$gtwId];
+                $daemonLog = " >>{$logsDir}AbeilleEzsp".$gtwId.'.log 2>&1';
                 $cmd = $nohup." python3 ".corePythonDir.$daemon." ".$daemonParams.$daemonLog;
                 break;
             // General monitoring daemon
@@ -1089,7 +1089,7 @@
                 - port 2 = FLASH
                 - Production mode: FLASH=1, RESET=0 then 1 */
             $gpioLib = config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1);
-            log::add('Abeille', 'debug', "  setPIGpio(): gpioLib='${gpioLib}'");
+            log::add('Abeille', 'debug', "  setPIGpio(): gpioLib='{$gpiolib}'");
             if ($gpioLib == "WiringPi") {
                 exec("command gpio -v", $out, $ret);
                 if ($ret != 0) {
@@ -1105,8 +1105,8 @@
                 return true;
             }
 
-            log::add('Abeille', 'error', "Librairie GPIO ${gpioLib} invalide pour la PiZigate.");
-            message::add('Abeille', "Librairie GPIO ${gpioLib} invalide pour la PiZigate.");
+            log::add('Abeille', 'error', "Librairie GPIO {$gpiolib} invalide pour la PiZigate.");
+            message::add('Abeille', "Librairie GPIO {$gpiolib} invalide pour la PiZigate.");
         }
 
         /**

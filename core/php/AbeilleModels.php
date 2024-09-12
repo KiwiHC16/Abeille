@@ -61,14 +61,14 @@
                     continue;
 
                 // Model and its optional variants is named '<modelName>[-<variant>].json'
-                logDebug("${dirEntry} => dirEntry2='${dirEntry2}'");
+                logDebug("{$dirEntry} => dirEntry2='{$dirEntry2}'");
                 if (substr($dirEntry2, 0, $deLen) != $dirEntry)
                     continue; // Discovery or other file but not a model
 
                 $dirEntry2 = substr($dirEntry2, 0, -5); // Removing trailing '.json'
                 $fullPath2 = $rootDir.$dirEntry.'/'.$dirEntry2.'.json';
                 if (!is_file($fullPath2)) {
-                    logMessage("error", "getModelsList(): Erreur interne '${fullPath2}'");
+                    logMessage("error", "getModelsList(): Erreur interne '{$fullPath2}'");
                     continue;
                 }
 
@@ -142,7 +142,7 @@
      * Return: device associative array WITHOUT top level key (modelSig) or false if error.
      */
     function getDeviceModel($src, $modelPath, $modelName, $modelSig='', $mode=0) {
-        log::add('Abeille', 'debug', "  getDeviceModel(${src}, '${modelPath}', ${modelName}, ${modelSig}, mode=${mode})");
+        log::add('Abeille', 'debug', "  getDeviceModel({$src}, '{$modelPath}', {$modelName}, {$modelSig}, mode={$mode})");
 
         // $dbg = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         // log::add('Abeille', 'debug', "BACKTRACE: ".json_encode($dbg, JSON_UNESCAPED_SLASHES));
@@ -150,7 +150,7 @@
         if ($modelPath == '') {
             // log::add('Abeille', 'error', "  getDeviceModel(): 'modelPath' vide !");
             // return false;
-            $modelPath = "${modelName}/${modelName}.json";
+            $modelPath = "{$modelName}/{$modelName}.json";
         }
 
         if (($src == 'Abeille') || ($src == ''))
@@ -159,18 +159,18 @@
             $modelPathFull = modelsLocalDir.$modelPath;
         // log::add('Abeille', 'debug', '  modelPathFull='.$modelPathFull);
         if (!is_file($modelPathFull)) {
-            log::add('Abeille', 'error', "  getDeviceModel(): Modèle d'équipement '${modelName}' inconnu.");
+            log::add('Abeille', 'error', "  getDeviceModel(): Modèle d'équipement '{$modelName}' inconnu.");
             return false;
         }
 
         $jsonContent = file_get_contents($modelPathFull);
         if ($jsonContent === false) {
-            log::add('Abeille', 'error', "  getDeviceModel(): Le modèle d'équipement '${modelName}' est introuvable.");
+            log::add('Abeille', 'error', "  getDeviceModel(): Le modèle d'équipement '{$modelName}' est introuvable.");
             return false;
         }
         $device = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', "  Le modèle JSON '${modelName}' est corrompu.");
+            log::add('Abeille', 'error', "  Le modèle JSON '{$modelName}' est corrompu.");
             log::add('Abeille', 'debug', '  getDeviceModel(): content='.$jsonContent);
             return false;
         }
@@ -193,7 +193,7 @@
                 } */
             if (!isset($device['alternateIds'][$modelSig])) {
                 // Internal error
-                log::add('Abeille', 'error', "getDeviceModel(): Unexpected alternate sig '${modelSig}'");
+                log::add('Abeille', 'error', "getDeviceModel(): Unexpected alternate sig '{$modelSig}'");
             } else {
                 $alt = $device['alternateIds'][$modelSig];
                 // manufacturer, model, type or icon overload
@@ -376,7 +376,7 @@
                     //         break;
                     //     $len = strpos(substr($newCmdTxt, $start + 1), "#"); // Length
                     //     if ($len === false) {
-                    //         log::add('Abeille', 'error', "getDeviceModel(): No closing dash (#) for cmd '${cmdJName}'");
+                    //         log::add('Abeille', 'error', "getDeviceModel(): No closing dash (#) for cmd '{$cmdJName}'");
                     //         break;
                     //     }
                     //     $len += 2;
@@ -490,7 +490,7 @@
             if (substr($key, 0, 7) != "comment")
                 continue;
 
-            // log::add('Abeille', 'debug', "REMOVING '${key}' '${val}'");
+            // log::add('Abeille', 'debug', "REMOVING '{$key}' '{$val}'");
             unset($tree[$key]);
         }
     }

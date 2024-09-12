@@ -121,7 +121,7 @@
         else
             $GLOBALS["curLogLevelNb"] = $level;
         $levelName = logGetLevelByNumber($level);
-        logMessage('info', "Log level changed to '".$GLOBALS["curLogLevelNb"]."/${levelName}'");
+        logMessage('info', "Log level changed to '".$GLOBALS["curLogLevelNb"]."/{$levelName}'");
         logMessage('info', "Test INFO");
         logMessage('debug', "Test DEBUG");
     }

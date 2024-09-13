@@ -15,7 +15,7 @@ Modifications history
 
 How to compile
 ==============
-root@FelicityDbox: make clean all
+make clean all
 
     rm -f build/uart.o build/JN51xx_BootLoader.o build/Firmware.o build/main.o build/JennicModuleProgrammer
     cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/uart.c -o build/uart.o
@@ -26,7 +26,9 @@ root@FelicityDbox: make clean all
 
 How to flash
 ============
-root@FelicityDbox: ./flashZigate.sh /dev/ttyS1 PI WiringPi ../fw_zigate/zigatev1-AB01-0000-opdm-dev.bin
+This is an EXAMPLE !! Do not forget to change TTY port with yours, as well as the firmware path.
+
+./flashZigate.sh /dev/ttyS1 PI WiringPi ../fw_zigate/zigatev1-AB01-0000-opdm-dev.bin
 
     Checking Zigate type PI access on port /dev/ttyS1
     - /dev/ttyS1 port found

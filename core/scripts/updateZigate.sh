@@ -103,15 +103,13 @@ if [ ${ZGTYPE} == "PI" ]; then
     # (Re)Compiling Jennic programmer v0.7-Abeille
     echo "- Compilation du programmateur"
     pushd ${COMPILE_DIR} >/dev/null
-    sudo make all
+    if [ ! -e "../../tmp" ]; then
+        mkdir ../../tmp
+    fi
+    sudo make all TARGET=../../tmp/JennicModuleProgrammer
     if [ $? -ne 0 ]; then
         echo "= ERREUR: Compilation ratée !"
         ERROR=3
-    else
-        if [ ! -e "../../tmp" ]; then
-            mkdir ../../tmp
-        fi
-        cp build/JennicModuleProgrammer ../../tmp
     fi
     # echo "= ERREUR: Programmateur Jennic manquant !"
     # echo "=         ${PROG_PIv1}"

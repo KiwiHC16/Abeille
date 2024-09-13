@@ -58,10 +58,6 @@ $(TARGET): $(OBJ)
 $(BUILDDIR)%.o: source/%.c
 	$(CC) -I. $(CFLAGS) $(PROJ_CFLAGS) -c $< -o $@
 
-install:
-	mkdir -p $(DESTDIR)/usr/bin/
-	cp $(TARGET) $(DESTDIR)/usr/bin/
-
 clean:
 	rm -f $(OBJ) $(TARGET)
 

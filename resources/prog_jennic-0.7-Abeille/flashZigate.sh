@@ -1,11 +1,12 @@
 #! /bin/bash
 
 ###
-### PI Zigate v1 flasher script
+### PI Zigate v1 flasher script (bash)
 ### Tcharp38
 ###
 
 V1PROG=build/JennicModuleProgrammer
+V2PROG=unsupported_yet
 
 # Display process ($1=Process ID)
 displayProcess() {
@@ -177,7 +178,7 @@ else
         dmesg | grep tty
 
         echo
-        echo "= Additional infos II:"
+        echo "= Additional infos II (ls -al /dev/serial*):"
         ls -al /dev/serial*
 
         exit 4
@@ -199,9 +200,9 @@ if [ "${TYPE}" == "PI" ] || [ ${TYPE} == "PIv2" ]; then
 fi
 
 echo "Flashing Zigate"
-echo "- Port tty: ${PORT}"
+echo "- TTY port: ${PORT}"
 echo "- Type    : ${TYPE}"
-echo "- Lib GPIO: ${GPIOLIB}"
+echo "- GPIO lib: ${GPIOLIB}"
 echo "- File    : ${FWPATH}"
 #echo "  Prog    : ${PROG}"
 echo
@@ -236,9 +237,9 @@ fi
 
 # Final status
 if [ $ERROR -eq 0 ]; then
-    echo "= Tout s'est bien passé. Vous pouvez fermer ce log."
+    echo "= Everything went OK."
 else
-    echo "= ATTENTION !!! "
-    echo "= Quelque chose s'est mal passé. Veuillez vérifier le log ci-dessus."
+    echo "= WARNING !!! "
+    echo "= Something wrong happened. Please check log above."
 fi
 exit $ERROR

@@ -5054,11 +5054,11 @@
 
         /* 8035/PDM event code. Since FW 3.1b */
         function decode8035($dest, $payload, $lqi) {
-            $PDMEvtCode = substr($payload, 0, 2); // <PDM event code: uint8_t>
-            $RecId = substr($payload, 2, 8); // <record id : uint32_t>
+            $PDMEvtCode = substr($payload, 0, 2); // PDM event code (PDM_eSystemEventCode): <uint8_t>
+            $RecId = substr($payload, 2, 8); // Record id : <uint32_t>
 
             parserLog2('debug', '0000', $dest.', Type=8035/PDM event code'
-                             .', PDMEvtCode=x'.$PDMEvtCode
+                             .', Code=x'.$PDMEvtCode
                              .', RecId='.$RecId
                              .' => '.zgGetPDMEvent($PDMEvtCode), "8035");
         }

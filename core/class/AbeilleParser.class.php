@@ -326,7 +326,7 @@
             $modelSource = "Abeille"; // Default location
 
             if (isset($eq['zigbee']['modelId']) && ($eq['zigbee']['modelId'] !== false) && ($eq['zigbee']['modelId'] != '')) {
-                if (($eq['zigbee']['manufId'] !== false) && ($eq['zigbee']['manufId'] != '')) {
+                if (isset($eq['zigbee']['manufId']) && ($eq['zigbee']['manufId'] !== false) && ($eq['zigbee']['manufId'] != '')) {
                     /* Search by modelId AND manufacturer */
                     $identifier = $eq['zigbee']['modelId'].'_'.$eq['zigbee']['manufId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
@@ -887,10 +887,9 @@
                 'net' => $net,
                 'addr' => $addr,
                 'ieee' => $eq['zigbee']['ieee'],
-                // 'ep' => $eq['epFirst'],
                 'ep' => $eq['mainEp'],
                 'modelId' => $eq['zigbee']['modelId'],
-                'manufId' => $eq['zigbee']['manufId'],
+                'manufId' => isset($eq['zigbee']['manufId']) ? $eq['zigbee']['manufId'] : '',
                 'modelName' => $eq['eqModel']['modelName'],
                 'modelSource' => $eq['eqModel']['modelSource'], // "Abeille" or "local"
                 'macCapa' => $eq['zigbee']['macCapa'],

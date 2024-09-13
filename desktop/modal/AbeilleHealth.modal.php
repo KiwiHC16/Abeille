@@ -131,11 +131,11 @@
                     console.log("net="+net+" => gtwId="+gtwId+", color="+netColor);
                     n = equipments[net];
                     parentBridge = equipments[net]['0000'];
-                    bridgeEnabled = parentBridge.isEnabled;
+                    gtwEnabled = parentBridge.isEnabled;
                     for (addr in n) {
                         // console.log("LA2 addr=", addr);
                         e = n[addr];
-                        if ((e.isEnabled == 0) || (bridgeEnabled == 0)) { // Equipment disabled or its parent bridge ?
+                        if ((e.isEnabled == 0) || (gtwEnabled == 0)) { // Equipment disabled or its parent bridge ?
                             dis1 = '<s>';
                             dis2 = '</s>';
                         } else {
@@ -175,7 +175,7 @@
                         // Status: Updated every minutes by cron() (see Abeille.class.php)
                         if (e.isEnabled == 0) // Disabled ?
                             status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
-                        else if (bridgeEnabled == 0) // Parent bridge disabled ?
+                        else if (gtwEnabled == 0) // Parent bridge disabled ?
                             status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{BR désactivé}}</span>';
                         else if (addr.substr(2) == "rc") // Remote control ?
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
@@ -217,8 +217,8 @@
 
                         tr += '</tr>';
 
-                        // Updating gateway status if coordinator (addr 0000)
-                        if (addr = '0000') {
+                        // Updating gateway status if coordinator (addr 0000) & enabled
+                        if ((addr == '0000') && (gtwEnabled == 1)) {
                             let gtwSpan = document.getElementById("idGtw"+gtwId);
                             if (e.gtwType == 'zigate')
                                 gtwSpan.textContent = "Zigate " + gtwId;

@@ -7,6 +7,7 @@
 -   Corrections: Interne: Syntaxe PHP8.
 -   Corrections: Interne: install.php & AbeilleTools.class.php
 -   Amélioration: Flasher PI Zigate: Création package standalone.
+-   Correction: Page santé. Crash interne si plusieurs autre passerelles désactivées.
 
 ## 240902-BETA-1
 

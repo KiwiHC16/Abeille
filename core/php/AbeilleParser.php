@@ -370,7 +370,7 @@
                     continue; // This network has already been checked
 
                 foreach ($GLOBALS['devices'][$oldNet] as $oldAddr => $eq) {
-                    if ($eq['zigbee']['ieee'] !== $ieee)
+                    if (!isset($eq['zigbee']['ieee']) || ($eq['zigbee']['ieee'] !== $ieee))
                         continue;
 
                     $GLOBALS['devices'][$net][$addr] = $eq; // net & addr update

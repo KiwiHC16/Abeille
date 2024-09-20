@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 240920-BETA-2
+## 240920-BETA-3
 
 -   Corrections: Page config & mode dev.
 -   Amélioration: Page config. Firmware proposé en fonction de la version de Zigate (v1 ou v2).

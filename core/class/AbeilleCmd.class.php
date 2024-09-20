@@ -126,7 +126,7 @@
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
             $cmdType = $this->getType();
             $cmdHName = $this->getHumanName();
-            logMessage('debug', "-- execute(${cmdHName}, type=${cmdType}, options=".json_encode($_options).')');
+            logMessage('debug', "-- execute({$cmdHName}, type={$cmdType}, options=".json_encode($_options).')');
 
             if ($cmdType != 'action') {
                 logMessage('error', "-- Unexpected info command => ignored");
@@ -171,10 +171,10 @@
             if (($pos = strpos($cmdLogicId, "::")) !== false) {
                 $cmdLogicId2 = substr($cmdLogicId, 0, $pos);
                 $cmdParams = substr($cmdLogicId, $pos + 2);
-                logMessage('debug', "-- User cmd: logicId=${cmdLogicId2}, params=${cmdParams}");
+                logMessage('debug', "-- User cmd: logicId={$cmdLogicId2}, params={$cmdParams}");
                 $cmdLogic = $eqLogic->getCmd('action', $cmdLogicId2);
                 if (!is_object($cmdLogic)) {
-                    logMessage('error', $this->getHumanName().": Cmde '${cmdLogicId2}' inconnue.");
+                    logMessage('error', $this->getHumanName().": Cmde '{$cmdLogicId2}' inconnue.");
                     return;
                 }
                 $params = explode('=', $cmdParams);
@@ -184,10 +184,10 @@
                 for ($i = 0; $i < $len; ) {
                     $pKey = $params[$i++];
                     $pVal = $params[$i++];
-                    logMessage('debug', "-- pKey=${pKey}, pVal=${pVal}");
-                    $request = str_ireplace("#${pKey}#", $pVal, $request);
+                    logMessage('debug', "-- pKey={$pKey}, pVal={$pVal}");
+                    $request = str_ireplace("#{$pKey}#", $pVal, $request);
                 }
-                logMessage('debug', "-- request=${request}");
+                logMessage('debug', "-- request={$request}");
             } else {
                 $cmdLogic = $this;
                 $request = $cmdLogic->getConfiguration('request', '');
@@ -205,7 +205,7 @@
             }
             if (stripos($topic, "#addrGroup#") !== false) {
                 $topic = str_ireplace("#addrGroup#", $eqLogic->getConfiguration("Groupe"), $topic);
-                logMessage('debug', "-- topic: '#addrgroup#' replaced => topic=${topic}");
+                logMessage('debug', "-- topic: '#addrgroup#' replaced => topic={$topic}");
             }
             $topic = $cmdLogic->updateField($net, $cmdLogic, $topic, $_options);
 
@@ -217,7 +217,7 @@
             // Ex: 'valueOffset': '100-#slider#'
             $vo = $cmdLogic->getConfiguration('ab::valueOffset', "");
             if ($vo != "") {
-                // logMessage('debug', "-- 'valueOffset' = '${vo}'");
+                // logMessage('debug', "-- 'valueOffset' = '{$vo}'");
 
                 // Replacing '#logicid...#' in valueOffset
                 $pos = stripos($vo, '#logicid'); // Any #logicid....# variable ?
@@ -229,13 +229,13 @@
                     // logMessage('debug', "-- execute(): logicId=".$logicId);
                     $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
                     if (!is_object($cmdLogic2)) {
-                        logMessage("error", "${cmdHName}: Commande '${logicId}' inconnue dans 'valueOffset'");
+                        logMessage("error", "{$cmdHName}: Commande '{$logicId}' inconnue dans 'valueOffset'");
                     } else {
                         $cmdVal = $cmdLogic2->execCmd();
                         logMessage('debug', "-- Cmd logicId='".$logicId."', val=".$cmdVal);
                         $vo0 = $vo;
                         $vo = str_ireplace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
-                        logMessage('debug', "-- valueOffset: '#logicid${logicId}#' replaced: '${vo0}' => '${vo}'");
+                        logMessage('debug', "-- valueOffset: '#logicid{$logicId}#' replaced: '{$vo0}' => '{$vo}'");
                     }
                 }
 
@@ -243,12 +243,12 @@
                 $pos = stripos($vo, '#slider#'); // Any #slider# variable ?
                 if ($pos !== false) {
                     if (!isset($_options['slider'])) {
-                        logMessage("error", "${cmdHName}: 'valueOffset' avec '#slider#' mais cmd pas de type 'slider'");
+                        logMessage("error", "{$cmdHName}: 'valueOffset' avec '#slider#' mais cmd pas de type 'slider'");
                         return;
                     }
                     $vo0 = $vo;
                     $vo = str_ireplace('#slider#', $_options['slider'], $vo); // Replace #slider# by slider value
-                    logMessage('debug', "-- valueOffset: '#slider#' replaced: '${vo0}' => '${vo}'");
+                    logMessage('debug', "-- valueOffset: '#slider#' replaced: '{$vo0}' => '{$vo}'");
                 }
 
                 // Replacing '#valueformat-FMT#' in valueOffset
@@ -259,7 +259,7 @@
                     else if (isset($_options['select']))
                         $value = $_options['select'];
                     else {
-                        logMessage("error", "${cmdHName}: 'valueOffset' avec '#valueformat..#' mais mauvais type.");
+                        logMessage("error", "{$cmdHName}: 'valueOffset' avec '#valueformat..#' mais mauvais type.");
                         return;
                     }
 
@@ -268,8 +268,8 @@
                     $fmt = substr($fmt, 0, $end); // 'FMT'
                     $newValue = sprintf($fmt, $value);
                     $vo0 = $vo;
-                    $vo = str_ireplace("#valueformat-${fmt}#", $newValue, $vo);
-                    logMessage('debug', "-- valueOffset: '#valueformat-${fmt}#' replaced: '${vo0}' => '${vo}'");
+                    $vo = str_ireplace("#valueformat-{$fmt}#", $newValue, $vo);
+                    logMessage('debug', "-- valueOffset: '#valueformat-{$fmt}#' replaced: '{$vo0}' => '{$vo}'");
                 }
 
                 if (isset($_options['slider'])) {
@@ -282,7 +282,7 @@
                 //     $request = str_ireplace('#valueoffset#', $newValue, $request);
                 // else if (stripos($request, '#value#') !== false)
                 //     $request = str_ireplace('#value#', $newValue, $request);
-                logMessage('debug', "-- valueOffset: result=${voValue}");
+                logMessage('debug', "-- valueOffset: result={$voValue}");
             }
 
             /* 'request' replacement examples
@@ -298,8 +298,8 @@
             */
             // if (stripos($request, "#valueoffset#") !== false) {
             //     if ($vo == "") {
-            //         // message::add("Abeille", "${cmdHName}: 'valueOffset' manquant");
-            //         logMessage('error', "${cmdHName}: 'valueOffset' manquant");
+            //         // message::add("Abeille", "{$cmdHName}: 'valueOffset' manquant");
+            //         logMessage('error', "{$cmdHName}: 'valueOffset' manquant");
             //         return;
             //     }
             //     /* Note: could not make it work with jeedom::evaluateExpression()
@@ -307,39 +307,39 @@
             //     [2024-06-16 22:05:20] -- '#valueoffset#' => newValue='0|(1<<1)'
             //     [2024-06-16 22:05:20] -- '#valueoffset#' => request='ep=01&clustId=0102&attrId=0017&attrVal=0|(1<<1)&attrType=18'
             //     */
-            //     $exp = "\$newVal = ${vo};";
+            //     $exp = "\$newVal = {$vo};";
             //     eval($exp);
             //     $request = str_ireplace("#valueoffset#", $newVal, $request);
-            //     logMessage('debug', "-- '#valueoffset#' => newVal='${newVal}', request='${request}'");
+            //     logMessage('debug', "-- '#valueoffset#' => newVal='{$newVal}', request='{$request}'");
             // }
             if (stripos($request, "#onTime#") !== false) {
                 $onTimeHex = sprintf("%04s", dechex($eqLogic->getConfiguration("onTime") * 10));
                 $request = str_ireplace("#onTime#", $onTimeHex, $request);
-                logMessage('debug', "-- request: '#onTime#' replaced => request='${request}'");
+                logMessage('debug', "-- request: '#onTime#' replaced => request='{$request}'");
             }
             if (stripos($request, "#addrGroup#") !== false) {
                 $request = str_ireplace("#addrGroup#", $eqLogic->getConfiguration("Groupe"), $request);
-                logMessage('debug', "-- request: '#addrgroup#' replaced => request='${request}'");
+                logMessage('debug', "-- request: '#addrgroup#' replaced => request='{$request}'");
             }
             if (stripos($request, "#ZiGateIEEE#") !== false) {
                 $ieee = Abeille::byLogicalId($net.'/0000', 'Abeille')->getConfiguration("IEEE", '');
                 $request = str_ireplace("#ZiGateIEEE#", $ieee, $request);
-                logMessage('debug', "-- request: '#ZiGateIEEE#' replaced => request='${request}'");
+                logMessage('debug', "-- request: '#ZiGateIEEE#' replaced => request='{$request}'");
             }
             if (stripos($request, '#IEEE#') !== false)  {
                 $ieee = $eqLogic->getConfiguration("IEEE", '');
                 $request = str_ireplace('#IEEE#', $ieee, $request);
-                logMessage('debug', "-- request: '#IEEE#' replaced => request='${request}'");
+                logMessage('debug', "-- request: '#IEEE#' replaced => request='{$request}'");
             }
             if (stripos($request, '#addrIEEE#') !== false)  {
                 $ieee = $eqLogic->getConfiguration("IEEE", '');
                 $request = str_ireplace('#addrIEEE#', $ieee, $request);
-                logMessage('debug', "-- request: '#addrIEEE#' replaced => request='${request}'");
+                logMessage('debug', "-- request: '#addrIEEE#' replaced => request='{$request}'");
             }
             switch ($cmdLogic->getSubType()) {
             case 'slider':
                 if (!isset($_options['slider'])) {
-                    logMessage("error", "${cmdHName}: 'slider' mais pas de valeur associée.");
+                    logMessage("error", "{$cmdHName}: 'slider' mais pas de valeur associée.");
                     return;
                 }
                 $sliderVal = ($vo != "") ? $voValue : $_options['slider'];
@@ -353,7 +353,7 @@
                 break;
             case 'select':
                 if (!isset($_options['select'])) {
-                    logMessage("error", "${cmdHName}: 'select' mais pas de valeur associée.");
+                    logMessage("error", "{$cmdHName}: 'select' mais pas de valeur associée.");
                     return;
                 }
                 $sliderVal = ($vo != "") ? $voValue : $_options['select'];
@@ -377,7 +377,7 @@
             default: // 'other'
                 if (stripos($request, "#valueoffset#") !== false) {
                     $request = str_ireplace("#valueoffset#", $voValue, $request);
-                    logMessage('debug', "-- '#valueoffset#' replaced to request => request='${request}'");
+                    logMessage('debug', "-- '#valueoffset#' replaced to request => request='{$request}'");
                 }
                 break;
             }
@@ -446,7 +446,7 @@
                 //     $toOffset = '';
                 $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $toLogicId);
                 if ($trigCmd) {
-                    logMessage('debug', "-- Triggering '${toLogicId}'");
+                    logMessage('debug', "-- Triggering '{$toLogicId}'");
                     $trigCmd->execute();
                 }
             }

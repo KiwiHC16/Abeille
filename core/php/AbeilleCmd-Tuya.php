@@ -161,7 +161,7 @@
         $len = strlen($message) / 2;
         for($i = 0; $i < $len; $i++) {
             $c = substr($message, $i * 2, 2);
-            // cmdLog('debug', "  c=${c}, crc=".dechex($crc));
+            // cmdLog('debug', "  c={$c}, crc=".dechex($crc));
             $crc += hexdec($c);
             $crc %= 0x100;
         }
@@ -174,7 +174,7 @@
     // Cmd 03: 'message'=JSON encoded {'seq' => hex string, 'pos' => binary, 'maxLen' => binary}
     function tuyaZosung($net, $addr, $ep, $command) {
         $cmd = $command['cmdParams']['cmd'];
-        cmdLog2('debug', $addr, "  tuyaZosung(Net=${net}, Addr=${addr}, EP=${ep}, Cmd=${cmd})");
+        cmdLog2('debug', $addr, "  tuyaZosung(Net={$net}, Addr={$addr}, EP={$ep}, Cmd={$cmd})");
 
         if (!isset($command['cmdParams']['message'])) {
             cmdLog2('error', $addr, "tuyaZosung: 'message' manquant");
@@ -184,7 +184,7 @@
         if ($cmd == '00') { // Send IR code
             // Data is base64 URL encoded
             $dataB64 = AbeilleTools::base64url2base64($data);
-            cmdLog2('debug', $addr, "  Send IR code '${dataB64}'");
+            cmdLog2('debug', $addr, "  Send IR code '{$dataB64}'");
             $irMsg = array(
                 'key_num' => 1,
                 'delay' => 300,
@@ -224,7 +224,7 @@
             $unk3 = '01';
             $cmd = '02';
             $unk4 = '0000';
-            cmdLog2('debug', $addr, "  Cmd ED00-00: Seq=${seq}, Len=${length}");
+            cmdLog2('debug', $addr, "  Cmd ED00-00: Seq={$seq}, Len={$length}");
 
             $seq = AbeilleTools::reverseHex($seq);
             $len = AbeilleTools::reverseHex($length);
@@ -247,10 +247,10 @@
             $seq = $params['seq']; // Hex string
             $pos = $params['pos']; // Integer
             $maxLen = $params['maxLen']; // Integer
-            cmdLog2('debug', $addr, "  Cmd ED00-03: Seq=${seq}, Pos=d${pos}, MaxLen=d${maxLen}");
+            cmdLog2('debug', $addr, "  Cmd ED00-03: Seq={$seq}, Pos=d{$pos}, MaxLen=d{$maxLen}");
 
             if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seq])) {
-                cmdLog2('debug', $addr, "  WARNING: No message defined for seq ${seq}");
+                cmdLog2('debug', $addr, "  WARNING: No message defined for seq {$seq}");
                 return;
             }
 
@@ -270,7 +270,7 @@
                 $msgPart = $msgRemain;
             $msgSize = sprintf("%02X", $msgSize);
             $msgPartCrc = tuyaZosungCrc($msgPart);
-            cmdLog2('debug', $addr, "  MsgSize=${msgSize}, MsgPart=${msgPart}, MsgPartCrc=${msgPartCrc}");
+            cmdLog2('debug', $addr, "  MsgSize={$msgSize}, MsgPart={$msgPart}, MsgPartCrc={$msgPartCrc}");
 
             // Cmd 03 reminder
             // {name: 'zero', type: DataType.uint8},

@@ -8,7 +8,7 @@
     // $command['lift']: Mandatory if cmd=01
     // $command['duration']: Optional (default=10sec)
     function profaluxSetTiltLift($net, $addr, $ep, $command) {
-        cmdLog2('debug', $addr, "  profaluxSetTiltLift(Net=${net}, Addr=${addr}, EP=${ep}, Command=".json_encode($command, JSON_UNESCAPED_SLASHES));
+        cmdLog2('debug', $addr, "  profaluxSetTiltLift(Net={$net}, Addr={$addr}, EP={$ep}, Command=".json_encode($command, JSON_UNESCAPED_SLASHES));
 
         $cmd = $command['cmdParams']['cmd'];
 
@@ -33,7 +33,7 @@
         $tilt = isset($command['cmdParams']['tilt']) ? $command['cmdParams']['tilt'] : 0;
         $duration = isset($command['cmdParams']['duration']) ? $command['cmdParams']['duration'] : 10; // Default = 10sec
 
-        cmdLog2('debug', $addr, "  Cmd=${cmd}, Option=${option}, Tilt=${tilt}, Lift=${lift}, Duration=${duration}");
+        cmdLog2('debug', $addr, "  Cmd={$cmd}, Option={$option}, Tilt={$tilt}, Lift={$lift}, Duration={$duration}");
 
         // Final formatting
         $lift = sprintf("%02X", $lift);

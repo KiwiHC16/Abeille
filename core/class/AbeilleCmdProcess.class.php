@@ -119,7 +119,7 @@
             } else {
                 $manufSpecific = 1;
                 $manufCode = AbeilleTools::reverseHex($manufCode);
-                $zhTxt .= "/ManufCode=${manufCode}";
+                $zhTxt .= "/ManufCode={$manufCode}";
             }
             $toCli = $toCli ? 1 : 0;
             if ($toCli)
@@ -275,11 +275,11 @@
                 // cmdLog('debug', "len=".$len.", valOut=".$valOut);
                 break;
             default:
-                cmdLog('error', "  formatAttribute(${valIn}, type=${type}) => Type non supporté");
+                cmdLog('error', "  formatAttribute({$valIn}, type={$type}) => Type non supporté");
                 $valOut = '12'; // Fake value
             }
 
-            cmdLog('debug', "  formatAttribute(${valIn}, type=${type}) => valOut=${valOut}");
+            cmdLog('debug', "  formatAttribute({$valIn}, type={$type}) => valOut={$valOut}");
             return $valOut;
         }
 
@@ -648,7 +648,7 @@
                 $attribList .=  $attrId;
                 $nbAttr++;
             }
-            cmdLog('debug', "  readAttribute: ClustId=${clustId}, AttrList=${attribList}");
+            cmdLog('debug', "  readAttribute: ClustId={$clustId}, AttrList={$attribList}");
             $nbOfAttrib = sprintf("%02X", $nbAttr);
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
 
@@ -2135,7 +2135,7 @@
                         $modeVal = "02";
                     } else // Normal
                         $modeVal = "00";
-                    cmdLog('debug', "  Setting mode ${modeVal}/${mode}");
+                    cmdLog('debug', "  Setting mode {$modeVal}/{$mode}");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0002", $modeVal);
                     return;
                 }
@@ -2157,7 +2157,7 @@
                         return;
                     }
 
-                    cmdLog('debug', "  zgSetCertification: Certif=${data}/${certif}");
+                    cmdLog('debug', "  zgSetCertification: Certif={$data}/{$certif}");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data);
                     return;
                 }
@@ -2278,7 +2278,7 @@
                     $zgCmd = "0806";
                     $data = $Command['cmdParams']['txPower'];
 
-                    cmdLog('debug', "  zgSetTxPower: txPower=${data}");
+                    cmdLog('debug', "  zgSetTxPower: txPower={$data}");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data);
                     return;
                 }
@@ -2334,7 +2334,7 @@
 
                     $zgCmd = "0020";
                     $extPanId = $Command['cmdParams']['extPanId'];
-                    cmdLog('debug', "  zgSetExtendedPanId: extPanId=${extPanId}");
+                    cmdLog('debug', "  zgSetExtendedPanId: extPanId={$extPanId}");
 
                     /* Note: This is NOT FUNCTIONAL.
                        Zigate always answers 04/busy. Probably because network started automatically */
@@ -2635,7 +2635,7 @@
                     $reqType        = isset($Command['cmdParams']['reqType']) ? $Command['cmdParams']['reqType'] : "00"; // 00=single device response, 01=extended
                     $startIndex     = "00";
 
-                    cmdLog('debug', "  getIeeeAddress: addr=${addr}, type=${reqType}");
+                    cmdLog('debug', "  getIeeeAddress: addr={$addr}, type={$reqType}");
                     $data = $addr.$shortAddr.$reqType.$startIndex ;
 
                     $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $addr);
@@ -2664,7 +2664,7 @@
 
                     $data = $addr.$ieee.$reqType.$startIndex ;
 
-                    cmdLog('debug', "  getNwkAddress: IEEE=${ieee}, ReqType=${reqType}");
+                    cmdLog('debug', "  getNwkAddress: IEEE={$ieee}, ReqType={$reqType}");
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
@@ -2686,7 +2686,7 @@
                     $addr = $Command['cmdParams']['addr'];
                     $addrMode = "02"; // Short addr with ACK
 
-                    cmdLog('debug', "  getActiveEndpoints: Prio=${prio}, Addr=${addr}");
+                    cmdLog('debug', "  getActiveEndpoints: Prio={$prio}, Addr={$addr}");
                     $data = $addr;
 
                     $this->addCmdToQueue2($prio, $dest, $zgCmd, $data, $addr, $addrMode);
@@ -2710,7 +2710,7 @@
                     $addrMode = "02"; // Short addr with ACK
                     $ep = sprintf("%02X", hexdec($Command['cmdParams']['ep']));
 
-                    cmdLog('debug', "  getSimpleDescriptor: Prio=${prio}, Addr=${addr}, EP=${ep}");
+                    cmdLog('debug', "  getSimpleDescriptor: Prio={$prio}, Addr={$addr}, EP={$ep}");
                     $data = $addr.$ep;
 
                     $this->addCmdToQueue2($prio, $dest, $zgCmd, $data, $addr, $addrMode);
@@ -2889,7 +2889,7 @@
                     $attrIdList = '';
                     foreach ($list as $attrId) {
                         if (strlen($attrId) != 4) {
-                            cmdLog('error', "  readAttribute2(): Format attribut (${attrId}) incorrect => ignoré.");
+                            cmdLog('error', "  readAttribute2(): Format attribut ({$attrId}) incorrect => ignoré.");
                             continue;
                         }
                         $attrIdList .= AbeilleTools::reverseHex($attrId);
@@ -2962,7 +2962,7 @@
                     $attrId = $Command['cmdParams']['attrId'];
                     $attrList = $attrId.$attrType.$attrVal;
 
-                    cmdLog('debug', "  writeAttribute: Dir=${dir}, ManufCode=${manufCode}, AttrId=${attrId}, AttrType=${attrType}, AttrVal=${attrVal}");
+                    cmdLog('debug', "  writeAttribute: Dir={$dir}, ManufCode={$manufCode}, AttrId={$attrId}, AttrType={$attrType}, AttrVal={$attrVal}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufCode.$nbOfAttributes.$attrList;
 
                     $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode, $repeat);
@@ -3036,7 +3036,7 @@
                     $dataType   = $Command['cmdParams']['attrType'];
                     $attrVal    = AbeilleTools::reverseHex($Command['cmdParams']['attrVal']);
 
-                    cmdLog('debug', "  writeAttribute0530: Dir=${dir}, AttrType=".$Command['cmdParams']['attrType'].", AttrVal=${attrVal}");
+                    cmdLog('debug', "  writeAttribute0530: Dir={$dir}, AttrType=".$Command['cmdParams']['attrType'].", AttrVal={$attrVal}");
                     $data2 = $zclHeader.$attrId.$dataType.$attrVal;
 
                     $dataLength = sprintf("%02X", strlen($data2) / 2);
@@ -3142,7 +3142,7 @@
 
                     $startId    = isset($Command['cmdParams']['startId']) ? $Command['cmdParams']['startId'] : "00";
                     $max        = isset($Command['cmdParams']['max']) ? $Command['cmdParams']['max'] : "FF";
-                    cmdLog('debug', "  discoverCommandsReceived: startId=${startId}, max=${max}");
+                    cmdLog('debug', "  discoverCommandsReceived: startId={$startId}, max={$max}");
                     $data2 = $zclHeader.$startId.$max;
 
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
@@ -3536,7 +3536,7 @@
                         else
                             $changeVal = $this->formatAttribute($changeVal, $attrType);
 
-                        cmdLog('debug', "  configureReporting2: AttrId=${attrId}, AttrType=${attrType}, Min=${minInterval}, Max=${maxInterval}, ChangeVal=${changeVal}");
+                        cmdLog('debug', "  configureReporting2: AttrId={$attrId}, AttrType={$attrType}, Min={$minInterval}, Max={$maxInterval}, ChangeVal={$changeVal}");
                         $attrId = AbeilleTools::reverseHex($attrId);
                         $minInterval = AbeilleTools::reverseHex($minInterval);
                         $maxInterval = AbeilleTools::reverseHex($maxInterval);
@@ -3794,7 +3794,7 @@
                         $dstEp      = ($addrMode == '02') ? $Command['cmdParams']['ep'] : '01';
                         $cmdId      = $Command['cmdParams']['cmd'];
 
-                        cmdLog('debug', "  cmd-0006: AddrMode=${addrMode}, Addr=${addr}, CmdId=${cmdId}");
+                        cmdLog('debug', "  cmd-0006: AddrMode={$addrMode}, Addr={$addr}, CmdId={$cmdId}");
                         $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId;
 
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
@@ -4038,7 +4038,7 @@
                     $maxData = $Command['cmdParams']['maxData'];
 
                     if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode]) || !isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
-                        cmdLog('debug', "  otaImageBlockResponse WARNING: ManufCode=${manufCode}, ImgType=${imgType} => NO FW. Request ignored");
+                        cmdLog('debug', "  otaImageBlockResponse WARNING: ManufCode={$manufCode}, ImgType={$imgType} => NO FW. Request ignored");
                         return;
                     }
                     $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
@@ -4052,7 +4052,7 @@
                     // if (hexdec($dataSize) > 48)
                     //     $dataSize = "30"; // Required ?
                     $realOffset = $fw['startIdx'] + hexdec($imgOffset);
-                    cmdLog('debug', "  otaImageBlockResponse: Offset=${realOffset}, ImgSize=${imgSize}");
+                    cmdLog('debug', "  otaImageBlockResponse: Offset={$realOffset}, ImgSize={$imgSize}");
                     fseek($fh, $realOffset, SEEK_SET);
                     $data = fread($fh, hexdec($dataSize));
                     $data = strtoupper(bin2hex($data));
@@ -4350,7 +4350,7 @@
                     else if ($cmdId == "05" || $cmdId == "08")
                         $extra = sprintf("%02X", $value); // uint8
 
-                    cmdLog('debug', "  cmd-0102: CmdId=${cmdId}, Extra=${extra}");
+                    cmdLog('debug', "  cmd-0102: CmdId={$cmdId}, Extra={$extra}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId.$extra;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
@@ -4410,12 +4410,12 @@
                         // 0x02 Both (adjust Heat Setpoint and Cool Setpoint)
                         $mode = isset($Command['cmdParams']['mode']) ? $Command['cmdParams']['mode'] : "00";
                         if (($mode != '00') && ($mode != '01') && ($mode != '02')) {
-                            cmdLog('error', "  cmd-0201: SetPoint raise/lower: Mode invalide: '${mode}'");
+                            cmdLog('error', "  cmd-0201: SetPoint raise/lower: Mode invalide: '{$mode}'");
                             return;
                         }
                         // Amount = signed 8-bit int, value for increase or decrease in steps of 0.1°C.
                         $amount = $Command['cmdParams']['amount'];
-                        cmdLog('debug', "  cmd-0201: Cmd=00, Mode=${mode}, Amount=${amount}");
+                        cmdLog('debug', "  cmd-0201: Cmd=00, Mode={$mode}, Amount={$amount}");
                         $data2 = $zclHeader.$mode.$amount;
                     } else {
                         cmdLog('error', "  cmd-0201: Commande ".$cmdId." non supportée");
@@ -4796,7 +4796,7 @@
                             $startIdx = isset($Command['cmdParams']['startIdx']) ? $Command['cmdParams']['startIdx'] : "00";
                             $data2 = $zclHeader.$startIdx;
                         } else {
-                            cmdLog('debug', "  ERROR: Unsupported cluster 1000 command ${cmdId} to SERVER");
+                            cmdLog('debug', "  ERROR: Unsupported cluster 1000 command {$cmdId} to SERVER");
                             return;
                         }
                     } else { // To client
@@ -4813,14 +4813,14 @@
                             $startIdx = isset($Command['cmdParams']['startIdx']) ? $Command['cmdParams']['startIdx'] : "00";
                             $count = isset($Command['cmdParams']['count']) ? $Command['cmdParams']['count'] : "01";
                             if (!isset($Command['cmdParams']['group'])) {
-                                cmdLog('error', "  Missing 'group' for cmd 1000-${cmdId} to CLIENT");
+                                cmdLog('error', "  Missing 'group' for cmd 1000-{$cmdId} to CLIENT");
                                 return;
                             }
                             $group = $Command['cmdParams']['group'];
-                            cmdLog('debug', "  cmd-1000-41 to client: total=${total}, startIdx=${startIdx}, count=${count}, group=${group}");
+                            cmdLog('debug', "  cmd-1000-41 to client: total={$total}, startIdx={$startIdx}, count={$count}, group={$group}");
                             $data2 = $zclHeader.$total.$startIdx.$count.$group.'00';
                         } else {
-                            cmdLog('debug', "  ERROR: Unsupported cluster 1000 command ${cmdId} to CLIENT");
+                            cmdLog('debug', "  ERROR: Unsupported cluster 1000 command {$cmdId} to CLIENT");
                             return;
                         }
                     }
@@ -4985,7 +4985,7 @@
                     } else if (method_exists($this, $fctName)) {
                         $this->$fctName($dest, $addr, $ep, $Command);
                     } else {
-                        cmdLog2('error', $addr, "  Commande privée: Fonction '${fctName}' inconnue");
+                        cmdLog2('error', $addr, "  Commande privée: Fonction '{$fctName}' inconnue");
                     }
                     return;
                 } // End 'cmd-Private'
@@ -5065,7 +5065,7 @@
                     $zclHeader = $this->genZclHeader($hParams);
                     $data = $Command['cmdParams']['data'];
 
-                    cmdLog('debug', "  genericCmd: ep=${dstEp}, clustId=${clustId}, zclHeader=${zclHeader}, data=${data}");
+                    cmdLog('debug', "  genericCmd: ep={$dstEp}, clustId={$clustId}, zclHeader={$zclHeader}, data={$data}");
                     $data2 = $zclHeader.$data;
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
 

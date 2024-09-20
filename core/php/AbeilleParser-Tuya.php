@@ -80,7 +80,7 @@
         $tLen = substr($msg, 4, 4);
         $tData = substr($msg, 8, hexdec($tLen) * 2);
         $tDataTypeTxt = tuyaGetDpDataType($tDataType);
-        $m = "Dp=${tDpId}, Type=${tDataType}/${tDataTypeTxt}, Len=${tLen}, ValueHex=".$tData;
+        $m = "Dp={$tDpId}, Type={$tDataType}/{$tDataTypeTxt}, Len={$tLen}, ValueHex=".$tData;
 
         $dp = array(
             'id' => $tDpId,
@@ -336,7 +336,7 @@
             // $tDataType = substr($msg, 6, 2);
             // $tLen = substr($msg, 8, 4);
             // $tData = substr($msg, 12, hexdec($tLen) * 2);
-            // $m = "Seq=${tSeq}, Dp=${tDpId}, Type=${tDataType}, Len=${tLen}, ValueHex=".$tData;
+            // $m = "Seq={$tSeq}, Dp={$tDpId}, Type={$tDataType}, Len={$tLen}, ValueHex=".$tData;
             // parserLog('debug', "  TY_DATA_SEARCH: ".$m);
         } else if ($cmdId == "11") { // TUYA_MCU_VERSION_RSP
             parserLog2('debug', $addr, "  TUYA_MCU_VERSION_RSP: ".$msg);
@@ -366,7 +366,7 @@
         $len = strlen($message) / 2;
         for($i = 0; $i < $len; $i++) {
             $c = substr($message, $i * 2, 2);
-            // cmdLog('debug', "  c=${c}, crc=".dechex($crc));
+            // cmdLog('debug', "  c={$c}, crc=".dechex($crc));
             $crc += hexdec($c);
             $crc %= 0x100;
         }
@@ -397,10 +397,10 @@
 
             $seqR = AbeilleTools::reverseHex($seq);
             $lenR = AbeilleTools::reverseHex($len);
-            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-00: Seq=${seqR}, Len=${lenR}, Cmd=${cmd} => Replying with ED00-01 & 02.");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-00: Seq={$seqR}, Len={$lenR}, Cmd={$cmd} => Replying with ED00-01 & 02.");
 
             $data = '00'.$seq.$len.$unk1.$unk2.$unk3.$cmd.$unk4;
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=01&data=${data}");
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=01&data={$data}");
             //meta.logger.debug(`"IR-Message-Code00" response sent.`);
             //Note: This last msg could generate err 14/E_ZCL_ERR_ZBUFFER_FAIL if too big. Size reduced by using hexdec().
 
@@ -410,8 +410,8 @@
             // {name: 'maxlen', type: DataType.uint8},
             $data = $seq.'00000000'.'38';
             // $time = time() + 2; // 2sec later
-            // msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/cmd-Generic&time=${time}", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
+            // msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/cmd-Generic&time={$time}", "ep=".$ep."&clustId=ED00&cmd=02&data={$data}");
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data={$data}");
             // meta.logger.debug(`"IR-Message-Code00" transfer started.`);
 
             $GLOBALS['zosung'] = [];
@@ -440,7 +440,7 @@
 
             $seqR = AbeilleTools::reverseHex($seq);
             $lenR = AbeilleTools::reverseHex($len);
-            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-01: Seq=${seqR}, Len=${lenR}, Cmd=${cmd}");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-01: Seq={$seqR}, Len={$lenR}, Cmd={$cmd}");
         } else if ($cmdId == "02") {
             // Cmd 02 reminder
             // {name: 'seq', type: DataType.uint16},
@@ -449,7 +449,7 @@
             $seqR = AbeilleTools::reverseHex(substr($pl, 0, 4));
             $positionR = AbeilleTools::reverseHex(substr($pl, 4, 8));
             $maxLen = substr($pl, 12, 2);
-            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-02: Seq=${seqR}, Pos=${positionR}, MaxLen=${maxLen}");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-02: Seq={$seqR}, Pos={$positionR}, MaxLen={$maxLen}");
 
             parserLog2("debug", $addr, "  Replying with cmd ED00-03");
             $data = array(
@@ -458,7 +458,7 @@
                 'maxLen' => hexdec($maxLen)
             );
             $dataJson = json_encode($data, JSON_UNESCAPED_SLASHES);
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Private", "ep=".$ep."&fct=tuyaZosung&cmd=03&message=${dataJson}");
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Private", "ep=".$ep."&fct=tuyaZosung&cmd=03&message={$dataJson}");
         } else if ($cmdId == "03") {
             // Cmd 03 reminder
             // {name: 'zero', type: DataType.uint8},
@@ -472,16 +472,16 @@
             $msgPart = substr($pl, 16, -2); // Rest is msgpart + msgpartcrc
             $msgPartSize = strlen($msgPart) / 2; // For control purposes
             if ($msgSize != $msgPartSize)
-                parserLog2("debug", $addr, "  WARNING: msgSize (${msgSize}) != len msgPart (${msgPartSize})");
+                parserLog2("debug", $addr, "  WARNING: msgSize ({$msgSize}) != len msgPart ({$msgPartSize})");
             $crc = substr($pl, -2);
 
             $seqR = AbeilleTools::reverseHex($seq);
             $posR = AbeilleTools::reverseHex($pos);
-            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-03: Seq=${seqR}, Pos=${posR}, MsgSize=d${msgSize}, CRC=${crc}");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-03: Seq={$seqR}, Pos={$posR}, MsgSize=d{$msgSize}, CRC={$crc}");
             $cCrc = tuyaZosungCrc($msgPart);
-            parserLog2("debug", $addr, "  MsgSize=${msgSize}, MsgPart=${msgPart}, computedCRC=${cCrc}");
+            parserLog2("debug", $addr, "  MsgSize={$msgSize}, MsgPart={$msgPart}, computedCRC={$cCrc}");
             if ($cCrc != $crc)
-                parserLog2("debug", $addr, "  WARNING: Computed CRC (${cCrc}) != CRC (${crc})");
+                parserLog2("debug", $addr, "  WARNING: Computed CRC ({$cCrc}) != CRC ({$crc})");
 
             if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
                 parserLog2("debug", $addr, "  Unexpected message => Ignored");
@@ -493,7 +493,7 @@
 
             $recSize = $GLOBALS['zosung'][$seqR]['received'];
             $expSize = $GLOBALS['zosung'][$seqR]['expected'];
-            parserLog2("debug", $addr, "  rcvSize=d${recSize}, expSize=d${expSize}, posR=${posR}");
+            parserLog2("debug", $addr, "  rcvSize=d{$recSize}, expSize=d{$expSize}, posR={$posR}");
             if ($recSize < $expSize) {
                 // Need more datas
                 parserLog2("debug", $addr, "  Replying with cmd ED00-02: Need more datas");
@@ -501,13 +501,13 @@
                 $posR = sprintf("%08X", hexdec($posR) + $msgSize);
                 $pos = AbeilleTools::reverseHex($posR);
                 $data = $seq.$pos.'38';
-                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
+                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data={$data}");
             } else {
                 // All data received
                 parserLog2("debug", $addr, "  Replying with cmd ED00-04: All datas received");
 
                 $data = '00'.$seq.'0000';
-                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=04&data=${data}");
+                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=04&data={$data}");
             }
         } else if ($cmdId == "04") {
             // Cmd 04 reminder
@@ -516,28 +516,28 @@
             // {name: 'zero1', type: DataType.uint16},
             $seq = substr($pl, 2, 4);
             $seqR = AbeilleTools::reverseHex($seq);
-            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-04: Seq=${seqR} => Replying with cmd ED00-05");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-04: Seq={$seqR} => Replying with cmd ED00-05");
 
             // Cmd 05 reminder
             // {name: 'seq', type: DataType.uint16},
             // {name: 'zero', type: DataType.uint16},
             $data = $seq.'0000';
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=05&data=${data}");
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=05&data={$data}");
         } else if ($cmdId == "05") {
             // Cmd 05 reminder
             // {name: 'seq', type: DataType.uint16},
             // {name: 'zero', type: DataType.uint16},
             $seq = substr($pl, 0, 4);
             $seqR = AbeilleTools::reverseHex($seq);
-            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-05: Seq=${seqR}");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-05: Seq={$seqR}");
 
             if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
-                parserLog2("debug", $addr, "  Unexpected message (seq ${seqR}) => Ignored");
+                parserLog2("debug", $addr, "  Unexpected message (seq {$seqR}) => Ignored");
                 return $attrReportN;
             }
 
             $data = bin2hex("{'study':1}");
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=E004&cmd=00&data=${data}");
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=E004&cmd=00&data={$data}");
 
             // Report msgpart as "IR learned"
             $dataBA = hex2bin($GLOBALS['zosung'][$seqR]['data']);

@@ -14,98 +14,12 @@
      */
     class AbeilleParser  {
         // public $queueKeyParserToAbeille = null; // Old communication path to Abeille
-        public $queueKeyParserToAbeille2 = null; // New communication path to Abeille
-        public $queueXToCmd = null;
+        // public $queueKeyParserToAbeille2 = null; // New communication path to Abeille
+        // public $queueXToCmd = null;
         // public $parameters_info;
         // public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
         public $wakeUpQueue; // queue of command to be sent when the device wakes up.
         public $whoTalked;   // store the source of messages to see if any message are waiting for them in wakeUpQueue
-
-        // // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
-        // // Data Type -> Description, # octets
-        // public $zbDataTypes = array(
-        //                          '00' => array( 'Null', 0 ),
-        //                          // 01-07: reserved
-        //                          '08' => array( 'General Data', 1),
-        //                          '09' => array( 'General Data', 2),
-        //                          '0A' => array( 'General Data', 3),
-        //                          '0B' => array( 'General Data', 4),
-        //                          '0C' => array( 'General Data', 5),
-        //                          '0D' => array( 'General Data', 6),
-        //                          '0E' => array( 'General Data', 7),
-        //                          '0F' => array( 'General Data', 8),
-
-        //                          '10' => array( 'Bool', 1 ), // Boolean
-        //                          // 0x11-0x17 Reserved
-        //                          '18' => array( 'Bitmap', 1 ),
-        //                          '19' => array( 'Bitmap', 2 ),
-        //                          '1A' => array( 'Bitmap', 3 ),
-        //                          '1B' => array( 'Bitmap', 4 ),
-        //                          '1C' => array( 'Bitmap', 5 ),
-        //                          '1D' => array( 'Bitmap', 6 ),
-        //                          '1E' => array( 'Bitmap', 7 ),
-        //                          '1F' => array( 'Bitmap', 8 ),
-
-        //                          '20' => array( 'Uint8',  1 ), // Unsigned 8-bit int
-        //                          '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
-        //                          '22' => array( 'Uint24', 3 ), // Unsigned 24-bit int
-        //                          '23' => array( 'Uint32', 4 ), // Unsigned 32-bit int
-        //                          '24' => array( 'Uint40', 5 ), // Unsigned 40-bit int
-        //                          '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
-        //                          '26' => array( 'Uint56', 7 ), // Unsigned 56-bit int
-        //                          '27' => array( 'Uint64', 8 ), // Unsigned 64-bit int
-
-        //                          '28' => array( 'Int8',  1 ), // Signed 8-bit int
-        //                          '29' => array( 'Int16', 2 ), // Signed 16-bit int
-        //                          '2A' => array( 'Int24', 3 ), // Signed 24-bit int
-        //                          '2B' => array( 'Int32', 4 ), // Signed 32-bit int
-        //                          '2C' => array( 'Int40', 5 ), // Signed 40-bit int
-        //                          '2D' => array( 'Int48', 6 ), // Signed 48-bit int
-        //                          '2E' => array( 'Int56', 7 ), // Signed 56-bit int
-        //                          '2F' => array( 'Int64', 8 ), // Signed 64-bit int
-
-        //                          '30' => array( 'Enumeration', 1 ),
-        //                          '31' => array( 'Enumeration', 2 ),
-        //                          // 0x32-0x37 Reserved
-
-        //                          '38' => array( 'SemiPrecision',   2 ),
-        //                          '39' => array( 'Single', 4 ), // Single precision
-        //                          '3A' => array( 'DoublePrecision', 8 ),
-        //                          // 0x3b-0x3f
-        //                          // 0x40 Reserved
-        //                          '41' => array( 'String - Octet string',             'Defined in first octet' ),
-        //                          '42' => array( 'String - Charactere string',        'Defined in first octet' ),
-        //                          '43' => array( 'String - Long octet string',        'Defined in first two octets' ),
-        //                          '44' => array( 'String - Long charactere string',   'Defined in first two octets' ),
-        //                          // 0x45-0x47 Reserved
-        //                          '48' => array( 'Ordered sequence - Array',          '2+sum of lengths of contents' ),
-        //                          // 0x49-0x4b Reserved
-        //                          '4C' => array( 'Ordered sequence - Structure',      '2+sum of lengths of contents' ),
-        //                          // 0x4d-0x4f Reserved
-        //                          '50' => array( 'Collection - Set',      'Sum of lengths of contents' ),
-        //                          '51' => array( 'Collection - Bag',      'Sum of lengths of contents' ),
-        //                          //0x52-0x57 Reserved
-        //                          // 0x58-0xdf Reserved
-        //                          'E0' => array( 'Time - Time of day', 4 ),
-        //                          'E1' => array( 'Time - Date', 4 ),
-        //                          'E2' => array( 'Time - UTCTime', 4 ),
-        //                          // 0xe3 - 0xe7 Reserved
-        //                          'E8' => array( 'Identifier - Cluster ID', 2 ),
-        //                          'E9' => array( 'Identifier - Attribute ID', 2 ),
-        //                          'EA' => array( 'Identifier - BACnet OID', 4 ),
-        //                          // 0xeb-0xef Reserved
-        //                          'F0' => array( 'Miscellaneous - IEEE address', 8 ),
-        //                          'F1' => array( 'Miscellaneous - 128 bit security key', 16 ),
-        //                          // 0xF2-0xFe Reserved
-        //                          'FF' => array( 'Unknown', 0 ),
-        // );
-
-        // /* Returns ZigBee data type or array('?'.$type.'?', 0) if unknown */
-        // function getZbDataType($type) {
-        //     if (array_key_exists($type, $this->zbDataTypes))
-        //         return $this->zbDataTypes[$type];
-        //     return array('?'.$type.'?', 0);
-        // }
 
         function __construct() {
             global $argv;
@@ -120,11 +34,11 @@
             // $this->requestedlevel = '' ? 'none' : $argv[1];
             // $GLOBALS['requestedlevel'] = $this->requestedlevel ;
 
-            $abQueues = $GLOBALS['abQueues'];
-            $this->queueXToCmd          = msg_get_queue($abQueues["xToCmd"]["id"]);
-            $this->queueParserToCmdAck  = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
-            $this->queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);
-            $this->queueParserToRoutes  = msg_get_queue($abQueues["parserToRoutes"]["id"]);
+            // $abQueues = $GLOBALS['abQueues'];
+            // $this->queueXToCmd          = msg_get_queue($abQueues["xToCmd"]["id"]);
+            // $this->queueParserToCmdAck  = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
+            // $this->queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);
+            // $this->queueParserToRoutes  = msg_get_queue($abQueues["parserToRoutes"]["id"]);
         }
 
         /* Check NPDU status */
@@ -176,7 +90,8 @@
         function msgToCmd2($prio, $msg) {
             $errCode = 0;
             $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-            if (msg_send($this->queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
+            global $queueXToCmd;
+            if (msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
                 parserLog("debug", "  ERROR: msgToCmd2(): Can't write to 'queueXToCmd', error=".$errCode);
             }
         }
@@ -185,7 +100,8 @@
            Returns: true=ok, false=ERROR */
         function msgToLQICollector($msg) {
             $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-            if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errCode) == true)
+            global $queueParserToLQI;
+            if (msg_send($queueParserToLQI, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
             // parserLog("error", "  msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errCode.")");
@@ -206,7 +122,8 @@
                 'table' => $table
             );
             $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-            if (msg_send($this->queueParserToRoutes, 1, $msgJson, false, false, $errCode) == true)
+            global $queueParserToRoutes;
+            if (msg_send($queueParserToRoutes, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
             // parserLog("error", "  msgToRoutingCollector(): Impossible d'envoyer le msg vers AbeilleRoutes (err ".$errCode.")");
@@ -311,10 +228,10 @@
                 $fullPath = ($modelSource == "Abeille") ? modelsDir : modelsLocalDir;
                 $fullPath .= $modelPath;
                 if (is_file($fullPath)) {
-                    parserLog('debug', "    Forced model (${modelPath}) is still valid");
+                    parserLog('debug', "    Forced model ({$modelPath}) is still valid");
                     return;
                 } else
-                    parserLog('debug', "    Forced model (${modelPath}) is NO LONGER valid");
+                    parserLog('debug', "    Forced model ({$modelPath}) is NO LONGER valid");
             }
 
             /* Looking for corresponding JSON if supported device.
@@ -377,7 +294,7 @@
             else
                 $eq['eqModel']['modelName'] = $GLOBALS['customEqList'][$modelSig]['modelName'];
             $eq['eqModel']['modelSource'] = $modelSource;
-            parserLog('debug', "  ModelName='".$eq['eqModel']['modelName']."', Source='${modelSource}'");
+            parserLog('debug', "  ModelName='".$eq['eqModel']['modelName']."', Source='{$modelSource}'");
             return true;
         } // End findModel()
 
@@ -469,7 +386,7 @@
             /* Default identification: need EP list.
                Tcharp38 note: Some devices may not answer to active endpoints request at all. */
             parserLog('debug', '  Requesting active end points list');
-            msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getActiveEndpoints");
+            msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getActiveEndpoints");
 
             /* Special trick for NXP based devices.
                - Note: 00158D=Jennic Ltd.
@@ -479,13 +396,13 @@
             $nxp = (substr($ieee, 0, 9) == "00158D000") ? true : false;
             if ($nxp) {
                 parserLog('debug', '  NXP based device. Requesting modelIdentifier from EP 01');
-                msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/readAttribute", "ep=01&clustId=0000&attrId=0005");
+                msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/readAttribute", "ep=01&clustId=0000&attrId=0005");
             }
         }
 
         /* There are device infos updates (ex: endpoints, manufId, modelId, location, ...). */
         function deviceUpdates($net, $addr, $ep, $updates = []) {
-            parserLog('debug', "  deviceUpdates(${net}, ${addr}, EP=${ep}, Upd=".json_encode($updates, JSON_UNESCAPED_SLASHES).")");
+            parserLog('debug', "  deviceUpdates({$net}, {$addr}, EP={$ep}, Upd=".json_encode($updates, JSON_UNESCAPED_SLASHES).")");
             if (isset($updates['ieee']))
                 $ieee = $updates['ieee'];
             else
@@ -498,8 +415,8 @@
             foreach ($updates as $updType => $value) {
                 // Log only if relevant
                 if ($updType && ($eq['status'] != 'idle')) {
-                    $v = ($value === false) ? "false" : "'${value}'";
-                    parserLog('debug', "    '${updType}'=${v}. Status=".$eq['status']);
+                    $v = ($value === false) ? "false" : "'{$value}'";
+                    parserLog('debug', "    '{$updType}'={$v}. Status=".$eq['status']);
                 }
 
                 /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
@@ -649,14 +566,14 @@
 
             if (!isset($eq['zigbee']['ieee'])) {
                 parserLog('debug', '    Requesting IEEE');
-                msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getIeeeAddress");
+                msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getIeeeAddress");
                 return $ret;
             }
             // IEEE is available
 
             if (!isset($eq['zigbee']['endPoints'])) {
                 parserLog('debug', '    Requesting active endpoints list');
-                msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getActiveEndpoints");
+                msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getActiveEndpoints");
                 return $ret;
             }
             // Endpoints list is available
@@ -667,8 +584,8 @@
                     continue; // Invalid case seen some times
 
                 if (!isset($ep2['servClusters'])) {
-                    parserLog('debug', "    'servClusters' missing: Requesting simple descriptor from EP ${epId2}");
-                    msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getSimpleDescriptor", "ep=".$epId2);
+                    parserLog('debug', "    'servClusters' missing: Requesting simple descriptor from EP {$epId2}");
+                    msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getSimpleDescriptor", "ep=".$epId2);
                     // break; // To reduce requests on first missing descriptor
                     return $ret;
                 } else if (strpos($ep2['servClusters'], '0004') !== false) {
@@ -676,7 +593,7 @@
                     //     parserLog('debug', '    Groups='.json_encode($ep2['groups']));
                     if (!isset($eq['zigbee']['groups']) || !isset($eq['zigbee']['groups'][$epId2])) {
                         parserLog('debug', '    Requesting groups membership for EP '.$epId2);
-                        msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getGroupMembership", "ep=".$epId2);
+                        msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getGroupMembership", "ep=".$epId2);
                         return $ret; // To reduce requests on first missing groups membership
                     }
                 }
@@ -685,7 +602,7 @@
 
             if (!isset($eq['zigbee']['manufCode']) || ($eq['zigbee']['manufCode'] === null)) {
                 parserLog('debug', "    Requesting node descriptor for 'manufCode'");
-                msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getNodeDescriptor");
+                msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getNodeDescriptor");
                 return $ret;
             }
 
@@ -743,8 +660,8 @@
                         $missingTxt .= 'location';
                     }
                     if ($missing != '') {
-                        parserLog('debug', "    Requesting ${missingTxt} from EP ${epId2}");
-                        msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+                        parserLog('debug', "    Requesting {$missingTxt} from EP {$epId2}");
+                        msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                         break; // Reducing requests on first missing stuff
                     }
                 }
@@ -770,8 +687,8 @@
                     $missingTxt .= 'swBuildId';
                 }
                 if ($missing != '') {
-                    parserLog('debug', "    Requesting ${missingTxt} from EP ${epId2}");
-                    msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/readAttribute", "ep=${epId2}&clustId=0000&attrId=${missing}");
+                    parserLog('debug', "    Requesting {$missingTxt} from EP {$epId2}");
+                    msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/readAttribute", "ep={$epId2}&clustId=0000&attrId={$missing}");
                     break; // Reducing requests on first missing stuff
                 }
             }
@@ -829,12 +746,12 @@
                 if ($profalux && ($eq['zigbee']['modelId'] !== false) && ($eq['zigbee']['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
                         parserLog('debug', '    Profalux v2: Requesting binding table size.');
-                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getBindingTable", "");
+                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getBindingTable", "");
                         return false; // Remote still not binded with curtain
                     }
                     if ($eq['bindingTableSize'] == 0) {
                         parserLog('debug', '    Profalux v2: Waiting remote to be binded.');
-                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getBindingTable", "");
+                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getBindingTable", "");
                         return false; // Remote still not binded with curtain
                     }
                     parserLog('debug', '    Profalux v2: Remote binded. Let\'s configure.');
@@ -937,10 +854,10 @@
                 //     $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
                 //     parserLog('debug', '      topic='.$topic.", request='".$request."'");
                 //     if ($delay == 0)
-                //         msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/".$topic, $request);
+                //         msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/".$topic, $request);
                 //     else {
                 //         $delay = time() + $delay;
-                //         msgToCmd(PRIO_NORM, "TempoCmd${net}/${addr}/".$topic.'&time='.$delay, $request);
+                //         msgToCmd(PRIO_NORM, "TempoCmd{$net}/{$addr}/".$topic.'&time='.$delay, $request);
                 //     }
                 // }
 
@@ -1001,12 +918,12 @@
             // foreach ($epArr as $epId) {
             //     $eq['zigbee']['endPoints'][$epId] = [];
             //     parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-            //     msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getSimpleDescriptor", 'ep='.$epId);
+            //     msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getSimpleDescriptor", 'ep='.$epId);
             // }
             foreach ($eq['zigbee']['endPoints'] as $epId => $ep) {
                 $eq['discovery']['endPoints'][$epId] = [];
                 parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-                msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/getSimpleDescriptor", 'ep='.$epId);
+                msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getSimpleDescriptor", 'ep='.$epId);
             }
 
             /* Discover ongoing. Informing Abeille for EQ creation/update */
@@ -1064,10 +981,10 @@
 
                     /* Requesting list of supported attributes */
                     foreach ($val2['servClusters'] as $clustId => $clust) {
-                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
+                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
                     }
                     foreach ($val2['cliClusters'] as $clustId => $clust) {
-                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=01&startAttrId=0000&maxAttrId=FF');
+                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=01&startAttrId=0000&maxAttrId=FF');
                     }
                 }
             }
@@ -1096,12 +1013,12 @@
                     if ($missingAttrNb < 4)
                         continue;
 
-                    msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
                     $missingAttr = '';
                     $missingAttrNb = 0;
                 }
                 if ($missingAttrNb != 0)
-                    msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
             }
 
             // discoverUpdate($dest, $srcAddr, $srcEp, 'DiscoverAttributesExtResponse', $clustId, $isServer, $attributes);
@@ -1121,7 +1038,7 @@
                     if (isset($attr['access']))
                         $clust['attributes'][$attrId]['access'] = $attr['access'];
                     if (!isset($clust['attributes'][$attrId]['value']))
-                        msgToCmd(PRIO_NORM, "Cmd${net}/${addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
+                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
                 }
             }
 
@@ -2182,7 +2099,7 @@
             $macCapa = substr($pl, 12, 2); // Mac capa
             $manufCode = AbeilleTools::reverseHex(substr($pl, 14, 4));
 
-            parserLog2('debug', $srcAddr, "  LogicalType=${logicalType}, MacCapa=${macCapa}, ManufCode=${manufCode}");
+            parserLog2('debug', $srcAddr, "  LogicalType={$logicalType}, MacCapa={$macCapa}, ManufCode={$manufCode}");
 
             // Infos to collect & store: logicalType, macCapa & manufCode
             $eq = getDevice($net, $srcAddr);
@@ -2229,7 +2146,7 @@
             $discovering = $this->discoveringState($net, $srcAddr);
             if ($status != "00") {
                 parserLog2('debug', $srcAddr, $m);
-                parserLog2('debug', $srcAddr, "  Status (${status}) != '00' => Decoding ignored");
+                parserLog2('debug', $srcAddr, "  Status ({$status}) != '00' => Decoding ignored");
                 if ($discovering)
                     $this->discoverUpdate($net, $srcAddr, $ep, 'SimpleDescriptorResponse', $status, $statusMsg);
                 return;
@@ -3627,7 +3544,7 @@
                                 // parserLog('debug', "  Model with 'private' entry");
                                 foreach ($eq['private'] as $pKey => $pVal) {
                                     $pKeyLen = strlen($pKey);
-                                    // parserLog2('debug', $srcAddr, "  clustId/attrId=${clustId}/${attrId} vs pKey=${pKey}, len=${pKeyLen}");
+                                    // parserLog2('debug', $srcAddr, "  clustId/attrId={$clustId}/{$attrId} vs pKey={$pKey}, len={$pKeyLen}");
                                     if ((($pKeyLen == 4) && ($pKey != $clustId)) || // 'CCCC' (clustId) case
                                         (($pKeyLen == 9) && ($pKey != $clustId.'-'.$attrId))) // 'CCCC-AAAA (clustId-attrId) case
                                         continue;
@@ -3651,7 +3568,7 @@
 
                                 // if ($manufCode == '115F') { // Xiaomi specific
                                 //     parserLog('warning', "  Old way (manufCode) to handle Xiaomi private cluster");
-                                //     // parserLog('debug', "  plOld=${plOld}");
+                                //     // parserLog('debug', "  plOld={$plOld}");
                                 //     xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
                                 //     // $pl = ''; // Full payload treated
                                 // }
@@ -3822,7 +3739,7 @@
                         $cmdId = substr($msg, 0, 2);
                         $status = substr($msg, 2, 2);
 
-                        parserLog2('debug', $srcAddr, "  Default Response: Cmd=${cmdId}, Status=${status}/".zbGetZCLStatus($status));
+                        parserLog2('debug', $srcAddr, "  Default Response: Cmd={$cmdId}, Status={$status}/".zbGetZCLStatus($status));
 
                         /* Send to client if connection opened */
                         $toCli = array(
@@ -3988,7 +3905,7 @@
                     } // Discover Attributes Extended Response
 
                     else {
-                        parserLog2("debug", $srcAddr, "  Ignored cluster ${clustId} general command ${cmd}", "8002");
+                        parserLog2("debug", $srcAddr, "  Ignored cluster {$clustId} general command {$cmd}", "8002");
                         // return;
                     }
                 } else { // Cluster specific command
@@ -4293,7 +4210,7 @@
                             // Responding to device: image found
                             $imgVers = $fw['fileVersion'];
                             $imgSize = $fw['fileSize'];
-                            parserLog2('debug', $srcAddr, "  FW version ${imgVers} available. Response handled by Zigate server.");
+                            parserLog2('debug', $srcAddr, "  FW version {$imgVers} available. Response handled by Zigate server.");
                             // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
                         } else if ($cmd == "03") { // Image Block Request
                             $fieldControl = substr($msg, 0, 2);
@@ -4321,20 +4238,20 @@
                             parserLog2('debug', $srcAddr, $m);
 
                             // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
-                            $eqLogic = Abeille::byLogicalId("${dest}/${srcAddr}", 'Abeille');
+                            $eqLogic = Abeille::byLogicalId("{$dest}/{$srcAddr}", 'Abeille');
                             $eqHName = $eqLogic->getHumanName();
                             switch ($status) {
                             case "00":
-                                message::add("Abeille", "${eqHName}: Mise-à-jour du firmware terminée avec succès");
+                                message::add("Abeille", "{$eqHName}: Mise-à-jour du firmware terminée avec succès");
                                 break;
                             case "95":
-                                message::add("Abeille", "${eqHName}: Transfert du firmware annulé par l'équipement");
+                                message::add("Abeille", "{$eqHName}: Transfert du firmware annulé par l'équipement");
                                 break;
                             case "96":
-                                message::add("Abeille", "${eqHName}: Transfert du firmware terminé mais invalide");
+                                message::add("Abeille", "{$eqHName}: Transfert du firmware terminé mais invalide");
                                 break;
                             case "99":
-                                message::add("Abeille", "${eqHName}: Transfert du firmware terminé mais d'autres images sont requises pour la mise-à-jour");
+                                message::add("Abeille", "{$eqHName}: Transfert du firmware terminé mais d'autres images sont requises pour la mise-à-jour");
                                 break;
                             }
                         }
@@ -5255,7 +5172,7 @@
 
         //     /* Forwarding to Abeille */
         //     $attributes = array();
-        //     // $this->msgToAbeille("${dest}/${srcAddr}", "Click", "Middle", $status);
+        //     // $this->msgToAbeille("{$dest}/{$srcAddr}", "Click", "Middle", $status);
         //     // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".
         //     //           Moreover no sense since there may have no link with "middle". It's is just a OnOff cmd FROM a device to Zigate.
         //     $attr = array(

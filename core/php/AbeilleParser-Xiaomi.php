@@ -84,7 +84,7 @@
             $value2 *= 100;
             $mapTxt .= 'div='.$div.', min='.$min.', max='.$max.', ';
         } else {
-            $m .= " => ERROR: Unexpected function '${func}'";
+            $m .= " => ERROR: Unexpected function '{$func}'";
             parserLog2('debug', $addr, $m);
             return;
         }
@@ -148,7 +148,7 @@
 
     // Decode tags only. For debugging purposes only
     function xiaomiDecodeTagsDebug($net, $addr, $clustId, $attrId, $pl) {
-        parserLog2('debug', $addr, "  Cluster ${clustId}, attrib ${attrId}: Decoding for debug purposes only");
+        parserLog2('debug', $addr, "  Cluster {$clustId}, attrib {$attrId}: Decoding for debug purposes only");
         $l = strlen($pl);
         for ($i = 0; $i < $l; ) {
             $tagId = substr($pl, $i + 0, 2);

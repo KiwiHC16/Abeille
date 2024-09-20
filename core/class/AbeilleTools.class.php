@@ -68,7 +68,7 @@
          * @param string le message lui meme
          * @param string $message
          */
-        public static function deamonlogFilter($loglevel = 'NONE', $pluginName, $loggerName = 'Tools', $message = '') {
+        public static function deamonlogFilter($loglevel = 'NONE', $pluginName = 'Abeille', $loggerName = 'Tools', $message = '') {
             if (strlen($message) < 1) return;
             if (self::getNumberFromLevel($loglevel) <= self::getLogLevel($pluginName)) {
                 $loglevel = strtolower(trim($loglevel));

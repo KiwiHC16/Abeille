@@ -547,10 +547,10 @@ class Abeille extends eqLogic {
         // Checking how many gateways are in pairing mode
         $count = 0;
         for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
-            $incStatus = self::checkInclusionStatus("Abeille${gtwId}");
-            log::add('Abeille', 'debug', "cron(): Abeille${gtwId} => inclusion status = ${incStatus}");
+            $incStatus = self::checkInclusionStatus("Abeille{$gtwId}");
+            log::add('Abeille', 'debug', "cron(): Abeille{$gtwId} => inclusion status = {$incStatus}");
             if ($incStatus === 1) {
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "CmdAbeille${gtwId}/0000/permitJoin", "Status");
+                Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "CmdAbeille{$gtwId}/0000/permitJoin", "Status");
                 $count++;
             }
         }
@@ -569,7 +569,7 @@ class Abeille extends eqLogic {
     public static function deamon_info() {
         // $pid = getmypid();
         // $toto = isset($GLOBALS['toto']) ? $GLOBALS['toto'] : "UNSET";
-        // log::add('Abeille', 'debug', "deamon_info() PID=${pid} TOTO=${toto}");
+        // log::add('Abeille', 'debug', "deamon_info() PID={$pid} TOTO={$toto}");
 
         // $smId = @shmop_open(12, "a", 0, 0);
         // if ($smId !== false) {
@@ -659,7 +659,7 @@ class Abeille extends eqLogic {
 
         // $GLOBALS['toto'] = 12;
         // $pid = getmypid();
-        // log::add('Abeille', 'debug', "deamon_start() PID=${pid} TOTO=".json_encode($GLOBALS['toto']));
+        // log::add('Abeille', 'debug', "deamon_start() PID={$pid} TOTO=".json_encode($GLOBALS['toto']));
         log::add('Abeille', 'debug', '>>> deamon_start()');
 
         $smId = @shmop_open(12, "a", 0, 0);
@@ -707,13 +707,13 @@ class Abeille extends eqLogic {
             $error = "";
             $sp = $config['ab::gtwPort'.$gtwId];
             if (($sp == 'none') || ($sp == "")) {
-                $error = "Port série invalide pour la passerelle ${gtwId}";
+                $error = "Port série invalide pour la passerelle {$gtwId}";
             }
             if ($error == "") {
                 if ($config['ab::gtwSubType'.$gtwId] == "WIFI") {
                     $wifiAddr = $config['ab::gtwIpAddr'.$gtwId];
                     if (($wifiAddr == 'none') || ($wifiAddr == "")) {
-                        $error = "Adresse Wifi invalide pour la Zigate ${gtwId}";
+                        $error = "Adresse Wifi invalide pour la Zigate {$gtwId}";
                     }
                 }
             }
@@ -806,7 +806,7 @@ class Abeille extends eqLogic {
             $qKey = $q['id'];
             if (msg_queue_exists($qKey) === true) {
                 if (msg_remove_queue(msg_get_queue($qKey)) === false)
-                    log::add('Abeille', 'debug', "deamon_stop(): msg_remove_queue(${qName}) FAILED");
+                    log::add('Abeille', 'debug', "deamon_stop(): msg_remove_queue({$qName}) FAILED");
             }
         }
         // $ret = shell_exec("ipcs -q");
@@ -912,7 +912,7 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'deamon(): Main daemon starting');
 
         // $pid = getmypid();
-        // log::add('Abeille', 'debug', "deamon() PID=${pid} TOTO=".json_encode($GLOBALS['toto']));
+        // log::add('Abeille', 'debug', "deamon() PID={$pid} TOTO=".json_encode($GLOBALS['toto']));
 
         /* Main daemon starting.
            This means that other daemons have started too. Abeille can communicate with them */
@@ -929,12 +929,12 @@ class Abeille extends eqLogic {
                 // Create/update beehive equipment on Jeedom side
                 // Note: This will reset 'FW-Version' to '---------' to mark FW version invalid.
                 if ($config['ab::gtwType'.$gtwId] == "zigate")
-                    self::createRuche("Abeille${gtwId}");
+                    self::createRuche("Abeille{$gtwId}");
                 else
-                    self::createEzspGateway("Abeille${gtwId}");
+                    self::createEzspGateway("Abeille{$gtwId}");
             } else {
                 // Gateway disabled. Ensure equipment is disabled too
-                $eqLogic = eqLogic::byLogicalId("Abeille${gtwId}/0000", 'Abeille');
+                $eqLogic = eqLogic::byLogicalId("Abeille{$gtwId}/0000", 'Abeille');
                 if (is_object($eqLogic) && ($eqLogic->getIsEnable() != 0)) {
                     $eqLogic->setIsEnable(0);
                     $eqLogic->save();
@@ -1208,7 +1208,7 @@ class Abeille extends eqLogic {
                         $modelPath = isset($modelInfos['modelPath']) ? $modelInfos['modelPath'] : '';
                         $modelSig = $modelInfos['modelSig'];
                         $eqHName = $eqLogic->getHumanName();
-                        message::add("Abeille", $eqHName.": Mise-à-jour à partir du modèle '${modelName}'", '');
+                        message::add("Abeille", $eqHName.": Mise-à-jour à partir du modèle '{$modelName}'", '');
                     }
                 }
             }
@@ -1220,9 +1220,9 @@ class Abeille extends eqLogic {
 
             // Was using a deleted local model ?
             if ($modelSource == "local") {
-                $fullPath = __DIR__."/../config/devices_local/${modelName}/${modelName}.json";
+                $fullPath = __DIR__."/../config/devices_local/{$modelName}/{$modelName}.json";
                 if (!file_exists($fullPath)) {
-                    $fullPath = __DIR__."/../config/devices/${modelName}/${modelName}.json";
+                    $fullPath = __DIR__."/../config/devices/{$modelName}/{$modelName}.json";
                     if (file_exists($fullPath)) {
                         log::add('Abeille', 'debug', "Local model not found => using official one instead");
                         $modelSource = "Abeille";
@@ -1309,56 +1309,56 @@ class Abeille extends eqLogic {
     public static function trigCommand($eqLogic, $value, $trigLogicId, $trigOffset = '') {
         $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
         if (!is_object($trigCmd)) {
-            log::add('Abeille', 'debug', "  trigCommand(): Unknown Jeedom command logicId='${trigLogicId}'");
+            log::add('Abeille', 'debug', "  trigCommand(): Unknown Jeedom command logicId='{$trigLogicId}'");
             return;
         }
 
-        log::add('Abeille', 'debug', "  trigCommand(Val=${value}, TrigOffset='${trigOffset}')");
+        log::add('Abeille', 'debug', "  trigCommand(Val={$value}, TrigOffset='{$trigOffset}')");
         if ($trigOffset != '') {
             $vsPos = stripos($trigOffset, '#valueswitch-'); // Any #valueswitch-....# variable ?
             if ($vsPos !== false) {
                 $vs = substr($trigOffset, $vsPos + 13);
                 $vsPos2 = strpos($vs, '#');
                 $varName = substr($vs, 0, $vsPos2);
-                log::add('Abeille', 'debug', "  'valueswitch' detected: VarName='${varName}'");
+                log::add('Abeille', 'debug', "  'valueswitch' detected: VarName='{$varName}'");
 
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
                 $varUp = strtoupper($varName);
                 if (!isset($eqModel['variables']) || !isset($eqModel['variables'][$varUp])) {
                     $eqHName = $eqLogic->getHumanName();
-                    message::add("Abeille", "${eqHName}: La variable '${varUp}' n'est pas définie");
+                    message::add("Abeille", "{$eqHName}: La variable '{$varUp}' n'est pas définie");
                     return;
                 }
                 $var = $eqModel['variables'][$varUp];
                 log::add('Abeille', 'debug', "  Var=".json_encode($var, JSON_UNESCAPED_SLASHES));
                 $varType = gettype($var);
-                log::add('Abeille', 'debug', "  varType=${varType}");
+                log::add('Abeille', 'debug', "  varType={$varType}");
                 if ($varType == "array") {
                     // Variable is an array so keys are string. If value is int => convert to hex string.
                     log::add('Abeille', 'debug', "  valueType=".gettype($value));
                     if (gettype($value) != "string") {
                         $value2 = strval($value);
-                        log::add('Abeille', 'debug', "  value2=${value2}");
+                        log::add('Abeille', 'debug', "  value2={$value2}");
                         $newValue = $var[$value2];
                     } else
                         $newValue = $var[$value];
                 } else
                     $newValue = $var;
                 log::add('Abeille', 'debug', "  newValue=".json_encode($newValue, JSON_UNESCAPED_SLASHES));
-                $trigValue = jeedom::evaluateExpression(str_ireplace("#valueswitch-${varName}#", $newValue, $trigOffset));
+                $trigValue = jeedom::evaluateExpression(str_ireplace("#valueswitch-{$varName}#", $newValue, $trigOffset));
             } else
                 $trigValue = jeedom::evaluateExpression(str_ireplace('#value#', $value, $trigOffset));
         } else
             $trigValue = $value;
 
         $trigName = $trigCmd->getName();
-        log::add('Abeille', 'debug', "  Triggering cmd '${trigName}' (${trigLogicId}) with Val='${trigValue}'");
+        log::add('Abeille', 'debug', "  Triggering cmd '{$trigName}' ({$trigLogicId}) with Val='{$trigValue}'");
         $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
 
         // Is the triggered command a battery percent reporting ?
         if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
             $trigValue = round($trigValue, 0);
-            log::add('Abeille', 'debug', "  Battery % reporting: ${trigLogicId}, Val=${trigValue}");
+            log::add('Abeille', 'debug', "  Battery % reporting: {$trigLogicId}, Val={$trigValue}");
             $eqLogic->setStatus('battery', $trigValue);
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
         }
@@ -1403,10 +1403,10 @@ class Abeille extends eqLogic {
             $cmdName = $cmd->getName();
             $cmdLogicId = $cmd->getLogicalId();
             if ($delay != 0) {
-                log::add('Abeille', 'debug', "  Triggering '${cmdName}' (${cmdLogicId}) with delay ".$delay);
+                log::add('Abeille', 'debug', "  Triggering '{$cmdName}' ({$cmdLogicId}) with delay ".$delay);
                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
             } else {
-                log::add('Abeille', 'debug', "  Triggering '${cmdName}' (${cmdLogicId})");
+                log::add('Abeille', 'debug', "  Triggering '{$cmdName}' ({$cmdLogicId})");
                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
             }
         }
@@ -1492,12 +1492,12 @@ class Abeille extends eqLogic {
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'error', "removeForcedModel '${net}/${addr}': Equipement inconnu.");
+                log::add('Abeille', 'error', "removeForcedModel '{$net}/{$addr}': Equipement inconnu.");
                 return;
             }
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
             if (!isset($zigbee['modelId']) || !isset($zigbee['manufId'])) {
-                log::add('Abeille', 'warning', "removeForcedModel '${net}/${addr}': Identifiant Zigbee incomplet => réparer");
+                log::add('Abeille', 'warning', "removeForcedModel '{$net}/{$addr}': Identifiant Zigbee incomplet => réparer");
                 log::add('Abeille', 'debug', "zigbee=".json_encode($zigbee, JSON_UNESCAPED_SLASHES));
                 return;
             }
@@ -1547,13 +1547,13 @@ class Abeille extends eqLogic {
 
         /* Parser has found device infos to update. */
         if ($msg['type'] == "deviceUpdates") {
-            log::add('Abeille', 'debug', "msgFromParser(): '${net}/${addr}/${ep}' device updates, ".json_encode($msg['updates'], JSON_UNESCAPED_SLASHES));
+            log::add('Abeille', 'debug', "msgFromParser(): '{$net}/{$addr}/{$ep}' device updates, ".json_encode($msg['updates'], JSON_UNESCAPED_SLASHES));
 
             $eqChanged = false;
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
                 if (!isset($msg['updates']['ieee'])) {
-                    log::add('Abeille', 'debug', "  ERROR: Unknown '${net}/${addr}' device and no IEEE update.");
+                    log::add('Abeille', 'debug', "  ERROR: Unknown '{$net}/{$addr}' device and no IEEE update.");
                     return;
                 }
                 $ieee = $msg['updates']['ieee'];
@@ -1567,9 +1567,9 @@ class Abeille extends eqLogic {
                     list($net2, $addr2) = explode( "/", $eqLogicId2);
                     $eqLogic->setLogicalId($net.'/'.$addr);
                     if ($net != $net2)
-                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Migrated from '${net2}/${addr2}' to '${net}/${addr}'");
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Migrated from '{$net2}/{$addr2}' to '{$net}/{$addr}'");
                     else
-                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Addr updated from ${addr2} to ${addr}");
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Addr updated from {$addr2} to {$addr}");
                     $eqLogic->setIsEnable(1);
                     $eqChanged = true;
                     // $informCmd = true;
@@ -1585,7 +1585,7 @@ class Abeille extends eqLogic {
                 else if ($updKey == 'logicalType') { // Node descriptor/logical type
                     $zigbee['logicalType'] = $updVal;
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[logicalType]' updated to ${updVal}");
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[logicalType]' updated to {$updVal}");
                 } else if ($updKey == 'macCapa') {
                     $zigbee['macCapa'] = $updVal;
                     $mc = hexdec($zigbee['macCapa']);
@@ -1605,38 +1605,38 @@ class Abeille extends eqLogic {
                             unset($zigbee['endPoints'][$epId2]);
                     }
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to ${jsonUpdVal}");
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'profId') {
                     $zigbee['endPoints'][$ep]['profId'] = $updVal;
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][profId]' updated to ${jsonUpdVal}");
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][profId]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'devId') {
                     $zigbee['endPoints'][$ep]['devId'] = $updVal;
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][devId]' updated to ${jsonUpdVal}");
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][devId]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'servClusters') {
                     $zigbee['endPoints'][$ep]['servClusters'] = $updVal;
                     if (strpos($updVal, '0004') !== false)
                         $zigbee['groups'][$ep] = '';
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][servClusters]' updated to ${jsonUpdVal}");
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][servClusters]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'manufId') {
                     if (!isset($zigbee['endPoints'][$ep]['manufId'])) {
                         $zigbee['endPoints'][$ep]['manufId'] = $updVal;
                         $zigbeeChanged = true;
-                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][manufId]' updated to '${updVal}'");
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][manufId]' updated to '{$updVal}'");
                     }
                 } else if ($updKey == 'modelId') {
                     if (!isset($zigbee['endPoints'][$ep]['modelId'])) {
                         $zigbee['endPoints'][$ep]['modelId'] = $updVal;
                         $zigbeeChanged = true;
-                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][modelId]' updated to '${updVal}'");
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][modelId]' updated to '{$updVal}'");
                     }
                 } else if ($updKey == 'location') {
                     if (!isset($zigbee['endPoints'][$ep]['location'])) {
                         $zigbee['endPoints'][$ep]['location'] = $updVal;
                         $zigbeeChanged = true;
-                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][location]' updated to '${updVal}'");
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][location]' updated to '{$updVal}'");
                     }
                 } else if ($updKey == 'manufCode') {
                     $zigbee['manufCode'] = $updVal;
@@ -1645,11 +1645,11 @@ class Abeille extends eqLogic {
                 } else if ($updKey == 'dateCode') { // Clust/attr = 0000-0006
                     $zigbee['endPoints'][$ep]['dateCode'] = $updVal;
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][dateCode]' updated to '${updVal}'");
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][dateCode]' updated to '{$updVal}'");
                 } else if ($updKey == 'swBuildId') { // Clust/attr = 0000-4000
                     $zigbee['endPoints'][$ep]['swBuildId'] = $updVal;
                     $zigbeeChanged = true;
-                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][${ep}][swBuildId]' updated to '${updVal}'");
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][swBuildId]' updated to '{$updVal}'");
                 }
             }
             if ($zigbeeChanged) {
@@ -1896,13 +1896,13 @@ class Abeille extends eqLogic {
             */
 
             if ($msg['type'] == "attributesReportN")
-                log::add('Abeille', 'debug', "msgFromParser(): Attributes report by name from '${net}/${addr}/${ep}'");
+                log::add('Abeille', 'debug', "msgFromParser(): Attributes report by name from '{$net}/{$addr}/{$ep}'");
             else
-                log::add('Abeille', 'debug', "msgFromParser(): Read attributes response by name from '${net}/${addr}/${ep}'");
+                log::add('Abeille', 'debug', "msgFromParser(): Read attributes response by name from '{$net}/{$addr}/{$ep}'");
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', "  Unknown device '${net}/${addr}'");
+                log::add('Abeille', 'debug', "  Unknown device '{$net}/{$addr}'");
                 return; // Unknown device
             }
 
@@ -1921,12 +1921,15 @@ class Abeille extends eqLogic {
                         log::add('Abeille', 'debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." ".$unit);
                     else
                         log::add('Abeille', 'debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." (calculValueOffset=".$cvo.")");
+log::add('Abeille', 'debug', "  checkAndUpdateCmd(), attr['value']=".json_encode($attr['value']));
                     $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
                     // Checking if battery info, only if registered command
+log::add('Abeille', 'debug', "  checkIfBatteryInfo(), attr=".json_encode($attr));
                     Abeille::checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
 
                     // Check if any action cmd must be executed triggered by this update
+log::add('Abeille', 'debug', "  infoCmdUpdate()");
                     Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
                 }
             }
@@ -1943,10 +1946,10 @@ class Abeille extends eqLogic {
                 'time' => time(),
                 'lqi' => $lqi
             */
-            log::add('Abeille', 'debug', "msgFromParser(): Device '${net}/${addr}' is ALIVE");
+            log::add('Abeille', 'debug', "msgFromParser(): Device '{$net}/{$addr}' is ALIVE");
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', "  Unknown device '${net}/${addr}'");
+                log::add('Abeille', 'debug', "  Unknown device '{$net}/{$addr}'");
                 return; // Unknown device
             }
             Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
@@ -2632,7 +2635,7 @@ class Abeille extends eqLogic {
         }
         $net = $dev['net'];
         $addr = $dev['addr'];
-        $eqLogicId = "${net}/${addr}";
+        $eqLogicId = "{$net}/{$addr}";
         $eqLogic = eqLogic::byLogicalId($eqLogicId, 'Abeille');
 
         // Do we have all informations about model to use ?
@@ -2661,7 +2664,7 @@ class Abeille extends eqLogic {
                 $modelSig = $jEqModel['modelSig'];
         }
         if (!isset($modelName)) {
-            log::add('Abeille', 'error', "  createDevice(${net}/${addr}): 'modelName' non renseigné");
+            log::add('Abeille', 'error', "  createDevice({$net}/{$addr}): 'modelName' non renseigné");
             return;
         }
 
@@ -2669,7 +2672,7 @@ class Abeille extends eqLogic {
         if ($modelSource == '')
             $modelSource = 'Abeille';
         if (!isset($modelPath))
-            $modelPath = "${modelName}/${modelName}.json";
+            $modelPath = "{$modelName}/{$modelName}.json";
         if (!isset($modelSig))
             $modelSig = $modelName;
 
@@ -2749,7 +2752,7 @@ class Abeille extends eqLogic {
         }
 
         if ($modelSource == "local") {
-            $fullPath = __DIR__."/../config/devices/${modelName}/${modelName}.json";
+            $fullPath = __DIR__."/../config/devices/{$modelName}/{$modelName}.json";
             if (file_exists($fullPath))
                 message::add("Abeille", $eqHName.": Attention ! Modèle local (devices_local) utilisé alors qu'un modèle officiel existe.", '');
         }
@@ -2916,7 +2919,7 @@ class Abeille extends eqLogic {
             // 'variables' // Optional
             // 'private' // Optional
         );
-        if ($modelPath != "${modelName}/${modelName}.json")
+        if ($modelPath != "{$modelName}/{$modelName}.json")
             $eqModelInfos['modelPath'] = $modelPath;
         if (isset($model['private'])) // Private cluster or command specific infos
             $eqModelInfos['private'] = $model['private'];
@@ -2992,19 +2995,19 @@ class Abeille extends eqLogic {
         foreach ($modelCmds as $mCmdName => $mCmd) {
             // Initial checks
             if (!isset($mCmd["type"])) {
-                log::add('Abeille', 'error', "{{La commande suivante n'a pas de type défini}}: '${mCmdName}'");
+                log::add('Abeille', 'error', "{{La commande suivante n'a pas de type défini}}: '{$mCmdName}'");
                 continue;
             }
             $mCmdType = $mCmd["type"];
             if ($mCmdType == 'info') {
                 if (!isset($mCmd["logicalId"]) || ($mCmd["logicalId"] == '')) {
-                    log::add('Abeille', 'error', "{{La commande suivante n'a pas de 'logicalId' défini}}: '${mCmdName}'");
+                    log::add('Abeille', 'error', "{{La commande suivante n'a pas de 'logicalId' défini}}: '{$mCmdName}'");
                     continue;
                 }
             } else if ($mCmdType == 'action') {
                 // Any checks ?
             } else {
-                log::add('Abeille', 'error', "{{La commande suivante a un type invalide}}: '${mCmdName}'");
+                log::add('Abeille', 'error', "{{La commande suivante a un type invalide}}: '{$mCmdName}'");
                 continue;
             }
 

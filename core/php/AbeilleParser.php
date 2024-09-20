@@ -487,6 +487,8 @@
     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
     $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
     $queueParserToCmdAck = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
+    $queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);
+    $queueParserToRoutes  = msg_get_queue($abQueues["parserToRoutes"]["id"]);
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */

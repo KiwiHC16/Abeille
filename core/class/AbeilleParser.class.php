@@ -3294,11 +3294,16 @@
                                     //           PHP uses 00:00:00 @1st of jan 1970 (Linux ref)
                                     // Attr 0007, type uint32/0x23
                                     $lt = localtime(null, true);
-                                    $localTime = mktime($lt['tm_hour'], $lt['tm_min'], $lt['tm_sec'], $lt['tm_mon'], $lt['tm_mday'], $lt['tm_year']);
-                                    $localTime -= mktime(0, 0, 0, 1, 1, 2000); // PHP to Zigbee shift
-                                    $localTime = sprintf("%04X", $localTime);
-                                    msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=23&attrVal='.$localTime);
-                                    parserLog2('debug', $srcAddr, "  Attribute 0007/LocalTime: Answering to device");
+                                    // $localTime = @mktime($lt['tm_hour'], $lt['tm_min'], $lt['tm_sec'], $lt['tm_mon'], $lt['tm_mday'], $lt['tm_year']);
+                                    $localTime = @mktime($lt['tm_hour']);
+                                    if ($localTime === false) { // mktime(): Epoch doesn't fit in a PHP integer
+                                        parserLog2('error', $srcAddr, "  Attribute 0007/LocalTime: CAN'T answer to device. mktime() failed.");
+                                    } else {
+                                        $localTime -= mktime(0, 0, 0, 1, 1, 2000); // PHP to Zigbee shift
+                                        $localTime = sprintf("%04X", $localTime);
+                                        msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=23&attrVal='.$localTime);
+                                        parserLog2('debug', $srcAddr, "  Attribute 0007/LocalTime: Answering to device");
+                                    }
                                 } else {
                                     parserLog2('debug', $srcAddr, "  WARNING: Unsupported time cluster attribute ".$attrId);
                                 }

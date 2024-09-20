@@ -10,6 +10,7 @@
 -   Corrections: Interne: install.php & AbeilleTools.class.php
 -   Amélioration: Flasher PI Zigate: Création package standalone.
 -   Correction: Page santé. Crash interne si plusieurs autre passerelles désactivées.
+-   Correction: Parser: mktime() sur systeme 32bits.
 
 ## 240902-BETA-1
 

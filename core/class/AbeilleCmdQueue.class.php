@@ -176,7 +176,7 @@
                 'cmd'       => $zgCmd, // Zigate message type
                 'datas'     => $payload,
                 'zgOnly'    => zgIsZigateOnly($zgCmd), // Msg for Zigate only if true, not to be transmitted
-                'status'    => '', // '', 'SENT', '8000', '8012' or '8702', '8011'
+                'status'    => '', // '', 'SENT'
                 'try'       => maxRetryDefault + 1, // Number of retries if failed
                 'sentTime'  => 0, // For lost cmds timeout
                 // Timeout: Zigate has 7s internal timeout when ACK
@@ -789,11 +789,7 @@
 
                 if ($cmd['status'] == '')
                     continue; // Not sent yet
-                // Timeout: At least 4sec to let Zigate do its job but is that enough ?
-                // if ($cmd['ackAps'])
-                //     $timeout = 8; // Zigate has 7s internal timeout when ACK
-                // else
-                //     $timeout = 4;
+
                 $timeout = $cmd['timeout'];
                 if ($cmd['sentTime'] + $timeout > time())
                     continue; // Timeout not reached yet

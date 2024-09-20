@@ -241,6 +241,8 @@ if [ "${REM}" != "" ]; then
     if [ $? -ne 0 ]; then
         echo "= ERROR: git push failed"
         echo "=        cmd='git push -q ${TARG_REPO} --delete ${TARG_BRANCH}'"
+        echo "=   then cmd 'git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}'"
+        echo "=   then cmd 'git checkout -q ${CUR_BRANCH}'"
         exit 33
     fi
 fi
@@ -251,6 +253,7 @@ git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git push failed"
     echo "=        cmd='git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}'"
+    echo "=   then cmd 'git checkout -q ${CUR_BRANCH}'"
     exit 34
 fi
 
@@ -259,7 +262,7 @@ git checkout -q ${CUR_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git checkout failed"
     echo "=        cmd='git checkout -q ${CUR_BRANCH}'"
-    exit 34
+    exit 35
 else
     echo "= Ok"
 fi

@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 240920-BETA-1
+
 -   Corrections: Page config & mode dev.
 -   Amélioration: Page config. Firmware proposé en fonction de la version de Zigate (v1 ou v2).
 -   Améliorations: Script ligne de commande 'checkZigate.sh'. Meilleur support de certaines erreurs.

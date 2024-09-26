@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Correction: Interne: PHP8 warning.
+
 ## 240920-BETA-3
 
 -   Corrections: Page config & mode dev.

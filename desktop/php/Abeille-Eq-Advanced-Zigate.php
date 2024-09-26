@@ -13,7 +13,7 @@
         else
             $style = "width:80px";
         if ($title != "")
-            $title = "title=\"${title}\"";
+            $title = "title=\"{$title}\"";
         echo '<a class="btn '.$class.'" style="'.$style.'" '.$title.' onclick="sendZigate(\''.$onclick.'\', \''.$onclick2.'\')">'.$name.'</a>';
     }
 

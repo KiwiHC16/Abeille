@@ -92,8 +92,11 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "setReportLightColorSpectre": {
-                "use": "setReportLightColorSpectre"
+            "SetReporting 0300-0007": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=#EP#&clustId=0300&attrId=0007&attrType=21",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
             },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",

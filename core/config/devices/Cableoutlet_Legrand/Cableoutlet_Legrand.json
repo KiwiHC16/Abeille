@@ -50,8 +50,11 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "setReportPuissanceLegrand": {
-                "use": "setReportPuissanceLegrand"
+            "SetReporting 0B04-050B": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=#EP#&clustId=0B04&attrId=050B&attrType=29",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
             },
             "Puissance": {
                 "use": "inf_zbAttr-0B04-ActivePower",

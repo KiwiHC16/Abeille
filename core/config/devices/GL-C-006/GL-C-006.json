@@ -80,8 +80,11 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 10
             },
-            "setReportLightColorSpectre": {
-                "use": "setReportLightColorSpectre"
+            "SetReporting 0300-0007": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=#EP#&clustId=0300&attrId=0007&attrType=21",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify"

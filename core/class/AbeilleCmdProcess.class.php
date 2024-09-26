@@ -1077,7 +1077,7 @@
                 $manufacturerId         = "0000";                   //
                 $numberOfAttributes     = "01";                     // One element at a time
 
-                if (isset( $Command['cmdParams']['AttributeDirection'] )) { $AttributeDirection = $Command['cmdParams']['AttributeDirection']; } else { $AttributeDirection = "00"; } // See if below
+                if (isset( $Command['cmdParams']['attributeDirection'] )) { $AttributeDirection = $Command['cmdParams']['attributeDirection']; } else { $AttributeDirection = "00"; } // See if below
 
                 $AttributeId            = $Command['cmdParams']['attributeId'];    // "0000"
 
@@ -1089,7 +1089,7 @@
                     }
                     if (isset($Command['cmdParams']['minInterval']))   { $MinInterval  = $Command['cmdParams']['minInterval']; } else { $MinInterval    = "0000"; }
                     if (isset($Command['cmdParams']['maxInterval']))   { $MaxInterval  = $Command['cmdParams']['maxInterval']; } else { $MaxInterval    = "0000"; }
-                    if (isset($Command['cmdParams']['Change']))        { $Change       = $Command['cmdParams']['Change']; }      else { $Change         = "00"; }
+                    if (isset($Command['cmdParams']['change']))        { $Change       = $Command['cmdParams']['change']; }      else { $Change         = "00"; }
                     $Timeout = "ABCD";
                 }
                 else if ($AttributeDirection == "01" ) {
@@ -1097,7 +1097,7 @@
                     $MinInterval            = "3456";   // Need it to respect cmd 0120 format.
                     $MaxInterval            = "7890";
                     $Change                 = "12";
-                    if (isset($Command['cmdParams']['Timeout']))   { $Timeout      = $Command['cmdParams']['Timeout']; }     else { $Timeout        = "0000"; }
+                    if (isset($Command['cmdParams']['timeout']))   { $Timeout      = $Command['cmdParams']['timeout']; }     else { $Timeout        = "0000"; }
                 }
                 else {
                     cmdLog('error', "  set Report with an AttributeDirection (".$AttributeDirection.") not valid for equipment: ". $addr." attribut: ".$AttributeId." can t process", $this->debug['processCmd']);

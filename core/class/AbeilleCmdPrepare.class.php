@@ -225,16 +225,16 @@
                                 "cmdParams" => array(
                                     "address"           => $address,
                                     "targetEndpoint"    => $parameters['targetEndpoint'],
-                                    "ClusterId"         => $parameters['ClusterId'],
-                                    "AttributeId"       => $parameters['AttributeId'],
-                                    "MinInterval"       => $parameters['MinInterval']
+                                    "clusterId"         => $parameters['ClusterId'],
+                                    "attributeId"       => $parameters['AttributeId'],
+                                    "minInterval"       => $parameters['MinInterval']
                                 )
                             );
-                if (isset($parameters["AttributeDirection"]))      { $Command['cmdParams']['AttributeDirection']    = $parameters['AttributeDirection']; }
-                if (isset($parameters["AttributeType"]))           { $Command['cmdParams']['AttributeType']         = $parameters['AttributeType']; }
-                if (isset($parameters["MaxInterval"]))             { $Command['cmdParams']['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
-                if (isset($parameters["Change"]))                  { $Command['cmdParams']['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
-                if (isset($parameters["Timeout"]))                 { $Command['cmdParams']['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
+                if (isset($parameters["AttributeDirection"]))      { $Command['cmdParams']['attributeDirection']    = $parameters['AttributeDirection']; }
+                if (isset($parameters["AttributeType"]))           { $Command['cmdParams']['attributeType']         = $parameters['AttributeType']; }
+                if (isset($parameters["MaxInterval"]))             { $Command['cmdParams']['maxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
+                if (isset($parameters["Change"]))                  { $Command['cmdParams']['change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
+                if (isset($parameters["Timeout"]))                 { $Command['cmdParams']['timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
 
             // case "setReportRaw": // OBSOLETE: Use 'configureReporting2' instead

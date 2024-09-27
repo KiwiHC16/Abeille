@@ -517,8 +517,8 @@
             // Treat pending commands for zigate
             $AbeilleCmdQueue->processCmdQueues();
 
-            // Check zigates status
-            $AbeilleCmdQueue->checkZigatesStatus();
+            // Check zigates status => Now part of processCmdQueues()
+            // $AbeilleCmdQueue->checkZigatesStatus();
 
             // Check 'xToCmd' queue
             $AbeilleCmdQueue->processXToCmdQueue();
@@ -533,7 +533,7 @@
                 $last = time();
             }
 
-            // Libère le CPU
+            // Free CPU time
             time_nanosleep(0, 10000000); // 1/100s
         }
     }

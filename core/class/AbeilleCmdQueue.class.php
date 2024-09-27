@@ -423,7 +423,26 @@
             foreach ($GLOBALS['zigates'] as $zgId => $zg) {
                 // cmdLog("debug", __FUNCTION__." zgId=".$zgId.", zg=".json_encode($zg));
 
-                if (!$zg['enabled']) continue; // Disabled
+                if (!$zg['enabled'])
+                    continue; // Disabled
+
+                // Checking if a cmd is ongoing (waiting for 8000 or APS ACK)
+                // Reminder for status: ''=unsent, 'SENT'=already sent
+                $lastPri = $zg['sentPri'];
+                $lastIdx = $zg['sentIdx'];
+                if (isset($zg['cmdQueue'][$lastPri]) && (count($zg['cmdQueue'][$lastPri]) != 0) && ($zg['cmdQueue'][$lastPri][$lastIdx]['status'] != '')) {
+                    // There is a command under execution
+                    $cmd = $zg['cmdQueue'][$lastPri][$lastIdx];
+                    $timeout = $cmd['timeout'];
+                    if ($cmd['sentTime'] + $timeout > time())
+                        continue; // Timeout not reached yet
+
+                    cmdLog("debug", "WARNING: processCmdQueues(): Zigate".$zgId." cmd ".$cmd['cmd']." {$timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
+                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
+                    $GLOBALS['zigates'][$zgId]['available'] = 1;
+                    unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
+                }
+
                 if (!$zg['available']) {
                     if (isset($zg['availTime']) && ($zg['availTime'] <= microtime(true))) {
                         $GLOBALS['zigates'][$zgId]['available'] = 1; // Available again
@@ -443,9 +462,8 @@
                 else
                     $regulation = '';
 
+                // Looking for a cmd to send in HIGH to LOW priority order
                 unset($sendIdx);
-
-                // Looking for a cmd to send in priority order
                 foreach (range(priorityMax, priorityMin) as $priority) {
                     $count = count($zg['cmdQueue'][$priority]);
                     if ($count == 0)
@@ -479,9 +497,6 @@
                 // Finally something to send for this Zigate ?
                 if (isset($sendIdx)) {
                     cmdLog('debug', "processCmdQueues(): ZgId={$zgId}, Pri={$priority}/Idx={$sendIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
-                    $GLOBALS['zigates'][$zgId]['available'] = 0; // Zigate no longer free
-                    $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
-                    $GLOBALS['zigates'][$zgId]['sentIdx'] = $sendIdx;
 
                     $cmd = $zg['cmdQueue'][$priority][$sendIdx];
                     $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
@@ -489,9 +504,14 @@
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['status'] = "SENT";
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['sentTime'] = time();
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['try']--;
-                    $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
+                    $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
+                    $GLOBALS['zigates'][$zgId]['sentIdx'] = $sendIdx;
+                    $GLOBALS['zigates'][$zgId]['available'] = 0; // Zigate no longer free
+                    // $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
                     if ($cmd['cmd'] == "0011") // Special case: soft reset
                         $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0; // Zg will be free in 1sec
+                    else
+                        $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
 
                     if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
                         monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
@@ -703,6 +723,7 @@
                                     if ($repeat != 0) {
                                         cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) but will be repeated.");
                                         $cmd['repeat'] -= 1;
+                                        $cmd['status'] = ''; // Not sent
                                         $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
                                         $removeCmd = false; // Keep the cmd to be repeated
                                     } else
@@ -774,33 +795,34 @@
 
         } // End processAcks()
 
+        // OBSOLETE: Part of processCmdQueues()
         // Check zigate status which may be blocked by unacked sent cmd
-        function checkZigatesStatus() {
-            foreach ($GLOBALS['zigates'] as $zgId => $zg) {
+        // function checkZigatesStatus() {
+        //     foreach ($GLOBALS['zigates'] as $zgId => $zg) {
 
-                if (!$zg['enabled'])
-                    continue; // This zigate is disabled/unconfigured
-                if ($zg['available'])
-                    continue; // Zigate is ON & available => nothing to check
+        //         if (!$zg['enabled'])
+        //             continue; // This zigate is disabled/unconfigured
+        //         if ($zg['available'])
+        //             continue; // Zigate is ON & available => nothing to check
 
-                $sentPri = $zg['sentPri'];
-                $sentIdx = $zg['sentIdx'];
-                $cmd = $zg['cmdQueue'][$sentPri][$sentIdx];
+        //         $sentPri = $zg['sentPri'];
+        //         $sentIdx = $zg['sentIdx'];
+        //         $cmd = $zg['cmdQueue'][$sentPri][$sentIdx];
 
-                if ($cmd['status'] == '')
-                    continue; // Not sent yet
+        //         if ($cmd['status'] == '')
+        //             continue; // Not sent yet
 
-                $timeout = $cmd['timeout'];
-                if ($cmd['sentTime'] + $timeout > time())
-                    continue; // Timeout not reached yet
+        //         $timeout = $cmd['timeout'];
+        //         if ($cmd['sentTime'] + $timeout > time())
+        //             continue; // Timeout not reached yet
 
-                cmdLog("debug", "WARNING: checkZigatesStatus(): Zigate".$zgId." cmd ".$cmd['cmd']." {$timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
-                // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
-                $GLOBALS['zigates'][$zgId]['available'] = 1;
-                unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
-            }
-        } // End checkZigatesStatus()
+        //         cmdLog("debug", "WARNING: checkZigatesStatus(): Zigate".$zgId." cmd ".$cmd['cmd']." {$timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
+        //         // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
+        //         array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
+        //         $GLOBALS['zigates'][$zgId]['available'] = 1;
+        //         unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
+        //     }
+        // } // End checkZigatesStatus()
 
         /* Collect & treat other messages from 'xToCmd' queue. */
         function processXToCmdQueue() {

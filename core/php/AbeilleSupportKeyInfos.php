@@ -123,17 +123,22 @@
                 if ($gtwType == 'zigate') {
                     $fwVersion = '????-????';
                     $channel = "?";
+                    $extPanId = "?";
                     $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'FW-Version');
                     if ($cmdLogic)
                         $fwVersion = $cmdLogic->execCmd();
                     $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'Network-Channel');
                     if ($cmdLogic)
                         $channel = $cmdLogic->execCmd();
+                    $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'Ext_PAN-ID');
+                    if ($cmdLogic)
+                        $extPanId = $cmdLogic->execCmd();
 
                     logIt("Zigate ".$gtwId."\n");
+                    logIt("- Type      : ".$gtwSubType."\n");
                     logIt("- FW version: ".$fwVersion."\n");
                     logIt("- Channel   : ".$channel."\n");
-                    logIt("- Type      : ".$gtwSubType."\n");
+                    logIt("- Ext PAN ID: ".$extPanId."\n");
                 } else if ($gtwType == 'ezsp') {
                     logIt("EZSP ".$gtwId."\n");
                     logIt("- Channel   : ".$channel."\n");

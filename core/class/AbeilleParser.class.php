@@ -2848,6 +2848,12 @@
 
                 else {
                     switch ($clustId) {
+                    case "0000":
+                        parserLog2('debug', $srcAddr, '  NWK_addr_req => Handled by Zigate');
+                        break;
+                    case "0001":
+                        parserLog2('debug', $srcAddr, '  IEEE_addr_req => Handled by Zigate');
+                        break;
                     case "0013": // Device_annce
                         parserLog2('debug', $srcAddr, '  Device announce => Handled by decode004D');
                         break;

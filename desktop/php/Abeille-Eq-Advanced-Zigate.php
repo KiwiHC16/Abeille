@@ -118,8 +118,8 @@
     </div>
     <div class="col-sm-5" advInfo="Ext_PAN-ID">
         <input type="text" value="">
-        <!-- Does not work. Unable to set a different PAN ID. Need to find a way to stop network & apply before restarting
-        < ?php addZgButton("{{Appliquer}}", "btn-danger", 'setExtPANId', 'Ext_PAN-ID'); ?> -->
+        <!-- FW >= AB01-0000 required. ExtPanId saved in PDM & used at reset -->
+        <?php addZgButton("{{Appliquer}}", "btn-danger", 'setExtPANId', 'Ext_PAN-ID'); ?>
     </div>
 </div>
 

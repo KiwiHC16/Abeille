@@ -413,7 +413,7 @@ class Abeille extends eqLogic {
                 continue;
             }
             if (msg_stat_queue($queue)["msg_qnum"] >= 50) {
-                log::add('Abeille', 'error', "cron(): La queue '".$queueName."' (id ".$queueId.") contient plus de 50 messages => redémarrage des démons.");
+                log::add('Abeille', 'error', "cron(): La queue '".$queueName."' (id ".dechex($queueId).") contient plus de 50 messages => redémarrage des démons.");
                 self::deamon_start(); // Start is doing a stop first
             }
         }

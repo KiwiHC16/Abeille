@@ -8,6 +8,7 @@
 -   Amélioration interne cmd: checkZigatesStatus() => intégré dans processCmdQueues()
 -   Amélioration interne: Description clusters 0000 & 0001 pour profile ID 0000.
 -   Amélioration: Page infos clefs: Ajout 'Extended PAN ID'.
+-   Correction interne: AbeilleCmdQueue.
 
 ## 240920-BETA-3
 

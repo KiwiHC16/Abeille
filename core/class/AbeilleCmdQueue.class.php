@@ -428,11 +428,11 @@
 
                 // Checking if a cmd is ongoing (waiting for 8000 or APS ACK)
                 // Reminder for status: ''=unsent, 'SENT'=already sent
-                $lastPri = $zg['sentPri'];
-                $lastIdx = $zg['sentIdx'];
-                if (isset($zg['cmdQueue'][$lastPri]) && (count($zg['cmdQueue'][$lastPri]) != 0) && ($zg['cmdQueue'][$lastPri][$lastIdx]['status'] != '')) {
+                $sentPri = $zg['sentPri'];
+                $sentIdx = $zg['sentIdx'];
+                if (isset($zg['cmdQueue'][$sentPri]) && (count($zg['cmdQueue'][$sentPri]) != 0) && ($zg['cmdQueue'][$sentPri][$sentIdx]['status'] != '')) {
                     // There is a command under execution
-                    $cmd = $zg['cmdQueue'][$lastPri][$lastIdx];
+                    $cmd = $zg['cmdQueue'][$sentPri][$sentIdx];
                     $timeout = $cmd['timeout'];
                     if ($cmd['sentTime'] + $timeout > time())
                         continue; // Timeout not reached yet

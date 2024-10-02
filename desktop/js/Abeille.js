@@ -1531,8 +1531,17 @@ function sendZigate(action, param) {
             else if (param == "Raw") payload = "mode=raw";
             else payload = "mode=hybrid";
             break;
-        case "setExtPANId":
-            topic = "CmdAbeille" + zgId + "/0000/zgSetExtendedPanId";
+        // case "setExtPANId":
+        //     topic = "CmdAbeille" + zgId + "/0000/zgSetExtendedPanId";
+        //     // Note: param = cmd logic id
+        //     cmd = eq.cmds[param];
+        //     cmdId = cmd.id;
+        //     extPanId = document.getElementById("cmdId-" + cmdId).value;
+        //     console.log("Ext PAN-ID=" + extPanId);
+        //     payload = "extPanId=" + extPanId;
+        //     break;
+        case "forceExtPANId":
+            topic = "CmdAbeille" + zgId + "/0000/zgForceExtendedPanId";
             // Note: param = cmd logic id
             cmd = eq.cmds[param];
             cmdId = cmd.id;

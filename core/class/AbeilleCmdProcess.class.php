@@ -2327,17 +2327,32 @@
 
                 // Zigate specific command: Set extended PAN-ID
                 // Mandatory params: 'extPanId'
-                else if ($cmdName == 'zgSetExtendedPanId') {
+                // else if ($cmdName == 'zgSetExtendedPanId') {
+                //     $required = ['extPanId'];
+                //     if (!$this->checkRequiredParams($required, $Command))
+                //         return;
+
+                //     $zgCmd = "0020";
+                //     $extPanId = $Command['cmdParams']['extPanId'];
+                //     cmdLog('debug', "  zgSetExtendedPanId: extPanId={$extPanId}");
+
+                //     /* Note: This is NOT FUNCTIONAL.
+                //        Zigate always answers 04/busy. Probably because network started automatically */
+
+                //     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $extPanId, "0000");
+                //     return;
+                // }
+
+                // Zigate specific command: Force extended PAN-ID (FW >= AB01-0000)
+                // Mandatory params: 'extPanId'
+                else if ($cmdName == 'zgForceExtendedPanId') {
                     $required = ['extPanId'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $zgCmd = "0020";
+                    $zgCmd = "AB04";
                     $extPanId = $Command['cmdParams']['extPanId'];
-                    cmdLog('debug', "  zgSetExtendedPanId: extPanId={$extPanId}");
-
-                    /* Note: This is NOT FUNCTIONAL.
-                       Zigate always answers 04/busy. Probably because network started automatically */
+                    cmdLog('debug', "  zgForceExtendedPanId: extPanId={$extPanId}");
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $extPanId, "0000");
                     return;

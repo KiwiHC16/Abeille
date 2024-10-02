@@ -119,7 +119,7 @@
     <div class="col-sm-5" advInfo="Ext_PAN-ID">
         <input type="text" value="">
         <!-- FW >= AB01-0000 required. ExtPanId saved in PDM & used at reset -->
-        <?php addZgButton("{{Appliquer}}", "btn-danger", 'setExtPANId', 'Ext_PAN-ID'); ?>
+        <?php addZgButton("{{Appliquer}}", "btn-danger", 'forceExtPANId', 'Ext_PAN-ID'); ?>
     </div>
 </div>
 

@@ -3,9 +3,10 @@
         "manufacturer": "Tuya",
         "model": "QS-zigbee-C01",
         "type": "Tuya QS-zigbee-C01 curtain module",
+        "genericType": "Shutter",
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "opening": "1"
         },
         "configuration": {
             "icon": "Tuya-QS-Zigbee-C01",
@@ -24,13 +25,13 @@
                 "use": "act_zbCmdC-0102-DownClose",
                 "isVisible": "1"
             },
-            "Current Level": {
-                "use": "inf_zbAttr-0102-CurPosLiftPercent",
-                "isVisible": "1"
-            },
-            "Get Current Level": {
+            "Get Level": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0102&attrId=0008"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "isVisible": "1"
             },
             "Bind 0102-ToZigate": {
                 "use": "act_zbBindToZigate",

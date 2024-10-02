@@ -3,23 +3,16 @@
         "manufacturer": "dOOWifi",
         "model": "DWF-0205ZB-PN-2",
         "type": "dOOWifi window module",
+        "genericType": "Shutter",
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "opening": "1"
         },
         "configuration": {
             "mainEP": "01",
             "icon": "dOOWifi-DWF-0205ZB-PN"
         },
         "commands": {
-            "Current Level": {
-                "use": "inf_zbAttr-0102-CurPosLiftPercent",
-                "isVisible": "1"
-            },
-            "Get Current Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0102&attrId=0008"
-            },
             "Up": {
                 "use": "act_zbCmdC-0102-UpOpen",
                 "isVisible": "1"
@@ -32,12 +25,20 @@
                 "use": "act_zbCmdC-0102-DownClose",
                 "isVisible": "1"
             },
-            "Bind-0102-ToZigate": {
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0102&attrId=0008"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "isVisible": "1"
+            },
+            "Bind 0102-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0102",
                 "execAtCreation": "yes"
             },
-            "SetReporting-0102": {
+            "SetReporting 0102": {
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=0102&attrId=0008&attrType=20",
                 "execAtCreation": "yes"

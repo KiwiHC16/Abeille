@@ -1,12 +1,13 @@
 {
     "TS130F__TZ3000_4uuaja4a": {
+        "comment": "Curtain module with calibration mode support",
         "manufacturer": "Girier",
         "model": "Curtain",
         "type": "Girier curtain module",
         "alternateIds": {
             "TS130F__TZ3210_dwytrmda": []
         },
-        "genericType": "Opening",
+        "genericType": "Shutter",
         "timeout": "60",
         "category": {
             "opening": "1"
@@ -35,15 +36,16 @@
                 "value": "Level",
                 "isVisible": "1"
             },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0102&attrId=0008",
+                "execAtCreation": "yes"
+            },
             "Level": {
                 "use": "inf_zbAttr-0102-CurPosLiftPercent",
                 "genericType": "FLAP_STATE",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0102&attrId=0008"
             },
             "Calibration": {
                 "use": "act_zbWriteAttribute-list",
@@ -61,25 +63,6 @@
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=0102&attrId=F001",
                 "comment": "Just to update 'Calibration' list"
-            },
-            "Set calibration time": {
-                "comment": "0 to 60s, multiplied by 10",
-                "use": "act_zbWriteAttribute",
-                "subType": "slider",
-                "maxValue": 60,
-                "valueOffset": "#value#*10",
-                "unit": "s",
-                "comment2": "F003 is uint16/x21",
-                "params": "clustId=0102&attrId=F003&attrType=21&attrVal=#slider#",
-                "value": "Calibration time",
-                "isVisible": "1"
-            },
-            "Calibration time": {
-                "use": "inf_generic-NumericBadge",
-                "logicalId": "0102-01-F003",
-                "unit": "s",
-                "calculValueOffset": "#value#/10",
-                "isVisible": "1"
             },
             "Bind 0102-ToZigate": {
                 "use": "act_zbBindToZigate",

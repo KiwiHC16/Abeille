@@ -2344,7 +2344,7 @@
                 'srcAddr' => $srcAddr,
                 'status' => $status,
                 'tableEntries' => $nTableEntries,
-                'tableListCount' => $nTableListCount,
+                'tableListCount' => 0, // Returning only nb in the current extended PAN ID
                 'startIdx' => $startIdx,
                 'nList' => []
             );
@@ -2395,6 +2395,7 @@
                     "lqi"      => substr($pl, $j + 42, 2),
                 );
                 $nList[] = $N; // Add to neighbors list
+                $toLqiCollector['tableListCount']++;
                 parserLog2('debug', $srcAddr, '  NExtPANId='.$N['extPANId']
                     .', NExtAddr='.$N['extAddr']
                     .', NAddr='.$N['addr']

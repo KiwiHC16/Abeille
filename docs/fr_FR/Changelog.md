@@ -11,6 +11,7 @@
 -   Correction interne: AbeilleCmdQueue.
 -   Correction interne: Parser: Ne prend en compte que voisins dans reseau courant (Mgmt_lqi_rsp).
 -   Correction interne: Page config. Selection mode developer.
+-   Nouveau: Support Tuya human presence sensor (2727).
 
 ## 240920-BETA-3
 

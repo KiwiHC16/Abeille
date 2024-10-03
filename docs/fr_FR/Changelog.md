@@ -10,6 +10,7 @@
 -   Amélioration: Page infos clefs: Ajout 'Extended PAN ID'.
 -   Correction interne: AbeilleCmdQueue.
 -   Correction interne: Parser: Ne prend en compte que voisins dans reseau courant (Mgmt_lqi_rsp).
+-   Correction interne: Page config. Selection mode developer.
 
 ## 240920-BETA-3
 

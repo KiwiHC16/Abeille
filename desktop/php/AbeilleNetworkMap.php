@@ -51,7 +51,7 @@
     //     }
     // }
     $networkMap = config::byKey('ab::networkMap', 'Abeille', [], true);
-    logDebug('networkMap='.json_encode($networkMap, JSON_UNESCAPED_UNICODE));
+    logDebug('networkMap='.json_encode($networkMap, JSON_UNESCAPED_SLASHES));
     if (!isset($networkMap['levels']))
         $networkMap['levels'] = [];
     // Set default level & image if none
@@ -89,7 +89,7 @@
             "height" => $height
         );
     }
-    logDebug('networkMap='.json_encode($networkMap, JSON_UNESCAPED_UNICODE));
+    logDebug('networkMap='.json_encode($networkMap, JSON_UNESCAPED_SLASHES));
 
     sendVarToJS('networkMap', $networkMap);
     sendVarToJS('viewLevel', $networkMap['levelChoice']);

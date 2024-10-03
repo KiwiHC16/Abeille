@@ -561,7 +561,7 @@
                     } else
                         echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px">';
                     ?>
-                    <input type="button" onclick="saveChanges()" value="{{Sauver}}" style="margin-left:8px">
+                    <input type="button" onclick="saveDbgChanges()" value="{{Sauver}}" style="margin-left:8px">
                     </div>
                 </div>
 
@@ -574,7 +574,7 @@
                     } else
                         echo '<input type="text" id="idDefines" title="Defines (ex: Tcharp38)" style="width:400px">';
                     ?>
-                    <input type="button" onclick="saveChanges()" value="{{Sauver}}" style="margin-left:8px">
+                    <input type="button" onclick="saveDbgChanges()" value="{{Sauver}}" style="margin-left:8px">
                     </div>
                 </div>
             <?php } ?>
@@ -1266,26 +1266,26 @@
         console.log("xableDevMode(enable="+enable+")");
         if (enable == 1) {
             /* Enable developer mode by creating debug.json then restart */
-            var devAction = 'writeDevConfig';
+            var action = 'writeDbgConfig';
         } else {
-            var devAction = 'deleteDevConfig';
+            var action = 'deleteDbgConfig';
         }
 
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
+            url: 'plugins/Abeille/core/ajax/AbeilleDbg.ajax.php',
             data: {
-                action: devAction,
-                devConfig: ''
+                action: action,
+                dbgConfig: '{}' // Empty JSON
             },
             dataType: 'json',
             global: false,
             error: function (request, status, error) {
-                bootbox.alert("ERREUR '"+devAction+"' !<br>status="+status+"<br>error="+error);
+                bootbox.alert("ERREUR '"+action+"' !<br>status="+status+"<br>error="+error);
             },
-            success: function (json_res) {
-                console.log(json_res);
-                res = JSON.parse(json_res.result);
+            success: function (response) {
+                console.log(response);
+                res = JSON.parse(response.result);
                 if (res.status != 0) {
                     var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
                     alert(msg);
@@ -1416,33 +1416,40 @@
         });
     }
 
-    /* For dev mode. Called to save debug config change in 'tmp/debug.json'. */
-    function saveChanges() {
-        console.log("saveChanges()");
+    /* For developer mode. Called to save debug config change in 'tmp/debug.json'. */
+    function saveDbgChanges() {
+        console.log("saveDbgChanges()");
 
         /* Get current config */
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
+            url: 'plugins/Abeille/core/ajax/AbeilleDbg.ajax.php',
             data: {
-                action: 'readDevConfig'
+                action: 'readDbgConfig'
             },
             dataType: 'json',
             global: false,
             error: function (request, status, error) {
-                bootbox.alert("ERREUR 'readDevConfig' !<br>status="+status+"<br>error="+error);
+                bootbox.alert("ERREUR 'readDbgConfig' !<br>status="+status+"<br>error="+error);
             },
-            success: function (json_res) {
-                console.log(json_res);
-                res = JSON.parse(json_res.result);
-                if (res.status != 0) {
+            success: function (response) {
+                console.log("response=", response);
+                result = JSON.parse(response.result);
+                if (result.status != 0) {
                     var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
                     alert(msg);
                     return;
                 }
 
                 /* Update config */
-                devConfig = JSON.parse(res.config);
+                console.log("typeof result.config="+typeof(result.config));
+                dbgConfig = JSON.parse(result.config);
+                console.log("dbgConfig=", dbgConfig);
+                // console.log("typeof dbgConfig="+typeof(dbgConfig));
+                if (typeof(dbgConfig) != 'object') {
+                    console.log("ERROR: dbgConfig is not object => correcting");
+                    dbgConfig = {};
+                }
 
                 var dbgParserDisableList = document.getElementById('idParserLog').value;
                 console.log("dbgParserDisableList="+dbgParserDisableList);
@@ -1453,9 +1460,9 @@
                         console.log("value="+value);
                         dbgParserLog.push(value);
                     });
-                    devConfig["dbgParserLog"] = dbgParserLog;
+                    dbgConfig["dbgParserLog"] = dbgParserLog;
                 } else
-                    devConfig["dbgParserLog"] = [];
+                    dbgConfig["dbgParserLog"] = [];
 
                 var dbgDefinesList = document.getElementById('idDefines').value;
                 console.log("dbgDefinesList="+dbgDefinesList);
@@ -1463,27 +1470,27 @@
                     var dbgDefines = [];
                     var res = dbgDefinesList.split(" ");
                     res.forEach(function(value) {
-                        console.log("value="+value);
+                        console.log("Define-value="+value);
                         dbgDefines.push(value);
                     });
-                    devConfig["defines"] = dbgDefines;
+                    dbgConfig["defines"] = dbgDefines;
                 } else
-                    devConfig["defines"] = [];
+                    dbgConfig["defines"] = [];
 
                 /* Save config */
-                jsonConfig = JSON.stringify(devConfig);
-                console.log("New devConfig="+jsonConfig);
+                console.log("New dbgConfig=", dbgConfig);
+                jsonConfig = JSON.stringify(dbgConfig, null, 4);
                 $.ajax({
                     type: 'POST',
-                    url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
+                    url: 'plugins/Abeille/core/ajax/AbeilleDbg.ajax.php',
                     data: {
-                        action: 'writeDevConfig',
-                        devConfig: jsonConfig
+                        action: 'writeDbgConfig',
+                        dbgConfig: jsonConfig
                     },
                     dataType: 'json',
                     global: false,
                     error: function (request, status, error) {
-                        bootbox.alert("ERREUR 'writeDevConfig' !<br>status="+status+"<br>error="+error);
+                        bootbox.alert("ERREUR 'writeDbgConfig' !<br>status="+status+"<br>error="+error);
                     },
                     success: function (json_res) {
                         console.log(json_res);

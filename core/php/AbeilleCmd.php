@@ -56,11 +56,11 @@
     // Reread Jeedom useful infos on eqLogic DB update
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {
-        logMessage('debug', "  updateDeviceFromDB(${eqId})");
+        logMessage('debug', "  updateDeviceFromDB({$eqId})");
 
         $eqLogic = eqLogic::byId($eqId);
         if (!is_object($eqLogic)) {
-            logMessage('debug', "  ERROR: updateDeviceFromDB(): Equipment ID ${eqId} does not exist");
+            logMessage('debug', "  ERROR: updateDeviceFromDB(): Equipment ID {$eqId} does not exist");
             return;
         }
 
@@ -72,7 +72,7 @@
 
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         if (!isset($GLOBALS['devices'][$net][$addr]) && ($ieee == '')) {
-            logMessage('debug', "  ERROR: updateDeviceFromDB(): Unknown addr '${net}/${addr}' and IEEE is undefined");
+            logMessage('debug', "  ERROR: updateDeviceFromDB(): Unknown addr '{$net}/{$addr}' and IEEE is undefined");
             return;
         }
 
@@ -87,7 +87,7 @@
                     $found = true;
                     $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net][$addr2];
                     unset($GLOBALS['devices'][$net][$addr2]);
-                    logMessage('debug', "  Device ID ${eqId} address changed from '${net}/${addr2}' to '${net}/${addr}'.");
+                    logMessage('debug', "  Device ID {$eqId} address changed from '{$net}/{$addr2}' to '{$net}/{$addr}'.");
                     break;
                 }
             }
@@ -102,7 +102,7 @@
                         $found = true;
                         $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net2][$addr2];
                         unset($GLOBALS['devices'][$net2][$addr2]);
-                        logMessage('debug', "  Device ID ${eqId} migrated from '${net2}/${addr2}' to '${net}/${addr}'.");
+                        logMessage('debug', "  Device ID {$eqId} migrated from '{$net2}/{$addr2}' to '{$net}/{$addr}'.");
                         break;
                     }
                 }
@@ -157,7 +157,7 @@
         global $queueXToCmd;
         // Note: '@' to suppress PHP warning message.
         if (@msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
-            cmdLog("debug", "  msgToCmd(xToCmd) ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
+            cmdLog("debug", "  msgToCmd(xToCmd) ERROR {$errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
@@ -167,18 +167,18 @@
         global $queueXToAbeille;
         // Note: '@' to suppress PHP warning message.
         if (@msg_send($queueXToAbeille, 1, json_encode($msg), false, false, $errCode) == false) {
-            cmdLog("debug", "  msgToAbeille() ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
+            cmdLog("debug", "  msgToAbeille() ERROR {$errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
     // Configure Zigate
     // Called to configure Zigate when receive channel is already opened to not loose responses
     function configureZigate($zgId) {
-        cmdLog('debug', "configureZigate(${zgId})");
+        cmdLog('debug', "configureZigate({$zgId})");
 
         $gtwType = isset($config['ab::gtwType'.$zgId]) ? $config['ab::gtwType'.$zgId] : 'zigate';
         if ($gtwType != 'zigate') {
-            cmdLog('error', "  Gateway ${zgId} is NOT a Zigate");
+            cmdLog('error', "  Gateway {$zgId} is NOT a Zigate");
             return;
         }
 
@@ -216,8 +216,8 @@
             $mode = "raw";
             $mode2 = "01";
         }
-        cmdLog('debug', "  Configuring Zigate ${zgId} in ${mode} mode");
-        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetMode&tempo=".(time()+1), "mode=${mode}");
+        cmdLog('debug', "  Configuring Zigate {$zgId} in {$mode} mode");
+        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetMode&tempo=".(time()+1), "mode={$mode}");
         AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0002", $mode2, "0000", null, 0);
 
         // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgStartNetwork&tempo=".(time()+10), "");
@@ -229,7 +229,7 @@
     // Configure device
     // Returns: true=ok, false=error
     function configureDevice($net, $addr) {
-        cmdLog('debug', "  configureDevice(${net}, ${addr})");
+        cmdLog('debug', "  configureDevice({$net}, {$addr})");
 
         if (!isset($GLOBALS['devices'][$net][$addr])) {
             cmdLog('debug', "  configureDevice() ERROR: Unknown device");
@@ -282,17 +282,17 @@
 
                     $varEnd = strpos($request, "#", $varStart + 1); // End
                     if ($varEnd === false) {
-                        // log::add('Abeille', 'error', "getDeviceModel(): No closing dash (#) for cmd '${cmdJName}'");
+                        // log::add('Abeille', 'error', "getDeviceModel(): No closing dash (#) for cmd '{$cmdJName}'");
                         cmdLog('error', "      No closing dash (#)");
                         break;
                     }
                     $varLen = $varEnd - $varStart + 1;
                     $var = substr($request, $varStart, $varLen); // $var='#xxx#'
                     $varUp = strtoupper(substr($var, 1, -1)); // '#var#' => 'VAR' (no #)
-                    cmdLog('debug', "      Start=${varStart}, End=${varEnd} => Size=${varLen}, var=${var}, varUp=${varUp}");
+                    cmdLog('debug', "      Start={$varStart}, End={$varEnd} => Size={$varLen}, var={$var}, varUp={$varUp}");
                     if (isset($eq['variables'][$varUp])) {
                         $varNew = $eq['variables'][$varUp];
-                        cmdLog('debug', "      Replacing '${var}' by '${varNew}");
+                        cmdLog('debug', "      Replacing '{$var}' by '{$varNew}");
                         $request = str_ireplace($var, $varNew, $request);
                         $offset = $varStart + strlen($varNew);
                     } else
@@ -300,7 +300,7 @@
                 }
             }
 
-            cmdLog('debug', '    topic='.$topic.", request='".$request."'");
+            cmdLog('debug', '      Topic='.$topic.", Request='".$request."'");
             if ($delay == 0)
                 $topic = "Cmd".$net."/".$addr."/".$topic;
             else {
@@ -313,25 +313,65 @@
         return true;
     } // End configureDevice()
 
-    // Remove all pending messages for given zgId/addr.
+    // Remove all pending messages for given zgId + addr or ieee.
     // Useful for ex when addr changed on device announce.
-    function clearPending($zgId, $addr) {
-        cmdLog("debug", "  clearPending(${zgId}, ${addr})");
+    function clearPending($zgId, $addr, $ieee) {
+        cmdLog("debug", "  clearPending({$zgId}, {$addr}, {$ieee})");
+
         foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $pri => $q) {
-            cmdLog("debug", "  pri=${pri}, q=".json_encode($q));
             $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]);
+            cmdLog("debug", "  Pri={$pri}, Count=$count, Q=".json_encode($q));
             for ($cmdIdx = 0; $cmdIdx < $count; ) {
                 $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$pri][$cmdIdx];
-                if ($cmd['addr'] == $addr) {
-                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri], $cmdIdx, 1);
-                    // Note: cmd @cmdIdx is the next cmd after array_splice
-                    cmdLog("debug", "  Removed Pri/Idx=${pri}/${cmdIdx}");
-                    $count--;
+                if ($cmd['status'] != '') {
+                    $cmdIdx++; // Already sent. Will be removed by ACK/NO-ACK
                     continue;
                 }
-                $cmdIdx++;
+
+                if (((strlen($cmd['addr']) == 4) && ($cmd['addr'] == $addr)) ||
+                    ((strlen($cmd['addr']) == 16) && ($cmd['addr'] == $ieee))) {
+                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri], $cmdIdx, 1);
+                    // Note: cmd @cmdIdx is the next cmd after array_splice
+                    cmdLog("debug", "  Removed Pri={$pri}/Idx={$cmdIdx}");
+                    $count--;
+                } else
+                    $cmdIdx++;
             }
+
+            // $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]);
+            // cmdLog("debug", "  Pri={$pri}, Count=$count, Q-AFTER=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]));
         }
+
+        // Cleaning tempo queue too
+        global $tempoMessageQueue;
+        $count = count($tempoMessageQueue);
+        cmdLog("debug", "  Tempo count=$count BEFORE=".json_encode($tempoMessageQueue));
+        for ($cmdIdx = 0; $cmdIdx < $count; ) {
+            $cmd = $tempoMessageQueue[$cmdIdx];
+            cmdLog("debug", "  cmdIdx={$cmdIdx}, cmd=".json_encode($cmd));
+            /* Examples
+               "topic":"CmdAbeille1/7D80/bind0030", "params":"addr=00124B002242C5C5&ep=01&clustId=0402&destAddr=00158D0001ED3365&destEp=01"
+               "topic":"CmdAbeille1/7D80/configureReporting2","params":"ep=01&clustId=0402&attrType=29&attrId=0000&minInterval=600&maxInterval=900"
+            */
+            $paramsAddr = strstr($cmd['params'], "addr=");
+            if ($paramsAddr === false) {
+                // Address to be extracted from topic
+                list($tmp, $cmdAddr, $tmp2) = explode("/", $cmd['topic']);
+            } else {
+                $paramsAddr = substr($paramsAddr, 5); // Skip 'addr='
+                $cmdAddr = explode('&', $paramsAddr)[0];
+            }
+            // cmdLog("debug", "  cmdAddr={$cmdAddr}");
+            if (((strlen($cmdAddr) == 4) && ($cmdAddr == $addr)) ||
+                ((strlen($cmdAddr) == 16) && ($cmdAddr == $ieee))) {
+                array_splice($tempoMessageQueue, $cmdIdx, 1);
+                cmdLog("debug", "  Removed Tempo/Idx={$cmdIdx}");
+                $count--;
+            } else
+                $cmdIdx++;
+        }
+        // $count = count($tempoMessageQueue);
+        // cmdLog("debug", "  Tempo count=$count AFTER=".json_encode($tempoMessageQueue));
     }
 
     logSetConf("AbeilleCmd.log", true);
@@ -373,6 +413,7 @@
     }
     $queueXToCmdMax         = $abQueues["xToCmd"]["max"];
     $queueParserToCmdAckMax = $abQueues["parserToCmdAck"]["max"];
+    $tempoMessageQueue = []; // Delayed commands to Zigate
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */

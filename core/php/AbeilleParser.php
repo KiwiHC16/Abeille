@@ -319,6 +319,8 @@
         If not, add entry with given net/addr/ieee.
         Returns: device entry by reference */
     function &getDevice($net, $addr, $ieee = null, &$new = false) {
+        $new = false;
+
         if (!isset($GLOBALS['devices'][$net]))
             $GLOBALS['devices'][$net] = [];
 
@@ -346,7 +348,8 @@
                     'oldNet' => $net,
                     'newNet' => $net,
                     'oldAddr' => $oldAddr,
-                    'newAddr' => $addr
+                    'newAddr' => $addr,
+                    'ieee' => $ieee
                 );
                 msgToCmdAck($msg);
 
@@ -383,7 +386,8 @@
                         'oldNet' => $oldNet,
                         'newNet' => $net,
                         'oldAddr' => $oldAddr,
-                        'newAddr' => $addr
+                        'newAddr' => $addr,
+                        'ieee' => $eq['zigbee']['ieee']
                     );
                     msgToCmdAck($msg);
 

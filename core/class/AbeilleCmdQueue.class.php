@@ -17,7 +17,7 @@
         // public $queueParserToCmdMax;
         // public $queueParserToCmdAck;
         // public $queueParserToCmdAckMax;
-        public $tempoMessageQueue;
+        // public $tempoMessageQueue;
 
         function __construct($debugLevel='debug') {
             // cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
@@ -29,7 +29,7 @@
             // $this->queueXToCmd              = msg_get_queue($abQueues["xToCmd"]["id"]);
             // $this->queueXToCmdMax           = $abQueues["xToCmd"]["max"];
 
-            $this->tempoMessageQueue = array();
+            // $this->tempoMessageQueue = array();
 
             // $GLOBALS['zigates'] = array();
             // cmdLog("debug", "AbeilleCmdQueue constructor");
@@ -60,22 +60,6 @@
         }
         */
 
-        public function publishMosquitto($queueId, $priority, $topic, $payload) {
-
-            $queue = msg_get_queue($queueId);
-
-            $msg = array();
-            $msg['topic']   = $topic;
-            $msg['payload'] = $payload;
-            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-
-            if (msg_send($queue, $priority, $msgJson, false, false)) {
-                cmdLog('debug', '(fct publishMosquitto) mesage: '.$msgJson.' added to queue : '.$queueId, $this->debug['tempo']);
-            } else {
-                cmdLog('debug', '(fct publishMosquitto) could not add message '.$msgJson.' to queue : '.$queueId, $this->debug['tempo']);
-            }
-        }
-
         public function msgToAbeille($topic, $payload) {
 
             $msg = array();
@@ -95,34 +79,54 @@
 
             list($timeTitle, $time) = explode('=', $param);
 
-            $this->tempoMessageQueue[] = array(
+            global $tempoMessageQueue;
+            // cmdLog('debug', 'addTempoCmdAbeille(): Queue BEFORE='.json_encode($tempoMessageQueue));
+            $tempoMessageQueue[] = array(
                 'time' => $time,
                 'priority' => $priority,
                 'topic' => $topic,
-                'msg' => $msg
+                'params' => $msg
             );
-            cmdLog('debug', 'addTempoCmdAbeille - tempoMessageQueue: '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
-            if (count($this->tempoMessageQueue) > 50) {
+            // cmdLog('debug', 'addTempoCmdAbeille(): Queue AFTER='.json_encode($tempoMessageQueue));
+            if (count($tempoMessageQueue) > 50) {
                 cmdLog('info', 'Il y a plus de 50 messages dans le queue tempo.');
             }
         }
 
-        public function execTempoCmdAbeille() {
+        public function publishMosquitto($priority, $topic, $payload) {
             global $abQueues;
+            $queue = msg_get_queue($abQueues['xToCmd']['id']);
 
-            if (count($this->tempoMessageQueue) == 0)
+            $msg = array();
+            $msg['topic']   = $topic;
+            $msg['payload'] = $payload;
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+
+            if (msg_send($queue, $priority, $msgJson, false, false) == false) {
+                cmdLog('debug', '  publishMosquitto() ERROR: Could not add message '.$msgJson.' to queue xToCmd');
+            }
+        }
+
+        public function execTempoCmdAbeille() {
+            global $tempoMessageQueue;
+
+            if (count($tempoMessageQueue) == 0)
                 return;
 
             $now = time();
-            foreach ($this->tempoMessageQueue as $key => $mqttMessage) {
+            foreach ($tempoMessageQueue as $key => $mqttMessage) {
                 // deamonlog('debug', 'execTempoCmdAbeille - tempoMessageQueue - 0: '.$mqttMessage[0] );
                 if ($mqttMessage['time'] > $now)
                     continue;
 
-                $this->publishMosquitto($abQueues['xToCmd']['id'], $mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['msg']);
-                cmdLog('debug', 'execTempoCmdAbeille(): tempoMessageQueue='.json_encode($this->tempoMessageQueue[$key]), $this->debug['tempo']);
-                unset($this->tempoMessageQueue[$key]);
-                // cmdLog('debug', 'execTempoCmdAbeille - tempoMessageQueue : '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
+                // cmdLog('debug', 'execTempoCmdAbeille BEFORE - tempoMessageQueue='.json_encode($tempoMessageQueue));
+                $this->publishMosquitto($mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['params']);
+                // msgToCmd()
+                // cmdLog('debug', 'execTempoCmdAbeille(): tempoMessageQueue='.json_encode($tempoMessageQueue[$key]));
+                // unset($tempoMessageQueue[$key]);
+                // Tcharp38: unset let an empty slot and change array to object.
+                array_splice($tempoMessageQueue, $key, 1);
+                // cmdLog('debug', 'execTempoCmdAbeille AFTER - tempoMessageQueue='.json_encode($tempoMessageQueue));
             }
         }
 
@@ -408,8 +412,9 @@
                 cmdLog("debug", "Zg{$zgId} status: {$avail}, ".$queuesTxt);
             }
 
-            if (isset($this->tempoMessageQueue))
-                $tempoCount = count($this->tempoMessageQueue);
+            global $tempoMessageQueue;
+            if (isset($tempoMessageQueue))
+                $tempoCount = count($tempoMessageQueue);
             else
                 $tempoCount = 0;
             cmdLog("debug", "Tempo status: count=".$tempoCount);
@@ -550,11 +555,12 @@
                     $newNet = $msg['newNet'];
                     $oldAddr = $msg['oldAddr'];
                     $newAddr = $msg['newAddr'];
-                    cmdLog("debug", "  shortAddrChange: {$oldNet}/{$oldAddr} to {$newNet}/{$newAddr}");
+                    $ieee = $msg['ieee'];
+                    cmdLog("debug", "  shortAddrChange: {$oldNet}/{$oldAddr} to {$newNet}/{$newAddr} (ieee=$ieee)");
 
                     // Remove any pending messages to be sent to old address
                     $zgId = substr($msg['oldNet'], 7);
-                    clearPending($zgId, $msg['oldAddr']);
+                    clearPending($zgId, $oldAddr, $ieee);
 
                     // Update local infos
                     if (isset($GLOBALS['devices'][$oldNet]) && isset($GLOBALS['devices'][$oldNet][$oldAddr])) {
@@ -567,6 +573,13 @@
                         $GLOBALS["dbgMonitorAddr"] = $newAddr;
                     continue;
                 } // End type=='shortAddrChange'
+
+                if ($msg['type'] == "clearPending") {
+                    // Remove any pending messages to be sent to old address
+                    $zgId = substr($msg['net'], 7);
+                    clearPending($zgId, $msg['addr'], $msg['ieee']);
+                    continue;
+                } // End type=='clearPending'
 
                 $zgId = substr($msg['net'], 7);
                 // $this->zgId = $zgId;

@@ -328,9 +328,21 @@
 
         /* Called on device announce. */
         function deviceAnnounce($net, $addr, $ieee, $macCapa, $rejoin) {
-            $eq = &getDevice($net, $addr, $ieee); // By ref
+            $eq = &getDevice($net, $addr, $ieee, $new); // By ref
             // 'status' set to 'identifying' if new device
             parserLog('debug', '  eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
+
+            // Removing any pending cmd (if any) to device.
+            // Note that is short addr change or equipment migrated, this should already be done
+            if (!$new) {
+                $msg = array(
+                    'type' => 'clearPending',
+                    'net' => $net,
+                    'addr' => $addr,
+                    'ieee' => $ieee
+                );
+                msgToCmdAck($msg);
+            }
 
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
                 $eq['zigbee']['macCapa'] = $eq['customization']['macCapa'];

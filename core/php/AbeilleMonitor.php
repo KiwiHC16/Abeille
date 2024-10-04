@@ -221,7 +221,7 @@
                         continue; // Continue without sleeping
                     }
 
-                    logMessage('debug', "msg_receive(xToMon) ERROR: ErrCode=${errCode}");
+                    logMessage('debug', "msg_receive(xToMon) ERROR: ErrCode={$errCode}");
                     usleep(500000); // Sleep 500ms
                     continue;
                 }
@@ -240,7 +240,7 @@
                         logMessage("debug", "<= ".$msg['msg']);
                 } else {
                     /* Should be 'newaddr' msg type */
-// logMessage("debug", "TEMPORARY: msgJson=${msgJson}");
+// logMessage("debug", "TEMPORARY: msgJson={$msgJson}");
                     logMessage("debug", "<= New short addr for ".$msg['ieee'].": ".$msg['addr']);
 
                     /* Informing 'AbeilleCmd' that addr has changed.

@@ -93,17 +93,20 @@
             }
         }
 
-        public function publishMosquitto($priority, $topic, $payload) {
-            global $abQueues;
-            $queue = msg_get_queue($abQueues['xToCmd']['id']);
+        public function sendToCmd($priority, $topic, $payload) {
+            // global $abQueues;
+            // $queue = msg_get_queue($abQueues['xToCmd']['id']);
 
-            $msg = array();
-            $msg['topic']   = $topic;
-            $msg['payload'] = $payload;
+            $msg = array(
+                'priority' => $priority,
+                'topic' => $topic,
+                'payload' => $payload,
+            );
             $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
-            if (msg_send($queue, $priority, $msgJson, false, false) == false) {
-                cmdLog('debug', '  publishMosquitto() ERROR: Could not add message '.$msgJson.' to queue xToCmd');
+            global $queueXToCmd;
+            if (msg_send($queueXToCmd, 1, $msgJson, false, false) == false) {
+                cmdLog('debug', '  sendToCmd() ERROR: Could not add message '.$msgJson.' to queue xToCmd');
             }
         }
 
@@ -120,7 +123,7 @@
                     continue;
 
                 // cmdLog('debug', 'execTempoCmdAbeille BEFORE - tempoMessageQueue='.json_encode($tempoMessageQueue));
-                $this->publishMosquitto($mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['params']);
+                $this->sendToCmd($mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['params']);
                 // msgToCmd()
                 // cmdLog('debug', 'execTempoCmdAbeille(): tempoMessageQueue='.json_encode($tempoMessageQueue[$key]));
                 // unset($tempoMessageQueue[$key]);

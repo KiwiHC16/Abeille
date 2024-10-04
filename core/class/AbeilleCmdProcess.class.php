@@ -1975,11 +1975,11 @@
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $address, $addrMode);
 
                 // if ($addrMode == "02" ) {
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
+                //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
+                //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
 
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['cmdParams']['onTime']), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['cmdParams']['onTime']), "ep=".$dstEp."&clustId=0008&attrId=0000" );
+                //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['cmdParams']['onTime']), "ep=".$dstEp."&clustId=0006&attrId=0000" );
+                //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['cmdParams']['onTime']), "ep=".$dstEp."&clustId=0008&attrId=0000" );
                 // }
                 return;
             }
@@ -2185,7 +2185,7 @@
 
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
 
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
+                        $this->sendToCmd(priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
                     } elseif ($mode == "stop") {
                         $cmd = "0049";
                         $data = "FFFC0000";
@@ -2201,7 +2201,7 @@
 
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
 
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status");
+                        $this->sendToCmd(priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status");
                     }
                     return;
                 } // End cmdName == 'zgSetPermitMode'
@@ -3890,11 +3890,11 @@
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     // if ($addrMode == "02") {
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
 
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
                     // }
                     return;
                 }
@@ -3932,11 +3932,11 @@
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     // if ($addrMode == "02") {
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
 
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
                     // }
                     return;
                 }
@@ -4518,7 +4518,7 @@
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     if ($addrMode == "02") {
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
+                        $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
                     }
                     return;
                 }

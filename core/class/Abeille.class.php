@@ -2307,11 +2307,12 @@ log::add('Abeille', 'debug', "  infoCmdUpdate()");
         }
 
         $msg = array();
+        $msg['priority'] = $priority;
         $msg['topic'] = $topic;
         $msg['payload'] = $payload;
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
-        if (msg_send($queue, $priority, $msgJson, false, false, $error_code)) {
+        if (msg_send($queue, 1, $msgJson, false, false, $error_code)) {
             log::add('Abeille', 'debug', "  publishMosquitto(): Sent '".$msgJson."' to queue ".$queueId);
             $queueStatus[$queueId] = "ok"; // Status ok
         } else
@@ -2348,11 +2349,12 @@ log::add('Abeille', 'debug', "  infoCmdUpdate()");
         }
 
         $msg = array();
+        $msg['priority'] = $priority;
         $msg['topic'] = $topic;
         $msg['payload'] = $payload;
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
-        if (msg_send($queue, $priority, $msgJson, false, false, $error_code)) {
+        if (msg_send($queue, 1, $msgJson, false, false, $error_code)) {
             log::add('Abeille', 'debug', "  msgToCmd(): Envoyé '".$msgJson."' vers queue ".$queueId);
             $queueStatus[$queueId] = "ok"; // Status ok
         } else

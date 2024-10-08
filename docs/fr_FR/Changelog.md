@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 241008-BETA-1
+
 -   Correction: Interne: PHP8 warning.
 -   Améliorations: Modéles: Suppression cmd obsolete 'setReportLightColorSpectre' => 'act_zbConfigureReporting2'
 -   Améliorations: Modéles: Suppression cmd obsolete 'setReportPuissanceLegrand' => 'act_zbConfigureReporting2'

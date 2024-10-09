@@ -169,17 +169,53 @@
         return sprintf("%02X", $crc);
     }
 
+    // Store message
+    function tuyaZosungMsgSet($logicId, $seq, $zosungMsg) {
+        if (!isset($GLOBALS['zosung']))
+            $GLOBALS['zosung'] = [];
+        if (!isset($GLOBALS['zosung'][$logicId]))
+            $GLOBALS['zosung'][$logicId] = [];
+        $GLOBALS['zosung'][$logicId][$seq] = $zosungMsg;
+    }
+
+    // Clear message
+    function tuyaZosungMsgClear($logicId, $seq) {
+        if (!isset($GLOBALS['zosung']))
+            return;
+        if (!isset($GLOBALS['zosung'][$logicId]))
+            return;
+        if (!isset($GLOBALS['zosung'][$logicId][$seq]))
+            return;
+        unset($GLOBALS['zosung'][$logicId][$seq]);
+    }
+
+    // Get msg
+    // Returns: zosungMsg (array) or []
+    function &tuyaZosungMsgGet($logicId, $seq) {
+        static $error = [];
+        if (!isset($GLOBALS['zosung']))
+            return $error;
+        if (!isset($GLOBALS['zosung'][$logicId]))
+            return $error;
+        if (!isset($GLOBALS['zosung'][$logicId][$seq]))
+            return $error;
+
+        return $GLOBALS['zosung'][$logicId][$seq];
+    }
+
     // Use cases: ED00 cluster support (Moes universal remote)
     // Cmd 00: 'message'=IR code to send (base64 URL encoded format)
     // Cmd 03: 'message'=JSON encoded {'seq' => hex string, 'pos' => binary, 'maxLen' => binary}
     function tuyaZosung($net, $addr, $ep, $command) {
         $cmd = $command['cmdParams']['cmd'];
         cmdLog2('debug', $addr, "  tuyaZosung(Net={$net}, Addr={$addr}, EP={$ep}, Cmd={$cmd})");
+        $logicId = $net."/".$addr;
 
         if (!isset($command['cmdParams']['message'])) {
             cmdLog2('error', $addr, "tuyaZosung: 'message' manquant");
             return;
         }
+
         $data = $command['cmdParams']['message'];
         if ($cmd == '00') { // Send IR code
             // Data is base64 URL encoded
@@ -202,11 +238,15 @@
             $seq = tuyaZosungSeq(); // For unknown reason, seq above 9 breaks the transfer
 
             // Saving message to send
-            if (!isset($GLOBALS['zosung']))
-                $GLOBALS['zosung'] = [];
-            $GLOBALS['zosung'][$seq] = array(
+            // if (!isset($GLOBALS['zosung']))
+            //     $GLOBALS['zosung'] = [];
+            // $GLOBALS['zosung'][$seq] = array(
+            //     'message' => $message
+            // );
+            $zosungMsg = array(
                 'message' => $message
             );
+            tuyaZosungMsgSet($logicId, $seq, $zosungMsg);
 
             // Cmd ED00-00 reminder
             // {name: 'seq', type: DataType.uint16},
@@ -249,15 +289,16 @@
             $maxLen = $params['maxLen']; // Integer
             cmdLog2('debug', $addr, "  Cmd ED00-03: Seq={$seq}, Pos=d{$pos}, MaxLen=d{$maxLen}");
 
-            if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seq])) {
+            $zosungMsg = &tuyaZosungMsgGet($logicId, $seq);
+            if ($zosungMsg == []) {
                 cmdLog2('debug', $addr, "  WARNING: No message defined for seq {$seq}");
                 return;
             }
 
-            $message = $GLOBALS['zosung'][$seq]['message'];
-            cmdLog2('debug', $addr, "  TEMPORARY: message=".$message);
+            $message = $zosungMsg['message'];
+            // cmdLog2('debug', $addr, "  TEMPORARY: message=".$message);
             $msgRemain = substr($message, $pos * 2);
-            cmdLog2('debug', $addr, "  TEMPORARY: msgRemain=".$msgRemain);
+            // cmdLog2('debug', $addr, "  TEMPORARY: msgRemain=".$msgRemain);
             $msgSize = strlen($msgRemain) / 2;
             if ($msgSize == 0) {
                 cmdLog2('debug', $addr, "  WARNING: All datas already sent");

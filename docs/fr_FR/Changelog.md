@@ -1,7 +1,9 @@
 # ChangeLog
 
 -   Amélioration: Tuya human presence sensor. Ajout de signatures alternatives (2727).
--   Amélioration: Tuya human presence sensor. Mise-à-jour image (2727).
+-   Amélioration: Tuya human presence sensor. Mise-à-jour image & modèle (2727).
+-   Amélioration interne: Moniteur. Augmentation taille queue.
+-   Amélioration interne: Support telecommandes universelles (Zosung).
 
 ## 241008-BETA-1
 

@@ -359,6 +359,40 @@
         return $attributesN;
     }
 
+    // Store message
+    function tuyaZosungMsgSet($logicId, $seq, $zosungMsg) {
+        if (!isset($GLOBALS['zosung']))
+            $GLOBALS['zosung'] = [];
+        if (!isset($GLOBALS['zosung'][$logicId]))
+            $GLOBALS['zosung'][$logicId] = [];
+        $GLOBALS['zosung'][$logicId][$seq] = $zosungMsg;
+    }
+
+    // Clear message
+    function tuyaZosungMsgClear($logicId, $seq) {
+        if (!isset($GLOBALS['zosung']))
+            return;
+        if (!isset($GLOBALS['zosung'][$logicId]))
+            return;
+        if (!isset($GLOBALS['zosung'][$logicId][$seq]))
+            return;
+        unset($GLOBALS['zosung'][$logicId][$seq]);
+    }
+
+    // Get msg
+    // Returns: zosungMsg (array) or []
+    function &tuyaZosungMsgGet($logicId, $seq) {
+        static $error = [];
+        if (!isset($GLOBALS['zosung']))
+            return $error;
+        if (!isset($GLOBALS['zosung'][$logicId]))
+            return $error;
+        if (!isset($GLOBALS['zosung'][$logicId][$seq]))
+            return $error;
+
+        return $GLOBALS['zosung'][$logicId][$seq];
+    }
+
     // Compute CRC for given message
     // Use cases: ED00 cluster support (Moes universal remote)
     function tuyaZosungCrc($message) {
@@ -377,6 +411,8 @@
     // Use cases: E004+ED00 clusters support (Moes universal remote)
     function tuyaDecodeZosungCmd($net, $addr, $ep, $cmdId, $pl) {
         $attrReportN = [];
+        $logicId = $net."/".$addr;
+
         // Assuming cluster ED00
         if ($cmdId == "00") {
             // Cmd 00 reminder
@@ -409,17 +445,21 @@
             // {name: 'position', type: DataType.uint32},
             // {name: 'maxlen', type: DataType.uint8},
             $data = $seq.'00000000'.'38';
-            // $time = time() + 2; // 2sec later
-            // msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/cmd-Generic&time={$time}", "ep=".$ep."&clustId=ED00&cmd=02&data={$data}");
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data={$data}");
             // meta.logger.debug(`"IR-Message-Code00" transfer started.`);
 
-            $GLOBALS['zosung'] = [];
-            $GLOBALS['zosung'][$seqR] = array(
+            // $GLOBALS['zosung'] = [];
+            // $GLOBALS['zosung'][$seqR] = array(
+            //     'expected' => hexdec($lenR), // Expected size
+            //     'received' => 0, // Received size
+            //     'data' => ''
+            // );
+            $zosungMsg = array(
                 'expected' => hexdec($lenR), // Expected size
                 'received' => 0, // Received size
                 'data' => ''
             );
+            tuyaZosungMsgSet($logicId, $seqR, $zosungMsg);
         } else if ($cmdId == "01") {
             // Cmd 01 reminder
             // {name: 'zero', type: DataType.uint8},
@@ -449,9 +489,9 @@
             $seqR = AbeilleTools::reverseHex(substr($pl, 0, 4));
             $positionR = AbeilleTools::reverseHex(substr($pl, 4, 8));
             $maxLen = substr($pl, 12, 2);
-            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-02: Seq={$seqR}, Pos={$positionR}, MaxLen={$maxLen}");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-02: Seq={$seqR}, Pos={$positionR}, MaxLen={$maxLen} => Replying with cmd ED00-03");
 
-            parserLog2("debug", $addr, "  Replying with cmd ED00-03");
+            // Cmd 03
             $data = array(
                 'seq' => $seqR,
                 'pos' => hexdec($positionR),
@@ -483,16 +523,17 @@
             if ($cCrc != $crc)
                 parserLog2("debug", $addr, "  WARNING: Computed CRC ({$cCrc}) != CRC ({$crc})");
 
-            if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
+            $zosungMsg = &tuyaZosungMsgGet($logicId, $seqR); // Return by ref
+            if ($zosungMsg == []) {
                 parserLog2("debug", $addr, "  Unexpected message => Ignored");
                 return $attrReportN;
             }
 
-            $GLOBALS['zosung'][$seqR]['data'] .= $msgPart; // Append to end
-            $GLOBALS['zosung'][$seqR]['received'] += $msgSize;
+            $zosungMsg['data'] .= $msgPart; // Append to end
+            $zosungMsg['received'] += $msgSize;
 
-            $recSize = $GLOBALS['zosung'][$seqR]['received'];
-            $expSize = $GLOBALS['zosung'][$seqR]['expected'];
+            $recSize = $zosungMsg['received'];
+            $expSize = $zosungMsg['expected'];
             parserLog2("debug", $addr, "  rcvSize=d{$recSize}, expSize=d{$expSize}, posR={$posR}");
             if ($recSize < $expSize) {
                 // Need more datas
@@ -531,7 +572,8 @@
             $seqR = AbeilleTools::reverseHex($seq);
             parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-05: Seq={$seqR}");
 
-            if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
+            $zosungMsg = &tuyaZosungMsgGet($logicId, $seqR);
+            if ($zosungMsg == []) {
                 parserLog2("debug", $addr, "  Unexpected message (seq {$seqR}) => Ignored");
                 return $attrReportN;
             }
@@ -540,14 +582,15 @@
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=E004&cmd=00&data={$data}");
 
             // Report msgpart as "IR learned"
-            $dataBA = hex2bin($GLOBALS['zosung'][$seqR]['data']);
+            $dataBA = hex2bin($zosungMsg['data']);
             $dataB64URL = AbeilleTools::base64url_encode($dataBA);
-
             $attrReportN[] = array(
                 'name' => "learnedCode",
                 'value' => $dataB64URL,
             );
-            unset($GLOBALS['zosung'][$seqR]);
+
+            // unset($GLOBALS['zosung'][$seqR]);
+            tuyaZosungMsgClear($logicId, $seq);
         } else {
             parserLog2("debug", $addr, "  Unsupported Tuya-Zosung cmd ".$cmdId." => ignored");
         }

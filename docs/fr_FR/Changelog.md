@@ -1,5 +1,8 @@
 # ChangeLog
 
+-   Amélioration: Tuya human presence sensor. Ajout de signatures alternatives (2727).
+-   Amélioration: Tuya human presence sensor. Mise-à-jour image (2727).
+
 ## 241008-BETA-1
 
 -   Correction: Interne: PHP8 warning.

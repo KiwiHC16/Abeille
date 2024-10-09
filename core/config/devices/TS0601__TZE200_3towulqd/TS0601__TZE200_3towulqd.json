@@ -4,6 +4,11 @@
         "model": "Presence sensor",
         "type": "Tuya human presence sensor",
         "genericType": "Security",
+        "alternateIds": {
+            "TS0601__TZE200_1ibpyhdc": {},
+            "TS0601__TZE200_bh3n6gk8": {},
+            "TS0601__TZE200_ttcovulf": {}
+        },
         "category": {
             "security": "1"
         },
@@ -32,24 +37,9 @@
                 "nextLine": "after"
             },
             "Illuminance": {
-                "use": "inf_zbAttr-0400-MeasuredValue",
+                "use": "inf_illuminance",
                 "params": "ep=01",
                 "isVisible": "1"
-            },
-            "Get Illuminance": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0400&attrId=0000"
-            },
-            "Bind 01-0400-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0400",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 01-0400-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0400&attrType=21&attrId=0000&minInterval=300&maxInterval=600&changeVal=0",
-                "execAtCreation": "yes",
-                "comment": "Reporting every 5 to 10mins"
             },
             "Zone Alarm1": {
                 "use": "inf_zone-Alarm1",
@@ -70,6 +60,15 @@
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0500",
                 "execAtCreation": "yes"
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "0C": {
+                    "function": "rcvValue",
+                    "info": "01-Illuminance"
+                }
             }
         }
     }

@@ -815,6 +815,9 @@
                 "0302" => array( "name" => "Divisor", "access" => "R" ),
                 "0303" => array( "name" => "SummationFormatting", "access" => "R", "dataType" => 0x18 ), // map8
                 "0306" => array( "name" => "MeteringDeviceType", "access" => "R", "dataType" => 0x18 ), // map8
+
+                // Historical Consumption Attribute
+                "0400" => array( "name" => "InstantaneousDemand", "access" => "R", "dataType" => 0x2A ), // int24
             ),
             // Commands received: none
             // Commands generated

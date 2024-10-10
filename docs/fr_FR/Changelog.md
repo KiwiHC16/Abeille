@@ -7,6 +7,7 @@
 -   Amélioration modèles: Ajout support '#valueFormat-XXX#' pour formatter la valeur d'une commande.
 -   Amélioration interne: check_json
 -   Nettoyage modèles: Suppression support '#cmdInfo*XXX*#' (remplacé par '#logicidXX#')
+-   Amélioration NodOn SIN-4-FP-21: Mise-à-jour du modèle.
 
 ## 241008-BETA-1
 

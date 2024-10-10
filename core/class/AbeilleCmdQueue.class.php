@@ -438,7 +438,7 @@
                 // Reminder for status: ''=unsent, 'SENT'=already sent
                 $sentPri = $zg['sentPri'];
                 $sentIdx = $zg['sentIdx'];
-                if (isset($zg['cmdQueue'][$sentPri]) && (count($zg['cmdQueue'][$sentPri]) != 0) && ($zg['cmdQueue'][$sentPri][$sentIdx]['status'] != '')) {
+                if (isset($zg['cmdQueue'][$sentPri]) && isset($zg['cmdQueue'][$sentPri][$sentIdx]) && ($zg['cmdQueue'][$sentPri][$sentIdx]['status'] != '')) {
                     // There is a command under execution
                     $cmd = $zg['cmdQueue'][$sentPri][$sentIdx];
                     $timeout = $cmd['timeout'];

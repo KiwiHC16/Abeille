@@ -3608,10 +3608,9 @@
                                 //     // $pl = ''; // Full payload treated
                                 // }
 
-                                // Philips Hue specific cluster
-                                // Used by RWL021, RDM001
-                                // Tcharp38: Where is the source of this decoding ?
-                                // else if ($clustId == "FC00") {
+                                // FC00 private cluster
+                                // Used by Philips Hue on RWL021, RDM001
+                                // Used by Nodon at least on SIN-4-FP-21
                                 if ($clustId == "FC00") {
                                     $buttonEventTxt = array (
                                         '00' => 'Short press',
@@ -3622,14 +3621,16 @@
                                     $button = $attrId;
                                     // $buttonEvent = substr($payload, 24 + 2, 2);
                                     $buttonEvent = substr($pl, 0 + 2, 2);
+                                    if (isset($buttonEventTxt[$buttonEvent]))
+                                        $buttonEventTxt = $buttonEventTxt[$buttonEvent];
+                                    else
+                                        $buttonEventTxt = "?";
                                     // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
                                     $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
-                                    parserLog2("debug", $srcAddr, "  TOBEREVISITED: Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
+                                    parserLog2("debug", $srcAddr, "  TOBEREVISITED: Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent."/".$buttonEventTxt."), duration=".$buttonDuree);
 
-                                    $attrReportN[] = [
-                                        array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
-                                        array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
-                                    ];
+                                    $attrReportN[] = array( "name" => $clustId."-".$srcEp."-".$attrId."-Event", "value" => $buttonEvent );
+                                    $attrReportN[] = array( "name" => $clustId."-".$srcEp."-".$attrId."-Duree", "value" => $buttonDuree );
                                 } // End cluster FC00
 
                                 // Attribute value post correction according to ZCL spec

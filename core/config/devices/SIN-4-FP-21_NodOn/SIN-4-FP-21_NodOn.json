@@ -66,6 +66,7 @@
                 "subType": "select",
                 "listValue": "0|Off;1|Comfort;2|Eco;3|Frost_protection;4|Comfort-1;5|Comfort-2",
                 "valueOffset": "#valueformat-%02X#",
+                "comment": "Formatting properly data to 2 hex chars",
                 "value": "Current",
                 "trigOut": {
                     "getCurrentMode": {}

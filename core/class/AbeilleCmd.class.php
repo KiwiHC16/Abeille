@@ -56,16 +56,16 @@
             // #cmdInfo_xxxxxxx_#
             // Ex: lift=#cmdInfo_Level_# => lift=value from 'Level' info cmd
             // OBSOLETE !! Better to use #logicidxxxx# since the cmd could be renamed by user
-            if (preg_match('`#cmdInfo_(.*)_#`m', $request2, $m)) {
-                log::add( 'Abeille', 'debug', '  updateField(): Found cmd info: '.json_encode($m, JSON_UNESCAPED_SLASHES));
-                $cmdInfo = $eqLogic->getCmd('info', $m[1]);
-                if (!is_object($cmdInfo)) {
-                    log::add( 'Abeille', 'error', $eqLogic->getHumanName().": Modèle invalide. La commande info '".$m[1]."' n'existe pas.");
-                } else {
-                    // log::add( 'Abeille', 'debug', 'CmdInfo: '.$cmdInfo->getName() );
-                    $request2 = str_replace("#cmdInfo_".$m[1]."_#", $cmdInfo->execCmd(), $request2);
-                }
-            }
+            // if (preg_match('`#cmdInfo_(.*)_#`m', $request2, $m)) {
+            //     log::add( 'Abeille', 'debug', '  updateField(): Found cmd info: '.json_encode($m, JSON_UNESCAPED_SLASHES));
+            //     $cmdInfo = $eqLogic->getCmd('info', $m[1]);
+            //     if (!is_object($cmdInfo)) {
+            //         log::add( 'Abeille', 'error', $eqLogic->getHumanName().": Modèle invalide. La commande info '".$m[1]."' n'existe pas.");
+            //     } else {
+            //         // log::add( 'Abeille', 'debug', 'CmdInfo: '.$cmdInfo->getName() );
+            //         $request2 = str_replace("#cmdInfo_".$m[1]."_#", $cmdInfo->execCmd(), $request2);
+            //     }
+            // }
             // log::add( 'Abeille', 'debug', 'CmdInfo: End analysis' );
 
             // if (isset($_options)) {
@@ -124,13 +124,83 @@
         */
         public function execute($_options = null) {
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
-            $cmdType = $this->getType();
             $cmdHName = $this->getHumanName();
+            $cmdType = $this->getType();
             logMessage('debug', "-- execute({$cmdHName}, type={$cmdType}, options=".json_encode($_options).')');
 
+            // Checks
             if ($cmdType != 'action') {
                 logMessage('error', "-- Unexpected info command => ignored");
                 return;
+            }
+            $eqLogic = $this->getEqLogic();
+            $eqLogicId = $eqLogic->getLogicalId();
+            list($net, $addr) = explode("/", $eqLogicId);
+            if ($net == '' || $addr == '') {
+                logMessage('error', $eqLogic->getHumanName().': Cet équipement à besoin de réparation.');
+                return;
+            }
+
+            // User added command support: redirection to another cmd with specific parameters.
+            // This is recognized with the following logical ID syntax 'logicalId::parameters'
+            // Ex: sendCode::message=B4gRiBEtAo8G4AED4AsB4BsfQAFAJ-APAcAbQAfgBwMH1rmIEYgRLQLgAxfgCwHgGx9AAUAn4A8BwBtAB-AHA-B8hwIGLQI
+            $cmdLogicId = $this->getLogicalId();
+            if (($pos = strpos($cmdLogicId, "::")) !== false) {
+                $cmdLogicId2 = substr($cmdLogicId, 0, $pos);
+                $cmdParams = substr($cmdLogicId, $pos + 2);
+                logMessage('debug', "-- User cmd: logicId={$cmdLogicId2}, params={$cmdParams}");
+                $cmdLogic = $eqLogic->getCmd('action', $cmdLogicId2);
+                if (!is_object($cmdLogic)) {
+                    logMessage('error', $cmdHName.": Cmde '{$cmdLogicId2}' inconnue.");
+                    return;
+                }
+                $params = explode('=', $cmdParams);
+                logMessage('debug', "-- params=".json_encode($params));
+                $request = $cmdLogic->getConfiguration('request', '');
+                $len = count($params);
+                for ($i = 0; $i < $len; ) {
+                    $pKey = $params[$i++];
+                    $pVal = $params[$i++];
+                    logMessage('debug', "-- pKey={$pKey}, pVal={$pVal}");
+                    $request = str_ireplace("#{$pKey}#", $pVal, $request);
+                }
+                logMessage('debug', "-- request={$request}");
+            } else {
+                $cmdLogic = $this;
+                $request = $cmdLogic->getConfiguration('request', '');
+            }
+
+            // What is command input value ?
+            // Note: No sense if there is command redirection (user cmd)
+            // Note: Value could already be frozen. Example for slider sub-type: "request":"EP=#EP#&slider=2700"
+            $inputVal = '';
+            $inputTitle = ''; // 'title' if message sub type
+            switch ($cmdLogic->getSubType()) {
+            case 'slider':
+                if (!isset($_options['slider'])) {
+                    logMessage("error", "{$cmdHName}: Sub-type 'slider' mais pas de valeur associée.");
+                    return;
+                }
+                $inputVal = trim($_options['slider']); // Remove potential space seen at end of slider value
+                break;
+            case 'select':
+                if (!isset($_options['select'])) {
+                    logMessage("error", "{$cmdHName}: Sub-type 'select' mais pas de valeur associée.");
+                    return;
+                }
+                $inputVal = trim($_options['select']); // Remove potential space seen at end of select value
+                break;
+            case 'color':
+                $inputVal = $_options['color'];
+                break;
+            case 'message':
+                if (isset($_options['title']))
+                    $inputTitle = $_options['title'];
+                if (isset($_options['message']))
+                    $inputVal = $_options['message'];
+                break;
+            default: // 'other' sub-type
+                break;
             }
 
             /* If cmd sub type is not 'other', there is a value associated to cmd which depends on sub type
@@ -156,42 +226,6 @@
             //     return;
             // }
 
-            $eqLogic = $this->getEqLogic();
-            $eqLogicId = $eqLogic->getLogicalId();
-            list($net, $addr) = explode("/", $eqLogicId);
-            if ($net == '' || $addr == '') {
-                logMessage('error', $eqLogic->getHumanName().': Cet équipement à besoin de réparation.');
-                return;
-            }
-
-            // User command support
-            // This is recognized with the following logical ID syntax 'logicalId::parameters'
-            // Ex: sendCode::message=B4gRiBEtAo8G4AED4AsB4BsfQAFAJ-APAcAbQAfgBwMH1rmIEYgRLQLgAxfgCwHgGx9AAUAn4A8BwBtAB-AHA-B8hwIGLQI
-            $cmdLogicId = $this->getLogicalId();
-            if (($pos = strpos($cmdLogicId, "::")) !== false) {
-                $cmdLogicId2 = substr($cmdLogicId, 0, $pos);
-                $cmdParams = substr($cmdLogicId, $pos + 2);
-                logMessage('debug', "-- User cmd: logicId={$cmdLogicId2}, params={$cmdParams}");
-                $cmdLogic = $eqLogic->getCmd('action', $cmdLogicId2);
-                if (!is_object($cmdLogic)) {
-                    logMessage('error', $this->getHumanName().": Cmde '{$cmdLogicId2}' inconnue.");
-                    return;
-                }
-                $params = explode('=', $cmdParams);
-                logMessage('debug', "-- params=".json_encode($params));
-                $request = $cmdLogic->getConfiguration('request', '');
-                $len = count($params);
-                for ($i = 0; $i < $len; ) {
-                    $pKey = $params[$i++];
-                    $pVal = $params[$i++];
-                    logMessage('debug', "-- pKey={$pKey}, pVal={$pVal}");
-                    $request = str_ireplace("#{$pKey}#", $pVal, $request);
-                }
-                logMessage('debug', "-- request={$request}");
-            } else {
-                $cmdLogic = $this;
-                $request = $cmdLogic->getConfiguration('request', '');
-            }
 
             /* 'topic' replacement examples
              "topic": "CmdAbeille/#addrGroup#/setColourGroup" => must replace #ADDRGROUP#
@@ -209,10 +243,10 @@
             }
             $topic = $cmdLogic->updateField($net, $cmdLogic, $topic, $_options);
 
-            // Value update if 'valueOffset' is defined.
+            // Input value can be updated/replaced if 'valueOffset' is defined.
             // Reminder: 'valueOffset' is equivalent to 'calculValueOffset' for action cmd.
             // Ex: "valueOffset": "#value#*10" >>> OBSOLETE
-            // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100" >>> OBSOLETE
+            // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
             // Ex: "valueOffset": "#valueformat-%02X#" (equiv 'sprintf("%02X", #value#)')
             // Ex: 'valueOffset': '100-#slider#'
             $vo = $cmdLogic->getConfiguration('ab::valueOffset', "");
@@ -240,15 +274,27 @@
                 }
 
                 // Replacing '#slider#' in valueOffset
+                // Ex: 'valueOffset': '100-#slider#'
                 $pos = stripos($vo, '#slider#'); // Any #slider# variable ?
                 if ($pos !== false) {
-                    if (!isset($_options['slider'])) {
-                        logMessage("error", "{$cmdHName}: 'valueOffset' avec '#slider#' mais cmd pas de type 'slider'");
-                        return;
-                    }
+                    // if (!isset($_options['slider'])) {
+                    //     logMessage("error", "{$cmdHName}: 'valueOffset' avec '#slider#' mais cmd pas de type 'slider'");
+                    //     return;
+                    // }
                     $vo0 = $vo;
-                    $vo = str_ireplace('#slider#', $_options['slider'], $vo); // Replace #slider# by slider value
+                    // $vo = str_ireplace('#slider#', $_options['slider'], $vo); // Replace #slider# by slider value
+                    $vo = str_ireplace('#slider#', $inputVal, $vo); // Replace #slider# by slider value
                     logMessage('debug', "-- valueOffset: '#slider#' replaced: '{$vo0}' => '{$vo}'");
+                }
+
+                // if (isset($_options['slider'])) {
+                //     $vo = str_ireplace('#value#', $_options['slider'], $vo); // Replace #value# by slider value
+                // }
+                $pos = stripos($vo, '#value#'); // Any #value# variable ?
+                if ($pos !== false) {
+                    $vo0 = $vo;
+                    $vo = str_ireplace('#value#', $inputVal, $vo); // Replace #value# by input value
+                    logMessage('debug', "-- valueOffset: '#value#' replaced: '{$vo0}' => '{$vo}'");
                 }
 
                 // Replacing '#valueformat-FMT#' in valueOffset
@@ -272,17 +318,22 @@
                     logMessage('debug', "-- valueOffset: '#valueformat-{$fmt}#' replaced: '{$vo0}' => '{$vo}'");
                 }
 
-                if (isset($_options['slider'])) {
-                    $vo = str_ireplace('#value#', $_options['slider'], $vo); // Replace #value# by slider value
-                }
+                // Compute valueOffset result if math formula
+                $plus = strstr($vo, "+");
+                $minus = strstr($vo, "-");
+                $div = strstr($vo, "/");
+                $mult = strstr($vo, "*");
+                if (($plus !== false) || ($minus !== false) || ($div !== false) || ($mult !== false))
+                    $voValue = jeedom::evaluateExpression($vo); // Compute final formula
+                else
+                    $voValue = $vo;
+                logMessage('debug', "-- valueOffset: result={$voValue}");
+                $inputVal = $voValue;
 
-                // Updating 'request' with valueOffset result
-                $voValue = jeedom::evaluateExpression($vo); // Compute final formula
                 // if (stripos($request, '#valueoffset#') !== false)
                 //     $request = str_ireplace('#valueoffset#', $newValue, $request);
                 // else if (stripos($request, '#value#') !== false)
                 //     $request = str_ireplace('#value#', $newValue, $request);
-                logMessage('debug', "-- valueOffset: result={$voValue}");
             }
 
             /* 'request' replacement examples
@@ -338,12 +389,13 @@
             }
             switch ($cmdLogic->getSubType()) {
             case 'slider':
-                if (!isset($_options['slider'])) {
-                    logMessage("error", "{$cmdHName}: 'slider' mais pas de valeur associée.");
-                    return;
-                }
-                $sliderVal = ($vo != "") ? $voValue : $_options['slider'];
-                $sliderVal = trim($sliderVal); // Remove potential space seen at end of slider value
+                // if (!isset($_options['slider'])) {
+                //     logMessage("error", "{$cmdHName}: 'slider' mais pas de valeur associée.");
+                //     return;
+                // }
+                // $sliderVal = ($vo != "") ? $voValue : $_options['slider'];
+                // $sliderVal = trim($sliderVal); // Remove potential space seen at end of slider value
+                $sliderVal = $inputVal;
                 $cmdTopic = $cmdLogic->getConfiguration('topic', '');
                 if ($cmdTopic == "writeAttribute") {
                     // New way of handling #slider#
@@ -352,27 +404,33 @@
                     $request = str_ireplace('#slider#', $sliderVal, $request);
                 break;
             case 'select':
-                if (!isset($_options['select'])) {
-                    logMessage("error", "{$cmdHName}: 'select' mais pas de valeur associée.");
-                    return;
-                }
-                $sliderVal = ($vo != "") ? $voValue : $_options['select'];
-                $sliderVal = trim($sliderVal); // Remove potential space seen at end of slider value
+                // if (!isset($_options['select'])) {
+                //     logMessage("error", "{$cmdHName}: 'select' mais pas de valeur associée.");
+                //     return;
+                // }
+                // $sliderVal = ($vo != "") ? $voValue : $_options['select'];
+                // $sliderVal = trim($sliderVal); // Remove potential space seen at end of slider value
+                $selectVal = $inputVal;
                 $cmdTopic = $cmdLogic->getConfiguration('topic', '');
                 if ($cmdTopic == "writeAttribute") {
                     // New way of handling #slider#
-                    $request = str_ireplace('#select#', '#select'.$sliderVal.'#', $request);
+                    $request = str_ireplace('#select#', '#select'.$selectVal.'#', $request);
                 } else
-                    $request = str_ireplace('#select#', $sliderVal, $request);
+                    $request = str_ireplace('#select#', $selectVal, $request);
                 break;
             case 'color':
-                $request = str_replace('#color#', $_options['color'], $request);
+                // $request = str_replace('#color#', $_options['color'], $request);
+                $request = str_replace('#color#', $inputVal, $request);
                 break;
             case 'message':
-                if (isset($_options['title']))
-                    $request = str_replace('#title#', $_options['title'], $request);
-                if (isset($_options['message']))
-                    $request = str_replace('#message#', $_options['message'], $request);
+                // if (isset($_options['title']))
+                //     $request = str_replace('#title#', $_options['title'], $request);
+                // if (isset($_options['message']))
+                //     $request = str_replace('#message#', $_options['message'], $request);
+                if ($inputTitle != '')
+                    $request = str_replace('#title#', $inputTitle, $request);
+                if ($inputVal != '')
+                    $request = str_replace('#message#', $inputVal, $request);
                 break;
             default: // 'other'
                 if (stripos($request, "#valueoffset#") !== false) {

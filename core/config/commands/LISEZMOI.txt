@@ -161,11 +161,17 @@ Exemple de commande 'action'
         Ex: "calculValueOffset": "#value#/10"
     Attention: Cette option est gérée par Jeedom et non pas par Abeille.
 
-  * valueOffset: optionnel (pour cmde action)
-    Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
+  * valueOffset: optionnel
+    Permet de modifier (ou remplacer) la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
         Ex: "valueOffset": "#value#*10"
         Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
         Ex: "valueOffset": "(#value#>>2)&1"
+    Sur une commande 'info' avec 'trigOut', permet de modifier/remplacer la valeur passée à Jeedom
+        Ex: "trigOut": {
+                "0006-04-0000": {
+                    "valueOffset": 0
+                }
+            }
 
   * Polling: optionnel
     Défini si cette commande 'action' doit etre executée regulierement.

@@ -4,6 +4,9 @@
 -   Amélioration: Tuya human presence sensor. Mise-à-jour image & modèle (2727).
 -   Amélioration interne: Moniteur. Augmentation taille queue.
 -   Amélioration interne: Support telecommandes universelles (Zosung).
+-   Amélioration modèles: Ajout support '#valueFormat-XXX#' pour formatter la valeur d'une commande.
+-   Amélioration interne: check_json
+-   Nettoyage modèles: Suppression support '#cmdInfo*XXX*#' (remplacé par '#logicidXX#')
 
 ## 241008-BETA-1
 

@@ -8,6 +8,7 @@
 -   Amélioration interne: check_json
 -   Nettoyage modèles: Suppression support '#cmdInfo*XXX*#' (remplacé par '#logicidXX#')
 -   Amélioration NodOn SIN-4-FP-21: Mise-à-jour du modèle.
+-   Nouveau: Support Tuya 'PIR motion sensor' (TS0202\_\_TZ3040_bb6xaihh): Modèle preliminaire (2728).
 
 ## 241008-BETA-1
 

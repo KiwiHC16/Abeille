@@ -221,6 +221,9 @@ Variables
 #logicid....#: Permet de récuperer la valeur d'une commande info via son 'logical ID'
     Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
 
+#valueformat-XX#: Permet de formatter le resultat
+    Ex: #valueformat-%02X" => format=%02X, entrée=11, sortie=0B
+
 #slider#: Valeur fournie par Jeedom si sub type = 'slider'
 #select#: Valeur fournie par Jeedom si sub type = 'select'
 #message#: Valeur fournie par Jeedom si sub type = 'message'

@@ -73,7 +73,7 @@
             },
             "Power": {
                 "use": "inf_zbAttr-0702-InstantaneousDemand",
-                "params": "div=1000",
+                "params": "div=1",
                 "unit": "W",
                 "isVisible": "1"
             },

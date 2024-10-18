@@ -54,7 +54,6 @@
             "Current mode": {
                 "use": "inf_generic-String",
                 "logicalId": "currentMode",
-                "isVisible": 1,
                 "nextLine": "after"
             },
              "Bind 01-FC00-ToZigate": {
@@ -75,7 +74,7 @@
             "Power": {
                 "use": "inf_zbAttr-0702-InstantaneousDemand",
                 "params": "div=1000",
-                "unit": "KWh",
+                "unit": "W",
                 "isVisible": "1"
             },
             "Total power": {

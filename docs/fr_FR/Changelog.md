@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 241028-BETA-1
+
 -   Amélioration: Tuya human presence sensor. Ajout de signatures alternatives (2727).
 -   Amélioration: Tuya human presence sensor. Mise-à-jour image & modèle (2727).
 -   Amélioration interne: Moniteur. Augmentation taille queue.

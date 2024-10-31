@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Amélioration: 1er FW officiel Abeille pour Zigate v1 => AB01-0000-opdm. Corrige le crash 'mgmt_rtg_rsp' (2705).
+
 ## 241028-BETA-1
 
 -   Amélioration: Tuya human presence sensor. Ajout de signatures alternatives (2727).

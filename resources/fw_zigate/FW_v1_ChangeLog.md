@@ -1,5 +1,13 @@
 # Zigate V1 firmware change log
 
+## Version AB01.0000
+
+* First Abeille's version (Tcharp38).
+* Fix 'Mgmt_rtg_rsp' crash when network is big (60 devices in routing table in my case). See https://github.com/KiwiHC16/Abeille/issues/2705
+* Cluster 0000/Basic, attrib 4000/swBuildID now used to store build date (YYYYMMDD format).
+
+
+
 Dernieres infos: https://zigate.fr/category/informations/
 Releases: https://github.com/fairecasoimeme/ZiGate/releases
 

@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 241104-BETA-1
+## 241104-STABLE-1, 241104-BETA-1
 
 **Mise-à-jour de modèles**
 

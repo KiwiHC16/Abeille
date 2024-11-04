@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="241028-BETA-1"
+# VERSION="241104-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1071,7 +1071,7 @@ e44f0103a4943fca4a50c8d1c97599af *docs/dev/ezsp_notes.txt
 efe23d9b46aa8efd0bdace8bfa5a8046 *docs/dev/jeedom_notes.txt
 14eb89c802e96f0936988934ecc29cc8 *docs/dev/remote_controls.txt
 ee5f03eaa76a54d018f27b08326961f6 *docs/dev/zigbee_notes.txt
-2b2c35233ed7da24b21f3225f0af60f8 *docs/fr_FR/Changelog.md
+835e61ac1dabe669b4f6012f5c7b4946 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1423,11 +1423,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-24f8098bfdeb6811884aa6dc973d2fb1 *plugin_info/Abeille.version
+c764a519fb1a6404e5b46afdae83f84f *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 489670c29a0bd0f77eb0e3f22a598011 *plugin_info/configuration.php
-258e4b6615d19d879eb956c7b134796f *plugin_info/info.json
+6909ed4c42f39b7711397be1fe1625d7 *plugin_info/info.json
 f8f82164cd73842ff9330c02d21bc6f9 *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
@@ -1804,10 +1804,10 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/verification.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/verification.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/xmlhttpConfChange.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/xmlhttpMQTTSend.php
-fd690e586457113b24f7ad64d76a915f *resources/fw_zigate/FW_ChangeLog.md
+85d4cfad809809e617b1ccda5537467c *resources/fw_zigate/FW_v1_ChangeLog.md
 ab45dc6fed08407de72aa24a25a17f46 *resources/fw_zigate/zigatev1-0003-0323-legacy.bin
 1aa395c7afe456eedb78337044f04724 *resources/fw_zigate/zigatev1-0004-0323-opdm.bin
-20b4f728646b40d29b16396aaf49303b *resources/fw_zigate/zigatev1-AB01-0000-opdm-dev.bin
+01e9676405180bc282b9da9b1e02749c *resources/fw_zigate/zigatev1-AB01-0000-opdm.bin
 636143f7c4ebe0b85bd18c7ec8f3c443 *resources/fw_zigate/zigatev2-0005-0322-opdm.bin
 5409d7e3ae8919a0aa572794ff40d954 *resources/prog_jennic-0.7-Abeille/Makefile
 b72399d5a204b159944b19883ea99870 *resources/prog_jennic-0.7-Abeille/README.md

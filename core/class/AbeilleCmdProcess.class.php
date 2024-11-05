@@ -4955,9 +4955,7 @@
                         $fcf        = "11"; // Frame Control Field
                         $sqn        = $this->genSqn();
                         $cmdId      = "00"; // TY_DATA_REQUEST, 0x00, The gateway sends data to the Zigbee module.
-                        // cmdLog2('debug', $addr, '  BEN: Command : '.json_encode($Command) );
-                        $dp = tuyaCmd2Dp($Command);
-                        // cmdLog2('debug', $addr, '  BEN: dp : '.json_encode($dp) );
+                        $dp = tuyaCmd2Dp($Command['cmdParams']);
                         if ($dp === false) {
                             return;
                         }

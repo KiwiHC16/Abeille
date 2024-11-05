@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Correction: Regression sur envoie cmdes Tuya (2467).
+
 ## 241104-STABLE-1, 241104-BETA-1
 
 **Mise-à-jour de modèles**

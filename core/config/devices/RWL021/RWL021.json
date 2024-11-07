@@ -3,6 +3,7 @@
         "manufacturer": "Philips",
         "model": "RWL021",
         "type": "Hue Dimmer Switch RWL021",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "02",

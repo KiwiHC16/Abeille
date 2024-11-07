@@ -3785,8 +3785,8 @@
                 // Mandatory params: addrGroup & cmd if addrMode=01/group
                 // Mandatory params: cmd if addrMode=04/broadcast
                 else if ($cmdName == 'cmd-0006') {
-                    $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos for dev addr
-                    $required2 = ['addrGroup', 'cmd']; // Mandatory infos for group addr
+                    $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos when addressing device
+                    $required2 = ['addrGroup', 'cmd']; // Mandatory infos when addressin group
                     $required3 = ['cmd']; // Mandatory infos for broadcast
                     $addrMode   = isset($Command['cmdParams']['addrMode']) ? $Command['cmdParams']['addrMode'] : "02"; // 01=Group, 02=device (default), 04=broadcast
                     if ($addrMode == '01') {

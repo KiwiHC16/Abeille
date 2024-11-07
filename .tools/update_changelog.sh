@@ -47,7 +47,7 @@ do
                 break
             fi
             echo "- Updating version to ${VERSION}"
-            VERSIONOLD=${VERSION### }
+            VERSIONOLD=${L### }
             echo "## ${VERSION}, ${VERSIONOLD}" >> ${TMP}
             STEP=2 # Copy rest of the file
             continue

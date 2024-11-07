@@ -5,6 +5,5 @@ resources/archives
 .hooks
 .tools
 .idea
-core/config/commands/OBSOLETE
 docs/dev
 

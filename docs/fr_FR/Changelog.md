@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Correction: Fichiers dit corrompus à l'installation.
+
 ## 241106-BETA-1
 
 -   Correction: Regression sur envoie cmdes Tuya (2467).

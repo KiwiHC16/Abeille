@@ -28,7 +28,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/update_md5.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/update_version.sh
 4e4163047fd9cd95464fe125063b8d2d *LICENSE.md
 706d55e28480d0074ea06e660b9b0e2c *README.md
-91f1ced2db82863722bcd98e4154260f *TODO.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *TODO.txt
 710a5821ae838030bbbfb6b5d8f7ba81 *core/ajax/Abeille.ajax.php
 bf56647042e6215c1b74eea942e22ac4 *core/ajax/AbeilleDbg.ajax.php
 b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
@@ -1065,12 +1065,12 @@ bb4f1f9ed4a7865cf3f52f24d9d14186 *desktop/php/Abeille-Eq-Cmds.php
 25c62538c9d1dff6a31ae1b9cbb0e2a3 *desktop/php/AbeilleMaintenance-Logs.php
 011a9b628fe7c72f13f838895f990577 *desktop/php/AbeilleMaintenance.php
 4bb4b94d777be9a8f48f5e77e67e327c *desktop/php/AbeilleNetworkMap.php
-e44f0103a4943fca4a50c8d1c97599af *docs/dev/ezsp_notes.txt
-46c7b16e4fb265876c42b4d1975646e9 *docs/dev/jeedom_config_db.txt
-5f43f625039542b8903b28e977aec2d2 *docs/dev/jeedom_eqlogic_db.txt
-efe23d9b46aa8efd0bdace8bfa5a8046 *docs/dev/jeedom_notes.txt
-14eb89c802e96f0936988934ecc29cc8 *docs/dev/remote_controls.txt
-ee5f03eaa76a54d018f27b08326961f6 *docs/dev/zigbee_notes.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/ezsp_notes.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_config_db.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
 45f0b8fe85b91dd0e03ee199edbb775e *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png

@@ -3,6 +3,7 @@
         "manufacturer": "Moes",
         "model": "MS-105BZ",
         "type": "Moes dual dimmer module",
+        "genericType": "Outlet",
         "alternateIds": {
             "TS0601__TZE200_fjjbhx9d": [],
             "TS0601__TZE200_gwkapsoq": [],
@@ -22,19 +23,9 @@
                 "params": "dpId=01&data=01",
                 "isVisible": 1
             },
-            "On (OLD)": {
-                "use": "cmdG-TuyaEF00-Set-OnOff",
-                "params": "onOff=01&dpId=01",
-                "isVisible": 1
-            },
             "Off 1": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=01&data=00",
-                "isVisible": 1
-            },
-            "Off (OLD)": {
-                "use": "cmdG-TuyaEF00-Set-OnOff",
-                "params": "onOff=00&dpId=01",
                 "isVisible": 1
             },
             "Status 1": {
@@ -63,11 +54,6 @@
                 "use": "act_tuyaEF00-SetValue-Slider",
                 "params": "dpId=02&mult=10",
                 "comment": "x per 100 to x per 1000 conversion",
-                "isVisible": 1
-            },
-            "Set Level 1 (OLD)": {
-                "use": "cmdG-TuyaEF00-Set-Level",
-                "params": "dpId=02",
                 "isVisible": 1
             },
             "Level 1": {

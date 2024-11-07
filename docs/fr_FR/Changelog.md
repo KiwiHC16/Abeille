@@ -1,6 +1,7 @@
 # ChangeLog
 
--   Correction: Fichiers dit corrompus à l'installation.
+-   Correction: Fichiers corrompus à l'installation.
+-   Amélioration: Moes MS105B: Amélioration modèle (2473).
 
 ## 241106-BETA-1
 

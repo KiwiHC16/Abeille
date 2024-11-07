@@ -38,15 +38,17 @@ do
         fi
 
         # Version line
+        # Note: '## VERSION1' or '## VERSION2, VERSION1'
         if [[ "${L}" == "## "* ]]; then
-            if [[ "${L}" == "## ${VERSION}"* ]]; then
+            if [[ "${L}" == *"${VERSION}"* ]]; then
                 echo "- Version is already correct in changelog. Doing nothing"
                 echo
                 rm ${TMP}
                 break
             fi
             echo "- Updating version to ${VERSION}"
-            echo "## ${VERSION}" >> ${TMP}
+            VERSIONOLD=${VERSION### }
+            echo "## ${VERSION}, ${VERSIONOLD}" >> ${TMP}
             STEP=2 # Copy rest of the file
             continue
         fi

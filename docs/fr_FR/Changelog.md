@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 241107-BETA-1
+## 241107-STABLE-1, 241107-STABLE-1
 
 -   Correction: Fichiers corrompus à l'installation.
 -   Amélioration: Moes MS105B: Amélioration modèle (2473).

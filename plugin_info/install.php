@@ -1172,8 +1172,9 @@
          * - Cmd DB: Removed all 'Time-TimeStamp' info cmds.
          * - Cmd DB: 'setLevel' update: 'Level' renamed to 'level'
          * - Cmd DB: 'setLevel' update: 'EP' renamed to 'ep'
+         * - Eq DB: Some icons renamed for normalization
          */
-        if (intval($dbVersion) < 20240821) {
+        if (intval($dbVersion) < 20241108) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled{$gtwId}", "ab::gtwEnabled{$gtwId}");
@@ -1201,6 +1202,21 @@
                 // $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
                 // $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
                 $saveEq = false;
+
+                // eqLogic: Renaming icons if required
+                $iconsList = array(
+                    'RWL021' => 'Philips-Remote',
+                );
+                $curIcon = $eqLogic->getConfiguration('ab::icon', '');
+                if (($curIcon != '') && isset($iconsList[$curIcon])) {
+                    $newIcon = $iconsList[$curIcon];
+                    $eqLogic->setConfiguration('ab::icon', $newIcon);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": Icon '".$curIcon."' changed to '".$newIcon."'");
+                    $saveEq = true;
+                }
+
+                if ($saveEq)
+                    $eqLogic->save();
 
                 // cmd
                 $cmds = Cmd::byEqLogicId($eqId);

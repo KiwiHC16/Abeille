@@ -10,6 +10,9 @@
             "icon": "Philips-Remote",
             "batteryType": "1x3V CR2032"
         },
+        "variables": {
+            "addrGroup": "2002"
+        },
         "category": {
             "light": "1"
         },
@@ -18,10 +21,6 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=02",
                 "isVisible": 1
-            },
-            "Get Battery-Percent": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=02&clustId=0001&attrId=0021"
             },
             "Bind 02-0001-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -37,15 +36,15 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-            "On group": {
+            "On": {
                 "use": "act_zbCmdC-0006-OnGroup",
                 "isVisible": 1
             },
-            "Off group": {
+            "Off": {
                 "use": "act_zbCmdC-0006-OffGroup",
                 "isVisible": 1
             },
-            "Toggle group": {
+            "Toggle": {
                 "use": "act_zbCmdC-0006-ToggleGroup",
                 "nextLine": "after"
             },

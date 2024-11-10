@@ -241,6 +241,7 @@
                 $topic = str_ireplace("#addrGroup#", $eqLogic->getConfiguration("Groupe"), $topic);
                 logMessage('debug', "-- topic: '#addrgroup#' replaced => topic={$topic}");
             }
+            // TODO: eqModel['variables'] support
             $topic = $cmdLogic->updateField($net, $cmdLogic, $topic, $_options);
 
             // Input value can be updated/replaced if 'valueOffset' is defined.
@@ -440,6 +441,23 @@
                 break;
             }
             $request = $cmdLogic->updateField($net, $cmdLogic, $request, $_options);
+
+            // Last 'request' replacement step for remaining #var# to be filled with eqModel['variables']
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            if ((stripos($request, "#") !== false) && (isset($eqModel['variables']))) {
+                while (true) {
+                    $pos = stripos($request, "#");
+                    if ($pos === false)
+                        break; // No more '#'
+                    $sb = substr($request, $pos + 1);
+                    $pos = stripos($sb, "#");
+                    $varNameUp = strtoupper(substr($sb, 0, $pos));
+                    if (!isset($eqModel['variables'][$varNameUp])) {
+                        $request = str_ireplace("#$varNameUp#", $eqModel['variables'][$varNameUp], $request);
+                        logMessage('debug', "-- request: '#$varNameUp#' replaced => request='{$request}'");
+                    }
+                }
+            }
 
             $repeat = $cmdLogic->getConfiguration('ab::repeat', 0);
 

@@ -10,7 +10,7 @@ name => Jeedom equipment name
 
 logicalId => Logical ID (ex: 'Abeille1/C14B')
 
-oject_id => Parent ID
+oject_id => Parent ID (ex: room ID)
 
 eqType_name => 'Abeille'
 
@@ -26,7 +26,7 @@ configuration
                 modelId => from cluster 0000 if supported
                 manufId => from cluster 0000 if supported
                 dateCode => from cluster 0000 if supported
-                swBuildId => from cluster 0000 if supported
+                swBuildId => Attrib 4000 from cluster 0000 if supported
         macCapa
         mainsPowered
         rxOnWhenIdle
@@ -36,14 +36,15 @@ configuration
 
     ab::eqModel
         modelSource => optional: 'Abeille' or 'local'
-        modelName
-        modelForced
+        modelName => mandatory: Model file name without '.json' extension
+        modelForced => optional: 'true' or 'false' (default)
         modelSig
         modelPath => optional (for variant): default='<modelName>/<modelName>.json'
         manuf
         model
         type
         private
+        variables
 
 
 

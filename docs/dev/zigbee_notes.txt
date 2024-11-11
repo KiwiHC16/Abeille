@@ -26,3 +26,10 @@ Mgmt_lqi_rsp => does not list all devices on the network
 	This is an incomplet list of devices registered in the network.
 	Devices that have been temporary disconnected (ex: plug or light bulb) are finally no longer in the 'Mgmt_lqi_rsp' list despite they did not left the network.
 	Then how to get full list of associated devices, even those temporary not alive ?
+    
+ZCL reporting
+    ZCL reporting is traditionally configured as “differential” reporting, using three parameters:
+    - minimum interval: reports may not be generated more often than this, regardless of value change
+    - maximum interval: reports must be generated at least this often, regardless of value change
+    - reportable change: if between minimum and maximum interval and the value has changed by at least this much since the last report, generate a report
+    

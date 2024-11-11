@@ -445,6 +445,7 @@
             // Last 'request' replacement step for remaining #var# to be filled with eqModel['variables']
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             if ((stripos($request, "#") !== false) && (isset($eqModel['variables']))) {
+                logMessage('debug', "-- request: Checking remaining variables against eqModel['variables']");
                 while (true) {
                     $pos = stripos($request, "#");
                     if ($pos === false)
@@ -452,7 +453,8 @@
                     $sb = substr($request, $pos + 1);
                     $pos = stripos($sb, "#");
                     $varNameUp = strtoupper(substr($sb, 0, $pos));
-                    if (!isset($eqModel['variables'][$varNameUp])) {
+                    logMessage('debug', "-- request: varNameUp='$varNameUp'");
+                    if (isset($eqModel['variables'][$varNameUp])) {
                         $request = str_ireplace("#$varNameUp#", $eqModel['variables'][$varNameUp], $request);
                         logMessage('debug', "-- request: '#$varNameUp#' replaced => request='{$request}'");
                     }

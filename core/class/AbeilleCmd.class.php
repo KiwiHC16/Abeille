@@ -369,22 +369,22 @@
                 $request = str_ireplace("#onTime#", $onTimeHex, $request);
                 logMessage('debug', "-- request: '#onTime#' replaced => request='{$request}'");
             }
-            if (stripos($request, "#addrGroup#") !== false) {
-                $request = str_ireplace("#addrGroup#", $eqLogic->getConfiguration("Groupe"), $request);
-                logMessage('debug', "-- request: '#addrgroup#' replaced => request='{$request}'");
+            $addrGroup = $eqLogic->getConfiguration("Groupe", '');
+            if ((stripos($request, "#addrGroup#") !== false) && ($addrGroup != '')) {
+                $request = str_ireplace("#addrGroup#", $addrGroup, $request);
+                logMessage('debug', "-- request: '#addrGroup#' replaced => request='{$request}'");
             }
-            if (stripos($request, "#ZiGateIEEE#") !== false) {
-                $ieee = Abeille::byLogicalId($net.'/0000', 'Abeille')->getConfiguration("IEEE", '');
-                $request = str_ireplace("#ZiGateIEEE#", $ieee, $request);
+            $zgIeee = Abeille::byLogicalId($net.'/0000', 'Abeille')->getConfiguration("IEEE", '');
+            if ((stripos($request, "#ZiGateIEEE#") !== false) && ($zgIeee != '')) {
+                $request = str_ireplace("#ZiGateIEEE#", $zgIeee, $request);
                 logMessage('debug', "-- request: '#ZiGateIEEE#' replaced => request='{$request}'");
             }
-            if (stripos($request, '#IEEE#') !== false)  {
-                $ieee = $eqLogic->getConfiguration("IEEE", '');
+            $ieee = $eqLogic->getConfiguration("IEEE", '');
+            if ((stripos($request, '#IEEE#') !== false) && ($ieee != ''))  {
                 $request = str_ireplace('#IEEE#', $ieee, $request);
                 logMessage('debug', "-- request: '#IEEE#' replaced => request='{$request}'");
             }
-            if (stripos($request, '#addrIEEE#') !== false)  {
-                $ieee = $eqLogic->getConfiguration("IEEE", '');
+            if ((stripos($request, '#addrIEEE#') !== false) && ($ieee != '')) {
                 $request = str_ireplace('#addrIEEE#', $ieee, $request);
                 logMessage('debug', "-- request: '#addrIEEE#' replaced => request='{$request}'");
             }
@@ -444,19 +444,23 @@
 
             // Last 'request' replacement step for remaining #var# to be filled with eqModel['variables']
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            if ((stripos($request, "#") !== false) && (isset($eqModel['variables']))) {
-                logMessage('debug', "-- request: Checking remaining variables against eqModel['variables']");
-                while (true) {
-                    $pos = stripos($request, "#");
-                    if ($pos === false)
-                        break; // No more '#'
-                    $sb = substr($request, $pos + 1);
-                    $pos = stripos($sb, "#");
-                    $varNameUp = strtoupper(substr($sb, 0, $pos));
-                    logMessage('debug', "-- request: varNameUp='$varNameUp'");
-                    if (isset($eqModel['variables'][$varNameUp])) {
-                        $request = str_ireplace("#$varNameUp#", $eqModel['variables'][$varNameUp], $request);
-                        logMessage('debug', "-- request: '#$varNameUp#' replaced => request='{$request}'");
+            // if ((stripos($request, "#") !== false) && (isset($eqModel['variables']))) {
+            if (stripos($request, "#") !== false) {
+                logMessage('debug', "-- request: Unreplaced variable found in request");
+                if (isset($eqModel['variables'])) {
+                    logMessage('debug', "-- request: Checking unreplaced variables against eqModel['variables']");
+                    while (true) {
+                        $pos = stripos($request, "#");
+                        if ($pos === false)
+                            break; // No more '#'
+                        $sb = substr($request, $pos + 1);
+                        $pos = stripos($sb, "#");
+                        $varNameUp = strtoupper(substr($sb, 0, $pos));
+                        logMessage('debug', "-- request: varNameUp='$varNameUp'");
+                        if (isset($eqModel['variables'][$varNameUp])) {
+                            $request = str_ireplace("#$varNameUp#", $eqModel['variables'][$varNameUp], $request);
+                            logMessage('debug', "-- request: '#$varNameUp#' replaced => request='{$request}'");
+                        }
                     }
                 }
             }

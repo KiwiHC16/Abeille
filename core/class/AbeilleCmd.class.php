@@ -237,12 +237,35 @@
             } else {
                 $topic = "Cmd".$eqLogicId."/".$cmdLogic->getConfiguration('topic');
             }
-            if (stripos($topic, "#addrGroup#") !== false) {
-                $topic = str_ireplace("#addrGroup#", $eqLogic->getConfiguration("Groupe"), $topic);
-                logMessage('debug', "-- topic: '#addrgroup#' replaced => topic={$topic}");
+            $addrGroup = $eqLogic->getConfiguration("Groupe", '');
+            if ((stripos($topic, "#addrGroup#") !== false) && ($addrGroup != '')) {
+                $topic = str_ireplace("#addrGroup#", $addrGroup, $topic);
+                logMessage('debug', "-- topic: '#addrGroup#' replaced => topic={$topic}");
             }
-            // TODO: eqModel['variables'] support
+
             $topic = $cmdLogic->updateField($net, $cmdLogic, $topic, $_options);
+
+            // Last 'topic' replacement step for remaining #var# to be filled with eqModel['variables']
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            if (stripos($topic, "#") !== false) {
+                logMessage('debug', "-- topic: Unreplaced variable found");
+                if (isset($eqModel['variables'])) {
+                    logMessage('debug', "-- topic: Checking unreplaced variables against eqModel['variables']");
+                    while (true) {
+                        $pos = stripos($topic, "#");
+                        if ($pos === false)
+                            break; // No more '#'
+                        $sb = substr($topic, $pos + 1);
+                        $pos = stripos($sb, "#");
+                        $varNameUp = strtoupper(substr($sb, 0, $pos));
+                        logMessage('debug', "-- topic: varNameUp='$varNameUp'");
+                        if (isset($eqModel['variables'][$varNameUp])) {
+                            $topic = str_ireplace("#$varNameUp#", $eqModel['variables'][$varNameUp], $topic);
+                            logMessage('debug', "-- topic: '#$varNameUp#' replaced => request='{$topic}'");
+                        }
+                    }
+                }
+            }
 
             // Input value can be updated/replaced if 'valueOffset' is defined.
             // Reminder: 'valueOffset' is equivalent to 'calculValueOffset' for action cmd.
@@ -446,7 +469,7 @@
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             // if ((stripos($request, "#") !== false) && (isset($eqModel['variables']))) {
             if (stripos($request, "#") !== false) {
-                logMessage('debug', "-- request: Unreplaced variable found in request");
+                logMessage('debug', "-- request: Unreplaced variable found");
                 if (isset($eqModel['variables'])) {
                     logMessage('debug', "-- request: Checking unreplaced variables against eqModel['variables']");
                     while (true) {

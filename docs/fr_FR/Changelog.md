@@ -3,6 +3,7 @@
 -   Amélioration: Philips RWL021: Mise-à-jour modèle (1243).
 -   Amélioration: Nom de qq images normalisé.
 -   Amélioration: Support section 'variables' des modeles.
+-   Amélioration: Interne cmd: Variable 'Groupe' n'est plus supportée => Section 'variables'
 
 ## 241107-STABLE-1, 241107-BETA-1
 

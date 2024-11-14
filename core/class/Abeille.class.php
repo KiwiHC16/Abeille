@@ -2843,9 +2843,10 @@ log::add('Abeille', 'debug', "  infoCmdUpdate()");
         if (isset($modelConf['paramType']))
             $eqLogic->setConfiguration('paramType', $modelConf['paramType']);
 
-        if (isset($modelConf['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
-            $eqLogic->setConfiguration('Groupe', $modelConf['Groupe']);
-        }
+        // OBSOLETE: Replaced by use of 'variables' section
+        // if (isset($modelConf['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
+        //     $eqLogic->setConfiguration('Groupe', $modelConf['Groupe']);
+        // }
 
         // #GROUPEPx# variables now stored as generic vars in 'variables' section and replacement already done by getDeviceModel()
         // Temporary support for 'groupEPx' (to replace #GROUPEPx#)

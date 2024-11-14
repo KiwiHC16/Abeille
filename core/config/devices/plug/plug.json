@@ -7,22 +7,14 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Xiaomi-Plug",
-            "Groupe": ""
+            "icon": "Xiaomi-Plug"
         },
         "category": {
             "automatism": "1"
         },
-        "variables": {
-            "addrGroup": "2002"
-        },
         "commands": {
             "On": {
                 "use": "act_zbCmdC-0006-On",
-                "isVisible": 1
-            },
-            "OnGroup": {
-                "use": "act_zbCmdC-0006-OnGroup",
                 "isVisible": 1
             },
             "Off": {

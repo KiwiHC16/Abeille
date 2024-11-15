@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="241107-BETA-1"
+# VERSION="241115-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -36,10 +36,10 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 925883ec8140b98f8144a29c13348615 *core/ajax/AbeilleModelChange.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 c697264a367aa536ef60425b7fcf88ea *core/ajax/AbeilleZigate.ajax.php
-80db8f1cd962ef331485350de014c4ed *core/class/Abeille.class.php
-4d5e870946f23491d530d439a6e8efd7 *core/class/AbeilleCmd.class.php
+aaae4db2de7816c52c1c39137652b2d3 *core/class/Abeille.class.php
+969ed963cbf18eb306e8b56cfeaf39d9 *core/class/AbeilleCmd.class.php
 2654211b5cb37ba38137ee93b257b888 *core/class/AbeilleCmdPrepare.class.php
-ddee8c159f1d7a640063bf60285c61ff *core/class/AbeilleCmdProcess.class.php
+f086674946902993cc8c91b5dba4db56 *core/class/AbeilleCmdProcess.class.php
 59bff3729f43ff75a33d3a53008a4406 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 a2ed86abd7634b3a69bdf732d0356637 *core/class/AbeilleParser.class.php
@@ -543,7 +543,7 @@ b63938d4df73ee3d04f498bca0dda7c2 *core/config/devices/RH3040/RH3040.json
 4253957c938de4e7544073347a5498c7 *core/config/devices/RODRETDimmer_IKEAofSweden/RODRETDimmer_IKEAofSweden-direct.json
 9db344363221366214c483598f85d05b *core/config/devices/RODRETDimmer_IKEAofSweden/RODRETDimmer_IKEAofSweden.json
 b3d7577c796d1f4ed48aef7011fdb221 *core/config/devices/RODRETDimmer_IKEAofSweden/discovery-RODRETDimmer_IKEAofSweden.json
-8bf97d18e96fb02a9b9e14cb2e49af62 *core/config/devices/RWL021/RWL021.json
+47d4c6fda3ef784028b9f673d20e187a *core/config/devices/RWL021/RWL021.json
 a1366186c526b4e7b702c19a880155e3 *core/config/devices/RWL021/discovery.json
 731ceef4aeed5de1e5ab29ac279cff4d *core/config/devices/Remoteswitch/067723_discovery.json
 ad1d9fe17a83f9a350dde68d72bfea26 *core/config/devices/Remoteswitch/Remoteswitch.json
@@ -968,7 +968,7 @@ c42db0aa285cea25a0dbf1122f55f319 *core/config/devices/zigbeeOnOffLight/zigbeeOnO
 df1aca4068e54c2b218f744b682ae9e3 *core/config/devices/zigbeeWindowCoveringDevice/zigbeeWindowCoveringDevice.json
 2261d07e5db7eb40b621b54973d81cb7 *core/config/devices_local/LISEZMOI.txt
 a03262b18f2d6fe7f9e99bb72ae4c38b *core/config/devices_local/README.txt
-3ab8135083575243b509c53cd24e47fe *core/config/ignore_on_push.txt
+a12372ddc5006c5af55e41847b9c6bf5 *core/config/ignore_on_push.txt
 ac6921e46447a8dcfbf2242350aa30f3 *core/config/rucheCommand.json
 bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 f3c14cd54c234f28d1f201bfb7517c25 *core/i18n/en_US.json
@@ -1071,7 +1071,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-de14c782587b404a5b32a695fd0aca5f *docs/fr_FR/Changelog.md
+3d3276c74da80007af934d566ad1b0fd *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1242,6 +1242,7 @@ c6d0633524dde492fc571404ff9b76d5 *images/node_PSE03-v1.1.0.png
 ae536215e67247fc3aebd2273f3ab115 *images/node_PaulmannLicht-DimmingController.png
 f186dd81fa0dc3eae3841b90259799c7 *images/node_Philips-MotionSensor-1.png
 b3147ce74c5cd569b5fbfcef1e094d98 *images/node_Philips-MotionSensor-2.png
+81f486f95b4cb7ab0718e54b723f5687 *images/node_Philips-Remote.png
 6c77dc05c5cb6bc0567c640e88da4430 *images/node_PhilipsHue-E14Bulb-CandleWA.png
 4abb4e9216934ecffd9b87c5b36e6adb *images/node_PhilipsHue-E27Bulb-White-Filament.png
 3ac21a2ca92e302e65f44d4405ba1212 *images/node_PhilipsHue-E27Bulb-White.png
@@ -1256,7 +1257,6 @@ fc3ae24271000807c38a651442beea6e *images/node_Profalux-Remote.png
 42584fcb6b390ada2173e6e01a3f7f9d *images/node_RF263.png
 535ffb4f6cb77147fe24170a56665d27 *images/node_RF265.png
 bcefd15d0679b4f46a868b671a920581 *images/node_RH3001.png
-81f486f95b4cb7ab0718e54b723f5687 *images/node_RWL021.png
 c9112730647a7c4d17b4d22a8b9a35d2 *images/node_Ruche.png
 84d7f326600545ca270b0ff3015d9e75 *images/node_SA-003-Zigbee.png
 8deebc5b7f3c9a7c264b50dcc3bafa8f *images/node_SM309.png
@@ -1423,12 +1423,12 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-401d6f64e9fc9a285b20ed08f4bd4294 *plugin_info/Abeille.version
+f6f0cc965fe0df7e1b32eab296267317 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 489670c29a0bd0f77eb0e3f22a598011 *plugin_info/configuration.php
-55a2098198b9cb031a870fb0fcd55d8e *plugin_info/info.json
-f8f82164cd73842ff9330c02d21bc6f9 *plugin_info/install.php
+8e64cdffc91a5ae8d65220b013935277 *plugin_info/info.json
+41791f297055e8aa257aa9152633a289 *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
 d41d8cd98f00b204e9800998ecf8427e *resources/COM

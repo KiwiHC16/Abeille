@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 241115-BETA-1
+
 -   Amélioration: Philips RWL021: Mise-à-jour modèle (1243).
 -   Amélioration: Nom de qq images normalisé.
 -   Amélioration: Support section 'variables' des modeles.

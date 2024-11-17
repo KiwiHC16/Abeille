@@ -676,7 +676,8 @@
                                 logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
                                 continue;
                             }
-                            $ieee = $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'];
+                            // Note: No IEEE for virtual remote control (addr=rcXX)
+                            $ieee = isset($GLOBALS['devices'][$net][$addr]['zigbee']['ieee']) ? $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] : '?';
                             unset($GLOBALS['devices'][$net][$addr]);
                             // TODO: Instead of removing, might be worth flaging it to not loose infos if rejoin
                             logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");

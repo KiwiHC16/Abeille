@@ -123,6 +123,7 @@
         $info = "undefined-info";
         $div = 1; // For optional value division
         $mult = 1; // For optional value multiplication
+        $enum = []; // For rcvValueEnum
         if (isset($mapping[$dpId]['function'])) {
             $func = $mapping[$dpId]['function'];
             if (isset($mapping[$dpId]['info']))
@@ -131,6 +132,8 @@
                 $div = $mapping[$dpId]['div'];
             if (isset($mapping[$dpId]['mult']))
                 $mult = $mapping[$dpId]['mult'];
+            if (isset($mapping[$dpId]['enum']))
+                $enum = $mapping[$dpId]['enum'];
         } else
             // This case should no longer be required. Obsolete !
             $func = $mapping[$dpId];
@@ -216,6 +219,22 @@
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
+            );
+            break;
+        case "rcvValueEnum": // Converting value thru enum
+            $val = $dp['data'];
+            // parserLog2("debug", $addr, "val=$val => enum=".json_encode($enum));
+            if (isset($enum[$val]))
+                $valOut = $enum[$val];
+            else {
+                parserLog2("error", $addr, "  '".$func."' for dpId=$dpId: Unknown enum");
+                $attributeN = false;
+                break;
+            }
+            $logMsg = "  ".$dp['m']." => 'rcvValueEnum' => '".$info."'=".$valOut;
+            $attributeN = array(
+                'name' => $info,
+                'value' => $valOut,
             );
             break;
 

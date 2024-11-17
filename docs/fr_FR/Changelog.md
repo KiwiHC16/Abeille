@@ -1,5 +1,8 @@
 # ChangeLog
 
+- Amélioration: Modèle pour Tuya 2 keys remote (2731).
+- Amélioration: Support Tuya: Ajout function générique 'rcvValueEnum'.
+
 ## 241115-BETA-1
 
 -   Amélioration: Philips RWL021: Mise-à-jour modèle (1243).

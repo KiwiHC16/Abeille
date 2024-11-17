@@ -183,6 +183,16 @@ La syntaxe actuelle est la suivante :
                 "function": "rcvValue",
                 "info": "01-measuredValue"
             },
+
+            // Fonctions supportées
+            // 'rcvValue'
+            // 'rcvValueEnum'
+            //     "function": "rcvValueEnum",
+            //     "enum": {
+            //          "00": "single",
+            //          "01": "double",
+            //          "02": "long"
+            //      }
         },
 
         "FCC0-0112": { // CLUSTID-ATTRID

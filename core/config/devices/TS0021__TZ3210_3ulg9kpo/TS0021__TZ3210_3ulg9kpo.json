@@ -1,0 +1,63 @@
+{
+    "TS0021__TZ3210_3ulg9kpo": {
+        "manufacturer": "Tuya",
+        "model": "LKWSZ211",
+        "type": "Tuya 2 keys remote",
+        "genericType": "Light",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-2KeysRemote",
+            "mainEP": "01",
+            "batteryType": "2x1.5V AAA"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "Click 1": {
+                "use": "inf_click",
+                "comment": "value = single, double or long",
+                "logicalId": "inf_click1",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "inf_click",
+                "comment": "value = single, double or long",
+                "logicalId": "inf_click2",
+                "isVisible": 1
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "01": {
+                    "function": "rcvValueEnum",
+                    "enum": {
+                        "00": "single",
+                        "01": "double",
+                        "02": "long"
+                    },
+                    "comment": "00=single, 01=double, 02=long",
+                    "info": "inf_click1"
+                },
+                "02": {
+                    "function": "rcvValueEnum",
+                    "enum": {
+                        "00": "single",
+                        "01": "double",
+                        "02": "long"
+                    },
+                    "comment": "00=single, 01=double, 02=long",
+                    "info": "inf_click2"
+                },
+                "10": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                }
+            }
+        }
+    }
+}

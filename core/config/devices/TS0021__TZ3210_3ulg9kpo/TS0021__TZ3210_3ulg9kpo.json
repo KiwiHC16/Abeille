@@ -4,6 +4,7 @@
         "model": "LKWSZ211",
         "type": "Tuya 2 keys remote",
         "genericType": "Light",
+        "isVisible": 0,
         "category": {
             "light": "1"
         },
@@ -21,12 +22,16 @@
                 "use": "inf_click",
                 "comment": "value = single, double or long",
                 "logicalId": "inf_click1",
+                "returnStateValue": "",
+                "returnStateTime": 1,
                 "isVisible": 1
             },
             "Click 2": {
                 "use": "inf_click",
                 "comment": "value = single, double or long",
                 "logicalId": "inf_click2",
+                "returnStateValue": "",
+                "returnStateTime": 1,
                 "isVisible": 1
             }
         },

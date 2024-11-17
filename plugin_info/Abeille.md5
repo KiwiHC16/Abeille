@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="241115-BETA-1"
+# VERSION="241117-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -44,7 +44,7 @@ f086674946902993cc8c91b5dba4db56 *core/class/AbeilleCmdProcess.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 a2ed86abd7634b3a69bdf732d0356637 *core/class/AbeilleParser.class.php
 99d42da202592d0f2f9cf60b4f3fcdd5 *core/class/AbeilleTools.class.php
-dce7b9755c23208405b5676e6357e430 *core/config/Abeille.config.php
+444b6b75f9331b56df5c5f812efb4f1a *core/config/Abeille.config.php
 603640a07e5e022e4d4f1b6eb9d91d5c *core/config/AbeilleInternalCmds.json
 d8fe59ba5c734449970615205f5a23cc *core/config/commands/BindToGroupLevelEP03.json
 7d700c97dd32d63675fafce8e5599906 *core/config/commands/BindToGroupLevelEP04.json
@@ -462,7 +462,7 @@ b14bb4a323435909b0c7933d71df77f0 *core/config/devices/LDSENK01F_ADEO/LDSENK01F_A
 6d8b81f36bdad6884997919523e209e4 *core/config/devices/LDSENK02F_ADEO/discovery.json
 b4400a5f9a189503b4595f36b7f623f9 *core/config/devices/LIGHTIFYIndoorFlexRGBW/LIGHTIFYIndoorFlexRGBW.json
 1b64992746e67ecf8cb9c7843cfcd681 *core/config/devices/LIGHTIFYOutdoorFlexRGBW/LIGHTIFYOutdoorFlexRGBW.json
-8b62d2a095d548d1bd394925dfccee3a *core/config/devices/LISEZMOI.txt
+0f083e82be1c81e1e221eefea53043fa *core/config/devices/LISEZMOI.txt
 0c0542e59385410773acebb2b49267f1 *core/config/devices/LLC011/LLC011.json
 4466fdf87eac8f845242f2a23e5ebb05 *core/config/devices/LLC020/LLC020.json
 2d853d041440520c9d2a004c04bfc2d8 *core/config/devices/LOM001/LOM001.json
@@ -668,6 +668,8 @@ a6577487ec6f376860a37a7cc3cab34c *core/config/devices/TS0011__TZ3000_ji4araar/TS
 e8b11ccc608052211864a7a09579db31 *core/config/devices/TS0011__TZ3000_ji4araar/discovery.json
 18536a915f4194433f8045c8dd46dede *core/config/devices/TS0012/TS0012.json
 1ab15bf9f3f9237842a7f19de134ec93 *core/config/devices/TS0013/TS0013.json
+c1170540932ada05d0c1a7d9c009b5d0 *core/config/devices/TS0021__TZ3210_3ulg9kpo/TS0021__TZ3210_3ulg9kpo.json
+bd35291fe765dc15c7b04fc503bca5db *core/config/devices/TS0021__TZ3210_3ulg9kpo/discovery-TS0021__TZ3210_3ulg9kpo.json
 3cf117996a58809b2ca943f6e01006b7 *core/config/devices/TS0041/TS0041.json
 16b53e2238af144fdb1dd79d931a3002 *core/config/devices/TS0042__TYZB02_keyjhapk/TS0042__TYZB02_keyjhapk.json
 092dc8b5e0b6035d772429f43f1557a6 *core/config/devices/TS0043__TYZB02_key8kk7r/TS0043__TYZB02_key8kk7r.json
@@ -857,7 +859,7 @@ af1df226ed3f569623a19dc54823479e *core/config/devices/WG001-Z01_AL001/WG001-Z01_
 405ef47228af60180720503c21762fd4 *core/config/devices/WaterSensor-EM_HEIMAN/discovery-WaterSensor-EM_HEIMAN.json
 1462a890bc59575793c9bcb92dc482c7 *core/config/devices/ZB-CL01/ZB-CL01.json
 7ce0c0aff7576c29a98dc6d860774eff *core/config/devices/ZB-RGBCW/ZB-RGBCW.json
-096daf14c243fd9e85e0c66e577d1836 *core/config/devices/ZB-SW01/ZB-SW01.json
+834bd0e7d6abcb9280199202dcdc0fe4 *core/config/devices/ZB-SW01/ZB-SW01.json
 4c26c4ede1a8bf449a434a2c2e901360 *core/config/devices/ZB-SW01/discovery.json
 72e04f0739040f897e9cca84af813a63 *core/config/devices/ZBEK-4_Adeo/ZBEK-4_Adeo.json
 a3cd29e67aed1895c8d34d574373ae8a *core/config/devices/ZBEK-4_Adeo/discovery.json
@@ -912,7 +914,7 @@ db5e4208620e427a916f1d0d2fa94b34 *core/config/devices/remote.b486opcn01/discover
 887afafefdefc156bfb94543e25a4baf *core/config/devices/remote.b486opcn01/remote.b486opcn01.json
 969877fa835c3f7624b7e5b984cb865f *core/config/devices/remote.b686opcn01/notes.txt
 3f2fcdfdf3e3a6ae5ddef047d5f2290a *core/config/devices/remote.b686opcn01/remote.b686opcn01.json
-ae49915df0d52b3e031ff0972bd21967 *core/config/devices/remotecontrol/remotecontrol.json
+eb2033e6d3a8ddb1fd892a8f938640ef *core/config/devices/remotecontrol/remotecontrol.json
 951f400be43ba32ea2128fa7244d7e6c *core/config/devices/router/router.json
 d23fa8eeae170c8252494da6e2254cb6 *core/config/devices/sen_ill.mgl01/discovery-sen_ill.agl01_LUMI.json
 7e2e47d4f465801f2a7114c07e9b8563 *core/config/devices/sen_ill.mgl01/discovery.json
@@ -987,9 +989,9 @@ f3b9942d631562c48bb607c8a437f446 *core/php/AbeilleLog.php
 1bb0e4ee133d6661a9a11f84f5257790 *core/php/AbeilleMonitor.php
 3f23e5dbc4f01327d47fd90e2ef88952 *core/php/AbeilleNoise.php
 9ab85f33787d42bdae75985d3e3b4d69 *core/php/AbeilleOTA.php
-ab35dff9aa6d63899da918784efe9874 *core/php/AbeilleParser-Tuya.php
+42723a371182e242ced6fe16c95697b9 *core/php/AbeilleParser-Tuya.php
 6ca572a7882071f1de22dc38d1247d3f *core/php/AbeilleParser-Xiaomi.php
-4b7f27fd69691c99605e6ebbdd541869 *core/php/AbeilleParser.php
+6d7c5f51a85ea638d72035c2e417a120 *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 bff8b2ccb60725680d50c00e0b84415c *core/php/AbeilleRepair.php
 875ae0bb9f3ffa4e1f4863f58ad6147a *core/php/AbeilleRoutes.php
@@ -1071,7 +1073,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-3d3276c74da80007af934d566ad1b0fd *docs/fr_FR/Changelog.md
+9c75cd66bb05349e2000c803c438aae2 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1316,6 +1318,7 @@ bd9af815f6c6fa32e1db1047613f7ded *images/node_TS0601__TZE200_nueqqe6k.png
 992b6d2473f467697af3e7029cad12b4 *images/node_TY0A01.png
 dfeca28d6d87a62e8962d80986860bed *images/node_Tongou-DinCircuitBreaker.png
 639b3aaaea43423156d14694f3dbdd07 *images/node_Tuya-1ChanSwitchModule.png
+7b1a7d40e9ad93768e5327258fc9d9b6 *images/node_Tuya-2KeysRemote.png
 7152f144af7c765ad8bd055ffc3e7339 *images/node_Tuya-4ButtonsSwitch-Gray.png
 e0b50d71018bb945837ecbaa7222bb32 *images/node_Tuya-4ButtonsSwitch-White.png
 d757e426e5d2ec5456e3c2ef58dd7937 *images/node_Tuya-CurtainModule.png
@@ -1423,12 +1426,12 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-f6f0cc965fe0df7e1b32eab296267317 *plugin_info/Abeille.version
+dea5a7ff43b831cd3b5485d76a4fb7be *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 489670c29a0bd0f77eb0e3f22a598011 *plugin_info/configuration.php
-8e64cdffc91a5ae8d65220b013935277 *plugin_info/info.json
-41791f297055e8aa257aa9152633a289 *plugin_info/install.php
+901f700f0ea44b473f87b73007ff275e *plugin_info/info.json
+9d1968d951fc2d5f88aa09d7e5ef2526 *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
 d41d8cd98f00b204e9800998ecf8427e *resources/COM

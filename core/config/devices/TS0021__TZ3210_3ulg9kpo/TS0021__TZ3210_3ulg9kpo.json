@@ -22,7 +22,7 @@
                 "use": "inf_click",
                 "comment": "value = single, double or long",
                 "logicalId": "inf_click1",
-                "returnStateValue": "",
+                "returnStateValue": "no-click",
                 "returnStateTime": 1,
                 "isVisible": 1
             },
@@ -30,7 +30,7 @@
                 "use": "inf_click",
                 "comment": "value = single, double or long",
                 "logicalId": "inf_click2",
-                "returnStateValue": "",
+                "returnStateValue": "no-click",
                 "returnStateTime": 1,
                 "isVisible": 1
             }

@@ -14,13 +14,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
-            },
-            "Status": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1,
-                "nextLine": "after"
+                "use": "act_zbCmdC-Identify"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -39,6 +33,11 @@
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Bind-01-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

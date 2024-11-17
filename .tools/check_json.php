@@ -724,7 +724,7 @@
 
         $devCmd = $devModel['commands'][$cmdJName];
 
-        if (isset($devCmd['params'])) {
+        if (isset($devCmd['params']) && ($devCmd['params'] != '')) {
             // Overwritting default settings with 'params' content
             // TODO: This should be done on 'configuration/request' only ??
             $paramsArr = explode('&', $devCmd['params']); // ep=01&clustId=0000 => ep=01, clustId=0000

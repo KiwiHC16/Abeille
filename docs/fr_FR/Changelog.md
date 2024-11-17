@@ -2,7 +2,7 @@
 
 - Amélioration: Modèle pour Tuya 2 keys remote (2731).
 - Amélioration: Support Tuya: Ajout function générique 'rcvValueEnum'.
-- Correction: Regression telecommande virtuelle (2732).
+- Correction: Regression telecommande virtuelle => Mise-à-jour automatique (2732).
 
 ## 241115-BETA-1
 

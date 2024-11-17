@@ -1173,8 +1173,9 @@
          * - Cmd DB: 'setLevel' update: 'Level' renamed to 'level'
          * - Cmd DB: 'setLevel' update: 'EP' renamed to 'ep'
          * - Eq DB: Some icons renamed for normalization
+         * - Some eq updates forced from changed model.
          */
-        if (intval($dbVersion) < 20241108) {
+        if (intval($dbVersion) < 20241117) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled{$gtwId}", "ab::gtwEnabled{$gtwId}");
@@ -1193,6 +1194,11 @@
 
                 renameConfigKey("ab::zgChan{$gtwId}", "ab::gtwChan{$gtwId}");
             }
+
+            // Force some equipments update from model.
+            $toReload = array(
+                'remotecontrol' => '2024-11-17 23:30:00',
+            );
 
             // 'eqLogic' + 'cmd' DB updates
             $eqLogics = eqLogic::byType('Abeille');
@@ -1258,11 +1264,42 @@
                     if (addCmdFromModel($eqId, "inf_time-String", "Time-Time") == true)
                         log::add('Abeille', 'debug', "  {$eqHName}[Time-Time]: Added");
                 }
+
+                // Model updated ?
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                if (isset($eqModel['modelName']) && array_key_exists($eqModel['modelName'], $toReload)) {
+                    $eqModelName = $eqModel['modelName'];
+                    checkAndUpdate($eqLogic, $eqModelName, $toReload);
+                }
             }
 
-            // config::save('ab::dbVersion', '20240624', 'Abeille');
+            // config::save('ab::dbVersion', '20241117', 'Abeille');
         }
     } // End updateConfigDB()
+
+    // Check if equipment must be updated and force if required
+    function checkAndUpdate($eqLogic, $eqModelName, $toReload) {
+
+        // Check last update from model
+        $modelTime = $toReload[$eqModelName];
+        $updateTime = $eqLogic->getConfiguration('updatetime', "");
+        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": modelTime=".$modelTime.", updateTime=".$updateTime);
+        if ($updateTime != '') {
+            if (strtotime($updateTime) > strtotime($modelTime))
+                return;
+        }
+
+        list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+        $dev = array(
+            'net' => $net,
+            'addr' => $addr,
+            'jsonId' => $eqModelId,
+            'jsonLocation' => 'Abeille',
+            'ieee' => $eqLogic->getConfiguration('IEEE'),
+        );
+        Abeille::createDevice("update", $dev);
+        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Updating Jeedom equipment from model");
+    }
 
     // Returns: true or false
     function addCmdFromModel($eqId, $cmdModelName, $cmdName) {

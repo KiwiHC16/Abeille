@@ -25,10 +25,6 @@
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
-            },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
             }
         }
     }

@@ -3455,29 +3455,29 @@
                                 // return;
                             }
 
-                            // Philips Hue specific cluster
-                            // Used by RWL021, RDM001
-                            // TODO: Private case to be revisited
-                            if ($clustId == "FC00") {
-                                $buttonEventTxt = array (
-                                    '00' => 'Short press',
-                                    '01' => 'Long press',
-                                    '02' => 'Release short press',
-                                    '03' => 'Release long press',
-                                );
-                                $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
-                                $button = $attrId;
-                                // $buttonEvent = substr($payload, 24 + 2, 2);
-                                $buttonEvent = substr($pl, 0 + 2, 2);
-                                // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
-                                $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
-                                parserLog2("debug", $srcAddr, "  TOBEREVISITED: Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
+                            // // Philips Hue specific cluster
+                            // // Used by RWL021, RDM001
+                            // // TODO: Private case to be revisited
+                            // if ($clustId == "FC00") {
+                            //     $buttonEventTxt = array (
+                            //         '00' => 'Short press',
+                            //         '01' => 'Long press',
+                            //         '02' => 'Release short press',
+                            //         '03' => 'Release long press',
+                            //     );
+                            //     $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
+                            //     $button = $attrId;
+                            //     // $buttonEvent = substr($payload, 24 + 2, 2);
+                            //     $buttonEvent = substr($pl, 0 + 2, 2);
+                            //     // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
+                            //     $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
+                            //     parserLog2("debug", $srcAddr, "  TOBEREVISITED: Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
 
-                                $attrReportN = [
-                                    array( "name" => $clustId."-".$srcEp."-".$attrId."-Event", "value" => $buttonEvent ),
-                                    array( "name" => $clustId."-".$srcEp."-".$attrId."-Duree", "value" => $buttonDuree ),
-                                ];
-                            } // End cluster FC00
+                            //     $attrReportN = [
+                            //         array( "name" => $clustId."-".$srcEp."-".$attrId."-Event", "value" => $buttonEvent ),
+                            //         array( "name" => $clustId."-".$srcEp."-".$attrId."-Duree", "value" => $buttonDuree ),
+                            //     ];
+                            // } // End cluster FC00
                         }
                     } // End '$cmd == "01"'
 
@@ -3934,6 +3934,7 @@
                         // return;
                     }
                 } else { // Cluster specific command
+
                     // 0004/Groups cluster specific
                     if ($clustId == "0004") {
                         // Duplicated message ?
@@ -4474,7 +4475,7 @@
                             return;
 
                         // Checking if command must be treated as special private case
-                        // WORK ONGOING !!!
+
                         /* Generic format for private clusters/commands reminder
                         "private": {
                             "EF00": { // CLUSTID
@@ -4494,6 +4495,10 @@
                                     "div": 1000,
                                     "info": "0001-01-0020"
                                 }
+                            },
+                            "FC00-00": { // CLUSTID-CMDID
+                                "type": "generic",
+                                "function": "philipsDecodeCmdFC00"
                             }
                         }
                         "fromDevice": { // OBSOLETE !! Previous naming
@@ -4516,39 +4521,54 @@
                                 },
                             }
                         } */
-                        if (isset($eq['private'])) {
-                            foreach ($eq['private'] as $key => $p2) {
-                                $lenKey = strlen($key);
-                                if (($lenKey == 4) && ($clustId != $key)) // 'CCCC' (clustId) case
-                                    continue;
-                                // if (($lenFd1 == 9) && ($clustId.'-'.$attrId != $fd1)) // 'CCCC-AAAA' (clustId-attrId) case
-                                //     continue;
-
-                                $supportType = $p2['type']; // "tuya", "tuya-zosung", "xiaomi"
-                                break;
-                            }
-                        }
-                        // else if (isset($eq['fromDevice'])) { // OBSOLETE !! Replaced by 'private'
-                        //     foreach ($eq['fromDevice'] as $fd1 => $fd2) {
-                        //         $lenFd1 = strlen($fd1);
-                        //         if (($lenFd1 == 4) && ($clustId != $fd1)) // 'CCCC' (clustId) case
+                        // if (isset($eq['private'])) {
+                        //     foreach ($eq['private'] as $key => $p2) {
+                        //         $lenKey = strlen($key);
+                        //         if (($lenKey == 4) && ($clustId != $key)) // 'CCCC' (clustId) case
                         //             continue;
                         //         // if (($lenFd1 == 9) && ($clustId.'-'.$attrId != $fd1)) // 'CCCC-AAAA' (clustId-attrId) case
                         //         //     continue;
 
-                        //         $supportType = $fd2['type']; // "tuya", "tuya-zosung", "xiaomi"
+                        //         $supportType = $p2['type']; // "tuya", "tuya-zosung", "xiaomi"
                         //         break;
                         //     }
                         // }
-                        if (isset($supportType)) {
+                        // if (isset($supportType)) {
+                        //     if ($supportType == 'tuya')
+                        //         $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        //     else if ($supportType == 'tuya-zosung')
+                        //         $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        //     else
+                        //         parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": unsupported type ".$supportType);
+                        // } else {
+                        //     parserLog2("debug", $srcAddr, "  Unsupported cluster specific command ".$clustId."-".$cmd, "8002");
+                        //     $attrReportN[] = array(
+                        //         'name' => 'inf_'.$srcEp.'-'.$clustId.'-cmd'.$cmd,
+                        //         'value' => $pl,
+                        //     );
+                        // }
+                        if (isset($eq['private']) && isset($eq['private'][$clustId.'-'.$cmd])) {
+                            $p = $eq['private'][$clustId.'-'.$cmd];
+                            $supportType = $p['type']; // "tuya", "tuya-zosung", "xiaomi", "generic"
                             if ($supportType == 'tuya')
                                 $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
                             else if ($supportType == 'tuya-zosung')
                                 $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
-                            else
-                                parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": unsupported type ".$supportType);
+                            else if ($supportType == 'generic') {
+                                if (!isset($p['function'])) {
+                                    parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Undefined private function");
+                                } else {
+                                    $fct = $p['function'];
+                                    if (!function_exists($fct)) {
+                                        parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unknown private function '$fct'");
+                                    } else {
+                                        $attrReportN = $fct($dest, $srcAddr, $srcEp, $clustId, $cmd, $pl);
+                                    }
+                                }
+                            } else
+                                parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unsupported type '$supportType'");
                         } else {
-                            parserLog2("debug", $srcAddr, "  Unsupported cluster specific command ".$clustId."-".$cmd, "8002");
+                            parserLog2("debug", $srcAddr, "  Unsupported cluster specific command ".$clustId."-".$cmd);
                             $attrReportN[] = array(
                                 'name' => 'inf_'.$srcEp.'-'.$clustId.'-cmd'.$cmd,
                                 'value' => $pl,

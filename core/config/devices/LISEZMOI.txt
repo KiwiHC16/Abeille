@@ -218,5 +218,9 @@ La syntaxe actuelle est la suivante :
                 "info": "0001-01-0020",
                 "comment": "Battery-Volt"
             }
+        },
+        "FC00-00": { // CLUSTID-CMDID
+            "type": "generic",
+            "function": "philipsDecodeCmdFC00"
         }
     }

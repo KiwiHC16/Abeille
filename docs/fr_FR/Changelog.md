@@ -1,10 +1,14 @@
 # ChangeLog
 
+-   Amélioration: Modèle d'équipement avec support 'private': Ajout du type 'generic'.
+-   Amélioration: Philips RWL021: Mise-à-jour modèle (1243). Attention à revoir scenario si besoin !!
+-   Amélioration: Ajout support Philips RWL020.
+
 ## 241117-BETA-1
 
-- Amélioration: Modèle pour Tuya 2 keys remote (2731).
-- Amélioration: Support Tuya: Ajout function générique 'rcvValueEnum'.
-- Correction: Regression telecommande virtuelle => Mise-à-jour automatique (2732).
+-   Amélioration: Modèle pour Tuya 2 keys remote (2731).
+-   Amélioration: Support Tuya: Ajout function générique 'rcvValueEnum'.
+-   Correction: Regression telecommande virtuelle => Mise-à-jour automatique (2732).
 
 ## 241115-BETA-1
 

@@ -4,6 +4,9 @@
         "model": "RWL021",
         "type": "Hue Dimmer Switch RWL021",
         "genericType": "Light",
+        "alternateIds": {
+            "RWL020": {}
+        },
         "timeout": "60",
         "configuration": {
             "mainEP": "02",
@@ -78,11 +81,41 @@
             "DureeButtonO": {
                 "use": "boutonStateRWL021_8"
             },
+            "I": {
+                "comment": "Button I/On, value=short-press/long-press/short-release/long-release",
+                "use": "inf_generic-String",
+                "logicalId": "philipsFC00-00-01",
+                "isVisible": 1
+            },
+            "B+": {
+                "comment": "Button Bightness +, value=short-press/long-press/short-release/long-release",
+                "use": "inf_generic-String",
+                "logicalId": "philipsFC00-00-02",
+                "isVisible": 1
+            },
+            "B-": {
+                "comment": "Button Bightness -, value=short-press/long-press/short-release/long-release",
+                "use": "inf_generic-String",
+                "logicalId": "philipsFC00-00-03",
+                "isVisible": 1
+            },
+            "0": {
+                "comment": "Button 0/Off, value=short-press/long-press/short-release/long-release",
+                "use": "inf_generic-String",
+                "logicalId": "philipsFC00-00-04",
+                "isVisible": 1
+            },
             "Bind-FC00-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=FC00",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
+            }
+        },
+        "private": {
+            "FC00-00": {
+                "type": "generic",
+                "function": "philipsDecodeCmdFC00"
             }
         }
     }

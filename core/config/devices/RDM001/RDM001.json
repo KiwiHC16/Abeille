@@ -17,10 +17,6 @@
             "automatism": "1"
         },
         "commands": {
-            "Get-SWBuild": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
@@ -37,8 +33,7 @@
                 "execAtCreationDelay": 2
             },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

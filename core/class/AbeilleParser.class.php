@@ -3455,29 +3455,29 @@
                                 // return;
                             }
 
-                            // // Philips Hue specific cluster
-                            // // Used by RWL021, RDM001
-                            // // TODO: Private case to be revisited
-                            // if ($clustId == "FC00") {
-                            //     $buttonEventTxt = array (
-                            //         '00' => 'Short press',
-                            //         '01' => 'Long press',
-                            //         '02' => 'Release short press',
-                            //         '03' => 'Release long press',
-                            //     );
-                            //     $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
-                            //     $button = $attrId;
-                            //     // $buttonEvent = substr($payload, 24 + 2, 2);
-                            //     $buttonEvent = substr($pl, 0 + 2, 2);
-                            //     // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
-                            //     $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
-                            //     parserLog2("debug", $srcAddr, "  TOBEREVISITED: Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
+                            // Philips Hue specific cluster
+                            // Used by RWL021, RDM001
+                            // TODO: Private case to be revisited
+                            if ($clustId == "FC00") {
+                                $buttonEventTxt = array (
+                                    '00' => 'Short press',
+                                    '01' => 'Long press',
+                                    '02' => 'Release short press',
+                                    '03' => 'Release long press',
+                                );
+                                $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
+                                $button = $attrId;
+                                // $buttonEvent = substr($payload, 24 + 2, 2);
+                                $buttonEvent = substr($pl, 0 + 2, 2);
+                                // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
+                                $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
+                                parserLog2("debug", $srcAddr, "  TOBEREVISITED: Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
 
-                            //     $attrReportN = [
-                            //         array( "name" => $clustId."-".$srcEp."-".$attrId."-Event", "value" => $buttonEvent ),
-                            //         array( "name" => $clustId."-".$srcEp."-".$attrId."-Duree", "value" => $buttonDuree ),
-                            //     ];
-                            // } // End cluster FC00
+                                $attrReportN = [
+                                    array( "name" => $clustId."-".$srcEp."-".$attrId."-Event", "value" => $buttonEvent ),
+                                    array( "name" => $clustId."-".$srcEp."-".$attrId."-Duree", "value" => $buttonDuree ),
+                                ];
+                            } // End cluster FC00
                         }
                     } // End '$cmd == "01"'
 

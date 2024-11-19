@@ -65,10 +65,10 @@
         // $unknown2 = substr($pl, 7, 2);
         $time = substr($pl, 9, 2);
         $typeTxt = isset($buttonTypeTxt[$type]) ? $buttonTypeTxt[$type] : "?";
-        parserLog2("debug", $addr, "  Philips private: Cluster=$clustId, Cmd=$cmd, Button=$button, Type=$type/$typeTxt, Time=$time");
+        parserLog2("debug", $addr, "  Philips private: Cluster=$clustId, Cmd=$cmdId, Button=$button, Type=$type/$typeTxt, Time=$time");
 
         $attrReportN = [];
-        $attrReportN[] = Array( "name" => "$philipsFC00-$cmdId-$button", "value" => $typeTxt );
+        $attrReportN[] = Array( "name" => "philipsFC00-$cmdId-$button", "value" => $typeTxt );
 
         // OBSOLETE SUPPORT
         // $attrReportN[] = Array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent );

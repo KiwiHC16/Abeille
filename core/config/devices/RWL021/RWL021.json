@@ -57,49 +57,25 @@
             "Up": {
                 "use": "upGroup"
             },
-            "EventButtonI": {
-                "use": "boutonStateRWL021_1"
-            },
-            "DureeButtonI": {
-                "use": "boutonStateRWL021_2"
-            },
-            "EventButtonLumPlus": {
-                "use": "boutonStateRWL021_3"
-            },
-            "DureeButtonLumPlus": {
-                "use": "boutonStateRWL021_4"
-            },
-            "EventButtonLumMoins": {
-                "use": "boutonStateRWL021_5"
-            },
-            "DureeButtonLumMoins": {
-                "use": "boutonStateRWL021_6"
-            },
-            "EventButtonO": {
-                "use": "boutonStateRWL021_7"
-            },
-            "DureeButtonO": {
-                "use": "boutonStateRWL021_8"
-            },
-            "I": {
+            "Button ON": {
                 "comment": "Button I/On, value=short-press/long-press/short-release/long-release",
                 "use": "inf_generic-String",
                 "logicalId": "philipsFC00-00-01",
                 "isVisible": 1
             },
-            "B+": {
+            "Button B+": {
                 "comment": "Button Bightness +, value=short-press/long-press/short-release/long-release",
                 "use": "inf_generic-String",
                 "logicalId": "philipsFC00-00-02",
                 "isVisible": 1
             },
-            "B-": {
+            "Button B-": {
                 "comment": "Button Bightness -, value=short-press/long-press/short-release/long-release",
                 "use": "inf_generic-String",
                 "logicalId": "philipsFC00-00-03",
                 "isVisible": 1
             },
-            "0": {
+            "Button OFF": {
                 "comment": "Button 0/Off, value=short-press/long-press/short-release/long-release",
                 "use": "inf_generic-String",
                 "logicalId": "philipsFC00-00-04",

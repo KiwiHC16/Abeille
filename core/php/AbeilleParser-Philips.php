@@ -60,10 +60,10 @@
         );
 
         $button = substr($pl, 0, 2);
-        // $unknown1 = substr($pl, 2, 3);
-        $type = substr($pl, 5, 2);
-        // $unknown2 = substr($pl, 7, 2);
-        $time = substr($pl, 9, 2);
+        // $unknown1 = substr($pl, 2, 6); // 24bits
+        $type = substr($pl, 8, 2);
+        // $unknown2 = substr($pl, 10, 2);
+        $time = substr($pl, 12, 2);
         $typeTxt = isset($buttonTypeTxt[$type]) ? $buttonTypeTxt[$type] : "?";
         parserLog2("debug", $addr, "  Philips private: Cluster=$clustId, Cmd=$cmdId, Button=$button, Type=$type/$typeTxt, Time=$time");
 

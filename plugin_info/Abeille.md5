@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="241117-BETA-1"
+# VERSION="241120-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -42,9 +42,9 @@ aaae4db2de7816c52c1c39137652b2d3 *core/class/Abeille.class.php
 f086674946902993cc8c91b5dba4db56 *core/class/AbeilleCmdProcess.class.php
 59bff3729f43ff75a33d3a53008a4406 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-a2ed86abd7634b3a69bdf732d0356637 *core/class/AbeilleParser.class.php
+6c1e810072b18ee3c412697b402272a1 *core/class/AbeilleParser.class.php
 99d42da202592d0f2f9cf60b4f3fcdd5 *core/class/AbeilleTools.class.php
-444b6b75f9331b56df5c5f812efb4f1a *core/config/Abeille.config.php
+67b899cf7555e7c605aef9c058176abd *core/config/Abeille.config.php
 603640a07e5e022e4d4f1b6eb9d91d5c *core/config/AbeilleInternalCmds.json
 d8fe59ba5c734449970615205f5a23cc *core/config/commands/BindToGroupLevelEP03.json
 7d700c97dd32d63675fafce8e5599906 *core/config/commands/BindToGroupLevelEP04.json
@@ -125,14 +125,6 @@ c86068d75f6d59cb8f18cb31648c0576 *core/config/commands/act_zbCmdC-0502-StartWarn
 bbcece1c5b3a71ffaa4de0ed2935f44b *core/config/commands/act_zbWriteAttribute-list.json
 a521db3753a2d1b3ab2adb5f2feb9188 *core/config/commands/act_zbWriteAttribute.json
 cc481b1882c2b789342a66631cd09048 *core/config/commands/battery-Volt2Percent-3.json
-9f52505ea18f32957b30e236532ebdd0 *core/config/commands/boutonStateRWL021_1.json
-c80382881655dd2f9fc2063864b20a2b *core/config/commands/boutonStateRWL021_2.json
-cbd37c0f096799e2b901c47f8347fa76 *core/config/commands/boutonStateRWL021_3.json
-681a3dda96bee6308475ab3bf8c13fb2 *core/config/commands/boutonStateRWL021_4.json
-d19b5cbabe3cfae8143893d63c3f868b *core/config/commands/boutonStateRWL021_5.json
-03981be91e9f28f26c559b6878b3ac54 *core/config/commands/boutonStateRWL021_6.json
-b716ef8aba6a906bbac0341da4a17e45 *core/config/commands/boutonStateRWL021_7.json
-00d23429dded9deaed42a8c680323d07 *core/config/commands/boutonStateRWL021_8.json
 753ec7a6a5dd0dbc5e057ce07c712e46 *core/config/commands/cmdG-LegrandFC41.json
 a2a177cd83b2371ca707b0ae80738b16 *core/config/commands/cmdG-TuyaEF00-Set-Level.json
 7365d9ca96ca2f829fd50f979d067364 *core/config/commands/cmdG-TuyaEF00-Set-OnOff.json
@@ -434,7 +426,7 @@ c466cfe3e546305e19062219701052eb *core/config/devices/GL-S-003Z/discovery.json
 ecc287f7b5b2e6d0fb2fccb1f7d8426e *core/config/devices/GL-S-004Z/GL-S-004Z.json
 47cc1cd3562db3b8e1daf59724a66ed3 *core/config/devices/GL-S-007Z/GL-S-007Z.json
 62ec056ea9c1578740c6d4074c062c71 *core/config/devices/GL-S-007Z/discovery.json
-769c51adb715a8eda542d20883b2b5b1 *core/config/devices/GL-SD-001/GL-SD-001.json
+f975239480e670cea0f9aeaa664a08a8 *core/config/devices/GL-SD-001/GL-SD-001.json
 7d1795802a6ec69c3b93a379aba6ee38 *core/config/devices/GL-SD-001/discovery.json
 5fbb74e4fc014069de0b6d71cd7ed11c *core/config/devices/GLEDOPTO/GLEDOPTO.json
 d5728fe3d77264dd7e1e6a02e88aed34 *core/config/devices/GUNNARPpanelround/GUNNARPpanelround.json
@@ -462,7 +454,7 @@ b14bb4a323435909b0c7933d71df77f0 *core/config/devices/LDSENK01F_ADEO/LDSENK01F_A
 6d8b81f36bdad6884997919523e209e4 *core/config/devices/LDSENK02F_ADEO/discovery.json
 b4400a5f9a189503b4595f36b7f623f9 *core/config/devices/LIGHTIFYIndoorFlexRGBW/LIGHTIFYIndoorFlexRGBW.json
 1b64992746e67ecf8cb9c7843cfcd681 *core/config/devices/LIGHTIFYOutdoorFlexRGBW/LIGHTIFYOutdoorFlexRGBW.json
-0f083e82be1c81e1e221eefea53043fa *core/config/devices/LISEZMOI.txt
+12646865f21048f0edf191a52de12237 *core/config/devices/LISEZMOI.txt
 0c0542e59385410773acebb2b49267f1 *core/config/devices/LLC011/LLC011.json
 4466fdf87eac8f845242f2a23e5ebb05 *core/config/devices/LLC020/LLC020.json
 2d853d041440520c9d2a004c04bfc2d8 *core/config/devices/LOM001/LOM001.json
@@ -532,9 +524,9 @@ b1208bfa523e48bff6e4441dd9de9668 *core/config/devices/RB175W/RB175W.json
 f7c9e011be14cf010fa9c6efc17439e1 *core/config/devices/RB285C/RB285C.json
 c73ce39645c82051f66c66465de0aa32 *core/config/devices/RC110_innr/RC110_innr.json
 9d04945aa6fd9918bd5b7595c4189837 *core/config/devices/RC110_innr/discovery-RC110_innr.json
-0d6c65d68b98d3b31ae88ff3b478e2a2 *core/config/devices/RC250_innr/RC250_innr.json
+36f08c1d5a8f3f7bfd38161fe428f332 *core/config/devices/RC250_innr/RC250_innr.json
 64c7e00c7f95fba0a5f09ca440ad3f20 *core/config/devices/RC250_innr/discovery.json
-987887555caa614abce82105252202ec *core/config/devices/RDM001/RDM001.json
+a049ae4cbbb6457dee0683690bdd4030 *core/config/devices/RDM001/RDM001.json
 3046d25c6eef47726d0a31b44703556c *core/config/devices/RDM001/discovery.json
 10668de55a81895ae56f8f30871adf8c *core/config/devices/RF263/RF263.json
 e00e032ee7e096384d5a2c0de48fbf6c *core/config/devices/RF265/RF265.json
@@ -543,7 +535,7 @@ b63938d4df73ee3d04f498bca0dda7c2 *core/config/devices/RH3040/RH3040.json
 4253957c938de4e7544073347a5498c7 *core/config/devices/RODRETDimmer_IKEAofSweden/RODRETDimmer_IKEAofSweden-direct.json
 9db344363221366214c483598f85d05b *core/config/devices/RODRETDimmer_IKEAofSweden/RODRETDimmer_IKEAofSweden.json
 b3d7577c796d1f4ed48aef7011fdb221 *core/config/devices/RODRETDimmer_IKEAofSweden/discovery-RODRETDimmer_IKEAofSweden.json
-47d4c6fda3ef784028b9f673d20e187a *core/config/devices/RWL021/RWL021.json
+7e6a4a1b688992da2c0049cb74ab5c61 *core/config/devices/RWL021/RWL021.json
 a1366186c526b4e7b702c19a880155e3 *core/config/devices/RWL021/discovery.json
 731ceef4aeed5de1e5ab29ac279cff4d *core/config/devices/Remoteswitch/067723_discovery.json
 ad1d9fe17a83f9a350dde68d72bfea26 *core/config/devices/Remoteswitch/Remoteswitch.json
@@ -668,7 +660,7 @@ a6577487ec6f376860a37a7cc3cab34c *core/config/devices/TS0011__TZ3000_ji4araar/TS
 e8b11ccc608052211864a7a09579db31 *core/config/devices/TS0011__TZ3000_ji4araar/discovery.json
 18536a915f4194433f8045c8dd46dede *core/config/devices/TS0012/TS0012.json
 1ab15bf9f3f9237842a7f19de134ec93 *core/config/devices/TS0013/TS0013.json
-c1170540932ada05d0c1a7d9c009b5d0 *core/config/devices/TS0021__TZ3210_3ulg9kpo/TS0021__TZ3210_3ulg9kpo.json
+b96f5af4291082e3229e56e2db3c3b3d *core/config/devices/TS0021__TZ3210_3ulg9kpo/TS0021__TZ3210_3ulg9kpo.json
 bd35291fe765dc15c7b04fc503bca5db *core/config/devices/TS0021__TZ3210_3ulg9kpo/discovery-TS0021__TZ3210_3ulg9kpo.json
 3cf117996a58809b2ca943f6e01006b7 *core/config/devices/TS0041/TS0041.json
 16b53e2238af144fdb1dd79d931a3002 *core/config/devices/TS0042__TYZB02_keyjhapk/TS0042__TYZB02_keyjhapk.json
@@ -705,7 +697,7 @@ acc5cc08d9ae440586500d957a938108 *core/config/devices/TS011F__TZ3000_gjnozsaz/TS
 952828224c143efdedb6aae8331e9696 *core/config/devices/TS011F__TZ3000_gjnozsaz/discovery.json
 1abfd2cd5d76cc05ca9a0c28d61e971c *core/config/devices/TS011F__TZ3000_gvn91tmx/TS011F__TZ3000_gvn91tmx.json
 24e0681a3591aad6f0e64e45d8ff5a7e *core/config/devices/TS011F__TZ3000_gvn91tmx/discovery-TS011F__TZ3000_gvn91tmx.json
-1827605e6cf9978a24ea8182ee5a73bb *core/config/devices/TS011F__TZ3000_ksw8qtmt/TS011F__TZ3000_ksw8qtmt.json
+78532cd4627042be9580e5d8e4951999 *core/config/devices/TS011F__TZ3000_ksw8qtmt/TS011F__TZ3000_ksw8qtmt.json
 12d2669f662c157e316e7972456d1f8b *core/config/devices/TS011F__TZ3000_ksw8qtmt/discovery.json
 f9944620a6c2e6f7827cc87d9369c37b *core/config/devices/TS011F__TZ3000_o005nuxx/TS011F__TZ3000_o005nuxx.json
 c510fe93f37db5567857dca94afd38b0 *core/config/devices/TS011F__TZ3000_o005nuxx/discovery.json
@@ -725,7 +717,7 @@ c13bee0e72a00114c00f3aa0791f23ba *core/config/devices/TS0121/TS0121.json
 0c2992fc68475c88df8aa5a0f894f823 *core/config/devices/TS0121__TYZB01_zanh6v1o/TS0121__TYZB01_zanh6v1o.json
 b76b7dc20cd94b865142f19d8b46f41f *core/config/devices/TS0121__TZ3000_8nkb7mof/TS0121__TZ3000_8nkb7mof.json
 d9e4133d1a2bc4ac11ae0e492b334d06 *core/config/devices/TS0121__TZ3000_8nkb7mof/discovery.json
-14e9a88f268142afabbc939fceeda0b4 *core/config/devices/TS0121__TZ3000_g5xawfcq/TS0121__TZ3000_g5xawfcq.json
+7eac828c9ac9f69298744f0a4c6ccfce *core/config/devices/TS0121__TZ3000_g5xawfcq/TS0121__TZ3000_g5xawfcq.json
 3c1bde5084f0df6631632cbace5944b1 *core/config/devices/TS0121__TZ3000_g5xawfcq/discovery-TS0121__TZ3000_g5xawfcq.json
 300a365c3c65847bb7b735e8959735e5 *core/config/devices/TS0121__TZ3000_rdtixbnu/TS0121__TZ3000_rdtixbnu.json
 22ada92edf3ca20ca923a06bb6e347b7 *core/config/devices/TS0121__TZ3000_rdtixbnu/discovery.json
@@ -989,9 +981,10 @@ f3b9942d631562c48bb607c8a437f446 *core/php/AbeilleLog.php
 1bb0e4ee133d6661a9a11f84f5257790 *core/php/AbeilleMonitor.php
 3f23e5dbc4f01327d47fd90e2ef88952 *core/php/AbeilleNoise.php
 9ab85f33787d42bdae75985d3e3b4d69 *core/php/AbeilleOTA.php
+b545fc2bab6f885ac28e78f89dad223a *core/php/AbeilleParser-Philips.php
 42723a371182e242ced6fe16c95697b9 *core/php/AbeilleParser-Tuya.php
 6ca572a7882071f1de22dc38d1247d3f *core/php/AbeilleParser-Xiaomi.php
-6d7c5f51a85ea638d72035c2e417a120 *core/php/AbeilleParser.php
+578b95fb86aa11c6838cab1922f5e617 *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 bff8b2ccb60725680d50c00e0b84415c *core/php/AbeilleRepair.php
 875ae0bb9f3ffa4e1f4863f58ad6147a *core/php/AbeilleRoutes.php
@@ -1061,7 +1054,7 @@ bb4f1f9ed4a7865cf3f52f24d9d14186 *desktop/php/Abeille-Eq-Cmds.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 3c1e258f18bb7bde58a1f8b3258dc3c5 *desktop/php/Abeille-TopButtons.php
 318f758e8d3349b4b0dfbb763f3ee2a4 *desktop/php/Abeille.php
-451d8f40a7152b83fb270466a949bd22 *desktop/php/AbeilleEqAssist.php
+183865b71b3230c6a5f4937f22d99d78 *desktop/php/AbeilleEqAssist.php
 4516d84ab76c42d1132cebc1ebe22dbe *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
 25c62538c9d1dff6a31ae1b9cbb0e2a3 *desktop/php/AbeilleMaintenance-Logs.php
@@ -1073,7 +1066,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-9c75cd66bb05349e2000c803c438aae2 *docs/fr_FR/Changelog.md
+65be6ea4066ab0c318fb7886d385ea8d *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1318,7 +1311,7 @@ bd9af815f6c6fa32e1db1047613f7ded *images/node_TS0601__TZE200_nueqqe6k.png
 992b6d2473f467697af3e7029cad12b4 *images/node_TY0A01.png
 dfeca28d6d87a62e8962d80986860bed *images/node_Tongou-DinCircuitBreaker.png
 639b3aaaea43423156d14694f3dbdd07 *images/node_Tuya-1ChanSwitchModule.png
-7b1a7d40e9ad93768e5327258fc9d9b6 *images/node_Tuya-2KeysRemote.png
+d9e0c96ba2fdae7c7ce341fe6c1f8b75 *images/node_Tuya-2KeysRemote.png
 7152f144af7c765ad8bd055ffc3e7339 *images/node_Tuya-4ButtonsSwitch-Gray.png
 e0b50d71018bb945837ecbaa7222bb32 *images/node_Tuya-4ButtonsSwitch-White.png
 d757e426e5d2ec5456e3c2ef58dd7937 *images/node_Tuya-CurtainModule.png
@@ -1426,12 +1419,12 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-dea5a7ff43b831cd3b5485d76a4fb7be *plugin_info/Abeille.version
+ba670d053b32589fd4b82c6f11da325a *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 489670c29a0bd0f77eb0e3f22a598011 *plugin_info/configuration.php
-901f700f0ea44b473f87b73007ff275e *plugin_info/info.json
-9d1968d951fc2d5f88aa09d7e5ef2526 *plugin_info/install.php
+899622df0679a6e9d1f115159d8b5a33 *plugin_info/info.json
+f1cca8a3440cdf7b12c772b78e183c71 *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
 d41d8cd98f00b204e9800998ecf8427e *resources/COM
@@ -1593,6 +1586,14 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/bindTo
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/bindToZigate-EP05-0006.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/bindToZigate-EP06-0006.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/bindToZigate.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/boutonStateRWL021_1.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/boutonStateRWL021_2.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/boutonStateRWL021_3.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/boutonStateRWL021_4.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/boutonStateRWL021_5.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/boutonStateRWL021_6.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/boutonStateRWL021_7.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/boutonStateRWL021_8.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/cmdG-TuyaEF00-Set-Setpoint.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/cmdG-TuyaEF00-Set-ThermostatMode.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/colorX.json

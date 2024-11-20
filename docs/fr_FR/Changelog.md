@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 241120-BETA-1
+
 **Mise-à-jour de modèles d'équipement**
 
     - Malgré la volonté de faire des évolutions les plus transparentes possibles, il se peut que certains équipements nécessitent d'être mis-à-jour à partir de leur dernier modèle pour à nouveau fonctionner correctement.

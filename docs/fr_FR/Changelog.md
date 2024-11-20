@@ -6,13 +6,14 @@
 
       - Si ils sont sur batterie, réinclusion nécessaire.
       - Si sur secteur, aller à la page 'avancé' et bouton 'mise-à-jour'.
-    - Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).
+    - ATTENTION ! Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).
 
 -   Amélioration: Modèle d'équipement avec support 'private': Ajout du type 'generic'.
 -   Amélioration: Philips RWL021: Mise-à-jour modèle (1243). Attention à revoir scenario si besoin !!
 -   Amélioration: Ajout support Philips RWL020.
 -   Amélioration: Suppression de cmdes obsoletes 'boutonStateRWL021_X.json'.
 -   Amélioration: Interne parser pour lecture de config reporting.
+-   Amélioration: Nous A1Z smart socket: Modèle revu pour réduire les reportings (2729).
 
 ## 241117-BETA-1
 

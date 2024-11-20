@@ -53,15 +53,15 @@
                 "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
+            "Get Total power": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0702&attrId=0000"
+            },
             "Total power": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",
                 "params": "div=1",
                 "unit": "KWh",
                 "isVisible": "1"
-            },
-            "Get Total power": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0702&attrId=0000"
             },
             "Poll 0702": {
                 "use": "act_poll-0702-0000"

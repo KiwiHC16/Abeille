@@ -1175,7 +1175,7 @@
          * - Eq DB: Some icons renamed for normalization
          * - Some eq updates forced from changed model.
          */
-        if (intval($dbVersion) < 20241117) {
+        if (intval($dbVersion) < 20241120) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled{$gtwId}", "ab::gtwEnabled{$gtwId}");
@@ -1198,6 +1198,7 @@
             // Force some equipments update from model.
             $toReload = array(
                 'remotecontrol' => '2024-11-17 23:30:00',
+                'TS011F__TZ3000_ksw8qtmt' => '2024-11-20 16:26:00',
             );
 
             // 'eqLogic' + 'cmd' DB updates
@@ -1273,7 +1274,7 @@
                 }
             }
 
-            // config::save('ab::dbVersion', '20241117', 'Abeille');
+            // config::save('ab::dbVersion', '20241120', 'Abeille');
         }
     } // End updateConfigDB()
 

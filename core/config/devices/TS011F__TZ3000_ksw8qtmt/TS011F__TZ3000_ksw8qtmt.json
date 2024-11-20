@@ -4,6 +4,7 @@
         "manufacturer": "Nous",
         "model": "A1Z",
         "type": "Nous smart socket",
+        "genericType": "Outlet",
         "timeout": "60",
         "category": {
             "energy": "1"
@@ -13,6 +14,12 @@
             "mainEP": "01"
         },
         "commands": {
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            },
             "Identify": {
                 "use": "act_zbCmdC-Identify"
             },
@@ -27,14 +34,14 @@
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
             },
             "Bind 0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -59,32 +66,32 @@
             "Poll 0702": {
                 "use": "act_poll-0702-0000"
             },
+            "Get RMS Voltage": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=0505"
+            },
             "RMS Voltage": {
                 "use": "inf_zbAttr-0B04-RMSVoltage",
                 "params": "mult=1&div=1",
                 "isVisible": "0"
             },
-            "Get RMS Voltage": {
+            "Get RMS Current": {
                 "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=0505"
+                "params": "clustId=0B04&attrId=0508"
             },
             "RMS Current": {
                 "use": "inf_zbAttr-0B04-RMSCurrent",
                 "params": "mult=1&div=1",
                 "isVisible": "1"
             },
-            "Get RMS Current": {
+            "Get Active Power": {
                 "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=0508"
+                "params": "clustId=0B04&attrId=050B"
             },
             "Active Power": {
                 "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": "1"
-            },
-            "Get Active Power": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=050B"
             },
             "Bind 0B04-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -94,13 +101,13 @@
             "SetReporting 0B04-0508": {
                 "comment": "RMSCurrent, changeVal set to 50 => 0x0032 (uint16)",
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0B04&attrType=21&attrId=0508&changeVal=50",
+                "params": "clustId=0B04&attrId=0508&attrType=21&changeVal=50",
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-050B": {
                 "comment": "ActivePower, changeVal set to 10 => 0x000A (int16)",
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0B04&attrType=29&attrId=050B&changeVal=10",
+                "params": "clustId=0B04&attrId=050B&attrType=29&changeVal=10",
                 "execAtCreation": "yes"
             }
         }

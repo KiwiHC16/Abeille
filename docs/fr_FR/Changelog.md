@@ -12,6 +12,7 @@
 -   Amélioration: Philips RWL021: Mise-à-jour modèle (1243). Attention à revoir scenario si besoin !!
 -   Amélioration: Ajout support Philips RWL020.
 -   Amélioration: Suppression de cmdes obsoletes 'boutonStateRWL021_X.json'.
+-   Amélioration: Interne parser pour lecture de config reporting.
 
 ## 241117-BETA-1
 

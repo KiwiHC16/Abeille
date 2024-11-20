@@ -1321,10 +1321,10 @@
                     }
                 }
                 if (isset(attributes['0000'])) {
+                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0702&attrId=0000");
                     cmds[cmdName] = newCmd("inf_zbAttr-0702-CurrentSummationDelivered", "div="+div);
                     cmds[cmdName]["unit"] = unit;
                     cmds[cmdName]["isVisible"] = 1;
-                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0702&attrId=0000");
                 }
             }
 
@@ -1333,21 +1333,21 @@
                 attributes = ep.servClusters["0B04"]['attributes'];
                 if (isset(attributes['0505'])) { // RMS Voltage
                     cmdName = "RMS Voltage"; // Default cmd name
+                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=0505");
                     cmds[cmdName] = newCmd("inf_zbAttr-0B04-RMSVoltage", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 0;
-                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=0505");
                 }
                 if (isset(attributes['0508'])) { // RMS Current
                     cmdName = "RMS Current"; // Default cmd name
+                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=0508");
                     cmds[cmdName] = newCmd("inf_zbAttr-0B04-RMSCurrent", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 1;
-                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=0508");
                 }
                 if (isset(attributes['050B'])) { // Active power
                     cmdName = "Active Power"; // Default cmd name
+                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=050B");
                     cmds[cmdName] = newCmd("inf_zbAttr-0B04-ActivePower", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 1;
-                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=050B");
                 }
                 cmds["Bind 0B04-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0B04", "yes");
                 if (isset(attributes['0508'])) { // RMS Current

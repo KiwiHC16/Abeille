@@ -3493,7 +3493,6 @@
 
                             $m = "  Attr=".$attrId.", Status=".$status.'/'.zbGetZCLStatus($status);
                             parserLog2('debug', $srcAddr, $m);
-                            // $toMon[] = $m; // For monitor
 
                             $i += 6;
                         }
@@ -3504,15 +3503,14 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
-                        $l = strlen($msg);
+                        $l = strlen($pl);
                         for ($i = 0; $i < $l; ) {
-                            $status = substr($msg, $i + 0, 2);
-                            $dir = substr($msg, $i + 2, 2);
-                            $attrId = AbeilleTools::reverseHex(substr($msg, $i + 4, 4));
+                            $status = substr($pl, $i + 0, 2);
+                            $dir = substr($pl, $i + 2, 2);
+                            $attrId = AbeilleTools::reverseHex(substr($pl, $i + 4, 4));
 
                             $m = "  Status=".$status.'/'.zbGetZCLStatus($status).", Attr=".$attrId.", Dir=".$dir;
                             parserLog2('debug', $srcAddr, $m);
-                            // $toMon[] = $m; // For monitor
 
                             $i += 8;
                         }
@@ -3523,24 +3521,27 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
-                        $status = substr($msg, 0, 2);
-                        $dir = substr($msg, 2, 2);
-                        $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
+                        $status = substr($pl, 0, 2);
+                        $dir = substr($pl, 2, 2);
+                        $attrId = substr($pl, 6, 2).substr($pl, 4, 2);
                         if ($status == "00") {
-                            $l = strlen($msg);
-                            $attrType = substr($msg, 8, 2);
-                            $minInterval = AbeilleTools::reverseHex(substr($msg, 10, 4));
-                            $maxInterval = AbeilleTools::reverseHex(substr($msg, 14, 4));
+                            $l = strlen($pl);
+                            $attrType = substr($pl, 8, 2);
+                            $minInterval = AbeilleTools::reverseHex(substr($pl, 10, 4));
+                            $maxInterval = AbeilleTools::reverseHex(substr($pl, 14, 4));
+
                             // Reportable change => Variable size
-                            // Timeout period => 2B
-                            // TO BE COMPLETED
+                            // Note: no reportable change for boolean type
+                            $attrSize = zbGetDataSize($attrType);
+                            parserLog2('debug', $srcAddr, "  AttrSize=$attrSize");
+                            $change = substr($pl, 18, $attrSize * 2);
+
                             parserLog2('debug', $srcAddr, '  Status='.$status.'/'.zbGetZCLStatus($status).', Dir='.$dir.', AttrId='.$attrId
-                                .', AttrType='.$attrType.', minInterval='.$minInterval.', maxInterval='.$maxInterval);
+                                .', AttrType='.$attrType.', MinInterval='.$minInterval.', MaxInterval='.$maxInterval.", Change=$change");
                         } else {
                             // $msg = substr($msg, 8);
                             parserLog2('debug', $srcAddr, '  Status='.$status.'/'.zbGetZCLStatus($status).', Dir='.$dir.', AttrId='.$attrId);
                         }
-                        // return;
                     }
 
                     else if ($cmd == "0A") { // Report attributes

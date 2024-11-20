@@ -96,14 +96,13 @@
             $devicesList[$dirEntry] = $dev;
 
             if (isset($devConf['alternateIds'])) {
-                $idList = explode(',', $devConf['alternateIds']);
-                foreach ($idList as $id) {
-                    echo("getDevicesList(): Alternate ID '".$id."' for '".$dirEntry."'\n");
+                foreach ($devConf['alternateIds'] as $altIdKey => $altId) {
+                    // echo("getDevicesList(): Alternate ID '".$altIdKey."' for '".$dirEntry."'\n");
                     $dev = array(
                         'jsonId' => $dirEntry,
                         'jsonLocation' => $from
                     );
-                    $devicesList[$id] = $dev;
+                    $devicesList[$altIdKey] = $dev;
                 }
             }
         }

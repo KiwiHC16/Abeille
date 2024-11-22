@@ -3684,7 +3684,7 @@
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['cmdParams']['ep'];
+                    $dstEp      = $Command['cmdParams']['EP'];
                     $duration   = (isset($Command['cmdParams']['duration']) && ($Command['cmdParams']['duration'] != '')) ? $Command['cmdParams']['duration'] : '0010';
 
                     cmdLog('debug', '  identifySend: ep='.$dstEp.', duration='.$duration);

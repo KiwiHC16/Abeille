@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Correction: Commande 'Identify'.
+
 ## 241120-BETA-1
 
 **Mise-à-jour de modèles d'équipement**

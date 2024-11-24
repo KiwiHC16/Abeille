@@ -3562,26 +3562,34 @@
                             $attrId = $attr['id'];
 
                             // Is this an attribute to handle as 'private' ?
-                            unset($private); // Clear in case it is set by previous attribute
-                            // parserLog('debug', 'LA eq='.json_encode($eq));
-                            if (isset($eq['private'])) {
-                                // parserLog('debug', "  Model with 'private' entry");
-                                foreach ($eq['private'] as $pKey => $pVal) {
-                                    $pKeyLen = strlen($pKey);
-                                    // parserLog2('debug', $srcAddr, "  clustId/attrId={$clustId}/{$attrId} vs pKey={$pKey}, len={$pKeyLen}");
-                                    if ((($pKeyLen == 4) && ($pKey != $clustId)) || // 'CCCC' (clustId) case
-                                        (($pKeyLen == 9) && ($pKey != $clustId.'-'.$attrId))) // 'CCCC-AAAA (clustId-attrId) case
-                                        continue;
 
-                                    $private = $pVal;
-                                    parserLog2('debug', $srcAddr, "  Private=".json_encode($private, JSON_UNESCAPED_SLASHES));
-                                    break;
-                                }
-                            }
+                            // unset($private); // Clear in case it is set by previous attribute
+                            // // parserLog('debug', 'LA eq='.json_encode($eq));
+                            // if (isset($eq['private'])) {
+                            //     // parserLog('debug', "  Model with 'private' entry");
+                            //     foreach ($eq['private'] as $pKey => $pVal) {
+                            //         $pKeyLen = strlen($pKey);
+                            //         // parserLog2('debug', $srcAddr, "  clustId/attrId={$clustId}/{$attrId} vs pKey={$pKey}, len={$pKeyLen}");
+                            //         if ((($pKeyLen == 4) && ($pKey != $clustId)) || // 'CCCC' (clustId) case
+                            //             (($pKeyLen == 9) && ($pKey != $clustId.'-'.$attrId))) // 'CCCC-AAAA (clustId-attrId) case
+                            //             continue;
+
+                            //         $private = $pVal;
+                            //         parserLog2('debug', $srcAddr, "  Private=".json_encode($private, JSON_UNESCAPED_SLASHES));
+                            //         break;
+                            //     }
+                            // }
 
                             // Handling attribute
-                            if (isset($private)) {
-                                // parserLog('debug', "  This cluster/attrib must be handled as private");
+                            // if (isset($private)) {
+                            //     // parserLog('debug', "  This cluster/attrib must be handled as private");
+                            //     if ($private['type'] == "xiaomi") {
+                            //         xiaomiReportAttribute($dest, $srcAddr, $clustId, $attr, $attrReportN);
+                            //     } else {
+                            //         parserLog2("error", $srcAddr, "  Ouahh... missing code to handle private cluster");
+                            //     }
+                            // }
+                            if (isset($eq['private']) && isset($eq['private']["$clustId-$attrId"])) {
                                 if ($private['type'] == "xiaomi") {
                                     xiaomiReportAttribute($dest, $srcAddr, $clustId, $attr, $attrReportN);
                                 } else {

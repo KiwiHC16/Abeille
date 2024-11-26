@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 241126-BETA-1
+
 -   Correction: Commande 'Identify'.
 -   Correction: Parser: Support section 'private' pour 'attribut report'.
 

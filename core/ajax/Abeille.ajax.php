@@ -792,11 +792,12 @@
                     $bat = $bat.'%';
                 $e['lastBat'] = $bat;
 
-                // Gateway
-                $gtwId = substr($eqNet, 7); // AbeilleX => X
-                $gtw = eqLogic::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
-                $e['gtwTimeout'] = $gtw->getStatus('timeout');
-                $e['gtwType'] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate');
+                // Gateway specific additional infos
+                if ($eqAddr == "0000") {
+                    $gtwId = substr($eqNet, 7); // AbeilleX => X
+                    //$e['gtwTimeout'] = $eqLogic->getStatus('timeout');
+                    $e['gtwType'] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate');
+                }
 
                 if (!isset($eq[$eqNet]))
                     $eq[$eqNet] = [];

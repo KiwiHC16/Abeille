@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Correction: Page santé: Erreur 'getHealthDatas' dans certaines conditions. (2735)
+
 ## 241126-BETA-1
 
 -   Correction: Commande 'Identify'.

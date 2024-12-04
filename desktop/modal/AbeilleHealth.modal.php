@@ -224,7 +224,7 @@
                                 gtwSpan.textContent = "Zigate " + gtwId;
                             else
                                 gtwSpan.textContent = "Ezsp " + gtwId;
-                            if (e.gtwTimeout)
+                            if (e.timeout)
                                 gtwSpan.className = "label label-danger";
                             else
                                 gtwSpan.className = "label label-success";

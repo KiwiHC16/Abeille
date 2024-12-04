@@ -111,7 +111,9 @@
             dataType: "json",
             global: false,
             error: function (request, status, error) {
-                bootbox.alert("ERREUR 'getHealthDatas' !");
+                //console.log("TOTO req=", request);
+                bootbox.alert("ERREUR 'getHealthDatas' (Status "+request.status+"/"+request.statusText+")");
+                clearInterval(timer);
             },
             success: function (json_res) {
                 res = JSON.parse(json_res.result);

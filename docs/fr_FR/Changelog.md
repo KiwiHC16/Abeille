@@ -1,6 +1,6 @@
 # ChangeLog
 
--   Correction: Page santé: Erreur 'getHealthDatas' dans certaines conditions. (2735)
+-   Correction: Page santé: Erreur 'getHealthDatas' si équipement orphelin sans gateway. (2735)
 
 ## 241126-BETA-1
 

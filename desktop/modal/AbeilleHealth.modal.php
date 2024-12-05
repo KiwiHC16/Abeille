@@ -132,8 +132,12 @@
                     netColor = colors[gtwId];
                     console.log("net="+net+" => gtwId="+gtwId+", color="+netColor);
                     n = equipments[net];
-                    parentBridge = equipments[net]['0000'];
-                    gtwEnabled = parentBridge.isEnabled;
+                    if (typeof(equipments[net]['0000']) != 'undefined') {
+                        // In case there is an equipment no longer attached to any gateway
+                        parentBridge = equipments[net]['0000'];
+                        gtwEnabled = parentBridge.isEnabled;
+                    } else
+                        gtwEnabled = 0;
                     for (addr in n) {
                         // console.log("LA2 addr=", addr);
                         e = n[addr];

@@ -1,0 +1,37 @@
+{
+    "Shutterscentralremoteswitch_Legrand": {
+        "manufacturer": "Legrand",
+        "model": "067646",
+        "type": "Legrand wireless shutter switch",
+        "genericType": "Shutter",
+        "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Legrand-ShutterSwitch",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2032"
+        },
+        "commands": {
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt",
+                "params": "ep=01"
+            },
+            "SetReporting 01-0001-00020": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            }
+        }
+    }
+}

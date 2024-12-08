@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Nouveau: Support Legrand wireless switch (2736).
+
 ## 241205-BETA-1
 
 -   Correction: Page santé: Erreur 'getHealthDatas' si équipement orphelin sans gateway. (2735)

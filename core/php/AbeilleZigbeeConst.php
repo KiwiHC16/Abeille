@@ -467,6 +467,13 @@
             ),
             // No received nor generated commands
         ),
+        "000F" => array(
+            "name" => "Binary Input",
+            "attributes" => array(
+                "0051" => array( "name" => "OutOfService", "access" => "RW", "dataType" => 0x10 ), // Type bool
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x10 ), // Type bool
+            ),
+        ),
         "0012" => array(
             "name" => "Multistate Input",
             "attributes" => array(

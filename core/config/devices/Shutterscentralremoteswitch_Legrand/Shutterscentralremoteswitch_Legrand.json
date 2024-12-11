@@ -23,14 +23,24 @@
                 "params": "ep=01&clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "yes"
             },
-            "Bind 01-0001-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0001",
-                "execAtCreation": "yes"
-            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
                 "nextLine": "after"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Bind 01-000F-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=000F",
+                "execAtCreation": "Yes"
+            },
+            "Bind 01-0102-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0102",
+                "execAtCreation": "Yes"
             }
         }
     }

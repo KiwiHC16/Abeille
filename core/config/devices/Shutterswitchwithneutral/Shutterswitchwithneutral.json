@@ -14,8 +14,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "Up": {
                 "use": "act_zbCmdC-0102-UpOpen",

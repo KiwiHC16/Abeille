@@ -27,6 +27,18 @@
                 "use": "act_zbCmdC-Identify",
                 "nextLine": "after"
             },
+            "Up button": {
+                "use": "inf_zbCmdC-0102-00UpOpen",
+                "isVisible": 1
+            },
+            "Down button": {
+                "use": "inf_zbCmdC-0102-01DownClose",
+                "isVisible": 1
+            },
+            "Stop button": {
+                "use": "inf_zbCmdC-0102-02Stop",
+                "isVisible": 1
+            },
             "Bind 01-0001-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0001",

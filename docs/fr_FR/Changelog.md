@@ -1,6 +1,7 @@
 # ChangeLog
 
 - Nouveau: Support Legrand wireless switch (2736).
+- Amélioration: Interne parser. Cmdes de cluster gérées de maniere generique (EP-CLUST-cmdCC).
 
 ## 241205-BETA-1
 

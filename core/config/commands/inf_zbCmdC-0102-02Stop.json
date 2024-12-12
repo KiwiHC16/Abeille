@@ -1,0 +1,13 @@
+{
+    "inf_zbCmdC-0102-02Stop": {
+        "comment": "Cluster 0102, 02/Stop cmd, received from CLIENT side",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0102-cmd02",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "returnStateValue": 0,
+            "returnStateTime": 1
+        }
+    }
+}

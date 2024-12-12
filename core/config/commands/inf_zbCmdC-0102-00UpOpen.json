@@ -1,0 +1,13 @@
+{
+    "inf_zbCmdC-0102-00UpOpen": {
+        "comment": "Cluster 0102, 00/UpOpen cmd, received from CLIENT side",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0102-cmd00",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "returnStateValue": 0,
+            "returnStateTime": 1
+        }
+    }
+}

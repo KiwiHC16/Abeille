@@ -14,6 +14,8 @@ oject_id => Parent ID (ex: room ID)
 
 eqType_name => 'Abeille'
 
+generic_type => 
+
 configuration
     IEEE => to be moved in ab::zigbee
     mainEP
@@ -46,5 +48,16 @@ configuration
         private
         variables
 
+    createtime: mis-à-jour par Jeedom à la création de l'équipement.
+    updatetime: mis-à-jour par Jeedom à chaque changement de la configuration.
+    batterytime: mis-à-jour par Jeedom
+    battery_type: Utilisé par Jeedom. Mis à jour par Abeille à partir de "batteryType" du JSON.
 
-
+isVisible
+isEnable
+timeout
+category
+display
+order
+comment
+tags

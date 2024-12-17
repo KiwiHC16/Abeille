@@ -4499,10 +4499,10 @@
                             } else
                                 parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unsupported type '$supportType'");
                         } else {
-                            parserLog2("debug", $srcAddr, "  Generic way to support cluster '$clustId' specific command '$cmd'");
+                            parserLog2("debug", $srcAddr, "  Cluster '$clustId' specific command '$cmd' handled as default logic id '$srcEp-$clustId-cmd$cmd'");
                             $attrReportN[] = array(
                                 'name' => $srcEp.'-'.$clustId.'-cmd'.$cmd,
-                                'value' => $pl,
+                                'value' => (sizeof($pl) > 0) ? $pl : "1",
                             );
                         }
                     }

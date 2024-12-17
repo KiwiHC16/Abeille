@@ -1,0 +1,47 @@
+***
+*** Abeille developer internal doc
+*** Jeedom 'cmd' database notes for Abeille
+*** Tcharp38
+***
+
+La table "cmd" de Jeedom est formatée comme suit:
+
+- id: int
+   ID de la commande. Affecté par Jeedom.
+- eqLogic_id: int
+   ID de l'équipement auquel la commande est rattachée.
+- eqType: varchar
+   "Abeille"
+- logicalId: varchar
+   Nom "logique" de la commande.
+   Prend actuellement la clef d'entrée de la commande mais semble inutilisé & redondant avec "topic".
+   A REVOIR côté Abeille !!
+- order: int
+   Ordre d'apparition de la commande (si visible) dans le widget.
+- name: varchar
+   Nom Jeedom de la commande.
+- configuration: text
+   A priori libre d'utilisation par Abeille donc ne contient que des champs spécifiques Abeille.
+   Correct ?
+
+  - calculValueOffset: utilisé par Jeedom (cmd.class.php). Ex: "calculValueOffset":"#value#*10"
+- template: text
+   ??
+- isHistorized: varchar
+   0 ou 1
+- type: varchar
+   Type de commande: "info" ou "action"
+- subType: varchar
+   Type d'information: "string", "binary", "numeric", "other"
+- unite: varchar
+   Unité de l'information (si cmde info): ex '%'
+- display: text
+   Options d'affichage dans le widget.
+- isVisible: int
+   0 ou 1
+- value: varchar
+   ??
+- alert: text
+   ??
+- generic_type: varchar
+   ??

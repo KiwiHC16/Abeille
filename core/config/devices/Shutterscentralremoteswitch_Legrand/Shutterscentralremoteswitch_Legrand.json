@@ -18,10 +18,9 @@
                 "use": "inf_zbAttr-0001-BatteryVolt",
                 "params": "ep=01"
             },
-            "SetReporting 01-0001-00020": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
-                "execAtCreation": "yes"
+            "Battery-VoltToPercent": {
+                "use": "inf_batteryVoltToPercent",
+                "params": "min=2.5&max=3"
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",

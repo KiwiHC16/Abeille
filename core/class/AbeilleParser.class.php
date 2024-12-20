@@ -3263,7 +3263,6 @@
                     $m = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.$cmdName;
                 }
                 parserLog2('debug', $srcAddr, $m);
-                // $toMon[] = $m;
 
                 // Getting corresponding device or create if unknown
                 $eq = getDevice($dest, $srcAddr);
@@ -4502,7 +4501,7 @@
                             parserLog2("debug", $srcAddr, "  Cluster '$clustId' specific command '$cmd' handled as default logic id '$srcEp-$clustId-cmd$cmd'");
                             $attrReportN[] = array(
                                 'name' => $srcEp.'-'.$clustId.'-cmd'.$cmd,
-                                'value' => (sizeof($pl) > 0) ? $pl : "1",
+                                'value' => (strlen($pl) > 0) ? $pl : "1",
                             );
                         }
                     }

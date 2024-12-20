@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="241205-BETA-1"
+# VERSION="241220-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -42,7 +42,7 @@ aaae4db2de7816c52c1c39137652b2d3 *core/class/Abeille.class.php
 be6e449f1d32861a7ebb2f98c775ce15 *core/class/AbeilleCmdProcess.class.php
 59bff3729f43ff75a33d3a53008a4406 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-7139b94176c0e37f33244411406eb089 *core/class/AbeilleParser.class.php
+f8ed6331c7328e08c5d7342afe4d7afa *core/class/AbeilleParser.class.php
 99d42da202592d0f2f9cf60b4f3fcdd5 *core/class/AbeilleTools.class.php
 67b899cf7555e7c605aef9c058176abd *core/config/Abeille.config.php
 603640a07e5e022e4d4f1b6eb9d91d5c *core/config/AbeilleInternalCmds.json
@@ -167,6 +167,7 @@ d0794406c29f943ca9616c838bf5ca36 *core/config/commands/etatSwitchSimple.json
 33430aef88869b7985e8e504f0d0abae *core/config/commands/inf_addr-Short.json
 168d78a1ff58c510722ce3de427917e1 *core/config/commands/inf_battery-Low.json
 a1fd77b65a714bd00c0df6e68f83957c *core/config/commands/inf_batteryVoltAndPercent-285-300.json
+6ad75677092d6dcad35972f025124f8f *core/config/commands/inf_batteryVoltToPercent.json
 da7f974ad7d269e9f89eaf5a29953d57 *core/config/commands/inf_click.json
 15fcc4d05b5d7476c4abaeb02ccb428f *core/config/commands/inf_door-Status.json
 12325a4c2a72bc62b7b2acb74561f7b6 *core/config/commands/inf_generic-Binary.json
@@ -232,7 +233,7 @@ a0b8c82f1d944b738c450775e400ef0e *core/config/commands/inf_zbAttr-0702-UnitOfMea
 1ba1b2bbdfc2ee562012874bb3fd542e *core/config/commands/inf_zbAttr-0B04-ActivePower.json
 229b2de0d48b995e3d0b2d37da05bf08 *core/config/commands/inf_zbAttr-0B04-RMSCurrent.json
 75fd25b946fd24e50e5c7b44b501b13e *core/config/commands/inf_zbAttr-0B04-RMSVoltage.json
-f52a93ac3194f9fcd9cd03f66a0d29c4 *core/config/commands/inf_zbCmd-Generic.json
+461ca9d65e9e4221f5990d5621914d3f *core/config/commands/inf_zbCmd-Generic.json
 3482a215d8d0ac7983373fdfe7975cfd *core/config/commands/inf_zbCmdC-0005-Ikea07.json
 631cfa440f34c2badd141107e26f04b7 *core/config/commands/inf_zbCmdC-0006-Off.json
 92a3aa158253d16ed2012bb86f09e03b *core/config/commands/inf_zbCmdC-0006-On.json
@@ -242,6 +243,9 @@ b932b84179bd3b4a0c4e3d40121a3f57 *core/config/commands/inf_zbCmdC-0008-MoveWithO
 c489b438fb12df2e712292279ab7e2e3 *core/config/commands/inf_zbCmdC-0008-Step.json
 ec72cab863572c39fb54ddd13dfea349 *core/config/commands/inf_zbCmdC-0008-StepWithOnOff.json
 172e5372b41f66229e55e1ad69a05780 *core/config/commands/inf_zbCmdC-0008-Stop.json
+16e8da9e0fc67d85d3eb944060becb57 *core/config/commands/inf_zbCmdC-0102-00UpOpen.json
+4ecf741186dd6f47f1c6e34140b74c5a *core/config/commands/inf_zbCmdC-0102-01DownClose.json
+187f6f91a82426bb47a8a75b76e4f6ea *core/config/commands/inf_zbCmdC-0102-02Stop.json
 ea4620f097eb5bd56d166b23bbbf7b1b *core/config/commands/inf_zbCmdC-0501-Arm-String.json
 b4799c21f2192529396b77962dcbbde5 *core/config/commands/inf_zbCmdC-0501-Arm-Value.json
 8a565468b6779ae7a5566a11391d0c92 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ChangeNotification.json
@@ -570,7 +574,9 @@ bbfc4ee5f7896335488fca0348b42f5b *core/config/devices/SNZB-06P_SONOFF/SNZB-06P_S
 d1e031e53759e20960fbdc30fbf5990e *core/config/devices/SPLZB-132/SPLZB-132.json
 5e3b1b9baa3c27102fd036f6b4e7ef7a *core/config/devices/SPLZB-132/discovery.json
 ff0403fd74438143258e55044b1106ca *core/config/devices/SPZB0001/SPZB0001.json
-8bb6f293a1ab444207499fb0ce585224 *core/config/devices/Shutterswitchwithneutral/Shutterswitchwithneutral.json
+8f1d38897340b73c7ab361c49fd0fa7d *core/config/devices/Shutterscentralremoteswitch_Legrand/Shutterscentralremoteswitch_Legrand.json
+9b6277795d0d4d06637c4d3da6ce1a94 *core/config/devices/Shutterscentralremoteswitch_Legrand/discovery-Shutterscentralremoteswitch_Legrand.json
+527258ce1801a85b7ba0747cba675c47 *core/config/devices/Shutterswitchwithneutral/Shutterswitchwithneutral.json
 e01e88dce276c42086b17ea69a1d6d7c *core/config/devices/Shutterswitchwithneutral/discovery-Shutterswitchwithneutral_Legrand.json
 42f997757a23f975e66178555bdb410d *core/config/devices/SmokeSensor-EF-3.0/SmokeSensor-EF-3.0.json
 399db46c33865fea091c9e9e686d6eed *core/config/devices/SmokeSensor-EM/SmokeSensor-EM.json
@@ -917,7 +923,7 @@ d23fa8eeae170c8252494da6e2254cb6 *core/config/devices/sen_ill.mgl01/discovery-se
 eed13afcb01bb162c35ac8a302e1b5da *core/config/devices/sensor_cube/sensor_cube.json
 21e0da4cc8f0f8f72d3cf2e6fe35f829 *core/config/devices/sensor_ht/sensor_ht.json
 c7c9208f78c11691b508b89f5aa2a6cd *core/config/devices/sensor_magnet.aq2/discovery-sensor_magnet.aq2_LUMI.json
-ceb65baf5aeb7a5648e772ccc714113f *core/config/devices/sensor_magnet.aq2/sensor_magnet.aq2.json
+080ce08e290b454d7da3689a94ffdaa4 *core/config/devices/sensor_magnet.aq2/sensor_magnet.aq2.json
 e8fa6cd93f966b888a6770314d63b692 *core/config/devices/sensor_magnet/sensor_magnet.json
 5da1c645549d16ce1f352ecb4ec6b193 *core/config/devices/sensor_motion.aq2/sensor_motion.aq2.json
 0194071d20aea08cc440f7fd25e96979 *core/config/devices/sensor_motion/sensor_motion.json
@@ -995,7 +1001,7 @@ de84d3fbd3a277d95e9ee97f1fbb675f *core/php/AbeilleSerialRead.php
 98dda2f694581222421a3bad2f6e4480 *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 4babce1ace5fa35ea4cb3d77e3bf3e79 *core/php/AbeilleZigateConst.php
-354a91dd2a99d8d5393c6c7957a50635 *core/php/AbeilleZigbeeConst.php
+01ec72f3602be4b95ab93ab3dbbbe66f *core/php/AbeilleZigbeeConst.php
 fae97a01f83e8d3d32620d318f4ee744 *core/python/AbeilleEzspAsh.py
 6d5dafac6786b9dd488b32f454c4b584 *core/python/AbeilleEzspCmds.py
 a59fd32a3db93ff16afeb3152f7b26d0 *core/python/AbeilleEzspD.py
@@ -1061,12 +1067,13 @@ bb4f1f9ed4a7865cf3f52f24d9d14186 *desktop/php/Abeille-Eq-Cmds.php
 011a9b628fe7c72f13f838895f990577 *desktop/php/AbeilleMaintenance.php
 4bb4b94d777be9a8f48f5e77e67e327c *desktop/php/AbeilleNetworkMap.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/ezsp_notes.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_cmd_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_config_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-50c7a52271b92ddb95377837bdc4f14f *docs/fr_FR/Changelog.md
+c6cfae4f6a4df0fa6f74c9558f98b191 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1419,11 +1426,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-e7518076a4c1815b4d212694b2cb2759 *plugin_info/Abeille.version
+af0c9dc82fa6f52fbee2d0c77cd75f44 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 489670c29a0bd0f77eb0e3f22a598011 *plugin_info/configuration.php
-1824219383f6e78c386bd005003d747c *plugin_info/info.json
+ebef7da9230faa3b108ed2a52100af69 *plugin_info/info.json
 f1cca8a3440cdf7b12c772b78e183c71 *plugin_info/install.php
 75ebf8e012f9d5b55c2c4eedf084d125 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

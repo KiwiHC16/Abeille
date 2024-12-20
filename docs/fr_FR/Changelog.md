@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 241220-BETA-1
+
 -   Nouveau: Support Legrand wireless switch (2736).
 -   Amélioration: Interne parser. Cmdes de cluster gérées de maniere generique (EP-CLUST-cmdCC).
 -   Amélioration: Ajout cmde 'inf_batteryVoltToPercent'.

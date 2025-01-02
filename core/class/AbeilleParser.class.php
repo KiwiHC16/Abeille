@@ -1708,10 +1708,11 @@
                 parserLog('debug', '  WARNING: FW major currently unknown => ignoring');
                 return;
             }
-            if ($GLOBALS['zigate'.$zgId]['fwVersionMaj'] == "0005") { // Zigate v2 ?
+            $min = hexdec($GLOBALS['zigate'.$zgId]['fwVersionMin']);
+            if (($GLOBALS['zigate'.$zgId]['fwVersionMaj'] == "0005") && ($min < 0x322)) { // Zigate v2 & fw < 3.22 ?
                 global $last8002DevAnnounce;
                 if ($addr != $last8002DevAnnounce) {
-                    parserLog('debug', '  WARNING: Corrupted message => ignoring');
+                    parserLog('debug', '  WARNING: Corrupted dev announce => ignoring');
                     return;
                 }
             }

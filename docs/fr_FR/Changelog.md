@@ -3,6 +3,8 @@
 -   Correction: Parser: 'Dev announce' ignoré que si FW version < 3.22 (2592).
 -   Correction: Repair.
 -   Correction: Placement réseau. Erreurs PHP.
+-   Amélioration: Interne: Ajout 'AbeilleZigbee'.
+-   Amélioration: Abeille repond 0 à l'attribut 0002 (time cluster).
 
 ## 241220-BETA-1
 

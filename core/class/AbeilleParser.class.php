@@ -1188,85 +1188,85 @@
         //     return $str;
         // }
 
-        // Fonction dupliquée dans Abeille.
-        public function volt2pourcent($voltage) {
-            $max = 3.135;
-            $min = 2.8;
-            if ( $voltage/1000 > $max ) {
-                parserLog('debug', '  Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.' );
-                return 100;
-            }
-            if ( $voltage/1000 < $min ) {
-                parserLog('debug', '  Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.' );
-                return 0;
-            }
-            return round(100-((($max-($voltage/1000))/($max-$min))*100));
-        }
+        // // Fonction dupliquée dans Abeille.
+        // public function volt2pourcent($voltage) {
+        //     $max = 3.135;
+        //     $min = 2.8;
+        //     if ( $voltage/1000 > $max ) {
+        //         parserLog('debug', '  Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.' );
+        //         return 100;
+        //     }
+        //     if ( $voltage/1000 < $min ) {
+        //         parserLog('debug', '  Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.' );
+        //         return 0;
+        //     }
+        //     return round(100-((($max-($voltage/1000))/($max-$min))*100));
+        // }
 
-        /* Zigbee type 0x10 to string */
-        function convBoolToString($value) {
-            if (hexdec($value) == 0)
-                return "0";
-            return "1"; // Any value != 0 means TRUE
-        }
+        // /* Zigbee type 0x10 to string */
+        // function convBoolToString($value) {
+        //     if (hexdec($value) == 0)
+        //         return "0";
+        //     return "1"; // Any value != 0 means TRUE
+        // }
 
-        /* Zigbee type 0x39 to string */
-        function convSingleToString($value) {
-          return unpack('f', pack('H*', $value ))[1];
-        }
+        // /* Zigbee type 0x39 to string */
+        // function convSingleToString($value) {
+        //   return unpack('f', pack('H*', $value ))[1];
+        // }
 
-        function convUint8ToString($value) {
-            return base_convert($value, 16, 10);
-        }
-        function convUint16ToString($value) {
-            return base_convert($value, 16, 10);
-        }
-        function convUint24ToString($value) {
-            return base_convert($value, 16, 10);
-        }
-        function convUint32ToString($value) {
-            return base_convert($value, 16, 10);
-        }
-        function convUint40ToString($value) {
-            return base_convert($value, 16, 10);
-        }
-        function convUint48ToString($value) {
-            return base_convert($value, 16, 10);
-        }
-        function convUint56ToString($value) {
-            return base_convert($value, 16, 10);
-        }
-        function convUint64ToString($value) {
-            return base_convert($value, 16, 10);
-        }
+        // function convUint8ToString($value) {
+        //     return base_convert($value, 16, 10);
+        // }
+        // function convUint16ToString($value) {
+        //     return base_convert($value, 16, 10);
+        // }
+        // function convUint24ToString($value) {
+        //     return base_convert($value, 16, 10);
+        // }
+        // function convUint32ToString($value) {
+        //     return base_convert($value, 16, 10);
+        // }
+        // function convUint40ToString($value) {
+        //     return base_convert($value, 16, 10);
+        // }
+        // function convUint48ToString($value) {
+        //     return base_convert($value, 16, 10);
+        // }
+        // function convUint56ToString($value) {
+        //     return base_convert($value, 16, 10);
+        // }
+        // function convUint64ToString($value) {
+        //     return base_convert($value, 16, 10);
+        // }
 
-        /* Zigbee types 0x28..0x2f to string */
-        function convInt8ToString($value) {
-            $num = hexdec($value);
-            if ($num > 0x7f) // is negative
-                $num -= 0x100;
-            return sprintf("%d", $num);
-        }
-        function convInt16ToString($value) {
-            $num = hexdec($value);
-            if ($num > 0x7fff) // is negative
-                $num -= 0x10000;
-            return sprintf("%d", $num);
-        }
-        function convInt24ToString($value) {
-            $num = hexdec($value);
-            if ($num > 0x7fffff) // is negative
-                $num -= 0x1000000;
-            return sprintf("%d", $num);
-        }
-        function convInt32ToString($value) {
-            $num = hexdec($value);
-            if ($num > 0x7fffffff) // is negative
-                $num -= 0x100000000;
-            $conv = sprintf("%d", $num);
-            // parserLog('debug', 'convInt32ToString value='.$value.', conv='.$conv );
-            return $conv;
-        }
+        // /* Zigbee types 0x28..0x2f to string */
+        // function convInt8ToString($value) {
+        //     $num = hexdec($value);
+        //     if ($num > 0x7f) // is negative
+        //         $num -= 0x100;
+        //     return sprintf("%d", $num);
+        // }
+        // function convInt16ToString($value) {
+        //     $num = hexdec($value);
+        //     if ($num > 0x7fff) // is negative
+        //         $num -= 0x10000;
+        //     return sprintf("%d", $num);
+        // }
+        // function convInt24ToString($value) {
+        //     $num = hexdec($value);
+        //     if ($num > 0x7fffff) // is negative
+        //         $num -= 0x1000000;
+        //     return sprintf("%d", $num);
+        // }
+        // function convInt32ToString($value) {
+        //     $num = hexdec($value);
+        //     if ($num > 0x7fffffff) // is negative
+        //         $num -= 0x100000000;
+        //     $conv = sprintf("%d", $num);
+        //     // parserLog('debug', 'convInt32ToString value='.$value.', conv='.$conv );
+        //     return $conv;
+        // }
 
         // /* New generic function to convert hex string to uintX/intX */
         // function convHexToNumber($hexValue, $zbType) {
@@ -3293,8 +3293,6 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
-                        // $toMon[] = "8002/Read attributes"; // For monitor
-
                         $l = strlen($msg);
                         $attributes = "";
                         for ($i = 0; $i < $l; $i += 4) {
@@ -3304,16 +3302,25 @@
                             $attributes .= $attrId;
 
                             if ($clustId == "000A") { // Time cluster
+                                /* Memo time cluster
+                                - UTCTime is an unsigned 32-bit value representing the number of seconds since 0 hours, 0 minutes, 0 seconds, 3705 on the 1st of January, 2000 UTC (Universal Coordinated Time).
+                                */
+
                                 if ($attrId == "0000") {
-                                    parserLog2('debug', $srcAddr, "  Attribute 0000 handled by Zigate");
-                                // } else if ($attrId == "0002") { // TimeZone
-                                    // TODO
+                                    // The Time attribute is 32 bits in length and holds the time value of a real time clock.
+                                    parserLog2('debug', $srcAddr, "  Attribute 0000/Time: Zigate responding");
+                                } else if ($attrId == "0002") { // TimeZone
+                                    // The TimeZone attribute indicates the local time zone, as a signed offset in seconds from the Time attribute value.
+                                    // Standard Time = Time + TimeZone
+                                    // TO BE REVISITED as currently respondig 0
+                                    $timeZone = zbFormatData(0, "2B"); // int32
+                                    msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=2B&attrVal='.$timeZone);
+                                    parserLog2('debug', $srcAddr, "  Attribute 0002/TimeZone: Answering 0 to device");
                                 } else if ($attrId == "0007") { // LocalTime
                                     // Reminder: Zigbee uses 00:00:00 @1st of jan 2000 as ref
                                     //           PHP uses 00:00:00 @1st of jan 1970 (Linux ref)
                                     // Attr 0007, type uint32/0x23
                                     $lt = localtime(null, true);
-                                    // $localTime = @mktime($lt['tm_hour'], $lt['tm_min'], $lt['tm_sec'], $lt['tm_mon'], $lt['tm_mday'], $lt['tm_year']);
                                     $localTime = @mktime($lt['tm_hour']);
                                     if ($localTime === false) { // mktime(): Epoch doesn't fit in a PHP integer
                                         parserLog2('error', $srcAddr, "  Attribute 0007/LocalTime: CAN'T answer to device. mktime() failed.");

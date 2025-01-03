@@ -83,6 +83,14 @@
         $saveEqZigbee = false;
 
         // Zigbee endpoints list defined ?
+        if (!isset($zigbee['endPoints'])) {
+            msgToCli("step", "Active end points");
+            logMessage('debug', '  Requesting active endpoints list');
+            msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
+            return;
+        } else
+            msgToCli("step", "Active end points", "ok");
+        // Zigbee endpoints cleanup
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) { // Checking current EP list
             if (($epId2 == '') || ($epId2 == '00')) {
                 logMessage('debug', "  Removing zigbee['endPoints'][${epId2}]");
@@ -92,13 +100,6 @@
         }
         if ($saveEqZigbee)
             saveEqConfig($eqLogic, 'ab::zigbee', $zigbee);
-        if (!isset($zigbee['endPoints'])) {
-            msgToCli("step", "Active end points");
-            logMessage('debug', '  Requesting active endpoints list');
-            msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
-            return;
-        } else
-            msgToCli("step", "Active end points", "ok");
 
         // Zigbee logicalType/macCapa/manufCode defined ?
         if (!isset($zigbee['logicalType']) ||

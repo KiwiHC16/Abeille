@@ -1,6 +1,7 @@
 # ChangeLog
 
-- Correction: Parser: 'Dev announce' ignoré que si FW version < 3.22 (2592).
+-   Correction: Parser: 'Dev announce' ignoré que si FW version < 3.22 (2592).
+-   Correction: Repair.
 
 ## 241220-BETA-1
 

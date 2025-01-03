@@ -137,23 +137,23 @@
             return $zclHeader;
         }
 
-        /**
-         * Converts signed decimal to hex (Two's complement)
-         *
-         * @param $value int, signed
-         *
-         * @return string, upper case hex value, both bytes padded left with zeros
-         */
-        function signed2hex($value, $size) {
-            $packed = pack('i', $value);
-            $hex='';
-            for ($i=0; $i < $size; $i++){
-                $hex .= strtoupper( str_pad( dechex(ord($packed[$i])) , 2, '0', STR_PAD_LEFT) );
-            }
-            $tmp = str_split($hex, 2);
-            $out = implode('', array_reverse($tmp));
-            return $out;
-        }
+        // /**
+        //  * Converts signed decimal to hex (Two's complement)
+        //  *
+        //  * @param $value int, signed
+        //  *
+        //  * @return string, upper case hex value, both bytes padded left with zeros
+        //  */
+        // function signed2hex($value, $size) {
+        //     $packed = pack('i', $value);
+        //     $hex='';
+        //     for ($i=0; $i < $size; $i++){
+        //         $hex .= strtoupper( str_pad( dechex(ord($packed[$i])) , 2, '0', STR_PAD_LEFT) );
+        //     }
+        //     $tmp = str_split($hex, 2);
+        //     $out = implode('', array_reverse($tmp));
+        //     return $out;
+        // }
 
         // Called to convert '#sliderXX#' or '#selectXX#' to 'XX'
         // 'XX' is always a decimal value

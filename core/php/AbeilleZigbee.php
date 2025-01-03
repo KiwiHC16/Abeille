@@ -5,6 +5,17 @@
      * Mainly Zigbee Cluster Library spec (ZCL).
      */
 
+    function zbSigned2hex($value, $size) {
+        $packed = pack('i', $value);
+        $hex='';
+        for ($i=0; $i < $size; $i++){
+            $hex .= strtoupper( str_pad( dechex(ord($packed[$i])) , 2, '0', STR_PAD_LEFT) );
+        }
+        $tmp = str_split($hex, 2);
+        $out = implode('', array_reverse($tmp));
+        return $out;
+    }
+
     /* Format attribute value.
         Return hex string formatted value according to its type.
         WARNING: Returned hex string must still be reversed if >= 2B */
@@ -48,18 +59,18 @@
             $valOut = sprintf("%012X", $valIn);
             break;
         case '28': // int8
-            $valOut = $this->signed2Hex($valIn, 1);
+            $valOut = zbSigned2Hex($valIn, 1);
             break;
         case '29': // int16
         case 'int16':
-            $valOut = $this->signed2Hex($valIn, 2);
+            $valOut = zbSigned2Hex($valIn, 2);
             break;
         case '2A': // int24
-            $valOut = $this->signed2Hex($valIn, 3);
+            $valOut = zbSigned2Hex($valIn, 3);
             break;
         case '2B': // int32
         case 'int32':
-            $valOut = $this->signed2Hex($valIn, 4);
+            $valOut = zbSigned2Hex($valIn, 4);
             break;
         case '39': // Single precision
             $valOut = strrev(unpack('h*', pack('f', $valIn))[1]);

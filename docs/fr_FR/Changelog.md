@@ -5,6 +5,8 @@
 -   Correction: Placement réseau. Erreurs PHP.
 -   Amélioration: Interne: Ajout 'AbeilleZigbee'.
 -   Amélioration: Abeille repond 0 à l'attribut 0002 (time cluster).
+-   Amélioration: Assistant modèle.
+-   Nouveau: Support Lexman ampoule E14 (2739).
 
 ## 241220-BETA-1
 

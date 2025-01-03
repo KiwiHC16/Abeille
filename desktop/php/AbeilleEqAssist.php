@@ -1001,12 +1001,16 @@
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
+            // console.log("Cluster 0008 EP "+epId+": ", ep);
 
             if (!isset(ep.servClusters))
                 continue;
 
             // If device ID is defined let's check if lighting device (see devicesTable in Zigbee consts)
-            if ((typeof ep.devId !== "undefined") && (ep.devId >= 0x0100) && (ep.devId <= 0x0850))
+            devId = -1;
+            if (typeof ep.devId !== "undefined")
+                devId = parseInt(ep.devId, 16);
+            if (devId != -1 && (devId >= 0x0100) && (devId <= 0x0850))
                 name = "Brightness";
             else
                 name = "Level";

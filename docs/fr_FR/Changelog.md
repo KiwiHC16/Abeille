@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 250103-BETA-1
+
 -   Correction: Parser: 'Dev announce' ignoré que si FW version < 3.22 (2592).
 -   Correction: Repair.
 -   Correction: Placement réseau. Erreurs PHP.

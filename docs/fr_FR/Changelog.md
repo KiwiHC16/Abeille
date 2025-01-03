@@ -2,6 +2,7 @@
 
 -   Correction: Parser: 'Dev announce' ignoré que si FW version < 3.22 (2592).
 -   Correction: Repair.
+-   Correction: Placement réseau. Erreurs PHP.
 
 ## 241220-BETA-1
 

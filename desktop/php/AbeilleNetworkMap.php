@@ -74,7 +74,7 @@
         $relPath .= '/';
         $relPath .= (isset($lev['mapFile']) ? $lev['mapFile'] : 'AbeilleNetworkMap-1200.png');
         $path = __DIR__.'/../../'.$relPath;
-        logDebug("path=${path}");
+        logDebug("path=$path");
         if (!file_exists($path)) {
             $networkMap['levels'][$levIdx]['mapDir'] = 'images';
             $networkMap['levels'][$levIdx]['mapFile'] = 'AbeilleNetworkMap-1200.png';
@@ -274,7 +274,7 @@
                 <?php
                     foreach ($networkMap['levels'] as $levIdx => $lev) {
                         $levelName = $lev['levelName'];
-                        echo "<option value=\"${levIdx}\">${levelName}</option>";
+                        echo "<option value=\"$levIdx\">$levelName</option>";
                     }
                 ?>
                 </select>

@@ -5,7 +5,12 @@
         "type": "Tuya temp and humidity",
         "genericType": "Environment",
         "alternateIds": {
-            "TS0201__TZ3000_bguser20": []
+            "TS0201__TZ3000_bguser20": {},
+            "TS0201__TZ3000_yd2e749y": {},
+            "TS0201__TZ3000_6uzkisv2": {},
+            "TS0201__TZ3000_fllyghyj": {},
+            "TS0201__TZ3000_saiqcn0y": {},
+            "TS0201__TZ3000_bjawzodf": {}
         },
         "timeout": "62",
         "configuration": {

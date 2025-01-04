@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Nouveau: Support TS0201, _TZ3000_fllyghyj (2738).
+
 ## 250103-BETA-1
 
 -   Correction: Parser: 'Dev announce' ignoré que si FW version < 3.22 (2592).

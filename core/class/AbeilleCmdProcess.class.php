@@ -2972,7 +2972,8 @@
                         $manufCode      = "0000";
                     }
                     $nbOfAttributes = "01";
-                    $attrVal = $this->formatAttribute($Command['cmdParams']['attrVal'], $attrType);
+                    // $attrVal = $this->formatAttribute($Command['cmdParams']['attrVal'], $attrType);
+                    $attrVal = zbFormatData($Command['cmdParams']['attrVal'], $attrType);
                     if ($attrVal === false)
                         return;
                     $attrId = $Command['cmdParams']['attrId'];
@@ -3542,15 +3543,18 @@
                             }
                         }
 
-                        $minInterval = $this->formatAttribute($minInterval, "uint16");
-                        $maxInterval = $this->formatAttribute($maxInterval, "uint16");
+                        // $minInterval = $this->formatAttribute($minInterval, "uint16");
+                        // $maxInterval = $this->formatAttribute($maxInterval, "uint16");
+                        $minInterval = zbFormatData($minInterval, "uint16");
+                        $maxInterval = zbFormatData($maxInterval, "uint16");
 
                         // 'changeVal' must be omitted if 'discrete' data types
                         $dt = hexdec($attrType);
                         if ((($dt >= 0x08) && ($dt <= 0x1f)) || (($dt >= 0x30) && ($dt <= 0x31)) || ($dt >= 0xe8)) // Discrete types
                             $changeVal = '';
                         else
-                            $changeVal = $this->formatAttribute($changeVal, $attrType);
+                            // $changeVal = $this->formatAttribute($changeVal, $attrType);
+                            $changeVal = zbFormatData($changeVal, $attrType);
 
                         cmdLog('debug', "  configureReporting2: AttrId={$attrId}, AttrType={$attrType}, Min={$minInterval}, Max={$maxInterval}, ChangeVal={$changeVal}");
                         $attrId = AbeilleTools::reverseHex($attrId);

@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Nouveau: Support TS0201, _TZ3000_fllyghyj (2738).
+-   Correction: Interne: formatAttribute => zbFormatData.
 
 ## 250103-BETA-1
 

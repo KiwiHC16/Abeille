@@ -1,5 +1,27 @@
 # ChangeLog
 
+**Modèles d'équipement**
+
+    - ATTENTION ! Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).
+
+**Zigates v2/+**
+
+    - Malheureusement ce modèle montre de grosses instabilités et ne doit pas être considéré pour une solution robuste.
+    - La maturité de la v2 n'est pas au niveau de la v1 et malgré ça, il n'y a pas eu de mises-à-jour depuis un moment. D'après differents retours le dernier FW dispo (3.A0) n'est pas le + stable mais le précédent (**3.22**). Nous vous conseillons de faire la mise-à-jour vers celui ci.
+    - Le FW **v3.22** est le meilleur FW du moment. Faire un **EFFACEMENT COMPLET** lors de la mise-à-jour.
+
+**Zigates v1**
+
+    - FW **v3.23 OPDM** ou **AB01-0000** recommandé.
+    - Le dernier FW officiel est le v3.23. Il est FORTEMENT recommandé de basculer dessus pour ne pas faire façe à des soucis déja corrigés.
+    - D'autre part si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 ## 250105-BETA-1
 
 -   Nouveau: Support TS0201, _TZ3000_fllyghyj (2738).

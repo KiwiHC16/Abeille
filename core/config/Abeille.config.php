@@ -81,6 +81,7 @@
     // define('daemonSocat9', 1 << 20);
     // define('daemonSocat10', 1 << 21);
     define('daemonMonitor', 1 << 22);
+    define('daemonMain', 1 << 23);
 
     define ("daemonStopTimeout", 2000); // 2sec
 ?>

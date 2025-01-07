@@ -7,8 +7,7 @@
 **Zigates v2/+**
 
     - Malheureusement ce modèle montre de grosses instabilités et ne doit pas être considéré pour une solution robuste.
-    - La maturité de la v2 n'est pas au niveau de la v1 et malgré ça, il n'y a pas eu de mises-à-jour depuis un moment. D'après differents retours le dernier FW dispo (3.A0) n'est pas le + stable mais le précédent (**3.22**). Nous vous conseillons de faire la mise-à-jour vers celui ci.
-    - Le FW **v3.22** est le meilleur FW du moment. Faire un **EFFACEMENT COMPLET** lors de la mise-à-jour.
+    - Le FW **v3.22** est le meilleur FW du moment (éviter 3.A0, trop de soucis).
 
 **Zigates v1**
 
@@ -22,9 +21,11 @@
       - Les firmwares avant 3.1e sont forcement 'legacy'.
       - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
+-   Amélioration: Interne: Démon principal isolé => 'AbeilleMainD'.
+
 ## 250105-BETA-1
 
--   Nouveau: Support TS0201, _TZ3000_fllyghyj (2738).
+-   Nouveau: Support TS0201, \_TZ3000_fllyghyj (2738).
 -   Correction: Interne: formatAttribute => zbFormatData.
 
 ## 250103-BETA-1

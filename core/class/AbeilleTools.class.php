@@ -639,6 +639,9 @@
                 } else if (strstr($line, "AbeilleMonitor") !== false) {
                     $shortName = "Monitor";
                     $runBits |= daemonMonitor;
+                } else if (strstr($line, "AbeilleMainD") !== false) {
+                    $shortName = "main";
+                    $runBits |= daemonMain;
                 } else if (strstr($line, "AbeilleSerialRead") !== false) {
                     $net = $lineArr[3]; // Ex 'Abeille1'
                     $zgId = substr($net, 7);
@@ -687,6 +690,7 @@
         {
             $found['cmd'] = 0;
             $found['parser'] = 0;
+            $found['main'] = 0;
             $nbProcessExpected = 2; // parser and cmd
 
             log::add('Abeille', 'debug', "config=".json_encode($config));
@@ -726,8 +730,10 @@
                 else {
                     if (stristr($line, "abeilleparser.php"))
                         $found['parser']++;
-                    if (stristr($line, "abeillecmd.php"))
+                    else if (stristr($line, "abeillecmd.php"))
                         $found['cmd']++;
+                    else if (stristr($line, "abeillemaind.php"))
+                        $found['main']++;
                 }
             }
 
@@ -908,7 +914,7 @@
                     }
                 }
                 if ($nbZigates > 0)
-                    $daemons .= " AbeilleParser AbeilleCmd";
+                    $daemons .= " AbeilleParser AbeilleCmd AbeilleMainD";
 
                 if ($daemons == "") {
                     message::add("Abeille", "Aucune passerelle active. Veuillez corriger via la page de config.");
@@ -1008,6 +1014,13 @@
             case 'abeillemonitor':
                 $log = " >>".log::getPathToLog("AbeilleMonitor.log")." 2>&1";
                 $cmd = $php." -r \"require '".corePhpDir."AbeilleMonitor.php'; monRun();\"".$log;
+                break;
+            // Main daemon
+            case 'main':
+            case 'abeillemaind':
+                $daemonPhp = "AbeilleMainD.php";
+                $logCmd = " >>{$logsDir}AbeilleMainD.log 2>&1";
+                $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$logCmd;
                 break;
             default:
                 $cmd = "";
@@ -1119,6 +1132,18 @@
             if (!is_object($cron))
                 return false;
             if ($cron->running() == false)
+                return false;
+            return true;
+        }
+
+        /**
+         * Returns true is Abeille's main daemon is running.
+         *
+         * @return true if running, else false
+         */
+        public static function isAbeilleMainRunning() {
+            exec("pgrep -a php | grep AbeilleMainD | awk '{print $1}'", $mainArr);
+            if (count($mainArr) == 0)
                 return false;
             return true;
         }

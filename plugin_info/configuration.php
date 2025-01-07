@@ -55,8 +55,29 @@
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
 
+    /* List of available firmwares */
+    $fwListZgV1 = [];
+    $fwListZgV2 = [];
+    foreach (ls(__DIR__.'/../resources/fw_zigate', 'zigatev'.$z.'*.bin') as $fwName) {
+        $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
+        if (substr($fwVers, -4) == "-dev") {
+            /* FW for developer mode only */
+            if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == false))
+                continue; // Not in developer mode. Ignoring this FW
+            $fwVers = substr($fwVers, 0, -4); // Removing "-dev" suffix
+        }
+        $zigateV = substr($fwVers, 7, 1); // 'zigatevX-xxx' => 'X'
+        $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
+        if ($zigateV == "1")
+            $fwListZgV1[] = $fwVers;
+        else
+            $fwListZgV2[] = $fwVers;
+    }
+
     echo '<script>var js_wifiLink = "'.wifiLink.'";</script>'; // PHP to JS
     echo '<script>var js_maxGateways = "'.maxGateways.'";</script>'; // PHP to JS
+    echo '<script>var js_fwListZgV1 = "'.fwListZgV1.'";</script>'; // PHP to JS
+    echo '<script>var js_fwListZgV2 = "'.fwListZgV2.'";</script>'; // PHP to JS
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
     function getCmdValueByLogicId($eqId, $logicId) {
@@ -1109,6 +1130,28 @@
             uploadCustomFw().then(response => updateZigateFw2(gtwId, zgType, "/tmp/jeedom/Abeille/" + response), error => console.log("uploadCustomFw() ERROR", error));
         } else
             updateZigateFw2(gtwId, zgType, zgFW);
+    }
+
+    // Build available firmwares drop-down list
+    function buildFwList(gtwId, gtwType, gtwSubType) {
+        console.log("buildFwList()");
+
+        let fwList = document.getElementById("idFw"+gtwId);
+        // Clear current list
+        fwList.innerHTML = "";
+        if (gtwType == "zigate") {
+            if ((gtwSubType == "PI") || (gtwSubType == "DIN"))
+                list = js_fwListZgV1;
+            else
+                list = js_fwListZgV2;
+
+            const opt = document.createElement("option");
+            opt.value = "3";
+            opt.text = "Option: Value 3";
+        } else {
+            console.log("Unsupported gtw type");
+            return;
+        }
     }
 
     // Update FW

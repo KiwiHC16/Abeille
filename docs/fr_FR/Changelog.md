@@ -22,6 +22,7 @@
       - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
 -   Amélioration: Interne: Démon principal isolé => 'AbeilleMainD'.
+-   Correction: Page de config: liste des FW crée dynamiquement en fonction du type de gateway.
 
 ## 250105-BETA-1
 

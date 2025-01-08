@@ -58,7 +58,7 @@
     /* List of available firmwares */
     $fwListZgV1 = [];
     $fwListZgV2 = [];
-    foreach (ls(__DIR__.'/../resources/fw_zigate', 'zigatev'.$z.'*.bin') as $fwName) {
+    foreach (ls(__DIR__.'/../resources/fw_zigate', 'zigatev*.bin') as $fwName) {
         $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
         if (substr($fwVers, -4) == "-dev") {
             /* FW for developer mode only */
@@ -69,15 +69,19 @@
         $zigateV = substr($fwVers, 7, 1); // 'zigatevX-xxx' => 'X'
         $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
         if ($zigateV == "1")
-            $fwListZgV1[] = $fwVers;
+            $fwListZgV1[$fwName] = $fwVers;
         else
-            $fwListZgV2[] = $fwVers;
+            $fwListZgV2[$fwName] = $fwVers;
+    }
+    if (isset($dbgDeveloperMode)) {
+        $fwListZgV1["CUSTOM"] = "{{Autre}}";
+        $fwListZgV2["CUSTOM"] = "{{Autre}}";
     }
 
     echo '<script>var js_wifiLink = "'.wifiLink.'";</script>'; // PHP to JS
     echo '<script>var js_maxGateways = "'.maxGateways.'";</script>'; // PHP to JS
-    echo '<script>var js_fwListZgV1 = "'.fwListZgV1.'";</script>'; // PHP to JS
-    echo '<script>var js_fwListZgV2 = "'.fwListZgV2.'";</script>'; // PHP to JS
+    sendVarToJS('js_fwListZgV1', $fwListZgV1);
+    sendVarToJS('js_fwListZgV2', $fwListZgV2);
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
     function getCmdValueByLogicId($eqId, $logicId) {
@@ -95,17 +99,16 @@
         return $cmd->getId();
     }
 
-    function displayGateway($zgId) {
+    function displayGateway($gtwId) {
         global $dbgTcharp38, $dbgDeveloperMode;
-
-        $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+        $eqLogic = eqLogic::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
         if ($eqLogic) {
             $eqId = $eqLogic->getId();
         }
         echo '<div class="form-group">';
             echo '<div class="col-lg-3">';
                 echo '<h4>';
-                    echo 'Passerelle '.$zgId;
+                    echo 'Passerelle '.$gtwId;
                 echo '</h4>';
             echo '</div>';
             echo '<div class="col-lg-9">';
@@ -115,8 +118,8 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom}} : </label>';
             echo '<div class="col-lg-4">';
-                if (Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille')) {
-                    $zgName = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille')->getName();
+                if (Abeille::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille')) {
+                    $zgName = Abeille::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille')->getName();
                 } else {
                     $zgName = "";
                 }
@@ -129,14 +132,14 @@
             echo '<div class="col-lg-4">';
                 echo '<div class="form-group">';
                     echo '<div class="col-lg-5">';
-                        echo '<select id="idSelGtwType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwType'.$zgId.'" onchange="gtwTypeChanged('.$zgId.')"  title="{{Type de clef}}">';
+                        echo '<select id="idSelGtwType'.$gtwId.'" class="configKey form-control" data-l1key="ab::gtwType'.$gtwId.'" onchange="gtwTypeChanged('.$gtwId.')"  title="{{Type de clef}}">';
                             echo '<option value="zigate" selected>{{Zigate}}</option>';
                             if (isset($dbgTcharp38))
                                 echo '<option value="ezsp">{{EmberZnet/EZSP}}</option>';
                         echo '</select>';
                     echo '</div>';
                     echo '<div class="col-lg-7">';
-                        echo '<select id="idZigateSubType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="gtwSubTypeChanged('.$zgId.')"  title="{{Modèle de clef}}">';
+                        echo '<select id="idZigateSubType'.$gtwId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$gtwId.'" onchange="gtwSubTypeChanged('.$gtwId.')"  title="{{Modèle de clef}}">';
                             echo '<option value="USB" selected>{{USB v1}}</option>';
                             echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
                             echo '<option value="PI">{{PI v1}}</option>';
@@ -145,7 +148,7 @@
                             echo '<option value="PIv2">{{PI +/v2}}</option>';
                             echo '<option value="DINv2">{{DIN +/v2}}</option>';
                         echo '</select>';
-                        echo '<select id="idEzspSubType'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$zgId.'" onchange="gtwSubTypeChanged('.$zgId.')"  title="{{Modèle de clef}}" style="display:none">';
+                        echo '<select id="idEzspSubType'.$gtwId.'" class="configKey form-control" data-l1key="ab::gtwSubType'.$gtwId.'" onchange="gtwSubTypeChanged('.$gtwId.')"  title="{{Modèle de clef}}" style="display:none">';
                             echo '<option value="DEFAULT" selected>{{Défaut}}</option>';
                         echo '</select>';
                     echo '</div>';
@@ -156,10 +159,10 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN}}" disabled>';
+                echo '<select id="idSelSP'.$gtwId.'" class="configKey form-control" data-l1key="ab::gtwPort'.$gtwId.'" title="{{Port série si zigate USB, Pi ou DIN}}" disabled>';
                     echo '<option value="none" selected>{{Aucun}}</option>';
-                    echo '<option value="'.wifiLink.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
-                    echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
+                    echo '<option value="'.wifiLink.$gtwId.'" >{{WIFI'.$gtwId.'}}</option>';
+                    echo '<option value="/dev/monitZigate'.$gtwId.'" >{{Monit'.$gtwId.'}}</option>';
                     foreach (jeedom::getUsbMapping('', true) as $name => $value) {
                         $value2 = substr($value, 5); // Remove '/dev/'
                         if ($value2 == "ttyS1")
@@ -175,9 +178,9 @@
                 // echo "getUsbMapping=".json_encode(jeedom::getUsbMapping('', true))."<br>";
             echo '</div>';
             echo '<div class="col-lg-5">';
-                echo '<div id="idCommTest'.$zgId.'" >';
-                    echo '<a id="idCheckSP'.$zgId.'" class="btn btn-default" onclick="checkSerialPort('.$zgId.')" title="{{Test de lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
-                    echo '<a class="serialPortStatus'.$zgId.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
+                echo '<div id="idCommTest'.$gtwId.'" >';
+                    echo '<a id="idCheckSP'.$gtwId.'" class="btn btn-default" onclick="checkSerialPort('.$gtwId.')" title="{{Test de lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
+                    echo '<a class="serialPortStatus'.$gtwId.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         echo '<span class="label label-success" style="font-size:1em">-?-</span>';
                     echo '</a>';
                     if (isset($dbgDeveloperMode))
@@ -189,61 +192,61 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port)}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwIpAddr'.$zgId.'" placeholder="{{<adresse>:<port>}}" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
+                echo '<input id="idWifiAddr'.$gtwId.'" class="configKey form-control" data-l1key="ab::gtwIpAddr'.$gtwId.'" placeholder="{{<adresse>:<port>}}" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
             echo '</div>';
         echo '</div>';
 
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Firmware}} : </label>';
             echo '<div class="col-lg-2">';
-                // echo '<input id="idFwVersion'.$zgId.'" type="text" title="{{Version actuelle du firmware}}" disabled>';
+                // echo '<input id="idFwVersion'.$gtwId.'" type="text" title="{{Version actuelle du firmware}}" disabled>';
                 if (isset($eqId))
                     $fwVersion = getCmdValueByLogicId($eqId, "FW-Version");
                 else
                     $fwVersion = "";
-                echo '<input id="idFwVersion'.$zgId.'" value="'.$fwVersion.'" type="text" class="cmd" data-type="info" data-subtype="string" data-cmd_id="" title="{{Version actuelle du firmware}}" readonly="readonly">';
+                echo '<input id="idFwVersion'.$gtwId.'" value="'.$fwVersion.'" type="text" class="cmd" data-type="info" data-subtype="string" data-cmd_id="" title="{{Version actuelle du firmware}}" readonly="readonly">';
                 // echo '<script>';
                 // echo "jeedom.cmd.update['3408'] = function(_options) {";
                 //     echo 'console.log("jeedom.cmd.update[3408], _options", _options);';
-                //     echo 'var element = document.getElementById("idFwVersion'.$zgId.'");';
+                //     echo 'var element = document.getElementById("idFwVersion'.$gtwId.'");';
                 //     echo 'console.log("element", element);';
                 //     echo 'element.value = _options.display_value;';
                 // echo '}';
                 // echo '</script>';
             echo '</div>';
             echo '<div class="col-lg-2">';
-                echo '<a id="idReadFwB'.$zgId.'" class="btn btn-default form-control" onclick="checkSerialPort('.$zgId.')" title="{{Lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Lire}}</a>';
+                echo '<a id="idReadFwB'.$gtwId.'" class="btn btn-default form-control" onclick="checkSerialPort('.$gtwId.')" title="{{Lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Lire}}</a>';
             echo '</div>';
             echo '<div class="col-lg-5">';
-                    echo '<div id="idUpdFw'.$zgId.'">';
-                    echo '<a id="idupdateZigateFw'.$zgId.'" class="btn btn-danger" onclick="updateZigateFw('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre-à-jour}}</a>';
-                    echo '<select id="idFW'.$zgId.'" style="width:160px; margin-left:4px" title="{{Firmwares disponibles}}">';
+                    echo '<div id="idUpdFw'.$gtwId.'">';
+                    echo '<a id="idupdateZigateFw'.$gtwId.'" class="btn btn-danger" onclick="updateZigateFw('.$gtwId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre-à-jour}}</a>';
+                    echo '<select id="idFW'.$gtwId.'" style="width:160px; margin-left:4px" title="{{Firmwares disponibles}}">';
 
-                    // Which Zigate version ?
-                    $zgType = config::byKey('ab::gtwSubType'.$zgId, 'Abeille', 'USB');
-                    if (($zgType == "PIv2") || ($zgType == "DINv2")) {
-                        $z = "2";
-                        $defaultFw = "0005-0322-opdm";
-                    } else {
-                        $z = "1";
-                        $defaultFw = "0004-0323-opdm";
-                    }
-                    foreach (ls(__DIR__.'/../resources/fw_zigate', 'zigatev'.$z.'*.bin') as $fwName) {
-                        $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
-                        if (substr($fwVers, -4) == "-dev") {
-                            /* FW for developer mode only */
-                            if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == false))
-                                continue; // Not in developer mode. Ignoring this FW
-                            $fwVers = substr($fwVers, 0, -4); // Removing "-dev" suffix
-                        }
-                        $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
-                        if ($fwVers == $defaultFw) // Default firwmare
-                            echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
-                        else
-                            echo '<option value='.$fwName.'>'.$fwVers.'</option>';
-                    }
-                    if (isset($dbgDeveloperMode))
-                        echo '<option value=CUSTOM>{{Autre}}</option>';
+                    // // Which Zigate version ?
+                    // $zgType = config::byKey('ab::gtwSubType'.$gtwId, 'Abeille', 'USB');
+                    // if (($zgType == "PIv2") || ($zgType == "DINv2")) {
+                    //     $z = "2";
+                    //     $defaultFw = "0005-0322-opdm";
+                    // } else {
+                    //     $z = "1";
+                    //     $defaultFw = "0004-0323-opdm";
+                    // }
+                    // foreach (ls(__DIR__.'/../resources/fw_zigate', 'zigatev'.$z.'*.bin') as $fwName) {
+                    //     $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
+                    //     if (substr($fwVers, -4) == "-dev") {
+                    //         /* FW for developer mode only */
+                    //         if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == false))
+                    //             continue; // Not in developer mode. Ignoring this FW
+                    //         $fwVers = substr($fwVers, 0, -4); // Removing "-dev" suffix
+                    //     }
+                    //     $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
+                    //     if ($fwVers == $defaultFw) // Default firwmare
+                    //         echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
+                    //     else
+                    //         echo '<option value='.$fwName.'>'.$fwVers.'</option>';
+                    // }
+                    // if (isset($dbgDeveloperMode))
+                    //     echo '<option value=CUSTOM>{{Autre}}</option>';
                     echo '</select>';
                 echo '</div>';
             echo '</div>';
@@ -252,7 +255,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Canal Zigbee}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelChan'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwChan'.$zgId.'" title="{{Canal Zigbee}}" disabled>';
+                echo '<select id="idSelChan'.$gtwId.'" class="configKey form-control" data-l1key="ab::gtwChan'.$gtwId.'" title="{{Canal Zigbee}}" disabled>';
                     echo '<option value=0>auto</option>';
                     for ($i = 11; $i < 27; $i++) {
                         echo '<option value='.$i.'>'.$i.'</option>';
@@ -264,7 +267,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelGtwStatus'.$zgId.'" class="configKey form-control" data-l1key="ab::gtwEnabled'.$zgId.'" onchange="gtwStatusChanged('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
+                echo '<select id="idSelGtwStatus'.$gtwId.'" class="configKey form-control" data-l1key="ab::gtwEnabled'.$gtwId.'" onchange="gtwStatusChanged('.$gtwId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
                     echo '<option value="N" selected>{{Désactivée}}</option>';
                     echo '<option value="Y">{{Activée}}</option>';
                 echo '</select>';
@@ -410,7 +413,7 @@
                         <div class="col-lg-4">
                             <input id="idSocatStatus" type="text" class="form-control" title="{{Status d'installation du package socat}}" readonly>
                         </div>
-                        <!-- <div id="idSocat'.$zgId.'" class="col-lg-6">
+                        <!-- <div id="idSocat'.$gtwId.'" class="col-lg-6">
                             <a class="socatStatus" title="Status d'installation du package socat">
                                 <span class="label label-success" style="font-size:1em;">-?-</span>
                             </a>
@@ -729,6 +732,11 @@
         console.log("gtwSubTypeChanged(gtwId="+gtwId+")");
         let gtwType = $("#idSelGtwType" + gtwId).val();
 
+        allowSelSP = true; // Serial port selection ALLOWED by default
+        allowWifiAddr = false; // Wifi addr disallowed by default
+        allowReadFwV = false; // Read FW version
+        allowUpdFw = false; // Update FW disallowed by default
+
         if (gtwType == "zigate") {
             var gtwSubType = $("#idZigateSubType" + gtwId).val();
             console.log('Gtw '+gtwId+' ('+gtwType+') sub type changed to "'+gtwSubType+'"');
@@ -765,10 +773,6 @@
                 // }
             }
 
-            allowSelSP = true; // Serial port selection ALLOWED by default
-            allowWifiAddr = false; // Wifi addr disallowed by default
-            allowReadFwV = false; // Read FW version
-            allowUpdFw = false; // Update FW disallowed by default
             switch (gtwSubType) {
             case "USB":
                 allowReadFwV = true;
@@ -796,24 +800,25 @@
                 allowReadFwV = true;
                 break;
             }
-            if (allowSelSP == false)
-                idSelSP.setAttribute('disabled', true);
-            if (allowWifiAddr)
-                idWifiAddr.removeAttribute('disabled');
-            if (allowReadFwV) {
-                $("#idReadFwB"+gtwId).show();
-                $("#idCommTest"+gtwId).show();
-            } else {
-                $("#idReadFwB"+gtwId).hide();
-                $("#idCommTest"+gtwId).hide();
-            }
-            if (allowUpdFw)
-                $("#idUpdFw"+gtwId).show();
         } else {
             var gtwSubType = $("#idEzspSubType" + gtwId).val();
             console.log('Gtw '+gtwId+' ('+gtwType+') sub type changed to "'+gtwSubType+'"');
+        }
 
-
+        if (allowSelSP == false)
+            idSelSP.setAttribute('disabled', true);
+        if (allowWifiAddr)
+            idWifiAddr.removeAttribute('disabled');
+        if (allowReadFwV) {
+            $("#idReadFwB"+gtwId).show();
+            $("#idCommTest"+gtwId).show();
+        } else {
+            $("#idReadFwB"+gtwId).hide();
+            $("#idCommTest"+gtwId).hide();
+        }
+        if (allowUpdFw) {
+            $("#idUpdFw"+gtwId).show();
+            updateFwList(gtwId, gtwType, gtwSubType);
         }
     }
 
@@ -1110,6 +1115,41 @@
         });
     }
 
+    // Build available firmwares drop-down list
+    function updateFwList(gtwId, gtwType, gtwSubType) {
+        console.log("updateFwList("+gtwId+","+gtwType+","+gtwSubType+")");
+
+        let fwList = document.getElementById("idFW"+gtwId);
+        // Clear current list
+        fwList.innerHTML = "";
+        if (gtwType == "zigate") {
+            if ((gtwSubType == "PI") || (gtwSubType == "DIN")) {
+                list = js_fwListZgV1;
+                defaultFw = "0004-0323-opdm";
+            } else { // Assuming PIv2 or DINv2
+                list = js_fwListZgV2;
+                defaultFw = "0005-0322-opdm";
+            }
+
+            console.log("list=", list);
+            idx = 0;
+            for (const [fwName, fwVers] of Object.entries(list)) {
+                // console.log(`${fwName}: ${fwVers}`);
+                const opt = document.createElement("option");
+                opt.value = fwName;
+                opt.text = fwVers;
+                fwList.appendChild(opt);
+
+                if (fwVers == defaultFw)
+                    fwList.selectedIndex = idx;
+                idx++;
+            }
+        } else {
+            console.log("Unsupported gtw type");
+            return;
+        }
+    }
+
     /* Called when FW update button is pressed */
     function updateZigateFw(gtwId) {
         console.log("updateZigateFw(gtwId="+gtwId+")");
@@ -1120,7 +1160,7 @@
         //     return;
         // }
         let zgType = $("#idZigateSubType"+gtwId).val();
-        if ((zgType != "PI") && (zgType != "PIv2") &&(zgType != "DIN")) {
+        if ((zgType != "PI") && (zgType != "PIv2") && (zgType != "DIN")) {
             console.log("=> Neither PI/PIv2 nor DIN type. UNEXPECTED !");
             return;
         }
@@ -1130,28 +1170,6 @@
             uploadCustomFw().then(response => updateZigateFw2(gtwId, zgType, "/tmp/jeedom/Abeille/" + response), error => console.log("uploadCustomFw() ERROR", error));
         } else
             updateZigateFw2(gtwId, zgType, zgFW);
-    }
-
-    // Build available firmwares drop-down list
-    function buildFwList(gtwId, gtwType, gtwSubType) {
-        console.log("buildFwList()");
-
-        let fwList = document.getElementById("idFw"+gtwId);
-        // Clear current list
-        fwList.innerHTML = "";
-        if (gtwType == "zigate") {
-            if ((gtwSubType == "PI") || (gtwSubType == "DIN"))
-                list = js_fwListZgV1;
-            else
-                list = js_fwListZgV2;
-
-            const opt = document.createElement("option");
-            opt.value = "3";
-            opt.text = "Option: Value 3";
-        } else {
-            console.log("Unsupported gtw type");
-            return;
-        }
     }
 
     // Update FW

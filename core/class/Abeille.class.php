@@ -1312,146 +1312,146 @@ class Abeille extends eqLogic {
     //     return;
     // } // End message()
 
-    /* Trig another command defined by 'trigLogicId'.
-       The 'newValue' is computed with 'trigOffset' if required then applied to 'trigLogicId' */
-    public static function trigCommand($eqLogic, $value, $trigLogicId, $trigOffset = '') {
-        $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
-        if (!is_object($trigCmd)) {
-            log::add('Abeille', 'debug', "  trigCommand(): Unknown Jeedom command logicId='{$trigLogicId}'");
-            return;
-        }
+    // /* Trig another command defined by 'trigLogicId'.
+    //    The 'newValue' is computed with 'trigOffset' if required then applied to 'trigLogicId' */
+    // public static function trigCommand($eqLogic, $value, $trigLogicId, $trigOffset = '') {
+    //     $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
+    //     if (!is_object($trigCmd)) {
+    //         log::add('Abeille', 'debug', "  trigCommand(): Unknown Jeedom command logicId='{$trigLogicId}'");
+    //         return;
+    //     }
 
-        log::add('Abeille', 'debug', "  trigCommand(Val={$value}, TrigOffset='{$trigOffset}')");
-        if ($trigOffset != '') {
-            $vsPos = stripos($trigOffset, '#valueswitch-'); // Any #valueswitch-....# variable ?
-            if ($vsPos !== false) {
-                $vs = substr($trigOffset, $vsPos + 13);
-                $vsPos2 = strpos($vs, '#');
-                $varName = substr($vs, 0, $vsPos2);
-                log::add('Abeille', 'debug', "  'valueswitch' detected: VarName='{$varName}'");
+    //     log::add('Abeille', 'debug', "  trigCommand(Val={$value}, TrigOffset='{$trigOffset}')");
+    //     if ($trigOffset != '') {
+    //         $vsPos = stripos($trigOffset, '#valueswitch-'); // Any #valueswitch-....# variable ?
+    //         if ($vsPos !== false) {
+    //             $vs = substr($trigOffset, $vsPos + 13);
+    //             $vsPos2 = strpos($vs, '#');
+    //             $varName = substr($vs, 0, $vsPos2);
+    //             log::add('Abeille', 'debug', "  'valueswitch' detected: VarName='{$varName}'");
 
-                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                $varUp = strtoupper($varName);
-                if (!isset($eqModel['variables']) || !isset($eqModel['variables'][$varUp])) {
-                    $eqHName = $eqLogic->getHumanName();
-                    message::add("Abeille", "{$eqHName}: La variable '{$varUp}' n'est pas définie");
-                    return;
-                }
-                $var = $eqModel['variables'][$varUp];
-                log::add('Abeille', 'debug', "  Var=".json_encode($var, JSON_UNESCAPED_SLASHES));
-                $varType = gettype($var);
-                log::add('Abeille', 'debug', "  varType={$varType}");
-                if ($varType == "array") {
-                    // Variable is an array so keys are string. If value is int => convert to hex string.
-                    log::add('Abeille', 'debug', "  valueType=".gettype($value));
-                    if (gettype($value) != "string") {
-                        $value2 = strval($value);
-                        log::add('Abeille', 'debug', "  value2={$value2}");
-                        $newValue = $var[$value2];
-                    } else
-                        $newValue = $var[$value];
-                } else
-                    $newValue = $var;
-                log::add('Abeille', 'debug', "  newValue=".json_encode($newValue, JSON_UNESCAPED_SLASHES));
-                $trigValue = jeedom::evaluateExpression(str_ireplace("#valueswitch-{$varName}#", $newValue, $trigOffset));
-            } else
-                $trigValue = jeedom::evaluateExpression(str_ireplace('#value#', $value, $trigOffset));
-        } else
-            $trigValue = $value;
+    //             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+    //             $varUp = strtoupper($varName);
+    //             if (!isset($eqModel['variables']) || !isset($eqModel['variables'][$varUp])) {
+    //                 $eqHName = $eqLogic->getHumanName();
+    //                 message::add("Abeille", "{$eqHName}: La variable '{$varUp}' n'est pas définie");
+    //                 return;
+    //             }
+    //             $var = $eqModel['variables'][$varUp];
+    //             log::add('Abeille', 'debug', "  Var=".json_encode($var, JSON_UNESCAPED_SLASHES));
+    //             $varType = gettype($var);
+    //             log::add('Abeille', 'debug', "  varType={$varType}");
+    //             if ($varType == "array") {
+    //                 // Variable is an array so keys are string. If value is int => convert to hex string.
+    //                 log::add('Abeille', 'debug', "  valueType=".gettype($value));
+    //                 if (gettype($value) != "string") {
+    //                     $value2 = strval($value);
+    //                     log::add('Abeille', 'debug', "  value2={$value2}");
+    //                     $newValue = $var[$value2];
+    //                 } else
+    //                     $newValue = $var[$value];
+    //             } else
+    //                 $newValue = $var;
+    //             log::add('Abeille', 'debug', "  newValue=".json_encode($newValue, JSON_UNESCAPED_SLASHES));
+    //             $trigValue = jeedom::evaluateExpression(str_ireplace("#valueswitch-{$varName}#", $newValue, $trigOffset));
+    //         } else
+    //             $trigValue = jeedom::evaluateExpression(str_ireplace('#value#', $value, $trigOffset));
+    //     } else
+    //         $trigValue = $value;
 
-        $trigName = $trigCmd->getName();
-        log::add('Abeille', 'debug', "  Triggering cmd '{$trigName}' ({$trigLogicId}) with Val='{$trigValue}'");
-        $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
+    //     $trigName = $trigCmd->getName();
+    //     log::add('Abeille', 'debug', "  Triggering cmd '{$trigName}' ({$trigLogicId}) with Val='{$trigValue}'");
+    //     $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
 
-        // Is the triggered command a battery percent reporting ?
-        if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
-            $trigValue = round($trigValue, 0);
-            log::add('Abeille', 'debug', "  Battery % reporting: {$trigLogicId}, Val={$trigValue}");
-            $eqLogic->setStatus('battery', $trigValue);
-            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-        }
-    }
+    //     // Is the triggered command a battery percent reporting ?
+    //     if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
+    //         $trigValue = round($trigValue, 0);
+    //         log::add('Abeille', 'debug', "  Battery % reporting: {$trigLogicId}, Val={$trigValue}");
+    //         $eqLogic->setStatus('battery', $trigValue);
+    //         $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+    //     }
+    // }
 
-    /* Called on info cmd update (attribute report or attribute read) to see if any action cmd must be executed */
-    public static function infoCmdUpdate($eqLogic, $cmdLogic, $value) {
+    // /* Called on info cmd update (attribute report or attribute read) to see if any action cmd must be executed */
+    // public static function infoCmdUpdate($eqLogic, $cmdLogic, $value) {
 
-        // Trig another command ('ab::trigOut' eqLogic config) ?
-        // Syntax reminder
-        // "trigOut": {
-        //     "01-smokeAlarm": {
-        //         "comment": "On receive we trig <EP>-smokeAlarm with extracted boolean/bit0 value",
-        //         "valueOffset": "#value#&1"
-        //     },
-        //     "01-tamperAlarm": {
-        //         "comment": "Bit 2 is tamper",
-        //         "valueOffset": "(#value#>>2)&1"
-        //     }
-        // }
-        $toList = $cmdLogic->getConfiguration('ab::trigOut', []);
-        foreach ($toList as $trigLogicId => $to) {
-            if (isset($to['valueOffset']))
-                $trigOffset = $to['valueOffset'];
-            else
-                $trigOffset = '';
-            Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
-        }
-        // if ($trigLogicId) {
-        //     $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
-        //     Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
-        // }
+    //     // Trig another command ('ab::trigOut' eqLogic config) ?
+    //     // Syntax reminder
+    //     // "trigOut": {
+    //     //     "01-smokeAlarm": {
+    //     //         "comment": "On receive we trig <EP>-smokeAlarm with extracted boolean/bit0 value",
+    //     //         "valueOffset": "#value#&1"
+    //     //     },
+    //     //     "01-tamperAlarm": {
+    //     //         "comment": "Bit 2 is tamper",
+    //     //         "valueOffset": "(#value#>>2)&1"
+    //     //     }
+    //     // }
+    //     $toList = $cmdLogic->getConfiguration('ab::trigOut', []);
+    //     foreach ($toList as $trigLogicId => $to) {
+    //         if (isset($to['valueOffset']))
+    //             $trigOffset = $to['valueOffset'];
+    //         else
+    //             $trigOffset = '';
+    //         Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+    //     }
+    //     // if ($trigLogicId) {
+    //     //     $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
+    //     //     Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+    //     // }
 
-        // Trig another command (PollingOnCmdChange keyword) ?
-        global $abQueues;
-        $cmds = cmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
-        $cmdLogicId = $cmdLogic->getLogicalId();
-        foreach ($cmds as $cmd) {
-            if ($cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
-                continue;
-            $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
-            $cmdName = $cmd->getName();
-            $cmdLogicId = $cmd->getLogicalId();
-            if ($delay != 0) {
-                log::add('Abeille', 'debug', "  Triggering '{$cmdName}' ({$cmdLogicId}) with delay ".$delay);
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
-            } else {
-                log::add('Abeille', 'debug', "  Triggering '{$cmdName}' ({$cmdLogicId})");
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
-            }
-        }
-    }
+    //     // Trig another command (PollingOnCmdChange keyword) ?
+    //     global $abQueues;
+    //     $cmds = cmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
+    //     $cmdLogicId = $cmdLogic->getLogicalId();
+    //     foreach ($cmds as $cmd) {
+    //         if ($cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
+    //             continue;
+    //         $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
+    //         $cmdName = $cmd->getName();
+    //         $cmdLogicId = $cmd->getLogicalId();
+    //         if ($delay != 0) {
+    //             log::add('Abeille', 'debug', "  Triggering '{$cmdName}' ({$cmdLogicId}) with delay ".$delay);
+    //             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
+    //         } else {
+    //             log::add('Abeille', 'debug', "  Triggering '{$cmdName}' ({$cmdLogicId})");
+    //             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
+    //         }
+    //     }
+    // }
 
-    public static function checkZgIeee($net, $ieee) {
-        $gtwId = substr($net, 7);
-        $keyIeee = str_replace('Abeille', 'ab::zgIeeeAddr', $net); // AbeilleX => ab::zgIeeeAddrX
-        $keyIeeeOk = str_replace('Abeille', 'ab::zgIeeeAddrOk', $net); // AbeilleX => ab::zgIeeeAddrOkX
-        if (config::byKey($keyIeeeOk, 'Abeille', 0) == 0) {
-            $ieeeConf = config::byKey($keyIeee, 'Abeille', '');
-            if ($ieeeConf == "") {
-                config::save($keyIeee, $ieee, 'Abeille');
-                config::save($keyIeeeOk, 1, 'Abeille');
-            } else if ($ieeeConf == $ieee) {
-                config::save($keyIeeeOk, 1, 'Abeille');
-            } else {
-                config::save($keyIeeeOk, -1, 'Abeille');
-                message::add("Abeille", "Attention: La zigate ".$gtwId." semble nouvelle ou il y a eu échange de ports. Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
-            }
-        }
-    }
+    // public static function checkZgIeee($net, $ieee) {
+    //     $gtwId = substr($net, 7);
+    //     $keyIeee = str_replace('Abeille', 'ab::zgIeeeAddr', $net); // AbeilleX => ab::zgIeeeAddrX
+    //     $keyIeeeOk = str_replace('Abeille', 'ab::zgIeeeAddrOk', $net); // AbeilleX => ab::zgIeeeAddrOkX
+    //     if (config::byKey($keyIeeeOk, 'Abeille', 0) == 0) {
+    //         $ieeeConf = config::byKey($keyIeee, 'Abeille', '');
+    //         if ($ieeeConf == "") {
+    //             config::save($keyIeee, $ieee, 'Abeille');
+    //             config::save($keyIeeeOk, 1, 'Abeille');
+    //         } else if ($ieeeConf == $ieee) {
+    //             config::save($keyIeeeOk, 1, 'Abeille');
+    //         } else {
+    //             config::save($keyIeeeOk, -1, 'Abeille');
+    //             message::add("Abeille", "Attention: La zigate ".$gtwId." semble nouvelle ou il y a eu échange de ports. Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
+    //         }
+    //     }
+    // }
 
-    // Check if received attribute is a battery information
-    public static function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
-        if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
-            $attrVal = round($attrVal, 0);
-            log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
-            $eqLogic->setStatus('battery', $attrVal);
-            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-        }  else if (preg_match("/^0001-[0-9A-F]*-0021/", $attrName)) {
-            $attrVal = round($attrVal, 0);
-            log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
-            $eqLogic->setStatus('battery', $attrVal);
-            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-        }
-    }
+    // // Check if received attribute is a battery information
+    // public static function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
+    //     if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
+    //         $attrVal = round($attrVal, 0);
+    //         log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
+    //         $eqLogic->setStatus('battery', $attrVal);
+    //         $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+    //     }  else if (preg_match("/^0001-[0-9A-F]*-0021/", $attrName)) {
+    //         $attrVal = round($attrVal, 0);
+    //         log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
+    //         $eqLogic->setStatus('battery', $attrVal);
+    //         $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+    //     }
+    // }
 
 //     /* Deal with messages coming from parser or cmd processes.
 //        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */

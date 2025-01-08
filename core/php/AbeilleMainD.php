@@ -42,7 +42,8 @@
                 // $topic = $cmd->getEqlogic()->getLogicalId().'/'.$cmd->getLogicalId();
                 $topic = $cmd->getEqlogic()->getLogicalId().'/'.$cmd->getConfiguration('topic');
                 $request = $cmd->getConfiguration('request');
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$topic."&time=".(time()+$i), $request);
+                // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$topic."&time=".(time()+$i), $request);
+                msgToCmd("TempoCmd".$topic."&time=".(time()+$i), $request);
                 $i++;
             }
         }
@@ -292,7 +293,7 @@
             'type' => "eqUpdated",
             'id' => $eqLogic->getId()
         );
-        Abeille::msgToCmd2($msg);
+        msgToCmd2($msg);
 
     } // End newJeedomDevice()
 
@@ -372,7 +373,7 @@
             logMessage('debug', 'message(): createRemote');
 
             /* Let's compute RC number */
-            $eqLogics = Abeille::byType('Abeille');
+            $eqLogics = eqLogic::byType('Abeille');
             $max = 1;
             foreach ($eqLogics as $key => $eqLogic) {
                 list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
@@ -408,7 +409,7 @@
         // if ($cmdId == "updateFromJson") {
         //     logMessage('debug', 'message(): updateFromJson, '.$net.'/'.$addr);
 
-        //     $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
+        //     $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
         //     if (!is_object($eqLogic)) {
         //         logMessage('debug', '  ERROR: Unknown device');
         //         return;
@@ -432,7 +433,7 @@
                 $action = 'reset';
             logMessage('debug', 'message(): '.$cmdId.', '.$net.'/'.$addr);
 
-            $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
                 logMessage('error', '  '.$cmdId.': Equipement inconnu: '.$net.'/'.$addr);
                 return;
@@ -542,7 +543,7 @@
 
             $eqLogic->checkAndUpdateCmd($cmdLogic, $value);
 
-            // Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $value);
+            // infoCmdUpdate($eqLogic, $cmdLogic, $value);
 
             // // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
             // $cmds = AbeilleCmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
@@ -551,8 +552,8 @@
             //         logMessage('debug', 'Cmd action execution: '.$cmd->getName());
             //         // $cmd->execute(); si j'envoie la demande immediatement le device n a pas le temps de refaire ses mesures et repond avec les valeurs d avant levenement
             //         // Je vais attendre qq secondes aveant de faire la demande
-            //         // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
-            //         Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getLogicalId()."&time=".(time() + $cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request'));
+            //         // publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+            //         publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getLogicalId()."&time=".(time() + $cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request'));
             //     }
             // }
             return;
@@ -647,7 +648,7 @@
             $ieee = $msg['ieee'];
             logMessage('debug', "msgFromParser(): New device: ".$net.'/'.$addr.", ieee=".$ieee);
 
-            Abeille::newJeedomDevice($net, $addr, $ieee);
+            newJeedomDevice($net, $addr, $ieee);
 
             return;
         } // End 'newDevice'
@@ -786,7 +787,7 @@
                     'type' => "eqUpdated",
                     'id' => $eqLogic->getId()
                 );
-                Abeille::msgToCmd2($msg);
+                msgToCmd2($msg);
             }
 
             return;
@@ -929,7 +930,7 @@
                 'type' => "eqUpdated",
                 'id' => $eqLogic->getId()
             );
-            Abeille::msgToCmd2($msg);
+            msgToCmd2($msg);
 
             return;
         } // End 'eqMigrated'
@@ -1048,11 +1049,11 @@ logMessage('debug', "  checkAndUpdateCmd(), attr['value']=".json_encode($attr['v
 
                     // Checking if battery info, only if registered command
 logMessage('debug', "  checkIfBatteryInfo(), attr=".json_encode($attr));
-                    Abeille::checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
+                    checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
 
                     // Check if any action cmd must be executed triggered by this update
 logMessage('debug', "  infoCmdUpdate()");
-                    Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
+                    infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
                 }
             }
 
@@ -1108,14 +1109,14 @@ logMessage('debug', "  infoCmdUpdate()");
                     // Zigate mode is now HYBRID in all cases. Abeille is no longer able to deal with older firmwares
                     if ($msg['major'] == 'AB01') { // Abeille's FW for Zigate v1
                         // logMessage('debug', '  FW version AB01 => Configuring zigate '.$gtwId.' in hybrid mode');
-                        // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=hybrid");
+                        // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=hybrid");
                     } else {
                         if (hexdec($msg['minor']) >= 0x031D) {
                             // logMessage('debug', '  FW version >= 3.1D => Configuring zigate '.$gtwId.' in hybrid mode');
-                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=hybrid");
+                            // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=hybrid");
                         } else {
                             // logMessage('debug', '  Old FW. Configuring zigate '.$gtwId.' in normal mode');
-                            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=normal");
+                            // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$gtwId."/0000/zgSetMode", "mode=normal");
                         }
                         // TODO: Different msg according to v1 or v2
                         if (hexdec($msg['minor']) < 0x0321) {
@@ -1201,7 +1202,7 @@ logMessage('debug', "  infoCmdUpdate()");
 
             logMessage('debug', "msgFromParser(): ".$net.", network state, ieee=".$msg['ieee'].", chan=".$msg['chan']);
 
-            Abeille::checkZgIeee($net, $msg['ieee']);
+            checkZgIeee($net, $msg['ieee']);
 
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
@@ -1252,7 +1253,7 @@ logMessage('debug', "  infoCmdUpdate()");
 
             logMessage('debug', "msgFromParser(): ".$net.", network started, ieee=".$msg['ieee'].", chan=".$msg['chan']);
 
-            Abeille::checkZgIeee($net, $msg['ieee']);
+            checkZgIeee($net, $msg['ieee']);
 
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
@@ -2044,8 +2045,8 @@ logMessage('debug', "  infoCmdUpdate()");
             'type' => "eqUpdated",
             'id' => $eqId,
         );
-        Abeille::msgToCmd2($msg);
-        Abeille::msgToParser($msg);
+        msgToCmd2($msg);
+        msgToParser($msg);
     } // End createDevice()
 
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
@@ -2124,13 +2125,209 @@ logMessage('debug', "  infoCmdUpdate()");
         logMessage('debug', "  Msg to Parser: ".$msgJson);
     }
 
+    function msgToCmd($topic, $payload) {
+        $msg = array();
+        $msg['priority'] = PRIO_NORM;
+        $msg['topic'] = $topic;
+        $msg['payload'] = $payload;
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+
+        global $queueXToCmd;
+        msg_send($queue, 1, $msgJson, false, false);
+        logMessage('debug', "  Msg to Cmd: ".$msgJson);
+    }
+
     function msgToCmd2($msg) {
         // global $abQueues;
         // $queue = msg_get_queue($abQueues['xToCmd']['id']);
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+
         global $queueXToCmd;
         msg_send($queue, 1, $msgJson, false, false);
         logMessage('debug', "  Msg to Cmd: ".$msgJson);
+    }
+
+    // function publishMosquitto($queueId, $priority, $topic, $payload) {
+    //     static $queueStatus = []; // "ok" or "error"
+
+    //     $queue = msg_get_queue($queueId);
+    //     if ($queue === false) {
+    //         logMessage('error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
+    //         return;
+    //     }
+    //     if (($stat = msg_stat_queue($queue)) == false) {
+    //         return; // Something wrong
+    //     }
+
+    //     /* To avoid plenty errors, checking if someone really reads the queue.
+    //        If not, do nothing but a message to user first time.
+    //        Note: Assuming potential pb if more than 50 pending messages. */
+    //     $pendMsg = $stat['msg_qnum']; // Pending messages
+    //     if ($pendMsg > 50) {
+    //         if (file_exists("/proc/") && !file_exists("/proc/".$stat['msg_lrpid'])) {
+    //             /* Receiver process seems down */
+    //             if (isset($queueStatus[$queueId]) && ($queueStatus[$queueId] == "error"))
+    //                 return; // Queue already marked "in error"
+    //             message::add("Abeille", "Alerte ! Démon arrété ou planté. (Re)démarrage nécessaire.", '');
+    //             $queueStatus[$queueId] = "error";
+    //             return;
+    //         }
+    //     }
+
+    //     $msg = array();
+    //     $msg['priority'] = $priority;
+    //     $msg['topic'] = $topic;
+    //     $msg['payload'] = $payload;
+    //     $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+
+    //     if (msg_send($queue, 1, $msgJson, false, false, $error_code)) {
+    //         logMessage('debug', "  publishMosquitto(): Sent '".$msgJson."' to queue ".$queueId);
+    //         $queueStatus[$queueId] = "ok"; // Status ok
+    //     } else
+    //         logMessage('warning', "publishMosquitto(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
+    // } // End publishMosquitto()
+
+    function checkZgIeee($net, $ieee) {
+        $gtwId = substr($net, 7);
+        $keyIeee = str_replace('Abeille', 'ab::zgIeeeAddr', $net); // AbeilleX => ab::zgIeeeAddrX
+        $keyIeeeOk = str_replace('Abeille', 'ab::zgIeeeAddrOk', $net); // AbeilleX => ab::zgIeeeAddrOkX
+        if (config::byKey($keyIeeeOk, 'Abeille', 0) == 0) {
+            $ieeeConf = config::byKey($keyIeee, 'Abeille', '');
+            if ($ieeeConf == "") {
+                config::save($keyIeee, $ieee, 'Abeille');
+                config::save($keyIeeeOk, 1, 'Abeille');
+            } else if ($ieeeConf == $ieee) {
+                config::save($keyIeeeOk, 1, 'Abeille');
+            } else {
+                config::save($keyIeeeOk, -1, 'Abeille');
+                message::add("Abeille", "Attention: La zigate ".$gtwId." semble nouvelle ou il y a eu échange de ports. Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
+            }
+        }
+    }
+
+    // Check if received attribute is a battery information
+    function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
+        if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
+            $attrVal = round($attrVal, 0);
+            logMessage('debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
+            $eqLogic->setStatus('battery', $attrVal);
+            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        }  else if (preg_match("/^0001-[0-9A-F]*-0021/", $attrName)) {
+            $attrVal = round($attrVal, 0);
+            logMessage('debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
+            $eqLogic->setStatus('battery', $attrVal);
+            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        }
+    }
+
+    /* Called on info cmd update (attribute report or attribute read) to see if any action cmd must be executed */
+    function infoCmdUpdate($eqLogic, $cmdLogic, $value) {
+
+        // Trig another command ('ab::trigOut' eqLogic config) ?
+        // Syntax reminder
+        // "trigOut": {
+        //     "01-smokeAlarm": {
+        //         "comment": "On receive we trig <EP>-smokeAlarm with extracted boolean/bit0 value",
+        //         "valueOffset": "#value#&1"
+        //     },
+        //     "01-tamperAlarm": {
+        //         "comment": "Bit 2 is tamper",
+        //         "valueOffset": "(#value#>>2)&1"
+        //     }
+        // }
+        $toList = $cmdLogic->getConfiguration('ab::trigOut', []);
+        foreach ($toList as $trigLogicId => $to) {
+            if (isset($to['valueOffset']))
+                $trigOffset = $to['valueOffset'];
+            else
+                $trigOffset = '';
+            trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+        }
+        // if ($trigLogicId) {
+        //     $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
+        //     Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+        // }
+
+        // Trig another command (PollingOnCmdChange keyword) ?
+        global $abQueues;
+        $cmds = cmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
+        $cmdLogicId = $cmdLogic->getLogicalId();
+        foreach ($cmds as $cmd) {
+            if ($cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
+                continue;
+            $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
+            $cmdName = $cmd->getName();
+            $cmdLogicId = $cmd->getLogicalId();
+            if ($delay != 0) {
+                logMessage('debug', "  Triggering '{$cmdName}' ({$cmdLogicId}) with delay ".$delay);
+                // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
+                msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
+            } else {
+                logMessage('debug', "  Triggering '{$cmdName}' ({$cmdLogicId})");
+                // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
+                msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
+            }
+        }
+    }
+
+    /* Trig another command defined by 'trigLogicId'.
+       The 'newValue' is computed with 'trigOffset' if required then applied to 'trigLogicId' */
+    function trigCommand($eqLogic, $value, $trigLogicId, $trigOffset = '') {
+        $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
+        if (!is_object($trigCmd)) {
+            logMessage('debug', "  trigCommand(): Unknown Jeedom command logicId='{$trigLogicId}'");
+            return;
+        }
+
+        logMessage('debug', "  trigCommand(Val={$value}, TrigOffset='{$trigOffset}')");
+        if ($trigOffset != '') {
+            $vsPos = stripos($trigOffset, '#valueswitch-'); // Any #valueswitch-....# variable ?
+            if ($vsPos !== false) {
+                $vs = substr($trigOffset, $vsPos + 13);
+                $vsPos2 = strpos($vs, '#');
+                $varName = substr($vs, 0, $vsPos2);
+                logMessage('debug', "  'valueswitch' detected: VarName='{$varName}'");
+
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $varUp = strtoupper($varName);
+                if (!isset($eqModel['variables']) || !isset($eqModel['variables'][$varUp])) {
+                    $eqHName = $eqLogic->getHumanName();
+                    message::add("Abeille", "{$eqHName}: La variable '{$varUp}' n'est pas définie");
+                    return;
+                }
+                $var = $eqModel['variables'][$varUp];
+                logMessage('debug', "  Var=".json_encode($var, JSON_UNESCAPED_SLASHES));
+                $varType = gettype($var);
+                logMessage('debug', "  varType={$varType}");
+                if ($varType == "array") {
+                    // Variable is an array so keys are string. If value is int => convert to hex string.
+                    logMessage('debug', "  valueType=".gettype($value));
+                    if (gettype($value) != "string") {
+                        $value2 = strval($value);
+                        logMessage('debug', "  value2={$value2}");
+                        $newValue = $var[$value2];
+                    } else
+                        $newValue = $var[$value];
+                } else
+                    $newValue = $var;
+                logMessage('debug', "  newValue=".json_encode($newValue, JSON_UNESCAPED_SLASHES));
+                $trigValue = jeedom::evaluateExpression(str_ireplace("#valueswitch-{$varName}#", $newValue, $trigOffset));
+            } else
+                $trigValue = jeedom::evaluateExpression(str_ireplace('#value#', $value, $trigOffset));
+        } else
+            $trigValue = $value;
+
+        $trigName = $trigCmd->getName();
+        logMessage('debug', "  Triggering cmd '{$trigName}' ({$trigLogicId}) with Val='{$trigValue}'");
+        $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
+
+        // Is the triggered command a battery percent reporting ?
+        if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
+            $trigValue = round($trigValue, 0);
+            logMessage('debug', "  Battery % reporting: {$trigLogicId}, Val={$trigValue}");
+            $eqLogic->setStatus('battery', $trigValue);
+            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        }
     }
 
 

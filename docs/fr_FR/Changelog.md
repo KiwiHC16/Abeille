@@ -23,6 +23,7 @@
 
 -   Amélioration: Interne: Démon principal isolé => 'AbeilleMainD'.
 -   Correction: Page de config: liste des FW crée dynamiquement en fonction du type de gateway.
+-   Nouveau: Support Tuya PIR+24G_radar+light ZG-204ZM (2741).
 
 ## 250105-BETA-1
 

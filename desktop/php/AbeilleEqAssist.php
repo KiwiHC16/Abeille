@@ -937,11 +937,11 @@
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
                     cmds["Battery-Percent"] = newCmd("inf_zbAttr-0001-BatteryPercent", "ep="+epId);
-                    cmds["SetReporting "+epId+"-0001-00021"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600", "yes");
+                    cmds["SetReporting "+epId+"-0001-00021"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrType=20&attrId=0021&minInterval=3600&maxInterval=3600", "yes");
                 } else if (isset(attributes['0020'])) {
                     cmds["Battery-Volt"] = newCmd("inf_zbAttr-0001-BatteryVolt", "ep="+epId);
                     // cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3", "ep="+epId);
-                    cmds["SetReporting "+epId+"-0001-00020"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600", "yes");
+                    cmds["SetReporting "+epId+"-0001-00020"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrType=20&attrId=0020&minInterval=3600&maxInterval=3600", "yes");
                 }
                 cmds["Bind "+epId+"-0001-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0001", "yes");
             }

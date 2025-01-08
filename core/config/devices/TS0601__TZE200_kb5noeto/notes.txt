@@ -1,0 +1,77 @@
+    {
+        fingerprint: tuya.fingerprint('TS0601', ['_TZE200_2aaelwxk', '_TZE200_kb5noeto']),
+        model: 'ZG-204ZM',
+        vendor: 'Tuya',
+        description: 'PIR 24Ghz human presence sensor',
+        fromZigbee: [tuya.fz.datapoints],
+        toZigbee: [tuya.tz.datapoints],
+        exposes: [
+            e.presence(),
+            e.enum('motion_state', ea.STATE, ['none', 'large', 'small', 'static']).withDescription('Motion state'),
+            e.illuminance_lux(),
+            e.battery(),
+            e
+                .numeric('fading_time', ea.STATE_SET)
+                .withValueMin(0)
+                .withValueMax(28800)
+                .withValueStep(1)
+                .withUnit('s')
+                .withDescription('Presence keep time'),
+            e
+                .numeric('static_detection_distance', ea.STATE_SET)
+                .withValueMin(0)
+                .withValueMax(10)
+                .withValueStep(0.01)
+                .withUnit('m')
+                .withDescription('Static detection distance'),
+            e
+                .numeric('static_detection_sensitivity', ea.STATE_SET)
+                .withValueMin(0)
+                .withValueMax(10)
+                .withValueStep(1)
+                .withUnit('x')
+                .withDescription('Static detection sensitivity'),
+            e.binary('indicator', ea.STATE_SET, 'ON', 'OFF').withDescription('LED indicator mode'),
+            e
+                .enum('motion_detection_mode', ea.STATE_SET, ['only_pir', 'pir_and_radar', 'only_radar'])
+                .withDescription('Motion detection mode (Firmware version>=0122052017)'),
+            e
+                .numeric('motion_detection_sensitivity', ea.STATE_SET)
+                .withValueMin(0)
+                .withValueMax(10)
+                .withValueStep(1)
+                .withUnit('x')
+                .withDescription('Motion detection sensitivity (Firmware version>=0122052017)'),
+        ],
+        meta: {
+            tuyaDatapoints: [
+                [1, 'presence', tuya.valueConverter.trueFalse1],
+                [106, 'illuminance_lux', tuya.valueConverter.raw],
+                [
+                    101,
+                    'motion_state',
+                    tuya.valueConverterBasic.lookup({
+                        none: tuya.enum(0),
+                        large: tuya.enum(1),
+                        small: tuya.enum(2),
+                        static: tuya.enum(3),
+                    }),
+                ],
+                [102, 'fading_time', tuya.valueConverter.raw],
+                [4, 'static_detection_distance', tuya.valueConverter.divideBy100],
+                [2, 'static_detection_sensitivity', tuya.valueConverter.raw],
+                [107, 'indicator', tuya.valueConverter.onOff],
+                [121, 'battery', tuya.valueConverter.raw],
+                [
+                    122,
+                    'motion_detection_mode',
+                    tuya.valueConverterBasic.lookup({
+                        only_pir: tuya.enum(0),
+                        pir_and_radar: tuya.enum(1),
+                        only_radar: tuya.enum(2),
+                    }),
+                ],
+                [123, 'motion_detection_sensitivity', tuya.valueConverter.raw],
+            ],
+        },
+    },

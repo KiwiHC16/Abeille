@@ -864,7 +864,7 @@
                 } else if ($msg['type'] == 'eqUpdated') {
                     updateDeviceFromDB($msg['id']); // Update device info from eqLogic
                 } else if ($msg['type'] == 'configureDevice') {
-                    configureDevice($msg['net'], $msg['addr']); // Configure device (execAtCreation)
+                    configureDevice($msg); // Configure device (execAtCreation)
                 } else if ($msg['type'] == 'logLevelChanged') {
                     logLevelChanged($msg['level']);
                 } else

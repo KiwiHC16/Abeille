@@ -835,7 +835,10 @@
                 $msg = array(
                     'type' => 'configureDevice',
                     'net' => $net,
-                    'addr' => $addr
+                    'addr' => $addr,
+                    'modelSource' => $eq['eqModel']['modelSource'],
+                    'modelPath' => $modelPath,
+                    'modelName' => $eq['eqModel']['modelName']
                 );
                 $this->msgToCmd2(PRIO_NORM, $msg);
 

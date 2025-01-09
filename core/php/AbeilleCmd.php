@@ -229,7 +229,9 @@
 
     // Configure device
     // Returns: true=ok, false=error
-    function configureDevice($net, $addr) {
+    function configureDevice($msg) {
+        $net = $msg['net'];
+        $addr = $msg['addr'];
         cmdLog('debug', "  configureDevice({$net}, {$addr})");
 
         if (!isset($GLOBALS['devices'][$net][$addr])) {
@@ -239,6 +241,20 @@
 
         $eq = $GLOBALS['devices'][$net][$addr];
         cmdLog('debug', "    eq=".json_encode($eq, JSON_UNESCAPED_SLASHES));
+
+        // If modelSource/modelPath & modelName are passed, using it to get up-to-date cmds
+        // - eqLogic might to be updated yet
+        // - model may be different
+        // - and configuration requires quick reaction during device announce
+        if (isset($msg['modelSource']) && isset($msg['modelPath']) && isset($msg['modelName'])) {
+            $model = getDeviceModel($msg['modelSource'], $msg['modelPath'], $msg['modelName']);
+            if ($model !== false) {
+                $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
+                $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
+                if (isset($model['variables']))
+                    $eq['variables'] = $model['variables'];
+            }
+        }
 
         if (!isset($eq['commands'])) {
             cmdLog('debug', "    No cmds in JSON model.");

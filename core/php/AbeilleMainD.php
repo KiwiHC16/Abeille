@@ -2330,7 +2330,6 @@ logMessage('debug', "  infoCmdUpdate()");
         }
     }
 
-
     logSetConf("AbeilleMainD.log", true);
     logMessage('info', ">>> Démarrage d'AbeilleMainD");
 

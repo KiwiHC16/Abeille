@@ -2358,8 +2358,7 @@ logMessage('debug', "  infoCmdUpdate()");
     $queueXToParser = msg_get_queue($abQueues['xToParser']['id']);
     $queueXToCmd = msg_get_queue($abQueues['xToCmd']['id']);
 
-    // Send a message to Abeille to ask for behive creation/update.
-    // Tcharp38: Moved from deamon_start()
+    // Create/update 'gateway' equipments
     $GLOBALS['config'] = $config;
     for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
         if ($config['ab::gtwPort'.$gtwId] == 'none')
@@ -2382,11 +2381,11 @@ logMessage('debug', "  infoCmdUpdate()");
         }
     }
 
-    // Essaye de recuperer les etats des equipements
-    // Tcharp38: Moved from deamon_start()
-    refreshCmd();
-
     try {
+        // Essaye de recuperer les etats des equipements
+        // Tcharp38: Moved from deamon_start()
+        refreshCmd();
+
         // $abQueues = $GLOBALS['abQueues'];
         // while(true) {
         //     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);

@@ -1597,6 +1597,7 @@
     }
 
     // Called when Abeille plugin config has been saved
+    // It is also called on daemon (re)start from config page bt_startDeamon button.
     function Abeille_postSaveConfiguration() {
         console.log("Abeille_postSaveConfiguration()");
 
@@ -1656,6 +1657,8 @@
                             deamons = res.daemons;
                             running = deamons.runningNb;
                             if (running > 0) {
+                                // TODO: If Abeille_postSaveConfiguration trigger = config save then daemons to be relaunched
+                                // TODO: If Abeille_postSaveConfiguration trigger = deamon (re)start then DO NOT relanch daemons has it is done by Jeedom process
                                 console.log(running+" daemons running => Restarting all");
                                 $.ajax({
                                     type: 'POST',

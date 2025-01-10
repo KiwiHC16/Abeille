@@ -227,18 +227,18 @@
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+10), "");
     }
 
-    // Configure device
+    // Configure device during 'device announce' or on user request (model update/reinit)
     // Returns: true=ok, false=error
     function configureDevice($msg) {
         $net = $msg['net'];
         $addr = $msg['addr'];
-        cmdLog('debug', "  configureDevice({$net}, {$addr})");
 
         if (!isset($GLOBALS['devices'][$net][$addr])) {
-            cmdLog('debug', "  configureDevice() ERROR: Unknown device");
+            cmdLog('debug', "  configureDevice($net, $addr) ERROR: Unknown device");
             return false; // Unexpected request
         }
 
+        cmdLog('debug', "  configureDevice($net, $addr)");
         $eq = $GLOBALS['devices'][$net][$addr];
         cmdLog('debug', "    eq=".json_encode($eq, JSON_UNESCAPED_SLASHES));
 

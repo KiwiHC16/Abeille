@@ -2120,7 +2120,8 @@ logMessage('debug', "  infoCmdUpdate()");
         // global $abQueues;
         // $queue = msg_get_queue($abQueues['xToParser']['id']);
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-        global $queueXToCmd;
+
+        global $queueXToParser;
         msg_send($queueXToParser, 1, $msgJson, false, false);
         logMessage('debug', "  Msg to Parser: ".$msgJson);
     }
@@ -2133,7 +2134,7 @@ logMessage('debug', "  infoCmdUpdate()");
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
         global $queueXToCmd;
-        msg_send($queue, 1, $msgJson, false, false);
+        msg_send($queueXToCmd, 1, $msgJson, false, false);
         logMessage('debug', "  Msg to Cmd: ".$msgJson);
     }
 
@@ -2143,7 +2144,7 @@ logMessage('debug', "  infoCmdUpdate()");
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
         global $queueXToCmd;
-        msg_send($queue, 1, $msgJson, false, false);
+        msg_send($queueXToCmd, 1, $msgJson, false, false);
         logMessage('debug', "  Msg to Cmd: ".$msgJson);
     }
 

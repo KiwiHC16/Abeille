@@ -1,6 +1,7 @@
 {
     "apt": {
-        "python3": {}
+        "python3": {},
+        "python3-sysv-ipc": {}
     },
     "pip3": {
         "pyserial": { "reinstall": true }

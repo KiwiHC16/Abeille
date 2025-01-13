@@ -21,6 +21,43 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
+            "Fading_time": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0102&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|0s;28800|28800s",
+                "isVisible": 1
+            },
+            "Set Indicator": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0107&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|Off;1|On",
+                "isVisible": 1,
+                "comment": "Led enable or disabled"
+            },
+            "Motion_detection_mode": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0104&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|seulement_pir;1|pir_and_radar;2|seulement_radar",
+                "isVisible": 1
+            },
+            "Motion_detection_sensitivity": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0105&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|0x;10|10x",
+                "isVisible": 1
+            },
+            "Static_detection_distance": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0108&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|0m;10|10m",
+                "isVisible": 1
+            },
+            "Static_detection_sensitivity": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0109&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|0x;10|10x",
+                "isVisible": 1
+            },
             "Occupancy": {
                 "use": "inf_presence-Detection",
                 "isVisible": 1
@@ -38,13 +75,17 @@
                     "function": "rcvValue0Is1",
                     "info": "01-presence"
                 },
+                "65": {
+                    "function": "rcvValue",
+                    "info": "01-motionState"
+                },
+                "6A": {
+                    "function": "rcvValue",
+                    "info": "01-Illuminance"
+                },
                 "79": {
                     "function": "rcvValue",
                     "info": "0001-01-0021"
-                },
-                "65": {
-                    "function": "rcvValue",
-                    "info": "01-Illuminance"
                 }
             }
         }

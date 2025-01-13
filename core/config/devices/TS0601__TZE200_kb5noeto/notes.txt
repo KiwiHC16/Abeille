@@ -46,9 +46,9 @@
         meta: {
             tuyaDatapoints: [
                 [1, 'presence', tuya.valueConverter.trueFalse1],
-                [106, 'illuminance_lux', tuya.valueConverter.raw],
+                [106, 'illuminance_lux', tuya.valueConverter.raw],                  >>> 0x6A
                 [
-                    101,
+                    101,                                                            >>> 0x65
                     'motion_state',
                     tuya.valueConverterBasic.lookup({
                         none: tuya.enum(0),
@@ -57,13 +57,13 @@
                         static: tuya.enum(3),
                     }),
                 ],
-                [102, 'fading_time', tuya.valueConverter.raw],
-                [4, 'static_detection_distance', tuya.valueConverter.divideBy100],
-                [2, 'static_detection_sensitivity', tuya.valueConverter.raw],
-                [107, 'indicator', tuya.valueConverter.onOff],
-                [121, 'battery', tuya.valueConverter.raw],
+                [102, 'fading_time', tuya.valueConverter.raw],                      >>> 0x66
+                [4, 'static_detection_distance', tuya.valueConverter.divideBy100],  >>> 0x4
+                [2, 'static_detection_sensitivity', tuya.valueConverter.raw],       >>> 0x2
+                [107, 'indicator', tuya.valueConverter.onOff],                      >>> 0x6B
+                [121, 'battery', tuya.valueConverter.raw],                          >>> 0x79
                 [
-                    122,
+                    122,                                                            >>> 0x7A 
                     'motion_detection_mode',
                     tuya.valueConverterBasic.lookup({
                         only_pir: tuya.enum(0),
@@ -71,7 +71,7 @@
                         only_radar: tuya.enum(2),
                     }),
                 ],
-                [123, 'motion_detection_sensitivity', tuya.valueConverter.raw],
+                [123, 'motion_detection_sensitivity', tuya.valueConverter.raw],     >>> 0x7B
             ],
         },
     },

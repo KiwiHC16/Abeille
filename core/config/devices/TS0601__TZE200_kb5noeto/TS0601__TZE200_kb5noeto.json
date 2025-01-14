@@ -34,8 +34,9 @@
                 "params": "ep=01"
             },
             "Set LED": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0107&attrId=0001&attrType=20&manufId=115F",
+                "use": "act_tuyaEF00-SetValue",
+                "subType": "select",
+                "params": "dpId=6B&data=#select#",
                 "listValue": "0|Off;1|On",
                 "isVisible": 1,
                 "comment": "Led enable/disable"

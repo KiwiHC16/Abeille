@@ -26,6 +26,7 @@
 -   Nouveau: Support Tuya PIR+24G_radar+light ZG-204ZM (2741).
 -   Correction: Config du device utilise dernier modele pour cmds à jour.
 -   Nouveau: Support préliminaire Moes ZSS-S01-GWM-C-MS (2742).
+-   Correction: Les démons ne sont plus relancés 2 fois suite au bouton 'Redémarrer'.
 
 ## 250105-BETA-1
 

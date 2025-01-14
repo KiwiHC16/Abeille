@@ -607,16 +607,7 @@
 </form>
 
 <script>
-    /* Show only groups in line with number of zigates (1 most of the time) */
-    // for (z = 1; z <= js_NbOfZigates; z++) {
-    //     console.log("Showing idGtwGroup"+z);
-    //     $("#idGtwGroup"+z).show();
-    // }
 
-    // $("#idZigates").hide();
-    // $("#zigatewifi").hide();
-    // $("#PiZigate").hide();
-    // $("#UpdateCheck").hide();
     $("#idAdvOptions").hide();
 
     // Install a way to monitor log level change
@@ -651,6 +642,14 @@
 
     // Wrap Log Save button
     abConfig.logSaveWrapper();
+
+    // Catching button 'bt_startDeamon' event
+    // Purpose: TODO
+    buttonStartDaemonEvent = 0;
+    $('body').off('click', '.bt_startDeamon').on('click', '.bt_startDeamon', function() {
+        console.log("bt_startDeamon event (saved=" + buttonStartDaemonEvent + ")");
+        buttonStartDaemonEvent = 1;
+    });
 
     // $('#idZigatesShowHide').on('click', function () {
     //     var Label = document.getElementById("idZigatesShowHide").innerText;
@@ -1596,8 +1595,8 @@
         });
     }
 
-    // Called when Abeille plugin config has been saved
-    // It is also called on daemon (re)start from config page bt_startDeamon button.
+    // Called when Abeille plugin config has been saved (button 'bt_savePluginConfig')
+    // It is also called on daemon (re)start request (button 'bt_startDeamon button').
     function Abeille_postSaveConfiguration() {
         console.log("Abeille_postSaveConfiguration()");
 
@@ -1642,6 +1641,11 @@
                 if (errors != '')
                     window.alert(errors);
                 else {
+                    console.log("buttonStartDaemonEvent=" + buttonStartDaemonEvent);
+                    if (buttonStartDaemonEvent == 1) {
+                        buttonStartDaemonEvent = 0;
+                        return; // Config save triggered by button start deamon
+                    }
                     // Restart daemons if already running
                     $.ajax({
                         type: 'POST',
@@ -1657,8 +1661,8 @@
                             deamons = res.daemons;
                             running = deamons.runningNb;
                             if (running > 0) {
-                                // TODO: If Abeille_postSaveConfiguration trigger = config save then daemons to be relaunched
-                                // TODO: If Abeille_postSaveConfiguration trigger = deamon (re)start then DO NOT relanch daemons has it is done by Jeedom process
+                                // TODO: If Abeille_postSaveConfiguration trigger = config save button then daemons must be relaunched
+                                // TODO: If Abeille_postSaveConfiguration trigger = deamon (re)start button then DO NOT relanch daemons has it is done by Jeedom process
                                 console.log(running+" daemons running => Restarting all");
                                 $.ajax({
                                     type: 'POST',

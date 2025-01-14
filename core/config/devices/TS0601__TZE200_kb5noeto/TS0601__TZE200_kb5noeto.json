@@ -16,10 +16,44 @@
             "mainEP": "01",
             "batteryType": "2x1.5V AAA/LR03"
         },
+        "variables": {
+            "motionStateStr": {
+                "0": "None",
+                "1": "Large",
+                "2": "Small",
+                "3": "Static"
+            },
+            "ledStateStr": {
+                "0": "Off",
+                "1": "On"
+            }
+        },
         "commands": {
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
+            },
+            "Set LED": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0107&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|Off;1|On",
+                "isVisible": 1,
+                "comment": "Led enable/disable"
+            },
+            "LED state val": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-ledStateVal",
+                "trigOut": {
+                    "01-ledState": {
+                        "valueOffset": "#valueswitch-ledStateStr#"
+                    }
+                },
+                "comment": "Keep it hidden. Convert '01-ledStateVal' val to string."
+            },
+            "LED state": {
+                "use": "inf_generic-String",
+                "logicalId": "01-ledState",
+                "nextLine": "after"
             },
             "Fading_time": {
                 "use": "act_zbWriteAttribute-list",
@@ -27,17 +61,10 @@
                 "listValue": "0|0s;28800|28800s",
                 "isVisible": 1
             },
-            "Set Indicator": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0107&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|Off;1|On",
-                "isVisible": 1,
-                "comment": "Led enable or disabled"
-            },
             "Motion_detection_mode": {
                 "use": "act_zbWriteAttribute-list",
                 "params": "clustId=0104&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|seulement_pir;1|pir_and_radar;2|seulement_radar",
+                "listValue": "0|seulement_pir;1|pir_et_radar;2|seulement_radar",
                 "isVisible": 1
             },
             "Motion_detection_sensitivity": {
@@ -45,6 +72,21 @@
                 "params": "clustId=0105&attrId=0001&attrType=20&manufId=115F",
                 "listValue": "0|0x;10|10x",
                 "isVisible": 1
+            },
+            "Motion state val": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-motionStateVal",
+                "trigOut": {
+                    "01-motionState": {
+                        "valueOffset": "#valueswitch-motionStateStr#"
+                    }
+                },
+                "comment": "Keep it hidden. Convert '01-motionStateVal' val to string."
+            },
+            "Motion state": {
+                "use": "inf_generic-String",
+                "logicalId": "01-motionState",
+                "nextLine": "after"
             },
             "Static_detection_distance": {
                 "use": "act_zbWriteAttribute-list",
@@ -58,7 +100,7 @@
                 "listValue": "0|0x;10|10x",
                 "isVisible": 1
             },
-            "Occupancy": {
+            "Presence": {
                 "use": "inf_presence-Detection",
                 "isVisible": 1
             },
@@ -77,11 +119,15 @@
                 },
                 "65": {
                     "function": "rcvValue",
-                    "info": "01-motionState"
+                    "info": "01-motionStateVal"
                 },
                 "6A": {
                     "function": "rcvValue",
                     "info": "01-Illuminance"
+                },
+                "6B": {
+                    "function": "rcvValue",
+                    "info": "01-ledStateVal"
                 },
                 "79": {
                     "function": "rcvValue",

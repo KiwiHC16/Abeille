@@ -193,6 +193,12 @@
             $logicIds = [];
             foreach ($commands as $cmdJName => $cmd) {
                 // New syntax: "<cmdJName>": { "use": "<fileName>", "params": "X=1&Y=2" }
+                // echo "cmd=".json_encode($cmd)."\n";
+                if ($cmd == []) {
+                    $error = newDevError($devModName, "ERROR", "Empty command '$cmdJName'");
+                    continue;
+                }
+
                 $cmdModName = $cmd['use'];
                 $cmdModPath = commandsDir."/".$cmdModName.".json";
                 if (!file_exists($cmdModPath)) {

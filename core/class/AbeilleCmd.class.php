@@ -479,12 +479,19 @@
                             break; // No more '#'
                         $sb = substr($request, $pos + 1);
                         $pos = stripos($sb, "#");
+                        if ($pos === false) {
+                            logMessage('error', "Missing '#' variable terminaison");
+                            break; // No more '#'
+                        }
                         $varNameUp = strtoupper(substr($sb, 0, $pos));
                         logMessage('debug', "-- request: varNameUp='$varNameUp'");
                         if (isset($eqModel['variables'][$varNameUp])) {
                             $var = $eqModel['variables'][$varNameUp];
                             $request = str_ireplace("#$varNameUp#", $eqModel['variables'][$varNameUp], $request);
                             logMessage('debug', "-- request: '#$varNameUp#' replaced by '$var' => request='{$request}'");
+                        } else {
+                            logMessage('error', "Missing '#$varNameUp#' variable");
+                            break; // No more '#'
                         }
                     }
                 }

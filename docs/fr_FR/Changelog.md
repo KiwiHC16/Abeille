@@ -28,6 +28,7 @@
 -   Nouveau: Support préliminaire Moes ZSS-S01-GWM-C-MS (2742).
 -   Correction: Les démons ne sont plus relancés 2 fois suite au bouton 'Redémarrer'.
 -   Amélioration: Outil 'check_json.php' pour commandes vides.
+-   Amélioration: Support cmd avec variable (#xxx#).
 
 ## 250105-BETA-1
 

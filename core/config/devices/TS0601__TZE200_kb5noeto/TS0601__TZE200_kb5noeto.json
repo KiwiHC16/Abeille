@@ -56,24 +56,6 @@
                 "logicalId": "01-ledState",
                 "nextLine": "after"
             },
-            "Fading_time": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0102&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|0s;28800|28800s",
-                "isVisible": 1
-            },
-            "Motion_detection_mode": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0104&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|only_pir;1|pir_and_radar;2|only_radar",
-                "isVisible": 1
-            },
-            "Motion_detection_sensitivity": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0105&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|0x;10|10x",
-                "isVisible": 1
-            },
             "Motion state val": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "01-motionStateVal",
@@ -88,6 +70,30 @@
                 "use": "inf_generic-String",
                 "logicalId": "01-motionState",
                 "nextLine": "after"
+            },
+            "Fading_time": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0102&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|0s;28800|28800s",
+                "isVisible": 1
+            },
+            "Motion detection mode": {
+                "use": "act_tuyaEF00-SetValue",
+                "subType": "select",
+                "listValue": "0|only_pir;1|pir_and_radar;2|only_radar",
+                "params": "dpId=7A&data=#select#",
+                "value": "Motion detection mode val",
+                "isVisible": 1
+            },
+            "Motion detection mode val": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-motionDetectionModeVal"
+            },
+            "Motion_detection_sensitivity": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0105&attrId=0001&attrType=20&manufId=115F",
+                "listValue": "0|0x;10|10x",
+                "isVisible": 1
             },
             "Static_detection_distance": {
                 "use": "act_zbWriteAttribute-list",
@@ -133,6 +139,10 @@
                 "79": {
                     "function": "rcvValue",
                     "info": "0001-01-0021"
+                },
+                "7A": {
+                    "function": "rcvValue",
+                    "info": "01-motionDetectionModeVal"
                 }
             }
         }

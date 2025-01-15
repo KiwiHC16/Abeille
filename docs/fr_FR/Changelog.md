@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 250115-BETA-1
+
 **Modèles d'équipement**
 
     - ATTENTION ! Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).

@@ -54,7 +54,8 @@
             "LED state": {
                 "use": "inf_generic-String",
                 "logicalId": "01-ledState",
-                "nextLine": "after"
+                "nextLine": "after",
+                "isVisible": 1
             },
             "Motion state val": {
                 "use": "inf_generic-NumericBadge",
@@ -69,13 +70,20 @@
             "Motion state": {
                 "use": "inf_generic-String",
                 "logicalId": "01-motionState",
-                "nextLine": "after"
-            },
-            "Fading_time": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0102&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|0s;28800|28800s",
+                "nextLine": "after",
                 "isVisible": 1
+            },
+            "Fading time": {
+                "use": "act_tuyaEF00-SetValue-Slider",
+                "params": "dpId=66&data=#select#",
+                "minValue": 0,
+                "maxValue": 28800,
+                "value": "Fading time val",
+                "isVisible": 1
+            },
+            "Fading time val": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-fadingTimeVal"
             },
             "Motion detection mode": {
                 "use": "act_tuyaEF00-SetValue",
@@ -89,11 +97,17 @@
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "01-motionDetectionModeVal"
             },
-            "Motion_detection_sensitivity": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0105&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|0x;10|10x",
+            "Motion detection sensitivity": {
+                "use": "act_tuyaEF00-SetValue-Slider",
+                "params": "dpId=7B&data=#select#",
+                "minValue": 0,
+                "maxValue": 10,
+                "value": "Motion detect sens val",
                 "isVisible": 1
+            },
+            "Motion detect sens val": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-motionDetectionSensVal"
             },
             "Static_detection_distance": {
                 "use": "act_zbWriteAttribute-list",
@@ -128,6 +142,18 @@
                     "function": "rcvValue",
                     "info": "01-motionStateVal"
                 },
+                "66": {
+                    "function": "rcvValue",
+                    "info": "01-fadingTimeVal"
+                },
+                "68": {
+                    "function": "rcvValue",
+                    "info": "01-motionDistVal"
+                },
+                "69": {
+                    "function": "rcvValue",
+                    "info": "01-motionSensVal"
+                },
                 "6A": {
                     "function": "rcvValue",
                     "info": "01-Illuminance"
@@ -136,6 +162,14 @@
                     "function": "rcvValue",
                     "info": "01-ledStateVal"
                 },
+                "6C": {
+                    "function": "rcvValue",
+                    "info": "01-staticDistVal"
+                },
+                "6D": {
+                    "function": "rcvValue",
+                    "info": "01-staticSensVal"
+                },
                 "79": {
                     "function": "rcvValue",
                     "info": "0001-01-0021"
@@ -143,6 +177,10 @@
                 "7A": {
                     "function": "rcvValue",
                     "info": "01-motionDetectionModeVal"
+                },
+                "7B": {
+                    "function": "rcvValue",
+                    "info": "01-motionDetectionSensVal"
                 }
             }
         }

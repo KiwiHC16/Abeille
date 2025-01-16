@@ -26,17 +26,30 @@
                 "use": "act_zbCmdC-Identify",
                 "nextLine": "after"
             },
+            "Click": {
+                "use": "inf_click",
+                "comment": "value = Up, Down, Stop or None",
+                "returnStateTime": 1,
+                "returnStateValue": "None",
+                "isVisible": 1
+            },
             "Up button": {
                 "use": "inf_zbCmdC-0102-00UpOpen",
-                "isVisible": 1
+                "trigOut": {
+                    "01-click": { "valueOffset": "Up" }
+                }
             },
             "Down button": {
                 "use": "inf_zbCmdC-0102-01DownClose",
-                "isVisible": 1
+                "trigOut": {
+                    "01-click": { "valueOffset": "Down" }
+                }
             },
             "Stop button": {
                 "use": "inf_zbCmdC-0102-02Stop",
-                "isVisible": 1
+                "trigOut": {
+                    "01-click": { "valueOffset": "Stop" }
+                }
             },
             "Bind 01-0001-ToZigate": {
                 "use": "act_zbBindToZigate",

@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Amélioration: Ajout info 'click' pour Legrand wireless switch (2736).
+
 ## 250115-BETA-2, ## 250115-BETA-1
 
 **Modèles d'équipement**

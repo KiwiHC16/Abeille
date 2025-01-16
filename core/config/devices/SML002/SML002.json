@@ -63,8 +63,9 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 12
             },
-            "etat": {
-                "use": "presence"
+            "Presence": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "isVisible": 1
             },
             "Bind 0406-ToZigate": {
                 "use": "act_zbBindToZigate",

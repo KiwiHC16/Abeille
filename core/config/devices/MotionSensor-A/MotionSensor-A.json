@@ -1,5 +1,8 @@
 {
     "MotionSensor-A": {
+        "manufacturer": "Osram",
+        "model": "AC01353010G",
+        "type": "Osram Motion Sensor-A",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,10 +12,11 @@
         "category": {
             "security": "1"
         },
-        "type": "Osram Motion Sensor-A",
         "commands": {
-            "etat": {
-                "use": "presenceEP2"
+            "Presence": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "calculValueOffset": "#value#&(1<<1)",
+                "isVisible": 1
             },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",

@@ -1,6 +1,8 @@
 # ChangeLog
 
 -   Amélioration: Ajout info 'click' pour Legrand wireless switch (2736).
+-   Amélioration: Outil 'check_json.php' pour commandes inexistantes.
+-   Amélioration: Suppression cmds obsoletes 'presence.json' & 'presenceEP2.json'.
 
 ## 250115-BETA-2, ## 250115-BETA-1
 

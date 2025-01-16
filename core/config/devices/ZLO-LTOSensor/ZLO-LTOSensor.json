@@ -22,8 +22,9 @@
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "etat": {
-                "use": "presence"
+            "Presence": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "isVisible": 1
             },
             "Battery-Volt": {
                 "use": "inf_zbAttr-0001-BatteryVolt"

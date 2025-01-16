@@ -202,7 +202,7 @@
                 $cmdModName = $cmd['use'];
                 $cmdModPath = commandsDir."/".$cmdModName.".json";
                 if (!file_exists($cmdModPath)) {
-                    $error = newDevError($devModName, "ERROR", "Unknown command JSON ".$cmdModName.".json");
+                    $error = newDevError($devModName, "ERROR", "Unknown command JSON '$cmdModName.json'");
                     $missingCmds++;
                 }
 
@@ -828,7 +828,11 @@
         $devCmd = $devModel['commands'][$cmdJName];
         $cmdMName = $devCmd['use'];
 
-        $cmdModJson = file_get_contents($cmdMPath);
+        $cmdModJson = @file_get_contents($cmdMPath);
+        if ($cmdModJson === false) {
+            newCmdError($cmdMName, 'ERROR', "Missing '$cmdMPath' file");
+            return;
+        }
         $cmdMod = json_decode($cmdModJson, true);
         if (json_last_error() != JSON_ERROR_NONE) {
             newCmdError($cmdMName, 'ERROR', 'Corrupted JSON file');

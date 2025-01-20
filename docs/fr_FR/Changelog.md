@@ -3,6 +3,7 @@
 -   Amélioration: Ajout info 'click' pour Legrand wireless switch (2736).
 -   Amélioration: Outil 'check_json.php' pour commandes inexistantes.
 -   Amélioration: Suppression cmds obsoletes 'presence.json' & 'presenceEP2.json'.
+-   Amélioration: Support Tuya PIR+24G_radar+light ZG-204ZM (2741).
 
 ## 250115-BETA-2, ## 250115-BETA-1
 

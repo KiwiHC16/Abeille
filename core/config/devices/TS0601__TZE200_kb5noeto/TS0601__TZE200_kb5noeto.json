@@ -75,10 +75,11 @@
             },
             "Fading time": {
                 "use": "act_tuyaEF00-SetValue-Slider",
-                "params": "dpId=66&data=#select#",
+                "params": "dpId=66",
                 "minValue": 0,
                 "maxValue": 28800,
                 "value": "Fading time val",
+                "unit": "s",
                 "isVisible": 1
             },
             "Fading time val": {

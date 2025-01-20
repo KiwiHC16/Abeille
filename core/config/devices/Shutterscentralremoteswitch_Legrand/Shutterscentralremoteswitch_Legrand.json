@@ -22,10 +22,6 @@
                 "use": "inf_batteryVoltToPercent",
                 "params": "min=2.5&max=3"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "nextLine": "after"
-            },
             "Click": {
                 "use": "inf_click",
                 "comment": "value = Up, Down, Stop or None",

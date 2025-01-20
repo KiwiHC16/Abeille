@@ -286,7 +286,7 @@
 
     function tuyaDecodeEF00Cmd($net, $addr, $ep, $cmdId, $msg) {
         $tCmds = array(
-            "00" => array("name" => "TY_DATA_REQUEST", "desc" => "Gateway-side data request"),
+            "00" => array("name" => "TY_DATA_REQUEST", "desc" => "The gateway sends a data request to the Zigbee device."),
             "01" => array("name" => "TY_DATA_RESPONE", "desc" => "Reply to MCU-side data request"),
             "02" => array("name" => "TY_DATA_REPORT", "desc" => "MCU-side data active upload (bidirectional)"),
             "03" => array("name" => "TY_DATA_QUERY", "desc" => "GW send, trigger MCU side to report all current information, no zcl payload"),

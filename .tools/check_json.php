@@ -730,8 +730,9 @@
 
         $devCmd = $devModel['commands'][$cmdJName];
 
+        // Overwritting default settings with 'params' content
+        // Overwritting variables: 'pname=pval' => '#pname#' replaced by 'pval'
         if (isset($devCmd['params']) && ($devCmd['params'] != '')) {
-            // Overwritting default settings with 'params' content
             // TODO: This should be done on 'configuration/request' only ??
             $paramsArr = explode('&', $devCmd['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
             $textCmd = json_encode($cmd);
@@ -740,6 +741,32 @@
                 $textCmd = str_ireplace('#'.$pName.'#', $pVal, $textCmd); // Case insensitive #xxx# replacement
             }
             $cmd = json_decode($textCmd, true);
+
+            // echo "LA '$cmdJName' cmd=".json_encode($cmd)."\n";
+
+            // Overwritting or adding parameters
+            if (isset($cmd['configuration']['request'])) {
+                $request = $cmd['configuration']['request'];
+                // log::add('Abeille', 'debug', 'request BEFORE='.json_encode($request));
+                $requestArr = explode('&', $request); // ep=01&clustId=0000 => ep=01, clustId=0000
+                foreach ($paramsArr as $p) {
+                    list($pName, $pVal) = explode("=", $p);
+                    $found = false;
+                    foreach ($requestArr as $r) {
+                        list($rName, $rVal) = explode("=", $r);
+                        if ($rName == $pName) {
+                            $found = true;
+                            if ($rVal != $pVal) {
+                                $request = str_ireplace($r, "$rName=$pVal", $request); // Case insensitive replacement
+                            }
+                            break;
+                        }
+                    }
+                    if ($found == false)
+                        $request .= "&".$p; // Adding optional param
+                }
+                $cmd['configuration']['request'] = $request;
+            }
         }
 
         if (isset($devCmd['isVisible'])) {
@@ -855,6 +882,7 @@
 
         // Overloading command with infos coming from device model
         $cmd = overloadCmd($devModel, $cmdJName, $cmd);
+        // echo "checkCmd: overloaded '$cmdJName' cmd=".json_encode($cmd)."\n";
 
         // echo "checkCmd devCmd=".json_encode($devCmd)."\n";
         // echo "cmd '$cmdJName'=".json_encode($cmd)."\n";
@@ -867,13 +895,13 @@
         }
 
         // WARNING: The checks hereafter are even not true
-        // Each variable could be frozen. Example for 'slider' sub-type: "request":"EP=#EP#&slider=2700"
 
         // A cmd with sub type 'slider' must have a #slider# in 'request'.
-        // if ($cmd['subType'] == "slider") {
-        //     if (stristr($cmd['configuration']['request'], "#slider#") === false)
-        //         $error = newDevError($devMName, "ERROR", "'slider' sub-type but no '#slider#' for cmd '".$cmdJName."'");
-        // }
+        // Each variable could be frozen. Example for 'slider' sub-type: "request":"EP=#EP#&slider=2700"
+        if ($cmd['subType'] == "slider") {
+            if ((stristr($cmd['configuration']['request'], "#slider#") === false) && (stristr($cmd['configuration']['request'], "slider=") === false))
+                $error = newDevError($devMName, "ERROR", "'slider' sub-type but no '#slider#' for cmd '".$cmdJName."'");
+        }
         // A cmd with sub type 'message' must have a #message# and/or '#title#' in 'request'.
         else if ($cmd['subType'] == "message") {
             if ((stristr($cmd['configuration']['request'], "#title#") === false) && (stristr($cmd['configuration']['request'], "#message#") === false))

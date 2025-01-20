@@ -100,7 +100,7 @@
             },
             "Motion detection sensitivity": {
                 "use": "act_tuyaEF00-SetValue-Slider",
-                "params": "dpId=7B&data=#select#",
+                "params": "dpId=7B",
                 "minValue": 0,
                 "maxValue": 10,
                 "value": "Motion detect sens val",

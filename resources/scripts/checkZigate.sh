@@ -22,8 +22,7 @@ displayProcess() {
     read -ra PSOUTA <<< "${PSOUT}"
     PPID2=${PSOUTA[0]}
     CMD=${PSOUTA[@]:1}
-    echo "= Infos:"
-    echo "=   Process ${PID} details:"
+    echo "= Process ${PID} details:"
     echo "=   PPid=${PPID2}, cmd='${CMD}'"
 }
 
@@ -31,6 +30,7 @@ displayProcess() {
 # $1=port
 checkPort() {
     local PORT=$1
+    PORTISFREE=0
 
     local FIELDS=`sudo lsof -Fcn ${PORT}`
     if [ "${FIELDS}" == "" ]; then
@@ -51,25 +51,48 @@ checkPort() {
 
     # Kill requested ?
     if [ ${KILLIFUSED} -eq 1 ]; then
-        echo "- Port is used by process ${PID} => killing process ${PID}"
+        echo "- Port is used by process ${PID} (see below)"
         displayProcess ${PID}
-        kill -9 ${PID}
-        # TODO: While loop with timeout to wait for effective kill
+        echo "- Killing process ${PID}"
+        sudo kill -9 ${PID}
+        # A small wait loop
+        for (( T=1; T<=3; T++ ))
+        do
+            ps -p ${PID} >/dev/null 2>&1
+            RES=$?
+            # echo "res=${RES}"
+            if [ ${RES} -ne 0 ]; then
+                break
+            fi
+            sleep 1
+        done
+        ps -p ${PID} >/dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            echo "= Can't kill process ${PID} using port ${PORT}."
+            return
+        fi
         PORTISFREE=1
     else
         echo "= ERROR: Port is used by process ${PID}."
-        echo "=        You can add '-k' option to further tests anyway."
+        echo "=        You can add '-k' option to kill it and perform more tests."
         PORTISFREE=0
 
+        echo
         displayProcess ${PID}
 
         echo
-        echo "= Additional infos I:"
+        echo "= Additional infos I (dmesg | grep tty):"
         dmesg | grep tty
 
         echo
-        echo "= Additional infos II:"
-        ls -al /dev/serial*
+        echo "= Additional infos II (ls -al /dev/serial*):"
+        ls -al /dev/serial* 2>/dev/null
+
+        if [ "$TYPE" == "USB" ] || [ "$TYPE" == "USBv2" ]; then
+            echo
+            echo "= Additional infos III (USB case):"
+            dmesg | grep -i zigate
+        fi
     fi
 }
 
@@ -146,42 +169,46 @@ if [ $? -ne 0 ]; then
 fi
 
 # Is port in use ?
-FIELDS=`sudo lsof -Fcn ${PORT}`
-if [ "${FIELDS}" == "" ]; then
-    echo "- Port seems free"
-else
-    PID=0
-    for f in ${FIELDS};
-    do
-        if [[ "$f" == "p"* ]]; then
-            PID=${f:1}
-            break
-        fi
-    done
-
-    # Kill requested ?
-    if [ ${KILLIFUSED} -eq 1 ]; then
-        echo "- Port is used by process ${PID} => killing process ${PID}"
-        displayProcess ${PID}
-        kill -9 ${PID}
-        # TODO: While loop with timeout to wait for effective kill
-    else
-        echo "= ERROR: Port is used by process '${PID}'."
-        echo "=        You can add '-k' option to further tests anyway."
-
-        displayProcess ${PID}
-
-        echo
-        echo "= Additional infos I:"
-        dmesg | grep tty
-
-        echo
-        echo "= Additional infos II:"
-        ls -al /dev/serial*
-
-        exit 4
-    fi
+checkPort ${PORT}
+if [ "${PORTISFREE}" -ne 1 ]; then
+    exit 4
 fi
+# FIELDS=`sudo lsof -Fcn ${PORT}`
+# if [ "${FIELDS}" == "" ]; then
+#     echo "- Port seems free"
+# else
+#     PID=0
+#     for f in ${FIELDS};
+#     do
+#         if [[ "$f" == "p"* ]]; then
+#             PID=${f:1}
+#             break
+#         fi
+#     done
+
+#     # Kill requested ?
+#     if [ ${KILLIFUSED} -eq 1 ]; then
+#         echo "- Port is used by process ${PID} => killing process ${PID}"
+#         displayProcess ${PID}
+#         kill -9 ${PID}
+#         # TODO: While loop with timeout to wait for effective kill
+#     else
+#         echo "= ERROR: Port is used by process '${PID}'."
+#         echo "=        You can add '-k' option to further tests anyway."
+
+#         displayProcess ${PID}
+
+#         echo
+#         echo "= Additional infos I:"
+#         dmesg | grep tty
+
+#         echo
+#         echo "= Additional infos II:"
+#         ls -al /dev/serial*
+
+#         exit 4
+#     fi
+# fi
 
 # Port is free, let's interrogate Zigate but python is required for that.
 command -v python3 >/dev/null

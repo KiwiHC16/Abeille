@@ -76,15 +76,18 @@
             "Fading time": {
                 "use": "act_tuyaEF00-SetValue-Slider",
                 "params": "dpId=66",
+                "comment": "0 to 28800sec = 0 to 480minutes. Currently limiting to 4min",
                 "minValue": 0,
-                "maxValue": 28800,
+                "maxValue": 4,
+                "valueOffset": "#slider#*60",
                 "value": "Fading time val",
-                "unit": "s",
+                "unit": "min",
                 "isVisible": 1
             },
             "Fading time val": {
                 "use": "inf_generic-NumericBadge",
-                "logicalId": "01-fadingTimeVal"
+                "logicalId": "01-fadingTimeVal",
+                "calculValueOffset": "#value#/60"
             },
             "Motion detection mode": {
                 "use": "act_tuyaEF00-SetValue",

@@ -57,6 +57,12 @@
                 "nextLine": "after",
                 "isVisible": 1
             },
+            "Motion state": {
+                "use": "inf_generic-String",
+                "logicalId": "01-motionState",
+                "nextLine": "after",
+                "isVisible": 1
+            },
             "Motion state val": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "01-motionStateVal",
@@ -66,12 +72,6 @@
                     }
                 },
                 "comment": "Keep it hidden. Convert '01-motionStateVal' val to string."
-            },
-            "Motion state": {
-                "use": "inf_generic-String",
-                "logicalId": "01-motionState",
-                "nextLine": "after",
-                "isVisible": 1
             },
             "Fading time": {
                 "use": "act_tuyaEF00-SetValue-Slider",
@@ -87,7 +87,9 @@
             "Fading time val": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "01-fadingTimeVal",
-                "calculValueOffset": "#value#/60"
+                "unit": "min",
+                "calculValueOffset": "#value#/60",
+                "nextLine": "after"
             },
             "Motion detection mode": {
                 "use": "act_tuyaEF00-SetValue",
@@ -99,7 +101,8 @@
             },
             "Motion detection mode val": {
                 "use": "inf_generic-NumericBadge",
-                "logicalId": "01-motionDetectionModeVal"
+                "logicalId": "01-motionDetectionModeVal",
+                "nextLine": "after"
             },
             "Motion detection sensitivity": {
                 "use": "act_tuyaEF00-SetValue-Slider",
@@ -111,18 +114,43 @@
             },
             "Motion detect sens val": {
                 "use": "inf_generic-NumericBadge",
-                "logicalId": "01-motionDetectionSensVal"
+                "logicalId": "01-motionDetectionSensVal",
+                "unit": "x",
+                "nextLine": "after"
             },
-            "Static_detection_distance": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0108&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|0m;10|10m",
+            "Static detection distance": {
+                "use": "act_tuyaEF00-SetValue-Slider",
+                "params": "dpId=6C",
+                "minValue": 0,
+                "maxValue": 10,
+                "value": "Static detect dist val",
                 "isVisible": 1
             },
-            "Static_detection_sensitivity": {
-                "use": "act_zbWriteAttribute-list",
-                "params": "clustId=0109&attrId=0001&attrType=20&manufId=115F",
-                "listValue": "0|0x;10|10x",
+            "Static detect dist val": {
+                "use": "inf_generic-NumericBadge",
+                "unit": "m",
+                "logicalId": "01-staticDistVal",
+                "nextLine": "after"
+            },
+            "Static detection sensitivity": {
+                "use": "act_tuyaEF00-SetValue-Slider",
+                "params": "dpId=6D",
+                "minValue": 0,
+                "maxValue": 10,
+                "value": "Static detect sens val",
+                "isVisible": 1
+            },
+            "Static detect sens val": {
+                "use": "inf_generic-NumericBadge",
+                "unit": "x",
+                "logicalId": "01-staticSensVal",
+                "nextLine": "after"
+            },
+            "Minimum Detection Distance": {
+                "use": "inf_generic-NumericBadge",
+                "unit": "x",
+                "logicalId": "01-miniDetectionDistVal",
+                "nextLine": "after",
                 "isVisible": 1
             },
             "Presence": {
@@ -141,6 +169,14 @@
                 "01": {
                     "function": "rcvValue0Is1",
                     "info": "01-presence"
+                },
+                "03": {
+                    "function": "rcvValue",
+                    "info": "01-miniDetectionDistVal"
+                },
+                "04": {
+                    "function": "rcvValue",
+                    "info": "01-staticDetectionDistVal"
                 },
                 "65": {
                     "function": "rcvValue",

@@ -6,6 +6,7 @@
 -   Amélioration: Support Tuya PIR+24G_radar+light ZG-204ZM (2741).
 -   Amélioration: Outil 'check_json.php' pour subType 'slider'.
 -   Amélioration: Script 'resources/scripts/checkZigate.sh'
+-   Correction: Regression au redémarrage démons (createDevice()).
 
 ## 250115-BETA-2, ## 250115-BETA-1
 

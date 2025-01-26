@@ -1,7 +1,6 @@
 <?php
     /*
-     * AbeilleMain daemon
-     * WORK ONGOING !!! NOT USED YET !!!
+     * AbeilleMain => Main daemon
      */
 
     include_once __DIR__.'/../config/Abeille.config.php';
@@ -642,6 +641,20 @@
 
             return;
         } // End 'removeForcedModel'
+
+        if ($msg['type'] == "updateFromModel") {
+            logMessage('debug', "msgFromParser(): updateFromModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
+            $dev = array(
+                'net' => $net,
+                'addr' => $addr,
+                'ieee' => $ieee,
+                'modelName' => $msg['modelName'],
+                'modelSource' => $msg['modelSource'],
+            );
+            createDevice("update", $dev);
+
+            return;
+        } // End 'updateFromModel'
 
         /* Parser has found a new device. Basic Jeedom entry to be created. */
         if ($msg['type'] == "newDevice") {

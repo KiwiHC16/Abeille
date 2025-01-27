@@ -74,26 +74,26 @@
         }
     }
 
-    /* New function to send msg to Abeille.
-        Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
-        into several messages to Abeille. */
-    function msgToMain($msg) {
-        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-        global $queueXToMain;
-        // Note: '@' to suppress PHP warning message.
-        if (@msg_send($queueXToMain, 1, $msgJson, false, false, $errCode) == false) {
-            log::add('Abeille', 'debug', "  msgToMain() ERROR $errCode/".AbeilleTools::getMsgSendErr($errCode));
-        }
-    }
+    // /* New function to send msg to Abeille.
+    //     Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
+    //     into several messages to Abeille. */
+    // function msgToMain($msg) {
+    //     $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+    //     global $queueXToMain;
+    //     // Note: '@' to suppress PHP warning message.
+    //     if (@msg_send($queueXToMain, 1, $msgJson, false, false, $errCode) == false) {
+    //         log::add('Abeille', 'debug', "  msgToMain() ERROR $errCode/".AbeilleTools::getMsgSendErr($errCode));
+    //     }
+    // }
 
-        /* Check and update configuration DB if required.
-       This function can update other informations in Jeedom DB.
-       Note: This function can be called before daemons startup. Useful for
-             GIT users & developpers. */
+    /* Check and update configuration DB if required.
+    This function can update other informations in Jeedom DB.
+    Note: This function can be called before daemons startup. Useful for
+            GIT users & developpers. */
     function updateConfigDB() {
 
-        global $abQueues;
-        $GLOBALS['queueXToMain'] = msg_get_queue($abQueues["xToAbeille"]["id"]);
+        // global $abQueues;
+        // $GLOBALS['queueXToMain'] = msg_get_queue($abQueues["xToAbeille"]["id"]);
 
         $dbVersion = config::byKey('ab::dbVersion', 'Abeille', '');
         if ($dbVersion == '')

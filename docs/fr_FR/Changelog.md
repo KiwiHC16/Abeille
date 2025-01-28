@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 250128-BETA-1
+## 250128-BETA-2, ## 250128-BETA-1
 
 -   Amélioration: Ajout info 'click' pour Legrand wireless switch (2736).
 -   Amélioration: Outil 'check_json.php' pour commandes inexistantes.

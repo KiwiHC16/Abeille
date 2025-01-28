@@ -25,6 +25,7 @@
     include_once __DIR__.'/AbeilleCmd-Profalux.php'; // Profalux specific commands
     include_once __DIR__.'/AbeilleZigateConst.php';
     include_once __DIR__.'/AbeilleZigbee.php'; // Zigbee specific functions
+    require_once __DIR__.'/AbeilleModels.php'; // getModelsList()
 
     // Log if proper log level
     function cmdLog($level, $message = "", $isEnable = 1) {

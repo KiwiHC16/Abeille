@@ -74,26 +74,11 @@
         }
     }
 
-    // /* New function to send msg to Abeille.
-    //     Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
-    //     into several messages to Abeille. */
-    // function msgToMain($msg) {
-    //     $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-    //     global $queueXToMain;
-    //     // Note: '@' to suppress PHP warning message.
-    //     if (@msg_send($queueXToMain, 1, $msgJson, false, false, $errCode) == false) {
-    //         log::add('Abeille', 'debug', "  msgToMain() ERROR $errCode/".AbeilleTools::getMsgSendErr($errCode));
-    //     }
-    // }
-
     /* Check and update configuration DB if required.
-    This function can update other informations in Jeedom DB.
-    Note: This function can be called before daemons startup. Useful for
-            GIT users & developpers. */
+        This function can update other informations in Jeedom DB.
+        Note: This function can be called before daemons startup. Useful for
+        GIT users & developpers. */
     function updateConfigDB() {
-
-        // global $abQueues;
-        // $GLOBALS['queueXToMain'] = msg_get_queue($abQueues["xToAbeille"]["id"]);
 
         $dbVersion = config::byKey('ab::dbVersion', 'Abeille', '');
         if ($dbVersion == '')
@@ -103,7 +88,7 @@
             config::save('ab::dbVersion', lastDbVersion, 'Abeille');
             $dbVersion = lastDbVersion;
         }
-        log::add('Abeille', 'debug', "dbVersion={$dbVersion}");
+        log::add('Abeille', 'debug', "  dbVersion={$dbVersion}");
 
         /* Version 20200225 changes:
            - Added multi-zigate support
@@ -167,78 +152,78 @@
         //     $dbVersion = '20200225';
         // }
 
-        /* Version 20200510 changes:
-           - Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI'
-         */
-        if (intval($dbVersion) < 20200510) {
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', '') != "Y")
-                    continue; // Disabled or undefined
+        // /* Version 20200510 changes:
+        //    - Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI'
+        //  */
+        // if (intval($dbVersion) < 20200510) {
+        //     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+        //         if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', '') != "Y")
+        //             continue; // Disabled or undefined
 
-                $sp = config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '');
-                if ($sp == "/dev/zigate".$zgId)
-                    config::save('AbeilleType'.$zgId, 'WIFI', 'Abeille');
-                else if ((substr($sp, 0, 9) == "/dev/ttyS") || (substr($sp, 0, 11) == "/dev/ttyAMA"))
-                    config::save('AbeilleType'.$zgId, 'PI', 'Abeille');
-                else
-                    config::save('AbeilleType'.$zgId, 'USB', 'Abeille');
-            }
-            config::save('ab::dbVersion', '20200510', 'Abeille');
-            $dbVersion = '20200510';
-        }
+        //         $sp = config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '');
+        //         if ($sp == "/dev/zigate".$zgId)
+        //             config::save('AbeilleType'.$zgId, 'WIFI', 'Abeille');
+        //         else if ((substr($sp, 0, 9) == "/dev/ttyS") || (substr($sp, 0, 11) == "/dev/ttyAMA"))
+        //             config::save('AbeilleType'.$zgId, 'PI', 'Abeille');
+        //         else
+        //             config::save('AbeilleType'.$zgId, 'USB', 'Abeille');
+        //     }
+        //     config::save('ab::dbVersion', '20200510', 'Abeille');
+        //     $dbVersion = '20200510';
+        // }
 
-        /* Version 20201025 changes:
-           - All hexa values are now UPPER-CASE
-         */
-        if (intval($dbVersion) < 20201025) {
-            /* Updating addresses in config */
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $ieee = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', '');
-                if ($ieee == "")
-                    continue; // Undefined
-                $ieee_up = strtoupper($ieee);
-                if ($ieee_up !== $ieee)
-                    config::save('AbeilleIEEE'.$zgId, $ieee_up, 'Abeille');
-            }
+        // /* Version 20201025 changes:
+        //    - All hexa values are now UPPER-CASE
+        //  */
+        // if (intval($dbVersion) < 20201025) {
+        //     /* Updating addresses in config */
+        //     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+        //         $ieee = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', '');
+        //         if ($ieee == "")
+        //             continue; // Undefined
+        //         $ieee_up = strtoupper($ieee);
+        //         if ($ieee_up !== $ieee)
+        //             config::save('AbeilleIEEE'.$zgId, $ieee_up, 'Abeille');
+        //     }
 
-            /* Updating addresses for all equipments Jeedom knows */
-            $eqLogics = eqLogic::byType('Abeille');
-            foreach ($eqLogics as $eqLogic) {
-                $ieee = $eqLogic->getConfiguration('IEEE', 'undefined');
-                if ($ieee != "undefined") {
-                    $ieee_up = strtoupper($ieee);
-                    if ($ieee_up !== $ieee) {
-                        $eqLogic->setConfiguration('IEEE', $ieee_up);
-                        $eqLogic->save();
-                    }
-                }
-                $topic = $eqLogic->getConfiguration('topic', 'undefined');
-                if ($topic != "undefined") {
-                    $topicArray = explode("/", $topic);
-                    if (ctype_xdigit($topicArray[1])) { // Convert hexa only (ex: avoid 'Ruche')
-                        $topicAddr_up = strtoupper($topicArray[1]);
-                        if ($topicAddr_up !== $topicArray[1]) {
-                            $eqLogic->setConfiguration('topic', $topicArray[0]."/".$topicAddr_up);
-                            $eqLogic->save();
-                        }
-                    }
-                }
-                $logId = $eqLogic->getLogicalId();
-                if ($logId != "") {
-                    $logIdArray = explode("/", $logId);
-                    if (ctype_xdigit($logIdArray[1])) { // Convert hexa only (ex: avoid 'Ruche')
-                        $logIdAddr_up = strtoupper($logIdArray[1]);
-                        if ($logIdAddr_up !== $logIdArray[1]) {
-                            $eqLogic->setLogicalId($logIdArray[0]."/".$logIdAddr_up);
-                            $eqLogic->save();
-                        }
-                    }
-                }
-            }
+        //     /* Updating addresses for all equipments Jeedom knows */
+        //     $eqLogics = eqLogic::byType('Abeille');
+        //     foreach ($eqLogics as $eqLogic) {
+        //         $ieee = $eqLogic->getConfiguration('IEEE', 'undefined');
+        //         if ($ieee != "undefined") {
+        //             $ieee_up = strtoupper($ieee);
+        //             if ($ieee_up !== $ieee) {
+        //                 $eqLogic->setConfiguration('IEEE', $ieee_up);
+        //                 $eqLogic->save();
+        //             }
+        //         }
+        //         $topic = $eqLogic->getConfiguration('topic', 'undefined');
+        //         if ($topic != "undefined") {
+        //             $topicArray = explode("/", $topic);
+        //             if (ctype_xdigit($topicArray[1])) { // Convert hexa only (ex: avoid 'Ruche')
+        //                 $topicAddr_up = strtoupper($topicArray[1]);
+        //                 if ($topicAddr_up !== $topicArray[1]) {
+        //                     $eqLogic->setConfiguration('topic', $topicArray[0]."/".$topicAddr_up);
+        //                     $eqLogic->save();
+        //                 }
+        //             }
+        //         }
+        //         $logId = $eqLogic->getLogicalId();
+        //         if ($logId != "") {
+        //             $logIdArray = explode("/", $logId);
+        //             if (ctype_xdigit($logIdArray[1])) { // Convert hexa only (ex: avoid 'Ruche')
+        //                 $logIdAddr_up = strtoupper($logIdArray[1]);
+        //                 if ($logIdAddr_up !== $logIdArray[1]) {
+        //                     $eqLogic->setLogicalId($logIdArray[0]."/".$logIdAddr_up);
+        //                     $eqLogic->save();
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            config::save('ab::dbVersion', '20201025', 'Abeille');
-            $dbVersion = '20201025';
-        }
+        //     config::save('ab::dbVersion', '20201025', 'Abeille');
+        //     $dbVersion = '20201025';
+        // }
 
         /* Version 20220407 changes:
            - Config DB: blocageTraitementAnnonce defaulted to "Non"
@@ -417,24 +402,6 @@
                 $obsolete[] = 'AbeilleSerialRead'.$zgId;
             }
             removeLogs($obsolete);
-
-            // Removing obsolete commands from existing Zigates (now handled in equipement advanced page)
-            // Tcharp38: No longer required. Obsolete cmds are removed at daemon startup in 'Abeille.class'.
-            // for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            //     $zg = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-            //     if (!is_object($zg))
-            //         continue;
-
-            //     $eqId = $zg->getId();
-            //     $obsoletes = ['Bind', 'BindShort', 'setReport', 'Get Name', 'Get Location', 'Set Location', 'Write Attribut', 'Get Attribut', 'ActiveEndPoint', 'SimpleDescriptorRequest'];
-            //     foreach ($obsoletes as $cmdJName) {
-            //         $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdJName);
-            //         if (!is_object($cmd))
-            //             continue;
-            //         log::add('Abeille', 'debug', '  Zigate '.$zgId.": Removing obsolete cmd '".$cmdJName."'");
-            //         $cmd->remove();
-            //     }
-            // }
 
             // Updating WIFI serial port (/dev/zigateX => constant wifiLink)
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
@@ -878,23 +845,14 @@
                 }
 
                 list($net, $addr) = explode("/", $eqLogic->getLogicalId());
-                // $dev = array(
-                //     'net' => $net,
-                //     'addr' => $addr,
-                //     'jsonId' => $eqModel['id'],
-                //     'jsonLocation' => 'Abeille',
-                //     'ieee' => $eqLogic->getConfiguration('IEEE'),
-                // );
-                // Abeille::createDevice("update", $dev);
-                $msg = array(
-                    'type' => 'updateFromModel',
+                $dev = array(
                     'net' => $net,
                     'addr' => $addr,
-                    'modelName' => $eqModel['id'],
-                    'modelSource' => 'Abeille',
-                    'ieee' => $eqLogic->getConfiguration('IEEE')
+                    'jsonId' => $eqModel['id'],
+                    'jsonLocation' => 'Abeille',
+                    'ieee' => $eqLogic->getConfiguration('IEEE'),
                 );
-                msgToMain($msg);
+                Abeille::createDevice("update", $dev);
                 log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Updating Jeedom equipment from model");
             }
 
@@ -1315,23 +1273,14 @@
         }
 
         list($net, $addr) = explode("/", $eqLogic->getLogicalId());
-        // $dev = array(
-        //     'net' => $net,
-        //     'addr' => $addr,
-        //     'jsonId' => $eqModelId,
-        //     'jsonLocation' => 'Abeille',
-        //     'ieee' => $eqLogic->getConfiguration('IEEE'),
-        // );
-        // Abeille::createDevice("update", $dev);
-        $msg = array(
-            'type' => 'updateFromModel',
+        $dev = array(
             'net' => $net,
             'addr' => $addr,
-            'modelName' => $eqModel['id'],
-            'modelSource' => 'Abeille',
-            'ieee' => $eqLogic->getConfiguration('IEEE')
+            'jsonId' => $eqModelId,
+            'jsonLocation' => 'Abeille',
+            'ieee' => $eqLogic->getConfiguration('IEEE'),
         );
-        msgToMain($msg);
+        Abeille::createDevice("update", $dev);
         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Updating Jeedom equipment from model");
     }
 

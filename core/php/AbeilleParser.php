@@ -40,6 +40,7 @@
     include_once __DIR__.'/AbeilleParser-Tuya.php'; // Tuya specific functions
     include_once __DIR__.'/AbeilleParser-Xiaomi.php'; // Xiaomi specific functions
     include_once __DIR__.'/AbeilleParser-Philips.php'; // Philips specific functions
+    require_once __DIR__.'/AbeilleModels.php'; // getModelsList()
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161

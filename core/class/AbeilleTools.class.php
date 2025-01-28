@@ -1,7 +1,7 @@
 <?php
     require_once __DIR__.'/../php/AbeilleLog.php';
     require_once __DIR__.'/../config/Abeille.config.php';
-    require_once __DIR__.'/../php/AbeilleModels.php'; // getModelsList()
+    // require_once __DIR__.'/../php/AbeilleModels.php'; // getModelsList()
 
     define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
     define('devicesLocalDir', __DIR__.'/../config/devices_local/'); // Unsupported/user devices
@@ -266,58 +266,58 @@
             return $cmd;
         }
 
-        // Attempt to find corresponding model based on given zigbee signature.
-        // Returns: associative array('modelSig', 'modelName, 'modelSource') or false
-        // OBSOLETE: Use identifyModel() from AbeilleModels.php lib
-        public static function findModel($zbModelId, $zbManufId) {
-            log::add('Abeille', 'debug', "  OBSOLETE findModel({$zbModelId}, {$zbManufId})");
+        // // Attempt to find corresponding model based on given zigbee signature.
+        // // Returns: associative array('modelSig', 'modelName, 'modelSource') or false
+        // // OBSOLETE: Use identifyModel() from AbeilleModels.php lib
+        // public static function findModel($zbModelId, $zbManufId) {
+        //     log::add('Abeille', 'debug', "  OBSOLETE findModel({$zbModelId}, {$zbManufId})");
 
-            $identifier1 = $zbModelId.'_'.$zbManufId;
-            $identifier2 = $zbModelId;
+        //     $identifier1 = $zbModelId.'_'.$zbManufId;
+        //     $identifier2 = $zbModelId;
 
-            // Search by <zbModelId>_<zbManufId>, starting from local models list
-            // $localModels = AbeilleTools::getDevicesList('local');
-            $localModels = getModelsList('local');
-            foreach ($localModels as $modelSig => $model) {
-                if ($modelSig == $identifier1) {
-                    $identifier = $identifier1;
-                    break;
-                }
-            }
-            if (!isset($identifier)) {
-                // Search by <zbModelId>_<zbManufId>, starting from offical models list
-                // $officialModels = AbeilleTools::getDevicesList('Abeille');
-                $officialModels = getModelsList('Abeille');
-                foreach ($officialModels as $modelSig => $model) {
-                    if ($modelSig == $identifier1) {
-                        $identifier = $identifier1;
-                        break;
-                    }
-                }
-            }
-            if (!isset($identifier)) {
-                // Search by <zbModelId> in local models
-                foreach ($localModels as $modelSig => $model) {
-                    if ($modelSig == $identifier2) {
-                        $identifier = $identifier2;
-                        break;
-                    }
-                }
-            }
-            if (!isset($identifier)) {
-                // Search by <zbModelId> in offical models
-                foreach ($officialModels as $modelSig => $model) {
-                    if ($modelSig == $identifier2) {
-                        $identifier = $identifier2;
-                        break;
-                    }
-                }
-            }
-            if (!isset($identifier))
-                return false; // No model found
+        //     // Search by <zbModelId>_<zbManufId>, starting from local models list
+        //     // $localModels = AbeilleTools::getDevicesList('local');
+        //     $localModels = getModelsList('local');
+        //     foreach ($localModels as $modelSig => $model) {
+        //         if ($modelSig == $identifier1) {
+        //             $identifier = $identifier1;
+        //             break;
+        //         }
+        //     }
+        //     if (!isset($identifier)) {
+        //         // Search by <zbModelId>_<zbManufId>, starting from offical models list
+        //         // $officialModels = AbeilleTools::getDevicesList('Abeille');
+        //         $officialModels = getModelsList('Abeille');
+        //         foreach ($officialModels as $modelSig => $model) {
+        //             if ($modelSig == $identifier1) {
+        //                 $identifier = $identifier1;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     if (!isset($identifier)) {
+        //         // Search by <zbModelId> in local models
+        //         foreach ($localModels as $modelSig => $model) {
+        //             if ($modelSig == $identifier2) {
+        //                 $identifier = $identifier2;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     if (!isset($identifier)) {
+        //         // Search by <zbModelId> in offical models
+        //         foreach ($officialModels as $modelSig => $model) {
+        //             if ($modelSig == $identifier2) {
+        //                 $identifier = $identifier2;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     if (!isset($identifier))
+        //         return false; // No model found
 
-            return $model;
-        }
+        //     return $model;
+        // }
 
         /**
          * return the config list from a file located in core/config directory

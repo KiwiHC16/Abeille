@@ -31,13 +31,13 @@
         else if ($src == "local")
             $rootDir = modelsLocalDir;
         else {
-            log::add('Abeille', 'error', "  getModelsList(): Emplacement JSON '".$src."' invalide");
+            logMessage('error', "  getModelsList(): Emplacement JSON '".$src."' invalide");
             return false;
         }
 
         $dh = opendir($rootDir);
         if ($dh === false) {
-            log::add('Abeille', 'error', '  getModelsList(): opendir('.$rootDir.')');
+            logMessage('error', '  getModelsList(): opendir('.$rootDir.')');
             return false;
         }
         while (($dirEntry = readdir($dh)) !== false) {
@@ -105,7 +105,7 @@
                             "alternateSigZ": {}
                         } */
                     foreach ($ai as $aId => $aIdVal) {
-                        log::add('Abeille', 'debug', "  getModelsList(): Alternate ID '".$aId."' for '".$dirEntry2."'");
+                        logMessage('debug', "  getModelsList(): Alternate ID '".$aId."' for '".$dirEntry2."'");
                         $devA = $dev; // modelName, modelSource & modelPath do not change
                         $devA['modelSig'] = $aId;
 
@@ -142,13 +142,13 @@
      * Return: device associative array WITHOUT top level key (modelSig) or false if error.
      */
     function getDeviceModel($src, $modelPath, $modelName, $modelSig='', $mode=0) {
-        log::add('Abeille', 'debug', "  getDeviceModel({$src}, '{$modelPath}', {$modelName}, {$modelSig}, mode={$mode})");
+        logMessage('debug', "  getDeviceModel({$src}, '{$modelPath}', {$modelName}, {$modelSig}, mode={$mode})");
 
         // $dbg = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-        // log::add('Abeille', 'debug', "BACKTRACE: ".json_encode($dbg, JSON_UNESCAPED_SLASHES));
+        // logMessage('debug', "BACKTRACE: ".json_encode($dbg, JSON_UNESCAPED_SLASHES));
 
         if ($modelPath == '') {
-            // log::add('Abeille', 'error', "  getDeviceModel(): 'modelPath' vide !");
+            // logMessage('error', "  getDeviceModel(): 'modelPath' vide !");
             // return false;
             $modelPath = "{$modelName}/{$modelName}.json";
         }
@@ -157,21 +157,21 @@
             $modelPathFull = modelsDir.$modelPath;
         else
             $modelPathFull = modelsLocalDir.$modelPath;
-        // log::add('Abeille', 'debug', '  modelPathFull='.$modelPathFull);
+        // logMessage('debug', '  modelPathFull='.$modelPathFull);
         if (!is_file($modelPathFull)) {
-            log::add('Abeille', 'error', "  getDeviceModel(): Modèle d'équipement '{$modelName}' inconnu.");
+            logMessage('error', "  getDeviceModel(): Modèle d'équipement '{$modelName}' inconnu.");
             return false;
         }
 
         $jsonContent = file_get_contents($modelPathFull);
         if ($jsonContent === false) {
-            log::add('Abeille', 'error', "  getDeviceModel(): Le modèle d'équipement '{$modelName}' est introuvable.");
+            logMessage('error', "  getDeviceModel(): Le modèle d'équipement '{$modelName}' est introuvable.");
             return false;
         }
         $device = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', "  Le modèle JSON '{$modelName}' est corrompu.");
-            log::add('Abeille', 'debug', '  getDeviceModel(): content='.$jsonContent);
+            logMessage('error', "  Le modèle JSON '{$modelName}' est corrompu.");
+            logMessage('debug', '  getDeviceModel(): content='.$jsonContent);
             return false;
         }
 
@@ -193,7 +193,7 @@
                 } */
             if (!isset($device['alternateIds'][$modelSig])) {
                 // Internal error
-                log::add('Abeille', 'error', "getDeviceModel(): Unexpected alternate sig '{$modelSig}'");
+                logMessage('error', "getDeviceModel(): Unexpected alternate sig '{$modelSig}'");
             } else {
                 $alt = $device['alternateIds'][$modelSig];
                 // manufacturer, model, type or icon overload
@@ -244,8 +244,8 @@
                         continue; // Cmd does not exist.
 
                     if (isset($cmd2['params'])) {
-                        // log::add('Abeille', 'debug', 'params='.json_encode($cmd2['params']));
-                        // log::add('Abeille', 'debug', 'newCmd BEFORE='.json_encode($newCmd));
+                        // logMessage('debug', 'params='.json_encode($cmd2['params']));
+                        // logMessage('debug', 'newCmd BEFORE='.json_encode($newCmd));
 
                         // Overwritting default settings with 'params' content
                         // TODO: This should be done on 'configuration/request' only ??
@@ -261,7 +261,7 @@
                         // Adding new (optional) parameters
                         if (isset($newCmd[$cmd1]['configuration']['request'])) {
                             $request = $newCmd[$cmd1]['configuration']['request'];
-                            // log::add('Abeille', 'debug', 'request BEFORE='.json_encode($request));
+                            // logMessage('debug', 'request BEFORE='.json_encode($request));
                             $requestArr = explode('&', $request); // ep=01&clustId=0000 => ep=01, clustId=0000
                             foreach ($paramsArr as $p) {
                                 list($pName, $pVal) = explode("=", $p);
@@ -277,10 +277,10 @@
                                     $request .= "&".$p; // Adding optional param
                             }
                             $newCmd[$cmd1]['configuration']['request'] = $request;
-                            // log::add('Abeille', 'debug', 'request AFTER='.json_encode($newCmd[$cmd1]['configuration']['request']));
+                            // logMessage('debug', 'request AFTER='.json_encode($newCmd[$cmd1]['configuration']['request']));
                         }
 
-                        // log::add('Abeille', 'debug', 'newCmd AFTER='.json_encode($newCmd));
+                        // logMessage('debug', 'newCmd AFTER='.json_encode($newCmd));
                     }
 
                     if (isset($cmd2['isVisible'])) {
@@ -378,7 +378,7 @@
                     //         break;
                     //     $len = strpos(substr($newCmdTxt, $start + 1), "#"); // Length
                     //     if ($len === false) {
-                    //         log::add('Abeille', 'error', "getDeviceModel(): No closing dash (#) for cmd '{$cmdJName}'");
+                    //         logMessage('error', "getDeviceModel(): No closing dash (#) for cmd '{$cmdJName}'");
                     //         break;
                     //     }
                     //     $len += 2;
@@ -398,7 +398,7 @@
                     // }
                     // $newCmd = json_decode($newCmdTxt, true);
 
-                    // log::add('Abeille', 'debug', 'getDeviceModel(): overloaded cmd='.json_encode($newCmd, JSON_UNESCAPED_SLASHES));
+                    // logMessage('debug', 'getDeviceModel(): overloaded cmd='.json_encode($newCmd, JSON_UNESCAPED_SLASHES));
                     $deviceCmds += $newCmd;
                 }
 
@@ -441,7 +441,7 @@
             }
         } // End isset($device['commands'])
 
-        // log::add('Abeille', 'debug', 'getDeviceModel end');
+        // logMessage('debug', 'getDeviceModel end');
         return $device;
     }
 
@@ -454,14 +454,14 @@
     function getCommandModel($eqModelName, $cmdFName, $newJCmdName = '') {
         $fullPath = cmdsDir.$cmdFName.'.json';
         if (!file_exists($fullPath)) {
-            log::add('Abeille', 'error', "Modèle '".$eqModelName."': Le fichier de commande '".$cmdFName.".json' n'existe pas.");
+            logMessage('error', "Modèle '".$eqModelName."': Le fichier de commande '".$cmdFName.".json' n'existe pas.");
             return false;
         }
 
         $jsonContent = file_get_contents($fullPath);
         $cmd = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', "Modèle '".$eqModelName."': Fichier de commande '".$cmdFName.".json' corrompu.");
+            logMessage('error', "Modèle '".$eqModelName."': Fichier de commande '".$cmdFName.".json' corrompu.");
             return false;
         }
 
@@ -492,7 +492,7 @@
             if (substr($key, 0, 7) != "comment")
                 continue;
 
-            // log::add('Abeille', 'debug', "REMOVING '{$key}' '{$val}'");
+            // logMessage('debug', "REMOVING '{$key}' '{$val}'");
             unset($tree[$key]);
         }
     }

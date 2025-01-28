@@ -4,6 +4,9 @@
         "model": "SNZB-04",
         "type": "Sonoff Door/Window Sensor",
         "genericType": "Opening",
+        "alternateIds": {
+            "SNZB-04": {}
+        },
         "timeout": "140",
         "configuration": {
             "mainEP": "01",
@@ -20,18 +23,6 @@
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
-            },
-            "Bind-0001-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0001",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 10
-            },
-            "SetReporting-0001-0021": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 7
             }
         },
         "comment": "https://community.jeedom.com/t/sonoff-snzb-04-sur-zigate-et-abeille/39336/4"

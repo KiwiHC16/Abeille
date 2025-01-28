@@ -146,13 +146,6 @@
                 "logicalId": "01-staticSensVal",
                 "nextLine": "after"
             },
-            "Minimum Detection Distance": {
-                "use": "inf_generic-NumericBadge",
-                "unit": "x",
-                "logicalId": "01-miniDetectionDistVal",
-                "nextLine": "after",
-                "isVisible": 1
-            },
             "Presence": {
                 "use": "inf_presence-Detection",
                 "isVisible": 1

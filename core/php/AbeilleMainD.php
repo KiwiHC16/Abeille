@@ -19,7 +19,7 @@
     include_once __DIR__.'/../class/AbeilleTools.class.php';
     // include_once __DIR__.'/AbeilleCmd.class.php';
     // include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
-    // include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()
+    include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()
 
     /**
      * RefreshCmd

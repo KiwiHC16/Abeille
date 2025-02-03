@@ -1,26 +1,9 @@
 # ChangeLog
 
-## 250203-BETA-2, ## 250203-BETA-1
-
--   Corrections: Regression AbeilleMainD + Abeille.class
--   Améliorations: Sonoff SNZB-04, modèle revu (2743).
-
-## 250128-BETA-2, ## 250128-BETA-1
-
--   Amélioration: Ajout info 'click' pour Legrand wireless switch (2736).
--   Amélioration: Outil 'check_json.php' pour commandes inexistantes.
--   Amélioration: Suppression cmds obsoletes 'presence.json' & 'presenceEP2.json'.
--   Amélioration: Support Tuya PIR+24G_radar+light ZG-204ZM (2741).
--   Amélioration: Outil 'check_json.php' pour subType 'slider'.
--   Amélioration: Script 'resources/scripts/checkZigate.sh'
--   Corrections: Regression au redémarrage démons (createDevice()).
--   Corrections: Interne.
-
-## 250115-BETA-2, ## 250115-BETA-1
-
 **Modèles d'équipement**
 
     - ATTENTION ! Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).
+    - ATTENTION ! Modèle DS01/SBZB-04 modifié. Revoir vos scenarios si besoin.
 
 **Zigates v2/+**
 
@@ -38,6 +21,24 @@
       - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
       - Les firmwares avant 3.1e sont forcement 'legacy'.
       - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+## 250203-BETA-2, ## 250203-BETA-1
+
+-   Corrections: Regression AbeilleMainD + Abeille.class
+-   Améliorations: Sonoff SNZB-04, modèle revu (2743).
+
+## 250128-BETA-2, ## 250128-BETA-1
+
+-   Amélioration: Ajout info 'click' pour Legrand wireless switch (2736).
+-   Amélioration: Outil 'check_json.php' pour commandes inexistantes.
+-   Amélioration: Suppression cmds obsoletes 'presence.json' & 'presenceEP2.json'.
+-   Amélioration: Support Tuya PIR+24G_radar+light ZG-204ZM (2741).
+-   Amélioration: Outil 'check_json.php' pour subType 'slider'.
+-   Amélioration: Script 'resources/scripts/checkZigate.sh'
+-   Corrections: Regression au redémarrage démons (createDevice()).
+-   Corrections: Interne.
+
+## 250115-BETA-2, ## 250115-BETA-1
 
 -   Amélioration: Interne: Démon principal isolé => 'AbeilleMainD'.
 -   Correction: Page de config: liste des FW crée dynamiquement en fonction du type de gateway.

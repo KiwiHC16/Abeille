@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 250203-BETA-2, ## 250203-BETA-1
+
 **Modèles d'équipement**
 
     - ATTENTION ! Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).
@@ -21,8 +23,6 @@
       - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
       - Les firmwares avant 3.1e sont forcement 'legacy'.
       - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
-
-## 250203-BETA-2, ## 250203-BETA-1
 
 -   Corrections: Regression AbeilleMainD + Abeille.class
 -   Améliorations: Sonoff SNZB-04, modèle revu (2743).

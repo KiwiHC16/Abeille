@@ -3,7 +3,8 @@
         "comment": "0500/IAS Zone cluster, cmd 00 (Zone status change notification) from SERVER",
         "type": "info",
         "subType": "numeric",
-        "configuration": [],
+        "configuration": {
+        },
         "logicalId": "#EP#-0500-cmd00"
     }
 }

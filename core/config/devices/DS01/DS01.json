@@ -17,12 +17,37 @@
             "security": "1"
         },
         "commands": {
+            "ZoneStatus-ChangeNotification": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "trigOut": {
+                    "01-doorStatus": {
+                        "valueOffset": "#value#&1"
+                    }
+                }
+            },
             "Status": {
-                "use": "etatSonoff"
+                "use": "inf_door-Status",
+                "isVisible": 1
             },
             "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent",
-                "isVisible": 1
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Bind-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0020": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0020&attrType=20&minInterval=3600&maxInterval=3600",
+                "comment": "Battery voltage reporting every hours",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=3600&maxInterval=3600",
+                "comment": "Battery percent reporting every hours",
+                "execAtCreation": "Yes"
             }
         },
         "comment": "https://community.jeedom.com/t/sonoff-snzb-04-sur-zigate-et-abeille/39336/4"

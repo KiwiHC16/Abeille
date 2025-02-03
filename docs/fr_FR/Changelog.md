@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 250203-BETA-1
+## 250203-BETA-2, ## 250203-BETA-1
 
 -   Corrections: Regression AbeilleMainD + Abeille.class
 -   Améliorations: Sonoff SNZB-04, modèle revu (2743).

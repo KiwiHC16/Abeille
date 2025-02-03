@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="250203-BETA-1"
+# VERSION="250203-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -248,7 +248,7 @@ ec72cab863572c39fb54ddd13dfea349 *core/config/commands/inf_zbCmdC-0008-StepWithO
 187f6f91a82426bb47a8a75b76e4f6ea *core/config/commands/inf_zbCmdC-0102-02Stop.json
 ea4620f097eb5bd56d166b23bbbf7b1b *core/config/commands/inf_zbCmdC-0501-Arm-String.json
 b4799c21f2192529396b77962dcbbde5 *core/config/commands/inf_zbCmdC-0501-Arm-Value.json
-8a565468b6779ae7a5566a11391d0c92 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ChangeNotification.json
+3dd36f82d8f8be4a1154a1b35912a633 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ChangeNotification.json
 3e99eaf761d47554bde5fd7f44936d84 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ZoneEnrollRequest.json
 05ec4445fd5f3a42d32f353bc33eb51c *core/config/commands/inf_zone-Alarm1.json
 8c24f9f574812ad0bf6c859af615059b *core/config/commands/multi.json
@@ -394,7 +394,7 @@ d3d02fa0315eb4a0884121f67c70b2e8 *core/config/devices/Connectedsocketoutlet_NIKO
 70a4a121f4fc0b637edc37c062826ff0 *core/config/devices/Contactor/Contactor.json
 21ebbeea85a7bed08fc34295fb68d3f3 *core/config/devices/Contactor/discovery.json
 20a3528205aeb2b7310e3c908c58a49f *core/config/devices/DIYRuZ_RT/DIYRuZ_RT.json
-f235ec37661e2361655dea4bb25ee1f8 *core/config/devices/DS01/DS01.json
+213429fe7a5db66d0c7dc44bf57b7bbc *core/config/devices/DS01/DS01.json
 3691e1a4a36977cef71d92b7878ef9a6 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/Dimmablelight_PaulmannLichtGmbH.json
 5cd4fdf8f485b585dc067954d4523f04 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/discovery.json
 6567e0e3b737bbd5eadde7b0c20e0ad2 *core/config/devices/Dimmer-Switch-ZB3.0_HZC/Dimmer-Switch-ZB3.0_HZC.json
@@ -1078,7 +1078,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-d00c89540b24f4493a171aae7131df5d *docs/fr_FR/Changelog.md
+b1e93f634709b08aaae082ad7e165ae0 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1431,11 +1431,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-6ba862a640d6978fe4df22bae7b2728b *plugin_info/Abeille.version
+6532ad2074b831731825560488c17539 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 0990c8a084d18ac633ea20e4a8556dd4 *plugin_info/configuration.php
-9fd443ebed6c92e2bb8b6598ea507012 *plugin_info/info.json
+a1bc699a4bacc4c15c7ddeb0307327fb *plugin_info/info.json
 a65e783f2bb184821923d20946e977a7 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

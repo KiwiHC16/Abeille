@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="250203-BETA-2"
+# VERSION="250203-BETA-3"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -152,7 +152,6 @@ e9a67daacf01a95811d414021a11d541 *core/config/commands/downGroup.json
 c397bb5a7935369dba599101cf13a56c *core/config/commands/etatDoorAlarme.json
 a621f4b6ea8e98b3bbc1e06a423e4765 *core/config/commands/etatIR_Alarme.json
 c0389a2ca87d39e6d19ae80280249310 *core/config/commands/etatSonOffIR.json
-1936d6f044d67de152c707563c1f4314 *core/config/commands/etatSonoff.json
 10af5d812ccdb99dc4d5b9253f3c8bb6 *core/config/commands/etatSwitchDouble_1.json
 7ff23ae01dbf7c46ee17128802b21fdf *core/config/commands/etatSwitchDouble_2.json
 de574fa13164820b3640095e30687804 *core/config/commands/etatSwitchDouble_3.json
@@ -1078,7 +1077,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-b1e93f634709b08aaae082ad7e165ae0 *docs/fr_FR/Changelog.md
+484df96e3c0ebb2d80ef584917cf9c8d *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1431,11 +1430,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-6532ad2074b831731825560488c17539 *plugin_info/Abeille.version
+dc8bf38a2dfc287955da97cc707a96da *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
-0990c8a084d18ac633ea20e4a8556dd4 *plugin_info/configuration.php
-a1bc699a4bacc4c15c7ddeb0307327fb *plugin_info/info.json
+0de7456b35f9700d3fb35cbfe9c8e363 *plugin_info/configuration.php
+94e522e1294d84ea275ad01099a32311 *plugin_info/info.json
 a65e783f2bb184821923d20946e977a7 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
@@ -1648,6 +1647,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/etatLi
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/etatSW1.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/etatSW2.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/etatSW3.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/etatSonoff.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/etatSwitch.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/etatSwitchKonke.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/etatSwitchLivolo.json

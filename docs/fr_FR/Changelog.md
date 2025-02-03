@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 250203-BETA-2, ## 250203-BETA-1
+## 250203-BETA-3, ## 250203-BETA-2, ## 250203-BETA-1
 
 **Modèles d'équipement**
 

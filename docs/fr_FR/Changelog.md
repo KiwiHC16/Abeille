@@ -1,6 +1,6 @@
 # ChangeLog
 
-- Correction: AbeilleMainD
+-   Corrections: Regression AbeilleMainD + Abeille.class
 
 ## 250128-BETA-2, ## 250128-BETA-1
 

@@ -2623,6 +2623,7 @@ class Abeille extends eqLogic {
        - To update from JSON (identical to re-inclusion) => action = 'update'
        - To force a different model than the one auto-detected => action = 'update'
      */
+    // WARNING: This CAN'T be moved in 'AbeilleMainD.php' as it is used by 'install.php'too
     public static function createDevice($action, $dev) {
         log::add('Abeille', 'debug', '  createDevice('.$action.', dev='.json_encode($dev, JSON_UNESCAPED_SLASHES));
 
@@ -3263,21 +3264,21 @@ class Abeille extends eqLogic {
         Abeille::msgToParser($msg);
     } // End createDevice()
 
-    // public static function msgToParser($msg) {
-    //     global $abQueues;
-    //     $queue = msg_get_queue($abQueues['xToParser']['id']);
-    //     $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-    //     msg_send($queue, 1, $msgJson, false, false);
-    //     log::add('Abeille', 'debug', "  Msg to Parser: ".$msgJson);
-    // }
+    public static function msgToParser($msg) {
+        global $abQueues;
+        $queue = msg_get_queue($abQueues['xToParser']['id']);
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+        msg_send($queue, 1, $msgJson, false, false);
+        log::add('Abeille', 'debug', "  Msg to Parser: ".$msgJson);
+    }
 
-    // public static function msgToCmd2($msg) {
-    //     global $abQueues;
-    //     $queue = msg_get_queue($abQueues['xToCmd']['id']);
-    //     $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-    //     msg_send($queue, 1, $msgJson, false, false);
-    //     log::add('Abeille', 'debug', "  Msg to Cmd: ".$msgJson);
-    // }
+    public static function msgToCmd2($msg) {
+        global $abQueues;
+        $queue = msg_get_queue($abQueues['xToCmd']['id']);
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+        msg_send($queue, 1, $msgJson, false, false);
+        log::add('Abeille', 'debug', "  Msg to Cmd: ".$msgJson);
+    }
 
     // /* Update all infos related to last communication time & LQI of given device.
     //    This is based on timestamp of last communication received from device itself. */

@@ -617,25 +617,34 @@
         if (!btSave.hasClass('ab::logLev')) { // Avoid multiple declaration of the event on the button
             btSave.addClass('ab::logLev');
             btSave.on('click', function() {
-                var level = $('input.configKey[data-l1key="log::level::Abeille"]:checked')
-                console.log('btSave click: level='+level.attr('data-l2key'));
-                if (level.length == 1) { // Found 1 log::level::Abeille input checked
-                    $.ajax({
-                        type: 'POST',
-                        url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
-                        data: {
-                            action: 'logLevelChanged',
-                            level: level.attr('data-l2key') // 100, 200, ...
-                        },
-                        dataType: 'json',
-                        global: false,
-                        // error: function (request, status, error) {
-                        //     bootbox.alert("ERREUR 'checkWifi' !<br>Votre installation semble corrompue.");
-                        // },
-                        success: function (json_res) {
-                        }
-                    });
-                }
+                // var level = $('input.configKey[data-l1key="log::level::Abeille"]:checked')
+                // console.log('btSave click: level='+level.attr('data-l2key'));
+                // if (level.length == 1) { // Found 1 log::level::Abeille input checked
+                //     $.ajax({
+                //         type: 'POST',
+                //         url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+                //         data: {
+                //             action: 'logLevelChanged',
+                //             level: level.attr('data-l2key') // 100, 200, ...
+                //         },
+                //         dataType: 'json',
+                //         global: false,
+                //         // error: function (request, status, error) {
+                //         //     bootbox.alert("ERREUR 'checkWifi' !<br>Votre installation semble corrompue.");
+                //         // },
+                //         success: function (json_res) {
+                //         }
+                //     });
+                // }
+
+                console.log("Restarting daemons");
+                $.ajax({
+                    type: 'POST',
+                    url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+                    data: {
+                        action: 'restartDaemons',
+                    }
+                });
             });
         };
     }
@@ -644,7 +653,7 @@
     abConfig.logSaveWrapper();
 
     // Catching button 'bt_startDeamon' event
-    // Purpose: TODO
+    // Purpose: To restart daemons automatically on config save but don't restart TWICE on 'bt_startDeamon' click.
     buttonStartDaemonEvent = 0;
     $('body').off('click', '.bt_startDeamon').on('click', '.bt_startDeamon', function() {
         console.log("bt_startDeamon event (saved=" + buttonStartDaemonEvent + ")");

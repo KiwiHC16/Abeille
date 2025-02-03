@@ -26,6 +26,7 @@
 
 -   Corrections: Regression AbeilleMainD + Abeille.class
 -   Améliorations: Sonoff SNZB-04, modèle revu (2743).
+-   Améliorations: Redémarrage des démons si niveau de log modifié (page de config).
 
 ## 250128-BETA-2, ## 250128-BETA-1
 

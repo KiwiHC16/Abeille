@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Sonoff SNZB-04 (DS01), modèle revu (2743).
+
 ## 250203-BETA-3, ## 250203-BETA-2, ## 250203-BETA-1
 
 **Modèles d'équipement**

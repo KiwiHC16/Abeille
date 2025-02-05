@@ -39,14 +39,14 @@
             },
             "SetReporting-0001-0020": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0001&attrId=0020&attrType=20&minInterval=3600&maxInterval=3600",
-                "comment": "Battery voltage reporting every hours",
+                "params": "clustId=0001&attrId=0020&attrType=20&minInterval=3000&maxInterval=3600",
+                "comment": "Battery voltage reporting every 50 to 60min",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0001-0021": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=3600&maxInterval=3600",
-                "comment": "Battery percent reporting every hours",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=3000&maxInterval=3600",
+                "comment": "Battery percent reporting every 50 to 60min",
                 "execAtCreation": "Yes"
             }
         },

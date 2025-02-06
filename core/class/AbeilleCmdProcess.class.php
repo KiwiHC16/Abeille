@@ -4100,7 +4100,9 @@
                     $data2 = $addrMode.$addr.$srcEp.$dstEp.$sqn.$status;
                     $data2 .= $imgOffset.$imgVers.$imgType.$manufCode.$dataSize.$data;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0502", $data2, $addr);
+                    // $this->addCmdToQueue2(PRIO_LOW, $dest, "0502", $data2, $addr, $addrMode);
+                    // ACK mode does not work. SQN sent back is 00 but ACK/8011 is sent with SQN!=0
+                    $this->addCmdToQueue2(PRIO_LOW, $dest, "0502", $data2, $addr);
 
                     if ($imgOffset == "00000000") {
                         $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
@@ -4108,7 +4110,7 @@
                         message::add("Abeille", $eqHName.": Mise-à-jour du firmware démarrée", "");
                     }
                     return;
-                }
+                } // End 'otaImageBlockResponse'
 
                 // ZCL cluster 0019 specific: Inform device to apply new image
                 else if ($cmdName == 'otaUpgradeEndResponse') {

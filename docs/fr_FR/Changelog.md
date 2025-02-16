@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 250216-BETA-1
+## 250216-STABLE-1, ## 250216-BETA-1
 
 **Modèles d'équipement**
 

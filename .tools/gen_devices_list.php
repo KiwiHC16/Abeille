@@ -116,11 +116,11 @@
     foreach ($devList as $jsonId => $dev) {
 
         $eqList[] = array(
-            'manufacturer' => $dev["manufacturer"],
-            'model' => $dev["model"],
-            'type' => $dev["type"],
+            'manufacturer' => isset($dev["manufacturer"]) ? $dev["manufacturer"] : '',
+            'model' => isset($dev["model"]) ? $dev["model"] : '',
+            'type' => isset($dev["type"]) ? $dev["type"] : '',
             'jsonId' => $jsonId,
-            'icon' => $dev["icon"]
+            'icon' => isset($dev["icon"]) ? $dev["icon"] : ''
         );
 
         // Collect all information related to Command used by the products

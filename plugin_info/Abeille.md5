@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="250203-BETA-3"
+# VERSION="250216-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -39,7 +39,7 @@ c697264a367aa536ef60425b7fcf88ea *core/ajax/AbeilleZigate.ajax.php
 5bab1e930b6a9f31b83bde830a1e5e75 *core/class/Abeille.class.php
 e88212be7bd371088e2f26157812a374 *core/class/AbeilleCmd.class.php
 2654211b5cb37ba38137ee93b257b888 *core/class/AbeilleCmdPrepare.class.php
-7951a19ff41559e9e1befd0ce7dedb89 *core/class/AbeilleCmdProcess.class.php
+c812867f51076c31e20f12386b22f4c2 *core/class/AbeilleCmdProcess.class.php
 59f9167baf04bb600b27944b24c1e617 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 f74aa7ed21eae1eeda967157b954dfbb *core/class/AbeilleParser.class.php
@@ -393,7 +393,7 @@ d3d02fa0315eb4a0884121f67c70b2e8 *core/config/devices/Connectedsocketoutlet_NIKO
 70a4a121f4fc0b637edc37c062826ff0 *core/config/devices/Contactor/Contactor.json
 21ebbeea85a7bed08fc34295fb68d3f3 *core/config/devices/Contactor/discovery.json
 20a3528205aeb2b7310e3c908c58a49f *core/config/devices/DIYRuZ_RT/DIYRuZ_RT.json
-213429fe7a5db66d0c7dc44bf57b7bbc *core/config/devices/DS01/DS01.json
+e784462124bb6454df6aad5813b8a630 *core/config/devices/DS01/DS01.json
 3691e1a4a36977cef71d92b7878ef9a6 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/Dimmablelight_PaulmannLichtGmbH.json
 5cd4fdf8f485b585dc067954d4523f04 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/discovery.json
 6567e0e3b737bbd5eadde7b0c20e0ad2 *core/config/devices/Dimmer-Switch-ZB3.0_HZC/Dimmer-Switch-ZB3.0_HZC.json
@@ -1077,7 +1077,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-484df96e3c0ebb2d80ef584917cf9c8d *docs/fr_FR/Changelog.md
+af4a2ee5bd7a5b658d3fc84c4a9158a0 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1430,11 +1430,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-dc8bf38a2dfc287955da97cc707a96da *plugin_info/Abeille.version
+f0aa189b92f9f0db6d7d61b15415a880 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 0de7456b35f9700d3fb35cbfe9c8e363 *plugin_info/configuration.php
-94e522e1294d84ea275ad01099a32311 *plugin_info/info.json
+50b64e0ff4d455b7d0aa0a19f35ea4a4 *plugin_info/info.json
 a65e783f2bb184821923d20946e977a7 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

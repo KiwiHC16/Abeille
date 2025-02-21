@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Ajout support SonOff SNZB-02P (2748)
+
 ## 250216-BETA-1
 
 **Modèles d'équipement**

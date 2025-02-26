@@ -330,13 +330,13 @@
         return 0;
     }
 
-    function updateLockFile($m) {
+    function updateLockFile($msg) {
         global $lockFile;
-        $lockStatus = file_put_contents($lockFile, $m);
+        $lockStatus = @file_put_contents($lockFile, $msg);
         if ($lockStatus === false) {
             echo "ERROR: Can't write lock file";
             logMessage("", "Unable to write lock file.");
-            unlink($lockFile);
+            @unlink($lockFile);
             exit;
         }
     }

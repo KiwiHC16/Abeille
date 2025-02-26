@@ -7,6 +7,7 @@
         "category": {
             "heating": "1"
         },
+        "timeout": 60,
         "configuration": {
             "icon": "Sonoff-TempHumidity-2",
             "mainEP": "01",
@@ -19,7 +20,8 @@
             },
             "SetReporting 01-0001-00021": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=3000&maxInterval=3300",
+                "comment": "Reporting every 55mins",
                 "execAtCreation": "yes"
             },
             "Bind 01-0001-ToZigate": {
@@ -32,9 +34,19 @@
                 "isVisible": 1,
                 "isHistorized": 1
             },
+            "Bind 01-0402-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0402",
+                "execAtCreation": "yes"
+            },
             "Humidity": {
                 "use": "inf_zbAttr-0405-MeasuredValue",
                 "isVisible": 1
+            },
+            "Bind 01-0405-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0405",
+                "execAtCreation": "yes"
             }
         }
     }

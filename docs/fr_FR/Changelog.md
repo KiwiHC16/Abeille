@@ -1,6 +1,9 @@
 # ChangeLog
 
 -   Améliorations: Ajout support SonOff SNZB-02P (2748)
+-   Améliorations: Affichage onglet 'avancé'.
+-   Corrections: Suppression 'adresse groupe' onglet avancé => 'variables'
+-   Corrections: Affichage des groupes Zigbee.
 
 ## 250216-BETA-1
 

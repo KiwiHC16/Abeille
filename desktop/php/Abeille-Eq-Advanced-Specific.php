@@ -10,12 +10,12 @@
 
         <label>{{Télécommande}}</label></br>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label class="col-sm-3 control-label">{{Adresse groupe}}</label>
             <div class="col-sm-9">
                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
             </div>
-        </div>
+        </div> -->
 
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Durée (s)}}</label>

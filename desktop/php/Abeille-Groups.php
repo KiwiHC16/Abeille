@@ -47,6 +47,8 @@
 
 			$groups = $zigbee['groups'];
 			foreach ($groups as $epId => $grps) {
+				if ($epId == "")
+					continue; // Skipping unexpected case
 				echo '<tr><td>'.$dis1.$eqHName.$dis2.'</td>';
 				echo '<td >'.$epId.'</td>';
 				echo '<td >';

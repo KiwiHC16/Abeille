@@ -24,14 +24,6 @@ RefreshData
     Supprimer ce support ? Voir #2580 => ERROR bind0030
     En lien avec le point suivant (updateField)
 
-Cluster 0004
-    La cmde 'addGroup' devrait sauver le groupe qq part => ab::groups ?
-    ab::groups={'01': '1001', '02': '2002'}
-
-    Notes pour les remotes:
-    - qq devices sont configurés en 'bindToGroup' (ex: trafrionoff)
-    - d'autres envoient vers adr de groupe et bind pas necessaire
-
 Lorsqu'un equipement quitte le réseau
     il doit etre désactivé
     plus aucun envoi ne doit lui etre fait

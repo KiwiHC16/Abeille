@@ -92,10 +92,10 @@ function refreshEqInfos() {
             document.getElementById("idEqAddr").value = curEq.addr;
             document.getElementById("idZgType").value = curEq.zgType;
 
-            // document.getElementById("idZbModel").value = curEq.zbModel;
-            document.getElementById("idZbModel").value = curEq.zigbee.modelId;
-            // document.getElementById("idZbManuf").value = curEq.zbManuf;
-            document.getElementById("idZbManuf").value = curEq.zigbee.manufId;
+            if (typeof curEq.zigbee.modelId != "undefined")
+                document.getElementById("idZbModel").value = curEq.zigbee.modelId;
+            if (typeof curEq.zigbee.manufId != "undefined")
+                document.getElementById("idZbManuf").value = curEq.zigbee.manufId;
 
             document.getElementById("idModelSig").value = curEq.model.modelSig;
             document.getElementById("idModelName").value =
@@ -139,7 +139,8 @@ function refreshEqInfos() {
                 document.getElementById("idVariables").innerHTML = h;
             }
 
-            switch (curEq.zigbee.logicalType) {
+            if (typeof curEq.zigbee.logicalType != "undefined") {
+                switch (curEq.zigbee.logicalType) {
                 case 0x00:
                     logicalType = "{{Coordinateur}}";
                     break;
@@ -152,19 +153,22 @@ function refreshEqInfos() {
                 default:
                     logicalType = curEq.zigbee.logicalType + "/?";
                     break;
-            }
+                }
+            } else
+                logicalType = "";
             document.getElementById("idZbLogicalType").value = logicalType;
-            mc = parseInt(curEq.zigbee.macCapa, 16);
-            document.getElementById("idMacCapa").value = mc
-                .toString(16)
-                .toUpperCase();
-            console.log("maccap=", mc);
-            if ((mc >> 3) & 1) $("#idZbRxOnWhenIdle").show();
-            else $("#idZbRxOnWhenIdle").hide();
-            // rxOnWhenIdle = curEq.zigbee.rxOnWhenIdle;
-            // document.getElementById("idZbRxOnWhenIdle").value = rxOnWhenIdle
-            //     ? "{{Oui}}"
-            //     : "{{Non}}";
+
+            if (typeof curEq.zigbee.macCapa != "undefined") {
+                mc = parseInt(curEq.zigbee.macCapa, 16);
+                document.getElementById("idMacCapa").value = mc
+                    .toString(16)
+                    .toUpperCase();
+
+                console.log("maccap=", mc);
+                if ((mc >> 3) & 1) $("#idZbRxOnWhenIdle").show();
+                else $("#idZbRxOnWhenIdle").hide();
+            }
+
             if (typeof curEq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
                     curEq.zigbee.manufCode;

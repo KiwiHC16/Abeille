@@ -27,7 +27,7 @@
     <label class="col-sm-3 control-label">MAC capabilities</label>
     <div class="col-sm-5">
         <input id="idMacCapa" type="text" readonly title="{{Node descriptor/MAC capabilities}}" value="">
-        <input id="idZbRxOnWhenIdle" type="text" readonly title="{{'Oui' si l'équipement est toujours en écoute}}" value="{{Toujours en écoute}}" />
+        <input id="idZbRxOnWhenIdle" type="text" readonly title="{{Indique si l'équipement est toujours en écoute}}" value="" />
     </div>
 </div>
 

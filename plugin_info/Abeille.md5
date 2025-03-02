@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="250216-BETA-1"
+# VERSION="250302-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -561,6 +561,7 @@ a348a8cc39563268011312608bbe437f *core/config/devices/SMSZB-120_frientAS/SMSZB-1
 b4cf34a49f4977b2af2a167c91750669 *core/config/devices/SNZB-01P_eWeLink/discovery-SNZB-01P_eWeLink.json
 b5d3a2bee0d3d11a471ac65e87c3fadc *core/config/devices/SNZB-02D_SONOFF/SNZB-02D_SONOFF.json
 6638da47cac1a93c227c8dabcc1ed433 *core/config/devices/SNZB-02D_SONOFF/discovery-SNZB-02D_SONOFF.json
+870478d6bb9bddcffdd14f21c27ecf88 *core/config/devices/SNZB-02P_eWeLink/SNZB-02P_eWeLink.json
 bbfc4ee5f7896335488fca0348b42f5b *core/config/devices/SNZB-06P_SONOFF/SNZB-06P_SONOFF.json
 4a7b445403d8b084f479f69ba85928aa *core/config/devices/SNZB-06P_SONOFF/discovery-SNZB-06P_SONOFF.json
 4fe7bd0912f54fc0f64ecc484a2f7790 *core/config/devices/SOCKETOUTLET1_SchneiderElectric/SOCKETOUTLET1_SchneiderElectric.json
@@ -983,7 +984,7 @@ f3118f21775220151c7e67b5b9d4a923 *core/php/AbeilleCmd.php
 e19dfc28fe5aab5966a0dcca176381ff *core/php/AbeilleGetEq.php
 da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
 cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
-65b8249c3455a7236abf9ee77c28b3e9 *core/php/AbeilleLQI.php
+2ace86f371f56d43f7272b03c13d4e84 *core/php/AbeilleLQI.php
 f3b9942d631562c48bb607c8a437f446 *core/php/AbeilleLog.php
 8d644bee916d82ccf6ac5f3ac261bcb6 *core/php/AbeilleMainD.php
 146ec27060d915a6f54d097f41962780 *core/php/AbeilleModels.php
@@ -1032,7 +1033,7 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 56ed2d6a626cf57f866bfdd1012a84a1 *core/scripts/switchBranch.sh
 71c43beb0fdcc6ec41532ea1443f4504 *core/scripts/updateZigate.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
-cfdf964f0cd1c144830d358c068df207 *desktop/js/Abeille.js
+2144e3b0c06e1e87d52f34be0c08dea7 *desktop/js/Abeille.js
 0b3789b65c5d1687d7dbd6769eb599b6 *desktop/js/AbeilleNetwork.js
 d0d1ca56ff2c7b9b33e3f9e1b392e3ba *desktop/modal/Abeille-OTA.modal.php
 65de456a79b820dd9307d1d50d21137d *desktop/modal/AbeilleCompatibility.modal.php
@@ -1049,15 +1050,15 @@ d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 41c414cacd161f892c9748152464a965 *desktop/modal/updateConfig.abeille.php
 f5892c354649bcd7a795bd8733deb3d9 *desktop/php/Abeille-Bees.php
 fd1b207c4ad744e872558c8e833c69cf *desktop/php/Abeille-Eq-Advanced-Common.php
-e6e50e56bd449bb71f3b6d8195c74450 *desktop/php/Abeille-Eq-Advanced-Device.php
+36252a2048f597b01652d92035e89505 *desktop/php/Abeille-Eq-Advanced-Device.php
 5e577db0f06c92026bd43d41542ed5b2 *desktop/php/Abeille-Eq-Advanced-Interrogations.php
-85e3b76216180daa197ba3173d2bc569 *desktop/php/Abeille-Eq-Advanced-Specific.php
+e159e231448191c6d7a92bd4f04a295c *desktop/php/Abeille-Eq-Advanced-Specific.php
 d0483934512311be9e507c3d9e675b64 *desktop/php/Abeille-Eq-Advanced-Zigate.php
 8f1defffb69c61242db008e5b0145452 *desktop/php/Abeille-Eq-Advanced.php
 bb4f1f9ed4a7865cf3f52f24d9d14186 *desktop/php/Abeille-Eq-Cmds.php
 500b2b9ba3705b4340764e7f79017d0b *desktop/php/Abeille-Eq-Main.php
 532a46ec694d8f0f0bf647162a9f7ae3 *desktop/php/Abeille-Eq.php
-6617143a5f1ec2ff6fb23a7c91fb5dca *desktop/php/Abeille-Groups.php
+f5fc03f691f2d1fd87932a9e2f119ff2 *desktop/php/Abeille-Groups.php
 38c8210d7ebb2be6a53d107718f9c24f *desktop/php/Abeille-MigrateEq.php
 65f78b170af42e37721c2aa19e02ae94 *desktop/php/Abeille-NewZigate.php
 5c5946238d9f28f78cee684346d00180 *desktop/php/Abeille-ReplaceEq.php
@@ -1070,6 +1071,7 @@ aad6673d681fc63db9ceabfa124d6b8a *desktop/php/AbeilleEqAssist.php
 25c62538c9d1dff6a31ae1b9cbb0e2a3 *desktop/php/AbeilleMaintenance-Logs.php
 011a9b628fe7c72f13f838895f990577 *desktop/php/AbeilleMaintenance.php
 16a392808867f383dc1ba6636e180f42 *desktop/php/AbeilleNetworkMap.php
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/dealing_with_groups.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/ezsp_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_cmd_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_config_db.txt
@@ -1077,7 +1079,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-af4a2ee5bd7a5b658d3fc84c4a9158a0 *docs/fr_FR/Changelog.md
+49ac4338d9c1830f59583e0bc1e8c621 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1286,6 +1288,7 @@ c96fc06840975eee3783acb90901d321 *images/node_Sonoff-S26R2ZB.png
 a60015fc47af1ce4f464ff2efc298291 *images/node_Sonoff-SNZB-02.png
 5e978fed76b82c06bfbd586e8d722e49 *images/node_Sonoff-SNZB-03.png
 7ce6af02369d8bb7dcbbf07793ad1f53 *images/node_Sonoff-SNZB-04.png
+a1c0224fb8b9350aef1290f479b21895 *images/node_Sonoff-TempHumidity-2.png
 5f66e7dd7452ccea07bc97abd0fccb43 *images/node_Sonoff-TempHumidityDisplay.png
 57fc03094cea92807d09ed9073d28721 *images/node_Sonoff-ZBMiniL.png
 244fd90702045fffbddcbd98f2d266ad *images/node_Sonoff-ZBMiniL2.png
@@ -1430,11 +1433,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-f0aa189b92f9f0db6d7d61b15415a880 *plugin_info/Abeille.version
+1ae2b21b6b12b9db7e72247116e28d21 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 0de7456b35f9700d3fb35cbfe9c8e363 *plugin_info/configuration.php
-50b64e0ff4d455b7d0aa0a19f35ea4a4 *plugin_info/info.json
+ba13b2160fb3e8214d26da9f34c6d5cb *plugin_info/info.json
 a65e783f2bb184821923d20946e977a7 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

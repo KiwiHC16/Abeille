@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 250302-BETA-1
+
 -   Améliorations: Ajout support SonOff SNZB-02P (2748)
 -   Améliorations: Affichage onglet 'avancé'.
 -   Corrections: Suppression 'adresse groupe' onglet avancé => 'variables'

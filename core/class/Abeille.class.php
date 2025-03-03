@@ -824,7 +824,7 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'deamon_stop(): Ended');
     }
 
-    // Tcharp38: Removed. During Git update, auto-restart is disabled thru config/deamonAutoMode
+    // Tcharp38: Moved to 'Abeille.ajax.php'. During Git update, auto-restart is disabled thru config/deamonAutoMode
     // /* Temporary stop daemons and prevent auto-restart from Jeedom */
     // public static function pauseDaemons($start) {
     //     $smId = shmop_open(12, "c", 0644, 50);

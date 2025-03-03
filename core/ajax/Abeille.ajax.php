@@ -312,10 +312,10 @@
             ajax::success();
         }
 
-        /* Devloper mode: Switch GIT branch */
+        /* Devloper mode: Switch/update GIT branch */
         if (init('action') == 'switchBranch') {
             $branch = init('branch');
-            $updateOnly = init('updateOnly'); // TODO: No longer required
+            // $updateOnly = init('updateOnly'); // TODO: No longer required
 
             logSetConf('AbeilleConfig.log', true);
 

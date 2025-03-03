@@ -205,9 +205,9 @@
         into several messages to Abeille. */
     function msgToAbeille2($msg) {
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
-        global $queueXToAbeille;
+        global $queueXToMain;
         // Note: '@' to suppress PHP warning message.
-        if (@msg_send($queueXToAbeille, 1, $msgJson, false, false, $errCode) == false) {
+        if (@msg_send($queueXToMain, 1, $msgJson, false, false, $errCode) == false) {
             parserLog("debug", "msgToAbeille2() ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
@@ -479,7 +479,7 @@
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
     if ($daemons["parser"] > 1) {
-        logMessage('error', "Le démon 'AbeilleParser' est déja lancé !");
+        logMessage('error', "<<< Le démon 'AbeilleParser' est déja lancé !");
         exit(3);
     }
 
@@ -491,11 +491,16 @@
     }
 
     // Inits
-    $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+    $queueXToMain = msg_get_queue($abQueues["xToAbeille"]["id"]);
     $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
     $queueParserToCmdAck = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
     $queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);
     $queueParserToRoutes  = msg_get_queue($abQueues["parserToRoutes"]["id"]);
+    if (($queueXToMain === false) || ($queueXToCmd === false) || ($queueParserToCmdAck === false)) {
+        // TODO: Why sometimes issues at queue creation ? Visible during GIT update.
+        logMessage('error', "<<< Erreur de création de queue => Arret AbeilleParser");
+        exit(4);
+    }
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */

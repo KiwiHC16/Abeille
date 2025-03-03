@@ -208,6 +208,17 @@
         $saveEqZigbee = false;
         $saveEq = false;
 
+        // zigbee['groups'] cleanup (removing invalid end point)
+        if (!$error && isset($zigbee['groups'])) {
+            foreach ($zigbee['groups'] as $epId2 => $grp2) {
+                if (($epId2 == '') || ($epId2 == '00')) {
+                    logMessage('debug', "  Removing zigbee['groups'][${epId2}]");
+                    unset($zigbee['groups'][$epId2]); // Removing unexpected content
+                    $saveEqZigbee = true;
+                }
+            }
+        }
+
         // Zigbee main signature correct ?
         // Should reflect the signature of the first EP supporting cluster 0000
         if (!$error) {

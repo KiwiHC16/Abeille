@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: 'Repair' nettoie les EP invalides de la partie 'zigbee[groups]'.
+
 ## 250302-BETA-1
 
 -   Améliorations: Ajout support SonOff SNZB-02P (2748)

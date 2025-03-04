@@ -1,0 +1,86 @@
+{
+    "SP240_innr": {
+        "manufacturer": "Innr",
+        "model": "SP240",
+        "type": "Innr smart plug with monitoring",
+        "genericType": "Outlet",
+        "category": {
+            "energy": "1"
+        },
+        "configuration": {
+            "icon": "Innr-SmartPlug",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "yes"
+            },
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "div=100",
+                "unit": "KWh",
+                "isVisible": "1"
+            },
+            "RMS Current": {
+                "use": "inf_zbAttr-0B04-RMSCurrent",
+                "params": "mult=1&div=1",
+                "isVisible": "1"
+            },
+            "Active Power": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": "1"
+            },
+            "Bind 0B04-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0B04",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B04-RMSCurrent": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrType=21&attrId=0508&changeVal=0.05",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B04-ActivePower": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrType=29&attrId=050B&changeVal=5",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

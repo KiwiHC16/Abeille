@@ -937,11 +937,11 @@
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
                     cmds["Battery-Percent"] = newCmd("inf_zbAttr-0001-BatteryPercent", "ep="+epId);
-                    cmds["SetReporting "+epId+"-0001-00021"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrType=20&attrId=0021&minInterval=3600&maxInterval=3600", "yes");
+                    cmds["SetReporting "+epId+"-0001-00021"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrId=0021&attrType=20&minInterval=3600&maxInterval=3600", "yes");
                 } else if (isset(attributes['0020'])) {
                     cmds["Battery-Volt"] = newCmd("inf_zbAttr-0001-BatteryVolt", "ep="+epId);
                     // cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3", "ep="+epId);
-                    cmds["SetReporting "+epId+"-0001-00020"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrType=20&attrId=0020&minInterval=3600&maxInterval=3600", "yes");
+                    cmds["SetReporting "+epId+"-0001-00020"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrId=0020&attrType=20&minInterval=3600&maxInterval=3600", "yes");
                 }
                 cmds["Bind "+epId+"-0001-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0001", "yes");
             }
@@ -988,7 +988,7 @@
                     cmds["Status"+clustIdx]["nextLine"] = "after";
                     // Adding bind + configureReporting but assuming supported
                     cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
-                    cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000", "yes");
+                    cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrId=0000&attrType=10", "yes");
                 }
             }
             onOffIdx++;
@@ -1355,10 +1355,10 @@
                 }
                 cmds["Bind 0B04-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0B04", "yes");
                 if (isset(attributes['0508'])) { // RMS Current
-                    cmds["SetReporting 0B04-RMSCurrent"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrType=21&attrId=0508", "yes");
+                    cmds["SetReporting 0B04-RMSCurrent"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrId=0508&attrType=21", "yes");
                 }
                 if (isset(attributes['050B'])) { // Active power
-                    cmds["SetReporting 0B04-ActivePower"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrType=29&attrId=050B", "yes");
+                    cmds["SetReporting 0B04-ActivePower"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrId=050B&attrType=29&changeVal=5", "yes");
                 }
             }
 

@@ -1,6 +1,8 @@
 # ChangeLog
 
 -   Améliorations: 'Repair' nettoie les EP invalides de la partie 'zigbee[groups]'.
+-   Améliorations: Assistant modèle.
+-   Améliorations: Support INNR SP240 (2750).
 
 ## 250302-BETA-1
 

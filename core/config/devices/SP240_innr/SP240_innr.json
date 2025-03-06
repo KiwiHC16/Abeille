@@ -56,6 +56,11 @@
                 "unit": "KWh",
                 "isVisible": "1"
             },
+            "SetReporting Total power": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0702&attrId=0000&attrType=25",
+                "execAtCreation": "yes"
+            },
             "RMS Current": {
                 "use": "inf_zbAttr-0B04-RMSCurrent",
                 "params": "mult=1&div=1",

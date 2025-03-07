@@ -18,9 +18,9 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
-            "SetReporting 01-0001-00021": {
+            "SetReporting 01-0001-0021": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=3000&maxInterval=3300",
+                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=3000&maxInterval=3300",
                 "comment": "Reporting every 55mins",
                 "execAtCreation": "yes"
             },
@@ -39,6 +39,12 @@
                 "params": "ep=01&clustId=0402",
                 "execAtCreation": "yes"
             },
+            "SetReporting 01-0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0402&attrId=0000&attrType=29&minInterval=540&maxInterval=600",
+                "comment": "Reporting every 9 to 10mins",
+                "execAtCreation": "yes"
+            },
             "Humidity": {
                 "use": "inf_zbAttr-0405-MeasuredValue",
                 "isVisible": 1
@@ -46,6 +52,12 @@
             "Bind 01-0405-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0405",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0405-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0405&attrId=0000&attrType=21&minInterval=540&maxInterval=600",
+                "comment": "Reporting every 9 to 10mins",
                 "execAtCreation": "yes"
             }
         }

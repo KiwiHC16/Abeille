@@ -56,10 +56,20 @@
                 "unit": "KWh",
                 "isVisible": "1"
             },
+            "Bind 0702-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0702",
+                "execAtCreation": "yes"
+            },
             "SetReporting Total power": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0702&attrId=0000&attrType=25",
+                "params": "clustId=0702&attrId=0000&attrType=25&minInterval=600&maxInterval=600",
                 "execAtCreation": "yes"
+            },
+            "RMS Voltage": {
+                "use": "inf_zbAttr-0B04-RMSVoltage",
+                "params": "mult=1&div=1",
+                "isVisible": "1"
             },
             "RMS Current": {
                 "use": "inf_zbAttr-0B04-RMSCurrent",
@@ -74,6 +84,11 @@
             "Bind 0B04-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0B04",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B04-RMSVoltage": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=60&maxInterval=600",
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-RMSCurrent": {

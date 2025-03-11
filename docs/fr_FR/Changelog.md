@@ -4,6 +4,7 @@
 -   Améliorations: Assistant modèle.
 -   Améliorations: Support INNR SP240 (2750).
 -   Améliorations: Modèle SonOff SNZB-02P revu pour réduire le reporting (2748).
+-   Améliorations: Support INNR outdoor smartplug OSP210 (2752).
 
 ## 250302-BETA-1
 

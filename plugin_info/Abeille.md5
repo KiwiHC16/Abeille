@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="250302-BETA-1"
+# VERSION="250311-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -29,14 +29,14 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/update_version.sh
 4e4163047fd9cd95464fe125063b8d2d *LICENSE.md
 706d55e28480d0074ea06e660b9b0e2c *README.md
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *TODO.txt
-455e5ec0a8fb67d0306e23894db3406f *core/ajax/Abeille.ajax.php
+fd905db2bcd348ca4a5cf43faa0d6b82 *core/ajax/Abeille.ajax.php
 bf56647042e6215c1b74eea942e22ac4 *core/ajax/AbeilleDbg.ajax.php
 b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 1a6fe273ce4ef9f9c81a030e93b994a7 *core/ajax/AbeilleFiles.ajax.php
 925883ec8140b98f8144a29c13348615 *core/ajax/AbeilleModelChange.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 c697264a367aa536ef60425b7fcf88ea *core/ajax/AbeilleZigate.ajax.php
-5bab1e930b6a9f31b83bde830a1e5e75 *core/class/Abeille.class.php
+ad342083879d16bd7d31779c9be8e131 *core/class/Abeille.class.php
 e88212be7bd371088e2f26157812a374 *core/class/AbeilleCmd.class.php
 2654211b5cb37ba38137ee93b257b888 *core/class/AbeilleCmdPrepare.class.php
 c812867f51076c31e20f12386b22f4c2 *core/class/AbeilleCmdProcess.class.php
@@ -230,7 +230,7 @@ cb4ff75728c27529db4645acd9146816 *core/config/commands/inf_zbAttr-0702-Multiplie
 0f91377e765426fb5024048872a9e2ea *core/config/commands/inf_zbAttr-0702-SummationFormatting.json
 a0b8c82f1d944b738c450775e400ef0e *core/config/commands/inf_zbAttr-0702-UnitOfMeasure.json
 1ba1b2bbdfc2ee562012874bb3fd542e *core/config/commands/inf_zbAttr-0B04-ActivePower.json
-229b2de0d48b995e3d0b2d37da05bf08 *core/config/commands/inf_zbAttr-0B04-RMSCurrent.json
+95c22953dd03eef7ae9745432261477f *core/config/commands/inf_zbAttr-0B04-RMSCurrent.json
 75fd25b946fd24e50e5c7b44b501b13e *core/config/commands/inf_zbAttr-0B04-RMSVoltage.json
 461ca9d65e9e4221f5990d5621914d3f *core/config/commands/inf_zbCmd-Generic.json
 3482a215d8d0ac7983373fdfe7975cfd *core/config/commands/inf_zbCmdC-0005-Ikea07.json
@@ -506,6 +506,8 @@ dadafccafd3fb1d01e5f4c7df5ce7741 *core/config/devices/Micromoduleswitch/Micromod
 956e9454e80aa20920c47e3d61de2146 *core/config/devices/MotionSensor-A/MotionSensor-A.json
 fbb7f01aabbfa0871b9f5f7bd56a4c86 *core/config/devices/NLIS-Doublelightswitch_Legrand/NLIS-Doublelightswitch_Legrand.json
 6eab75a9d65b5bf5bb8aaa34bb79c6fc *core/config/devices/NLIS-Doublelightswitch_Legrand/discovery.json
+7a12e3ae338f4727190fe89348953e1f *core/config/devices/OSP210_innr/OSP210_innr.json
+0ab02c35c24ce9942ff5183ddd00cb64 *core/config/devices/OSP210_innr/discovery.json
 12580f78a5f683cbc3a09a0e04c7cf3b *core/config/devices/OSRAMSwitch/OSRAMSwitch.json
 771832a1b3f21d44f5bdef20c2d1ebeb *core/config/devices/PAR1650TW/PAR1650TW.json
 a32c40092e18df43432aa7c8d0209f23 *core/config/devices/PAR16RGBWZ3/PAR16RGBWZ3.json
@@ -561,12 +563,15 @@ a348a8cc39563268011312608bbe437f *core/config/devices/SMSZB-120_frientAS/SMSZB-1
 b4cf34a49f4977b2af2a167c91750669 *core/config/devices/SNZB-01P_eWeLink/discovery-SNZB-01P_eWeLink.json
 b5d3a2bee0d3d11a471ac65e87c3fadc *core/config/devices/SNZB-02D_SONOFF/SNZB-02D_SONOFF.json
 6638da47cac1a93c227c8dabcc1ed433 *core/config/devices/SNZB-02D_SONOFF/discovery-SNZB-02D_SONOFF.json
-870478d6bb9bddcffdd14f21c27ecf88 *core/config/devices/SNZB-02P_eWeLink/SNZB-02P_eWeLink.json
+060374f2a437c396d0386affff9b4ce7 *core/config/devices/SNZB-02P_eWeLink/SNZB-02P_eWeLink.json
+1434814a4269bf1107354435056a0008 *core/config/devices/SNZB-02P_eWeLink/discovery-SNZB-02P_eWeLink.json
 bbfc4ee5f7896335488fca0348b42f5b *core/config/devices/SNZB-06P_SONOFF/SNZB-06P_SONOFF.json
 4a7b445403d8b084f479f69ba85928aa *core/config/devices/SNZB-06P_SONOFF/discovery-SNZB-06P_SONOFF.json
 4fe7bd0912f54fc0f64ecc484a2f7790 *core/config/devices/SOCKETOUTLET1_SchneiderElectric/SOCKETOUTLET1_SchneiderElectric.json
 35e86781b989807b96971b43f057324b *core/config/devices/SOCKETOUTLET1_SchneiderElectric/discovery-SOCKETOUTLET1_SchneiderElectric.json
 174bee7608f0de1febd510ca3790b23a *core/config/devices/SP220/SP220.json
+8bb62f58fd5ea40e24e4518209262bef *core/config/devices/SP240_innr/SP240_innr.json
+36db6f730530389349f62727706db49c *core/config/devices/SP240_innr/discovery-SP240_innr.json
 92b35de71c7374e2402c8d1ad6a8f74c *core/config/devices/SPLZB-131/SPLZB-131.json
 4695063585a7bb3f5556096f5d9fbf26 *core/config/devices/SPLZB-131/discovery.json
 d1e031e53759e20960fbdc30fbf5990e *core/config/devices/SPLZB-132/SPLZB-132.json
@@ -994,9 +999,9 @@ f3b9942d631562c48bb607c8a437f446 *core/php/AbeilleLog.php
 b545fc2bab6f885ac28e78f89dad223a *core/php/AbeilleParser-Philips.php
 2afce28cdb183dca6cbb4a3cfc7d8bf9 *core/php/AbeilleParser-Tuya.php
 6ca572a7882071f1de22dc38d1247d3f *core/php/AbeilleParser-Xiaomi.php
-d7626f94528c68874269137d9a5b5bc9 *core/php/AbeilleParser.php
+cd03e9045e21d07d23b3df71e09a1d5e *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
-a8e4c9d1a49ed6d4b42b6313251258e7 *core/php/AbeilleRepair.php
+e563ea5a49c9df89116cf7addb9ab8a9 *core/php/AbeilleRepair.php
 875ae0bb9f3ffa4e1f4863f58ad6147a *core/php/AbeilleRoutes.php
 de84d3fbd3a277d95e9ee97f1fbb675f *core/php/AbeilleSerialRead.php
 220cfe670ad55774709d2fa3e67b1c34 *core/php/AbeilleSetEq.php
@@ -1065,7 +1070,7 @@ f5fc03f691f2d1fd87932a9e2f119ff2 *desktop/php/Abeille-Groups.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 3c1e258f18bb7bde58a1f8b3258dc3c5 *desktop/php/Abeille-TopButtons.php
 318f758e8d3349b4b0dfbb763f3ee2a4 *desktop/php/Abeille.php
-aad6673d681fc63db9ceabfa124d6b8a *desktop/php/AbeilleEqAssist.php
+a1abb431ae40b841e6eb61716901b90b *desktop/php/AbeilleEqAssist.php
 4516d84ab76c42d1132cebc1ebe22dbe *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
 25c62538c9d1dff6a31ae1b9cbb0e2a3 *desktop/php/AbeilleMaintenance-Logs.php
@@ -1079,7 +1084,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-49ac4338d9c1830f59583e0bc1e8c621 *docs/fr_FR/Changelog.md
+0a40748f593f55b4acd96ee8b627ea0f *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1170,6 +1175,8 @@ f9c5bdad3b63fec85dbcfe13ab0c0866 *images/node_Iluminize-511201.png
 34ce1dfb2f7e35970e39275f687282c3 *images/node_Innr-E27Bulb-Colour.png
 8f9a64861eee715dd978337740c60712 *images/node_Innr-RC110.png
 e10af83d03e9f3abed5c66ede2a453bf *images/node_Innr-Remote-5keys.png
+d1d5bc0eec9698fd8632190dd9e7c48d *images/node_Innr-SmartPlug-Outdoor.png
+bc1206611061540636bc725c469ebfba *images/node_Innr-SmartPlug.png
 76ce24905b247b8b9f03c311a7d5e88a *images/node_Iolloi-ID-EU20FWB4L.png
 1ca79492f0ef8c234713438c2b98c2c4 *images/node_JR-ZPM01.png
 e08b82906d1f10ddbb838597fde83d13 *images/node_Keyfob-ZB3.0.png
@@ -1433,11 +1440,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-1ae2b21b6b12b9db7e72247116e28d21 *plugin_info/Abeille.version
+98e359d803a133e2005a37984137a90e *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 0de7456b35f9700d3fb35cbfe9c8e363 *plugin_info/configuration.php
-ba13b2160fb3e8214d26da9f34c6d5cb *plugin_info/info.json
+c2ec89b7d67c34e4f1e65203e76de7e2 *plugin_info/info.json
 a65e783f2bb184821923d20946e977a7 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

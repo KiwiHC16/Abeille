@@ -63,7 +63,7 @@
             },
             "SetReporting Total power": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0702&attrId=0000&attrType=25&minInterval=600&maxInterval=600",
+                "params": "clustId=0702&attrId=0000&attrType=25&minInterval=600",
                 "execAtCreation": "yes"
             },
             "RMS Voltage": {
@@ -88,7 +88,7 @@
             },
             "SetReporting 0B04-RMSVoltage": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=60&maxInterval=600&changeVal=10",
+                "params": "clustId=0B04&attrType=21&attrId=0505&changeVal=10",
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-RMSCurrent": {

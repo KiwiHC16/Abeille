@@ -1340,26 +1340,28 @@
                     cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=0505");
                     cmds[cmdName] = newCmd("inf_zbAttr-0B04-RMSVoltage", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 0;
+
+                    // Reporting changeVal=10 V
+                    cmds["SetReporting 0B04-RMSVoltage"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrId=0505&attrType=21&changeVal=10", "yes");
                 }
                 if (isset(attributes['0508'])) { // RMS Current
                     cmdName = "RMS Current"; // Default cmd name
                     cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=0508");
                     cmds[cmdName] = newCmd("inf_zbAttr-0B04-RMSCurrent", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 1;
+
+                    // Reporting changeVal=50mA assuming div by 1000
+                    cmds["SetReporting 0B04-RMSCurrent"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrId=0508&attrType=21&changeVal=50", "yes");
                 }
                 if (isset(attributes['050B'])) { // Active power
                     cmdName = "Active Power"; // Default cmd name
                     cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=050B");
                     cmds[cmdName] = newCmd("inf_zbAttr-0B04-ActivePower", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 1;
+
+                    cmds["SetReporting 0B04-ActivePower"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrId=050B&attrType=29&changeVal=10", "yes");
                 }
                 cmds["Bind 0B04-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0B04", "yes");
-                if (isset(attributes['0508'])) { // RMS Current
-                    cmds["SetReporting 0B04-RMSCurrent"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrId=0508&attrType=21", "yes");
-                }
-                if (isset(attributes['050B'])) { // Active power
-                    cmds["SetReporting 0B04-ActivePower"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrId=050B&attrType=29&changeVal=5", "yes");
-                }
             }
 
             // commandsReceived = ep.servClusters[clustId]['commandsReceived'];

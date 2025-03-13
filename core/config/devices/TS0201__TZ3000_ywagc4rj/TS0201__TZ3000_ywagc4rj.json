@@ -1,8 +1,8 @@
 {
     "TS0201__TZ3000_ywagc4rj": {
         "manufacturer": "NIKJEBDF",
-        "model": "?",
-        "type": "NIKJEBDF temperature/humidity sensor/display",
+        "model": "TS0201",
+        "type": "NIKJEBDF temperature/humidity/display sensor",
         "genericType": "Environment",
         "alternateIds": [],
         "timeout": "60",

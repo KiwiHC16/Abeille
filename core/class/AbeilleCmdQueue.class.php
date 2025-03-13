@@ -184,7 +184,7 @@
                 'datas'     => $payload,
                 'zgOnly'    => zgIsZigateOnly($zgCmd), // Msg for Zigate only if true, not to be transmitted
                 'status'    => '', // '', 'SENT'
-                'try'       => maxRetryDefault + 1, // Number of retries if failed
+                'try'       => maxRetryDefault + 1, // Number of send attempts
                 'sentTime'  => 0, // For lost cmds timeout
                 // Timeout: Zigate has 7s internal timeout when ACK
                 'timeout'   => $ackAps ? 8 : 4, // Cmd expiration time
@@ -351,49 +351,49 @@
             }
         }
 
-        /**
-         * sendCmdToZigate()
-         *
-         * connect to zigate and pass the commande on serial link
-         *
-         * @param dest  Zigbee network (ex: 'Abeille1')
-         * @param cmd   zigate commande as per zigate API
-         * @param data  data for the cmd
-         *
-         * @return none
-         */
-        function sendCmdToZigate($dest, $addr, $cmd, $datas) {
-            // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
-            // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
-            // if (0) {
-            //     $f = fopen("/var/www/html/log/toto","w");
-            //     $this->writeToDest($f, $dest, $cmd, $datas);
-            //     fclose($f);
-            // }
+        // /**
+        //  * sendCmdToZigate()
+        //  *
+        //  * connect to zigate and pass the commande on serial link
+        //  *
+        //  * @param dest  Zigbee network (ex: 'Abeille1')
+        //  * @param cmd   zigate commande as per zigate API
+        //  * @param data  data for the cmd
+        //  *
+        //  * @return none
+        //  */
+        // function sendCmdToZigate($dest, $addr, $cmd, $datas) {
+        //     // Ecrit dans un fichier toto pour avoir le hex envoyés pour analyse ou envoie les hex sur le bus serie.
+        //     // SVP ne pas enlever ce code c est tres utile pour le debug et verifier les commandes envoyées sur le port serie.
+        //     // if (0) {
+        //     //     $f = fopen("/var/www/html/log/toto","w");
+        //     //     $this->writeToDest($f, $dest, $cmd, $datas);
+        //     //     fclose($f);
+        //     // }
 
-            cmdLog('debug', '  sendCmdToZigate(Dest='.$dest.', addr='.$addr.', cmd='.$cmd.', datas='.$datas.")", $this->debug['sendCmdToZigate']);
+        //     cmdLog('debug', '  sendCmdToZigate(Dest='.$dest.', addr='.$addr.', cmd='.$cmd.', datas='.$datas.")", $this->debug['sendCmdToZigate']);
 
-            $zgId = substr($dest, 7);
-            // $this->zgId = $zgId;
-            $destSerial = $GLOBALS['zigates'][$zgId]['port'];
+        //     $zgId = substr($dest, 7);
+        //     // $this->zgId = $zgId;
+        //     $destSerial = $GLOBALS['zigates'][$zgId]['port'];
 
-            // Test should not be needed as we already tested in addCmdToQueue2
-            if (!$GLOBALS['zigates'][$zgId]['enabled']) {
-                cmdLog("debug", "  Zigate ".$zgId." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$datas);
-                return;
-            }
+        //     // Test should not be needed as we already tested in addCmdToQueue2
+        //     if (!$GLOBALS['zigates'][$zgId]['enabled']) {
+        //         cmdLog("debug", "  Zigate ".$zgId." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$datas);
+        //         return;
+        //     }
 
-            // Note: Using file_exists() to avoid PHP warning when port issue.
-            if (!file_exists($destSerial) || (($f = fopen($destSerial, "w")) == false)) {
-                // cmdLog("error", "  Port '$destSerial' non accessible. Commande '$cmd' non écrite.");
-                cmdLog("debug", "  '$destSerial' port not accessible => '$cmd' cmd ignored.");
-                return;
-            }
+        //     // Note: Using file_exists() to avoid PHP warning when port issue.
+        //     if (!file_exists($destSerial) || (($f = fopen($destSerial, "w")) == false)) {
+        //         // cmdLog("error", "  Port '$destSerial' non accessible. Commande '$cmd' non écrite.");
+        //         cmdLog("debug", "  '$destSerial' port not accessible => '$cmd' cmd ignored.");
+        //         return;
+        //     }
 
-            // cmdLog("debug", "  Writing to port ".$destSerial.': '.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate']);
-            $this->writeToDest($f, $destSerial, $cmd, $datas);
-            fclose($f);
-        }
+        //     // cmdLog("debug", "  Writing to port ".$destSerial.': '.$cmd.'-'.$len.'-'.$datas, $this->debug['sendCmdToZigate']);
+        //     $this->writeToDest($f, $destSerial, $cmd, $datas);
+        //     fclose($f);
+        // }
 
         /**
          * Display queues & zigate status.
@@ -447,13 +447,13 @@
 
                     cmdLog("debug", "WARNING: processCmdQueues(): Zigate".$zgId." cmd ".$cmd['cmd']." {$timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
-                    $GLOBALS['zigates'][$zgId]['available'] = 1;
+                    $GLOBALS['zigates'][$zgId]['available'] = true;
                     unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
                 }
 
                 if (!$zg['available']) {
                     if (isset($zg['availTime']) && ($zg['availTime'] <= microtime(true))) {
-                        $GLOBALS['zigates'][$zgId]['available'] = 1; // Available again
+                        $GLOBALS['zigates'][$zgId]['available'] = true; // Available again
                         unset($GLOBALS['zigates'][$zgId]['availTime']);
                     } else
                         continue; // Still not available
@@ -507,14 +507,27 @@
                     cmdLog('debug', "processCmdQueues(): ZgId={$zgId}, Pri={$priority}/Idx={$sendIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
 
                     $cmd = $zg['cmdQueue'][$priority][$sendIdx];
-                    $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
 
+                    // $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
+                    cmdLog('debug', '  Sending: Dest='.$cmd['dest'].', addr='.$cmd['addr'].', zgCmd='.$cmd['cmd'].', datas='.$cmd['datas']);
+                    $destSerial = $GLOBALS['zigates'][$zgId]['port'];
+                    // Note: Using file_exists() to avoid PHP warning when port issue.
+                    if (!file_exists($destSerial) || (($f = fopen($destSerial, "w")) == false)) {
+                        cmdLog("debug", "  '$destSerial' port not accessible => '$cmd' cmd ignored.");
+                        continue; // Move to next Zigate
+                    }
+                    $this->writeToDest($f, $destSerial, $cmd['cmd'], $cmd['datas']);
+                    fclose($f);
+
+                    // cmdLog('debug', "  CmdBEFORE=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]));
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['status'] = "SENT";
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['sentTime'] = time();
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['try']--;
+                    // cmdLog('debug', "  CmdAFTER=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]));
+
                     $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
                     $GLOBALS['zigates'][$zgId]['sentIdx'] = $sendIdx;
-                    $GLOBALS['zigates'][$zgId]['available'] = 0; // Zigate no longer free
+                    $GLOBALS['zigates'][$zgId]['available'] = false; // Zigate no longer free
                     // $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
                     if ($cmd['cmd'] == "0011") // Special case: soft reset
                         $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0; // Zg will be free in 1sec
@@ -649,11 +662,20 @@
                         continue;
                     }
 
+                    /* Trying to understand this
+                    [2025-03-12 21:59:27] WARNING: processCmdQueues(): Zigate1 cmd 0030 8s TIMEOUT (SQN=00, SQNAPS=DD) => Considering zigate available.
+                    [2025-03-12 21:59:27] processCmdQueues(): ZgId=1, Pri=2/Idx=0, NPDU=0, APDU=1
+                    [2025-03-12 21:59:27]   sendCmdToZigate(Dest=Abeille1, addr=0C4314FFFE86A648, cmd=0030, datas=0C4314FFFE86A6480103000300158D0001C61BE701)
+                    [2025-03-12 21:59:27] processAcks(): msg={"type":"8000","net":"Abeille1","status":"80","sqn":"00","sqnAps":"E1","packetType":"0030","nPDU":"00","aPDU":"00"}
+                    [2025-03-12 21:59:27]   8000 => ignored as packets are different: packetType=0030 cmd=0100
+                    */
+
+                    cmdLog("debug", "  TEMP: cmds=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'], JSON_UNESCAPED_SLASHES));
                     $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx];
 
                     // Checking sent cmd vs received ack misalignment
                     if ($msg['packetType'] != $cmd['cmd']) {
-                        cmdLog("debug", "  8000 => ignored as packets are different: packetType=".$msg['packetType']." cmd=".$cmd['cmd']);
+                        cmdLog("debug", "  8000 => ignored as packets are different: packetType=".$msg['packetType']." zgCmd=".$cmd['cmd']);
                         continue;
                     }
 
@@ -690,7 +712,9 @@
                         $removeCmd = true;
                     }
                     else {
-                        // Something failed: case 04/Busy
+                        // Something failed
+                        // - Case 04/Busy
+                        // - Case 80/?? => what is that ?
                         if ($cmd['try'] == 0) {
                             cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." to ".$cmd['addr']." failed and too many retries.");
                             $removeCmd = true;
@@ -740,7 +764,7 @@
                                         cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) but will be repeated.");
                                         $cmd['repeat'] -= 1;
                                         $cmd['status'] = ''; // Not sent
-                                        $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
+                                        $GLOBALS['zigates'][$zgId]['available'] = true; // Zigate is free again
                                         $removeCmd = false; // Keep the cmd to be repeated
                                     } else
                                         cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) even if Repeat={$repeat}.");
@@ -800,7 +824,7 @@
                     $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
                     cmdLog('debug', "  Queue count after={$count}");
 
-                    $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
+                    $GLOBALS['zigates'][$zgId]['available'] = true; // Zigate is free again
                     unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
                 }
             }

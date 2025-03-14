@@ -3525,17 +3525,19 @@
 
                         if ($maxInterval == 0xffff) {
                             cmdLog('debug', "  configureReporting2: Disable reporting");
-                            // 'changeVal' must 0 for that case
+                            // 'changeVal' must be 0 for that case
                             $changeVal = 0;
                         } else if (($maxInterval == 0) && ($minInterval != 0xffff)) {
-                            cmdLog('debug', "  configureReporting2: No periodic reporting");
+                            // If this value is set to 0x0000, and the minimum reporting interval field does not equal 0xffff there SHALL
+                            // be no periodic reporting, but change based reporting SHALL still be operational.
+                            cmdLog('debug', "  configureReporting2: No periodic reporting but change val based only");
                             if ($changeVal == 0) {
                                 cmdLog('error', "  configureReporting2: 'changeVal' ne peut etre 0");
                                 return;
                             }
                         } else if (($maxInterval == 0) && ($minInterval == 0xffff)) {
                             cmdLog('debug', "  configureReporting2: Revert to default reporting");
-                            // 'changeVal' must 0 for that case
+                            // 'changeVal' must be 0 for that case
                             $changeVal = 0;
                         } else {
                             if ($maxInterval < $minInterval) {

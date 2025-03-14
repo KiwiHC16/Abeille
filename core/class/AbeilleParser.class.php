@@ -533,6 +533,11 @@
                         $eq['zigbee']['manufCode'] = $value;
                         $abUpdates["manufCode"] = $value;
                     }
+                } else if ($updType == '0019-0008') { // Cluster 0019/OTA, attr 0008/ImageType
+                    if (!isset($eq['zigbee']['imageType']) || ($eq['zigbee']['imageType'] != $value)) {
+                        $eq['zigbee']['imageType'] = $value;
+                        $abUpdates["imageType"] = $value;
+                    }
                 } else if ($updType == 'ieee') {
                     $eq['zigbee'][$updType] = $value;
                 } else // 'bindingTableSize'
@@ -3666,6 +3671,10 @@
                                         $attr['comment'] = "cleaned manuf";
                                     }
                                     if (($attr['id'] == '0004') || ($attr['id'] == '0005') || ($attr['id'] == '0010'))
+                                        $updates[$clustId.'-'.$attr['id']] = $attr['value'];
+                                }
+                                if ($clustId == "0000") {
+                                    if ($attr['id'] == '0008')
                                         $updates[$clustId.'-'.$attr['id']] = $attr['value'];
                                 }
 

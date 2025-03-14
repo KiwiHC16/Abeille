@@ -46,6 +46,13 @@
 </div>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Type d'image}} (ImageType)</label>
+    <div class="col-sm-5">
+        <input id="idImageType" readonly title="{{Type d'image}}" value="" />
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Date fabrication}} (DateCode)</label>
     <div class="col-sm-5">
         <input type="text" id="idDateCode" title="{{Cluster 0000, attribut 0006/DateCode}}" value="" readonly>

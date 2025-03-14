@@ -93,9 +93,11 @@ function refreshEqInfos() {
             document.getElementById("idZgType").value = curEq.zgType;
 
             if (typeof curEq.zigbee.modelId != "undefined")
-                document.getElementById("idZbModel").value = curEq.zigbee.modelId;
+                document.getElementById("idZbModel").value =
+                    curEq.zigbee.modelId;
             if (typeof curEq.zigbee.manufId != "undefined")
-                document.getElementById("idZbManuf").value = curEq.zigbee.manufId;
+                document.getElementById("idZbManuf").value =
+                    curEq.zigbee.manufId;
 
             document.getElementById("idModelSig").value = curEq.model.modelSig;
             document.getElementById("idModelName").value =
@@ -141,21 +143,20 @@ function refreshEqInfos() {
 
             if (typeof curEq.zigbee.logicalType != "undefined") {
                 switch (curEq.zigbee.logicalType) {
-                case 0x00:
-                    logicalType = "{{Coordinateur}}";
-                    break;
-                case 0x01:
-                    logicalType = "{{Routeur}}";
-                    break;
-                case 0x02:
-                    logicalType = "{{End device}}";
-                    break;
-                default:
-                    logicalType = curEq.zigbee.logicalType + "/?";
-                    break;
+                    case 0x00:
+                        logicalType = "{{Coordinateur}}";
+                        break;
+                    case 0x01:
+                        logicalType = "{{Routeur}}";
+                        break;
+                    case 0x02:
+                        logicalType = "{{End device}}";
+                        break;
+                    default:
+                        logicalType = curEq.zigbee.logicalType + "/?";
+                        break;
                 }
-            } else
-                logicalType = "";
+            } else logicalType = "";
             document.getElementById("idZbLogicalType").value = logicalType;
 
             if (typeof curEq.zigbee.macCapa != "undefined") {
@@ -172,6 +173,9 @@ function refreshEqInfos() {
             if (typeof curEq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
                     curEq.zigbee.manufCode;
+            if (typeof curEq.zigbee.imageType != "undefined")
+                document.getElementById("idImageType").value =
+                    curEq.zigbee.imageType;
             if (typeof curEq.zigbee.endPoints != "undefined") {
                 for (const [epId, ep] of Object.entries(
                     curEq.zigbee.endPoints

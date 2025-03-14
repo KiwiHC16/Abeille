@@ -2743,10 +2743,11 @@
 
                     $zgCmd = "0042";
                     $addr = sprintf("%04X", hexdec($Command['cmdParams']['addr']));
+                    $addrMode = "02"; // Short addr with ACK
 
                     $data = $addr;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 

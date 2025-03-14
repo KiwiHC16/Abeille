@@ -73,16 +73,17 @@
             }
         }
 
+        // Tempo queue: filling process
         public function addTempoCmdAbeille($topic, $msg, $priority) {
             list($topic, $param) = explode('&', $topic);
             $topic = str_replace( 'Tempo', '', $topic);
 
-            list($timeTitle, $time) = explode('=', $param);
+            list($timeTitle, $timeStr) = explode('=', $param);
 
             global $tempoMessageQueue;
             // cmdLog('debug', 'addTempoCmdAbeille(): Queue BEFORE='.json_encode($tempoMessageQueue));
             $tempoMessageQueue[] = array(
-                'time' => $time,
+                'time' => intval($timeStr),
                 'priority' => $priority,
                 'topic' => $topic,
                 'params' => $msg
@@ -90,6 +91,28 @@
             // cmdLog('debug', 'addTempoCmdAbeille(): Queue AFTER='.json_encode($tempoMessageQueue));
             if (count($tempoMessageQueue) > 50) {
                 cmdLog('info', 'Il y a plus de 50 messages dans le queue tempo.');
+            }
+        }
+
+        // Tempo queue: reading process
+        public function execTempoCmdAbeille() {
+
+            global $tempoMessageQueue;
+            $nbMsg = count($tempoMessageQueue);
+            if ($nbMsg == 0)
+                return;
+
+            // cmdLog('debug', "execTempoCmdAbeille(), Count=$nbMsg, Queue=".json_encode($tempoMessageQueue));
+            $now = time();
+            foreach ($tempoMessageQueue as $msgIdx => $msg) {
+                // cmdLog('debug', 'execTempoCmdAbeille(), msg='.json_encode($msg));
+                if ($msg['time'] > $now)
+                    continue;
+
+                // cmdLog('debug', 'execTempoCmdAbeille() BEFORE - tempoMessageQueue='.json_encode($tempoMessageQueue));
+                $this->sendToCmd($msg['priority'], $msg['topic'], $msg['params']);
+                array_splice($tempoMessageQueue, $msgIdx, 1);
+                // cmdLog('debug', 'execTempoCmdAbeille() AFTER - tempoMessageQueue='.json_encode($tempoMessageQueue));
             }
         }
 
@@ -107,29 +130,6 @@
             global $queueXToCmd;
             if (msg_send($queueXToCmd, 1, $msgJson, false, false) == false) {
                 cmdLog('debug', '  sendToCmd() ERROR: Could not add message '.$msgJson.' to queue xToCmd');
-            }
-        }
-
-        public function execTempoCmdAbeille() {
-            global $tempoMessageQueue;
-
-            if (count($tempoMessageQueue) == 0)
-                return;
-
-            $now = time();
-            foreach ($tempoMessageQueue as $key => $mqttMessage) {
-                // deamonlog('debug', 'execTempoCmdAbeille - tempoMessageQueue - 0: '.$mqttMessage[0] );
-                if ($mqttMessage['time'] > $now)
-                    continue;
-
-                // cmdLog('debug', 'execTempoCmdAbeille BEFORE - tempoMessageQueue='.json_encode($tempoMessageQueue));
-                $this->sendToCmd($mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['params']);
-                // msgToCmd()
-                // cmdLog('debug', 'execTempoCmdAbeille(): tempoMessageQueue='.json_encode($tempoMessageQueue[$key]));
-                // unset($tempoMessageQueue[$key]);
-                // Tcharp38: unset let an empty slot and change array to object.
-                array_splice($tempoMessageQueue, $key, 1);
-                // cmdLog('debug', 'execTempoCmdAbeille AFTER - tempoMessageQueue='.json_encode($tempoMessageQueue));
             }
         }
 

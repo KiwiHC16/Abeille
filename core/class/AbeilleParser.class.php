@@ -4219,6 +4219,9 @@
                             switch ($status) {
                             case "00":
                                 message::add("Abeille", "{$eqHName}: Mise-à-jour du firmware terminée avec succès");
+                                // OTA update completed. Need to reread some infos
+                                msgToCmd(PRIO_HIGH, "Cmd".$dest."/".$srcAddr."/readAttribute", "ep=".$srcEp."&clustId=0000&attrId=0006,4000"); // Read DateCode + SWBuildID
+                                msgToCmd(PRIO_HIGH, "Cmd".$dest."/".$srcAddr."/getNodeDescriptor", "");
                                 break;
                             case "95":
                                 message::add("Abeille", "{$eqHName}: Transfert du firmware annulé par l'équipement");

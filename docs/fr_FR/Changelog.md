@@ -4,6 +4,7 @@
 -   Améliorations: Assistant modèle.
 -   Améliorations: Interne Cmd: 'getNodeDescriptor' avec ACK.
 -   Améliorations: OTA: Collecte 'image type'.
+-   Améliorations: OTA: Relecture 'DateCode', 'SWBuildID' & node desc si mise-à-jour terminée avec succés.
 
 ## 250311-BETA-1
 

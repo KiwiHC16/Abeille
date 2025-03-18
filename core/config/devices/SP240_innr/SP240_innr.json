@@ -52,7 +52,7 @@
             },
             "Total power": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",
-                "params": "div=100",
+                "params": "div=1000",
                 "unit": "KWh",
                 "isVisible": "1"
             },
@@ -63,7 +63,7 @@
             },
             "SetReporting Total power": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0702&attrId=0000&attrType=25&minInterval=600",
+                "params": "clustId=0702&attrId=0000&attrType=25&changeVal=10",
                 "execAtCreation": "yes"
             },
             "RMS Voltage": {

@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 250318-BETA-1
+
 -   Améliorations: Support INNR SP240 (2750).
 -   Améliorations: Assistant modèle.
 -   Améliorations: Interne Cmd: 'getNodeDescriptor' avec ACK.

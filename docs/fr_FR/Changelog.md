@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Repair: Collecte 'image type'.
+
 ## 250318-BETA-1
 
 -   Améliorations: Support INNR SP240 (2750).

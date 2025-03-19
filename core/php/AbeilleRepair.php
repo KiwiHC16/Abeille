@@ -187,8 +187,8 @@
                     // msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/readAttribute2", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                     return; // Reducing requests on first missing stuff
                 }
+                msgToCli("step", "EP${epId2} server cluster 0000 infos", "ok");
             }
-            msgToCli("step", "EP${epId2} server cluster 0000 infos", "ok");
 
             if (strpos($ep2['servClusters'], '0004') !== false) {
                 // Cluster 0004 is supported
@@ -200,8 +200,19 @@
                     msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/getGroupMembership", "ep=".$epId2);
                     return; // To reduce requests on first missing groups membership
                 }
+                msgToCli("step", "EP${epId2} server cluster 0004 infos", "ok");
             }
-            msgToCli("step", "EP${epId2} server cluster 0004 infos", "ok");
+
+            if (strpos($ep2['servClusters'], '0019') !== false) {
+                // Cluster 0019 is supported
+                if (!isset($zigbee['imageType'])) {
+                    msgToCli("step", "EP${epId2} server cluster 0019 infos");
+                    logMessage('debug', "  Requesting 'imageType' for EP ".$epId2);
+                    msgToCmd(PRIO_HIGH, "Cmd${net}/${addr}/readAttribute", "ep=$epId2&clustId=0019&attrId=0008");
+                    return; // To reduce requests on first missing groups membership
+                }
+                msgToCli("step", "EP${epId2} server cluster 0019 infos", "ok");
+            }
         }
 
         $error = false;

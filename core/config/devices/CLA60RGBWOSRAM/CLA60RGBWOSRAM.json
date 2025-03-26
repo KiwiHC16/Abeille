@@ -1,5 +1,9 @@
 {
     "CLA60RGBWOSRAM": {
+        "manufacturer": "Osram",
+        "model": "?",
+        "type": "CLA60RGBWOSRAM",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "03",
@@ -9,9 +13,19 @@
         "category": {
             "light": "1"
         },
-        "type": "CLA60RGBWOSRAM",
         "commands": {
-            "etat": {
+            "On": {
+                "use": "act_zbCmdC-0006-On"
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "isVisible": 1
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "nextLine": "after"
+            },
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
@@ -25,13 +39,6 @@
             },
             "CurrentY": {
                 "use": "inf_zbAttr-0300-CurrentY",
-                "isVisible": 1
-            },
-            "On": {
-                "use": "act_zbCmdC-0006-On"
-            },
-            "Off": {
-                "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
             "Set Level": {
@@ -135,10 +142,6 @@
             },
             "setBleu": {
                 "use": "setBleu"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

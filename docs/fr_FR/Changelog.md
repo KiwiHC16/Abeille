@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Améliorations: Repair: Collecte 'image type'.
+-   Améliorations: Modèle 'CLA60 TW OSRAM'.
 
 ## 250318-BETA-1
 

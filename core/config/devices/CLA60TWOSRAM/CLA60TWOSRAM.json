@@ -1,6 +1,9 @@
 {
     "CLA60TWOSRAM": {
         "manufacturer": "Osram",
+        "model": "AC03642",
+        "type": "Osram CLA60 TW",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "03",
@@ -8,16 +11,11 @@
             "icon": "OSRAMClassicE27Dimmable"
         },
         "category": {
-            "automatism": "1"
+            "light": "1"
         },
-        "type": "Osram CLA60 TW",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "On": {
@@ -27,20 +25,28 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "nextLine": "after"
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Get-CurrentLevel": {
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
+            },
+            "Set Brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
+            },
+            "Get-Brightness": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "Bind-0006-ToZigate": {
@@ -66,10 +72,6 @@
                 "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

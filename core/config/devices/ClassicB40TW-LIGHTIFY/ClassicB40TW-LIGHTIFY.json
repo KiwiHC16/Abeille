@@ -2,25 +2,17 @@
     "ClassicB40TW-LIGHTIFY": {
         "manufacturer": "Osram",
         "model": "B40TW",
+        "type": "Osram Lightify classic B40 bulb",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "03",
-            "poll": "1",
             "icon": "OsramLightify-B40Bulb-Classic"
         },
         "category": {
-            "automatism": "1"
+            "light": "1"
         },
-        "type": "Osram Lightify classic B40 bulb",
         "commands": {
-            "Status": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On"
             },
@@ -28,17 +20,30 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
-            "Set Level": {
+            "Get-Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000",
+                "Polling": "cron"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "trigOut": {
+                    "getBrightness": {}
+                },
+                "isVisible": 1
+            },
+            "Set Brightness": {
                 "use": "act_setLevel-Light",
                 "isVisible": 1
             },
-            "Get-Status": {
+            "Get-Brightness": {
                 "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
-            },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
+                "logicalId": "getBrightness",
                 "params": "clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",

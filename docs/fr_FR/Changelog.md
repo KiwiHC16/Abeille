@@ -1,7 +1,7 @@
 # ChangeLog
 
 -   Améliorations: Repair: Collecte 'image type'.
--   Améliorations: Modèle 'CLA60 TW OSRAM'.
+-   Améliorations: Modèles 'CLA60 TW OSRAM' & 'ClassicB40TW-LIGHTIFY'.
 -   Améliorations: check_json: Vérification valeurs de 'Polling'.
 
 ## 250318-BETA-1

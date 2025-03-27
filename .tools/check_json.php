@@ -915,6 +915,16 @@
             if (!isset($cmd['configuration']['listValue']))
                 $error = newDevError($devMName, "ERROR", "'select' sub-type but no 'listValue' for cmd '".$cmdJName."'");
         }
+
+        // Checking "Polling" syntax
+        // echo "LA cmd=".json_encode($cmd)."\n";
+        if (isset($cmd['configuration']) && isset($cmd['configuration']['Polling'])) {
+            $validPolling = ['cron', 'cron5', 'cron10', 'cron15'];
+            $pol = $cmd['configuration']['Polling'];
+            if (!in_array($pol, $validPolling))
+                $error = newDevError($devMName, "ERROR", "Invalid 'Polling' value ($pol) for cmd '".$cmdJName."'");
+        }
+
         $newCmd = $cmd;
 
         // Overload cmd model from device model customizations

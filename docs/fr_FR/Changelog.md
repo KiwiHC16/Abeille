@@ -2,6 +2,7 @@
 
 -   Améliorations: Repair: Collecte 'image type'.
 -   Améliorations: Modèle 'CLA60 TW OSRAM'.
+-   Améliorations: check_json: Vérification valeurs de 'Polling'.
 
 ## 250318-BETA-1
 

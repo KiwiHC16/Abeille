@@ -31,7 +31,7 @@
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000",
-                "Polling": "cron1"
+                "Polling": "cron"
             },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",

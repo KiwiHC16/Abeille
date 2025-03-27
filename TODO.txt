@@ -1,3 +1,18 @@
+poll & Polling
+    Virer "poll" du modele device pour utiliser "Polling" dans la commande
+
+    "Status": {
+        "use": "inf_zbAttr-0006-OnOff",
+        "trigOut": {
+            "getBrightness": {}
+        }
+    },
+    "Get-Brightness": {
+        "use": "act_zbReadAttribute",
+        "logicalId": "getBrightness",
+        "params": "clustId=0008&attrId=0000"
+    },
+
 Espace disque
     Chaque fois que c'est possible, remonter info utilisateur si espace disque saturé (et /tmp)
 

@@ -7,7 +7,6 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "03",
-            "poll": "1",
             "icon": "OSRAMClassicE27Dimmable"
         },
         "category": {
@@ -31,10 +30,14 @@
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
+                "params": "clustId=0006&attrId=0000",
+                "Polling": "cron1"
             },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
+                "trigOut": {
+                    "getBrightness": {}
+                },
                 "isVisible": 1
             },
             "Set Brightness": {
@@ -43,6 +46,7 @@
             },
             "Get-Brightness": {
                 "use": "act_zbReadAttribute",
+                "logicalId": "getBrightness",
                 "params": "clustId=0008&attrId=0000"
             },
             "Brightness": {

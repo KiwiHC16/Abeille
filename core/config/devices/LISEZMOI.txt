@@ -113,7 +113,11 @@ Exemple: BASICZBR3.json
     Format RECOMMANDE: 'node_<Vendeur>-<Modele>.png'
   - paramType: ?
     "telecommande", "telecommande7groups"
-
+  - poll: Force la lecture des cluster 0006 & 0008 attribut 0000 de maniere répétitive.
+    A EVITER !! Preferer le polling par commande ("Polling": "cron1")
+    Ex: "poll": "1"
+  
+  
 * customization: optionnel
   Permet de corriger/forcer qq infos remontées par l'équipement.
   Ex:  "customization": {

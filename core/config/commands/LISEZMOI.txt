@@ -176,6 +176,7 @@ Exemple de commande 'action'
   * Polling: optionnel
     Défini si cette commande 'action' doit etre executée regulierement.
     Valeurs: 'cron', 'cron5', 'cron10', 'cron15', 'cron30', 'cronHourly', 'cronDaily'
+    Ex: "Polling": "cron5"
 
   * PollingOnCmdChange: optionnel
     Précise que cette commande 'action' doit être exécutée si la cmde donnée change.

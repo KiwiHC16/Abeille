@@ -321,7 +321,7 @@ class Abeille extends eqLogic {
             if (strlen($address) != 4)
                 continue; // Bad address, needed for virtual device
 
-            log::add('Abeille', 'debug', 'cron(): GetEtat/GetLevel, addr='.$address);
+            log::add('Abeille', 'debug', 'cron(): poll=1 found, interrogating addr='.$address);
             $mainEP = $eqLogic->getConfiguration('mainEP');
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");

@@ -1140,7 +1140,7 @@
                 '5F01'=>'Xiaomi Temperature',
 
                 // From Legrand investigation
-                '0B04'=>'Electrical Measurement', // Attribut Id: 0x50B - Active Power
+                '0B04'=>'Electrical Measurement',
             ),
             /* ZLL */
             'C05E' => array(

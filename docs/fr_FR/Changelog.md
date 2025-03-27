@@ -3,6 +3,7 @@
 -   Améliorations: Repair: Collecte 'image type'.
 -   Améliorations: Modèles 'CLA60 TW OSRAM' & 'ClassicB40TW-LIGHTIFY'.
 -   Améliorations: check_json: Vérification valeurs de 'Polling'.
+-   Améliorations: Assistant modèle pour device 'lightning'.
 
 ## 250318-BETA-1
 

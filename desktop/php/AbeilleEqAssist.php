@@ -877,6 +877,30 @@
         return cmd;
     }
 
+    // Returns true if lighting device
+    function isALightingDevice(ep) {
+        // If device ID is defined let's check if lighting device (see devicesTable in Zigbee consts)
+        profId = -1;
+        devId = -1;
+        if (typeof ep.profId !== "undefined")
+            profId = parseInt(ep.profId, 16);
+        if (typeof ep.devId !== "undefined")
+            devId = parseInt(ep.devId, 16);
+        if ((profId == -1) || (devId == -1))
+            return false;
+
+        if (profId == 0x104) {
+            if ((devId >= 0x0100) && (devId <= 0x010E))
+                return true;
+            if ((devId >= 0x0800) && (devId <= 0x850))
+                return true;
+        } else if (profId == 0xC05E) { // ZLL ?
+            return true;
+        }
+
+        return false;
+    }
+
     /* Generate JSON model based on zigbee discovery datas */
     function zigbeeToModel() {
         console.log("zigbeeToModel()");
@@ -898,6 +922,11 @@
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
+
+            if (isALightingDevice(ep)) {
+                document.getElementById("idGenericType").value = "Light";
+                document.getElementById("idlight").checked = true;
+            }
 
             if (!isset(ep.servClusters))
                 continue;
@@ -1007,29 +1036,26 @@
                 continue;
 
             // If device ID is defined let's check if lighting device (see devicesTable in Zigbee consts)
-            devId = -1;
-            if (typeof ep.devId !== "undefined")
-                devId = parseInt(ep.devId, 16);
-            if (devId != -1 && (devId >= 0x0100) && (devId <= 0x0850))
-                name = "Brightness";
+            if (isALightingDevice(ep))
+                cmdName = "Brightness";
             else
-                name = "Level";
-
+                cmdName = "Level";
             if (multipleCluster) // If multiple clusters adding index in name
-                clustIdx = " "+levelIdx;
+                cmdName += " "+levelIdx;
+
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
                 // Note: If device is a light bulb, need to use 'act_setLevel-Light'
-                cmds["Set "+name+clustIdx] = newCmd("act_setLevel-Light", "ep="+epId);
-                cmds["Set "+name+clustIdx]["isVisible"] = 1;
-                cmds["Set "+name+clustIdx]["value"] = name+clustIdx; // Slider default value
-                cmds["Get "+name+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
+                cmds["Set "+cmdName] = newCmd("act_setLevel-Light", "ep="+epId);
+                cmds["Set "+cmdName]["isVisible"] = 1;
+                cmds["Set "+cmdName]["value"] = cmdName; // Slider default value
+                cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
 
-                cmds[name+clustIdx] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
-                cmds[name+clustIdx]["isVisible"] = 1;
-                cmds[name+clustIdx]["nextLine"] = "after";
+                cmds[cmdName] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
+                cmds[cmdName]["isVisible"] = 1;
+                cmds[cmdName]["nextLine"] = "after";
                 cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
-                cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrType=20&attrId=0000", "yes");
+                cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrId=0000&attrType=20", "yes");
             }
             levelIdx++;
         }

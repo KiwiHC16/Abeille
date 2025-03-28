@@ -1028,45 +1028,45 @@
             return $cmd;
         }
 
-        /**
-         * send a message to a ruche according to the splitted daemonnameX
-         * where daemonname and zigateNbr are extracted.
-         *
-         * @param $daemon
-         */
-        public static function sendMessageToRuche($daemon, $message = "") {
-            global $abQueues;
+        // /**
+        //  * send a message to a ruche according to the splitted daemonnameX
+        //  * where daemonname and zigateNbr are extracted.
+        //  *
+        //  * @param $daemon
+        //  */
+        // public static function sendMessageToRuche($daemon, $message = "") {
+        //     global $abQueues;
 
-            $daemonName = (preg_match('/[a-zA-Z]*/', $daemon, $matches) != true ? $daemon : $matches[0]);
-            unset($matches);
-            $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);
-            $messageToSend = ($message == "") ? "" : "$daemonName: $message";
-            // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate '.$zigateNbr);
-            if ( strlen($messageToSend) > 2 ) {
-            Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM,
-                "Abeille$zigateNbr/0000/SystemMessage", $messageToSend);
-            }
-        }
+        //     $daemonName = (preg_match('/[a-zA-Z]*/', $daemon, $matches) != true ? $daemon : $matches[0]);
+        //     unset($matches);
+        //     $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);
+        //     $messageToSend = ($message == "") ? "" : "$daemonName: $message";
+        //     // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate '.$zigateNbr);
+        //     if ( strlen($messageToSend) > 2 ) {
+        //     Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM,
+        //         "Abeille$zigateNbr/0000/SystemMessage", $messageToSend);
+        //     }
+        // }
 
-        /**
-         * clean messages displayed by all zigates if no parameters or all
-         *
-         * @param array $parameters jeedom Abeille's config
-         * @param string $which number, from 1 to 9
-         */
-        public static function clearSystemMessage($parameters, $which = 'all') {
-            if ($which == 'all') {
-                for ($n = 1; $n <= maxGateways; $n++) {
-                    if ($parameters['ab::gtwEnabled'.$n] == "Y") {
-                        // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$n);
-                        AbeilleTools::sendMessageToRuche("daemon$n", "");
-                    }
-                }
-            } else {
-                // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$which);
-                AbeilleTools::sendMessageToRuche("daemon$which", "");
-            }
-        }
+        // /**
+        //  * clean messages displayed by all zigates if no parameters or all
+        //  *
+        //  * @param array $parameters jeedom Abeille's config
+        //  * @param string $which number, from 1 to 9
+        //  */
+        // public static function clearSystemMessage($parameters, $which = 'all') {
+        //     if ($which == 'all') {
+        //         for ($n = 1; $n <= maxGateways; $n++) {
+        //             if ($parameters['ab::gtwEnabled'.$n] == "Y") {
+        //                 // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$n);
+        //                 AbeilleTools::sendMessageToRuche("daemon$n", "");
+        //             }
+        //         }
+        //     } else {
+        //         // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$which);
+        //         AbeilleTools::sendMessageToRuche("daemon$which", "");
+        //     }
+        // }
 
         // Unused
         // public static function checkRequired($type, $zigateNumber) {

@@ -323,8 +323,10 @@ class Abeille extends eqLogic {
 
             log::add('Abeille', 'debug', 'cron(): poll=1 found, interrogating addr='.$address);
             $mainEP = $eqLogic->getConfiguration('mainEP');
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
+            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");
+            Abeille::msgToCmd(PRIO_NORM, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
+            Abeille::msgToCmd(PRIO_NORM, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");
             $i++;
         }
         if (($i * 3) > 60) {
@@ -382,7 +384,8 @@ class Abeille extends eqLogic {
             $incStatus = self::checkInclusionStatus("Abeille{$gtwId}");
             log::add('Abeille', 'debug', "cron(): Abeille{$gtwId} => inclusion status = {$incStatus}");
             if ($incStatus === 1) {
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "CmdAbeille{$gtwId}/0000/permitJoin", "Status");
+                // Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "CmdAbeille{$gtwId}/0000/permitJoin", "Status");
+                Abeille::msgToCmd(PRIO_NORM, "CmdAbeille{$gtwId}/0000/permitJoin", "Status");
                 $count++;
             }
         }
@@ -530,9 +533,9 @@ class Abeille extends eqLogic {
 
                 if ($poll > 0) {
                     log::add('Abeille', 'debug', "cron15(): Interrogating '".$eqName."' (addr ".$addr.", poll-reason=".$poll.")");
-                    // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
                     // Reading ZCLVersion attribute which should always be supported
-                    Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+($i*23)), "ep=".$mainEP."&clustId=0000&attrId=0000");
+                    // Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+($i*23)), "ep=".$mainEP."&clustId=0000&attrId=0000");
+                    Abeille::msgToCmd(PRIO_NORM, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+($i*23)), "ep=".$mainEP."&clustId=0000&attrId=0000");
                     $i++;
                 }
             }
@@ -2287,45 +2290,45 @@ class Abeille extends eqLogic {
 //         log::add('Abeille', 'debug', "msgFromParser(): Ignored msg ".json_encode($msg));
 //     } // End msgFromParser()
 
-    public static function publishMosquitto($queueId, $priority, $topic, $payload) {
-        static $queueStatus = []; // "ok" or "error"
+    // public static function publishMosquitto($queueId, $priority, $topic, $payload) {
+    //     static $queueStatus = []; // "ok" or "error"
 
-        $queue = msg_get_queue($queueId);
-        if ($queue === false) {
-            log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
-            return;
-        }
-        if (($stat = msg_stat_queue($queue)) == false) {
-            return; // Something wrong
-        }
+    //     $queue = msg_get_queue($queueId);
+    //     if ($queue === false) {
+    //         log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
+    //         return;
+    //     }
+    //     if (($stat = msg_stat_queue($queue)) == false) {
+    //         return; // Something wrong
+    //     }
 
-        /* To avoid plenty errors, checking if someone really reads the queue.
-           If not, do nothing but a message to user first time.
-           Note: Assuming potential pb if more than 50 pending messages. */
-        $pendMsg = $stat['msg_qnum']; // Pending messages
-        if ($pendMsg > 50) {
-            if (file_exists("/proc/") && !file_exists("/proc/".$stat['msg_lrpid'])) {
-                /* Receiver process seems down */
-                if (isset($queueStatus[$queueId]) && ($queueStatus[$queueId] == "error"))
-                    return; // Queue already marked "in error"
-                message::add("Abeille", "Alerte ! Démon arrété ou planté. (Re)démarrage nécessaire.", '');
-                $queueStatus[$queueId] = "error";
-                return;
-            }
-        }
+    //     /* To avoid plenty errors, checking if someone really reads the queue.
+    //        If not, do nothing but a message to user first time.
+    //        Note: Assuming potential pb if more than 50 pending messages. */
+    //     $pendMsg = $stat['msg_qnum']; // Pending messages
+    //     if ($pendMsg > 50) {
+    //         if (file_exists("/proc/") && !file_exists("/proc/".$stat['msg_lrpid'])) {
+    //             /* Receiver process seems down */
+    //             if (isset($queueStatus[$queueId]) && ($queueStatus[$queueId] == "error"))
+    //                 return; // Queue already marked "in error"
+    //             message::add("Abeille", "Alerte ! Démon arrété ou planté. (Re)démarrage nécessaire.", '');
+    //             $queueStatus[$queueId] = "error";
+    //             return;
+    //         }
+    //     }
 
-        $msg = array();
-        $msg['priority'] = $priority;
-        $msg['topic'] = $topic;
-        $msg['payload'] = $payload;
-        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+    //     $msg = array();
+    //     $msg['priority'] = $priority;
+    //     $msg['topic'] = $topic;
+    //     $msg['payload'] = $payload;
+    //     $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
-        if (msg_send($queue, 1, $msgJson, false, false, $error_code)) {
-            log::add('Abeille', 'debug', "  publishMosquitto(): Sent '".$msgJson."' to queue ".$queueId);
-            $queueStatus[$queueId] = "ok"; // Status ok
-        } else
-            log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
-    } // End publishMosquitto()
+    //     if (msg_send($queue, 1, $msgJson, false, false, $error_code)) {
+    //         log::add('Abeille', 'debug', "  publishMosquitto(): Sent '".$msgJson."' to queue ".$queueId);
+    //         $queueStatus[$queueId] = "ok"; // Status ok
+    //     } else
+    //         log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
+    // } // End publishMosquitto()
 
     public static function msgToCmd($priority, $topic, $payload = "") {
         static $queueStatus = []; // "ok" or "error"
@@ -2363,7 +2366,7 @@ class Abeille extends eqLogic {
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
         if (msg_send($queue, 1, $msgJson, false, false, $error_code)) {
-            log::add('Abeille', 'debug', "  msgToCmd(): Envoyé '".$msgJson."' vers queue ".$queueId);
+            log::add('Abeille', 'debug', "  msgToCmd(): Sent '$msgJson'");
             $queueStatus[$queueId] = "ok"; // Status ok
         } else
             log::add('Abeille', 'warning', "msgToCmd(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);

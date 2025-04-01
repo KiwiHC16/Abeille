@@ -1439,7 +1439,7 @@ function saveConfig(config) {
 }
 
 $("#idEqIcon").change(function () {
-    var text = "plugins/Abeille/images/node_" + $("#idEqIcon").val() + ".png";
+    var text = "plugins/Abeille/core/config/devices/devices_images/node_" + $("#idEqIcon").val() + ".png";
     //$("#icon_visu").attr('src',text);
     document.icon_visu.src = text;
 });

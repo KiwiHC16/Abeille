@@ -1275,9 +1275,9 @@
             //     // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu()" />';
             // }
             if (configMode)
-                newG += '<image class="draggable" xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+                newG += '<image class="draggable" xlink:href="/plugins/Abeille/core/config/devices_images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
             else
-                newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+                newG += '<image xlink:href="/plugins/Abeille/core/config/devices_images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
             // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
             // newG += '</g>';
 

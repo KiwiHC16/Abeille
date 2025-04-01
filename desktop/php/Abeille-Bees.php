@@ -34,7 +34,7 @@
         if ($icon == '')
             $icon = 'defaultUnknown';
         $icon = 'node_'.$icon.'.png';
-        $iconPath = __DIR__.'/../../images/'.$icon;
+        $iconPath = __DIR__.'/../../core/config/devices/devices_images/'.$icon;
         if (!file_exists($iconPath))
             $icon = 'node_defaultUnknown.png';
         // $test = 'node_' . $eqLogic->getConfiguration('ab::icon') . '.png';

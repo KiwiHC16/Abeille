@@ -50,7 +50,7 @@
         echo    '<input id="idBeeChecked'.$zgId.'-'.$id.'" class="beeChecked" type="checkbox" name="eqSelected-'.$id.'" />';
         echo 	'<br/>';
         echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="width: 130px" data-eqLogic_id="'.$id.'">';
-        echo 		'<img src="plugins/Abeille/images/'.$icon.'" />';
+        echo 		'<img src="plugins/Abeille/core/config/devices/devices_images/'.$icon.'" />';
         // echo 		'<img src="plugins/Abeille/images/'.$icon.'" class="iconRatio iconZ1" />';
         // echo 		'<img src="plugins/Abeille/images/disabled.png" align=top class="iconZ2" />';
         echo 		'<br/>';
@@ -102,7 +102,7 @@
         }
 
 		echo '<div class="eqLogicThumbnailContainer">';
-        $dir = dirname(__FILE__) . '/../../images/';
+        $dir = dirname(__FILE__) . '/../../core/config/devices/devices_images/';
         $files = scandir($dir);
         // Display beehive first
 		foreach ($eqPerZigate[$zgId] as $eq) {

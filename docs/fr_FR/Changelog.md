@@ -5,6 +5,7 @@
 -   Améliorations: check_json: Vérification valeurs de 'Polling'.
 -   Améliorations: Assistant modèle pour device 'lightning'.
 -   Améliorations: Interne Abeille.class (publishMosquitto => msgToCmd).
+-   Nouveau: Support TRADFRIbulbE27WSglobe1055lm (2755).
 
 ## 250318-BETA-1
 

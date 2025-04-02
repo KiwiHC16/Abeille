@@ -1913,13 +1913,21 @@ console.log("missing value for "+attrId);
                     if (clustId == "0000") // Basic cluster supported on this EP
                         $("#idEP"+sEp+"Model").show();
                     var newRow = servClustTable.insertRow(-1);
-                    var newCell = newRow.insertCell(0);
-                    newCell.innerHTML = clustId;
+
+                    // 1st col = cluster ID
+                    cell0 = newRow.insertCell(0);
+                    cell0.style.width = '40px';
+                    cell0.innerHTML = clustId;
+
+                    // 2nd col = Buttons discover attributes
+                    // cell1 = newRow.insertCell(-1);
+                    cell1 = cell0; // TO BE CONTINUED
                     // newCell.setAttribute('title', 'toto'); // Tcharp38 TODO: How to retrive cluster name ?
                     // newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RBEx" class="btn btn-warning" title="{{Découverte étendue des attributs}}" onclick="requestInfos(\'attribExtList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
-                    newCell.innerHTML += '<a id="id'+sEp+'-S'+clustId+'-DAE" class="btn btn-warning" title="{{Découverte étendue des attributs}}" onclick="requestInfos(\'attribExtList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                    cell1.innerHTML += '<a id="id'+sEp+'-S'+clustId+'-DAE" class="btn btn-warning" title="{{Découverte étendue des attributs}}" onclick="requestInfos(\'attribExtList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
                     // newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="{{Découverte des attributs}}" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
-                    newCell.innerHTML += '<a id="id'+sEp+'-S'+clustId+'-DA" class="btn btn-warning" title="{{Découverte des attributs}}" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                    cell1.innerHTML += '<a id="id'+sEp+'-S'+clustId+'-DA" class="btn btn-warning" title="{{Découverte des attributs}}" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+
                     if (clustId == "0000") { // Basic cluster supported on this EP
                         requestInfos('manufacturer', sEp, clustId);
                         requestInfos('modelId', sEp, clustId);

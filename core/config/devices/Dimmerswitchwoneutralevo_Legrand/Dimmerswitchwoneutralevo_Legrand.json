@@ -1,0 +1,81 @@
+{
+    "Dimmerswitchwoneutralevo_Legrand": {
+        "manufacturer": "Legrand",
+        "model": "077701LA",
+        "type": "Legrand wireless switch",
+        "genericType": "Light",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "?",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0006&attrId=0000&attrType=10",
+                "execAtCreation": "yes"
+            },
+            "Set Brightness": {
+                "use": "act_setLevel-Light",
+                "params": "ep=01",
+                "isVisible": "1",
+                "value": "Brightness"
+            },
+            "Get Brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Bind 01-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0008-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0008&attrId=0000&attrType=20",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

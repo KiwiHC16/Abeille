@@ -146,7 +146,7 @@
             if ($icon == "")
                 $error = newDevError($devModName, "ERROR", "No 'icon' defined.");
             else {
-                $icon = "images/node_".$icon.".png";
+                $icon = "core/config/devices_images/node_".$icon.".png";
                 if (!file_exists($icon)) {
                     $error = newDevError($devModName, "ERROR", "Missing icon '".$icon."' file.");
                 }

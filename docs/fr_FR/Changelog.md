@@ -6,7 +6,8 @@
 -   Améliorations: Assistant modèle pour device 'lightning'.
 -   Améliorations: Interne Abeille.class (publishMosquitto => msgToCmd).
 -   Nouveau: Support TRADFRIbulbE27WSglobe1055lm (2755).
--   Améliorations: Images des devices déplacées dans 'core/config/devices/devices_images'.
+-   Améliorations: Images des devices déplacées dans 'core/config/devices_images'.
+-   Nouveau: Support variateur Legrand 077701LA (2756).
 
 ## 250318-BETA-1
 

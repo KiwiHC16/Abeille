@@ -2796,7 +2796,7 @@ class Abeille extends eqLogic {
         // Icon updated if no-longer-exists/reset/undefined/defaultUnknown
         $curIcon = $eqLogic->getConfiguration('ab::icon', '');
         if ($curIcon != '') {
-            $iconPath = __DIR__.'/../../core/config/devices/devices_images/node_'.$curIcon.'.png';
+            $iconPath = __DIR__.'/../../core/config/devices_images/node_'.$curIcon.'.png';
             $iconExists = file_exists($iconPath);
         } else {
             $iconPath = '';

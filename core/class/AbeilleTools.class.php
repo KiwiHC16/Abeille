@@ -6,7 +6,7 @@
     define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
     define('devicesLocalDir', __DIR__.'/../config/devices_local/'); // Unsupported/user devices
     define('cmdsDir', __DIR__.'/../config/commands/'); // Abeille's supported commands
-    define('imagesDir', __DIR__.'/../../core/config/devices/devices_images/'); // Abeille's supported icons
+    define('imagesDir', __DIR__.'/../../core/config/devices_images/'); // Abeille's supported icons
 
     class AbeilleTools
     {

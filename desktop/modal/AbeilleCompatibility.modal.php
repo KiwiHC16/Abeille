@@ -29,7 +29,7 @@
         echo '</tr></thead>';
         foreach ($eqList as $eq) {
             echo '<tr>';
-            echo '<td><img src="/plugins/Abeille/core/config/devices/devices_images/node_'.$eq['icon'].'.png" width="100" height="100"></td>';
+            echo '<td><img src="/plugins/Abeille/core/config/devices_images/node_'.$eq['icon'].'.png" width="100" height="100"></td>';
             echo '<td>'.$eq['manufacturer'].'</td>';
             echo '<td>'.$eq['model'].'</td>';
             echo '<td>'.$eq['type'].'</td>';

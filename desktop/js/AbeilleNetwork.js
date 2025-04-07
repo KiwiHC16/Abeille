@@ -902,7 +902,7 @@ function displayLinksGraph(gtwId) {
                                 .attr("width", imgSize)
                                 .attr("height", imgSize)
                                 .link(
-                                    "/plugins/Abeille/core/config/devices/devices_images/node_" +
+                                    "/plugins/Abeille/core/config/devices_images/node_" +
                                         iconName +
                                         ".png"
                                 );

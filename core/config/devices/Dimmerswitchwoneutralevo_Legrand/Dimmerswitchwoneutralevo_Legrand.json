@@ -2,13 +2,13 @@
     "Dimmerswitchwoneutralevo_Legrand": {
         "manufacturer": "Legrand",
         "model": "077701LA",
-        "type": "Legrand wireless switch",
+        "type": "Legrand wired switch without neutral",
         "genericType": "Light",
         "category": {
             "light": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "Legrand-Switch",
             "mainEP": "01"
         },
         "commands": {
@@ -40,16 +40,6 @@
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Bind 01-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0006",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 01-0006": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0006&attrId=0000&attrType=10",
-                "execAtCreation": "yes"
-            },
             "Set Brightness": {
                 "use": "act_setLevel-Light",
                 "params": "ep=01",
@@ -66,14 +56,19 @@
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Bind 01-0008-ToZigate": {
+            "Bind 01-0003-ToZigate": {
                 "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0008",
+                "params": "ep=01&clustId=0003",
                 "execAtCreation": "yes"
             },
-            "SetReporting 01-0008-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0008&attrId=0000&attrType=20",
+            "Bind 01-000F-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=000F",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0301-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0301",
                 "execAtCreation": "yes"
             }
         }

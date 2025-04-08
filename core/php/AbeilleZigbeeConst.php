@@ -670,6 +670,12 @@
         ),
         "0301" => array(
             "name" => "Ballast Configuration",
+            "attributes" => array(
+                "0000" => array( "name" => "PhysicalMinLevel", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0001" => array( "name" => "PhysicalMaxLevel", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0010" => array( "name" => "MinLevel", "access" => "RW", "dataType" => 0x20 ), // uint8
+                "0011" => array( "name" => "MaxLevel", "access" => "RW", "dataType" => 0x20 ), // uint8
+            ),
         ),
         "0400" => array(
             "name" => "Illuminance Measurement",

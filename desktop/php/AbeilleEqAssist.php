@@ -152,6 +152,12 @@
                 table, td {
                     border: 1px solid black;
                 }
+                table.clustTable {
+                    border: 1px solid black;
+                }
+                table.clustTable td {
+                    padding: 4px;
+                }
             </style>
 
             <div class="row" id="idEndPoints">
@@ -1795,16 +1801,17 @@ console.log("missing value for "+attrId);
                 /* Display server clusters */
                 h += '<div style="margin-left:30px">';
                 h += '<label for="fname">Server/input clusters:</label>';
-                h += '<br>';
-                h += '<table id="idServClust'+zEpId+'">';
+                // h += '<br>';
+                h += '<table id="idEp'+zEpId+'-ServClust" class="clustTable">';
                 h += '</table>';
                 h += '<br>';
 
                 /* Display client clusters */
                 h += '<label for="fname">Client/output clusters:</label>';
-                h += '<table id="idCliClust'+zEpId+'">';
+                h += '<table id="idEp'+zEpId+'-CliClust" class="clustTable">';
                 h += '</table>';
                 h += '<br>';
+
                 h += '</div>';
                 h += '</div>';
                 $("#idEndPoints").append(h);
@@ -1895,8 +1902,8 @@ console.log("missing value for "+attrId);
                 field = document.getElementById("idZbDevId"+sEp);
                 field.value = ep.devId;
                 changeClass("idZbDevId"+sEp+"-RB", "btn-warning", "btn-success");
-                var servClustTable = document.getElementById("idServClust"+sEp);
-                var cliClustTable = document.getElementById("idCliClust"+sEp);
+                var servClustTable = document.getElementById("idEp"+sEp+"-ServClust");
+                var cliClustTable = document.getElementById("idEp"+sEp+"-CliClust");
                 /* Cleanup tables */
                 var rowCount = servClustTable.rows.length;
                 for (var i = rowCount - 1; i >= 0; i--) {
@@ -1916,7 +1923,7 @@ console.log("missing value for "+attrId);
 
                     // 1st col = cluster ID
                     cell0 = newRow.insertCell(0);
-                    cell0.style.width = '40px';
+                    // cell0.style.width = '40px';
                     cell0.innerHTML = clustId;
 
                     // 2nd col = Buttons discover attributes
@@ -2013,9 +2020,9 @@ console.log("missing value for "+attrId);
                 /* Updating display */
                 var row;
                 if (sDir) { // Server to client = server clusters
-                    var clustTable = document.getElementById("idServClust"+sEp);
+                    var clustTable = document.getElementById("idEp"+sEp+"-ServClust");
                 } else {
-                    var clustTable = document.getElementById("idCliClust"+sEp);
+                    var clustTable = document.getElementById("idEp"+sEp+"-CliClust");
                 }
 
                 if (typeof clustTable === 'undefined') {

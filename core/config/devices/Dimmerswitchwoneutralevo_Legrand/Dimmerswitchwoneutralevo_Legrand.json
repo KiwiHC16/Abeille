@@ -56,6 +56,12 @@
                 "isVisible": "1",
                 "nextLine": "after"
             },
+            "Device mode": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FC01&attrId=0000&attrType=09&manufId=1021",
+                "listValue": "0100|Dimmer OFF;0101|Dimmer ON",
+                "isVisible": 1
+            },
             "Bind 01-0003-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0003",

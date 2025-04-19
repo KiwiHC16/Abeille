@@ -23,9 +23,9 @@
         // logMessage('debug', "zbFormatData(".$valIn.", ".$type.")");
         // Note: Slider/select conversion to be done in execute() function
         if (substr($valIn, 0, 7) == "#slider") {
-            $valIn = substr($valIn, 7, -1); // Extracting decimal value
+            $valIn = substr($valIn, 7, -1); // Extracting value
         } else if (substr($valIn, 0, 7) == "#select") {
-            $valIn = substr($valIn, 7, -1); // Extracting decimal value
+            $valIn = substr($valIn, 7, -1); // Extracting value
         } else if (substr($valIn, 0, 2) == "0x") {
             $valIn = hexdec($valIn);
         }
@@ -34,6 +34,16 @@
 
         $valOut = '';
         switch ($type) {
+        case '08': // data8: 8-bit data
+        case '09':
+        case '0A':
+        case '0B':
+        case '0C':
+        case '0D':
+        case '0E':
+        case '0F': // data64: 64-bit data
+            $valOut = $valIn; // Don't touch anything for these types
+            break;
         case 'bool':
         case '10':
         case '18': // map8

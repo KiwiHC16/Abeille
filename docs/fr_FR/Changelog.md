@@ -9,6 +9,7 @@
 -   Améliorations: Images des devices déplacées dans 'core/config/devices_images'.
 -   Nouveau: Support variateur Legrand 077701LA (2756).
 -   Améliorations: Interne constantes Zigbee cluster 0301/Ballast control.
+-   Améliorations: Interne: Support types 08 (8-bit data) a 0F (64-bit data).
 
 ## 250318-BETA-1
 

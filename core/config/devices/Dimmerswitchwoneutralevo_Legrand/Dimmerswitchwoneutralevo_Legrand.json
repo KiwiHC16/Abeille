@@ -76,6 +76,16 @@
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0301",
                 "execAtCreation": "yes"
+            },
+            "Bind 01-FC01-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=FC01",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-FC01-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=FC01&attrId=0000&attrType=09",
+                "execAtCreation": "Yes"
             }
         }
     }

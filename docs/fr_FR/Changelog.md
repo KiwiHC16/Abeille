@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Support variateur Legrand 077701LA (2756).
+
 ## 250426-BETA-1
 
 -   Améliorations: Repair: Collecte 'image type'.

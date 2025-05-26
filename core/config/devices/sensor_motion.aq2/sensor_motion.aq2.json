@@ -18,6 +18,9 @@
                 "use": "inf_zbAttr-0400-MeasuredValue",
                 "comment": "Seems to be non standard 0400-0000 attribute with direct Lux value",
                 "notStandard": 1,
+                "trigOut": {
+                    "0406-01-0000": { "valueOffset": 1 }
+                },
                 "isVisible": 1
             },
             "Occupancy": {

@@ -92,6 +92,7 @@ Exemple de commande 'action'
 * invertBinary: optionnel.
   Utile uniquement pour une commande 'info' de subType 'binary'.
   Non inversé par défaut ("invertBinary":0).
+  = Inverser les valeurs binaires (page configuration commande).
 
 * disableTitle: optionnel.
   Utile uniquement pour une commande 'action' de subType 'message'.
@@ -198,9 +199,11 @@ Exemple de commande 'action'
 
   * returnStateTime: X
     Permet d'indiquer à Jeedom de changer automatique la valeur au bout de X sec à celle de 'returnStateValue'
+    = Durée avant retour d'état (en min)
 
   * returnStateValue: Y
-    Valeur de retour automatique pour une commande info.
+    Valeur de retour automatique pour une commande info
+    = Valeur retour d'état.
 
   * notStandard: 1
     Permet d'indiquer que l'attribut ne doit pas etre traité comme un attribut ZCL.

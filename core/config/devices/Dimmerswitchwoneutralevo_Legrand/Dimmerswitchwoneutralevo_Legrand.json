@@ -60,7 +60,10 @@
                 "use": "act_zbWriteAttribute-list",
                 "params": "clustId=FC01&attrId=0000&attrType=09&manufId=1021",
                 "listValue": "0100|Dimmer OFF;0101|Dimmer ON",
-                "isVisible": 1
+                "isVisible": 1,
+                "trigOut": {
+                    "getDeviceMode": {}
+                }
             },
             "Bind 01-0003-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -77,15 +80,26 @@
                 "params": "ep=01&clustId=0301",
                 "execAtCreation": "yes"
             },
-            "Bind 01-FC01-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=FC01",
-                "execAtCreation": "yes"
+            "Get device mode": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=FC01&attrId=0000",
+                "execAtCreation": "yes",
+                "logicalId": "getDeviceMode"
             },
-            "SetReporting 01-FC01-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=FC01&attrId=0000&attrType=09",
-                "execAtCreation": "Yes"
+            "LED": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FC01&attrId=0001&attrType=10&manufId=1021",
+                "listValue": "01|LED ON;00|LED OFF",
+                "isVisible": 1,
+                "trigOut": {
+                    "getLED": {}
+                }
+            },
+            "Get LED": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=FC01&attrId=0001",
+                "execAtCreation": "yes",
+                "logicalId": "getLED"
             }
         }
     }

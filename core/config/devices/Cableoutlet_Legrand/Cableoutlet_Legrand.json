@@ -13,10 +13,9 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
-            "etat": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
@@ -61,11 +60,20 @@
                 "params": "mult=1&div=1",
                 "isVisible": 1
             },
-            "Set Led On": {
-                "use": "setLegrandLEDOn"
+            "LED": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FC01&attrId=0001&attrType=10&manufId=1021",
+                "listValue": "01|LED ON;00|LED OFF",
+                "isVisible": 1,
+                "trigOut": {
+                    "getLED": {}
+                }
             },
-            "Set Led Off": {
-                "use": "setLegrandLEDOff"
+            "Get LED": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=FC01&attrId=0001",
+                "execAtCreation": "yes",
+                "logicalId": "getLED"
             },
             "Set Led On If On": {
                 "use": "setLegrandLEDOn_if_on"

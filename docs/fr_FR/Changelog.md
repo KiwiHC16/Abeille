@@ -1,6 +1,8 @@
 # ChangeLog
 
 -   Améliorations: Support variateur Legrand 077701LA (2756).
+-   Améliorations: Interne: Warnings 'check_json.php'.
+-   Améliorations: Remplacement cmdes obsolètes 'setLegrandLEDOff.json' & 'setLegrandLEDOn.json'.
 
 ## 250426-BETA-1
 

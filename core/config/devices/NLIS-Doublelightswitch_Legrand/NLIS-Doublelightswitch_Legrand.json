@@ -80,11 +80,20 @@
                 "params": "ep=02&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
-            "LedOn": {
-                "use": "setLegrandLEDOn"
+            "LED": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FC01&attrId=0001&attrType=10&manufId=1021",
+                "listValue": "01|LED ON;00|LED OFF",
+                "isVisible": 1,
+                "trigOut": {
+                    "getLED": {}
+                }
             },
-            "LedOff": {
-                "use": "setLegrandLEDOff"
+            "Get LED": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=FC01&attrId=0001",
+                "execAtCreation": "yes",
+                "logicalId": "getLED"
             },
             "LedOn_if_on": {
                 "use": "setLegrandLEDOn_if_on"

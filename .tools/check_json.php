@@ -252,7 +252,7 @@
                     if ($attr !== false) {
                         $correctAttrType = sprintf("%02X", $attr['dataType']);
                         if ($attrType != $correctAttrType) {
-                            $error = newDevError($devModName, "ERROR", "Cmd '${cmdJName}': Invalid attribute type '${attrType}' for clust ${clustId} attr ${attrId}");
+                            $error = newDevError($devModName, "ERROR", "Cmd '$cmdJName': Invalid attribute type '$attrType' for clust $clustId attr $attrId");
                         }
                     }
                 }
@@ -347,7 +347,7 @@
 
                 if ($pType == "xiaomi") {
                     if ($pKeyLen != 9) { // Expecting CLUSTID-ATTRID
-                        newDevError($devModName, "ERROR", "Xiaomi private support: Invalid key '${pKey}'");
+                        newDevError($devModName, "ERROR", "Xiaomi private support: Invalid key '$pKey'");
                         continue;
                     }
 
@@ -391,7 +391,7 @@
                  */
                 else if ($pType == "tuya") {
                     if ($pKeyLen != 4) { // Expecting CLUSTID
-                        newDevError($devModName, "ERROR", "Tuya DP private support: Invalid key '${pKey}'");
+                        newDevError($devModName, "ERROR", "Tuya DP private support: Invalid key '$pKey'");
                         continue;
                     }
 
@@ -400,18 +400,18 @@
                             continue;
 
                         if (!isset($dpVal['function'])) {
-                            $error = newDevError($devModName, "ERROR", "Missing 'function' for private/${pKey}");
+                            $error = newDevError($devModName, "ERROR", "Missing 'function' for private/$pKey");
                             continue;
                         }
                         $func = $dpVal['function'];
                         $supportedFunc = ['rcvValue', 'rcvValueEnum', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
                         if (!in_array($func, $supportedFunc)) {
-                            $error = newDevError($devModName, "ERROR", "Invalid function '${func}' for private/${pKey} DP ${dpId}");
+                            $error = newDevError($devModName, "ERROR", "Invalid function '$func' for private/$pKey DP $dpId");
                             continue;
                         }
                         if ($func == 'rcvValueDiv') {
                             if (!isset($dpVal['div'])) {
-                                $error = newDevError($devModName, "ERROR", "Missing 'div' for DP '${dpId}' in private/${pKey}");
+                                $error = newDevError($devModName, "ERROR", "Missing 'div' for DP '$dpId' in private/$pKey");
                                 continue;
                             }
                         }
@@ -1019,7 +1019,7 @@
                 $varOk = true;
             }
             if (!$varOk) {
-                $error = newDevError($devMName, "ERROR", "Missing '${var}' variable data for cmd '${cmdJName}'");
+                $error = newDevError($devMName, "ERROR", "Missing '$var' variable data for cmd '$cmdJName'");
             }
 
             $newCmdText = substr($newCmdText, $start + $len);
@@ -1037,7 +1037,7 @@
 
         // If 'listValue', 'subType' should be 'select'
         if ((isset($newCmd["listValue"]) || isset($devCmd["listValue"])) && ($newCmd["subType"] != "select")) {
-            $error = newDevError($devMName, "ERROR", "Wrong sub-type for 'listValue' in cmd '${cmdJName}'");
+            $error = newDevError($devMName, "ERROR", "Wrong sub-type for 'listValue' in cmd '$cmdJName'");
         }
 
         if ($error)

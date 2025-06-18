@@ -100,6 +100,21 @@
                 "params": "ep=01&clustId=FC01&attrId=0001",
                 "execAtCreation": "yes",
                 "logicalId": "getLED"
+            },
+            "LED if ON": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FC01&attrId=0002&attrType=10&manufId=1021",
+                "listValue": "01|LED ON if ON;00|LED OFF if ON",
+                "isVisible": 1,
+                "trigOut": {
+                    "getLEDifON": {}
+                }
+            },
+            "Get LED if ON": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=FC01&attrId=0002",
+                "execAtCreation": "yes",
+                "logicalId": "getLEDifON"
             }
         }
     }

@@ -32,44 +32,45 @@ Notes
 Format de fichier
 =================
 
-Exemple: BASICZBR3.json
+Exemple
 
-  {
-    "BASICZBR3": {
-      "type": "Sonoff smart switch",
-      "manufacturer": "Sonoff",
-      "model": "BASICZBR3",
-      "genericType": "Generic",
-      "alternateIds": {
-        "BASICZBR30": {
-          "manufacturer": "if-different-from-top",
-          "model": "if-different-from-top",
-          "icon": "if-different-from-top",
-          "type": "if-different-from-top"
+    {
+        "BASICZBR3": {
+            "type": "Sonoff smart switch",
+            "manufacturer": "Sonoff",
+            "model": "BASICZBR3",
+            "genericType": "Generic",
+            "alternateIds": {
+                "BASICZBR30": {
+                  "manufacturer": "if-different-from-top",
+                  "model": "if-different-from-top",
+                  "icon": "if-different-from-top",
+                  "type": "if-different-from-top"
+                }
+            },
+            "timeout": "60",
+            "category": {
+                "automatism": "1"
+            },
+            "configuration": {
+                "icon": "Sonoff-BASICZBR3",
+                "mainEP": "01"
+            },
+            "variables": {
+                "comment": "Section optionnelle permettant de déclarer des variables par défaut"
+            },
+            "commands": {
+                "On": { "use": "On", "isVisible": 1 },
+                "Off": { "use": "Off", "isVisible": 1 },
+                "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+                "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+                "Group1": "grp_legrand-LED"
+            },
+            "private": {
+                "comment": "Section optionnelle pour la gestion des clusters privés"
+            }
         }
-      },
-      "timeout": "60",
-      "category": {
-        "automatism": "1"
-      },
-      "configuration": {
-        "icon": "Sonoff-BASICZBR3",
-        "mainEP": "01"
-      },
-      "variables": {
-        "comment": "Section optionnelle permettant de déclarer des variables par défaut"
-      },
-      "commands": {
-        "On": { "use": "On", "isVisible": 1 },
-        "Off": { "use": "Off", "isVisible": 1 },
-        "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
-        "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" }
-      },
-      "private": {
-        "comment": "Section optionnelle pour la gestion des clusters privés"
-      }
     }
-  }
 
 * Clef d'entrée/identificateur: OBLIGATOIRE, = nom du fichier sans extension (ex: BASICZBR3)
   ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous différentes marques.
@@ -116,8 +117,7 @@ Exemple: BASICZBR3.json
   - poll: Force la lecture des cluster 0006 & 0008 attribut 0000 de maniere répétitive.
     A EVITER !! Preferer le polling par commande ("Polling": "cron1")
     Ex: "poll": "1"
-  
-  
+
 * customization: optionnel
   Permet de corriger/forcer qq infos remontées par l'équipement.
   Ex:  "customization": {

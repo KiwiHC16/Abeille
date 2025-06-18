@@ -1,0 +1,17 @@
+{
+    "Dimmer": {
+        "use": "act_zbWriteAttribute-list",
+        "params": "clustId=FC01&attrId=0000&attrType=09&manufId=1021",
+        "listValue": "0100|Dimmer OFF;0101|Dimmer ON",
+        "isVisible": 1,
+        "trigOut": {
+            "getDeviceMode": {}
+        }
+    },
+    "Get device mode": {
+        "use": "act_zbReadAttribute",
+        "params": "ep=01&clustId=FC01&attrId=0000",
+        "execAtCreation": "yes",
+        "logicalId": "getDeviceMode"
+    }
+}

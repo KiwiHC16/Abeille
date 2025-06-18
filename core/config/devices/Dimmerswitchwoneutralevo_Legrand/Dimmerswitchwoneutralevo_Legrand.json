@@ -65,6 +65,12 @@
                     "getDeviceMode": {}
                 }
             },
+            "Get device mode": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=FC01&attrId=0000",
+                "execAtCreation": "yes",
+                "logicalId": "getDeviceMode"
+            },
             "Bind 01-0003-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0003",
@@ -79,12 +85,6 @@
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0301",
                 "execAtCreation": "yes"
-            },
-            "Get device mode": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=FC01&attrId=0000",
-                "execAtCreation": "yes",
-                "logicalId": "getDeviceMode"
             },
             "LED": {
                 "use": "act_zbWriteAttribute-list",

@@ -237,7 +237,17 @@
                 $jsonCmds = $device['commands'];
                 unset($device['commands']);
                 foreach ($jsonCmds as $cmd1 => $cmd2) {
-                    /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
+                    /* New command JSON format reminder:
+                        Declaring a Jeedom command by its name
+                            "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... }
+                        Declaring a group of Jeedom commands
+                            "GroupX": "grp_xxx"
+                     */
+                    if ((substr($cmd1, 0, 5) == "Group") && (gettype($cmd2) == "string")) {
+                        logMessage('debug', 'Cmds group detected');
+                        logMessage('debug', 'NOT SUPPORTED YET !!!');
+                        continue;
+                    }
                     $cmdFName = $cmd2['use']; // File name without '.json'
                     $newCmd = getCommandModel($modelName, $cmdFName, $cmd1);
                     if ($newCmd === false)

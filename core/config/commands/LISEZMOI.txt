@@ -13,6 +13,7 @@ Nom des commandes
 En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
 - Toute commande 'action' doit commencer par 'act_'.
 - Toute commande 'info' doit commencer par 'inf_'.
+- Tout groupe de commandes doit commencer par 'grp_'.
 - La lettre suivante est toujours en minuscule.
 
 - Les commandes specifiques Zigbee (issues du standard Zigbee) sont ensuite prefixées par "zb"
@@ -57,6 +58,26 @@ Exemple de commande 'action'
           "visibilityCategory": "additionalCommand"
         }
       }
+    }
+
+Exemple de groupe de commandes
+
+    {
+        "Dimmer": {
+            "use": "act_zbWriteAttribute-list",
+            "params": "clustId=FC01&attrId=0000&attrType=09&manufId=1021",
+            "listValue": "0100|Dimmer OFF;0101|Dimmer ON",
+            "isVisible": 1,
+            "trigOut": {
+                "getDeviceMode": {}
+            }
+        },
+        "Get device mode": {
+            "use": "act_zbReadAttribute",
+            "params": "ep=01&clustId=FC01&attrId=0000",
+            "execAtCreation": "yes",
+            "logicalId": "getDeviceMode"
+        }
     }
 
 * Clef d'entrée/identificateur: OBLIGATOIRE

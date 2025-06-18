@@ -1,5 +1,8 @@
 <?php
-    /* Check JSON files */
+    /*
+     * Abeille plugin
+     * Check JSON models
+     */
 
     define('devicesDir', __DIR__.'/../core/config/devices');
     define('commandsDir', __DIR__.'/../core/config/commands');
@@ -68,6 +71,56 @@
             "msg" => $msg
         );
         $cmdErrors[] = $e;
+    }
+
+    /* Returns device model as associative array.
+       Group of commands are included (commands/GroupX replaced) */
+    function loadDeviceModel($devModName, $fullPath) {
+
+        $jsonContent = file_get_contents($fullPath);
+        $content = json_decode($jsonContent, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            newDevError($devModName, 'ERROR', 'Corrupted JSON file');
+            step('E');
+            return [];
+        }
+        // echo "Content=".json_encode($content)."\n";
+
+        $content2 = [];
+        $content2[$devModName] = [];
+        foreach ($content[$devModName] as $key => $val) {
+            // echo "key=$key\n";
+            if ($key == "commands") {
+                $content2[$devModName][$key] = [];
+                foreach ($content[$devModName][$key] as $key2 => $val2) {
+                    // echo "  key2=$key2\n";
+                    if ((substr($key2, 0, 5) == "Group") && (gettype($val2) == "string")) {
+                        // echo "    group=$key2 => $val2\n";
+                        $fullPath = commandsDir.'/'.$val2.'.json';
+                        if (!file_exists($fullPath)) {
+                            newDevError($devModName, 'ERROR', 'Missing cmds group "$val2"');
+                            step('E');
+                            return [];
+                        }
+                        $jsonContent = file_get_contents($fullPath);
+                        $grp = json_decode($jsonContent, true);
+                        if (json_last_error() != JSON_ERROR_NONE) {
+                            newDevError($devModName, 'ERROR', 'Corrupted cmds group file');
+                            step('E');
+                            return [];
+                        }
+                        foreach ($grp as $key3 => $val3) {
+                            $content2[$devModName][$key][$key3] = $val3;
+                        }
+                    } else
+                        $content2[$devModName][$key][$key2] = $val2;
+                }
+            } else
+                $content2[$devModName][$key] = $val;
+        }
+        // echo "Content2=".json_encode($content2)."\n";
+
+        return $content2;
     }
 
     // Check cmd 'subType'. Returns true if ok, else false
@@ -192,11 +245,22 @@
             // echo "commands=".json_encode($commands)."\n";
             $logicIds = [];
             foreach ($commands as $cmdJName => $cmd) {
-                // New syntax: "<cmdJName>": { "use": "<fileName>", "params": "X=1&Y=2" }
+                /* New command JSON format reminder:
+                    Declaring a Jeedom command by its name
+                        "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... }
+                    Declaring a group of Jeedom commands
+                        "GroupX": "grp_xxx"
+                    */
                 // echo "cmd=".json_encode($cmd)."\n";
                 if ($cmd == []) {
                     $error = newDevError($devModName, "ERROR", "Empty command '$cmdJName'");
                     continue;
+                }
+
+                // Group of commands support
+                if ((substr($cmdJName, 0, 5) == "Group") && (gettype($cmd) == "string")) {
+                    echo("ERROR: Cmds group detected => Should be included in another step\n");
+                    return;
                 }
 
                 $cmdModName = $cmd['use'];
@@ -1076,13 +1140,17 @@
     echo "Checking devices models syntax\n- ";
     $idx = 2;
     foreach ($devModList as $devModName => $fullPath) {
-        $jsonContent = file_get_contents($fullPath);
-        $content = json_decode($jsonContent, true);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            newDevError($devModName, 'ERROR', 'Corrupted JSON file');
-            step('E');
-        } else
-            checkDeviceModel($devModName, $content);
+        // $jsonContent = file_get_contents($fullPath);
+        // $content = json_decode($jsonContent, true);
+        // if (json_last_error() != JSON_ERROR_NONE) {
+        //     newDevError($devModName, 'ERROR', 'Corrupted JSON file');
+        //     step('E');
+        // } else
+        $content = loadDeviceModel($devModName, $fullPath);
+        if ($content == [])
+            continue;
+
+        checkDeviceModel($devModName, $content);
     }
 
     // TODO: Should be USED cmds only

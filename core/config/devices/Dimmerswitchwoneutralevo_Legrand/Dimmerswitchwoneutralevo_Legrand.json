@@ -89,7 +89,8 @@
             "LED": {
                 "use": "act_zbWriteAttribute-list",
                 "params": "clustId=FC01&attrId=0001&attrType=10&manufId=1021",
-                "listValue": "01|LED ON;00|LED OFF",
+                "listValue": "1|LED ON;0|LED OFF",
+                "logicalId": "FC01-01-0001",
                 "isVisible": 1,
                 "trigOut": {
                     "getLED": {}
@@ -104,7 +105,8 @@
             "LED if ON": {
                 "use": "act_zbWriteAttribute-list",
                 "params": "clustId=FC01&attrId=0002&attrType=10&manufId=1021",
-                "listValue": "01|LED ON if ON;00|LED OFF if ON",
+                "listValue": "1|LED ON if ON;0|LED OFF if ON",
+                "logicalId": "FC01-01-0002",
                 "isVisible": 1,
                 "trigOut": {
                     "getLEDifON": {}

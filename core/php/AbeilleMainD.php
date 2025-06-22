@@ -1058,7 +1058,9 @@
                     else
                         logMessage('debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." (calculValueOffset=".$cvo.")");
 logMessage('debug', "  checkAndUpdateCmd(), attr['value']=".json_encode($attr['value']));
-                    $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
+                    if ($eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']) != true)
+                        logMessage('debug', "    WARNING: checkAndUpdateCmd() failed");
+
 
                     // Checking if battery info, only if registered command
 logMessage('debug', "  checkIfBatteryInfo(), attr=".json_encode($attr));

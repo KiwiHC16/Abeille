@@ -5,6 +5,7 @@
 -   Améliorations: Remplacement cmdes obsolètes 'setLegrandLEDOff.json' & 'setLegrandLEDOn.json'.
 -   Améliorations: Remplacement cmdes obsolètes 'setLegrandLEDOff_if_on.json' & 'setLegrandLEDOn_if_on.json'.
 -   Améliorations: Commandes: Support préliminaire de groupes de commandes (Ex: 'grp_legrand-Dimmer.json').
+-   Corrections: Modele 'sensor_motion.aq2' revu pour 'Occupancy' dont l'historique s'arrète (2757).
 
 ## 250426-BETA-1
 

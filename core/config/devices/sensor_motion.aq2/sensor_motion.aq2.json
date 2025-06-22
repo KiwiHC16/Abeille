@@ -27,6 +27,7 @@
                 "use": "inf_zbAttr-0406-Occupancy",
                 "returnStateValue": 0,
                 "returnStateTime": 1,
+                "repeatEventManagement": "always",
                 "isVisible": "1"
             },
             "Battery-Volt": {

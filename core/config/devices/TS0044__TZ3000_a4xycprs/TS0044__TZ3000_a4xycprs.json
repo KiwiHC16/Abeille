@@ -1,0 +1,54 @@
+{
+    "TS0044__TZ3000_a4xycprs": {
+        "manufacturer": "Moes",
+        "model": "ZT-SR-EU4",
+        "type": "4 buttons switch",
+        "alternateIds": {
+            "TS0044__TZ3000_dziaict4": { "manufacturer": "Tuya", "model": "TS0044_1" },
+            "TS0044__TZ3000_mh9px7cq": { "manufacturer": "Tuya", "model": "TS0044_1" },
+            "TS0044__TZ3000_j61x9rxn": { "manufacturer": "Tuya", "model": "TS0044_1" },
+            "TS0044__TZ3000_u3nv1jwk": { "manufacturer": "Tuya", "model": "TM-YKQ004" },
+            "TS0044__TZ3000_bgtzm4ny": { "manufacturer": "HOBEIAN", "model": "ZG-101ZS" },
+            "TS0044__TZ3000_6azpyoao": { "manufacturer": "Tuya", "model": "TS044" }
+        },
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-4ButtonsSwitch-White",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Click 1": {
+                "use": "inf_click",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "inf_click",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Click 3": {
+                "use": "inf_click",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Click 4": {
+                "use": "inf_click",
+                "params": "ep=04",
+                "isVisible": 1
+            }
+        }
+    }
+}

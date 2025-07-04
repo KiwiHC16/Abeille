@@ -287,6 +287,10 @@
         $eqLogic->setIsEnable(1);
         $eqLogic->save();
 
+        // TODO ? Missing basic cmds at this step
+        // [2025-07-04 12:14:43]   updateTimestamp(): WARNING: Abeille1/F909, missing cmd 'Time-Time'
+        // [2025-07-04 12:14:43]   updateTimestamp(): WARNING: Abeille1/F909, missing cmd 'Link-Quality'
+
         // Inform cmd that new device has been created
         $msg = array(
             'type' => "eqUpdated",
@@ -1048,30 +1052,42 @@
                     logMessage('debug', "  Unknown Jeedom command logicId='".$attr['name']."'");
                 } else {
                     $cmdName = $cmdLogic->getName();
-                    $unit = $cmdLogic->getUnite();
-                    if ($unit === null)
-                        $unit = '';
-                    // WARNING: value might not be the final one if 'calculValueOffset' is used
-                    $cvo = $cmdLogic->getConfiguration('calculValueOffset', '');
-                    if ($cvo == '')
-                        logMessage('debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." ".$unit);
-                    else
-                        logMessage('debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." (calculValueOffset=".$cvo.")");
-logMessage('debug', "  checkAndUpdateCmd(), attr['value']=".json_encode($attr['value']));
-                    if ($eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']) != true)
-                        logMessage('debug', "    WARNING: checkAndUpdateCmd() failed");
+                    if ($cmdLogic->getType() == "action") {
+                        $subType = $cmdLogic->getSubType();
+                        logMessage('debug', "  WARNING: 'action' cmd '$cmdName' detected (subType=$subType)");
+                        // Tcharp38 note: maybe we could update 'select' or 'slider' value with this returned data
+                        // Test
+                        if (($subType == 'slider') || ($subType == 'select')) {
+                            logMessage('debug', "  WARNING: 'action' cmd detected => trying to set value");
+                            $cmdLogic->setValue($attr['value']);
+                        }
+                    } else {
+                        $unit = $cmdLogic->getUnite();
+                        if ($unit === null)
+                            $unit = '';
+                        // WARNING: value might not be the final one if 'calculValueOffset' is used
+                        $cvo = $cmdLogic->getConfiguration('calculValueOffset', '');
+                        if ($cvo == '')
+                            logMessage('debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." ".$unit);
+                        else
+                            logMessage('debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." (calculValueOffset=".$cvo.")");
+    logMessage('debug', "  checkAndUpdateCmd(), attr['value']=".json_encode($attr['value']));
+                        // if ($eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']) != true)
+                        //     logMessage('debug', "    WARNING: checkAndUpdateCmd() failed");
+                        $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
+                        // Checking if battery info, only if registered command
+    logMessage('debug', "  checkIfBatteryInfo(), attr=".json_encode($attr));
+                        checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
 
-                    // Checking if battery info, only if registered command
-logMessage('debug', "  checkIfBatteryInfo(), attr=".json_encode($attr));
-                    checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
-
-                    // Check if any action cmd must be executed triggered by this update
-logMessage('debug', "  infoCmdUpdate()");
-                    infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
+                        // Check if any action cmd must be executed triggered by this update
+    logMessage('debug', "  infoCmdUpdate()");
+                        infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
+                    }
                 }
             }
 
+            // Updating equipment life status
             updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             return;
         } // End 'attributesReportN' or 'readAttributesResponseN'

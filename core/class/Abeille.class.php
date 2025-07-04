@@ -28,7 +28,7 @@
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/AbeilleTools.class.php';
-    include_once __DIR__.'/AbeilleCmd.class.php';
+    include_once __DIR__.'/AbeilleCmd.class.php'; // execute()
     include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
     include_once __DIR__.'/../php/AbeilleLog.php'; // logGetLevelNumber()
     // include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()

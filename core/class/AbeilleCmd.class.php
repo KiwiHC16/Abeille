@@ -13,14 +13,14 @@
 
             // if (strpos($request2, "#addrGroup#") > 0) {
             //     $request2 = str_replace("#addrGroup#", $eqLogic->getConfiguration("Groupe"), $request2);
-            //     // logMessage('debug', 'request - addGroup : '.$request2);
+            //     // log::add('Abeille', 'debug', 'request - addGroup : '.$request2);
             // }
 
             // Tcharp38: #GroupeEPx# removed. Now supported thru 'variables' section
             // if (strpos($request2, "#GroupeEP") > 0) {
             //     $id = substr($request2, strpos($request2, "#GroupeEP") + strlen("#GroupeEP"), 1);
             //     $request2 = str_replace("#GroupeEP".$id."#", $eqLogic->getConfiguration("GroupeEP".$id), $request2);
-            //     // logMessage('debug', 'request - GroupEP : '.$id.' - '.$request2);
+            //     // log::add('Abeille', 'debug', 'request - GroupEP : '.$id.' - '.$request2);
             //     // $request .+ "TEST";
             // }
 
@@ -28,7 +28,7 @@
             //     $onTimeHex = sprintf("%04s", dechex($eqLogic->getConfiguration("onTime") * 10));
             //     $request2 = str_replace("#onTime#", $onTimeHex, $request2);
             // }
-            // logMessage('debug', 'request - onTime: '.$request2);
+            // log::add('Abeille', 'debug', 'request - onTime: '.$request2);
 
             // if (stripos($request2, '#addrIEEE#') !== false)  {
             //     $commandIEEE = $eqLogic->getConfiguration("IEEE", '');
@@ -40,16 +40,16 @@
             //     if ($commandIEEE != '')
             //         $request2 = str_ireplace('#IEEE#', $commandIEEE, $request2);
             // }
-            // logMessage('debug', 'request - addrIEEE: '.$request);
+            // log::add('Abeille', 'debug', 'request - addrIEEE: '.$request);
 
             // if (stripos($request2, '#ZiGateIEEE#') !== false) {
             //     // Logical Id ruche de la forme: Abeille1/0000
             //     $rucheIEEE = Abeille::byLogicalId($net.'/0000', 'Abeille')->getConfiguration("IEEE", '');
-            //     // logMessage('debug', 'Adresse IEEE de la ruche '.$rucheIEEE);
+            //     // log::add('Abeille', 'debug', 'Adresse IEEE de la ruche '.$rucheIEEE);
             //     if ($rucheIEEE != '')
             //         $request2 = str_ireplace('#ZiGateIEEE#', $rucheIEEE, $request2);
             // }
-            // logMessage('debug', 'request - ZigateIEEE: '.$request2);
+            // log::add('Abeille', 'debug', 'request - ZigateIEEE: '.$request2);
 
             // Request with multi inputs, input from a Info command.
             // Todo: At this stage process only one cmd info, could need multi info command in the futur
@@ -103,17 +103,17 @@
             //         break;
             //     }
             // }
-            // logMessage('debug', 'request - options: '.$request2);
+            // log::add('Abeille', 'debug', 'request - options: '.$request2);
 
             $request2 = str_replace('\\', '', jeedom::evaluateExpression($request2));
-            // logMessage('debug', 'request - eval: '.$request2);
+            // log::add('Abeille', 'debug', 'request - eval: '.$request2);
 
             $request2 = cmd::cmdToValue($request2);
-            // logMessage('debug', 'request - cmdToVal: '.$request2);
+            // log::add('Abeille', 'debug', 'request - cmdToVal: '.$request2);
 
             if ($request2 != $request) {
-                logMessage('debug', "  updateField(): Updated '".$request."'");
-                logMessage('debug', "  updateField(): To '".$request2."'");
+                log::add('Abeille', 'debug', "  updateField(): Updated '".$request."'");
+                log::add('Abeille', 'debug', "  updateField(): To '".$request2."'");
                 $request = $request2;
             }
             return $request;
@@ -123,21 +123,21 @@
            This is a Jeedom required function. Called to execute an 'action' command.
         */
         public function execute($_options = null) {
-            logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
+            // logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
             $cmdHName = $this->getHumanName();
             $cmdType = $this->getType();
-            logMessage('debug', "-- execute({$cmdHName}, type={$cmdType}, options=".json_encode($_options).')');
+            log::add('Abeille', 'debug', "-- execute({$cmdHName}, type={$cmdType}, options=".json_encode($_options).')');
 
             // Checks
             if ($cmdType != 'action') {
-                logMessage('error', "-- Unexpected info command => ignored");
+                log::add('Abeille', 'error', "Unexpected info command => ignored");
                 return;
             }
             $eqLogic = $this->getEqLogic();
             $eqLogicId = $eqLogic->getLogicalId();
             list($net, $addr) = explode("/", $eqLogicId);
             if ($net == '' || $addr == '') {
-                logMessage('error', $eqLogic->getHumanName().': Cet équipement à besoin de réparation.');
+                log::add('Abeille', 'error', $eqLogic->getHumanName().': Cet équipement à besoin de réparation.');
                 return;
             }
 
@@ -148,23 +148,23 @@
             if (($pos = strpos($cmdLogicId, "::")) !== false) {
                 $cmdLogicId2 = substr($cmdLogicId, 0, $pos);
                 $cmdParams = substr($cmdLogicId, $pos + 2);
-                logMessage('debug', "-- User cmd: logicId={$cmdLogicId2}, params={$cmdParams}");
+                log::add('Abeille', 'debug', "-- User cmd: logicId={$cmdLogicId2}, params={$cmdParams}");
                 $cmdLogic = $eqLogic->getCmd('action', $cmdLogicId2);
                 if (!is_object($cmdLogic)) {
-                    logMessage('error', $cmdHName.": Cmde '{$cmdLogicId2}' inconnue.");
+                    log::add('Abeille', 'error', $cmdHName.": Cmde '{$cmdLogicId2}' inconnue.");
                     return;
                 }
                 $params = explode('=', $cmdParams);
-                logMessage('debug', "-- params=".json_encode($params));
+                log::add('Abeille', 'debug', "-- params=".json_encode($params));
                 $request = $cmdLogic->getConfiguration('request', '');
                 $len = count($params);
                 for ($i = 0; $i < $len; ) {
                     $pKey = $params[$i++];
                     $pVal = $params[$i++];
-                    logMessage('debug', "-- pKey={$pKey}, pVal={$pVal}");
+                    log::add('Abeille', 'debug', "-- pKey={$pKey}, pVal={$pVal}");
                     $request = str_ireplace("#{$pKey}#", $pVal, $request);
                 }
-                logMessage('debug', "-- request={$request}");
+                log::add('Abeille', 'debug', "-- request={$request}");
             } else {
                 $cmdLogic = $this;
                 $request = $cmdLogic->getConfiguration('request', '');
@@ -178,14 +178,14 @@
             switch ($cmdLogic->getSubType()) {
             case 'slider':
                 if (!isset($_options['slider'])) {
-                    logMessage("error", "{$cmdHName}: Sub-type 'slider' mais pas de valeur associée.");
+                    log::add('Abeille', "error", "{$cmdHName}: Sub-type 'slider' mais pas de valeur associée.");
                     return;
                 }
                 $inputVal = trim($_options['slider']); // Remove potential space seen at end of slider value
                 break;
             case 'select':
                 if (!isset($_options['select'])) {
-                    logMessage("error", "{$cmdHName}: Sub-type 'select' mais pas de valeur associée.");
+                    log::add('Abeille', "error", "{$cmdHName}: Sub-type 'select' mais pas de valeur associée.");
                     return;
                 }
                 $inputVal = trim($_options['select']); // Remove potential space seen at end of select value
@@ -222,7 +222,7 @@
             // [2020-01-30 03:39:22][debug] : execute ->action<- function with options ->{"cmdIdUpdated":"12676"}<-
             // Tcharp38: 'cmdIdUpdated' not found elsewhere in Abeille nor in Jeedom core.
             // if (isset($_options['cmdIdUpdated'])) {
-            //     logMessage('debug', '-- _options[cmdIdUpdated] received so stop here, don t process: '.json_encode($_options['cmdIdUpdated']));
+            //     log::add('Abeille', 'debug', '-- _options[cmdIdUpdated] received so stop here, don t process: '.json_encode($_options['cmdIdUpdated']));
             //     return;
             // }
 
@@ -240,7 +240,7 @@
             // $addrGroup = $eqLogic->getConfiguration("Groupe", ''); // OBSOLETE: Replaced by use of 'variables' section
             // if ((stripos($topic, "#addrGroup#") !== false) && ($addrGroup != '')) {
             //     $topic = str_ireplace("#addrGroup#", $addrGroup, $topic);
-            //     logMessage('debug', "-- topic: '#addrGroup#' replaced by '$addrGroup' => topic={$topic}");
+            //     log::add('Abeille', 'debug', "-- topic: '#addrGroup#' replaced by '$addrGroup' => topic={$topic}");
             // }
 
             $topic = $cmdLogic->updateField($net, $cmdLogic, $topic, $_options);
@@ -248,9 +248,9 @@
             // Last 'topic' replacement step for remaining #var# to be filled with eqModel['variables']
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             if (stripos($topic, "#") !== false) {
-                logMessage('debug', "-- topic: Unreplaced variable found");
+                log::add('Abeille', 'debug', "-- topic: Unreplaced variable found");
                 if (isset($eqModel['variables'])) {
-                    logMessage('debug', "-- topic: Checking unreplaced variables against eqModel['variables']");
+                    log::add('Abeille', 'debug', "-- topic: Checking unreplaced variables against eqModel['variables']");
                     while (true) {
                         $pos = stripos($topic, "#");
                         if ($pos === false)
@@ -258,11 +258,11 @@
                         $sb = substr($topic, $pos + 1);
                         $pos = stripos($sb, "#");
                         $varNameUp = strtoupper(substr($sb, 0, $pos));
-                        logMessage('debug', "-- topic: varNameUp='$varNameUp'");
+                        log::add('Abeille', 'debug', "-- topic: varNameUp='$varNameUp'");
                         if (isset($eqModel['variables'][$varNameUp])) {
                             $var = $eqModel['variables'][$varNameUp];
                             $topic = str_ireplace("#$varNameUp#", $var, $topic);
-                            logMessage('debug', "-- topic: '#$varNameUp#' replaced by '$var' => topic='{$topic}'");
+                            log::add('Abeille', 'debug', "-- topic: '#$varNameUp#' replaced by '$var' => topic='{$topic}'");
                         }
                     }
                 }
@@ -276,25 +276,25 @@
             // Ex: 'valueOffset': '100-#slider#'
             $vo = $cmdLogic->getConfiguration('ab::valueOffset', "");
             if ($vo != "") {
-                // logMessage('debug', "-- 'valueOffset' = '{$vo}'");
+                // log::add('Abeille', 'debug', "-- 'valueOffset' = '{$vo}'");
 
                 // Replacing '#logicid...#' in valueOffset
                 $pos = stripos($vo, '#logicid'); // Any #logicid....# variable ?
                 if ($pos !== false) {
-                    // logMessage('debug', "-- execute(): logicId at pos ".$pos);
+                    // log::add('Abeille', 'debug', "-- execute(): logicId at pos ".$pos);
                     $logicId = substr($vo, $pos + 8);
                     $lop = strpos($logicId, '#');
                     $logicId = substr($logicId, 0, $lop);
-                    // logMessage('debug', "-- execute(): logicId=".$logicId);
+                    // log::add('Abeille', 'debug', "-- execute(): logicId=".$logicId);
                     $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
                     if (!is_object($cmdLogic2)) {
-                        logMessage("error", "{$cmdHName}: Commande '{$logicId}' inconnue dans 'valueOffset'");
+                        log::add('Abeille', "error", "{$cmdHName}: Commande '{$logicId}' inconnue dans 'valueOffset'");
                     } else {
                         $cmdVal = $cmdLogic2->execCmd();
-                        logMessage('debug', "-- Cmd logicId='".$logicId."', val=".$cmdVal);
+                        log::add('Abeille', 'debug', "-- Cmd logicId='".$logicId."', val=".$cmdVal);
                         $vo0 = $vo;
                         $vo = str_ireplace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
-                        logMessage('debug', "-- valueOffset: '#logicid{$logicId}#' replaced: '{$vo0}' => '{$vo}'");
+                        log::add('Abeille', 'debug', "-- valueOffset: '#logicid{$logicId}#' replaced: '{$vo0}' => '{$vo}'");
                     }
                 }
 
@@ -303,13 +303,13 @@
                 $pos = stripos($vo, '#slider#'); // Any #slider# variable ?
                 if ($pos !== false) {
                     // if (!isset($_options['slider'])) {
-                    //     logMessage("error", "{$cmdHName}: 'valueOffset' avec '#slider#' mais cmd pas de type 'slider'");
+                    //     log::add('Abeille', "error", "{$cmdHName}: 'valueOffset' avec '#slider#' mais cmd pas de type 'slider'");
                     //     return;
                     // }
                     $vo0 = $vo;
                     // $vo = str_ireplace('#slider#', $_options['slider'], $vo); // Replace #slider# by slider value
                     $vo = str_ireplace('#slider#', $inputVal, $vo); // Replace #slider# by slider value
-                    logMessage('debug', "-- valueOffset: '#slider#' replaced: '{$vo0}' => '{$vo}'");
+                    log::add('Abeille', 'debug', "-- valueOffset: '#slider#' replaced: '{$vo0}' => '{$vo}'");
                 }
 
                 // if (isset($_options['slider'])) {
@@ -319,7 +319,7 @@
                 if ($pos !== false) {
                     $vo0 = $vo;
                     $vo = str_ireplace('#value#', $inputVal, $vo); // Replace #value# by input value
-                    logMessage('debug', "-- valueOffset: '#value#' replaced: '{$vo0}' => '{$vo}'");
+                    log::add('Abeille', 'debug', "-- valueOffset: '#value#' replaced: '{$vo0}' => '{$vo}'");
                 }
 
                 // Replacing '#valueformat-FMT#' in valueOffset
@@ -330,7 +330,7 @@
                     else if (isset($_options['select']))
                         $value = $_options['select'];
                     else {
-                        logMessage("error", "{$cmdHName}: 'valueOffset' avec '#valueformat..#' mais mauvais type.");
+                        log::add('Abeille', "error", "{$cmdHName}: 'valueOffset' avec '#valueformat..#' mais mauvais type.");
                         return;
                     }
 
@@ -340,7 +340,7 @@
                     $newValue = sprintf($fmt, $value);
                     $vo0 = $vo;
                     $vo = str_ireplace("#valueformat-{$fmt}#", $newValue, $vo);
-                    logMessage('debug', "-- valueOffset: '#valueformat-{$fmt}#' replaced: '{$vo0}' => '{$vo}'");
+                    log::add('Abeille', 'debug', "-- valueOffset: '#valueformat-{$fmt}#' replaced: '{$vo0}' => '{$vo}'");
                 }
 
                 // Compute valueOffset result if math formula
@@ -352,7 +352,7 @@
                     $voValue = jeedom::evaluateExpression($vo); // Compute final formula
                 else
                     $voValue = $vo;
-                logMessage('debug', "-- valueOffset: result={$voValue}");
+                log::add('Abeille', 'debug', "-- valueOffset: result={$voValue}");
                 $inputVal = $voValue;
 
                 // if (stripos($request, '#valueoffset#') !== false)
@@ -375,7 +375,7 @@
             // if (stripos($request, "#valueoffset#") !== false) {
             //     if ($vo == "") {
             //         // message::add("Abeille", "{$cmdHName}: 'valueOffset' manquant");
-            //         logMessage('error', "{$cmdHName}: 'valueOffset' manquant");
+            //         log::add('Abeille', 'error', "{$cmdHName}: 'valueOffset' manquant");
             //         return;
             //     }
             //     /* Note: could not make it work with jeedom::evaluateExpression()
@@ -386,36 +386,36 @@
             //     $exp = "\$newVal = {$vo};";
             //     eval($exp);
             //     $request = str_ireplace("#valueoffset#", $newVal, $request);
-            //     logMessage('debug', "-- '#valueoffset#' => newVal='{$newVal}', request='{$request}'");
+            //     log::add('Abeille', 'debug', "-- '#valueoffset#' => newVal='{$newVal}', request='{$request}'");
             // }
             if (stripos($request, "#onTime#") !== false) {
                 $onTimeHex = sprintf("%04s", dechex($eqLogic->getConfiguration("onTime") * 10));
                 $request = str_ireplace("#onTime#", $onTimeHex, $request);
-                logMessage('debug', "-- request: '#onTime#' replaced => request='{$request}'");
+                log::add('Abeille', 'debug', "-- request: '#onTime#' replaced => request='{$request}'");
             }
             // $addrGroup = $eqLogic->getConfiguration("Groupe", ''); // OBSOLETE => use of 'variables' section
             // if ((stripos($request, "#addrGroup#") !== false) && ($addrGroup != '')) {
             //     $request = str_ireplace("#addrGroup#", $addrGroup, $request);
-            //     logMessage('debug', "-- request: '#addrGroup#' replaced by '$addrGroup' => request='{$request}'");
+            //     log::add('Abeille', 'debug', "-- request: '#addrGroup#' replaced by '$addrGroup' => request='{$request}'");
             // }
             $zgIeee = Abeille::byLogicalId($net.'/0000', 'Abeille')->getConfiguration("IEEE", '');
             if ((stripos($request, "#ZiGateIEEE#") !== false) && ($zgIeee != '')) {
                 $request = str_ireplace("#ZiGateIEEE#", $zgIeee, $request);
-                logMessage('debug', "-- request: '#ZiGateIEEE#' replaced => request='{$request}'");
+                log::add('Abeille', 'debug', "-- request: '#ZiGateIEEE#' replaced => request='{$request}'");
             }
             $ieee = $eqLogic->getConfiguration("IEEE", '');
             if ((stripos($request, '#IEEE#') !== false) && ($ieee != ''))  {
                 $request = str_ireplace('#IEEE#', $ieee, $request);
-                logMessage('debug', "-- request: '#IEEE#' replaced by '$ieee' => request='{$request}'");
+                log::add('Abeille', 'debug', "-- request: '#IEEE#' replaced by '$ieee' => request='{$request}'");
             }
             if ((stripos($request, '#addrIEEE#') !== false) && ($ieee != '')) {
                 $request = str_ireplace('#addrIEEE#', $ieee, $request);
-                logMessage('debug', "-- request: '#addrIEEE#' replaced by '$ieee' => request='{$request}'");
+                log::add('Abeille', 'debug', "-- request: '#addrIEEE#' replaced by '$ieee' => request='{$request}'");
             }
             switch ($cmdLogic->getSubType()) {
             case 'slider':
                 // if (!isset($_options['slider'])) {
-                //     logMessage("error", "{$cmdHName}: 'slider' mais pas de valeur associée.");
+                //     log::add('Abeille', "error", "{$cmdHName}: 'slider' mais pas de valeur associée.");
                 //     return;
                 // }
                 // $sliderVal = ($vo != "") ? $voValue : $_options['slider'];
@@ -430,7 +430,7 @@
                 break;
             case 'select':
                 // if (!isset($_options['select'])) {
-                //     logMessage("error", "{$cmdHName}: 'select' mais pas de valeur associée.");
+                //     log::add('Abeille', "error", "{$cmdHName}: 'select' mais pas de valeur associée.");
                 //     return;
                 // }
                 // $sliderVal = ($vo != "") ? $voValue : $_options['select'];
@@ -460,7 +460,7 @@
             default: // 'other'
                 if (stripos($request, "#valueoffset#") !== false) {
                     $request = str_ireplace("#valueoffset#", $voValue, $request);
-                    logMessage('debug', "-- '#valueoffset#' replaced to request => request='{$request}'");
+                    log::add('Abeille', 'debug', "-- '#valueoffset#' replaced to request => request='{$request}'");
                 }
                 break;
             }
@@ -470,9 +470,9 @@
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             // if ((stripos($request, "#") !== false) && (isset($eqModel['variables']))) {
             if (stripos($request, "#") !== false) {
-                logMessage('debug', "-- request: Unreplaced variable found");
+                log::add('Abeille', 'debug', "-- request: Unreplaced variable found");
                 if (isset($eqModel['variables'])) {
-                    logMessage('debug', "-- request: Checking unreplaced variables against eqModel['variables']");
+                    log::add('Abeille', 'debug', "-- request: Checking unreplaced variables against eqModel['variables']");
                     while (true) {
                         $pos = stripos($request, "#");
                         if ($pos === false)
@@ -480,17 +480,17 @@
                         $sb = substr($request, $pos + 1);
                         $pos = stripos($sb, "#");
                         if ($pos === false) {
-                            logMessage('error', "Missing '#' variable terminaison");
+                            log::add('Abeille', 'error', "Missing '#' variable terminaison");
                             break; // No more '#'
                         }
                         $varNameUp = strtoupper(substr($sb, 0, $pos));
-                        logMessage('debug', "-- request: varNameUp='$varNameUp'");
+                        log::add('Abeille', 'debug', "-- request: varNameUp='$varNameUp'");
                         if (isset($eqModel['variables'][$varNameUp])) {
                             $var = $eqModel['variables'][$varNameUp];
                             $request = str_ireplace("#$varNameUp#", $eqModel['variables'][$varNameUp], $request);
-                            logMessage('debug', "-- request: '#$varNameUp#' replaced by '$var' => request='{$request}'");
+                            log::add('Abeille', 'debug', "-- request: '#$varNameUp#' replaced by '$var' => request='{$request}'");
                         } else {
-                            logMessage('error', "Missing '#$varNameUp#' variable");
+                            log::add('Abeille', 'error', "Missing '#$varNameUp#' variable");
                             break; // No more '#'
                         }
                     }
@@ -510,16 +510,16 @@
             if (strpos($topic, "CmdCreate") === 0) {
                 $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
                 if (msg_send($queueXToAbeille, 1, $msgJson, false, false)) {
-                    logMessage('debug', '-- CmdCreate: Msg sent: '.$msgJson);
+                    log::add('Abeille', 'debug', '-- CmdCreate: Msg sent: '.$msgJson);
                 } else {
-                    logMessage('debug', '-- ERROR: CmdCreate: Could not send Msg');
+                    log::add('Abeille', 'debug', '-- ERROR: CmdCreate: Could not send Msg');
                 }
             } else {
                 $queue = msg_get_queue($abQueues['xToCmd']['id']);
                 if (msg_send($queue, PRIO_NORM, $msgJson, false, false)) {
-                    logMessage('debug', '-- Msg sent: '.$msgJson);
+                    log::add('Abeille', 'debug', '-- Msg sent: '.$msgJson);
                 } else {
-                    logMessage('debug', '-- ERROR: Could not send Msg');
+                    log::add('Abeille', 'debug', '-- ERROR: Could not send Msg');
                 }
             }
 
@@ -529,12 +529,12 @@
                "value" field for action cmd is the opposite. Action is updated from info change.
              */
             // if ($cmdLogic->getCmdValue()) {
-            //     logMessage('debug', '-- Will process cmdAction with cmd Info Ref if exist: '.$cmdLogic->getCmdValue()->getName());
+            //     log::add('Abeille', 'debug', '-- Will process cmdAction with cmd Info Ref if exist: '.$cmdLogic->getCmdValue()->getName());
             //     // TODO: je suppose qu il n'y a qu une commande info associée
             //     $cmdInfo = $cmdLogic->getCmdValue();
             //     if ($cmdInfo) {
             //         if (isset($_options['slider'])) {
-            //             logMessage('debug', '-- cmdAction with cmd Info Ref: '.$cmdLogic->getCmdValue()->getName().' with value slider: '.$_options['slider']);
+            //             log::add('Abeille', 'debug', '-- cmdAction with cmd Info Ref: '.$cmdLogic->getCmdValue()->getName().' with value slider: '.$_options['slider']);
             //             $cmdInfo->event($_options['slider']);
             //         }
             //     }
@@ -560,7 +560,7 @@
                 //     $toOffset = '';
                 $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $toLogicId);
                 if ($trigCmd) {
-                    logMessage('debug', "-- Triggering '{$toLogicId}'");
+                    log::add('Abeille', 'debug', "-- Triggering '{$toLogicId}'");
                     $trigCmd->execute();
                 }
             }

@@ -7,6 +7,8 @@
 *.zip binary
 *.exe binary
 *.jpg binary
+*.pdf binary
+*.ppt binary
 
 # Automatically solve conflicts for the following files.
 # Note: They need to be updated anyway after a merge.

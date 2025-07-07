@@ -1003,14 +1003,14 @@ class Abeille extends eqLogic {
     // }
 
     // Jeedom optional function: called before saving (create or update) an equipment
-    public function preSave() {
-        log::add('Abeille', 'debug', 'preSave()');
+    // public function preSave() {
+    //     log::add('Abeille', 'debug', 'preSave()');
         // log::add('Abeille', 'debug', 'this='.json_encode($this));
-    }
+    // }
 
     // Jeedom optional function: called after saving (create or update) an equipment
-    public static function postSave() {
-        log::add('Abeille', 'debug', 'postSave()');
+    // public static function postSave() {
+    //     log::add('Abeille', 'debug', 'postSave()');
         /* Tcharp38: Strange. postSave() called when starting daemons.
            No sense to re-start main daemon from their then */
         // log::add('Abeille', 'debug', 'postSave()');
@@ -1019,7 +1019,7 @@ class Abeille extends eqLogic {
         //     $cron->run();
         // }
         // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
-    }
+    // }
 
     // // Trying to capture log level change event
     // public static function postConfig_log_level_Abeille($value) {

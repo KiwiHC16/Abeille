@@ -8,6 +8,7 @@
 -   Corrections: Modele 'sensor_motion.aq2' revu pour 'Occupancy' dont l'historique s'arrète (2757).
 -   Nouveau: Support nouveaux modeles TS044 (2758).
 -   Améliorations: Interne. 'AbeilleCmd.class' utilisé par 'Abeille.class' seulement.
+-   Améliorations: Onglet 'avancé'.
 
 ## 250426-BETA-1
 

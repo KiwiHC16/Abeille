@@ -19,20 +19,24 @@
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "params": "ep=01",
+                "trigOut": {
+                    "getStatus": {}
+                },
                 "isVisible": "1"
             },
             "Off": {
                 "use": "act_zbCmdC-0006-Off",
                 "params": "ep=01",
+                "trigOut": {
+                    "getStatus": {}
+                },
                 "isVisible": "1"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "params": "ep=01"
             },
             "Get Status": {
                 "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0006&attrId=0000"
+                "params": "ep=01&clustId=0006&attrId=0000",
+                "logicalId": "getStatus",
+                "execAtCreation": "yes"
             },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
@@ -44,11 +48,15 @@
                 "use": "act_setLevel-Light",
                 "params": "ep=01",
                 "isVisible": "1",
-                "value": "Brightness"
+                "value": "Brightness",
+                "trigOut": {
+                    "getBrightness": {}
+                }
             },
             "Get Brightness": {
                 "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0008&attrId=0000"
+                "params": "ep=01&clustId=0008&attrId=0000",
+                "logicalId": "getBrightness"
             },
             "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
@@ -61,14 +69,19 @@
                 "params": "ep=01&clustId=0003",
                 "execAtCreation": "yes"
             },
-            "Bind 01-000F-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=000F",
-                "execAtCreation": "yes"
-            },
             "Bind 01-0301-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0301",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0008",
                 "execAtCreation": "yes"
             },
             "Device mode": {

@@ -1439,7 +1439,10 @@ function saveConfig(config) {
 }
 
 $("#idEqIcon").change(function () {
-    var text = "plugins/Abeille/core/config/devices/devices_images/node_" + $("#idEqIcon").val() + ".png";
+    var text =
+        "plugins/Abeille/core/config/devices/devices_images/node_" +
+        $("#idEqIcon").val() +
+        ".png";
     //$("#icon_visu").attr('src',text);
     document.icon_visu.src = text;
 });
@@ -1961,10 +1964,14 @@ function interrogate(request) {
         payload = "";
     } else if (request == "getBindingTable") {
         topic = "Cmd" + logicalId + "_getBindingTable";
-        payload = "";
+        idx = document.getElementById("idIdx-BT").value;
+        // TODO: How to allow 1 digit and convert (ex 3 => 03) ?
+        if (idx != "") payload = "startIdx=" + idx;
+        else payload = "";
     } else if (request == "getNeighborTable") {
         topic = "Cmd" + logicalId + "_getNeighborTable";
         startIdx = document.getElementById("idStartIdx").value;
+        // TODO: How to allow 1 digit and convert (ex 3 => 03) ?
         payload = "startIndex=" + startIdx;
     } else if (request == "getActiveEndPoints") {
         topic = "Cmd" + logicalId + "_getActiveEndpoints";

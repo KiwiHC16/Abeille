@@ -18,35 +18,33 @@
 
 <!-- Zigbee standard commands -->
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">{{Table de routage}}</label>
+    <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">{{Routing table}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getRoutingTable");
         ?>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">{{Table de binding}}</label>
+    <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">{{Binding table}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getBindingTable");
+            echo '<input id="idIdx-BT" title="{{Start index (ex: 00)}}" value="00" style="width:30px; margin-left:8px" />';
         ?>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">{{Table de voisinage}}</label>
+    <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">{{Neighbor table}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getNeighborTable\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getNeighborTable");
+            echo '<input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" style="width:30px; margin-left:8px" />';
         ?>
-        <input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" />
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getActiveEndPoints">{{Liste des 'end points'}}</label>
+    <label class="col-sm-3 control-label" title="getActiveEndPoints">{{End points}}</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "getActiveEndPoints");
@@ -54,7 +52,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getSimpleDescriptor (Simple_Desc_req)">{{Descripteur simple}}</label>
+    <label class="col-sm-3 control-label" title="getSimpleDescriptor (Simple_Desc_req)">{{Simple descriptor}}</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "getSimpleDescriptor");
@@ -63,7 +61,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getNodeDescriptor (Node_Desc_req)">{{Descripteur de noeud}}</label>
+    <label class="col-sm-3 control-label" title="getNodeDescriptor (Node_Desc_req)">{{Node descriptor}}</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "getNodeDescriptor");
@@ -71,7 +69,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">{{Adresse IEEE}}</label>
+    <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">{{IEEE address}}</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "getIeeeAddress");
@@ -83,7 +81,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getNwkAddress (NWK_addr_req)">{{Adresse courte}}</label>
+    <label class="col-sm-3 control-label" title="getNwkAddress (NWK_addr_req)">{{Network address}}</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "getNwkAddress");

@@ -2475,7 +2475,7 @@
 
                 // Zigbee command: Get binding table (Mgmt_Bind_req)
                 // Mandatory params: 'addr'
-                // Optional params: none
+                // Optional params: 'startIdx' (hex byte, default='00')
                 else if ($cmdName == 'getBindingTable') {
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -2503,7 +2503,7 @@
                     $radius     = "30";
 
                     $sqn        = $this->genSqn();
-                    $startIndex = "00";
+                    $startIndex = isset($Command['cmdParams']['startIdx']) ? $Command['cmdParams']['startIdx'] : "00";
 
                     $data2 = $sqn.$startIndex;
                     $dataLength = sprintf("%02X", strlen($data2) / 2);

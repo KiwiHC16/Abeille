@@ -24,3 +24,11 @@ public function checkAndUpdateCmd($_logicalId, $_value, $_updateTime = null) {}
     Et mets a jour 'lastCommunication' => date('Y-m-d H:i:s'), 'timeout' => 0
 
 En gros affecte une valeur a une commande info et gere les actions associées.
+
+$cmdLogic->setValue()
+=====================
+Pour cmde action, permet de definir une cmde de mise à jour ("Commande mise à jour" sur config avancée).
+Penser au "save()".
+
+$cmdLogic->setValue("toto");  // A voir. Ca devrait donc etre le nom d'une cmde info existante
+$cmdLogic->save();

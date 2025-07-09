@@ -226,7 +226,6 @@
 
             // Whatever existing or new beehive, it is key to reset the following points
             if ($cmdLogicId == 'FW-Version')
-                // $cmdLogic->setValue('----'); // Indicate FW version is invalid
                 $cmdLogic->setCache('value', '---------'); // Indicate FW version is invalid
 
             $cmdLogic->save();
@@ -1056,11 +1055,18 @@
                         $subType = $cmdLogic->getSubType();
                         logMessage('debug', "  WARNING: 'action' cmd '$cmdName' detected (subType=$subType)");
                         // Tcharp38 note: maybe we could update 'select' or 'slider' value with this returned data
-                        // Test
-                        if (($subType == 'slider') || ($subType == 'select')) {
-                            logMessage('debug', "  WARNING: 'action' cmd detected => trying to set value");
-                            $cmdLogic->setValue($attr['value']);
-                        }
+                        // How to update current or select value ??
+                        // if (($subType == 'slider') || ($subType == 'select')) {
+                        //     logMessage('debug', "  WARNING: 'action' cmd detected => trying to set value");
+                        //     logMessage('debug', "  WARNING: value before=".$cmdLogic->getValue());
+                        //     // $cmdLogic->setValue($attr['value']);
+                        //     // $cmdLogic->save();
+                        //     // $cmdLogic->setValue("toto");
+                        //     // $cmdLogic->save();
+                        //     $cmdLogic->setCache('value', $attr['value']);
+                        //     $cmdLogic->save();
+                        //     logMessage('debug', "  WARNING: value after=".$cmdLogic->getValue());
+                        // }
                     } else {
                         $unit = $cmdLogic->getUnite();
                         if ($unit === null)

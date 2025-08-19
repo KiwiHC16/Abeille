@@ -9,6 +9,8 @@
 *.jpg binary
 *.pdf binary
 *.ppt binary
+*.xlsx binary
+*.docx binary
 
 # Automatically solve conflicts for the following files.
 # Note: They need to be updated anyway after a merge.

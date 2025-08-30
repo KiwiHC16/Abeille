@@ -9,6 +9,7 @@
 -   Nouveau: Support nouveaux modeles TS044 (2758).
 -   Améliorations: Interne. 'AbeilleCmd.class' utilisé par 'Abeille.class' seulement.
 -   Améliorations: Onglet 'avancé'.
+-   Corrections: Interne, 'execTempoCmdAbeille()' revu (commandes oubliées).
 
 ## 250426-BETA-1
 

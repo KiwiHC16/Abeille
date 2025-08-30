@@ -89,6 +89,10 @@
                 'params' => $msg
             );
             // cmdLog('debug', 'addTempoCmdAbeille(): Queue AFTER='.json_encode($tempoMessageQueue));
+            $count = count($tempoMessageQueue);
+            cmdLog('debug', "  Added msg to 'Tempo' queue. Count=$count");
+
+            // Check
             if (count($tempoMessageQueue) > 50) {
                 cmdLog('info', 'Il y a plus de 50 messages dans le queue tempo.');
             }
@@ -98,21 +102,37 @@
         public function execTempoCmdAbeille() {
 
             global $tempoMessageQueue;
-            $nbMsg = count($tempoMessageQueue);
-            if ($nbMsg == 0)
+            $count = count($tempoMessageQueue);
+            if ($count == 0)
                 return;
 
-            // cmdLog('debug', "execTempoCmdAbeille(), Count=$nbMsg, Queue=".json_encode($tempoMessageQueue));
+            // cmdLog('debug', "execTempoCmdAbeille(), Count=$count, Queue=".json_encode($tempoMessageQueue));
             $now = time();
-            foreach ($tempoMessageQueue as $msgIdx => $msg) {
-                // cmdLog('debug', 'execTempoCmdAbeille(), msg='.json_encode($msg));
-                if ($msg['time'] > $now)
-                    continue;
+            // foreach ($tempoMessageQueue as $msgIdx => $msg) {
+            //     if ($msg['time'] > $now)
+            //         continue;
 
-                // cmdLog('debug', 'execTempoCmdAbeille() BEFORE - tempoMessageQueue='.json_encode($tempoMessageQueue));
+            //     $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+            //     cmdLog("debug", "  Queuing Tempo cmd for execution: idx=$msgIdx, msg=$msgJson");
+            //     cmdLog('debug', "execTempoCmdAbeille() BEFORE - Count=$count, tempoMessageQueue=".json_encode($tempoMessageQueue));
+            //     $this->sendToCmd($msg['priority'], $msg['topic'], $msg['params']);
+            //     array_splice($tempoMessageQueue, $msgIdx, 1);
+            //     $count = count($tempoMessageQueue);
+            //     cmdLog('debug', "execTempoCmdAbeille() AFTER - Count=$count, tempoMessageQueue=".json_encode($tempoMessageQueue));
+            // }
+
+            for ($msgIdx = 0; $msgIdx < $count; ) {
+                $msg = $tempoMessageQueue[$msgIdx];
+                if ($msg['time'] > $now) {
+                    $msgIdx++;
+                    continue;
+                }
+
+                $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+                cmdLog("debug", "  Queuing Tempo cmd for execution: idx=$msgIdx, msg=$msgJson");
                 $this->sendToCmd($msg['priority'], $msg['topic'], $msg['params']);
                 array_splice($tempoMessageQueue, $msgIdx, 1);
-                // cmdLog('debug', 'execTempoCmdAbeille() AFTER - tempoMessageQueue='.json_encode($tempoMessageQueue));
+                $count = count($tempoMessageQueue);
             }
         }
 

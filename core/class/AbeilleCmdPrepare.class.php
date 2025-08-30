@@ -68,7 +68,6 @@
             list ($type, $address, $action) = explode('/', $topic);
 
             if (preg_match("(^TempoCmd)", $type)) {
-                cmdLog("debug", "    Ajoutons le message a queue Tempo.", $this->debug['prepareCmd2']);
                 $this->addTempoCmdAbeille($topic, $msg, $priority);
                 return;
             }

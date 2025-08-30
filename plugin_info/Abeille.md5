@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="250426-BETA-1"
+# VERSION="250830-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -36,11 +36,11 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 925883ec8140b98f8144a29c13348615 *core/ajax/AbeilleModelChange.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 c697264a367aa536ef60425b7fcf88ea *core/ajax/AbeilleZigate.ajax.php
-e60cc1d37553314dbb9092ca9fe4b202 *core/class/Abeille.class.php
-e88212be7bd371088e2f26157812a374 *core/class/AbeilleCmd.class.php
-2654211b5cb37ba38137ee93b257b888 *core/class/AbeilleCmdPrepare.class.php
-353bd523e5fa5955cb5a5318acadbb81 *core/class/AbeilleCmdProcess.class.php
-365bceabc7f7cb0c84abf295640e40aa *core/class/AbeilleCmdQueue.class.php
+9dd0a598dbca776649d5095f875ba0c1 *core/class/Abeille.class.php
+75c34cd58ca9876cd7d088350cc3b69d *core/class/AbeilleCmd.class.php
+ba846bba3296594cc4684d73909bda05 *core/class/AbeilleCmdPrepare.class.php
+4c1f08cf352060249be08720827afc17 *core/class/AbeilleCmdProcess.class.php
+ca19f75b7ba1eb2566d214a9ee3cb5f7 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 168c0cb112c0cefbc9320bf395f2bf42 *core/class/AbeilleParser.class.php
 29517f873d704d8fed38efc665304bf5 *core/class/AbeilleTools.class.php
@@ -59,7 +59,7 @@ ad206a8d20b7a0dbbada9259df4ce9e5 *core/config/commands/BindToGroupLevelEP07.json
 f62276a76290b0ca8a8167ddf4357b52 *core/config/commands/ColourRGB.json
 ad69d09e995793a5ea02b294a0680e61 *core/config/commands/CurrentPrise_mA.json
 689969c54494a4227f88f29bc2c2724a *core/config/commands/CurrentSummationDelivered.json
-2e4215b2ee9d121f4952e417dad3bb2e *core/config/commands/LISEZMOI.txt
+00f62c4e0834f8fbb7160a958fe43f66 *core/config/commands/LISEZMOI.txt
 b6b844e9b4859fc495717b92d936d818 *core/config/commands/Left-Right-Cmd.json
 95bb1521fb6d62d15f8146ff644ebcf5 *core/config/commands/Left-Right-Direction.json
 6ce940e21fac2fa0e4f635ad623e3e7c *core/config/commands/LegrandContactorAuto.json
@@ -162,6 +162,9 @@ fefccacd3fa4c041c22fc9c0f3005737 *core/config/commands/etatSwitchDoubleb286acn01
 d0794406c29f943ca9616c838bf5ca36 *core/config/commands/etatSwitchSimple.json
 204fe87aef259e38a31e85f6c2578988 *core/config/commands/etatSwitchXiaomiCarre.json
 17212ff597e7eb67e229f9fc9d30b9d0 *core/config/commands/getColorTemperature.json
+b92a190f4a1d8152d37a6668db6059f7 *core/config/commands/grp_legrand-Dimmer.json
+0e80d488a925f7b7a14cbf1f5a259c57 *core/config/commands/grp_legrand-LED.json
+584300a4abbd33745af36a023b84b9f6 *core/config/commands/grp_legrand-LED_if_ON.json
 03cef7b22d65cb5e2046824f81a28f5c *core/config/commands/inf_addr-Ieee.json
 33430aef88869b7985e8e504f0d0abae *core/config/commands/inf_addr-Short.json
 168d78a1ff58c510722ce3de427917e1 *core/config/commands/inf_battery-Low.json
@@ -281,10 +284,6 @@ a22cbe6e78fb187e46a8fa18ec2d3974 *core/config/commands/sceneGroupRecall3.json
 e94842a564afabe0d394d7bbc6ce9b39 *core/config/commands/setColourRGB.json
 489184f9c4f66ec030d842fe174058fa *core/config/commands/setLegrandDimmerOff.json
 79f26387b6a8848a16fa04439c97f8b2 *core/config/commands/setLegrandDimmerOn.json
-19dc17e821c03b9613c3e57276cc0a9f *core/config/commands/setLegrandLEDOff.json
-a80f90c0ec6bd4213631c0617b21eb30 *core/config/commands/setLegrandLEDOff_if_on.json
-e5e3547659e7152c4534c2effa76bbbc *core/config/commands/setLegrandLEDOn.json
-1aa01419b8cae86b338e3f9d39c9f7fc *core/config/commands/setLegrandLEDOn_if_on.json
 440313009bc4b651a8e6b2e502eaf752 *core/config/commands/setLevelGroup.json
 583396d6cc22710e1c93eebc29e2fa42 *core/config/commands/setLevelGroupEP1.json
 9b46cc6c7c2534bb70a7a62177df27ce *core/config/commands/setLevelGroupEP3.json
@@ -379,7 +378,7 @@ b4bd8cbf104653e646b6d8af6b9f5a59 *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOS
 a8882db099befb112d35804d0d233238 *core/config/devices/COSensor-EF-3.0/COSensor-EF-3.0.json
 e9f80231bb398f25a9c4d35fa9e5ac0b *core/config/devices/COSensor-EF-3.0/discovery.json
 ccd852947ff7684cd5808a64745cc7e1 *core/config/devices/COSensor-EM/COSensor-EM.json
-b6f69de1e919d76e24b0c55ced0f74e1 *core/config/devices/Cableoutlet_Legrand/Cableoutlet_Legrand.json
+1cd6980431305cc4120b8b405272a2e0 *core/config/devices/Cableoutlet_Legrand/Cableoutlet_Legrand.json
 2616c67478e0854680abed1dafc346e5 *core/config/devices/ClassicA60RGBW/ClassicA60RGBW.json
 ffcea5d5a2680954f017ee6c723f3728 *core/config/devices/ClassicA60TW_OSRAM/ClassicA60TW_OSRAM.json
 7151e7378fe1dbb5436cdd0972b3cba7 *core/config/devices/ClassicA60TW_OSRAM/discovery.json
@@ -398,9 +397,9 @@ e784462124bb6454df6aad5813b8a630 *core/config/devices/DS01/DS01.json
 3691e1a4a36977cef71d92b7878ef9a6 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/Dimmablelight_PaulmannLichtGmbH.json
 5cd4fdf8f485b585dc067954d4523f04 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/discovery.json
 6567e0e3b737bbd5eadde7b0c20e0ad2 *core/config/devices/Dimmer-Switch-ZB3.0_HZC/Dimmer-Switch-ZB3.0_HZC.json
-a2f467be863427492b69480fd84e14d7 *core/config/devices/Dimmerswitchwoneutral/Dimmerswitchwoneutral.json
-bec2fb07b893087e7ca8acaf86290491 *core/config/devices/Dimmerswitchwoneutralevo_Legrand/Dimmerswitchwoneutralevo_Legrand.json
-e7ee9bb0b94f19dce7c7423811a4de69 *core/config/devices/Dimmerswitchwoneutralevo_Legrand/discovery-Dimmerswitchwoneutralevo_Legrand.json
+205de17b5a13f921930a5dd950988ec7 *core/config/devices/Dimmerswitchwoneutral/Dimmerswitchwoneutral.json
+5c77d6c7745796be35e3a78aa687a77e *core/config/devices/Dimmerswitchwoneutralevo_Legrand/Dimmerswitchwoneutralevo_Legrand.json
+6e0bb55916ac39ec4e25f3a3a12b0485 *core/config/devices/Dimmerswitchwoneutralevo_Legrand/discovery-Dimmerswitchwoneutralevo_Legrand.json
 18cdf22338b4e637f1af2705e8a202ef *core/config/devices/Doublegangsremoteswitch_Legrand/Doublegangsremoteswitch_Legrand.json
 fb28d565df85f09e7d1ac75647877658 *core/config/devices/Doublegangsremoteswitch_Legrand/auto_discovery.json
 4ce41f6cb3feaca6f0e52ba6d2de0d3f *core/config/devices/FLOALTpanelWS30x30/FLOALTpanelWS30x30.json
@@ -458,7 +457,7 @@ b14bb4a323435909b0c7933d71df77f0 *core/config/devices/LDSENK01F_ADEO/LDSENK01F_A
 6d8b81f36bdad6884997919523e209e4 *core/config/devices/LDSENK02F_ADEO/discovery.json
 b4400a5f9a189503b4595f36b7f623f9 *core/config/devices/LIGHTIFYIndoorFlexRGBW/LIGHTIFYIndoorFlexRGBW.json
 1b64992746e67ecf8cb9c7843cfcd681 *core/config/devices/LIGHTIFYOutdoorFlexRGBW/LIGHTIFYOutdoorFlexRGBW.json
-5683e0963a02779ee3c9587ec12866c2 *core/config/devices/LISEZMOI.txt
+54eb1f2a6e8328370ba6666e0d0d4d11 *core/config/devices/LISEZMOI.txt
 0c0542e59385410773acebb2b49267f1 *core/config/devices/LLC011/LLC011.json
 4466fdf87eac8f845242f2a23e5ebb05 *core/config/devices/LLC020/LLC020.json
 2d853d041440520c9d2a004c04bfc2d8 *core/config/devices/LOM001/LOM001.json
@@ -507,7 +506,7 @@ ec4c365dfbcef22c285caa0cad6a210b *core/config/devices/MOT-C1Z06C/notes.txt
 ef378ecb1e5a7f4d96962bffd28f0322 *core/config/devices/MS01/MS01.json
 dadafccafd3fb1d01e5f4c7df5ce7741 *core/config/devices/Micromoduleswitch/Micromoduleswitch.json
 956e9454e80aa20920c47e3d61de2146 *core/config/devices/MotionSensor-A/MotionSensor-A.json
-fbb7f01aabbfa0871b9f5f7bd56a4c86 *core/config/devices/NLIS-Doublelightswitch_Legrand/NLIS-Doublelightswitch_Legrand.json
+8162cb1c729e6cb3f2d75c8c074fecd5 *core/config/devices/NLIS-Doublelightswitch_Legrand/NLIS-Doublelightswitch_Legrand.json
 6eab75a9d65b5bf5bb8aaa34bb79c6fc *core/config/devices/NLIS-Doublelightswitch_Legrand/discovery.json
 7a12e3ae338f4727190fe89348953e1f *core/config/devices/OSP210_innr/OSP210_innr.json
 0ab02c35c24ce9942ff5183ddd00cb64 *core/config/devices/OSP210_innr/discovery.json
@@ -682,6 +681,8 @@ bd35291fe765dc15c7b04fc503bca5db *core/config/devices/TS0021__TZ3210_3ulg9kpo/di
 1305e496735ffcca2b66284ea35e89d8 *core/config/devices/TS0043__TZ3000_bi6lpsew/TS0043__TZ3000_bi6lpsew.json
 d9631aacae0e7865f931575751e8a6d3 *core/config/devices/TS0043__TZ3000_bi6lpsew/discovery-TS0043__TZ3000_gbm10jnj_bouton-3btn_moes.json
 84a853b672479c17f3c737f82d78c034 *core/config/devices/TS0043__TZ3000_bi6lpsew/discovery.json
+3c2d0df6d03c9f5c3a07ed30f3a5eeb4 *core/config/devices/TS0044__TZ3000_a4xycprs/TS0044__TZ3000_a4xycprs.json
+0e138c97e914bee419e3c52753014a76 *core/config/devices/TS0044__TZ3000_a4xycprs/discovery-TS0044__TZ3000_6azpyoao.json
 f8bbaa1ad68f914f77fc4c0dc0713f69 *core/config/devices/TS0044__TZ3000_b7bxojrg/TS0044__TZ3000_b7bxojrg.json
 2d5322d22cf824798c5953e6a7049167 *core/config/devices/TS0044__TZ3000_vp6clf9d/TS0044__TZ3000_vp6clf9d.json
 659563150c295fa9e2017a881dad610e *core/config/devices/TS0044__TZ3000_wkai4ga5/TS0044__TZ3000_wkai4ga5.json
@@ -940,7 +941,8 @@ eed13afcb01bb162c35ac8a302e1b5da *core/config/devices/sensor_cube/sensor_cube.js
 c7c9208f78c11691b508b89f5aa2a6cd *core/config/devices/sensor_magnet.aq2/discovery-sensor_magnet.aq2_LUMI.json
 080ce08e290b454d7da3689a94ffdaa4 *core/config/devices/sensor_magnet.aq2/sensor_magnet.aq2.json
 e8fa6cd93f966b888a6770314d63b692 *core/config/devices/sensor_magnet/sensor_magnet.json
-5da1c645549d16ce1f352ecb4ec6b193 *core/config/devices/sensor_motion.aq2/sensor_motion.aq2.json
+9c939dd07e56e8c117a3513542018926 *core/config/devices/sensor_motion.aq2/discovery-sensor_motion.aq2_LUMI.json
+b08a9d7363ddf72c3a593179c7552ade *core/config/devices/sensor_motion.aq2/sensor_motion.aq2.json
 2b369b27b806541c3c0eca2f95cc95c5 *core/config/devices/sensor_motion/sensor_motion.json
 a30e3de57030164f5a09df2b17eece18 *core/config/devices/sensor_natgas/sensor_natgas.json
 ab0c2e36f05beced36593b77cd837cf0 *core/config/devices/sensor_smoke/sensor_smoke.json
@@ -1345,15 +1347,15 @@ da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
 cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 2ace86f371f56d43f7272b03c13d4e84 *core/php/AbeilleLQI.php
 f3b9942d631562c48bb607c8a437f446 *core/php/AbeilleLog.php
-8d644bee916d82ccf6ac5f3ac261bcb6 *core/php/AbeilleMainD.php
-146ec27060d915a6f54d097f41962780 *core/php/AbeilleModels.php
+cb56726eff694a747277e81f999dcbc2 *core/php/AbeilleMainD.php
+26032902931439f78d74b141aaa192fd *core/php/AbeilleModels.php
 1bb0e4ee133d6661a9a11f84f5257790 *core/php/AbeilleMonitor.php
 3f23e5dbc4f01327d47fd90e2ef88952 *core/php/AbeilleNoise.php
 9ab85f33787d42bdae75985d3e3b4d69 *core/php/AbeilleOTA.php
 b545fc2bab6f885ac28e78f89dad223a *core/php/AbeilleParser-Philips.php
 2afce28cdb183dca6cbb4a3cfc7d8bf9 *core/php/AbeilleParser-Tuya.php
 6ca572a7882071f1de22dc38d1247d3f *core/php/AbeilleParser-Xiaomi.php
-cd03e9045e21d07d23b3df71e09a1d5e *core/php/AbeilleParser.php
+8b0b3790af8c4d9d2f2b641f0488d5bc *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 55fa859980e266a0292e58f49daee3f6 *core/php/AbeilleRepair.php
 875ae0bb9f3ffa4e1f4863f58ad6147a *core/php/AbeilleRoutes.php
@@ -1392,7 +1394,7 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 56ed2d6a626cf57f866bfdd1012a84a1 *core/scripts/switchBranch.sh
 71c43beb0fdcc6ec41532ea1443f4504 *core/scripts/updateZigate.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
-dc4e4d1708c864914f555618938004bc *desktop/js/Abeille.js
+83641a876e70fcf1500387e5975e1a6b *desktop/js/Abeille.js
 a54d5f0b473ccd5969cd30da1a355b6f *desktop/js/AbeilleNetwork.js
 d0d1ca56ff2c7b9b33e3f9e1b392e3ba *desktop/modal/Abeille-OTA.modal.php
 e795b7310c3b38d5ddd804944cccf323 *desktop/modal/AbeilleCompatibility.modal.php
@@ -1410,7 +1412,7 @@ d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 3a47eaf979ddc2c1e08311566b7607ad *desktop/php/Abeille-Bees.php
 fd1b207c4ad744e872558c8e833c69cf *desktop/php/Abeille-Eq-Advanced-Common.php
 ee90cf3e43e72a31e9e7db9889c34997 *desktop/php/Abeille-Eq-Advanced-Device.php
-5e577db0f06c92026bd43d41542ed5b2 *desktop/php/Abeille-Eq-Advanced-Interrogations.php
+ee308142eb5f8ab3fea7b7e382812880 *desktop/php/Abeille-Eq-Advanced-Interrogations.php
 e159e231448191c6d7a92bd4f04a295c *desktop/php/Abeille-Eq-Advanced-Specific.php
 d0483934512311be9e507c3d9e675b64 *desktop/php/Abeille-Eq-Advanced-Zigate.php
 8f1defffb69c61242db008e5b0145452 *desktop/php/Abeille-Eq-Advanced.php
@@ -1430,15 +1432,37 @@ b76b22691f60119c4b337e9857600d02 *desktop/php/AbeilleEqAssist.php
 25c62538c9d1dff6a31ae1b9cbb0e2a3 *desktop/php/AbeilleMaintenance-Logs.php
 011a9b628fe7c72f13f838895f990577 *desktop/php/AbeilleMaintenance.php
 f15f7c6277aa8ddbaf71b4a6978dfc5d *desktop/php/AbeilleNetworkMap.php
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/AbeilleOverview.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/AbeilleOverview.pptx
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/dealing_with_groups.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/ezsp_notes.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_cmd_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_config_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_eqlogic_db.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/jeedom_notes.txt
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/2018_03_07_09_36_10_Hue_Go.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/2018_03_07_09_38_19_Philips_Hue.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/2018_03_07_09_43_21_Ikea_Telecommande.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/2018_03_07_09_47_17.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/2018_03_12_12_18_26.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/2018_03_12_12_36_18.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/AbeilleEquipmentFunctionSupported.xlsx
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/AmpouleIkeaQuiRemonteLaPuissanceDesCanaux.xlsx
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/Build My Own Raspbian Docker Image Yiang s Site.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/CalibrageVolet.xlsx
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/CouleurCalculation.xlsx
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/Docker container Backup and Recovery - LinuxConfig.org.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/ERL-Interface-Specification.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/Ikea_ampoule.e27.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/Ikea_ampoule.gu10.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/MessageFlow.pdf
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/Xiaomi Timing.xlsx
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/XiaomiCodeAnalysis.xlsx
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/ZiGate and Jeedom.docx
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/ZiGate_API_Developper.xls
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-293ce5182dd6161ccde34267fe47220b *docs/fr_FR/Changelog.md
+562965796825cac84cf1080eacb8acb3 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1447,11 +1471,11 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-644ba00ea008807fd9dddf2a9056fb26 *plugin_info/Abeille.version
+486a79ec34bab709025e1fc4622d463c *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 0de7456b35f9700d3fb35cbfe9c8e363 *plugin_info/configuration.php
-a0e5a05a83cf65175c3c3b1e46e38bd5 *plugin_info/info.json
+ce050e26013f10d8ac4bc5ba9e7be300 *plugin_info/info.json
 a65e783f2bb184821923d20946e977a7 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
@@ -1724,6 +1748,10 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/puissa
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/puissance2.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/puissanceEP15.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/securitySafetyGaz.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/setLegrandLEDOff.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/setLegrandLEDOff_if_on.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/setLegrandLEDOn.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/setLegrandLEDOn_if_on.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/setLevel.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/setLevelVoletDown.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/setLevelVoletUp.json

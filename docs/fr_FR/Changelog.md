@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 250901-BETA-1
+
 -   Améliorations: Interne MainD: Mise-à-jour du device au max toutes les 10sec.
 -   Améliorations: Interne MainD/Parser: Récupération de l'info 'ImageType'.
 

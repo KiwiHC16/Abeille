@@ -81,13 +81,13 @@
 -   Améliorations: Sonoff SNZB-04 (DS01), modèle revu (2743).
 -   Corrections: Mise-à-jour OTA, otaImageBlockResponse, ajout ACK + prio LOW.
 
-## 250203-BETA-3, ## 250203-BETA-2, ## 250203-BETA-1
+## 250203-BETA-3, 250203-BETA-2, 250203-BETA-1
 
 -   Corrections: Regression AbeilleMainD + Abeille.class
 -   Améliorations: Sonoff SNZB-04, modèle revu (2743).
 -   Améliorations: Redémarrage des démons si niveau de log modifié (page de config).
 
-## 250128-BETA-2, ## 250128-BETA-1
+## 250128-BETA-2, 250128-BETA-1
 
 -   Amélioration: Ajout info 'click' pour Legrand wireless switch (2736).
 -   Amélioration: Outil 'check_json.php' pour commandes inexistantes.
@@ -98,7 +98,7 @@
 -   Corrections: Regression au redémarrage démons (createDevice()).
 -   Corrections: Interne.
 
-## 250115-BETA-2, ## 250115-BETA-1
+## 250115-BETA-2, 250115-BETA-1
 
 -   Amélioration: Interne: Démon principal isolé => 'AbeilleMainD'.
 -   Correction: Page de config: liste des FW crée dynamiquement en fonction du type de gateway.

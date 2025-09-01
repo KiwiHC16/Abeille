@@ -267,4 +267,16 @@ else
     echo "= Ok"
 fi
 
+# Now trying to update ../AbeilleDoc.git
+php .tools/gen_devices_list.php
+cd ../AbeilleDoc.git
+git pull
+cp ../Abeille.git/docs/fr_FR/Changelog.md source
+cp ../Abeille.git/CompatibilityList.rst source/devices
+./gen_docs.sh
+git add -u
+git commit -m "Changelog + compatibility list updates"
+git push
+cd ../Abeille.git
+
 exit 0

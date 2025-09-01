@@ -533,7 +533,7 @@
                         $eq['zigbee']['manufCode'] = $value;
                         $abUpdates["manufCode"] = $value;
                     }
-                } else if ($updType == '0019-0008') { // Cluster 0019/OTA, attr 0008/ImageType
+                } else if (($updType == 'imageType') || ($updType == '0019-0008')) { // Cluster 0019/OTA, attr 0008/ImageType
                     if (!isset($eq['zigbee']['imageType']) || ($eq['zigbee']['imageType'] != $value)) {
                         $eq['zigbee']['imageType'] = $value;
                         $abUpdates["imageType"] = $value;
@@ -556,7 +556,7 @@
                     'ep' => $ep,
                     'updates' => $abUpdates
                 );
-                msgToAbeille2($msg);
+                msgToMainD($msg);
             }
 
             if (($eq['status'] != "unknown_ident") && ($eq['status'] != "identifying"))
@@ -831,7 +831,7 @@
             );
             if (isset($eq['eqModel']['modelPath']))
                 $msg['modelPath'] = $eq['eqModel']['modelPath'];
-            msgToAbeille2($msg);
+            msgToMainD($msg);
 
             if (!isset($eqModel['commands'])) {
                 parserLog('debug', "    No cmds for configuration in JSON model.");
@@ -917,7 +917,7 @@
                 'macCapa' => $eq['zigbee']['macCapa'],
                 'time' => time()
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
 
             // TODO: Tcharp38: 'idle' state might be too early since execAtCreation commands might not be completed yet
             $eq['status'] = 'idle';
@@ -963,7 +963,7 @@
                 'macCapa' => $eq['zigbee']['macCapa'],
                 'time' => time()
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
         }
 
         /* Update received during discovering process */
@@ -1807,7 +1807,7 @@
                 'time' => time(),
                 'lqi' => $lqi
             );
-            msgToAbeille2($toAbeille);
+            msgToMainD($toAbeille);
 
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
@@ -2102,7 +2102,7 @@
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            // msgToAbeille2($msg);
+            // msgToMainD($msg);
         } // End decode8002_IeeeAddrRsp()
 
         /* Called from decode8002() to decode "Node descriptor response" message */
@@ -2319,7 +2319,7 @@
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            // msgToAbeille2($msg);
+            // msgToMainD($msg);
         } // End decode8002_BindRsp()
 
         /* Called from decode8002() to decode "Unbind response" message (Unbind_rsp, cluster 8022) */
@@ -2341,7 +2341,7 @@
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            // msgToAbeille2($msg);
+            // msgToMainD($msg);
         } // End decode8002_UnbindRsp()
 
         /* Called from decode8002() to decode "Mgmt_lqi_rsp" message */
@@ -4198,6 +4198,21 @@
 
                             msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/otaImageBlockResponse", 'ep='.$srcEp.'&sqn='.$sqn.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
 
+                            if (!isset($eq['zigbee']['imageType']) || ($eq['zigbee']['imageType'] != $imgType)) {
+                                // TODO: May need to support multiple image types
+                                $eq['zigbee']['imageType'] = $imgType;
+                                $msg = array(
+                                    'type' => 'deviceUpdates',
+                                    'net' => $dest,
+                                    'addr' => $srcAddr,
+                                    'ep' => $srcEp,
+                                    'updates' => array(
+                                        "imageType" => $imgType
+                                    )
+                                );
+                                msgToMainD($msg);
+                            }
+
                             $m = "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$fileVersion.", fileOffset=".$fileOffset.", maxData=".$maxDataSize;
                             parserLog2('debug', $srcAddr, $m);
                         } else if ($cmd == "06") { // Upgrade end request
@@ -4548,7 +4563,7 @@
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                msgToAbeille2($msg);
+                msgToMainD($msg);
             }
             if (count($readAttributesResponseN) > 0) {
                 $msg = array(
@@ -4562,11 +4577,11 @@
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                msgToAbeille2($msg);
+                msgToMainD($msg);
             }
             if (count($toAbeille) > 0) {
                 foreach ($toAbeille as $msg)
-                    msgToAbeille2($msg);
+                    msgToMainD($msg);
             }
             // If nothing to report, at least informing device is alive to prevent timeout
             if ((count($attrReportN) == 0) && (count($readAttributesResponseN) == 0) && (count($toAbeille) == 0)) {
@@ -4577,7 +4592,7 @@
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                msgToAbeille2($msg);
+                msgToMainD($msg);
             }
 
             // Something to report to client ?
@@ -4659,7 +4674,7 @@
                 'chan' => $chan,
                 'time' => time()
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
         }
 
         /* Zigate FW version */
@@ -4692,7 +4707,7 @@
                 'minor' => $minor,
                 'time' => time()
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
         }
 
         /**
@@ -4828,7 +4843,7 @@
                 'status' => $status,
                 'time' => time()
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
         }
 
         /* Get devices list response */
@@ -4900,7 +4915,7 @@
                 'timeServer' => $data,
                 'time' => time()
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
         }
 
         /* 8024/Network joined/formed */
@@ -4964,7 +4979,7 @@
                 'chan' => $dataNetwork,
                 'time' => time()
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
         }
 
         /* 8035/PDM event code. Since FW 3.1b */
@@ -5042,7 +5057,7 @@
                 'time' => time(),
                 'lqi' => $lqi
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
 
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $ieee))
@@ -5127,7 +5142,7 @@
         //         'time' => time(),
         //         'lqi' => $lqi
         //     );
-        //     msgToAbeille2($msg);
+        //     msgToMainD($msg);
         // }
 
         // /* OnOff cluster command coming from a device (broadcast or unicast to Zigate) */
@@ -5199,7 +5214,7 @@
         //         'time' => time(),
         //         'lqi' => $lqi
         //     );
-        //     msgToAbeille2($msg);
+        //     msgToMainD($msg);
         // }
 
         // //----------------------------------------------------------------------------------------------------------------
@@ -5380,7 +5395,7 @@
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                msgToAbeille2($toAbeille);
+                msgToMainD($toAbeille);
             }
         } // End decode80A6()
 
@@ -5470,7 +5485,7 @@
                 'time' => time(),
                 'lqi' => $lqi
             );
-            msgToAbeille2($toAbeille);
+            msgToMainD($toAbeille);
 
             $this->whoTalked[] = $dest.'/'.$source;
         } // End decode80A7()
@@ -5594,7 +5609,7 @@
                 'power' => $power,
                 'time' => time(),
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
         }
 
         function decode8807($dest, $payload, $lqi) {
@@ -5620,7 +5635,7 @@
                 'power' => $power,
                 'time' => time(),
             );
-            msgToAbeille2($msg);
+            msgToMainD($msg);
         }
 
         // PDM dump response (Abeille's firmware only)

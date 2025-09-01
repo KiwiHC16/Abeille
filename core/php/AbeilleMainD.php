@@ -781,6 +781,10 @@
                     $zigbee['manufCode'] = $updVal;
                     $zigbeeChanged = true;
                     logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[manufCode]' updated to ".$updVal);
+                } else if ($updKey == 'imageType') {
+                    $zigbee['imageType'] = $updVal;
+                    $zigbeeChanged = true;
+                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[imageType]' updated to ".$updVal);
                 } else if ($updKey == 'dateCode') { // Clust/attr = 0000-0006
                     $zigbee['endPoints'][$ep]['dateCode'] = $updVal;
                     $zigbeeChanged = true;
@@ -1107,12 +1111,16 @@
                 'lqi' => $lqi
             */
             logMessage('debug', "msgFromParser(): Device '{$net}/{$addr}' is ALIVE");
-            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!is_object($eqLogic)) {
-                logMessage('debug', "  Unknown device '{$net}/{$addr}'");
-                return; // Unknown device
-            }
-            updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+
+            // $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+            // if (!is_object($eqLogic)) {
+            //     logMessage('debug', "  Unknown device '{$net}/{$addr}'");
+            //     return; // Unknown device
+            // }
+            // updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+
+            // Update only if not faster than every 10sec
+            updateTimestamp2($net, $addr, $msg['time'], $msg['lqi']);
             return;
         }
 
@@ -1506,6 +1514,82 @@
         }
     }
 
+    /* Update all infos related to last communication time & LQI of given device.
+       This is based on timestamp of last communication received from device itself.
+       Note: For performances enhancements, update is done at max every 10sec. Any changes below would be ignored. */
+    function updateTimestamp2($net, $addr, $timestamp, $lqi = null) {
+
+        if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!is_object($eqLogic)) {
+                logMessage('debug', "  Unknown device '{$net}/{$addr}'");
+                return; // Unknown device
+            }
+            if (!isset($GLOBALS['devices'][$net]))
+                $GLOBALS['devices'][$net] = [];
+            if (!isset($GLOBALS['devices'][$net][$addr]))
+                $GLOBALS['devices'][$net][$addr] = array(
+                    'eqLogic' => $eqLogic,
+                    'timestamp' => 0
+                );
+        }
+        $device = &$GLOBALS['devices'][$net][$addr];
+
+        if (($device['timestamp'] != 0) && (($timestamp - $device['timestamp']) < 10)) {
+            logMessage('debug', "  updateTimestamp2(): Fast update ignored");
+            return;
+        }
+        $eqLogic = $device['eqLogic'];
+        $eqLogicId = $eqLogic->getLogicalId();
+        $eqId = $eqLogic->getId();
+
+        // Updating internal infos
+        $device['timestamp'] = $timestamp;
+
+        // logMessage('debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
+
+        // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
+        $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+
+        /* Tcharp38 note:
+           The cases hereafter could be removed. Using 'lastCommunication' allows to no longer
+           use these 3 specific & redondant commands. To be discussed. */
+
+        // $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
+        // if (!is_object($cmdLogic))
+        //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-TimeStamp'");
+        // else
+        //     $eqLogic->checkAndUpdateCmd($cmdLogic, $timestamp);
+
+        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
+        if (!is_object($cmdLogic))
+            logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-Time'");
+        else
+            $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
+
+        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
+        if (is_object($cmdLogic))
+        //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
+        // else
+            $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
+
+        list($net, $addr) = explode("/", $eqLogicId);
+        if ($addr != "0000") { // Not a gateway
+            if ($lqi !== null) {
+                $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Link-Quality');
+                if (!is_object($cmdLogic))
+                    logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Link-Quality'");
+                else
+                    $eqLogic->checkAndUpdateCmd($cmdLogic, $lqi);
+            }
+
+            // Updating corresponding Zigate alive status too
+            $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
+            $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+            // Warning: lastCommunication update is not transmitted to client as not an info cmd
+        }
+    }
+
     function msgToParser($msg) {
         // global $abQueues;
         // $queue = msg_get_queue($abQueues['xToParser']['id']);
@@ -1771,6 +1855,13 @@
         }
     }
 
+    /* Internal devices list
+    $GLOBALS['devices'][$net][$addr]
+        $eqLogic
+        $timestamp
+    */
+    $GLOBALS['devices'] = [];
+
     try {
         // Essaye de recuperer les etats des equipements
         // Tcharp38: Moved from deamon_start()
@@ -1794,7 +1885,8 @@
         // Blocking queue read
         logMessage('debug', 'Infinite listening to queueXToAbeille');
         while (true) {
-            logMessage('debug', 'msg_receive, msg_qnum='.msg_stat_queue($queueXToAbeille)["msg_qnum"]);
+            logMessage('debug', 'msg_receive(xToAbeille): msg_qnum='.msg_stat_queue($queueXToAbeille)["msg_qnum"]);
+
             if (@msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, 0, $errCode) == false) {
                 if ($errCode == 7) {
                     msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
@@ -1802,11 +1894,12 @@
                     continue; // Continue without sleeping
                 }
 
-                logMessage('debug', 'msg_receive(xToAbeille) erreur '.$errCode);
+                logMessage('debug', 'msg_receive(xToAbeille) ERROR '.$errCode);
                 usleep(500000); // Sleep 500ms
                 continue;
             }
 
+            logMessage('debug', "  msg=$msgJson");
             $msg = json_decode($msgJson, true);
             if (isset($msg['topic']))
                 message($msg['topic'], $msg['payload']);

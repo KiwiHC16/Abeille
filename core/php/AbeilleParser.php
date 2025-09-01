@@ -203,12 +203,12 @@
     /* New function to send msg to Abeille.
         Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
         into several messages to Abeille. */
-    function msgToAbeille2($msg) {
+    function msgToMainD($msg) {
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
         global $queueXToMain;
         // Note: '@' to suppress PHP warning message.
         if (@msg_send($queueXToMain, 1, $msgJson, false, false, $errCode) == false) {
-            parserLog("debug", "msgToAbeille2() ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
+            parserLog("debug", "msgToMainD() ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
@@ -245,10 +245,10 @@
             'addr' => $addr,
             'ieee' => $ieee,
         );
-        msgToAbeille2($msg);
+        msgToMainD($msg);
     }
 
-    /* Devices list reminder
+    /* Internal devices list reminder
     $GLOBALS['devices'][net][addr]
         zigbee => []
             ieee =>
@@ -271,6 +271,7 @@
             logicalType
             groups => [], Only if cluster 0004 supported
                 XX => 'GGGG/YYYY'
+            imageType
         mainEp => from model
         eqModel => []
             modelName => JSON file name without extension
@@ -365,7 +366,7 @@
                         'ieee' => $ieee
                     ),
                 );
-                msgToAbeille2($msg);
+                msgToMainD($msg);
 
                 return $GLOBALS['devices'][$net][$addr];
             }
@@ -402,7 +403,7 @@
                         'srcNet' => $oldNet,
                         'srcAddr' => $oldAddr,
                     );
-                    msgToAbeille2($msg);
+                    msgToMainD($msg);
 
                     return $GLOBALS['devices'][$net][$addr];
                 }

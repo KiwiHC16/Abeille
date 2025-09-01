@@ -1,5 +1,8 @@
 # ChangeLog
 
+-   Améliorations: Interne MainD: Mise-à-jour du device au max toutes les 10sec.
+-   Améliorations: Interne MainD/Parser: Récupération de l'info 'ImageType'.
+
 ## 250830-BETA-1
 
 -   Améliorations: Support variateur Legrand 077701LA (2756).

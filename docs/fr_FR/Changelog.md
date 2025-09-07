@@ -1,6 +1,7 @@
 # ChangeLog
 
 - Nouveau: Ajout support SonOff SNZB-03P (2762)
+- Nouveau: Ajout support SonOff SNZB-04P (2763)
 
 ## 250901-BETA-1
 

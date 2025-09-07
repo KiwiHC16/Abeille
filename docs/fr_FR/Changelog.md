@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Nouveau: Ajout support SonOff SNZB-03P (2762)
+
 ## 250901-BETA-1
 
 -   Améliorations: Interne MainD: Mise-à-jour du device au max toutes les 10sec.

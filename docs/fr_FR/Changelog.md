@@ -2,6 +2,7 @@
 
 - Nouveau: Ajout support SonOff SNZB-03P (2762)
 - Nouveau: Ajout support SonOff SNZB-04P (2763)
+- Corrections: Crash 'call to undefined getDeviceModel()' (2764)
 
 ## 250901-BETA-1
 

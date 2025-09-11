@@ -1157,7 +1157,7 @@
          * - Eq DB: Some icons renamed for normalization
          * - Some eq updates forced from changed model.
          */
-        if (intval($dbVersion) < 20241120) {
+        if (intval($dbVersion) < 20250911) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled{$gtwId}", "ab::gtwEnabled{$gtwId}");
@@ -1256,7 +1256,7 @@
                 }
             }
 
-            // config::save('ab::dbVersion', '20241120', 'Abeille');
+            config::save('ab::dbVersion', '20250911', 'Abeille');
         }
     } // End updateConfigDB()
 
@@ -1276,7 +1276,7 @@
         $dev = array(
             'net' => $net,
             'addr' => $addr,
-            'jsonId' => $eqModelId,
+            'jsonId' => $eqModelName,
             'jsonLocation' => 'Abeille',
             'ieee' => $eqLogic->getConfiguration('IEEE'),
         );

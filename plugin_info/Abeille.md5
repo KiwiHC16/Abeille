@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="250901-BETA-1"
+# VERSION="250911-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -44,7 +44,7 @@ ca19f75b7ba1eb2566d214a9ee3cb5f7 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 daf9602d3f63bccb7466ffa5dafeba22 *core/class/AbeilleParser.class.php
 29517f873d704d8fed38efc665304bf5 *core/class/AbeilleTools.class.php
-10f881008bbd5f22351f9c42815aa26c *core/config/Abeille.config.php
+5711e9debe071f0b4dd6fefbab029d67 *core/config/Abeille.config.php
 603640a07e5e022e4d4f1b6eb9d91d5c *core/config/AbeilleInternalCmds.json
 d8fe59ba5c734449970615205f5a23cc *core/config/commands/BindToGroupLevelEP03.json
 7d700c97dd32d63675fafce8e5599906 *core/config/commands/BindToGroupLevelEP04.json
@@ -567,6 +567,10 @@ b5d3a2bee0d3d11a471ac65e87c3fadc *core/config/devices/SNZB-02D_SONOFF/SNZB-02D_S
 6638da47cac1a93c227c8dabcc1ed433 *core/config/devices/SNZB-02D_SONOFF/discovery-SNZB-02D_SONOFF.json
 060374f2a437c396d0386affff9b4ce7 *core/config/devices/SNZB-02P_eWeLink/SNZB-02P_eWeLink.json
 1434814a4269bf1107354435056a0008 *core/config/devices/SNZB-02P_eWeLink/discovery-SNZB-02P_eWeLink.json
+3ad33411ca9181f778489f2a09bad2ac *core/config/devices/SNZB-03P_eWeLink/SNZB-03P_eWeLink.json
+cd75f29fcc4df1e5ee0c401f72e6b97c *core/config/devices/SNZB-03P_eWeLink/discovery-SNZB-03P_eWeLink.json
+8484f08ee398626c74b6ece0e8acdc30 *core/config/devices/SNZB-04P_eWeLink/SNZB-04P_eWeLink.json
+47a28b14caa69a90f2c3424000258697 *core/config/devices/SNZB-04P_eWeLink/discovery-SNZB-04P_eWeLink.json
 bbfc4ee5f7896335488fca0348b42f5b *core/config/devices/SNZB-06P_SONOFF/SNZB-06P_SONOFF.json
 4a7b445403d8b084f479f69ba85928aa *core/config/devices/SNZB-06P_SONOFF/discovery-SNZB-06P_SONOFF.json
 4fe7bd0912f54fc0f64ecc484a2f7790 *core/config/devices/SOCKETOUTLET1_SchneiderElectric/SOCKETOUTLET1_SchneiderElectric.json
@@ -1183,6 +1187,8 @@ f7a65eca3cf57583929f4719e739eab9 *core/config/devices_images/node_SmokeSensor-EM
 5efc0afe25f9647ee3abe6d5c49fc232 *core/config/devices_images/node_Sonoff-01MINIZB.png
 b47b765a6640f32aaddadd58dfb4b1c4 *core/config/devices_images/node_Sonoff-BASICZBR3.png
 da4acb14e31b31a09103c3eee5543af8 *core/config/devices_images/node_Sonoff-Button.png
+e04776678d83a150858ed57f5a1698b1 *core/config/devices_images/node_Sonoff-DoorSensor.png
+d3d700d10e73488a1011c3770ad1e6a4 *core/config/devices_images/node_Sonoff-MotionSensor.png
 37cb6776b64bd0c016034b6c0af13d94 *core/config/devices_images/node_Sonoff-PresenceSensor.png
 c96fc06840975eee3783acb90901d321 *core/config/devices_images/node_Sonoff-S26R2ZB.png
 3ec9a385b5a711c08bd1415b3bd2a41d *core/config/devices_images/node_Sonoff-SNZB-01.png
@@ -1462,7 +1468,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/ZiGate and Jeedom.docx
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/ZiGate_API_Developper.xls
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-d25c8956fed0a64d44e4175ce4640365 *docs/fr_FR/Changelog.md
+f3635573ae236f52ac1ca3b24a48fdd6 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1471,12 +1477,12 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-396d4f55e41087f468fd32ba49e535cd *plugin_info/Abeille.version
+c1684ea1d382f6b3c6e1ebe8d21476e0 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 0de7456b35f9700d3fb35cbfe9c8e363 *plugin_info/configuration.php
-8e4eb352e101620c3ba89f8a2fe10c3d *plugin_info/info.json
-a65e783f2bb184821923d20946e977a7 *plugin_info/install.php
+bdf98892c8882fe696f7b86497c4e997 *plugin_info/info.json
+7cb32fb4d8ee499bc1b2c1266829f197 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
 d41d8cd98f00b204e9800998ecf8427e *resources/COM

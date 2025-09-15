@@ -1,10 +1,13 @@
 # ChangeLog
 
+-   Améliorations: Interne: Eq assist pour cluster 0500.
+-   Améliorations:Support SonOff SNZB-04P (2763)
+
 ## 250911-BETA-1
 
-- Nouveau: Ajout support SonOff SNZB-03P (2762)
-- Nouveau: Ajout support SonOff SNZB-04P (2763)
-- Corrections: Crash 'call to undefined getDeviceModel()' (2764)
+-   Nouveau: Ajout support SonOff SNZB-03P (2762)
+-   Nouveau: Ajout support SonOff SNZB-04P (2763)
+-   Corrections: Crash 'call to undefined getDeviceModel()' (2764)
 
 ## 250901-BETA-1
 

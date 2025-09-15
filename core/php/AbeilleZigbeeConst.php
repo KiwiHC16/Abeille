@@ -1138,7 +1138,7 @@
 
                 // Intruder Alarm Systems
                 '0400'=>'IAS Control and Indicating Equipment',
-                '0401'=>'IAs Ancillary Equipment',
+                '0401'=>'IAS Ancillary Equipment',
                 '0402'=>'IAS Zone',
                 '0403'=>'IAS Warning Device',
 
@@ -1147,6 +1147,9 @@
 
                 // From Legrand investigation
                 '0B04'=>'Electrical Measurement',
+
+                // Note: ZCL spec says valid devices are 0x0000 to 0xbfff (Standard device description).
+                //       Other values are reserved
             ),
             /* ZLL */
             'C05E' => array(

@@ -1309,15 +1309,37 @@
                 //     cmds["SetReporting 0500-0002"] = newCmd("act_zbConfigureReporting2", "clustId=0500&attrId=0002&attrType=19", "yes");
                 // }
 
+                // Extracting zone type for door/window case (zoneType=='0016')
+                if (isset(ep.servClusters["0500"]['attributes']['0001'])) {
+                    zoneType = ep.servClusters["0500"]['attributes']['0001'];
+                else
+                    zoneType = '';
+
                 // Generated cmd 00 seems to be mandatory. Using it by default
-                cmds["Zone Alarm1"] = newCmd("inf_zone-Alarm1", "ep="+epId);
-                cmds["Zone Alarm1"]["isVisible"] = 1;
-                cmds["Zone Status Changed"] = newCmd("inf_zbCmdS-0500-ZoneStatus-ChangeNotification", "ep="+epId);
+                cmds["ZoneStatus-ChangeNotification"] = newCmd("inf_zbCmdS-0500-ZoneStatus-ChangeNotification", "ep="+epId);
                 trigOut = new Object();
-                trigOut.comment = "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value";
-                trigOut.valueOffset = "#value#&1";
-                cmds["Zone Status Changed"]["trigOut"] = new Object();
-                cmds["Zone Status Changed"]["trigOut"][epId+"-0500-alarm1"] = trigOut;
+                cmds["ZoneStatus-ChangeNotification"]["trigOut"] = new Object();
+                if (zoneType == '0016') {
+                    trigOut.comment = "On receive we trig <EP>-doorStatus with extracted boolean bit1 value";
+                    trigOut.valueOffset = "#value#&2";
+                    cmds["ZoneStatus-ChangeNotification"]["trigOut"][epId+"-doorStatus"] = trigOut;
+                } else {
+                    trigOut.comment = "On receive we trig <EP>-0500-alarm1 with extracted boolean bit0 value";
+                    trigOut.valueOffset = "#value#&1";
+                    cmds["ZoneStatus-ChangeNotification"]["trigOut"][epId+"-0500-alarm1"] = trigOut;
+                }
+
+                if (zoneType == '0016') {
+                    cmds["Status"] = newCmd("inf_door-Status", "ep="+epId);
+                    cmds["Status"]["isVisible"] = 1;
+                } else {
+                    cmds["Zone Alarm1"] = newCmd("inf_zone-Alarm1", "ep="+epId);
+                    cmds["Zone Alarm1"]["isVisible"] = 1;
+                }
+
+                // Tamper generation if required
+                // cmds["Tamper"] = newCmd("inf_zbAttr-0500-ZoneStatus-Tamper", "ep="+epId);
+                // cmds["Tamper"]["isVisible"] = 1;
 
                 cmds["Bind "+epId+"-0500-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0500", "yes");
             }

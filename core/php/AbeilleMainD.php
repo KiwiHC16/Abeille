@@ -1827,8 +1827,8 @@
     /* Main daemon starting.
         This means that other daemons have started too. Abeille can communicate with them */
 
-    $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
-    $queueXToAbeilleMax = $abQueues["xToAbeille"]["max"];
+    $queueXToMain = msg_get_queue($abQueues["xToAbeille"]["id"]);
+    $queueXToMainMax = $abQueues["xToAbeille"]["max"];
     $queueXToParser = msg_get_queue($abQueues['xToParser']['id']);
     $queueXToCmd = msg_get_queue($abQueues['xToCmd']['id']);
 
@@ -1869,27 +1869,27 @@
 
         // $abQueues = $GLOBALS['abQueues'];
         // while(true) {
-        //     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
-        //     if ($queueXToAbeille !== false)
+        //     $queueXToMain = msg_get_queue($abQueues["xToAbeille"]["id"]);
+        //     if ($queueXToMain !== false)
         //         break;
 
         //     logMessage('debug', 'msg_get_queue(xToAbeille) ERROR');
         //     usleep(500000); // Sleep 500ms
         // }
-        // $queueXToAbeilleMax = $abQueues["xToAbeille"]["max"];
+        // $queueXToMainMax = $abQueues["xToAbeille"]["max"];
 
         // https: github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
         // const int EINVAL = 22;
         // const int ENOMSG = 42; /* No message of desired type */
 
         // Blocking queue read
-        logMessage('debug', 'Infinite listening to queueXToAbeille');
+        logMessage('debug', 'Infinite listening to queueXToMain');
         while (true) {
-            logMessage('debug', 'msg_receive(xToAbeille): msg_qnum='.msg_stat_queue($queueXToAbeille)["msg_qnum"]);
+            logMessage('debug', 'msg_receive(xToAbeille): msg_qnum='.msg_stat_queue($queueXToMain)["msg_qnum"]);
 
-            if (@msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, 0, $errCode) == false) {
+            if (@msg_receive($queueXToMain, 0, $rxMsgType, $queueXToMainMax, $msgJson, false, 0, $errCode) == false) {
                 if ($errCode == 7) {
-                    msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                    msg_receive($queueXToMain, 0, $rxMsgType, $queueXToMainMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
                     logMessage('error', "Message (xToAbeille) trop grand ignoré: ".$msgJson);
                     continue; // Continue without sleeping
                 }

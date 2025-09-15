@@ -6,21 +6,20 @@
         max-width: 130px;
         width:auto;
     }
-    .iconZ1
-    {
-      position:relative;
-      top: 0px;
-      /* left: 10px; */
-      z-index: 1;
-    }
-    .iconZ2
+    /* .iconZ1
     {
         position:relative;
-        /* align: top; */
-      top: -99px; /* Why 99 ? */
-      left: 0px;
-      z-index: 2;
-    }
+        top: 0px;
+        / * left: 10px; * /
+        z-index: 1;
+    } */
+    /* .iconZ2
+    {
+        position:relative;
+        top: -99px; / * Why 99 ? * /
+        left: 0px;
+        z-index: 2;
+    } */
 </style>
 
 <?php
@@ -37,28 +36,20 @@
         $iconPath = __DIR__.'/../../core/config/devices_images/'.$icon;
         if (!file_exists($iconPath))
             $icon = 'node_defaultUnknown.png';
-        // $test = 'node_' . $eqLogic->getConfiguration('ab::icon') . '.png';
-        // if (in_array($test, $files, 0)) {
-        //     $path = 'node_' . $eqLogic->getConfiguration('ab::icon');
-        // } else {
-        //     $path = 'Abeille_icon';
-        // }
 
-        // Affichage
         $id = $eqLogic->getId();
         echo '<div>';
-        echo    '<input id="idBeeChecked'.$zgId.'-'.$id.'" class="beeChecked" type="checkbox" name="eqSelected-'.$id.'" />';
-        echo 	'<br/>';
-        echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="width: 130px" data-eqLogic_id="'.$id.'">';
+        echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="width:130px" data-eqLogic_id="'.$id.'">';
+        // Note: idBeeChecked must be in 'eqLogicDisplayCard' to be filtered out using the search bar
+        echo        '<input id="idBeeChecked'.$zgId.'-'.$id.'" class="beeChecked" type="checkbox" name="eqSelected-'.$id.'" />';
+        echo 	    '<br/>';
+        // TODO: To be revisited to extend HEIGHT.
         echo 		'<img src="plugins/Abeille/core/config/devices_images/'.$icon.'" />';
-        // echo 		'<img src="plugins/Abeille/images/'.$icon.'" class="iconRatio iconZ1" />';
-        // echo 		'<img src="plugins/Abeille/images/disabled.png" align=top class="iconZ2" />';
         echo 		'<br/>';
-        // echo 		'<span class="name">'. $eqLogic->getHumanName(true, true) .'</span>';
-        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-        echo '<span class="hiddenAsCard displayTableRight hidden">';
+        echo        '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+        echo        '<span class="hiddenAsCard displayTableRight hidden">';
         echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
-        echo '</span>';
+        echo        '</span>';
         echo 	'</div>';
         echo '</div>';
     }
@@ -101,9 +92,10 @@
             echo '<a onclick="setBeesTimeout('.$zgId.')" class="btn btn-primary btn-xs" style="margin-top:-10px; margin-left:8px" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
         }
 
-		echo '<div class="eqLogicThumbnailContainer">';
+		echo '<div class="eqLogicThumbnailContainer" style="height:180px">';
         $dir = dirname(__FILE__) . '/../../core/config/devices_images/';
         $files = scandir($dir);
+
         // Display beehive first
 		foreach ($eqPerZigate[$zgId] as $eq) {
             if ($eq['addr'] != '0000')
@@ -112,6 +104,7 @@
             $eqLogic = eqLogic::byId($eqId);
             displayBeeCard($eqLogic, $files, $zgId);
         }
+
         // Display attached equipments
 		foreach ($eqPerZigate[$zgId] as $eq) {
             if ($eq['addr'] == '0000')
@@ -120,8 +113,8 @@
             $eqLogic = eqLogic::byId($eqId);
             displayBeeCard($eqLogic, $files, $zgId);
         }
-        echo '<script>var js_eqZigate'.$zgId.' = \''.json_encode($eqPerZigate[$zgId]).'\';</script>';
         echo ' </div>';
+        echo '<script>var js_eqZigate'.$zgId.' = \''.json_encode($eqPerZigate[$zgId]).'\';</script>';
     }
 
     if ($NbOfZigatesON == 0) { // No Zigate to display. UNEXPECTED !

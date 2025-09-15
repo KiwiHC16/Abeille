@@ -29,7 +29,7 @@
     $abQueues["xToMon"] = array( "id" => 0xAB0081, "max" => 1024 ); // Messages to monitor (cmd/parser to monitor)
     // $abQueues["monToCmd"] = array( "id" => 0xAB0084, "max" => 1024 ); // Messages to cmd (addr update)
     $abQueues["parserToAssist"] = array( "id" => 0xAB008D, "max" => 512 ); // Parser to EQ assistant
-    $abQueues["xToAbeille"] = array( "id" => 0xAB026D, "max" => 1024 ); // All messages to main daemon (AbeilleMainD)
+    $abQueues["xToAbeille"] = array( "id" => 0xAB026D, "max" => 1024 ); // All messages to main daemon (AbeilleMainD). TO BE RENAMED to 'xToMain'
     $GLOBALS['abQueues'] = $abQueues;
 
     // 3 priorities only: 1=MAX, 2=normal, 3=MIN

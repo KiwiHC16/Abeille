@@ -46,24 +46,28 @@
                 "params": "ep=01&clustId=0406&attrId=0000&attrType=18",
                 "execAtCreation": "yes"
             },
-            "Zone Alarm1": {
-                "use": "inf_zone-Alarm1",
-                "params": "ep=01",
-                "isVisible": "1"
+            "Timeout": {
+                "use": "act_zbWriteAttribute-slider",
+                "params": "clustId=0406&attrId=0020&attrType=21",
+                "minValue": 5,
+                "maxValue": 60,
+                "isVisible": 1,
+                "value": "Timeout info"
             },
-            "Zone Status Changed": {
-                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
-                "params": "ep=01",
-                "trigOut": {
-                    "01-0500-alarm1": {
-                        "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
-                        "valueOffset": "#value#&1"
-                    }
-                }
+            "Get timeout": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0406&attrId=0020",
+                "execAtCreation": "yes",
+                "logicalId": "getTimeout"
             },
-            "Bind 01-0500-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0500",
+            "Timeout info": {
+                "use": "inf_generic-NumericBadge",
+                "params": "ep=01",
+                "logicalId": "0406-01-0020"
+            },
+            "SetReporting 01-0406-0020": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0406&attrId=0020&attrType=21",
                 "execAtCreation": "yes"
             }
         }

@@ -2,10 +2,10 @@
 <input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic"/>
 
 <style>
-    .iconRatio {
+    /* .iconRatio {
         max-width: 130px;
         width:auto;
-    }
+    } */
     /* .iconZ1
     {
         position:relative;
@@ -20,11 +20,20 @@
         left: 0px;
         z-index: 2;
     } */
+
+    .eqLogicDisplayCard.cursor /* Not used */
+    {
+        height:180px!important;
+    }
+    .div.eqLogicDisplayCard.cursor /* Not used */
+    {
+        height:200px!important;
+    }
 </style>
 
 <?php
     /* Display beehive or bee card */
-    function displayBeeCard($eqLogic, $files, $zgId) {
+    function displayBeeCard($eqLogic, $zgId) {
         // find opacity
         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 
@@ -38,8 +47,9 @@
             $icon = 'node_defaultUnknown.png';
 
         $id = $eqLogic->getId();
-        echo '<div>';
-        echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="width:130px" data-eqLogic_id="'.$id.'">';
+        // echo '<div>';
+        // echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="width:130px" data-eqLogic_id="'.$id.'">';
+        echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="'.$id.'">';
         // Note: idBeeChecked must be in 'eqLogicDisplayCard' to be filtered out using the search bar
         echo        '<input id="idBeeChecked'.$zgId.'-'.$id.'" class="beeChecked" type="checkbox" name="eqSelected-'.$id.'" />';
         echo 	    '<br/>';
@@ -48,41 +58,37 @@
         echo 		'<br/>';
         echo        '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
         echo        '<span class="hiddenAsCard displayTableRight hidden">';
-        echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+        echo            ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
         echo        '</span>';
         echo 	'</div>';
-        echo '</div>';
+        // echo '</div>';
     }
 
     $NbOfZigatesON = 0; // Number of enabled zigates
-    // $eqAll = array(); // All equipments, sorted per zigate
     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+
         if ( config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y' )
             continue; // This Zigate is not enabled
-
         $NbOfZigatesON++;
+
         if ( Abeille::byLogicalId( 'Abeille'.$zgId.'/0000', 'Abeille') ) {
             echo '<label style="margin: 10px 0px 0px 10px">{{Réseau Abeille}}'.$zgId.'</label>';
         }
         echo "&nbsp&nbsp&nbsp";
-        // echo '<span class="cursor" id="bt_include'.$zgId.'" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."><i class="fas fa-plus-circle" style="font-size:160%;color:green !important;"></i></span>';
         echo '<a class="fas fa-plus-circle" style="font-size:160%;color:green !important;" onclick="sendToCmd(\'startPermitJoin\','.$zgId.')" title="{{Activation du mode inclusion}}"></a>';
         echo "&nbsp&nbsp&nbsp";
-        // echo '<span class="cursor" id="bt_include_stop'.$zgId.'" title="Inclusion: clic sur le moins pour arreter le mode inclusion."><i class="fas fa-minus-circle" style="font-size:160%;color:red !important;"></i></span>';
         echo '<a class="fas fa-minus-circle" style="font-size:160%;color:red !important;" onclick="sendToCmd(\'stopPermitJoin\','.$zgId.')" title="{{Arret du mode inclusion}}"></a>';
         echo "&nbsp&nbsp&nbsp";
         echo '<span class="cursor" onclick="createRemote('.$zgId.')" title="Clic pour créer une télécommande virtuelle."><i class="fas fa-gamepad" style="font-size:160%;color:orange !important;"></i></span>';
 
         /* Remove equipments from Jeedom only */
-        // echo '<a onclick="removeBeesJeedom('.$zgId.')" class="btn btn-warning btn-xs" style="margin-top: -10px; margin-left:15px" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
         echo '<a onclick="removeSelectedEq('.$zgId.')" class="btn btn-warning btn-xs" style="margin-top: -10px; margin-left:15px" title="{{Supprime les équipements sélectionnés de Jeedom uniquement}}">{{Supprimer de Jeedom}}</a>';
 
         /* Exclude feature */
         echo '<a onclick="removeBees('.$zgId.')" class="btn btn-warning btn-xs" style="margin-top:-10px; margin-left:8px" title="Demande aux équipement(s) sélectionné(s) de sortir du réseau.">{{Exclure}}</a>';
 
-        $port = config::byKey('ab::gtwPort'.$zgId, 'Abeille', '');
-
         /* Monitoring feature */
+        $port = config::byKey('ab::gtwPort'.$zgId, 'Abeille', '');
         echo '<a onclick="monitorIt('.$zgId.', \''.$port.'\')" class="btn btn-warning btn-xs" style="margin-top:-10px; margin-left:8px" title="Surveillance des messages vers/de l\'équipement sélectionné. Sortie dans \'AbeilleMonitor\'.">{{Surveiller}}</a>';
 
         if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
@@ -92,9 +98,9 @@
             echo '<a onclick="setBeesTimeout('.$zgId.')" class="btn btn-primary btn-xs" style="margin-top:-10px; margin-left:8px" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
         }
 
-		echo '<div class="eqLogicThumbnailContainer" style="height:180px">';
-        $dir = dirname(__FILE__) . '/../../core/config/devices_images/';
-        $files = scandir($dir);
+        /* Display list of equipments */
+		// echo '<div class="eqLogicThumbnailContainer" style="height:180px">';
+		echo '<div class="eqLogicThumbnailContainer">';
 
         // Display beehive first
 		foreach ($eqPerZigate[$zgId] as $eq) {
@@ -102,7 +108,7 @@
                 continue; // It's not a zigate
             $eqId = $eq['id'];
             $eqLogic = eqLogic::byId($eqId);
-            displayBeeCard($eqLogic, $files, $zgId);
+            displayBeeCard($eqLogic, $zgId);
         }
 
         // Display attached equipments
@@ -111,7 +117,7 @@
                 continue; // It's a zigate
             $eqId = $eq['id'];
             $eqLogic = eqLogic::byId($eqId);
-            displayBeeCard($eqLogic, $files, $zgId);
+            displayBeeCard($eqLogic, $zgId);
         }
         echo ' </div>';
         echo '<script>var js_eqZigate'.$zgId.' = \''.json_encode($eqPerZigate[$zgId]).'\';</script>';

@@ -69,6 +69,14 @@
                 "use": "act_zbConfigureReporting2",
                 "params": "ep=01&clustId=0406&attrId=0020&attrType=21",
                 "execAtCreation": "yes"
+            },
+            "Brightness": {
+                "use": "inf_generic-String",
+                "params": "ep=01&clustId=FC11&attrId=2001",
+                "listValue": "0|Dim;1|Bright",
+                "logicalId": "FC11-01-2001",
+                "comment": "Only updated when occupancy is detected",
+                "isVisible": 1
             }
         }
     }

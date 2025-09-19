@@ -586,14 +586,14 @@
 
         /* Log level has changed */
         if ($msg['type'] == "logLevelChanged") {
-            logMessage('debug', "msgFromParser(): log level changed to ".$msg['level']);
+            logMessage('debug', "  msgFromParser(): log level changed to ".$msg['level']);
             logLevelChanged($msg['level']);
             return;
         } // End 'logLevelChanged'
 
         /* Request to update EQ from given model (ex: user force model) */
         if ($msg['type'] == "setForcedModel") {
-            logMessage('debug', "msgFromParser(): setForcedModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
+            logMessage('debug', "  msgFromParser(): setForcedModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
 
             $dev = array(
                 'net' => $net,
@@ -613,7 +613,7 @@
 
         /* Request to update EQ from originally identified model (ex: user removed forced model) */
         if ($msg['type'] == "removeForcedModel") {
-            logMessage('debug', "msgFromParser(): removeForcedModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
+            logMessage('debug', "  msgFromParser(): removeForcedModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
@@ -646,7 +646,7 @@
         } // End 'removeForcedModel'
 
         if ($msg['type'] == "updateFromModel") {
-            logMessage('debug', "msgFromParser(): updateFromModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
+            logMessage('debug', "  msgFromParser(): updateFromModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
             $dev = array(
                 'net' => $net,
                 'addr' => $addr,
@@ -662,7 +662,7 @@
         /* Parser has found a new device. Basic Jeedom entry to be created. */
         if ($msg['type'] == "newDevice") {
             $ieee = $msg['ieee'];
-            logMessage('debug', "msgFromParser(): New device: ".$net.'/'.$addr.", ieee=".$ieee);
+            logMessage('debug', "  msgFromParser(): New device: ".$net.'/'.$addr.", ieee=".$ieee);
 
             newJeedomDevice($net, $addr, $ieee);
 
@@ -671,7 +671,7 @@
 
         /* Transmit status has changed. */
         if ($msg['type'] == "eqTxStatusUpdate") {
-            logMessage('debug', "msgFromParser(): TX status update: ".$net.'/'.$addr.", status=".$msg['txStatus']);
+            logMessage('debug', "  msgFromParser(): TX status update: ".$net.'/'.$addr.", status=".$msg['txStatus']);
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (is_object($eqLogic)) {
@@ -686,7 +686,7 @@
 
         /* Parser has found device infos to update. */
         if ($msg['type'] == "deviceUpdates") {
-            logMessage('debug', "msgFromParser(): '{$net}/{$addr}/{$ep}' device updates, ".json_encode($msg['updates'], JSON_UNESCAPED_SLASHES));
+            logMessage('debug', "  msgFromParser(): '{$net}/{$addr}/{$ep}' device updates, ".json_encode($msg['updates'], JSON_UNESCAPED_SLASHES));
 
             $eqChanged = false;
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
@@ -834,7 +834,7 @@
             $logicalId = $net.'/'.$addr;
             $modelName = $msg['modelName'];
             $modelSource = $msg['modelSource']; // 'Abeille' or 'local'
-            logMessage('debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$modelName."'".", jsonLoc='".$modelSource."'");
+            logMessage('debug', "  msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$modelName."'".", jsonLoc='".$modelSource."'");
 
             $ieee = $msg['ieee'];
 
@@ -931,7 +931,7 @@
             // 'srcAddr' => $oldAddr,
 
             $oldLogicId = $msg['srcNet'].'/'.$msg['srcAddr'];
-            logMessage('debug', "msgFromParser(): Device migration from ".$oldLogicId." to ".$net."/".$addr);
+            logMessage('debug', "  msgFromParser(): Device migration from ".$oldLogicId." to ".$net."/".$addr);
 
             $eqLogic = eqLogic::byLogicalId($oldLogicId, 'Abeille');
             if (!is_object($eqLogic)) {
@@ -968,7 +968,7 @@
             */
 
             $ieee = $msg['ieee'];
-            logMessage('debug', "msgFromParser(): Leave indication for ".$net."/".$ieee.", rejoin=".$msg['rejoin']);
+            logMessage('debug', "  msgFromParser(): Leave indication for ".$net."/".$ieee.", rejoin=".$msg['rejoin']);
 
             /* Look for corresponding equipment (identified via its IEEE addr) */
             $all = eqLogic::byType('Abeille');
@@ -983,7 +983,7 @@
 
                 $ieee2 = $eqLogic2->getConfiguration('IEEE', '');
                 if ($ieee2 == '') {
-                    logMessage('debug', "msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId2."' config.");
+                    logMessage('debug', "  msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId2."' config.");
                     $cmd = $eqLogic2->getCmd('info', 'IEEE-Addr');
                     if (is_object($cmd)) {
                         $ieee2 = $cmd->execCmd();
@@ -993,7 +993,7 @@
                         //           since IEEE always provided with device announce.
                         $eqLogic2->setConfiguration('IEEE', $ieee2);
                         $eqLogic2->save();
-                        logMessage('debug', "msgFromParser(): Missing IEEE addr corrected");
+                        logMessage('debug', "  msgFromParser(): Missing IEEE addr corrected");
                     }
                 }
                 if ($ieee2 != $ieee)
@@ -1039,25 +1039,25 @@
             */
 
             if ($msg['type'] == "attributesReportN")
-                logMessage('debug', "msgFromParser(): Attributes report by name from '{$net}/{$addr}/{$ep}'");
+                logMessage('debug', "  msgFromParser(): Attributes report by name from '{$net}/{$addr}/{$ep}'");
             else
-                logMessage('debug', "msgFromParser(): Read attributes response by name from '{$net}/{$addr}/{$ep}'");
+                logMessage('debug', "  msgFromParser(): Read attributes response by name from '{$net}/{$addr}/{$ep}'");
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('debug', "  Unknown device '{$net}/{$addr}'");
+                logMessage('debug', "    Unknown device '{$net}/{$addr}'");
                 return; // Unknown device
             }
 
             foreach ($msg['attributes'] as $attr) {
                 $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $attr['name']);
                 if (!is_object($cmdLogic)) {
-                    logMessage('debug', "  Unknown Jeedom command logicId='".$attr['name']."'");
+                    logMessage('debug', "    ".$attr['name']." = ? => Unknown Jeedom command");
                 } else {
                     $cmdName = $cmdLogic->getName();
                     if ($cmdLogic->getType() == "action") {
                         $subType = $cmdLogic->getSubType();
-                        logMessage('debug', "  WARNING: 'action' cmd '$cmdName' detected (subType=$subType)");
+                        logMessage('debug', "    WARNING: 'action' cmd '$cmdName' detected (subType=$subType)");
                         // Tcharp38 note: maybe we could update 'select' or 'slider' value with this returned data
                         // How to update current or select value ??
                         // if (($subType == 'slider') || ($subType == 'select')) {
@@ -1078,20 +1078,20 @@
                         // WARNING: value might not be the final one if 'calculValueOffset' is used
                         $cvo = $cmdLogic->getConfiguration('calculValueOffset', '');
                         if ($cvo == '')
-                            logMessage('debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." ".$unit);
+                            logMessage('debug', "    ".$attr['name']." = '".$cmdName."' => ".$attr['value']." ".$unit);
                         else
-                            logMessage('debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." (calculValueOffset=".$cvo.")");
-    logMessage('debug', "  checkAndUpdateCmd(), attr['value']=".json_encode($attr['value']));
+                            logMessage('debug', "    ".$attr['name']." = '".$cmdName."' => ".$attr['value']." (calculValueOffset=".$cvo.")");
+    // logMessage('debug', "  checkAndUpdateCmd(), attr['value']=".json_encode($attr['value']));
                         // if ($eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']) != true)
                         //     logMessage('debug', "    WARNING: checkAndUpdateCmd() failed");
                         $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
                         // Checking if battery info, only if registered command
-    logMessage('debug', "  checkIfBatteryInfo(), attr=".json_encode($attr));
+    logMessage('debug', "    checkIfBatteryInfo(), attr=".json_encode($attr));
                         checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
 
                         // Check if any action cmd must be executed triggered by this update
-    logMessage('debug', "  infoCmdUpdate()");
+    logMessage('debug', "    infoCmdUpdate()");
                         infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
                     }
                 }
@@ -1110,7 +1110,7 @@
                 'time' => time(),
                 'lqi' => $lqi
             */
-            logMessage('debug', "msgFromParser(): Device '{$net}/{$addr}' is ALIVE");
+            logMessage('debug', "  msgFromParser(): Device '{$net}/{$addr}' is ALIVE");
 
             // $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             // if (!is_object($eqLogic)) {
@@ -1136,7 +1136,7 @@
                 'time' => time()
             ); */
 
-            logMessage('debug', "msgFromParser(): ".$net.", Zigate version ".$msg['major']."-".$msg['minor']);
+            logMessage('debug', "  msgFromParser(): ".$net.", Zigate version ".$msg['major']."-".$msg['minor']);
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 logMessage('debug', "  ERROR: No zigate for network ".$net);
@@ -1148,7 +1148,7 @@
                 $savedVersion = $cmdLogic->execCmd(); // MMMM-mmmm
                 $version = $msg['major'].'-'.$msg['minor'];
                 if ($savedVersion != $version)
-                    logMessage('debug', '  FW saved version: '.$savedVersion);
+                    logMessage('debug', '    FW saved version: '.$savedVersion);
                 if ($savedVersion == '---------') {
                     $gtwId = substr($net, 7);
                     // Zigate mode is now HYBRID in all cases. Abeille is no longer able to deal with older firmwares
@@ -1190,10 +1190,10 @@
                 'time' => time()
              */
 
-            logMessage('debug', "msgFromParser(): ".$net.", Zigate timeServer ".$msg['time']);
+            logMessage('debug', "  msgFromParser(): ".$net.", Zigate timeServer ".$msg['time']);
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('debug', "  ERROR: No zigate for network ".$net);
+                logMessage('debug', "    ERROR: No zigate for network ".$net);
                 return;
             }
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'ZiGate-Time');
@@ -1215,10 +1215,10 @@
                 'time' => time()
              */
 
-            logMessage('debug', "msgFromParser(): ".$net.", Zigate power ".$msg['power']);
+            logMessage('debug', "  msgFromParser(): ".$net.", Zigate power ".$msg['power']);
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('debug', "  ERROR: No zigate for network ".$net);
+                logMessage('debug', "    ERROR: No zigate for network ".$net);
                 return;
             }
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'ZiGate-Power');
@@ -1245,13 +1245,13 @@
                 'time' => time()
             ); */
 
-            logMessage('debug', "msgFromParser(): ".$net.", network state, ieee=".$msg['ieee'].", chan=".$msg['chan']);
+            logMessage('debug', "  msgFromParser(): ".$net.", network state, ieee=".$msg['ieee'].", chan=".$msg['chan']);
 
             checkZgIeee($net, $msg['ieee']);
 
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('debug', "  ERROR: No zigate for network ".$net);
+                logMessage('debug', "    ERROR: No zigate for network ".$net);
                 return;
             }
             // $ieee = $eqLogic->getConfiguration('IEEE', '');
@@ -1296,18 +1296,18 @@
                 'time' => time()
             ); */
 
-            logMessage('debug', "msgFromParser(): ".$net.", network started, ieee=".$msg['ieee'].", chan=".$msg['chan']);
+            logMessage('debug', "  msgFromParser(): ".$net.", network started, ieee=".$msg['ieee'].", chan=".$msg['chan']);
 
             checkZgIeee($net, $msg['ieee']);
 
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('debug', "  ERROR: No zigate for network ".$net);
+                logMessage('debug', "    ERROR: No zigate for network ".$net);
                 return;
             }
             $ieee = $eqLogic->getConfiguration('IEEE', '');
             if (($ieee != '') && ($ieee != $msg['ieee'])) {
-                logMessage('debug', "  ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
+                logMessage('debug', "    ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
                 return;
             }
             $eqId = $eqLogic->getId();
@@ -1333,10 +1333,10 @@
                 'time' => time()
             ); */
 
-            logMessage('debug', "msgFromParser(): ".$net.", permit join, status=".$msg['status']);
+            logMessage('debug', "  msgFromParser(): ".$net.", permit join, status=".$msg['status']);
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('debug', "  ERROR: No zigate for network ".$net);
+                logMessage('debug', "    ERROR: No zigate for network ".$net);
                 return;
             }
             $eqId = $eqLogic->getId();
@@ -1357,7 +1357,7 @@
             // 'status' => $status,
             // 'time' => time(),
             // 'lqi' => $lqi,
-            logMessage('debug', "msgFromParser(): ".$net."/".$addr.", Bind response, status=".$msg['status']);
+            logMessage('debug', "  msgFromParser(): ".$net."/".$addr.", Bind response, status=".$msg['status']);
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if ($eqLogic)
@@ -1374,11 +1374,11 @@
             // 'ieee' => $ieee,
             // 'time' => time(),
             // 'lqi' => $lqi,
-            logMessage('debug', "msgFromParser(): ".$net."/".$addr.", IEEE addr response, ieee=".$msg['ieee']);
+            logMessage('debug', "  msgFromParser(): ".$net."/".$addr.", IEEE addr response, ieee=".$msg['ieee']);
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!$eqLogic) {
-                logMessage('debug', "  WARNING: Unknown device");
+                logMessage('debug', "    WARNING: Unknown device");
                 return;
             }
             $curIeee = $eqLogic->getConfiguration('IEEE', '');
@@ -1386,9 +1386,9 @@
                 $eqLogic->setConfiguration('IEEE', $msg['ieee']);
                 $eqLogic->save();
                 $eqLogic->refresh();
-                logMessage('debug', "  Device IEEE updated.");
+                logMessage('debug', "    Device IEEE updated.");
             } else if ($curIeee != $msg['ieee']) {
-                logMessage('debug', "  WARNING: Device has a different IEEE => UNEXPECTED !!");
+                logMessage('debug', "    WARNING: Device has a different IEEE => UNEXPECTED !!");
             }
 
             updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
@@ -1405,10 +1405,10 @@
             // 'groups' => $grp
             // 'time' => time(),
             // 'lqi' => $lqi
-            logMessage('debug', "msgFromParser(): ".$net."/".$addr."/".$ep.", ".$msg['type'].", groups=".$msg['groups']);
+            logMessage('debug', "  msgFromParser(): ".$net."/".$addr."/".$ep.", ".$msg['type'].", groups=".$msg['groups']);
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('debug', "  Unknown device '".$net."/".$addr."'");
+                logMessage('debug', "    Unknown device '".$net."/".$addr."'");
                 return; // Unknown device
             }
 
@@ -1444,7 +1444,7 @@
             return;
         } // End 'addGroupResponse'/'removeGroupResponse'/'getGroupMembershipResponse'
 
-        logMessage('debug', "msgFromParser(): Ignored msg ".json_encode($msg));
+        logMessage('debug', "  msgFromParser(): Ignored msg ".json_encode($msg));
     } // End msgFromParser()
 
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */

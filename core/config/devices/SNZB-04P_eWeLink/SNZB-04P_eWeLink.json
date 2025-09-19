@@ -36,7 +36,7 @@
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "trigOut": {
                     "01-doorStatus": {
-                        "valueOffset": "#value#&2"
+                        "valueOffset": "#value#&1"
                     },
                     "01-0500-0002-tamper": {
                         "valueOffset": "#value#&4"

@@ -1,9 +1,10 @@
 # ChangeLog
 
 -   Améliorations: Interne: Eq assist pour cluster 0500.
--   Améliorations:Support SonOff SNZB-04P (2763)
+-   Améliorations: Support SonOff SNZB-04P (2763)
 -   Corrections: Page équipements: Changement mineur pour utilisation barre de recherche.
--   Améliorations:Support SonOff SNZB-03P (2762)
+-   Améliorations: Support SonOff SNZB-03P (2762)
+-   Améliorations: Interne. Message dbg main daemon.
 
 ## 250911-BETA-1
 

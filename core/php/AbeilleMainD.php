@@ -545,7 +545,7 @@
 
             $eqLogic->checkAndUpdateCmd($cmdLogic, $value);
 
-            // infoCmdUpdate($eqLogic, $cmdLogic, $value);
+            // checkTrigOut($eqLogic, $cmdLogic, $value);
 
             // // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
             // $cmds = AbeilleCmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
@@ -1087,12 +1087,12 @@
                         $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
                         // Checking if battery info, only if registered command
-    logMessage('debug', "    checkIfBatteryInfo(), attr=".json_encode($attr));
-                        checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
+    // logMessage('debug', "    checkBatteryPercent(), attr=".json_encode($attr));
+                        checkBatteryPercent($eqLogic, $attr['name'], $attr['value']);
 
                         // Check if any action cmd must be executed triggered by this update
-    logMessage('debug', "    infoCmdUpdate()");
-                        infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
+    logMessage('debug', "    checkTrigOut()");
+                        checkTrigOut($eqLogic, $cmdLogic, $attr['value']);
                     }
                 }
             }
@@ -1680,23 +1680,20 @@
         }
     }
 
-    // Check if received attribute is a battery information
-    function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
-        if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
+    // Check if received attribute is a battery percent information
+    function checkBatteryPercent($eqLogic, $attrLogicId, $attrVal) {
+        // if (($attrLogicId == "Battery-Percent") || preg_match("/^0001-[0-9A-F]*-0021/", $attrLogicId)) {
+        // Assuming attribute logic ID as '0001-<EP>-0021' for battery percent. Nothing else.
+        if (preg_match("/^0001-[0-9A-F]*-0021/", $attrLogicId)) {
             $attrVal = round($attrVal, 0);
-            logMessage('debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
-            $eqLogic->setStatus('battery', $attrVal);
-            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-        }  else if (preg_match("/^0001-[0-9A-F]*-0021/", $attrName)) {
-            $attrVal = round($attrVal, 0);
-            logMessage('debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
+            logMessage('debug', "      Battery % reporting: ".$attrLogicId.", val=".$attrVal);
             $eqLogic->setStatus('battery', $attrVal);
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
         }
     }
 
     /* Called on info cmd update (attribute report or attribute read) to see if any action cmd must be executed */
-    function infoCmdUpdate($eqLogic, $cmdLogic, $value) {
+    function checkTrigOut($eqLogic, $cmdLogic, $value) {
 
         // Trig another command ('ab::trigOut' eqLogic config) ?
         // Syntax reminder
@@ -1734,11 +1731,11 @@
             $cmdName = $cmd->getName();
             $cmdLogicId = $cmd->getLogicalId();
             if ($delay != 0) {
-                logMessage('debug', "  Triggering '{$cmdName}' ({$cmdLogicId}) with delay ".$delay);
+                logMessage('debug', "    Triggering '{$cmdName}' ({$cmdLogicId}) with delay ".$delay);
                 // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
                 msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
             } else {
-                logMessage('debug', "  Triggering '{$cmdName}' ({$cmdLogicId})");
+                logMessage('debug', "    Triggering '{$cmdName}' ({$cmdLogicId})");
                 // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
                 msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
             }
@@ -1750,18 +1747,18 @@
     function trigCommand($eqLogic, $value, $trigLogicId, $trigOffset = '') {
         $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
         if (!is_object($trigCmd)) {
-            logMessage('debug', "  trigCommand(): Unknown Jeedom command logicId='{$trigLogicId}'");
+            logMessage('debug', "    trigCommand(): Unknown Jeedom command logicId='{$trigLogicId}'");
             return;
         }
 
-        logMessage('debug', "  trigCommand(Val={$value}, TrigOffset='{$trigOffset}')");
+        logMessage('debug', "    trigCommand(Val={$value}, TrigOffset='{$trigOffset}')");
         if ($trigOffset != '') {
             $vsPos = stripos($trigOffset, '#valueswitch-'); // Any #valueswitch-....# variable ?
             if ($vsPos !== false) {
                 $vs = substr($trigOffset, $vsPos + 13);
                 $vsPos2 = strpos($vs, '#');
                 $varName = substr($vs, 0, $vsPos2);
-                logMessage('debug', "  'valueswitch' detected: VarName='{$varName}'");
+                logMessage('debug', "    'valueswitch' detected: VarName='{$varName}'");
 
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
                 $varUp = strtoupper($varName);
@@ -1771,12 +1768,12 @@
                     return;
                 }
                 $var = $eqModel['variables'][$varUp];
-                logMessage('debug', "  Var=".json_encode($var, JSON_UNESCAPED_SLASHES));
+                logMessage('debug', "    Var=".json_encode($var, JSON_UNESCAPED_SLASHES));
                 $varType = gettype($var);
-                logMessage('debug', "  varType={$varType}");
+                logMessage('debug', "    varType={$varType}");
                 if ($varType == "array") {
                     // Variable is an array so keys are string. If value is int => convert to hex string.
-                    logMessage('debug', "  valueType=".gettype($value));
+                    logMessage('debug', "    valueType=".gettype($value));
                     if (gettype($value) != "string") {
                         $value2 = strval($value);
                         logMessage('debug', "  value2={$value2}");
@@ -1785,7 +1782,7 @@
                         $newValue = $var[$value];
                 } else
                     $newValue = $var;
-                logMessage('debug', "  newValue=".json_encode($newValue, JSON_UNESCAPED_SLASHES));
+                logMessage('debug', "    newValue=".json_encode($newValue, JSON_UNESCAPED_SLASHES));
                 $trigValue = jeedom::evaluateExpression(str_ireplace("#valueswitch-{$varName}#", $newValue, $trigOffset));
             } else
                 $trigValue = jeedom::evaluateExpression(str_ireplace('#value#', $value, $trigOffset));
@@ -1793,16 +1790,17 @@
             $trigValue = $value;
 
         $trigName = $trigCmd->getName();
-        logMessage('debug', "  Triggering cmd '{$trigName}' ({$trigLogicId}) with Val='{$trigValue}'");
+        logMessage('debug', "    Triggering cmd '{$trigName}' ({$trigLogicId}) with Val='{$trigValue}'");
         $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
 
         // Is the triggered command a battery percent reporting ?
-        if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
-            $trigValue = round($trigValue, 0);
-            logMessage('debug', "  Battery % reporting: {$trigLogicId}, Val={$trigValue}");
-            $eqLogic->setStatus('battery', $trigValue);
-            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-        }
+        checkBatteryPercent($eqLogic, $trigLogicId, $trigValue);
+        // if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
+        //     $trigValue = round($trigValue, 0);
+        //     logMessage('debug', "  Battery % reporting: {$trigLogicId}, Val={$trigValue}");
+        //     $eqLogic->setStatus('battery', $trigValue);
+        //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        // }
     }
 
     logSetConf("AbeilleMainD.log", true);

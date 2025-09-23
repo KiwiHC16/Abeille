@@ -6,6 +6,7 @@
 -   Améliorations: Support SonOff SNZB-03P (2762)
 -   Améliorations: Interne. Message dbg main daemon.
 -   Améliorations: Suppression commandes obsoletes (etatSwitchSimple/etatSwitchDouble_X).
+-   Améliorations: AbeilleMainD: Test 'battery percent' revu.
 
 ## 250911-BETA-1
 

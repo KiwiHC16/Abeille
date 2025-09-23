@@ -1441,21 +1441,6 @@ class Abeille extends eqLogic {
     //     }
     // }
 
-    // // Check if received attribute is a battery information
-    // public static function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
-    //     if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
-    //         $attrVal = round($attrVal, 0);
-    //         log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
-    //         $eqLogic->setStatus('battery', $attrVal);
-    //         $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-    //     }  else if (preg_match("/^0001-[0-9A-F]*-0021/", $attrName)) {
-    //         $attrVal = round($attrVal, 0);
-    //         log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
-    //         $eqLogic->setStatus('battery', $attrVal);
-    //         $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-    //     }
-    // }
-
 //     /* Deal with messages coming from parser or cmd processes.
 //        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */
 //     public static function msgFromParser($msg) {

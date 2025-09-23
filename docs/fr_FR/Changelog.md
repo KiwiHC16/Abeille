@@ -5,6 +5,7 @@
 -   Corrections: Page équipements: Changement mineur pour utilisation barre de recherche.
 -   Améliorations: Support SonOff SNZB-03P (2762)
 -   Améliorations: Interne. Message dbg main daemon.
+-   Améliorations: Suppression commandes obsoletes (etatSwitchSimple/etatSwitchDouble_X).
 
 ## 250911-BETA-1
 

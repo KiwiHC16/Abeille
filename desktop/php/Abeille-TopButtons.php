@@ -16,10 +16,10 @@
 			'ota'       => array( 'bouton'=>'bt_Ota',				'icon'=>'fa-paperclip',     'text'=>'{{Mises-à-jour OTA}}' ),
 			'support'   => array( 'bouton'=>'bt_maintenancePage',	'icon'=>'fa-medkit',        'text'=>'{{Maintenance}}' ),
 		);
-		if (isset($dbgDeveloperMode)) {
-			// No time to spent on next subject. No longer functional
+		// if (isset($dbgDeveloperMode)) {
+			// No time to spent on next subject. No longer functional and useless.
 			// $tools['graph'] = array( 'bouton'=>'bt_graph', 'icon'=>'fa-flask', 'text'=>'{{Graph}}' );
-		}
+		// }
 
 		foreach ($tools as $key => $tool) {
 			echo '<div class="cursor eqLogicAction logoSecondary" style="color:#767676;" id="'.$tool['bouton'].'">';

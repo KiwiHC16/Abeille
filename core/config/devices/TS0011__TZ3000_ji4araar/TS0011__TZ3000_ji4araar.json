@@ -5,7 +5,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Tuya-1chanSwitchModule"
+            "icon": "Tuya-1ChanSwitchModule"
         },
         "category": {
             "automatism": "1"

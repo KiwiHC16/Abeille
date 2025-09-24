@@ -7,6 +7,8 @@
 -   Améliorations: Interne. Message dbg main daemon.
 -   Améliorations: Suppression commandes obsoletes (etatSwitchSimple/etatSwitchDouble_X).
 -   Améliorations: AbeilleMainD: Test 'battery percent' revu.
+-   Améliorations: Affichage équipements supportés.
+-   Corrections: Pb de casse sur plusieurs noms d'icone.
 
 ## 250911-BETA-1
 

@@ -8,7 +8,7 @@
             "light": "1"
         },
         "configuration": {
-            "icon": "Sonoff-ZbminiL",
+            "icon": "Sonoff-ZBMiniL",
             "mainEP": "01"
         },
         "commands": {

@@ -19,7 +19,6 @@
         echo "<h1>{{Equipements supportés}}</h1>";
         echo "Les docs stockées de chaque équipement sont accessibles via un clic sur le champ 'ID Zigbee'. Si pas de doc, vous tomberez sur une page du type 'erreur 404'<br><br>";
         echo '<table class="tablesorter" id="idEqTable">';
-        // echo "<caption>Equipements supportés</caption>";
         echo '<thead><tr>';
         echo '<th class="header">Icone</th>';
         echo '<th class="header" width="100px" title="Trier par fabricant">Fabricant</th>';
@@ -27,13 +26,19 @@
         echo '<th class="header" width="100px" title="Trier par type">Type</th>';
         echo '<th class="header" title="Trier par ID Zigbee">ID Zigbee</th>';
         echo '</tr></thead>';
+
         foreach ($eqList as $eq) {
+            $icon = $eq['icon'];
+            $iconPath = __DIR__."/../../core/config/devices_images/node_".$icon.".png";
+            if (!file_exists($iconPath))
+                $icon = "defaultUnknown";
+
             echo '<tr>';
-            echo '<td><img src="/plugins/Abeille/core/config/devices_images/node_'.$eq['icon'].'.png" width="100" height="100"></td>';
-            echo '<td>'.$eq['manufacturer'].'</td>';
-            echo '<td>'.$eq['model'].'</td>';
-            echo '<td>'.$eq['type'].'</td>';
-            echo '<td><a href="'.urlProducts.'/'.$eq['modelSig'].'">'.$eq['modelSig'].'</a></td>';
+            echo    '<td style="height:100px;width:115px;padding-right:15px"><img src="/plugins/Abeille/core/config/devices_images/node_'.$icon.'.png" style="max-width: 100%; max-height: 100%; height: auto;"></td>';
+            echo    '<td>'.$eq['manufacturer'].'</td>';
+            echo    '<td>'.$eq['model'].'</td>';
+            echo    '<td>'.$eq['type'].'</td>';
+            echo    '<td><a href="'.urlProducts.'/'.$eq['modelSig'].'">'.$eq['modelSig'].'</a></td>';
             echo '</tr>'."\n";
         }
         echo "</table>";

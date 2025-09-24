@@ -47,13 +47,11 @@
             $icon = 'node_defaultUnknown.png';
 
         $id = $eqLogic->getId();
-        // echo '<div>';
-        // echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="width:130px" data-eqLogic_id="'.$id.'">';
-        echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="'.$id.'">';
+        echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="height:185px !important" data-eqLogic_id="'.$id.'">';
         // Note: idBeeChecked must be in 'eqLogicDisplayCard' to be filtered out using the search bar
+        //       This forced to add style="height:185px !important" to extend height
         echo        '<input id="idBeeChecked'.$zgId.'-'.$id.'" class="beeChecked" type="checkbox" name="eqSelected-'.$id.'" />';
         echo 	    '<br/>';
-        // TODO: To be revisited to extend HEIGHT.
         echo 		'<img src="plugins/Abeille/core/config/devices_images/'.$icon.'" />';
         echo 		'<br/>';
         echo        '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
@@ -61,7 +59,6 @@
         echo            ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
         echo        '</span>';
         echo 	'</div>';
-        // echo '</div>';
     }
 
     $NbOfZigatesON = 0; // Number of enabled zigates

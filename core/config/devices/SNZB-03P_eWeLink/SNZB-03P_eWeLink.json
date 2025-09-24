@@ -71,7 +71,7 @@
                 "execAtCreation": "yes"
             },
             "Bright": {
-                "use": "inf_generic-NumericBadge",
+                "use": "inf_generic-Binary",
                 "params": "ep=01&clustId=FC11&attrId=2001",
                 "logicalId": "FC11-01-2001",
                 "comment": "Only updated when occupancy is detected",

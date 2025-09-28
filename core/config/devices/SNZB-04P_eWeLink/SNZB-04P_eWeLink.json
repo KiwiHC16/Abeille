@@ -49,6 +49,7 @@
             },
             "Tamper": {
                 "use": "inf_zbAttr-0500-ZoneStatus-Tamper",
+                "invertBinary": 1,
                 "isVisible": 1
             },
             "Bind 01-0500-ToZigate": {

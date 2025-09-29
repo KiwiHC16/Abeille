@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 250929-BETA-1
+
 -   Améliorations: Interne: Eq assist pour cluster 0500.
 -   Améliorations: Support SonOff SNZB-04P (2763)
 -   Corrections: Page équipements: Changement mineur pour utilisation barre de recherche.

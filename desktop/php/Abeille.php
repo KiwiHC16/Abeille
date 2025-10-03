@@ -30,6 +30,7 @@
        $eqPerZigate[$zgId][id2] => id for next eq... */
     $eqPerZigate = array(); // All equipements id/addr per zigate
     foreach ($eqLogics as $eqLogic) {
+
         $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
         list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
         $zgId = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
@@ -39,15 +40,18 @@
         $eq['id'] = $eqId;
         $eq['addr'] = $eqAddr;
         $eq['isEnabled'] = $eqLogic->getIsEnable();
+        $eq['isVisible'] = $eqLogic->getIsVisible();
         $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
         $eq['jsonId'] = $eqModel ? $eqModel['modelName'] : '';
         $eq['name'] = $eqLogic->getName();
+        $eq['hName'] = $eqLogic->getHumanName(true, true);
+        $eq['icon'] = $eqLogic->getConfiguration('ab::icon', '');
         if (isset($eqModel['variables']))
             $eq['variables'] = $eqModel['variables'];
 
         if ($eqAddr == "0000") {
-            if (isset($eqPerZigate[$zgId][$eqId]))
+            if (isset($eqPerZigate[$zgId][$eqId])) // Tcharp38: Why would it be the case ? Can't remind that.
                 array_unshift($eqPerZigate[$zgId][$eqId], $eq);
             else
                 $eqPerZigate[$zgId][$eqId] = $eq;

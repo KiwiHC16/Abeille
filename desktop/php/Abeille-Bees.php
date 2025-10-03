@@ -33,12 +33,18 @@
 
 <?php
     /* Display beehive or bee card */
-    function displayBeeCard($eqLogic, $zgId) {
+    // function displayBeeCard($eqLogic, $zgId, $eqId) {
+    function displayBeeCard($zgId, $eqId) {
+
+        $eq = $GLOBALS['eqPerZigate'][$zgId][$eqId];
+
         // find opacity
-        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+        // $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+        $opacity = ($eq['isEnabled']) ? '' : 'disableCard';
 
         // Find icon
-        $icon = $eqLogic->getConfiguration('ab::icon', '');
+        // $icon = $eqLogic->getConfiguration('ab::icon', '');
+        $icon = $eq['icon'];
         if ($icon == '')
             $icon = 'defaultUnknown';
         $icon = 'node_'.$icon.'.png';
@@ -46,17 +52,19 @@
         if (!file_exists($iconPath))
             $icon = 'node_defaultUnknown.png';
 
-        $id = $eqLogic->getId();
+        // $eqId = $eqLogic->getId();
         // Note: idBeeChecked needs a special code to be filtered out when using the search bar
         echo 	'<div>';
-        echo        '<input id="idBeeChecked'.$zgId.'-'.$id.'" class="beeChecked" type="checkbox" name="eqSelected-'.$id.'" />';
+        echo        '<input id="idBeeChecked'.$zgId.'-'.$eqId.'" class="beeChecked" type="checkbox" name="eqSelected-'.$eqId.'" />';
         echo 	    '<br/>';
-        echo 	    '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="'.$id.'">';
+        echo 	    '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="'.$eqId.'">';
         echo 		    '<img src="plugins/Abeille/core/config/devices_images/'.$icon.'" />';
         echo 		    '<br/>';
-        echo            '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+        // echo            '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+        echo            '<span class="name">' . $eq['hName'] . '</span>';
         echo            '<span class="hiddenAsCard displayTableRight hidden">';
-        echo                ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+        // echo                ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+        echo                ($eq['isVisible']) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
         echo            '</span>';
         echo 	    '</div>';
         echo 	'</div>';
@@ -100,22 +108,26 @@
 		// echo '<div class="eqLogicThumbnailContainer" style="height:180px">';
 		echo '<div class="eqLogicThumbnailContainer">';
 
-        // Display beehive first
+        // Display gateway first
 		foreach ($eqPerZigate[$zgId] as $eq) {
             if ($eq['addr'] != '0000')
                 continue; // It's not a zigate
+
             $eqId = $eq['id'];
-            $eqLogic = eqLogic::byId($eqId);
-            displayBeeCard($eqLogic, $zgId);
+            // $eqLogic = eqLogic::byId($eqId);
+            // displayBeeCard($eqLogic, $zgId, $eqId);
+            displayBeeCard($zgId, $eqId);
         }
 
         // Display attached equipments
 		foreach ($eqPerZigate[$zgId] as $eq) {
             if ($eq['addr'] == '0000')
                 continue; // It's a zigate
+
             $eqId = $eq['id'];
-            $eqLogic = eqLogic::byId($eqId);
-            displayBeeCard($eqLogic, $zgId);
+            // $eqLogic = eqLogic::byId($eqId);
+            // displayBeeCard($eqLogic, $zgId, $eqId);
+            displayBeeCard($zgId, $eqId);
         }
         echo ' </div>';
         echo '<script>var js_eqZigate'.$zgId.' = \''.json_encode($eqPerZigate[$zgId]).'\';</script>';

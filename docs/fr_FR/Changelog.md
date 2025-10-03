@@ -2,6 +2,7 @@
 
 -   Améliorations: Page santé. Réarrangement mineur des colonnes.
 -   Corrections: Page équipements: Nouveau changement pour utilisation barre de recherche.
+-   Améliorations: Page équipements: Optimizations d'accès DB.
 
 ## 250929-BETA-1
 

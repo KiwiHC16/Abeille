@@ -1471,7 +1471,7 @@ function saveConfig(config) {
 
 $("#idEqIcon").change(function () {
     var text =
-        "plugins/Abeille/core/config/devices/devices_images/node_" +
+        "plugins/Abeille/core/config/devices_images/node_" +
         $("#idEqIcon").val() +
         ".png";
     //$("#icon_visu").attr('src',text);

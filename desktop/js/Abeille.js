@@ -29,6 +29,37 @@ if (window.location.href.indexOf("id=") > -1) {
 
 // console.log("LA2 eqId=", curEqId);
 
+// Additional code to hide checkboxes (class=beeChecked) when seach bar is used.
+// Jeedom code is already handling the 'eqLogicDisplayCard' class.
+document
+    .getElementById("in_searchEqlogic")
+    ?.addEventListener("keyup", function (event) {
+        var search = event.target.value;
+        if (search == "") {
+            document.querySelectorAll(".beeChecked").seen();
+            return;
+        }
+
+        document.querySelectorAll(".beeChecked").unseen(); // Hide all
+        search = jeedomUtils.normTextLower(search);
+        var text;
+        document
+            .querySelectorAll(".eqLogicDisplayCard .name")
+            .forEach((_name) => {
+                text = jeedomUtils.normTextLower(_name.textContent);
+                if (text.includes(search)) {
+                    // console.log("TOTO=", _name);
+                    eq = _name.closest(".eqLogicDisplayCard");
+                    // console.log("EQ=", eq);
+                    eqId = eq.getAttribute("data-eqlogic_id");
+                    // console.log("ID=", eqId);
+                    document
+                        .querySelector('[name="eqSelected-' + eqId + '"]')
+                        .seen();
+                }
+            });
+    });
+
 // Click generate on page reload too.
 $(".eqLogicDisplayCard").on("click", function () {
     console.log("eqLogicDisplayCard click");

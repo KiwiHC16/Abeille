@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Améliorations: Page santé. Réarrangement mineur des colonnes.
+-   Corrections: Page équipements: Nouveau changement pour utilisation barre de recherche.
 
 ## 250929-BETA-1
 

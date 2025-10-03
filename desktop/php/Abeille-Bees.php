@@ -47,17 +47,18 @@
             $icon = 'node_defaultUnknown.png';
 
         $id = $eqLogic->getId();
-        echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="height:185px !important" data-eqLogic_id="'.$id.'">';
-        // Note: idBeeChecked must be in 'eqLogicDisplayCard' to be filtered out using the search bar
-        //       This forced to add style="height:185px !important" to extend height
+        // Note: idBeeChecked needs a special code to be filtered out when using the search bar
+        echo 	'<div>';
         echo        '<input id="idBeeChecked'.$zgId.'-'.$id.'" class="beeChecked" type="checkbox" name="eqSelected-'.$id.'" />';
         echo 	    '<br/>';
-        echo 		'<img src="plugins/Abeille/core/config/devices_images/'.$icon.'" />';
-        echo 		'<br/>';
-        echo        '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-        echo        '<span class="hiddenAsCard displayTableRight hidden">';
-        echo            ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
-        echo        '</span>';
+        echo 	    '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="'.$id.'">';
+        echo 		    '<img src="plugins/Abeille/core/config/devices_images/'.$icon.'" />';
+        echo 		    '<br/>';
+        echo            '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+        echo            '<span class="hiddenAsCard displayTableRight hidden">';
+        echo                ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+        echo            '</span>';
+        echo 	    '</div>';
         echo 	'</div>';
     }
 

@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Page santé. Réarrangement mineur des colonnes.
+
 ## 250929-BETA-1
 
 -   Améliorations: Interne: Eq assist pour cluster 0500.

@@ -80,15 +80,15 @@
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
     <thead>
         <tr>
+            <th class="header" data-toggle="tooltip" title="{{ID Jeedom}}">{{ID}}</th>
             <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Réseau}}</th>
             <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Equipement}}</th>
-            <th class="header" data-toggle="tooltip" title="{{ID Jeedom}}">{{ID}}</th>
             <th class="header" data-toggle="tooltip" title="{{Type d'équipement}}">{{Type}}</th>
             <th class="header" data-toggle="tooltip" title="{{Adresse courte}}">{{Adresse}}</th>
             <th class="header" data-toggle="tooltip" title="{{Adresse IEEE}}">{{IEEE}}</th>
             <th class="header" data-toggle="tooltip" title="{{Status de l'équipement}}">{{Status}}</th>
-            <th class="header" data-toggle="tooltip" title="{{Dernière communication}}">{{Dernière comm.}}</th>
             <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Depuis}} (H)</th>
+            <th class="header" data-toggle="tooltip" title="{{Dernière communication}}">{{Dernière comm.}}</th>
             <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{LQI}}</th>
             <th class="header" data-toggle="tooltip" title="{{Dernier niveau de batterie}}">{{Batterie}}</th>
         </tr>
@@ -151,6 +151,9 @@
 
                         tr += '<tr>';
 
+                        // Jeedom ID
+                        tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+e.jId+dis2+'</span></td>';
+
                         // Network (AbeilleX)
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+net+dis2+'</span></td>';
                         tr += '<td><span style="font-size:1em;cursor:default;color:black;background-color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
@@ -159,9 +162,6 @@
                         // Device name
                         tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+dis1+e.hName+dis2+'</a></td>';
                         // tr += '<td><a href="'+e.link+'" style="font-size:1em;color:black;background-color:'+netColor+'">'+dis1+e.hName+dis2+'</a></td>';
-
-                        // Jeedom ID
-                        tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+e.jId+dis2+'</span></td>';
 
                         // Device type
                         // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.type+dis2+'</span></td>';
@@ -197,9 +197,11 @@
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
                         tr += '<td>'+status+'</td>';
 
+                        // Time in H since last comm.
+                        since = '<span style="font-size:1em;cursor:default;">'+dis1+e.since+dis2+'</span>';
+                        tr += '<td>'+since+'</td>';
+
                         // Last comm.
-                        // lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">';
-                        // lastComm = '<span style="font-size:1em;cursor:default;background-color:'+netColor+'">';
                         lastComm = '<span style="font-size:1em;cursor:default;">';
                         if (addr.substr(2) == "rc") // Remote control ?
                             lastComm += '-</span>';
@@ -207,18 +209,10 @@
                             lastComm += dis1+e.lastComm+dis2+'</span>';
                         tr += '<td>'+lastComm+'</td>';
 
-                        // Time in H since last comm.
-                        // since = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.since+dis2+'</span>';
-                        // since = '<span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.since+dis2+'</span>';
-                        since = '<span style="font-size:1em;cursor:default;">'+dis1+e.since+dis2+'</span>';
-                        tr += '<td>'+since+'</td>';
-
-                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastLqi+dis2+'</span></td>';
-                        // tr += '<td><span style="font-size:1em;cursor:default;background-color:'+netColor+'">'+dis1+e.lastLqi+dis2+'</span></td>';
+                        // Last LQI
                         tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+e.lastLqi+dis2+'</span></td>';
 
-                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastBat+dis2+'</span></td>';
-                        // tr += '<td style="background-color:'+netColor+'"><span style="font-size:1em;cursor:default">'+dis1+e.lastBat+dis2+'</span></td>';
+                        // Last battery
                         tr += '<td style=""><span style="font-size:1em;cursor:default">'+dis1+e.lastBat+dis2+'</span></td>';
 
                         tr += '</tr>';

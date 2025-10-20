@@ -4,6 +4,7 @@
 -   Corrections: Page équipements: Nouveau changement pour utilisation barre de recherche.
 -   Améliorations: Page équipements: Optimizations d'accès DB.
 -   Corrections: Icone de l'équipement mal affiché.
+-   Nouveau: Support Tuya garage door opener (2765).
 
 ## 250929-BETA-1
 

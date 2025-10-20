@@ -5,6 +5,11 @@
         "type": "Tuya Garage Door Controller with Sensor",
         "genericType": "Opening",
         "comment": "whiteLabel: [{vendor: 'MatSee Plus', model: 'PJ-ZGD01'}]",
+        "alternateIds": {
+            "TS0601__TZE204_nklqjk62": {},
+            "TS0601__TZE204_jktmrpoj": { "manufacturer": "Moes", "model": "ZM-102-M" },
+            "TS0601__TZE284_nklqjk62": {}
+        },
         "timeout": "60",
         "category": {
             "opening": "1"

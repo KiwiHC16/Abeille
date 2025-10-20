@@ -189,7 +189,7 @@
                 'value' => $val,
             );
             break;
-        // Use exemple:  "02": { "function": "rcvValueDiv", "info": "01-setPoint", "dic": 10 },
+        // Use exemple:  "02": { "function": "rcvValueDiv", "info": "01-setPoint", "div": 10 },
         case "rcvValueDiv": // Divided value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val / $div;
@@ -310,13 +310,11 @@
 
         if (($cmdId == "01") || ($cmdId == "02")) {
             // parserLog('debug', 'eq='.json_encode($eq));
-            // if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
             // TODO: EF00 might not be always the cluster in Tuya DP mode
             if (!isset($eq['private']) || !isset($eq['private']['EF00'])) {
                 parserLog2('debug', $addr, "  No defined Tuya mapping => ignoring (msg=".$msg.")");
                 return [];
             }
-            // $mapping = $eq['tuyaEF00']['fromDevice'];
             $mapping = $eq['private']['EF00'];
             // parserLog('debug', '  Tuya mapping='.json_encode($mapping));
 
@@ -345,18 +343,10 @@
             $tSeq = substr($msg, 0, 4);
             $msg = substr($msg, 4); // Skip tSqn
             $dp = tuyaGetDp($msg);
-            // $mapping = $eq['tuyaEF00']['fromDevice'];
             $mapping = $eq['private']['EF00'];
             $a = tuyaDecodeDp($addr, $ep, $dp, $mapping);
             if ($a !== false)
                 $attributesN[] = $a;
-            // $tSeq = substr($msg, 0, 4);
-            // $tDpId = substr($msg, 4, 2);
-            // $tDataType = substr($msg, 6, 2);
-            // $tLen = substr($msg, 8, 4);
-            // $tData = substr($msg, 12, hexdec($tLen) * 2);
-            // $m = "Seq={$tSeq}, Dp={$tDpId}, Type={$tDataType}, Len={$tLen}, ValueHex=".$tData;
-            // parserLog('debug', "  TY_DATA_SEARCH: ".$m);
         } else if ($cmdId == "11") { // TUYA_MCU_VERSION_RSP
             parserLog2('debug', $addr, "  TUYA_MCU_VERSION_RSP: ".$msg);
         } else if ($cmdId == "25") { // TUYA_INTERNET_STATUS

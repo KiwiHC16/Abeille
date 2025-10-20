@@ -1480,32 +1480,32 @@
             return $value;
         }
 
-        function getFF01IdName($id) {
-            $IdName = array(
-                '01' => "Volt",             // Based on Xiaomi Bouton V2 Carré
-                '03' => "Device Temperature", // Based on #1344
-                '05' => "tbd2",             // Type Associé 21 donc 16bitUint
-                '07' => "tbd3",             // Type associé 27 donc 64bitUint
-                '08' => "tbd4",             // ??
-                '09' => "tbd5",             // ??
-                '0B' => "tbd0b",            // Type associé 20 donc 8bitUint
-                '64' => "Etat SW 1 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 64 pour la temperature (Temp carré V2), Etat On/Off Prise Xiaomi
-                '65' => "Etat SW 2 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 65 pour Humidity Temp carré V2)
-                '66' => "Pression",          // Based on Temperature Capteur V2
-                '6E' => "Etat SW 1 Analog",  // Based on Aqara Double Relay
-                '6F' => "Etat SW 2 Analog",  // Based on Aqara Double Relay
-                '94' => "tbd6",             // Type associé ??
-                '95' => "Consommation",     // Based on Prise Xiaomi
-                '96' => "Voltage",          // Based on #1344
-                '97' => "Current",          // Based on #1344
-                '98' => "Puissance",        // Based on Aqara Double Relay nad #1344
-                '9A' => "tbd9A",            // Type associé 20 donc une donnée 8bitUint
-                '9B' => "tbd11",            // Type associé 10 donc une donnée binaire
-            );
-            if (array_key_exists($id, $IdName))
-                return $IdName[$id];
-            return '?'.$id.'?';
-        }
+        // function getFF01IdName($id) {
+        //     $IdName = array(
+        //         '01' => "Volt",             // Based on Xiaomi Bouton V2 Carré
+        //         '03' => "Device Temperature", // Based on #1344
+        //         '05' => "tbd2",             // Type Associé 21 donc 16bitUint
+        //         '07' => "tbd3",             // Type associé 27 donc 64bitUint
+        //         '08' => "tbd4",             // ??
+        //         '09' => "tbd5",             // ??
+        //         '0B' => "tbd0b",            // Type associé 20 donc 8bitUint
+        //         '64' => "Etat SW 1 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 64 pour la temperature (Temp carré V2), Etat On/Off Prise Xiaomi
+        //         '65' => "Etat SW 2 Binaire", // Based on Aqara Double Relay (mais j ai aussi un 65 pour Humidity Temp carré V2)
+        //         '66' => "Pression",          // Based on Temperature Capteur V2
+        //         '6E' => "Etat SW 1 Analog",  // Based on Aqara Double Relay
+        //         '6F' => "Etat SW 2 Analog",  // Based on Aqara Double Relay
+        //         '94' => "tbd6",             // Type associé ??
+        //         '95' => "Consommation",     // Based on Prise Xiaomi
+        //         '96' => "Voltage",          // Based on #1344
+        //         '97' => "Current",          // Based on #1344
+        //         '98' => "Puissance",        // Based on Aqara Double Relay nad #1344
+        //         '9A' => "tbd9A",            // Type associé 20 donc une donnée 8bitUint
+        //         '9B' => "tbd11",            // Type associé 10 donc une donnée binaire
+        //     );
+        //     if (array_key_exists($id, $IdName))
+        //         return $IdName[$id];
+        //     return '?'.$id.'?';
+        // }
 
         // /* Decode FF01 attribut payload */
         // function decodeFF01($data) {

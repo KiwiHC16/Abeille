@@ -1,11 +1,13 @@
 #! /bin/bash
 
 ###
-### An attempt to power cycle USB device
-### Tcharp38
+### An attempt to power cycle USB Zigate device
+### (C) Tcharp38
 ###
 
 # Note: https://www.kernel.org/doc/Documentation/usb/power-management.txt
+# Note: This code does not work properly with device is like "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0"
+
 DISCONNECT_TIME=2
 
 echo -n "powerCycleUsb.sh starting: "
@@ -34,8 +36,19 @@ DEV=${FULLDEV#/dev/}
 #DMESG=`dmesg | grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/'`
 DMESG=$(dmesg 2>/dev/null | grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/')
 if [ "${DMESG}" == "" ]; then
-    echo "ERROR: Grep on dmesg failed. 'dmesg' output follows"
+    echo "ERROR: Grep on dmesg failed."
+    echo
+    echo "'dmesg' output"
+    echo "=============="
     dmesg
+    echo
+    echo "'lsusb' output"
+    echo "=============="
+    lsusb
+    echo
+    echo "'lsusb -t' output"
+    echo "=============="
+    lsusb -t
     exit 3
 fi
 

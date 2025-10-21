@@ -6,6 +6,7 @@
 -   Corrections: Icone de l'équipement mal affiché.
 -   Nouveau: Support Tuya garage door opener (2765).
 -   Nouveau: Doc dev pour support Tuya (docs/dev).
+-   Améliorations: Support Zigate USB plantée (powerCycleUsb.sh).
 
 ## 250929-BETA-1
 

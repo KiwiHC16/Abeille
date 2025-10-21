@@ -283,13 +283,14 @@ class Abeille extends eqLogic {
                 $lastComm = strtotime($lastComm);
             // log::add('Abeille', 'info', "lastComm2=".$lastComm);
             if ((time() - $lastComm) > (2 * 60)) {
-                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$gtwId." depuis plus de 2min => reset");
                 $zgType = $config['ab::gtwSubType'.$gtwId];
                 $zgPort = $config['ab::gtwPort'.$gtwId];
                 if (($zgType == "USB") || ($zgType == "USBv2")) {
                     if ($config['ab::preventUsbPowerCycle'] == 'Y')
-                        log::add('Abeille', 'warning', 'Power cycle required for Zigate '.$gtwId.' but disabled');
+                        log::add('Abeille', 'warning', "Pas de réponse de la Zigate ".$gtwId." depuis plus de 2min mais reset bloqué par utilisateur");
+                        // log::add('Abeille', 'warning', 'Power cycle required for Zigate '.$gtwId.' but disabled by user (advanced options)');
                     else {
+                        log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$gtwId." depuis plus de 2min => reset");
                         $dir = __DIR__."/../scripts";
                         $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
                         log::add('Abeille', 'debug', 'Performing power cycle on port \''.$zgPort.'\'');

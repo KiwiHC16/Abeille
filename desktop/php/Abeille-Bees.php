@@ -61,7 +61,11 @@
         echo 		    '<img src="plugins/Abeille/core/config/devices_images/'.$icon.'" />';
         echo 		    '<br/>';
         // echo            '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-        echo            '<span class="name">' . $eq['hName'] . '</span>';
+        echo            '<span class="name">';
+        echo                '<span class="label labelObjectHuman">'.$eq['pName'].'</span><br>';
+        echo                '<strong>'.$eq['name'].'</strong>';
+        echo            '</span>';
+        // <span class="name"><span class="label labelObjectHuman"> C1</span><br><strong> Lumière C1</strong></span>
         echo            '<span class="hiddenAsCard displayTableRight hidden">';
         // echo                ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
         echo                ($eq['isVisible']) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';

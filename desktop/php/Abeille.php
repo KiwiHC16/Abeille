@@ -45,7 +45,7 @@
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
         $eq['jsonId'] = $eqModel ? $eqModel['modelName'] : '';
         $eq['name'] = $eqLogic->getName();
-        $eq['hName'] = $eqLogic->getHumanName(true, true);
+        $eq['pName'] = $eqLogic->getObject()->getName(); // Parent name
         $eq['icon'] = $eqLogic->getConfiguration('ab::icon', '');
         if (isset($eqModel['variables']))
             $eq['variables'] = $eqModel['variables'];
@@ -61,9 +61,6 @@
     $GLOBALS['eqPerZigate'] = $eqPerZigate;
     echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
     echo '<script>var js_urlProducts = "'.urlProducts.'";</script>';
-
-    // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
-    // $parametersAbeille = AbeilleTools::getParameters();
 ?>
 
 <!-- For all modals on 'Abeille' page. -->

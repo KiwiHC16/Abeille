@@ -606,7 +606,7 @@ $(".eqLogicAction[data-action=abRemove]")
 
 /* Remove from Jeedom eq with ID 'eqId' but list first how it is used and ask confirmation to user */
 function removeEq(zgId, eqId) {
-    console.log("removeEq(" + eqId + ")");
+    console.log("removeEq(zgId=" + zgId +", eqId=" + eqId + ")");
 
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
     eqName = eqPerZigate[zgId][eqId]["name"];

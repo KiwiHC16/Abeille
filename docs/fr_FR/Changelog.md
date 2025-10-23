@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Corrections: Impossible de supprimer un équipement (2767).
+
 ## 251022-BETA-1
 
 -   Améliorations: Page santé. Réarrangement mineur des colonnes.

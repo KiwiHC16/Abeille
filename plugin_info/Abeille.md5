@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="251022-BETA-1"
+# VERSION="251023-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1390,14 +1390,14 @@ a456f59fadd4dbe5b35228f76feadd37 *core/scripts/installDependencies.sh
 98dc409684b48b7fc0e9608d8b4af837 *core/scripts/installPackage.sh
 43983e7e8e4703d3337dbbc06f6a89a4 *core/scripts/installTTY.sh
 84b8045194c2efe5ae2a330e81df3f50 *core/scripts/pizigateModeFlash.py
-31507d434ff5f960136d7c3398a4e381 *core/scripts/powerCycleUsb.sh
+f3c58c9eece20636463cb7088ea3989b *core/scripts/powerCycleUsb.sh
 2a2b9ab6c51dc8748c915093490a6949 *core/scripts/remove.sh
 99decf39a53368905871e2415b4c1684 *core/scripts/resetPiZigate.py
 b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 56ed2d6a626cf57f866bfdd1012a84a1 *core/scripts/switchBranch.sh
 71c43beb0fdcc6ec41532ea1443f4504 *core/scripts/updateZigate.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
-7e2b20aacf574ff6a0bbbc763477c6b3 *desktop/js/Abeille.js
+bcade782ce2a637a89b090096bedffe7 *desktop/js/Abeille.js
 a54d5f0b473ccd5969cd30da1a355b6f *desktop/js/AbeilleNetwork.js
 d0d1ca56ff2c7b9b33e3f9e1b392e3ba *desktop/modal/Abeille-OTA.modal.php
 67a4a2fe92fa2fa0fd844fe617517c45 *desktop/modal/AbeilleCompatibility.modal.php
@@ -1412,7 +1412,7 @@ ced3148c471815f3e86f01729030dc74 *desktop/modal/AbeilleConfigPage.modal.php
 248ea2edd134a87c1292fc39fdb255d8 *desktop/modal/installTTY.abeille.php
 d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 41c414cacd161f892c9748152464a965 *desktop/modal/updateConfig.abeille.php
-78a9a4f458ee3b1b73af0b03e997f3d0 *desktop/php/Abeille-Bees.php
+ba5d3876440060b92f5404b83d2a8fa6 *desktop/php/Abeille-Bees.php
 fd1b207c4ad744e872558c8e833c69cf *desktop/php/Abeille-Eq-Advanced-Common.php
 ee90cf3e43e72a31e9e7db9889c34997 *desktop/php/Abeille-Eq-Advanced-Device.php
 ee308142eb5f8ab3fea7b7e382812880 *desktop/php/Abeille-Eq-Advanced-Interrogations.php
@@ -1428,7 +1428,7 @@ f5fc03f691f2d1fd87932a9e2f119ff2 *desktop/php/Abeille-Groups.php
 5c5946238d9f28f78cee684346d00180 *desktop/php/Abeille-ReplaceEq.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 30a5951b65bb1959054beff6ba9ea77d *desktop/php/Abeille-TopButtons.php
-c66a7b296827546e4bbe6ca419c20a19 *desktop/php/Abeille.php
+2d8b9e4d52b3be05cd90ea2c21877690 *desktop/php/Abeille.php
 a0f4a8869a11ea8943768e1432badd9b *desktop/php/AbeilleEqAssist.php
 4516d84ab76c42d1132cebc1ebe22dbe *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
@@ -1466,7 +1466,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/ZiGate_API_Developper.xls
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/tuya_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-49210791f9fb90feefa7670bdd910f02 *docs/fr_FR/Changelog.md
+7e09a9b8e4e0879823e5cd6587f7ef0b *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1475,11 +1475,11 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-0f1410cd12d72450a9eef3847a87d8db *plugin_info/Abeille.version
+71cfd6e3250d863dada64090a0a70f51 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 0de7456b35f9700d3fb35cbfe9c8e363 *plugin_info/configuration.php
-4f90024eb3efa88ac6c54aefd8fa9738 *plugin_info/info.json
+e921d47c289d119c5324390c60db5796 *plugin_info/info.json
 7cb32fb4d8ee499bc1b2c1266829f197 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

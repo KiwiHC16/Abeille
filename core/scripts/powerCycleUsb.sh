@@ -27,7 +27,7 @@ if [ ! -e "${FULLDEV}" ]; then
     exit 2
 fi
 
-# TODO: Removing "/dev/" prefix
+# '/dev/ttyXXX' case: Removing "/dev/" prefix
 DEV=${FULLDEV#/dev/}
 #echo "DEV=$DEV"
 
@@ -49,6 +49,12 @@ if [ "${DMESG}" == "" ]; then
     echo "'lsusb -t' output"
     echo "=============="
     lsusb -t
+    if [[ "${FULLDEV}" == "/dev/serial/by-id"* ]]; then
+        echo
+        echo "'ls -l /dev/serial/by-id' output"
+        echo "================================"
+        ls -l /dev/serial/by-id
+    fi
     exit 3
 fi
 

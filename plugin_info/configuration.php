@@ -315,7 +315,7 @@
                         if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) {
                             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{GIT : }}</label>';
                             /* TODO: Check if GIT repo & GIT present */
-                            if (gitIsRepo() == FALSE) {
+                            if (gitIsRepo() == false) {
                                 echo "Pas sous GIT";
                             } else {
                                 $localChanges = gitHasLocalChanges();
@@ -328,7 +328,7 @@
                                 echo $localBranch;
                                 echo '</div>';
                                 /* List branches */
-                                gitFetchAll(1);
+                                gitFetchAll(true);
                                 $Branches = gitGetAllBranches();
                                 echo '<select id="idBranch" class="ml4px" style="width:140px" title="{{Branches dispos}}">';
                                 foreach ($Branches as $b) {

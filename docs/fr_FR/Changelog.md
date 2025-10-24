@@ -3,6 +3,7 @@
 -   Améliorations: Reset de Zigate plantée: Support '/dev/serial/by-id...'
 -   Corrections: Equipement fantome n'est plus créé suite à analyse réseau (Mgmt_lqi_rsp) tant qu'il ne répond pas.
 -   Corrections: Erreur mineure lors de la création du package de logs (pour support).
+-   Corrections: Interne 'AbeilleGit.php', mineure.
 
 ## 251023-BETA-1
 

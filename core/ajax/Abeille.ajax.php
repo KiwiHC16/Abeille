@@ -334,7 +334,7 @@
             $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd);
 
-            gitFetchAll(0);
+            gitFetchAll(false);
 
             $dStatus = pauseDaemons(true); // Stop daemons if running
 

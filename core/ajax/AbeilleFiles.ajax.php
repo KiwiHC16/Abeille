@@ -180,13 +180,15 @@
             exec('php '.__DIR__.'/../php/AbeilleSupportKeyInfos.php');
 
             /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
-            $jlogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
+            $jLogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
             if ($status == 0) {
-                $cmd = "cd ".$jlogsDir."; sudo cp Abeille* ".$logsDir;
+                $cmd = "cd ".$jLogsDir;
+                $cmd .= "; sudo cp Abeille* ".$logsDir;
                 $cmd .= "; sudo cp http.error event ".$logsDir;
-                // $cmd .= "; sudo cp update ".$logsDir;
-                $cmd .= "; sudo cp ".$tmpDir."/*.log ".$logsDir;
-                $cmd .= "; find ${tmpDir} -name \*.json -exec cp \"{}\" ${logsDir} \;";
+                $cmd .= "; cd ".$tmpDir;
+                $cmd .= "; sudo cp *.log ".$logsDir;
+                $cmd .= "; sudo cp *.json ".$logsDir;
+                // $cmd .= "; find ${tmpDir} -name \*.json -exec cp \"{}\" ${logsDir} \;";
                 // $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
                 exec($cmd, $out, $status);
                 if ($status != 0) {
@@ -197,7 +199,7 @@
 
             // Special case for 'update': filtering out 'http://' or 'https://'
             if ($status == 0) {
-                if ($fileIn = fopen($jlogsDir."/update", "r")) {
+                if ($fileIn = fopen($jLogsDir."/update", "r")) {
                     $fileOut = fopen($logsDir.'/update', 'w');
                     while(!feof($fileIn)) {
                         $line = fgets($fileIn);

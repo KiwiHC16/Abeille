@@ -20,16 +20,25 @@ if [ ${NBARGS} -ne 1 ]; then
 fi
 
 FULLDEV=$1
-echo "USB port=$FULLDEV"
+echo "USB port : $FULLDEV"
 
 if [ ! -e "${FULLDEV}" ]; then
     echo "ERROR: Invalid USB port ${FULLDEV}. Does not exist."
     exit 2
 fi
 
-# '/dev/ttyXXX' case: Removing "/dev/" prefix
-DEV=${FULLDEV#/dev/}
-#echo "DEV=$DEV"
+# Treating "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0" like case
+# ls -l /dev/serial/by-id
+# lrwxrwxrwx 1 root root 13 Oct 24 09:23 usb-Huawei_Technologies_HUAWEI_Mobile-if00-port0 -> ../../ttyUSB0
+if [[ "${FULLDEV}" == "/dev/serial/by-id"* ]]; then
+    DEV2=`realpath ${FULLDEV}` # Should give '/dev/ttyXXX'
+    DEV=${DEV2#/dev/} # Extract 'ttyXXX'
+
+else
+    # '/dev/ttyXXX' case: Removing "/dev/" prefix
+    DEV=${FULLDEV#/dev/}
+fi
+echo "Short dev: $DEV"
 
 # Identifing corresponding port using dmesg
 # [   11.037185] usb 3-1.2: cp210x converter now attached to ttyUSB0

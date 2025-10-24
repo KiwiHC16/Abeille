@@ -2430,42 +2430,26 @@
             $this->msgToLQICollector($toLqiCollector);
 
             // Foreach neighbor, let's ensure that useful infos are stored
-            // Tcharp38: No reliable info to collect thru 'Mgmt_lqi_rsp' except short & IEEE addresses.
+            // Tcharp38: DISABLED => NOT reliable 'Mgmt_lqi_rsp' infos. Routers may report faulty infos even for short addr.
+            //           Instead if device is unknown, requesting NWK (short) address to see if alive
             // foreach ($nList as $N) {
             //     if ($N['addr'] == "0000")
             //         continue; // It's a zigate
 
-            //     $eq = getDevice($dest, $N['addr'], $N['extAddr']);
-
-            //     // Any useful infos to update ?
-            //     $bitMap = hexdec($N['bitMap']);
-            //     $rxOn = ($bitMap >> 2) & 0x1; // 01 = RX ON when idle
-            //     if (isset($eq['customization']) && isset($eq['customization']['rxOn'])) {
-            //         $rxOn = $eq['customization']['rxOn'];
-            //         parserLog('debug', "  ".$N['addr'].": 'rxOnWhenIdle' customized to ".$rxOn);
-            //     }
-
             //     $updates = [];
-            //     if ($eq['zigbee']['ieee'] != $N['extAddr'])
-            //         $updates['ieee'] = $N['extAddr'];
-            //     if ($eq['rxOnWhenIdle'] && ($eq['rxOnWhenIdle'] != $rxOn)) {
-            //         parserLog('debug', "  ".$N['addr'].": WARNING, unexpected rxOn difference: rxOnWhenIdle=".$eq['rxOnWhenIdle'].", rxOn=".$rxOn);
-            //         // $updates['rxOnWhenIdle'] = $rxOn;
-            //         // Update DISABLED. Seems not reliable or error in bitMap interpretation. See #2532
-            //         // >     Du 0020: "addr":"0E9F","bitMap":"0225"
-            //         // >     Du B78D: "addr":"0E9F","bitMap":"0229"
-            //         // >     Du 342B: "addr":"0E9F","bitMap":"0229"
-            //     }
-            //     if ($updates != [])
-            //         $this->updateDevice($dest, $N['addr'], $updates);
+            //     $updates['ieee'] = $N['extAddr'];
+            //     $this->deviceUpdates($dest, $N['addr'], '', $updates);
             // }
+            // If device is unknown, interrogating him to see if really alive
             foreach ($nList as $N) {
                 if ($N['addr'] == "0000")
                     continue; // It's a zigate
 
-                $updates = [];
-                $updates['ieee'] = $N['extAddr'];
-                $this->deviceUpdates($dest, $N['addr'], '', $updates);
+                $d = getDeviceByIeee($dest, $N['extAddr']);
+                if ($d === []) {
+                    parserLog('debug', '    Pinging '.$N['addr'].'/'.$N['extAddr']);
+                    msgToCmd(PRIO_NORM, "Cmd$dest/".$N['addr']."/getIeeeAddress");
+                }
             }
         } // End decode8002_MgmtLqiRsp()
 

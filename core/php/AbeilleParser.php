@@ -416,6 +416,24 @@
         return $GLOBALS['devices'][$net][$addr];
     } // End getDevice()
 
+    /* Find device by its IEEE address.
+        Returns: device entry by reference, or [] */
+    function &getDeviceByIeee($net, $ieee) {
+
+        $notFound = [];
+
+        if (!isset($GLOBALS['devices'][$net]))
+            return $notFound;
+
+        foreach ($GLOBALS['devices'][$net] as $a => $d) {
+            if (!isset($d['zigbee']['ieee']) || ($d['zigbee']['ieee'] !== $ieee))
+                continue;
+            return $GLOBALS['devices'][$net][$a];
+        }
+
+        return $notFound;
+    }
+
     // Reread Jeedom useful infos on eqLogic DB update
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {

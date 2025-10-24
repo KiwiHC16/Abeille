@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Améliorations: Reset de Zigate plantée: Support '/dev/serial/by-id...'
+-   Corrections: Equipement fantome n'est plus créé suite à analyse réseau (Mgmt_lqi_rsp) tant qu'il ne répond pas.
 
 ## 251023-BETA-1
 

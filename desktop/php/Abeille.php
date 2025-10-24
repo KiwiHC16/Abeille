@@ -35,6 +35,11 @@
         list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
         $zgId = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
         $eqId = $eqLogic->getId();
+        $eqParent = $eqLogic->getObject();
+        if (!is_object($eqParent))
+            $pName = "";
+        else
+            $pName = $eqParent->getName();
 
         $eq = [];
         $eq['id'] = $eqId;
@@ -45,7 +50,7 @@
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
         $eq['jsonId'] = $eqModel ? $eqModel['modelName'] : '';
         $eq['name'] = $eqLogic->getName();
-        $eq['pName'] = $eqLogic->getObject()->getName(); // Parent name
+        $eq['pName'] = $pName; // Parent name
         $eq['icon'] = $eqLogic->getConfiguration('ab::icon', '');
         if (isset($eqModel['variables']))
             $eq['variables'] = $eqModel['variables'];

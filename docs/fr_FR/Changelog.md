@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Reset de Zigate plantée: Support '/dev/serial/by-id...'
+
 ## 251023-BETA-1
 
 -   Corrections: Impossible de supprimer un équipement (2767).

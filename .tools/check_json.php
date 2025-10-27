@@ -84,7 +84,12 @@
             step('E');
             return [];
         }
-        // echo "Content=".json_encode($content)."\n";
+        // echo "devModName=$devModName, content=".json_encode($content)."\n";
+        if (!isset($content[$devModName])) {
+            newDevError($devModName, 'ERROR', "Missing '$devModName' top level key");
+            step('E');
+            return [];
+        }
 
         $content2 = [];
         $content2[$devModName] = [];

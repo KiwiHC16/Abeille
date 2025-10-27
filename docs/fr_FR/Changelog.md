@@ -1,5 +1,8 @@
 # ChangeLog
 
+-   Nouveau: Support Tuya Solar Rain Sensor (2768).
+-   Améliorations: Interne: check_json.
+
 ## 251024-BETA-1
 
 -   Améliorations: Reset de Zigate plantée: Support '/dev/serial/by-id...'

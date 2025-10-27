@@ -1,0 +1,90 @@
+{
+    "TS0207__TZ3210_p68kms0l": {
+        "type": "Tuya Solar rain sensor",
+        "manufacturer": "Tuya",
+        "model": "RB-SRAIN01",
+        "alternateIds": {
+            "TS0207__TZ3210_tgvtvdoc": {}
+        },
+        "zbManufacturer": "_TZ3210_p68kms0l",
+        "genericType": "Environment",
+        "comment": "Capteur de pluie solaire Tuya Zigbee (RB-SRAIN01)",
+        "timeout": "60",
+        "category": {
+            "default": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-SolarRainSensor",
+            "mainEP": "01",
+            "batteryType": "1x3.7V Solar"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Illuminance": {
+                "use": "inf_illuminance",
+                "isVisible": 1
+            },
+            "Illuminance avg 20": {
+                "use": "inf_illuminance",
+                "isVisible": 1,
+                "logicalId": "01-IlluminanceAvg20"
+            },
+            "Illuminance today": {
+                "use": "inf_illuminance",
+                "isVisible": 1,
+                "logicalId": "01-IlluminanceToday"
+            },
+            "Rain intensity": {
+                "use": "inf_generic-NumericBadge",
+                "isVisible": 1,
+                "logicalId": "01-RainIntensity",
+                "unit": "mV"
+            },
+
+            "Rain detected": {
+                "use": "inf_rain-Alarm",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Rain status": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "params": "ep=01",
+                "comment": "Bit0 = pluie détectée (1=pluie, 0=sec)",
+                "trigOut": {
+                    "01-rainAlarm": {
+                        "valueOffset": "#value#&1"
+                    }
+                }
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "04": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                },
+                "65": {
+                    "function": "rcvValue",
+                    "info": "01-Illuminance"
+                },
+                "66": {
+                    "function": "rcvValue",
+                    "info": "01-IlluminanceAvg20"
+                },
+                "67": {
+                    "function": "rcvValue",
+                    "info": "01-IlluminanceToday"
+                },
+                "69": {
+                    "function": "rcvValue",
+                    "info": "01-RainIntensity"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "inf_rain-Alarm": {
+        "comment": "A generic attribute to display a RAIN detection ALARM",
+        "subType": "binary",
+        "template": "",
+        "type": "info",
+        "logicalId": "#EP#-rainAlarm",
+        "unit": "",
+        "invertBinary": 1,
+        "genericType": "GENERIC_INFO"
+    }
+}

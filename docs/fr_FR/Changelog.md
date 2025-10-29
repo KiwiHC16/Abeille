@@ -3,6 +3,7 @@
 -   Nouveau: Support Tuya Solar Rain Sensor (2768).
 -   Améliorations: Interne: check_json.
 -   Corrections: Regression sur création de package de logs.
+-   Améliorations: Page config. Amélioration mineure pour lien Github.
 
 ## 251024-BETA-1
 

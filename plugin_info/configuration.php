@@ -293,7 +293,7 @@
             <!-- <p><i> Suivez toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur ce forum</strong> </a>.</i></p>
             <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p> -->
             <!-- <p><i> Note: si vous souhaitez de l'aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p> -->
-            <p><i> {{Note: Pour toute demande de support, passez par ce lien}}: https://github.com/KiwiHC16/Abeille/issues.</i></p>
+            <p><i> {{Note: Pour toute demande de support, passez par ce lien}}: <a href="https://github.com/KiwiHC16/Abeille/issues"><strong>Github</strong></a>.</i></p>
             <p><i> {{Note: Ne pas activer la fonction 'Heartbeat' pour l'instant. Pas encore de support.}}</i></p>
         </div>
         <div class="form-group">

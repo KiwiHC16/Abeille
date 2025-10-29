@@ -167,8 +167,9 @@
             $error = "";
             $zipFile = "";
 
-            $tmpDir = jeedom::getTmpFolder("Abeille");
-            $logsDir = $tmpDir."/AbeilleLogs";
+            $jLogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
+            $jTmpDir = jeedom::getTmpFolder("Abeille");
+            $logsDir = $jTmpDir."/AbeilleLogs";
             // Note: always rm to avoid conflict with AbeilleLogs file instead of dir.
             if (file_exists($logsDir)) {
                 $cmd = "sudo rm -rf ".$logsDir;
@@ -180,20 +181,23 @@
             exec('php '.__DIR__.'/../php/AbeilleSupportKeyInfos.php');
 
             /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
-            $jLogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
             if ($status == 0) {
                 $cmd = "cd ".$jLogsDir;
-                $cmd .= "; sudo cp Abeille* ".$logsDir;
-                $cmd .= "; sudo cp http.error event ".$logsDir;
-                $cmd .= "; cd ".$tmpDir;
-                $cmd .= "; sudo cp *.log ".$logsDir;
-                $cmd .= "; sudo cp *.json ".$logsDir;
-                // $cmd .= "; find ${tmpDir} -name \*.json -exec cp \"{}\" ${logsDir} \;";
-                // $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
+                $cmd .= "; sudo cp Abeille* ".$logsDir." 2>&1";
+                $cmd .= "; sudo cp http.error event ".$logsDir." 2>&1";
+                $cmd .= "; cd ".$jTmpDir." 2>&1";
+                $cmd .= "; sudo cp *.log ".$logsDir." 2>&1";
+                // Note: Ignoring error code during JSON copy (if no JSON this would lead to error on full cmd).
+                $cmd .= "; sudo cp *.json ".$logsDir." || true";
                 exec($cmd, $out, $status);
                 if ($status != 0) {
                     $status = -1;
-                    $error = "Copie des logs impossible. Manque de place sur /tmp ?";
+                    $error = "Copie des logs impossible. Manque de place sur '/tmp' ?";
+                    if (sizeof($out) != 0) { // Tcharp38: This seems to not work. To be investigated
+                        $error .= "\n\nERR: ";
+                        foreach ($out as $idx => $line)
+                            $error .= $line;
+                    }
                 }
             }
 

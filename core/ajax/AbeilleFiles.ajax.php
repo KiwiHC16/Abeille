@@ -182,13 +182,14 @@
 
             /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
             if ($status == 0) {
+                // Tcharp38: Redirecting stderr avoid to have messages in 'http.error' and to catch them.
                 $cmd = "cd ".$jLogsDir;
                 $cmd .= "; sudo cp Abeille* ".$logsDir." 2>&1";
                 $cmd .= "; sudo cp http.error event ".$logsDir." 2>&1";
                 $cmd .= "; cd ".$jTmpDir." 2>&1";
                 $cmd .= "; sudo cp *.log ".$logsDir." 2>&1";
-                // Note: Ignoring error code during JSON copy (if no JSON this would lead to error on full cmd).
-                $cmd .= "; sudo cp *.json ".$logsDir." || true";
+                // Tcharp38: Ignoring error code during JSON copy (if no JSON this would lead to error on full cmd).
+                $cmd .= "; sudo cp *.json ".$logsDir." 2>&1 || true";
                 exec($cmd, $out, $status);
                 if ($status != 0) {
                     $status = -1;

@@ -109,7 +109,7 @@
 			}
         }
         if ($byId && (($vendor != "") || ($model != "")))
-            $port['desc'] .= " (by ID, $vendor, $model)";
+            $port['desc'] .= " (by ID: $vendor, $model)";
         else if (!$byId && (($vendor != "") || ($model != "")))
             $port['desc'] .= " ($vendor, $model)";
 

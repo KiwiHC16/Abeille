@@ -83,7 +83,12 @@
     sendVarToJS('js_fwListZgV1', $fwListZgV1);
     sendVarToJS('js_fwListZgV2', $fwListZgV2);
 
-    function getPortDetails($port) {
+    /* Get serial port details using 'udevadm' */
+    function getPortDetails($shortName) {
+
+        $port  = [];
+        $port['name'] = "/dev/$shortName";
+        $port['desc'] = $shortName;
 
         $vendor = "";
         $model = "";
@@ -116,25 +121,16 @@
         return $port;
     }
 
-    /* Listing possible USB/serial ports !!! WORK ONGOING !!! */
+    /* Listing possible USB/serial ports */
     $GLOBALS['portsList'] = [];
     foreach (ls('/dev/', 'ttyUSB*') as $value) {
-        $port  = [];
-        $port['name'] = "/dev/$value";
-        $port['desc'] = $value;
-        $GLOBALS['portsList'][] = getPortDetails($port);
+        $GLOBALS['portsList'][] = getPortDetails($value);
     }
     foreach (ls('/dev/', 'ttyACM*') as $value) { // Modem serial without modem
-        $port  = [];
-        $port['name'] = "/dev/$value";
-        $port['desc'] = $value;
-        $GLOBALS['portsList'][] = getPortDetails($port);
+        $GLOBALS['portsList'][] = getPortDetails($value);
     }
     foreach (ls('/dev/', 'ttyS*') as $value) {
-        $port  = [];
-        $port['name'] = "/dev/$value";
-        $port['desc'] = $value;
-        $GLOBALS['portsList'][] = getPortDetails($port);
+        $GLOBALS['portsList'][] = getPortDetails($value);
     }
     // KiwiHC16: 3 lignes suivantes necessaire pour KiwiHC16. Dans mon multi Zigate j ai des liens créés automatiquement pour ne pas les melanger lors d un reboot.
     foreach (ls('/dev/', 'tty*') as $value) {

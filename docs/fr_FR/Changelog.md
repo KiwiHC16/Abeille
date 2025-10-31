@@ -4,6 +4,7 @@
 -   Améliorations: Interne: check_json.
 -   Corrections: Regression sur création de package de logs.
 -   Améliorations: Page config. Amélioration mineure pour lien Github.
+-   Améliorations: Ajout LQI dans trace debug parser.
 
 ## 251024-BETA-1
 

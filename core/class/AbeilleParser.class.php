@@ -1707,6 +1707,7 @@
 
             $m = '004d/Device announce'.', Addr='.$addr.', ExtAddr='.$ieee.', MACCapa='.$macCapa;
             if ($rejoin != "") $m .= ', Rejoin='.$rejoin;
+            $m .= ", LQI=$lqi";
             parserLog('debug', $dest.', Type='.$m);
 
             // Work-around for https://github.com/fairecasoimeme/ZiGatev2/issues/36#
@@ -2707,7 +2708,8 @@
                             .", SrcAddrMode=".$srcAddrMode
                             .", SrcAddr=".$srcAddr
                             .", DstAddrMode=".$dstAddrMode
-                            .", DstAddr=".$dstAddr;
+                            .", DstAddr=".$dstAddr
+                            .", LQI=".$lqi;
             parserLog2('debug', $srcAddr, $dest.', Type='.$msgDecoded, "8002");
 
             $devUpdates = []; // Device key infos updates: Sent at end of decode8002()

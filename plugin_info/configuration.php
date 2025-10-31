@@ -83,6 +83,76 @@
     sendVarToJS('js_fwListZgV1', $fwListZgV1);
     sendVarToJS('js_fwListZgV2', $fwListZgV2);
 
+    function getPortDetails($port) {
+
+        $vendor = "";
+        $model = "";
+        $byId = false;
+		foreach (explode("\n", shell_exec('udevadm info --name=' . $port['name'] . ' --query=all')) as $line) {
+			if (strpos($line, 'E: ID_VENDOR=') !== false) {
+				$vendor = trim(str_replace(array('E: ID_VENDOR=', '"'), '', $line));
+                continue;
+			}
+			if (strpos($line, 'E: ID_MODEL=') !== false) {
+				$model = trim(str_replace(array('E: ID_MODEL=', '"'), '', $line));
+                continue;
+			}
+			if (strpos($line, 'E: DEVLINKS=') !== false) {
+				$serial_by_ids = explode(' ', trim(str_replace(array('E: DEVLINKS=', '"'), '', $line)));
+				foreach ($serial_by_ids as $serial_links) {
+					if (strpos($serial_links, '/serial/by-id') !== false) {
+						$port['name'] = trim($serial_links); // Replacing /dev/ttyXX by /dev/serial/by-id/xxx
+                        $byId = true;
+						break;
+					}
+				}
+			}
+        }
+        if ($byId && (($vendor != "") || ($model != "")))
+            $port['desc'] .= " (by ID, $vendor, $model)";
+        else if (!$byId && (($vendor != "") || ($model != "")))
+            $port['desc'] .= " ($vendor, $model)";
+
+        return $port;
+    }
+
+    /* Listing possible USB/serial ports !!! WORK ONGOING !!! */
+    $GLOBALS['portsList'] = [];
+    foreach (ls('/dev/', 'ttyUSB*') as $value) {
+        $port  = [];
+        $port['name'] = "/dev/$value";
+        $port['desc'] = $value;
+        $GLOBALS['portsList'][] = getPortDetails($port);
+    }
+    foreach (ls('/dev/', 'ttyACM*') as $value) { // Modem serial without modem
+        $port  = [];
+        $port['name'] = "/dev/$value";
+        $port['desc'] = $value;
+        $GLOBALS['portsList'][] = getPortDetails($port);
+    }
+    foreach (ls('/dev/', 'ttyS*') as $value) {
+        $port  = [];
+        $port['name'] = "/dev/$value";
+        $port['desc'] = $value;
+        $GLOBALS['portsList'][] = getPortDetails($port);
+    }
+    // KiwiHC16: 3 lignes suivantes necessaire pour KiwiHC16. Dans mon multi Zigate j ai des liens créés automatiquement pour ne pas les melanger lors d un reboot.
+    foreach (ls('/dev/', 'tty*') as $value) {
+        // Ignoring ttyUSBx or ttyACMx already in the list
+        if (substr($value, 0, 6) == "ttyUSB")
+            continue;
+        if (substr($value, 0, 6) == "ttyACM")
+            continue;
+        if (substr($value, 0, 4) == "ttyS")
+            continue;
+        if (substr($value, 0, 5) == "ttyGS") // Serial gadget.. not a Zigate
+            continue;
+        $port  = [];
+        $port['name'] = "/dev/$value";
+        $port['desc'] = $value;
+        $GLOBALS['portsList'][] = $port;
+    }
+
     /* Returns current cmd value identified by its Jeedom logical ID name */
     function getCmdValueByLogicId($eqId, $logicId) {
         $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
@@ -100,7 +170,7 @@
     }
 
     function displayGateway($gtwId) {
-        global $dbgTcharp38, $dbgDeveloperMode;
+        global $dbgTcharp38, $dbgDeveloperMode, $portsList;
         $eqLogic = eqLogic::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
         if ($eqLogic) {
             $eqId = $eqLogic->getId();
@@ -162,20 +232,22 @@
                 echo '<select id="idSelSP'.$gtwId.'" class="configKey form-control" data-l1key="ab::gtwPort'.$gtwId.'" title="{{Port série si zigate USB, Pi ou DIN}}" disabled>';
                     echo '<option value="none" selected>{{Aucun}}</option>';
                     echo '<option value="'.wifiLink.$gtwId.'" >{{WIFI'.$gtwId.'}}</option>';
-                    echo '<option value="/dev/monitZigate'.$gtwId.'" >{{Monit'.$gtwId.'}}</option>';
-                    foreach (jeedom::getUsbMapping('', true) as $name => $value) {
-                        $value2 = substr($value, 5); // Remove '/dev/'
-                        if ($value2 == "ttyS1")
-                            $name .= ", Orange Pi Zero";
-                        echo '<option value="'.$value.'">'.$value2.' ('.$name.')</option>';
-                    }
+                    // echo '<option value="/dev/monitZigate'.$gtwId.'" >{{Monit'.$gtwId.'}}</option>'; // Tcharp38: How is it used ?
+                    // Issue with jeedom::getUsbMapping() not stable (#2770) => Using local code
+                    // foreach (jeedom::getUsbMapping('', true) as $name => $value) {
+                    //     $value2 = substr($value, 5); // Remove '/dev/'
+                    //     if ($value2 == "ttyS1")
+                    //         $name .= ", Orange Pi Zero";
+                    //     echo '<option value="'.$value.'">'.$value2.' ('.$name.')</option>';
+                    // }
                     // KiwiHC16: 3 lignes suivantes necessaire pour KiwiHC16. Dans mon multi Zigate j ai des liens créés automatiquement pour ne pas les melanger lors d un reboot.
-                    foreach (ls('/dev/', 'tty*') as $value) {
-                         echo '<option value="/dev/'.$value.'">'.$value.'</option>';
+                    // foreach (ls('/dev/', 'tty*') as $value) {
+                    //      echo '<option value="/dev/'.$value.'">'.$value.'</option>';
+                    // }
+                    foreach ($portsList as $p) {
+                         echo '<option value="'.$p['name'].'">'.$p['desc'].'</option>';
                     }
                 echo '</select>';
-                // TODO: getUsbMapping={"Cubiboard":"\/dev\/ttyS0","Jeedom Luna Zwave":"\/dev\/ttyS1","Odroid C2":"\/dev\/ttyS1","Jeedom Atlas":"\/dev\/ttyS2","Orange PI":"\/dev\/ttyS3"}
-                // echo "getUsbMapping=".json_encode(jeedom::getUsbMapping('', true))."<br>";
             echo '</div>';
             echo '<div class="col-lg-5">';
                 echo '<div id="idCommTest'.$gtwId.'" >';

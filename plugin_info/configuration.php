@@ -106,6 +106,7 @@
 				$serial_by_ids = explode(' ', trim(str_replace(array('E: DEVLINKS=', '"'), '', $line)));
 				foreach ($serial_by_ids as $serial_links) {
 					if (strpos($serial_links, '/serial/by-id') !== false) {
+                        $port['alias'] = $port['name'];
 						$port['name'] = trim($serial_links); // Replacing /dev/ttyXX by /dev/serial/by-id/xxx
                         $byId = true;
 						break;
@@ -141,12 +142,34 @@
             continue;
         if (substr($value, 0, 4) == "ttyS")
             continue;
-        if (substr($value, 0, 5) == "ttyGS") // Serial gadget.. not a Zigate
+        if (substr($value, 0, 5) == "ttyGS") // Gadget Serial.. could not be a Zigate
             continue;
         $port  = [];
         $port['name'] = "/dev/$value";
         $port['desc'] = $value;
         $GLOBALS['portsList'][] = $port;
+    }
+
+    /* Quick review of used serial ports since now using '/dev/serial/by-id' in priority.
+       Ex: When '/dev/ttyUSB0' was used, it could be now '/dev/serial/by-id/xxx' link to 'ttyUSB0' */
+    // TODO: To be moved to install.php
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+        if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
+            continue;
+        $gtwType = config::byKey("ab::gtwType{$gtwId}", 'Abeille', 'zigate', true);
+        $gtwSubType = config::byKey("ab::gtwSubType{$gtwId}", 'Abeille', '', true);
+        if (($gtwType == "zigate") && ($gtwSubType == "WIFI"))
+            continue;
+        $gtwPort = config::byKey("ab::gtwPort{$gtwId}", 'Abeille', '', true);
+
+        foreach($GLOBALS['portsList'] as $p) {
+            if (!isset($p['alias']))
+                continue;
+            if ($gtwPort == $p['alias']) {
+                config::save("ab::gtwPort{$gtwId}", $p['name'], 'Abeille');
+                break;
+            }
+        }
     }
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
@@ -1201,7 +1224,8 @@
         if (gtwType == "zigate") {
             if ((gtwSubType == "PI") || (gtwSubType == "DIN")) {
                 list = js_fwListZgV1;
-                defaultFw = "0004-0323-opdm";
+                // defaultFw = "0004-0323-opdm";
+                defaultFw = "AB01-0000-opdm";
             } else { // Assuming PIv2 or DINv2
                 list = js_fwListZgV2;
                 defaultFw = "0005-0322-opdm";

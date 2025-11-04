@@ -5,7 +5,7 @@
 -   Corrections: Regression sur création de package de logs.
 -   Améliorations: Page config. Amélioration mineure pour lien Github.
 -   Améliorations: Ajout LQI dans trace debug parser.
--   Améliorations: Page config. Liste des ports revue. '/dev/serial/by-id' utilisé si dispo.
+-   Améliorations: Page config. Liste des ports revue. '/dev/serial/by-id' utilisé en priorité.
 
 ## 251024-BETA-1
 

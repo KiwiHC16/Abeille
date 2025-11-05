@@ -84,16 +84,15 @@
     sendVarToJS('js_fwListZgV2', $fwListZgV2);
 
     /* Get serial port details using 'udevadm' */
-    function getPortDetails($shortName) {
+    function addPortDetails($shortName) {
 
-        $port  = [];
-        $port['name'] = "/dev/$shortName";
-        $port['desc'] = $shortName;
+        $port = [];
+        $port['real'] = "/dev/$shortName"; // Real port name
+        $port['name'] = $shortName; // Default visible name
 
         $vendor = "";
         $model = "";
-        $byId = false;
-		foreach (explode("\n", shell_exec('udevadm info --name=' . $port['name'] . ' --query=all')) as $line) {
+		foreach (explode("\n", shell_exec('udevadm info --name=' . $port['real'] . ' --query=all')) as $line) {
 			if (strpos($line, 'E: ID_VENDOR=') !== false) {
 				$vendor = trim(str_replace(array('E: ID_VENDOR=', '"'), '', $line));
                 continue;
@@ -106,32 +105,43 @@
 				$serial_by_ids = explode(' ', trim(str_replace(array('E: DEVLINKS=', '"'), '', $line)));
 				foreach ($serial_by_ids as $serial_links) {
 					if (strpos($serial_links, '/serial/by-id') !== false) {
-                        $port['alias'] = $port['name'];
-						$port['name'] = trim($serial_links); // Replacing /dev/ttyXX by /dev/serial/by-id/xxx
-                        $byId = true;
-						break;
+                        if (!isset($port['byId']))
+                            $port['byId'] = [];
+						$port['byId'][] = trim($serial_links);
 					}
 				}
 			}
         }
-        if ($byId && (($vendor != "") || ($model != "")))
-            $port['desc'] .= " (by ID: $vendor, $model)";
-        else if (!$byId && (($vendor != "") || ($model != "")))
-            $port['desc'] .= " ($vendor, $model)";
 
-        return $port;
+        if (isset($port['byId'])) {
+            foreach ($port['byId'] as $serialLink) {
+                $port['real'] = $serialLink;
+                $port['name'] = substr($serialLink, 12)." ($shortName, $vendor, $model)";
+                $GLOBALS['portsList'][] = $port;
+            }
+        } else {
+            if (($vendor != "") || ($model != ""))
+                $port['name'] .= " ($vendor, $model)";
+            $GLOBALS['portsList'][] = $port;
+        }
+        // if ($byId && (($vendor != "") || ($model != "")))
+        //     $port['name'] .= " (by ID: $vendor, $model)";
+        // else if (!$byId && (($vendor != "") || ($model != "")))
+        //     $port['name'] .= " ($vendor, $model)";
+
+        // $GLOBALS['portsList'][] = $port;
     }
 
     /* Listing possible USB/serial ports */
     $GLOBALS['portsList'] = [];
     foreach (ls('/dev/', 'ttyUSB*') as $value) {
-        $GLOBALS['portsList'][] = getPortDetails($value);
+        addPortDetails($value);
     }
     foreach (ls('/dev/', 'ttyACM*') as $value) { // Modem serial without modem
-        $GLOBALS['portsList'][] = getPortDetails($value);
+        addPortDetails($value);
     }
     foreach (ls('/dev/', 'ttyS*') as $value) {
-        $GLOBALS['portsList'][] = getPortDetails($value);
+        addPortDetails($value);
     }
     // KiwiHC16: 3 lignes suivantes necessaire pour KiwiHC16. Dans mon multi Zigate j ai des liens créés automatiquement pour ne pas les melanger lors d un reboot.
     foreach (ls('/dev/', 'tty*') as $value) {
@@ -145,32 +155,32 @@
         if (substr($value, 0, 5) == "ttyGS") // Gadget Serial.. could not be a Zigate
             continue;
         $port  = [];
-        $port['name'] = "/dev/$value";
-        $port['desc'] = $value;
+        $port['real'] = "/dev/$value";
+        $port['name'] = $value;
         $GLOBALS['portsList'][] = $port;
     }
 
     /* Quick review of used serial ports since now using '/dev/serial/by-id' in priority.
        Ex: When '/dev/ttyUSB0' was used, it could be now '/dev/serial/by-id/xxx' link to 'ttyUSB0' */
     // TODO: To be moved to install.php
-    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
-        if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
-            continue;
-        $gtwType = config::byKey("ab::gtwType{$gtwId}", 'Abeille', 'zigate', true);
-        $gtwSubType = config::byKey("ab::gtwSubType{$gtwId}", 'Abeille', '', true);
-        if (($gtwType == "zigate") && ($gtwSubType == "WIFI"))
-            continue;
-        $gtwPort = config::byKey("ab::gtwPort{$gtwId}", 'Abeille', '', true);
+    // for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+    //     if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
+    //         continue;
+    //     $gtwType = config::byKey("ab::gtwType{$gtwId}", 'Abeille', 'zigate', true);
+    //     $gtwSubType = config::byKey("ab::gtwSubType{$gtwId}", 'Abeille', '', true);
+    //     if (($gtwType == "zigate") && ($gtwSubType == "WIFI"))
+    //         continue;
+    //     $gtwPort = config::byKey("ab::gtwPort{$gtwId}", 'Abeille', '', true);
 
-        foreach($GLOBALS['portsList'] as $p) {
-            if (!isset($p['alias']))
-                continue;
-            if ($gtwPort == $p['alias']) {
-                config::save("ab::gtwPort{$gtwId}", $p['name'], 'Abeille');
-                break;
-            }
-        }
-    }
+    //     foreach($GLOBALS['portsList'] as $p) {
+    //         if (!isset($p['alias']))
+    //             continue;
+    //         if ($gtwPort == $p['alias']) {
+    //             config::save("ab::gtwPort{$gtwId}", $p['real'], 'Abeille');
+    //             break;
+    //         }
+    //     }
+    // }
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
     function getCmdValueByLogicId($eqId, $logicId) {
@@ -264,7 +274,7 @@
                     //      echo '<option value="/dev/'.$value.'">'.$value.'</option>';
                     // }
                     foreach ($portsList as $p) {
-                         echo '<option value="'.$p['name'].'">'.$p['desc'].'</option>';
+                         echo '<option value="'.$p['real'].'">'.$p['name'].'</option>';
                     }
                 echo '</select>';
             echo '</div>';

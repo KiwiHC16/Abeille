@@ -86,13 +86,10 @@
     /* Get serial port details using 'udevadm' */
     function addPortDetails($shortName) {
 
-        $port = [];
-        $port['real'] = "/dev/$shortName"; // Real port name
-        $port['name'] = $shortName; // Default visible name
-
         $vendor = "";
         $model = "";
-		foreach (explode("\n", shell_exec('udevadm info --name=' . $port['real'] . ' --query=all')) as $line) {
+        $byId = [];
+		foreach (explode("\n", shell_exec("udevadm info --name=/dev/$shortName --query=all")) as $line) {
 			if (strpos($line, 'E: ID_VENDOR=') !== false) {
 				$vendor = trim(str_replace(array('E: ID_VENDOR=', '"'), '', $line));
                 continue;
@@ -103,33 +100,30 @@
 			}
 			if (strpos($line, 'E: DEVLINKS=') !== false) {
 				$serial_by_ids = explode(' ', trim(str_replace(array('E: DEVLINKS=', '"'), '', $line)));
-				foreach ($serial_by_ids as $serial_links) {
-					if (strpos($serial_links, '/serial/by-id') !== false) {
-                        if (!isset($port['byId']))
-                            $port['byId'] = [];
-						$port['byId'][] = trim($serial_links);
+				foreach ($serial_by_ids as $devLink) {
+					if (strpos($devLink, '/serial/by-id') !== false) {
+						$byId[] = trim($devLink);
 					}
 				}
 			}
         }
 
-        if (isset($port['byId'])) {
-            foreach ($port['byId'] as $serialLink) {
-                $port['real'] = $serialLink;
-                $port['name'] = substr($serialLink, 12)." ($shortName, $vendor, $model)";
+        if (count($byId) != 0) {
+            foreach ($byId as $serialById) {
+                // $serialById=/dev/serial/by-id/xxx
+                $port = [];
+                $port['real'] = $serialById;
+                $port['name'] = substr($serialById, 12)." ($shortName, $vendor, $model)";
                 $GLOBALS['portsList'][] = $port;
             }
         } else {
+            $port = [];
+            $port['real'] = "/dev/$shortName"; // Real port name
+            $port['name'] = $shortName; // Default visible name
             if (($vendor != "") || ($model != ""))
                 $port['name'] .= " ($vendor, $model)";
             $GLOBALS['portsList'][] = $port;
         }
-        // if ($byId && (($vendor != "") || ($model != "")))
-        //     $port['name'] .= " (by ID: $vendor, $model)";
-        // else if (!$byId && (($vendor != "") || ($model != "")))
-        //     $port['name'] .= " ($vendor, $model)";
-
-        // $GLOBALS['portsList'][] = $port;
     }
 
     /* Listing possible USB/serial ports */

@@ -1156,8 +1156,9 @@
          * - Cmd DB: 'setLevel' update: 'EP' renamed to 'ep'
          * - Eq DB: Some icons renamed for normalization
          * - Some eq updates forced from changed model.
+         * - AbeilleCmd + Parser => AbeilleCmdD + ParserD
          */
-        if (intval($dbVersion) < 20250911) {
+        if (intval($dbVersion) < 20251106) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled{$gtwId}", "ab::gtwEnabled{$gtwId}");
@@ -1256,7 +1257,12 @@
                 }
             }
 
-            config::save('ab::dbVersion', '20250911', 'Abeille');
+            // AbeilleParser.log removed => AbeilleParserD.log
+            // AbeilleCmd.log removed => AbeilleCmdD.log
+            $obsolete = ['AbeilleParser.log', 'AbeilleCmd.log'];
+            removeLogs($obsolete);
+
+            config::save('ab::dbVersion', '20251106', 'Abeille');
         }
     } // End updateConfigDB()
 

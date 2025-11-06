@@ -392,7 +392,7 @@
         // cmdLog("debug", "  Tempo count=$count AFTER=".json_encode($tempoMessageQueue));
     }
 
-    logSetConf("AbeilleCmd.log", true);
+    logSetConf("AbeilleCmdD.log", true);
     logMessage('info', ">>> Démarrage d'AbeilleCmd");
 
     // ***********************************************************************************************

@@ -630,10 +630,10 @@
             $runBits = 0;
             foreach ($processes as $line) {
                 $lineArr = explode(" ", $line);
-                if (strstr($line, "AbeilleCmd") != false) {
+                if (strstr($line, "AbeilleCmdD") != false) {
                     $shortName = "Cmd";
                     $runBits |= daemonCmd;
-                } else if (strstr($line, "AbeilleParser") !== false) {
+                } else if (strstr($line, "AbeilleParserD") !== false) {
                     $shortName = "Parser";
                     $runBits |= daemonParser;
                 } else if (strstr($line, "AbeilleMonitor") !== false) {
@@ -728,9 +728,9 @@
                     }
                 }
                 else {
-                    if (stristr($line, "abeilleparser.php"))
+                    if (stristr($line, "abeilleparserd.php"))
                         $found['parser']++;
-                    else if (stristr($line, "abeillecmd.php"))
+                    else if (stristr($line, "abeillecmdd.php"))
                         $found['cmd']++;
                     else if (stristr($line, "abeillemaind.php"))
                         $found['main']++;
@@ -744,7 +744,7 @@
 
         /**
          * Stop given daemons list or all daemons.
-         * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
+         * Ex: $daemons = "AbeilleMonitor AbeilleCmdD AbeilleParserD"
          * @param string $daemons Deamons list to stop, space separated. Empty string = ALL
          */
         public static function stopDaemons($toStop = "") {
@@ -882,7 +882,7 @@
 
         /**
          * Start daemons.
-         * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
+         * Ex: $daemons = "AbeilleMonitor AbeilleCmdD AbeilleParserD"
          * @param string $daemons Deamons list to start, space separated. Empty string = ALL
          */
         public static function startDaemons($config, $daemons = "") {
@@ -914,7 +914,7 @@
                     }
                 }
                 if ($nbZigates > 0)
-                    $daemons .= " AbeilleParser AbeilleCmd AbeilleMainD";
+                    $daemons .= " AbeilleParserD AbeilleCmdD AbeilleMainD";
 
                 if ($daemons == "") {
                     message::add("Abeille", "Aucune passerelle active. Veuillez corriger via la page de config.");
@@ -940,7 +940,7 @@
 
         /**
          * (Re)start given daemons list.
-         * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
+         * Ex: $daemons = "AbeilleMonitor AbeilleCmdD AbeilleParserD"
          * @param string $daemons Deamons list to restart, space separated
          */
         public static function restartDaemons($config, $daemons = "") {
@@ -974,15 +974,15 @@
             switch ($daemonFile) {
             // Zigate specific daemons
             case 'cmd':
-            case 'abeillecmd':
-                $daemonPhp = "AbeilleCmd.php";
-                $logCmd = " >>{$logsDir}AbeilleCmd.log 2>&1";
+            case 'abeillecmdd':
+                $daemonPhp = "AbeilleCmdD.php";
+                $logCmd = " >>{$logsDir}AbeilleCmdD.log 2>&1";
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$logCmd;
                 break;
             case 'parser':
-            case 'abeilleparser':
-                $daemonPhp = "AbeilleParser.php";
-                $daemonLog = " >>{$logsDir}AbeilleParser.log 2>&1";
+            case 'abeilleparserd':
+                $daemonPhp = "AbeilleParserD.php";
+                $daemonLog = " >>{$logsDir}AbeilleParserD.log 2>&1";
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$daemonLog;
                 break;
             case 'serialread':

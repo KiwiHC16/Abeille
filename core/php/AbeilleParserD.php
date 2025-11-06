@@ -489,7 +489,7 @@
     // ***********************************************************************************************
     // exemple d appel
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
-    logSetConf("AbeilleParser.log", true);
+    logSetConf("AbeilleParserD.log", true);
     logMessage("info", ">>> Démarrage d'AbeilleParser");
 
     // Check if already running

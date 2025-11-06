@@ -8,6 +8,7 @@
 -   Améliorations: Page config. Liste des ports revue. Suppression utilisation getUsbMapping() bugguée.
 -   Améliorations: Interne, changement nom démons: AbeilleCmd/Parser => AbeilleCmdD/ParserD.
 -   Corrections: Pages santé. Status des démons revu.
+-   Corrections: Placement réseau. Image par défaut si plan utilisateur plus disponible.
 
 ## 251024-BETA-1
 

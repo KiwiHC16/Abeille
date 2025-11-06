@@ -12,18 +12,18 @@
 
     // Reading URL parameter: "...?zigate=X", where X is zigate number
     // if (isset($_GET['zigate']))
-    //     $zgId = $_GET['zigate'];
+    //     $gtwId = $_GET['zigate'];
     // else
-    //     $zgId = 1; // Default = zigate1. TODO: Should be the 1st enabled, not the 1
-    // sendVarToJS('zgId', $zgId);
+    //     $gtwId = 1; // Default = zigate1. TODO: Should be the 1st enabled, not the 1
+    // sendVarToJS('gtwId', $gtwId);
 
     // Filling 'networks'
     $networks = [];
-    for ($zgId = 1; $zgId < maxNbOfZigate; $zgId++) {
-        if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+    for ($gtwId = 1; $gtwId < maxGateways; $gtwId++) {
+        if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
             continue;
         $networks[] = array(
-            'zgId' => $zgId
+            'gtwId' => $gtwId
         );
     }
     sendVarToJS('networks', $networks);
@@ -73,14 +73,17 @@
         $relPath = (isset($lev['mapDir']) ? $lev['mapDir'] : 'images');
         $relPath .= '/';
         $relPath .= (isset($lev['mapFile']) ? $lev['mapFile'] : 'AbeilleNetworkMap-1200.png');
-        $path = __DIR__.'/../../'.$relPath;
-        logDebug("path=$path");
-        if (!file_exists($path)) {
+        $fullPath = __DIR__.'/../../'.$relPath;
+        logDebug("fullPath=$fullPath");
+        if (!file_exists($fullPath)) {
+            // Network map does not exist. Using default one.
             $networkMap['levels'][$levIdx]['mapDir'] = 'images';
             $networkMap['levels'][$levIdx]['mapFile'] = 'AbeilleNetworkMap-1200.png';
+            $relPath = 'images/AbeilleNetworkMap-1200.png';
+            $fullPath = __DIR__.'/../../'.$relPath;
         }
 
-        $iSize = getimagesize(__DIR__."/../../".$relPath);
+        $iSize = getimagesize($fullPath);
         $width = $iSize[0];
         $height = $iSize[1];
         $viewImages[] = Array(
@@ -200,9 +203,9 @@
                         }
 
                         for ($n = 0; $n < count($networks); $n++ ) {
-                            $zgId = $networks[$n]['zgId'];
+                            $gtwId = $networks[$n]['gtwId'];
 
-                            echo '<input type="checkbox" class="viewNet" id="idViewNet-'.$n.'" checked><label>Abeille '.$zgId.'</label><br>';
+                            echo '<input type="checkbox" class="viewNet" id="idViewNet-'.$n.'" checked><label>Abeille '.$gtwId.'</label><br>';
                         }
                     ?>
 
@@ -415,7 +418,7 @@
                 refreshPage();
             }
         };
-        // xhr.open("GET", "/plugins/Abeille/core/php/AbeilleLQI.php?zigate="+zgId, true);
+        // xhr.open("GET", "/plugins/Abeille/core/php/AbeilleLQI.php?zigate="+gtwId, true);
         xhr.open("GET", "/plugins/Abeille/core/php/AbeilleLQI.php", true); // Updating all zigates
         xhr.send();
         button = document.getElementById("idRefreshLqi");
@@ -531,9 +534,9 @@
     function devLogicId2Net(devLogicId) {
         net = devLogicId.split('/');
         netName = net[0]; // Ex: 'AbeilleX'
-        zgId = netName.substring(7);
+        gtwId = netName.substring(7);
         for (n = 0; n < networks.length; n++) {
-            if (networks[n].zgId == zgId)
+            if (networks[n].gtwId == gtwId)
                 return n;
         }
 
@@ -826,18 +829,18 @@
     //     location.reload(true);
     // }
 
-    // function refreshNetwork(newZgId) {
+    // function refreshNetwork(newgtwId) {
     //     // window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
-    //     // window.open("plugins/Abeille/desktop/php/AbeilleNetworkGraph.php?zigate="+zgId);
+    //     // window.open("plugins/Abeille/desktop/php/AbeilleNetworkGraph.php?zigate="+gtwId);
 
     //     var url = window.location.href;
     //     console.log("url="+url);
-    //     idx = url.indexOf('zigate='+zgId);
+    //     idx = url.indexOf('zigate='+gtwId);
     //     if (idx === -1) {
-    //         url += '&zigate='+newZgId
+    //         url += '&zigate='+newgtwId
     //     } else {
     //         console.log("idx="+idx);
-    //         url = url.replace('zigate='+zgId, 'zigate='+newZgId);
+    //         url = url.replace('zigate='+gtwId, 'zigate='+newgtwId);
     //         // url += '?param=1'
     //     }
     //     // location.reload(true);
@@ -859,13 +862,13 @@
 
         for (n = 0; n < networks.length; n++) {
             netw = networks[n];
-            zgId = netw.zgId;
+            gtwId = netw.gtwId;
             $.ajax({
                 type: 'POST',
                 url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
                 data: {
                     action: 'getTmpFile',
-                    file : "AbeilleLQI-Abeille"+zgId+".json",
+                    file : "AbeilleLQI-Abeille"+gtwId+".json",
                 },
                 dataType: "json",
                 global: false,
@@ -1425,7 +1428,7 @@
         devName = document.getElementById('idDevName');
         devName.textContent = dev.name;
         netName = document.getElementById('idNetName');
-        netName.textContent = "Abeille" + networks[netIdx].zgId;
+        netName.textContent = "Abeille" + networks[netIdx].gtwId;
         addr = document.getElementById('idAddr');
         addr.textContent = dev.addr;
 
@@ -1447,7 +1450,7 @@
     //     "height" => $height
     // );
     // networks = [] of Object(
-    //     'zgId' =>
+    //     'gtwId' =>
     //     'lqiTable' => // Network topology coming from LQI collect.
     //     'devList' => new Object();
     //     'devListNb' => x;
@@ -1475,10 +1478,10 @@
     console.log("URL params=" + queryString);
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.has('zigate')) {
-        zgId = urlParams.get('zigate');
-        Ruche = "Abeille" + zgId;
+        gtwId = urlParams.get('zigate');
+        Ruche = "Abeille" + gtwId;
     } else {
-        zgId = 1;
+        gtwId = 1;
         Ruche = "Abeille1";
     }
     // res = queryString.substr(1);

@@ -108,7 +108,7 @@
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons='.json_encode($daemons));
-    if ($daemons["serialRead".$zgId] > 1) {
+    if ($daemons["serialread".$zgId] > 1) {
         logMessage('error', 'Un démon AbeilleSerialRead'.$zgId.' est déja lancé.');
         exit(4);
     }

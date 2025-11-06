@@ -20,7 +20,8 @@
 {{Démons}}:
 <?php
     function displayDaemonStatus($diff, $name, &$oneMissing) {
-        $nameLow = strtolower(substr($name, 0, 1)).substr($name, 1); // First char lower case
+        // $nameLow = strtolower(substr($name, 0, 1)).substr($name, 1); // First char lower case
+        $nameLow = strtolower($name); // Ex: MainD => maind
         if ($diff[$nameLow] == 1)
             echo '<span class="label label-success" style="font-size:1em; margin-left:4px">'.$name.'</span>';
         else {
@@ -28,28 +29,51 @@
             $oneMissing = true;
         }
     }
+    function displayDaemonStatus2($running2, $shortName, &$oneMissing) {
+        if (isset($running2['daemons'][$shortName]))
+            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">'.$shortName.'</span>';
+        else {
+            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">'.$shortName.'</span>';
+            $oneMissing = true;
+        }
+    }
 
     $config = AbeilleTools::getConfig();
 // logDebug("parameters=".json_encode($config));
-    $running = AbeilleTools::getRunningDaemons();
-    $diff = AbeilleTools::diffExpectedRunningDaemons($config, $running);
+//     $running = AbeilleTools::getRunningDaemons();
+// logDebug("running=".json_encode($running));
+//     $diff = AbeilleTools::diffExpectedRunningDaemons($config, $running);
 // logDebug("diff=".json_encode($diff));
+//     $oneMissing = false;
+//     displayDaemonStatus($diff, "MainD", $oneMissing);
+//     displayDaemonStatus($diff, "CmdD", $oneMissing);
+//     displayDaemonStatus($diff, "ParserD", $oneMissing);
+//     for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+//         if ($config['ab::gtwEnabled'.$gtwId] != "Y")
+//             continue; // Zigate disabled
+//         displayDaemonStatus($diff, "SerialRead".$gtwId, $oneMissing);
+//         if ($config['ab::gtwSubType'.$gtwId] == "WIFI")
+//             displayDaemonStatus($diff, "Socat".$gtwId, $oneMissing);
+//     }
+    $running2 = AbeilleTools::getRunningDaemons2();
+logDebug("running2=".json_encode($running2));
     $oneMissing = false;
-    displayDaemonStatus($diff, "Cmd", $oneMissing);
-    displayDaemonStatus($diff, "Parser", $oneMissing);
-    for ($gtwId = 1; $gtwId <= maxNbOfZigate; $gtwId++) {
+    displayDaemonStatus2($running2, "MainD", $oneMissing);
+    displayDaemonStatus2($running2, "CmdD", $oneMissing);
+    displayDaemonStatus2($running2, "ParserD", $oneMissing);
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
         if ($config['ab::gtwEnabled'.$gtwId] != "Y")
             continue; // Zigate disabled
-        displayDaemonStatus($diff, "SerialRead".$gtwId, $oneMissing);
+        displayDaemonStatus2($running2, "SerialRead".$gtwId, $oneMissing);
         if ($config['ab::gtwSubType'.$gtwId] == "WIFI")
-            displayDaemonStatus($diff, "Socat".$gtwId, $oneMissing);
+            displayDaemonStatus2($running2, "Socat".$gtwId, $oneMissing);
     }
     if ($oneMissing)
         echo " Attention: Un ou plusieurs démons ne tournent pas !";
 
     /* Checking if active Zigates are not in timeout */
     echo "    Gateways: ";
-    for ($gtwId = 1; $gtwId <= maxNbOfZigate; $gtwId++) {
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
         if ($config['ab::gtwEnabled'.$gtwId] != "Y")
             continue; // Disabled
 

@@ -6,7 +6,8 @@
 -   Améliorations: Page config. Amélioration mineure pour lien Github.
 -   Améliorations: Ajout LQI dans trace debug parser.
 -   Améliorations: Page config. Liste des ports revue. Suppression utilisation getUsbMapping() bugguée.
--   Améliorations: Interne, mineurg: AbeilleCmd/Parser => AbeilleCmdD/ParserD.
+-   Améliorations: Interne, changement nom démons: AbeilleCmd/Parser => AbeilleCmdD/ParserD.
+-   Corrections: Pages santé. Status des démons revu.
 
 ## 251024-BETA-1
 

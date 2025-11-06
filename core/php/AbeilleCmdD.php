@@ -403,7 +403,7 @@
     $running = AbeilleTools::getRunningDaemons();
     $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
-    if ($daemons["cmd"] > 1){
+    if ($daemons["cmdd"] > 1){
         logMessage('error', "Un démon 'cmd' est déja lancé ! ".json_encode($daemons));
         exit(3);
     }

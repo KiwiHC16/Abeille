@@ -568,8 +568,9 @@
             }
 
             if ($nbZigates != 0) {
-                $expected[] = 'Parser';
-                $expected[] = 'Cmd';
+                $expected[] = 'MainD';
+                $expected[] = 'ParserD';
+                $expected[] = 'CmdD';
             }
             log::add('Abeille', 'debug', '  expected='.json_encode($expected, JSON_UNESCAPED_SLASHES));
 
@@ -603,7 +604,7 @@
          * @return array
          */
         public static function getRunningDaemons(): array {
-            exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Ezsp).php /'", $running);
+            exec("pgrep -a php | awk '/Abeille(MainD|ParserD|SerialRead|CmdD|Socat).php /'", $running);
             // TODO: Ezsp is not php but python3
             return $running;
         }
@@ -611,8 +612,15 @@
         /**
          * Get Abeille's running processes
          *
-         * @return array of array
-         */
+         * @return array = array(
+         *      'runningNb' => sizeof($daemons), // Nb of running daemons
+         *      'runBits' => $runBits, // 1 bit per running daemon
+         *      'daemons' => array( // Detail on each daemon identified per short name (MainD/CmdD/ParserD...)
+         *          'pid' => Process ID,
+         *          'cmd' => Cmd line
+         *       )
+         *  )
+         **/
         public static function getRunningDaemons2(): array {
             $cmd1 = "pgrep -a php | grep Abeille";
             exec($cmd1, $running); // Get all Abeille daemons
@@ -624,24 +632,24 @@
                 16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
             $cmd3 = "pgrep -a python3 | grep Abeille";
             exec($cmd3, $running3); // Get all Abeille python3 daemons
-            $processes = array_merge($running, $running2, $running3);
 
+            $processes = array_merge($running, $running2, $running3);
             $daemons = [];
             $runBits = 0;
             foreach ($processes as $line) {
                 $lineArr = explode(" ", $line);
                 if (strstr($line, "AbeilleCmdD") != false) {
-                    $shortName = "Cmd";
+                    $shortName = "CmdD";
                     $runBits |= daemonCmd;
                 } else if (strstr($line, "AbeilleParserD") !== false) {
-                    $shortName = "Parser";
+                    $shortName = "ParserD";
                     $runBits |= daemonParser;
+                } else if (strstr($line, "AbeilleMainD") !== false) {
+                    $shortName = "MainD";
+                    $runBits |= daemonMain;
                 } else if (strstr($line, "AbeilleMonitor") !== false) {
                     $shortName = "Monitor";
                     $runBits |= daemonMonitor;
-                } else if (strstr($line, "AbeilleMainD") !== false) {
-                    $shortName = "main";
-                    $runBits |= daemonMain;
                 } else if (strstr($line, "AbeilleSerialRead") !== false) {
                     $net = $lineArr[3]; // Ex 'Abeille1'
                     $zgId = substr($net, 7);
@@ -688,10 +696,10 @@
         public
         static function diffExpectedRunningDaemons($config, $running): array
         {
-            $found['cmd'] = 0;
-            $found['parser'] = 0;
-            $found['main'] = 0;
-            $nbProcessExpected = 2; // parser and cmd
+            $found['cmdd'] = 0;
+            $found['parserd'] = 0;
+            $found['maind'] = 0;
+            $nbProcessExpected = 3; // MainD, ParserD and CmdD mandatory
 
             log::add('Abeille', 'debug', "config=".json_encode($config));
             log::add('Abeille', 'debug', "running=".json_encode($running));
@@ -702,7 +710,7 @@
                     continue;
 
                 if ($config['ab::gtwType'.$n] == 'zigate') {
-                    $found['serialRead'.$n] = 0;
+                    $found['serialread'.$n] = 0;
                     $nbProcessExpected++;
 
                     if ($config['ab::gtwSubType'.$n] == "WIFI") {
@@ -719,7 +727,7 @@
                 if (preg_match('/AbeilleSerialRead.php Abeille([0-9]) /', $line, $match)) {
                     $abeille = $match[1];
                     if (stristr($line, "abeilleserialread.php"))
-                        $found['serialRead'.$abeille]++;
+                        $found['serialread'.$abeille]++;
                 }
                 elseif (preg_match('/AbeilleSocat.php \/tmp\/zigateWifi([0-9]) /', $line, $match)) {
                     $abeille = $match[1];
@@ -728,12 +736,12 @@
                     }
                 }
                 else {
-                    if (stristr($line, "abeilleparserd.php"))
-                        $found['parser']++;
-                    else if (stristr($line, "abeillecmdd.php"))
-                        $found['cmd']++;
-                    else if (stristr($line, "abeillemaind.php"))
-                        $found['main']++;
+                    if (stristr($line, "AbeilleParserD.php"))
+                        $found['parserd']++;
+                    else if (stristr($line, "AbeilleCmdD.php"))
+                        $found['cmdd']++;
+                    else if (stristr($line, "AbeilleMainD.php"))
+                        $found['maind']++;
                 }
             }
 
@@ -973,13 +981,13 @@
 
             switch ($daemonFile) {
             // Zigate specific daemons
-            case 'cmd':
+            case 'cmdd':
             case 'abeillecmdd':
                 $daemonPhp = "AbeilleCmdD.php";
                 $logCmd = " >>{$logsDir}AbeilleCmdD.log 2>&1";
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$logCmd;
                 break;
-            case 'parser':
+            case 'parserd':
             case 'abeilleparserd':
                 $daemonPhp = "AbeilleParserD.php";
                 $daemonLog = " >>{$logsDir}AbeilleParserD.log 2>&1";
@@ -1016,7 +1024,7 @@
                 $cmd = $php." -r \"require '".corePhpDir."AbeilleMonitor.php'; monRun();\"".$log;
                 break;
             // Main daemon
-            case 'main':
+            case 'maind':
             case 'abeillemaind':
                 $daemonPhp = "AbeilleMainD.php";
                 $logCmd = " >>{$logsDir}AbeilleMainD.log 2>&1";

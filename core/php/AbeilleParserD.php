@@ -497,7 +497,7 @@
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
-    if ($daemons["parser"] > 1) {
+    if ($daemons["parserd"] > 1) {
         logMessage('error', "<<< Le démon 'AbeilleParser' est déja lancé !");
         exit(3);
     }

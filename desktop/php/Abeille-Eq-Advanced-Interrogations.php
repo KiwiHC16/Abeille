@@ -18,67 +18,77 @@
 
 <!-- Zigbee standard commands -->
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">{{Table de routage}}</label>
+    <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">{{Routing table}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getRoutingTable");
         ?>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">{{Table de binding}}</label>
+    <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">{{Binding table}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getBindingTable");
+            echo '<input id="idIdx-BT" title="{{Start index (ex: 00)}}" value="00" style="width:30px; margin-left:8px" />';
         ?>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">{{Table de voisinage}}</label>
+    <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">{{Neighbor table}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getNeighborTable\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getNeighborTable");
+            echo '<input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" style="width:30px; margin-left:8px" />';
         ?>
-        <input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" />
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getActiveEndPoints">{{Liste des 'end points'}}</label>
+    <label class="col-sm-3 control-label" title="getActiveEndPoints">{{End points}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getActiveEndPoints\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getActiveEndPoints");
         ?>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getSimpleDescriptor (Simple_Desc_req)">{{Descripteur simple}}</label>
+    <label class="col-sm-3 control-label" title="getSimpleDescriptor (Simple_Desc_req)">{{Simple descriptor}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getSimpleDescriptor\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getSimpleDescriptor");
             addEpInput("idEpSDR");
         ?>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getNodeDescriptor (Node_Desc_req)">{{Descripteur de noeud}}</label>
+    <label class="col-sm-3 control-label" title="getNodeDescriptor (Node_Desc_req)">{{Node descriptor}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getNodeDescriptor\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getNodeDescriptor");
         ?>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">{{Adresse IEEE}}</label>
+    <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">{{IEEE address}}</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'getIeeeAddress\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-default", "getIeeeAddress");
+            echo '<select id="idMgmtIeeeReq-RT" style="width:90px; margin-left: 8px" title="{{Request type}}" />';
+            echo '<option value="00" selected>Single dev</option>';
+            echo '<option value="01">Extended</option>';
+            echo '</select>';
+        ?>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="getNwkAddress (NWK_addr_req)">{{Network address}}</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Interroger}}", "btn-default", "getNwkAddress");
+            echo '<select id="idNwkAddrReq-RT" style="width:90px; margin-left: 8px" title="{{Request type}}" />';
+            echo '<option value="00" selected>Single dev</option>';
+            echo '<option value="01">Extended</option>';
+            echo '</select>';
         ?>
     </div>
 </div>
@@ -86,7 +96,6 @@
     <label class="col-sm-3 control-label" title="Mgmt_NWK_Update_req">Mgmt network update request</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'mgmtNetworkUpdateReq\')">{{Interroger}}</a>';
             addButton("{{Interroger}}", "btn-warning", "mgmtNetworkUpdateReq");
         ?>
         <input id="idMgmtNwkUpdReqSC" title="{{Scanned channels mask (ex: all=07FFF800)}}" />
@@ -237,6 +246,7 @@
             addButton("{{Interroger}}", "btn-default", "discoverCommandsReceived");
             addEpInput("idEpB");
             addClusterList("idClustIdB");
+            addDirList("idDir-DiscoverCmdRx");
         ?>
     </div>
 </div>
@@ -346,6 +356,17 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0102/WindowCovering">ZCL: 0102 - Window covering</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Appliquer}}", "btn-danger", "0102-Apply");
+            addEpInput("idEp-0102");
+            add0102CmdsList("idCmd-0102");
+        ?>
+        <input id="idExtra-0102" title="{{Valeur}}" placeholder="{{Valeur}}" style="width:60px" />
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0201, Setpoint Raise/Lower (cmd 00)">ZCL: 0201 - Raise/lower</label>
     <div class="col-sm-5">
         <?php
@@ -372,15 +393,15 @@
         <?php
             addButton("{{Appliquer}}", "btn-danger", "0502-StartWarning");
             addEpInput("idEp-SW");
-            addWarningModesList("idMode-SW");
+            add0502WarningModesList("idMode-SW");
             addCheckbox("idStrobe-SW", "Strobe");
-            addSirenLevelList("idSirenL-SW");
+            add0502SirenLevelList("idSirenL-SW");
             addInput("idDuration-SW", "Duration in sec", "Duration");
         ?>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41)">ZCL: 1000 - Groupes</label>
+    <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41) to SERVER">ZCL: 1000 - Groupes req</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "1000-GetGroups");
@@ -389,7 +410,17 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Cluster 1000, Get endpont list (cmd 42)">ZCL: 1000 - End points</label>
+    <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers response (cmd 41) to CLIENT">ZCL: 1000 - Groupes resp</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Interroger}}", "btn-default", "1000-GetGroupsResp");
+            addEpInput("idEpC1000-41-Resp");
+            addGroupInput('idGrpC1000-41-Resp', 'Group');
+        ?>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 1000, Get endpont list (cmd 42) to SERVER">ZCL: 1000 - End points</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-default", "1000-GetEndpoints");

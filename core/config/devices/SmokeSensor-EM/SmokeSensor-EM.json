@@ -42,9 +42,6 @@
             },
             "setReportSmokeHeiman": {
                 "use": "setReportSmokeHeiman"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

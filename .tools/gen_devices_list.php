@@ -96,14 +96,13 @@
             $devicesList[$dirEntry] = $dev;
 
             if (isset($devConf['alternateIds'])) {
-                $idList = explode(',', $devConf['alternateIds']);
-                foreach ($idList as $id) {
-                    echo("getDevicesList(): Alternate ID '".$id."' for '".$dirEntry."'\n");
+                foreach ($devConf['alternateIds'] as $altIdKey => $altId) {
+                    // echo("getDevicesList(): Alternate ID '".$altIdKey."' for '".$dirEntry."'\n");
                     $dev = array(
                         'jsonId' => $dirEntry,
                         'jsonLocation' => $from
                     );
-                    $devicesList[$id] = $dev;
+                    $devicesList[$altIdKey] = $dev;
                 }
             }
         }
@@ -117,11 +116,11 @@
     foreach ($devList as $jsonId => $dev) {
 
         $eqList[] = array(
-            'manufacturer' => $dev["manufacturer"],
-            'model' => $dev["model"],
-            'type' => $dev["type"],
+            'manufacturer' => isset($dev["manufacturer"]) ? $dev["manufacturer"] : '',
+            'model' => isset($dev["model"]) ? $dev["model"] : '',
+            'type' => isset($dev["type"]) ? $dev["type"] : '',
             'jsonId' => $jsonId,
-            'icon' => $dev["icon"]
+            'icon' => isset($dev["icon"]) ? $dev["icon"] : ''
         );
 
         // Collect all information related to Command used by the products

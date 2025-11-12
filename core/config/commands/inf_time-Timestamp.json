@@ -1,7 +1,7 @@
 {
     "inf_time-Timestamp": {
         "subType": "numeric",
-        "template": "badge",
+        "template": "",
         "configuration": {
             "visibilityCategory": "Time"
         },

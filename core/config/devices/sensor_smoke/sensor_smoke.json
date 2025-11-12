@@ -1,7 +1,7 @@
 {
     "sensor_smoke": {
         "manufacturer": "Xiaomi",
-        "model": "?",
+        "model": "JTYJ-GD-01LM/BW",
         "type": "Xiaomi Smoke Sensor",
         "genericType": "Environment",
         "timeout": "60",
@@ -14,14 +14,30 @@
             "security": "1"
         },
         "commands": {
-            "Etat": {
-                "use": "securitySafetySmoke"
+            "ZoneStatus Change": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "trigOut": {
+                    "01-smokeAlarm": {
+                        "valueOffset": "#value#&2"
+                    },
+                    "01-batteryLow": {
+                        "valueOffset": "#value#&8"
+                    }
+                }
+            },
+            "Smoke alarm": {
+                "use": "inf_smoke-Alarm",
+                "isVisible": 1
             },
             "Battery-Volt": {
-                "use": "inf_zbAttr-0001-BatteryVolt"
+                 "use": "inf_batteryVoltAndPercent-285-300"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Battery-Low": {
+                "use": "inf_battery-Low",
+                "isVisible": 1
             },
             "Low": {
                 "use": "setSmokeSensivityLow"
@@ -33,7 +49,10 @@
                 "use": "setSmokeSensivityHigh"
             },
             "Test": {
-                "use": "testSmoke"
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0500&attrId=fff1&attrType=23&attrVal=50397184&manufId=115f",
+                "comment": "value=0x03010000. Repeat if no ACK since device not RX always ON",
+                "repeat": 3
             }
         },
         "private": {

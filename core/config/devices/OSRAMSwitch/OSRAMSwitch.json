@@ -10,10 +10,6 @@
             "automatism": "1"
         },
         "type": "OSRAMSwitch",
-        "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            }
-        }
+        "commands": []
     }
 }

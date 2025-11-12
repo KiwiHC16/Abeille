@@ -1,0 +1,16 @@
+{
+    "inf_zbAttr-040D-MeasuredValue": {
+        "comment": "040D/CO2 cluster, attrib 0000/MeasuredValue",
+        "name": "MeasuredValue",
+        "subType": "numeric",
+        "template": "badge",
+        "isHistorized": "1",
+        "configuration": {
+            "historizeRound": "0"
+        },
+        "type": "info",
+        "logicalId": "040D-#EP#-0000",
+        "unit": "",
+        "genericType": "CO2"
+    }
+}

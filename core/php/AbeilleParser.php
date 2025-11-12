@@ -31,13 +31,16 @@
     include_once __DIR__.'/../class/AbeilleTools.class.php';
     include_once __DIR__.'/AbeilleLog.php'; // Abeille log features
     include_once __DIR__.'/AbeilleZigateConst.php'; // Zigate constants
+    include_once __DIR__.'/AbeilleZigbee.php'; // Zigbee specific functions
     include_once __DIR__.'/AbeilleZigbeeConst.php'; // Zigbee constants
-    include_once __DIR__.'/../class/AbeilleCmd.class.php';
+    // include_once __DIR__.'/../class/AbeilleCmd.class.php';
     include_once __DIR__.'/../class/AbeilleParser.class.php';
     include_once __DIR__.'/../class/Abeille.class.php';
     include_once __DIR__.'/AbeilleOTA.php';
     include_once __DIR__.'/AbeilleParser-Tuya.php'; // Tuya specific functions
     include_once __DIR__.'/AbeilleParser-Xiaomi.php'; // Xiaomi specific functions
+    include_once __DIR__.'/AbeilleParser-Philips.php'; // Philips specific functions
+    require_once __DIR__.'/AbeilleModels.php'; // getModelsList()
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161
@@ -200,10 +203,12 @@
     /* New function to send msg to Abeille.
         Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
         into several messages to Abeille. */
-    function msgToAbeille2($msg) {
-        global $queueXToAbeille;
-        if (msg_send($queueXToAbeille, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
-            parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
+    function msgToMainD($msg) {
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+        global $queueXToMain;
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queueXToMain, 1, $msgJson, false, false, $errCode) == false) {
+            parserLog("debug", "msgToMainD() ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
@@ -217,16 +222,18 @@
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
         global $queueXToCmd;
-        if (msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
-            parserLog("debug", "  ERROR: msgToCmd(): Can't write to 'queueXToCmd', error=".$errCode);
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queueXToCmd, 1, $msgJson, false, false, $errCode) == false) {
+            parserLog("debug", "  msgToCmd(queueXToCmd) ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
     function msgToCmdAck($msg) {
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
         global $queueParserToCmdAck;
-        if (msg_send($queueParserToCmdAck, 1, $msgJson, false, false) == false) {
-            parserLog("error", "  ERROR: Can't send msg to 'queueParserToCmdAck'. msg=".$msgJson);
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queueParserToCmdAck, 1, $msgJson, false, false, $errCode) == false) {
+            parserLog("debug", "  msgToCmd(queueParserToCmdAck) ERROR ${errCode}/".AbeilleTools::getMsgSendErr($errCode));
         }
     }
 
@@ -238,26 +245,65 @@
             'addr' => $addr,
             'ieee' => $ieee,
         );
-        msgToAbeille2($msg);
+        msgToMainD($msg);
     }
 
-    // Create a new device in internal devices list => $GLOBALS['eqList'][$net][$addr]
+    /* Internal devices list reminder
+    $GLOBALS['devices'][net][addr]
+        zigbee => []
+            ieee =>
+            macCapa
+            rxOnWhenIdle => undef or true/false
+            endPoints => []
+                XX => []
+                    profId
+                    devId
+                    servClusters
+                    modelId => From cluster 0000: unset, set to false, or set to proper value
+                    manufId => From cluster 0000: unset, set to false, or set to proper value
+                    location => From cluster 0000: unset, set to false, or set to proper value
+                    swBuildId => From cluster 0000: unset, set to false, or set to proper value
+                    dateCode => From cluster 0000: unset, set to false, or set to proper value
+            modelId => copy from the 1st cluster 0000
+            manufId => copy from the 1st cluster 0000
+            location => copy from the 1st cluster 0000
+            manufCode
+            logicalType
+            groups => [], Only if cluster 0004 supported
+                XX => 'GGGG/YYYY'
+            imageType
+        mainEp => from model
+        eqModel => []
+            modelName => JSON file name without extension
+            modelSource => '' = 'Abeille' or 'local'
+        commands => from model
+    */
+
+    // Create a new device in internal devices list => $GLOBALS['devices'][$net][$addr]
     function newDevice($net, $addr, $ieee = null) {
         // This is a new device
-        $GLOBALS['eqList'][$net][$addr] = array(
+        $zigbee = array(
             'ieee' => $ieee,
             'macCapa' => '',
-            'rxOnWhenIdle' => null,
+            // 'rxOnWhenIdle' => undef or true/false
+            // 'endPoints' => undef or []
+            // 'modelId' => Zigmee model: undef/false(unsupported)/'xx' from 1st cluser 0000
+            // 'manufId' => Zigbee manufacturer: undef/false(unsupported)/'xx' from 1st cluser 0000
+            // 'location' => Zigbee location: undef/false(unsupported)/'xx' from 1st cluser 0000
+        );
+        $eqModel = array(
+            'modelName' => '', // JSON file name without extension
+            'modelSource' => '', // ''/'Abeille' or 'local'
+            'modelForced' => false // Model forced by user if 'true'
+        );
+        $GLOBALS['devices'][$net][$addr] = array(
+            'zigbee' => $zigbee,
+
             'rejoin' => '', // Rejoin info from device announce
             'status' => 'identifying', // identifying, configuring, discovering, idle
             'time' => time(),
-            'endPoints' => null,
             'mainEp' => '',
-            'manufId' => null, // null(undef)/false(unsupported)/'xx'
-            'modelId' => null, // null(undef)/false(unsupported)/'xx'
-            'location' => null, // null(undef)/false(unsupported)/'xx'
-            'jsonId' => '',
-            'jsonLocation' => '',
+            'eqModel' => $eqModel,
             // Optional 'private'
             // Optional 'notStandard-0400-0000'
         );
@@ -277,32 +323,37 @@
         If not, add entry with given net/addr/ieee.
         Returns: device entry by reference */
     function &getDevice($net, $addr, $ieee = null, &$new = false) {
-        if (!isset($GLOBALS['eqList'][$net]))
-            $GLOBALS['eqList'][$net] = [];
+        $new = false;
 
-        if (isset($GLOBALS['eqList'][$net][$addr])) {
-            if (($GLOBALS['eqList'][$net][$addr]['ieee'] === null) && ($ieee !== null)) {
-                $GLOBALS['eqList'][$net][$addr]['ieee'] = $ieee;
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+
+        if (isset($GLOBALS['devices'][$net][$addr])) {
+            if (($GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] === null) && ($ieee !== null)) {
+                $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] = $ieee;
                 addNewJeedomDevice($net, $addr, $ieee);
             }
-            return $GLOBALS['eqList'][$net][$addr];
+            return $GLOBALS['devices'][$net][$addr];
         }
 
         // Not found. If IEEE is given let's check if short addr has changed or if equipment has migrated from another network.
         if ($ieee) {
-            foreach ($GLOBALS['eqList'][$net] as $oldAddr => $eq) {
-                if (!isset($eq['ieee']) || ($eq['ieee'] !== $ieee))
+            foreach ($GLOBALS['devices'][$net] as $oldAddr => $eq) {
+                if (!isset($eq['zigbee']['ieee']) || ($eq['zigbee']['ieee'] !== $ieee))
                     continue;
 
-                $GLOBALS['eqList'][$net][$addr] = $eq;
-                unset($GLOBALS['eqList'][$net][$oldAddr]);
+                $GLOBALS['devices'][$net][$addr] = $eq;
+                unset($GLOBALS['devices'][$net][$oldAddr]);
                 parserLog('debug', "  EQ already known: Addr updated from ${oldAddr} to ${addr}");
 
                 // Removing any cmd pending message for old address since device would no longer answer
                 $msg = array(
-                    'type' => 'clearMessages',
-                    'net' => $net,
-                    'addr' => $oldAddr
+                    'type' => 'shortAddrChange',
+                    'oldNet' => $net,
+                    'newNet' => $net,
+                    'oldAddr' => $oldAddr,
+                    'newAddr' => $addr,
+                    'ieee' => $ieee
                 );
                 msgToCmdAck($msg);
 
@@ -315,23 +366,34 @@
                         'ieee' => $ieee
                     ),
                 );
-                msgToAbeille2($msg);
+                msgToMainD($msg);
 
-                return $GLOBALS['eqList'][$net][$addr];
+                return $GLOBALS['devices'][$net][$addr];
             }
 
             // Still not found. Checking if was in a different network but need IEEE for that.
-            foreach ($GLOBALS['eqList'] as $oldNet => $oldAddr) {
+            foreach ($GLOBALS['devices'] as $oldNet => $oldAddr) {
                 if ($oldNet == $net)
                     continue; // This network has already been checked
 
-                foreach ($GLOBALS['eqList'][$oldNet] as $oldAddr => $eq) {
-                    if ($eq['ieee'] !== $ieee)
+                foreach ($GLOBALS['devices'][$oldNet] as $oldAddr => $eq) {
+                    if (!isset($eq['zigbee']['ieee']) || ($eq['zigbee']['ieee'] !== $ieee))
                         continue;
 
-                    $GLOBALS['eqList'][$net][$addr] = $eq; // net & addr update
-                    unset($GLOBALS['eqList'][$oldNet][$oldAddr]);
+                    $GLOBALS['devices'][$net][$addr] = $eq; // net & addr update
+                    unset($GLOBALS['devices'][$oldNet][$oldAddr]);
                     parserLog('debug', '  EQ already known on network '.$oldNet.' with addr '.$oldAddr.' => migrated');
+
+                    // Removing any cmd pending message for old net/address since device would no longer answer
+                    $msg = array(
+                        'type' => 'shortAddrChange',
+                        'oldNet' => $oldNet,
+                        'newNet' => $net,
+                        'oldAddr' => $oldAddr,
+                        'newAddr' => $addr,
+                        'ieee' => $eq['zigbee']['ieee']
+                    );
+                    msgToCmdAck($msg);
 
                     // Informing Abeille to migrate Jeedom part to proper network.
                     $msg = array(
@@ -341,9 +403,9 @@
                         'srcNet' => $oldNet,
                         'srcAddr' => $oldAddr,
                     );
-                    msgToAbeille2($msg);
+                    msgToMainD($msg);
 
-                    return $GLOBALS['eqList'][$net][$addr];
+                    return $GLOBALS['devices'][$net][$addr];
                 }
             }
         }
@@ -351,8 +413,26 @@
         // This is a new device
         newDevice($net, $addr, $ieee);
         $new = true; // This is a new device
-        return $GLOBALS['eqList'][$net][$addr];
+        return $GLOBALS['devices'][$net][$addr];
     } // End getDevice()
+
+    /* Find device by its IEEE address.
+        Returns: device entry by reference, or [] */
+    function &getDeviceByIeee($net, $ieee) {
+
+        $notFound = [];
+
+        if (!isset($GLOBALS['devices'][$net]))
+            return $notFound;
+
+        foreach ($GLOBALS['devices'][$net] as $a => $d) {
+            if (!isset($d['zigbee']['ieee']) || ($d['zigbee']['ieee'] !== $ieee))
+                continue;
+            return $GLOBALS['devices'][$net][$a];
+        }
+
+        return $notFound;
+    }
 
     // Reread Jeedom useful infos on eqLogic DB update
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
@@ -365,26 +445,36 @@
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
 
-        if (!isset($GLOBALS['eqList'][$net]))
-            $GLOBALS['eqList'][$net] = [];
-        if (!isset($GLOBALS['eqList'][$net][$addr]))
-            $GLOBALS['eqList'][$net][$addr] = [];
-        $eq = &$GLOBALS['eqList'][$net][$addr];
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+        if (!isset($GLOBALS['devices'][$net][$addr]))
+            $GLOBALS['devices'][$net][$addr] = [];
+        $eq = &$GLOBALS['devices'][$net][$addr];
 
-        $private = $eqLogic->getConfiguration('ab::private', null);
-        if ($private !== null) {
-            $eq['private'] = $private;
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        // $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+        // $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
+        // $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
+        // if (isset($eqModel['modelPath'])) // Forced model variant case
+        //     $eq['modelPath'] = $eqModel['modelPath'];
+        if (!isset($eqModel['modelSource']))
+            $eqModel['modelSource'] = ''; // Default
+        if (!isset($eqModel['modelPath']))
+            $eqModel['modelPath'] = ''; // Default
+        if (isset($eqModel['private'])) {
+            $eq['private'] = $eqModel['private'];
             parserLog('debug', "  'private' updated to ".json_encode($eq['private'], JSON_UNESCAPED_SLASHES));
-        } else if (isset($eq['private']))
-            unset($GLOBALS['eqList'][$net][$addr]['private']);
-        $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', null); // OBSOLETE soon. Replaced by 'private'
-        if ($fromDevice !== null) { // OBSOLETE soon. Replaced by 'private'
-            $eq['fromDevice'] = $fromDevice;
-            parserLog('debug', "  'fromDevice' updated to ".json_encode($eq['fromDevice']));
-        } else if (isset($eq['fromDevice']))
-            unset($GLOBALS['eqList'][$net][$addr]['fromDevice']);
-        $eq['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null); // OBSOLETE soon. Replaced by 'private'
-        parserLog('debug', "  'tuyaEF00' updated to ".json_encode($eq['tuyaEF00'])); // OBSOLETE soon. Replaced by 'private'
+        } else if (isset($GLOBALS['devices'][$net][$addr]['private']))
+            unset($GLOBALS['devices'][$net][$addr]['private']);
+
+        // $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', null); // OBSOLETE soon. Replaced by 'private'
+        // if ($fromDevice !== null) { // OBSOLETE soon. Replaced by 'private'
+        //     $eq['fromDevice'] = $fromDevice;
+        //     parserLog('debug', "  'fromDevice' updated to ".json_encode($eq['fromDevice']));
+        // } else if (isset($eq['fromDevice']))
+        //     unset($GLOBALS['devices'][$net][$addr]['fromDevice']);
+        // $eq['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null); // OBSOLETE soon. Replaced by 'private'
+        // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($eq['tuyaEF00'])); // OBSOLETE soon. Replaced by 'private'
         // $eq['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null); // OBSOLETE soon. Replaced by 'private'
         // parserLog('debug', "  'xiaomi' updated to ".json_encode($eq['xiaomi'])); // OBSOLETE soon. Replaced by 'private'
 
@@ -408,22 +498,28 @@
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
     if ($daemons["parser"] > 1) {
-        logMessage('error', "Le démon 'AbeilleParser' est déja lancé !");
+        logMessage('error', "<<< Le démon 'AbeilleParser' est déja lancé !");
         exit(3);
     }
 
     declare(ticks = 1);
     pcntl_signal(SIGTERM, 'signalHandler', false);
     function signalHandler($signal) {
-        logMessage('info', '<<< Arret du démon AbeilleParser');
-        exit;
+        logMessage('info', '<<< SIGTERM => Arret du démon AbeilleParser');
+        exit(0);
     }
 
     // Inits
-    // $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
-    $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+    $queueXToMain = msg_get_queue($abQueues["xToAbeille"]["id"]);
     $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
     $queueParserToCmdAck = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
+    $queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);
+    $queueParserToRoutes  = msg_get_queue($abQueues["parserToRoutes"]["id"]);
+    if (($queueXToMain === false) || ($queueXToCmd === false) || ($queueParserToCmdAck === false)) {
+        // TODO: Why sometimes issues at queue creation ? Visible during GIT update.
+        logMessage('error', "<<< Erreur de création de queue => Arret AbeilleParser");
+        exit(4);
+    }
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */
@@ -445,19 +541,21 @@
     }
 
     // In case parser only is restarted, let's get zigates IEEE if known */
-    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        // if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
-        if ($config['ab::zgEnabled'.$zgId] != 'Y')
-            continue; // This Zigate is not enabled
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+        if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
+            continue; // Disabled
+        if ($config['ab::gtwType'.$gtwId] != 'zigate')
+            continue; // Not a Zigate network
+
         // $ieeeOk = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
-        $ieeeOk = $config['ab::zgIeeeAddrOk'.$zgId];
+        $ieeeOk = $config['ab::zgIeeeAddrOk'.$gtwId];
         if ($ieeeOk == 1) { // IEEE addr already verified & valid
             // $extAddr = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', "1212121212121212");
-            $extAddr = $config['ab::zgIeeeAddr'.$zgId];
-            $GLOBALS['zigate'.$zgId]['ieee'] = $extAddr;
-            logMessage("debug", "Zigate ".$zgId." already verified IEEE: ".$extAddr);
+            $extAddr = $config['ab::zgIeeeAddr'.$gtwId];
+            $GLOBALS['zigate'.$gtwId]['ieee'] = $extAddr;
+            logMessage("debug", "Zigate ".$gtwId." already verified IEEE: ".$extAddr);
         }
-        $GLOBALS['zigate'.$zgId]['ieeeStatus'] = $ieeeOk;
+        $GLOBALS['zigate'.$gtwId]['ieeeStatus'] = $ieeeOk;
     }
 
     // Reading available OTA firmwares
@@ -481,10 +579,16 @@
 
         /* Init known devices list */
         $eqLogics = eqLogic::byType('Abeille');
-        $GLOBALS['eqList'] = [];
+        $GLOBALS['devices'] = [];
         foreach ($eqLogics as $eqLogic) {
             $eqLogicId = $eqLogic->getLogicalId();
             list($net, $addr) = explode("/", $eqLogicId);
+            $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
+            if ($gtwId == '')
+                continue; // Incorrect case
+
+            if ($config['ab::gtwType'.$gtwId] != 'zigate')
+                continue; // Not a Zigate network
 
             // $sig = $eqLogic->getConfiguration('ab::signature', '');
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
@@ -493,37 +597,32 @@
                 $status = 'idle';
             else
                 $status = 'identifying';
+
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            $ieee = $eqLogic->getConfiguration('IEEE', '');
+            if ($ieee != '')
+                $zigbee['ieee'] = $ieee;
+
             $eq = array(
-                'ieee' => $eqLogic->getConfiguration('IEEE', null),
-                'macCapa' => isset($zigbee['macCapa']) ? $zigbee['macCapa'] : '',
-                'rxOnWhenIdle' => isset($zigbee['rxOnWhenIdle']) ? $zigbee['rxOnWhenIdle'] : null,
-                'manufCode' => isset($zigbee['manufCode']) ? $zigbee['manufCode'] : null,
+                'zigbee' => $zigbee,
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => $status, // identifying, configuring, discovering, idle
                 'time' => time(),
-                'endPoints' => isset($zigbee['endPoints']) ? $zigbee['endPoints'] : null, // null(undef)
                 'mainEp' => '',
-                // Cluster 0000 infos
-                'manufId' => null, // null(undef)/false(unsupported)/'xx'
-                'modelId' => null, // null(undef)/false(unsupported)/'xx'
-                'location' => null, // null(undef)/false(unsupported)/'xx'
-                'dateCode' => null,
-                'swBuildId' => null,
+
                 // Abeille's model infos
-                'jsonId' => $jsonId,
-                'jsonLocation' => '',
+                // 'modelName' => $jsonId,
+                // 'modelSource' => '',
+                // 'modelForced' => isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false,
+                'eqModel' => $eqModel,
                 'customization' => $eqLogic->getConfiguration('ab::customization', null),
-                //'private' => // Set if exists in model
-                //'fromDevice' => // Set if exists in model // OBSOLETE soon
-                'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null), // OBSOLETE soon => replaced by 'private'
-                // 'xiaomi' => $eqLogic->getConfiguration('ab::xiaomi', null), // OBSOLETE soon => replaced by 'private'
+                //'private' => // Optional: Set if 'private' section exists in model
                 // Optional 'notStandard-0400-0000'
             );
             if (isset($eqModel['private']))
                 $eq['private'] = $eqModel['private'];
-            else if (isset($eqModel['fromDevice'])) // OBSOLETE soon => replaced by 'private'
-                $eq['fromDevice'] = $eqModel['fromDevice']; // OBSOLETE soon => replaced by 'private'
+            // else if (isset($eqModel['fromDevice'])) // OBSOLETE soon => replaced by 'private'
+            //     $eq['fromDevice'] = $eqModel['fromDevice']; // OBSOLETE soon => replaced by 'private'
 
             // Checking for '0400-0000' not standard attribute
             $cmds = Cmd::byEqLogicId($eqLogic->getId(), 'info');
@@ -553,7 +652,7 @@
             //     }
             // }
 
-            $GLOBALS['eqList'][$net][$addr] = $eq;
+            $GLOBALS['devices'][$net][$addr] = $eq;
         }
 
         logMessage('debug', 'Reading messages queues');
@@ -578,6 +677,8 @@
                 } else if ($msg['type'] == "serialRead") {
                     // Message from AbeilleSerialReadX
                     $AbeilleParser->protocolDatas($msg['net'], $msg['msg']);
+                } else if ($msg['type'] == "logLevelChanged") {
+                    logLevelChanged($msg['level']);
                 } else {
                     // Ctrl message
                     if ($msg['type'] == 'sendToCli') {
@@ -590,20 +691,22 @@
                         logMessage('debug', 'Some equipments removed from Jeedom');
                         // Some equipments removed from Jeedom => phantoms if still in network
                         // $msg['net'] = Abeille network (AbeilleX)
-                        // $msg['eqList'] = Eq addr separated by ','
+                        // $msg['addrList'] = Eq addr separated by ','
                         $net = $msg['net'];
-                        $arr = explode(',', $msg['eqList']);
-                        foreach ($arr as $idx => $addr) {
-                            if (!isset($GLOBALS['eqList'][$net])) {
+                        $arr = explode(',', $msg['addrList']);
+                        foreach ($arr as $addr) {
+                            if (!isset($GLOBALS['devices'][$net])) {
                                 logMessage('debug', "  ERROR: Unknown network ".$net);
                                 continue;
                             }
-                            if (!isset($GLOBALS['eqList'][$net][$addr])) {
+                            if (!isset($GLOBALS['devices'][$net][$addr])) {
                                 logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
                                 continue;
                             }
-                            $ieee = $GLOBALS['eqList'][$net][$addr]['ieee'];
-                            unset($GLOBALS['eqList'][$net][$addr]);
+                            // Note: No IEEE for virtual remote control (addr=rcXX)
+                            $ieee = isset($GLOBALS['devices'][$net][$addr]['zigbee']['ieee']) ? $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] : '?';
+                            unset($GLOBALS['devices'][$net][$addr]);
+                            // TODO: Instead of removing, might be worth flaging it to not loose infos if rejoin
                             logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");
                         }
                     } else if ($msg['type'] == 'eqUpdated') {

@@ -2,6 +2,8 @@
     "GL-B-001Z": {
         "manufacturer": "Gledopto",
         "model": "GL-B-001Z",
+        "type": "GL-B-001Z Dual White And Color Candle Bulb",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",
@@ -11,13 +13,28 @@
         "category": {
             "light": "1"
         },
-        "type": "GL-B-001Z 4W Dual White And Color Candle Bulb",
         "commands": {
-            "etat": {
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "isVisible": 1
+            },
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
-            "CurrentLevel-0008": {
+            "Set brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
@@ -27,18 +44,6 @@
             },
             "CurrentY": {
                 "use": "inf_zbAttr-0300-CurrentY",
-                "isVisible": 1
-            },
-            "On": {
-                "use": "act_zbCmdC-0006-On",
-                "isVisible": 1
-            },
-            "Off": {
-                "use": "act_zbCmdC-0006-Off",
-                "isVisible": 1
-            },
-            "Set Level": {
-                "use": "act_setLevel-Light",
                 "isVisible": 1
             },
             "Set 2200K": {
@@ -108,16 +113,8 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
-            },
-            "Scenes": {
-                "use": "Scene-Membership"
+                "use": "act_zbCmdC-Identify"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

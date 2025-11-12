@@ -1,0 +1,82 @@
+{
+    "SNZB-03P_eWeLink": {
+        "manufacturer": "Sonoff",
+        "model": "SNZB-03P",
+        "type": "Sonoff motion sensor",
+        "genericType": "Security",
+        "timeout": "60",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Sonoff-MotionSensor",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2477"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "SetReporting 01-0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=3600&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Occupancy": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "isVisible": "1"
+            },
+            "Bind 01-0406-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0406",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0406-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0406&attrId=0000&attrType=18",
+                "execAtCreation": "yes"
+            },
+            "Timeout": {
+                "use": "act_zbWriteAttribute-slider",
+                "params": "clustId=0406&attrId=0020&attrType=21",
+                "minValue": 5,
+                "maxValue": 60,
+                "isVisible": 1,
+                "value": "Timeout info"
+            },
+            "Get timeout": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0406&attrId=0020",
+                "execAtCreation": "yes",
+                "logicalId": "getTimeout"
+            },
+            "Timeout info": {
+                "use": "inf_generic-NumericBadge",
+                "params": "ep=01",
+                "logicalId": "0406-01-0020"
+            },
+            "SetReporting 01-0406-0020": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0406&attrId=0020&attrType=21",
+                "execAtCreation": "yes"
+            },
+            "Bright": {
+                "use": "inf_generic-Binary",
+                "params": "ep=01&clustId=FC11&attrId=2001",
+                "logicalId": "FC11-01-2001",
+                "comment": "Only updated when occupancy is detected",
+                "isVisible": 1
+            }
+        }
+    }
+}

@@ -11,15 +11,7 @@
             "automatism": "1"
         },
         "type": "router",
-        "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            }
-        },
+        "commands": [],
         "comment": "https://community.jeedom.com/t/cc2531-routeur-pour-etendre-reseau-zigbee/20837"
     }
 }

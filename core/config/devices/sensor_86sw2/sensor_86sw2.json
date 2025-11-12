@@ -14,7 +14,7 @@
             "batteryType": "1x3V CR2032"
         },
         "category": {
-            "automatism": "1"
+            "light": "1"
         },
         "commands": {
             "Battery-Volt": {
@@ -23,14 +23,32 @@
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "etat1": {
-                "use": "etatSwitchDouble_1"
+            "Status 1": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": 1,
+                "isHistorized": "1",
+                "repeatEventManagement": "always",
+                "returnStateValue": "0",
+                "returnStateTime": "1"
             },
-            "etat2": {
-                "use": "etatSwitchDouble_2"
+            "Status 2": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=02",
+                "isVisible": 1,
+                "isHistorized": "1",
+                "repeatEventManagement": "always",
+                "returnStateValue": "0",
+                "returnStateTime": "1"
             },
-            "etat3": {
-                "use": "etatSwitchDouble_3"
+            "Status 3": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=03",
+                "isVisible": 1,
+                "isHistorized": "1",
+                "repeatEventManagement": "always",
+                "returnStateValue": "0",
+                "returnStateTime": "1"
             }
         },
         "private": {

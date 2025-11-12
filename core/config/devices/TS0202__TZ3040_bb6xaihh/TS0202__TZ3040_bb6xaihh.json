@@ -1,0 +1,67 @@
+{
+    "TS0202__TZ3040_bb6xaihh": {
+        "manufacturer": "Tuya",
+        "model": "809WZT",
+        "type": "Tuya PIR motion sensor",
+        "genericType": "Security",
+        "alternateIds": {
+            "TS0202__TZ3000_hktqahrq": { "model": "WHD02" },
+            "TS0202__TZ3040_wqmtjsyk": { "model": "PIR1-ZB" },
+            "TS0202__TZ3000_otvn3lne": { "model": "ZMS01" },
+            "TS0202__TZ3000_h4wnrtck": { "model": "E2" },
+            "TS0202__TZ3000_qomxlryd": { "model": "ORBIS Motion Sensor" },
+            "TS0202__TZ3000_jmrgyl7o": { "model": "ZX-5311" },
+            "TS0202__TZ3000_lf56vpxj": { "model": "ZP01" },
+            "TS0202__TZ3000_bsvqrxru": { "model": "HW500A" },
+            "TS0202__TZ3000_nss8amz9": { "model": "ZBSM10WT" }
+        },
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-PIR-MotionSensor",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2450"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Zone Alarm1": {
+                "use": "inf_zone-Alarm1",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Zone Status Changed": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "params": "ep=01",
+                "trigOut": {
+                    "01-0500-alarm1": {
+                        "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
+                        "valueOffset": "#value#&1"
+                    }
+                }
+            },
+            "Bind 01-0500-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0500",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

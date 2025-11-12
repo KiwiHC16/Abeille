@@ -8,6 +8,65 @@
 ?>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
+    <div class="col-sm-5">
+        <input id="idEqAddr" type="text" value="" readonly>
+        /
+        <input id="idEqIeee" type="text" class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE" readonly></input>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Type logique}}</label>
+    <div class="col-sm-5">
+        <input id="idZbLogicalType" type="text" readonly title="{{Node descriptor/Logical type}}" value="">
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">MAC capabilities</label>
+    <div class="col-sm-5">
+        <input id="idMacCapa" type="text" readonly title="{{Node descriptor/MAC capabilities}}" value="">
+        <input id="idZbRxOnWhenIdle" type="text" readonly title="{{Indique si l'équipement est toujours en écoute}}" value="" />
+    </div>
+</div>
+
+<!-- <div class="form-group">
+    <label class="col-sm-3 control-label">{{Toujours en écoute}}</label>
+    <div class="col-sm-5">
+        <input id="idZbRxOnWhenIdle" readonly title="{{'Oui' si l'équipement est toujours en écoute}}" value="" />
+    </div>
+</div> -->
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Code fabricant}} (ManufCode)</label>
+    <div class="col-sm-5">
+        <input id="idManufCode" readonly title="{{Code fabricant}}" value="" />
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Type d'image}} (ImageType)</label>
+    <div class="col-sm-5">
+        <input id="idImageType" readonly title="{{Type d'image}}" value="" />
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Date fabrication}} (DateCode)</label>
+    <div class="col-sm-5">
+        <input type="text" id="idDateCode" title="{{Cluster 0000, attribut 0006/DateCode}}" value="" readonly>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
+    <div class="col-sm-5">
+        <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
     <div class="col-sm-5">
         <input id="idZbModel" readonly title="{{Identificant Zigbee du modèle}}" value="" />
@@ -21,7 +80,7 @@
         <input id="idModelSig" readonly style="width:240px" title="{{Signature du modèle utilisé}}" value="" />
         <input id="idModelName" readonly style="width:240px" title="{{Nom du modèle utilisé}}" value="" />
         <input id="idModelSource" readonly style="width:80px" title="{{Source du modèle}}" value="" />
-        <a class="btn btn-danger" id="idDelLocalBtn" title="{{Supprime la version locale du modèle}}" style="display:none"><i class="far fa-trash-alt"></i></a>
+        <a class="btn btn-danger" id="idDelLocalBtn" title="{{Supprime la version locale du modèle}} (devices_local)" style="display:none"><i class="far fa-trash-alt"></i></a>
         <a class="btn btn-default" id="idUpdateBtn" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>
         <a class="btn btn-danger" id="idReinitBtn" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l'équipement comme s'il s'agissait d'une nouvelle inclusion}}">{{Réinitialiser}}</a>
         <a class="btn btn-danger" id="idModelChangeBtn" style="margin-left:8px" title="{{Utilisateurs avancés - Forcer un modèle particulier}}">{{Forcer modèle}}</a>
@@ -54,9 +113,8 @@
         </p>
     </div>
 
-    <!-- Liste de choix des modèles connus d'Abeille, rempli plus tard en ajax, si besoin -->
+    <!-- Abeille's models list if user wants to force a different one -->
     <datalist id="abeille-all-models-list"></datalist>
-    <!-- Fin choix du modèle -->
 </div>
 
 
@@ -64,27 +122,6 @@
     <label class="col-sm-3 control-label">{{Assistant de découverte}}</label>
     <div class="col-sm-5">
         <a class="btn btn-default" id="idEqAssistBtn">{{Ouvrir}}</a>
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{Code fabricant}} (manufCode)</label>
-    <div class="col-sm-5">
-        <input id="idManufCode" readonly title="{{Code fabricant}}" value="" />
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{Date fabrication}} (DateCode)</label>
-    <div class="col-sm-5">
-        <input type="text" id="idDateCode" title="{{Cluster 0000, attribut 0006/DateCode}}" value="" readonly>
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
-    <div class="col-sm-5">
-        <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
     </div>
 </div>
 

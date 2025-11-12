@@ -13,17 +13,15 @@
             "security": "1"
         },
         "commands": {
-            "etat": {
-                "use": "presence"
+            "Presence": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "isVisible": 1
             },
             "Battery-Volt": {
                 "use": "inf_zbAttr-0001-BatteryVolt"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

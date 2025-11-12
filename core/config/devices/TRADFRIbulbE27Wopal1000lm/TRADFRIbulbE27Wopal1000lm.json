@@ -37,14 +37,6 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
-            },
-            "Level": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
             "Get-Level": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
@@ -72,7 +64,17 @@
                 "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
+            },
+            "Set brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1,
+                "value": "Brightness"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
             }
-        }
+        },
+        "genericType": "Light"
     }
 }

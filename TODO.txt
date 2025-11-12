@@ -1,3 +1,36 @@
+PollingOnCmdChange, PollingOnCmdChangeDelay
+    Remplacer
+        "PollingOnCmdChange": "0006-#EP#-0000",
+        "PollingOnCmdChangeDelay": "5"
+    par
+        "trigIn": {
+            "0006-#EP#-0000": { "delay": 5 },
+        }
+
+poll & Polling
+    Virer "poll" du modele device pour utiliser "Polling" dans la commande
+
+    "Status": {
+        "use": "inf_zbAttr-0006-OnOff",
+        "trigOut": {
+            "getBrightness": {}
+        }
+    },
+    "Get-Brightness": {
+        "use": "act_zbReadAttribute",
+        "logicalId": "getBrightness",
+        "params": "clustId=0008&attrId=0000"
+    },
+
+Espace disque
+    Chaque fois que c'est possible, remonter info utilisateur si espace disque saturé (et /tmp)
+
+Droits ?
+    Des checks à faire pour informer utilisateur ?
+
+Collecte des routages
+    Il peut etre tres utile de connaitre le dernier routage pour identifier cause de blocage du reseau
+
 Mise à jour FW Zigate
     Le démon peut etre relancé pendant la programmation. Pas bon => conflit
 
@@ -9,23 +42,11 @@ time cluster attribute 0002
       FCF=10/General/Cli->Serv, SQN=4C, cmd=00/Read Attributes
       Attribute 0000 handled by Zigate
       WARNING: Unsupported time cluster attribute 0002
+    Actuellement repond 0 tout le temps !! A revoir !!
 
 RefreshData
     Supprimer ce support ? Voir #2580 => ERROR bind0030
     En lien avec le point suivant (updateField)
-
-Voir ou/quand faire updateField
-    cas Jeedom vers Abeille (donc execute())
-    cas configure (venant de parser)
-    cas autre ?
-
-Cluster 0004
-    La cmde 'addGroup' devrait sauver le groupe qq part => ab::groups ?
-    ab::groups={'01': '1001', '02': '2002'}
-
-    Notes pour les remotes:
-    - qq devices sont configurés en 'bindToGroup' (ex: trafrionoff)
-    - d'autres envoient vers adr de groupe et bind pas necessaire
 
 Lorsqu'un equipement quitte le réseau
     il doit etre désactivé
@@ -35,10 +56,7 @@ Lorsqu'un equipement quitte le réseau
 switch branch & update
     Les demons ne sont pas arretes pendant la mise à jour.
     Qqch n'est pas propre
-
-Canal Zigbee: memoriser choix user pour reappliquer redemarrage => 'ab::zgChanX'
-    Ajouter choix du canal sur page de config => ok pour visu only
-    Par defaut = 11
+    => Changement fait 29/mar/24. A voir si Ok
 
 Page support/logs: Mise a jour en temps reel sur selection courante
 
@@ -52,3 +70,8 @@ Doc: Améliorer support de nouveau equipements
     Demander image PNG SANS arriere plan
     Demander type et nomber de batteries
     Demander ref/modele fabricant
+
+Canal Zigbee
+    Si changement de canal via onglet avancé et que page config ouverte avec ancien canal => PB !!
+    Page de config doit etre raffraichie une fois le changement de canal fait
+    => Déplacer choix Zigbee dans la page de config ?

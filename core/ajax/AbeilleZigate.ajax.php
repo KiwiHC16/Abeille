@@ -45,7 +45,7 @@
             $msg = array();
             $msg['topic']   = $topic;
             $msg['payload'] = $payload;
-            $msgJson = json_encode($msg);
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
             $queue = msg_get_queue($abQueues['xToCmd']['id']);
             if (msg_send($queue, 1, $msgJson, false, false) == false) {
@@ -72,7 +72,7 @@
                 "type" => $type,
                 "network" => $network
             );
-            $msgJson = json_encode($msg);
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
             if (msg_send($queue, 1, $msgJson, false, false) == false) {
                 $error = "Could not send msg to 'xToParser': msg=".$msgJson;

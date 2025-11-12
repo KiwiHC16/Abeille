@@ -13,6 +13,7 @@ Nom des commandes
 En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
 - Toute commande 'action' doit commencer par 'act_'.
 - Toute commande 'info' doit commencer par 'inf_'.
+- Tout groupe de commandes doit commencer par 'grp_'.
 - La lettre suivante est toujours en minuscule.
 
 - Les commandes specifiques Zigbee (issues du standard Zigbee) sont ensuite prefixées par "zb"
@@ -59,22 +60,37 @@ Exemple de commande 'action'
       }
     }
 
+Exemple de groupe de commandes
+
+    {
+        "Dimmer": {
+            "use": "act_zbWriteAttribute-list",
+            "params": "clustId=FC01&attrId=0000&attrType=09&manufId=1021",
+            "listValue": "0100|Dimmer OFF;0101|Dimmer ON",
+            "isVisible": 1,
+            "trigOut": {
+                "getDeviceMode": {}
+            }
+        },
+        "Get device mode": {
+            "use": "act_zbReadAttribute",
+            "params": "ep=01&clustId=FC01&attrId=0000",
+            "execAtCreation": "yes",
+            "logicalId": "getDeviceMode"
+        }
+    }
+
 * Clef d'entrée/identificateur: OBLIGATOIRE
   Doit être identique au nom de fichier.
-
-* name: OBLIGATOIRE si l'équipement utilise la directive "include", sinon optionnel
-  Nom par défaut de la commande vu par Jeedom.
-  Si le fichier est appelé avec la directive "include", c'est le nom officiel de la commande crée.
-  Si le fichier est appelé avec la directive "use", alors ce nom est ignoré.
 
 * type: OBLIGATOIRE
   Type de commande: 'info' ou 'action'
 
 * subType: OBLIGATOIRE
-  Type d'information: 'binary', 'numeric', 'string'
-  Type d'action: 'other' (pas de paramètre), 'message' (titre + message)
+  Pour 'information': 'binary', 'numeric', 'string'
+  Pour 'action': 'other' (pas de paramètre), 'message' (titre + message), 'select', 'slider', 'color'
 
-* logicalId: OBLIGATOIRE si commande INFO
+* logicalId: OBLIGATOIRE
   Ex: '0400-01-0000' pour définir l'information 'luminosité'.
 
 * unit: optionnel
@@ -91,12 +107,13 @@ Exemple de commande 'action'
   Non par défaut ("isHistorized":0).
   Ce parametre est à mettre dans le modele d'équipement pour personnaliser la commande.
 
-* genericType: RECOMMANDE
+* genericType: OBLIGATOIRE
   Permet d'associer un widget représentatif de la commande.
 
 * invertBinary: optionnel.
   Utile uniquement pour une commande 'info' de subType 'binary'.
   Non inversé par défaut ("invertBinary":0).
+  = Inverser les valeurs binaires (page configuration commande).
 
 * disableTitle: optionnel.
   Utile uniquement pour une commande 'action' de subType 'message'.
@@ -146,7 +163,7 @@ Exemple de commande 'action'
     Delai d'execution en secondes apres l'annonce de la commande ayant le flag 'execAtCreation'.
 
   * trigOut: optionnel
-    Permet, pour une commande info, de définir une ou plusieurs commandes info à déclencher.
+    Permet, pour une commande info, de définir une ou plusieurs commandes à déclencher.
     Il est possible d'appliquer une formule sur la valeur au passage (valueOffset).
     Chaque commande à déclencher est définie par sont identifiant logique (logicalId).
     Exemple: "trigOut": {
@@ -162,15 +179,26 @@ Exemple de commande 'action'
 
   * calculValueOffset: optionnel (pour cmde info)
     Permet de modifier la valeur d'une cmde info.
+        Ex: "calculValueOffset": "intval(1000000/#value#)"
+        Ex: "calculValueOffset": "#value#/10"
+    Attention: Cette option est gérée par Jeedom et non pas par Abeille.
 
-  * valueOffset: optionnel (pour cmde action)
-    Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
-        // Ex: "valueOffset": "#value#*10"
-        // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+  * valueOffset: optionnel
+    Permet de modifier (ou remplacer) la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
+        Ex: "valueOffset": "#value#*10"
+        Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+        Ex: "valueOffset": "(#value#>>2)&1"
+    Sur une commande 'info' avec 'trigOut', permet de modifier/remplacer la valeur passée à Jeedom
+        Ex: "trigOut": {
+                "0006-04-0000": {
+                    "valueOffset": 0
+                }
+            }
 
   * Polling: optionnel
     Défini si cette commande 'action' doit etre executée regulierement.
     Valeurs: 'cron', 'cron5', 'cron10', 'cron15', 'cron30', 'cronHourly', 'cronDaily'
+    Ex: "Polling": "cron5"
 
   * PollingOnCmdChange: optionnel
     Précise que cette commande 'action' doit être exécutée si la cmde donnée change.
@@ -179,8 +207,8 @@ Exemple de commande 'action'
   * PollingOnCmdChangeDelay: optionnel
     ?
 
-  * listValue: optionnel
-    Dans le cas d'une commande action du type 'select', permet de définir la liste des cas.
+  * listValue: OBLIGATOIRE si cmd action de type 'select'
+    Permet de définir la liste des cas.
     Ex:
             "Set Sensitivity": {
                 "use": "act_zbWriteAttribute-list",
@@ -192,12 +220,35 @@ Exemple de commande 'action'
 
   * returnStateTime: X
     Permet d'indiquer à Jeedom de changer automatique la valeur au bout de X sec à celle de 'returnStateValue'
+    = Durée avant retour d'état (en min)
 
   * returnStateValue: Y
-    Valeur de retour automatique pour une commande info.
+    Valeur de retour automatique pour une commande info
+    = Valeur retour d'état.
 
   * notStandard: 1
     Permet d'indiquer que l'attribut ne doit pas etre traité comme un attribut ZCL.
 
   * RefreshData: ??
     Ex: "RefreshData": "1"
+
+  * repeat: optionnel
+    Permet de repeter la commande X fois si pas acquittée par le destinataire.
+    Ex: "repeat": 3
+
+Variables
+=========
+
+#valueoffset#: Permet d'inserer le résultat de 'valueOffset'
+    Ex: "params": "ep=01&clustId=0102&attrId=0017&attrType=18&attrVal=#valueoffset#",
+        "valueOffset": "#logicid0102-01-0017#|(1<<1)",
+
+#logicid....#: Permet de récuperer la valeur d'une commande info via son 'logical ID'
+    Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+
+#valueformat-XX#: Permet de formatter le resultat
+    Ex: #valueformat-%02X" => format=%02X, entrée=11, sortie=0B
+
+#slider#: Valeur fournie par Jeedom si sub type = 'slider'
+#select#: Valeur fournie par Jeedom si sub type = 'select'
+#message#: Valeur fournie par Jeedom si sub type = 'message'

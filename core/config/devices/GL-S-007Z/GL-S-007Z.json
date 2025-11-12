@@ -13,16 +13,8 @@
             "light": "1"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -52,16 +44,16 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "Set Level": {
+            "Set brightness": {
                 "use": "act_setLevel-Light",
                 "isVisible": 1
             },
-            "Current Level": {
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1,
                 "nextLine": "after"
             },
-            "Get Current Level": {
+            "Get brightness": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },

@@ -3,6 +3,7 @@
         "manufacturer": "Abeille",
         "model": "Virtual remote",
         "type": "Abeille's virtual remote",
+        "genericType": "Light",
         "timeout": "",
         "configuration": {
             "mainEP": "01",
@@ -11,6 +12,9 @@
         },
         "category": {
             "light": "1"
+        },
+        "variables": {
+            "addrGroup": "1212"
         },
         "commands": {
             "On group": {

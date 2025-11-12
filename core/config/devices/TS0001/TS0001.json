@@ -28,9 +28,6 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",
                 "nextLine": "after"

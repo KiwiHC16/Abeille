@@ -3,26 +3,27 @@
         "manufacturer": "Tuya",
         "model": "QS-Zigbee-C01",
         "zbManufacturer": "_TZ3000_vd43bbfq",
+        "type": "Tuya QS-Zigbee-C01 Curtain Module",
+        "genericType": "Shutter",
         "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
         "configuration": {
             "mainEP": "01",
             "icon": "Tuya-QS-Zigbee-C01"
         },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Tuya QS-Zigbee-C01 Curtain Module",
         "commands": {
-            "Position": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
             "Up": {
                 "use": "act_zbCmdC-0008-UpOpen",
                 "isVisible": 1
             },
             "Down": {
                 "use": "act_zbCmdC-0008-DownClose",
+                "isVisible": 1
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             }
         }

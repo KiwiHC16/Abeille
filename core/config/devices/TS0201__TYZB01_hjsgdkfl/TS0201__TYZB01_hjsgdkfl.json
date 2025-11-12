@@ -15,8 +15,7 @@
                 "model": "Display",
                 "type": "Tuya temp/humidity display"
             },
-            "TS0201__TZ2000_hjsgdkfl": {
-            }
+            "TS0201__TZ2000_hjsgdkfl": []
         },
         "timeout": "360",
         "configuration": {
@@ -28,9 +27,6 @@
             "automatism": "1"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
             "Battery-Volt": {
                 "use": "inf_zbAttr-0001-BatteryVolt"
             },

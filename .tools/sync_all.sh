@@ -12,6 +12,7 @@ LSFILES=../git.lsfiles
 
 git ls-files > ${LSFILES}
 echo "cd ${ABEILLE_DIR}" > ${SFTP_SCRIPT}
+PREVIOUS_DIR=""
 while read -r; do
     # echo "Line=$REPLY"
 
@@ -30,7 +31,13 @@ while read -r; do
         echo "IGN: ${REPLY}"
         continue
     fi
+    REPLY_DIR=$(dirname ${REPLY})
     echo "ADD: ${REPLY}"
+    if [ "${REPLY_DIR}" != "${PREVIOUS_DIR}" ]; then
+        # Warning: Could not be sure that all path exists for creation
+        echo "mkdir ${REPLY_DIR}" >> ${SFTP_SCRIPT}
+        PREVIOUS_DIR=${REPLY_DIR}
+    fi
     echo "put ${REPLY} ${REPLY}" >> ${SFTP_SCRIPT}
 done < ${LSFILES}
 

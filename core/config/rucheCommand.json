@@ -1,103 +1,72 @@
 {
     "online": {
         "name": "Online",
-        "isHistorized": "0",
         "isVisible": "1",
         "Type": "info",
         "subType": "string",
-        "invertBinary": "0",
         "template": ""
     },
     "FW-Version": {
         "name": "FW version",
-        "isHistorized": "0",
         "isVisible": "1",
         "Type": "info",
         "subType": "string",
-        "invertBinary": "0",
         "template": ""
     },
-    "Get FW version": {
-        "name": "Get FW version",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "zgGetVersion",
-            "request": ""
-        }
+    "Network-Status": {
+        "name": "Network Status",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "template": ""
+    },
+    "Network-Channel": {
+        "name": "Network Channel",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "template": ""
+    },
+    "PAN-ID": {
+        "name": "PAN ID",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "template": ""
+    },
+    "Ext_PAN-ID": {
+        "name": "Ext PAN ID",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "template": ""
     },
     "Time-Time": {
-        "name": "Last",
-        "isHistorized": "0",
+        "name": "Time-Time",
         "isVisible": "1",
         "Type": "info",
         "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Time-TimeStamp": {
-        "name": "Last Stamps",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
         "template": ""
     },
     "ZiGate-Time": {
         "name": "ZiGate-Time",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "info",
         "subType": "string",
-        "invertBinary": "0",
         "template": "",
         "display": {
             "forceReturnLineAfter": "1"
         }
     },
-    "Short-Addr": {
-        "name": "Short Addr",
-        "isHistorized": "0",
-        "isVisible": "1",
+    "ZiGate-Power": {
+        "name": "ZiGate-Power",
+        "isVisible": "0",
         "Type": "info",
         "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "IEEE-Addr": {
-        "name": "IEEE Addr",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "PAN-ID": {
-        "name": "PAN ID",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Ext_PAN-ID": {
-        "name": "Ext PAN ID",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
         "template": ""
     },
     "Set inclusion mode": {
         "name": "Set inclusion mode",
-        "comment": "Readded this function for case #2476",
-        "isHistorized": "0",
         "isVisible": "1",
         "Type": "action",
         "subType": "other",
@@ -106,23 +75,8 @@
             "request": "mode=start"
         }
     },
-    "Get Inclusion Status": {
-        "name": "Get Inclusion Status",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "permitJoin",
-            "request": "Status"
-        },
-        "display": {
-            "forceReturnLineAfter": "1"
-        }
-    },
     "permitJoin-Status": {
         "name": "Inclusion Status",
-        "isHistorized": "0",
         "isVisible": "1",
         "Type": "info",
         "subType": "binary",
@@ -134,7 +88,6 @@
     },
     "storeScene": {
         "name": "storeScene",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
         "subType": "message",
@@ -150,7 +103,6 @@
     },
     "recallScene": {
         "name": "recallScene",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
         "subType": "message",
@@ -166,7 +118,6 @@
     },
     "sceneGroupRecall": {
         "name": "sceneGroupRecall",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
         "subType": "message",
@@ -182,7 +133,6 @@
     },
     "addScene": {
         "name": "Add Scene",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
         "subType": "message",
@@ -197,7 +147,6 @@
     },
     "removeScene": {
         "name": "Remove Scene",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
         "subType": "message",
@@ -213,7 +162,6 @@
     },
     "removeSceneAll": {
         "name": "Remove Scene All",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
         "subType": "message",
@@ -229,7 +177,6 @@
     },
     "viewScene": {
         "name": "viewScene",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
         "subType": "message",
@@ -245,7 +192,6 @@
     },
     "getSceneMemberShip": {
         "name": "getSceneMemberShip",
-        "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
         "subType": "message",
@@ -257,161 +203,6 @@
             "forceReturnLineAfter": "1",
             "title_placeholder": "Adresse courte de l equipement",
             "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY"
-        }
-    },
-    "Network-Status": {
-        "name": "Network Status",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Network-Channel": {
-        "name": "Network Channel",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Network Status Request": {
-        "name": "Network Status Request (Not implemented)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "networkStatus",
-            "request": "Request"
-        }
-    },
-    "joinLeave-IEEE": {
-        "name": "joinLeave",
-        "isHistorized": "1",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Factory New Reset": {
-        "name": "Factory New Reset",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "FactoryNewReset",
-            "request": "FactoryNewReset"
-        },
-        "display": {
-            "forceReturnLineAfter": "1"
-        }
-    },
-    "Network-Bind": {
-        "name": "Last Bind",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Network-Report": {
-        "name": "Last Report",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Network_Address_request": {
-        "name": "Network Address Request",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "Network_Address_request",
-            "request": "address=#title#&#message#"
-        },
-        "display": {
-            "forceReturnLineAfter": "0",
-            "title_placeholder": "Adresse courte de l equipement",
-            "message_placeholder": "IEEEAddress=xxxxxxxxxxxxxxxx[&requestType=00&startIndex=00] "
-        }
-    },
-    "Group-Membership": {
-        "isVisible": 0,
-        "name": "Groups",
-        "isHistorized": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "badge",
-        "configuration": {
-            "uniqId": "5c07c88621b88",
-            "visibilityCategory": "Network"
-        }
-    },
-    "Set Power 0": {
-        "name": "Set Power (0dBm)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "TxPower",
-            "request": "00"
-        }
-    },
-    "Set Power 9": {
-        "name": "Set Power (-9dBm)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "TxPower",
-            "request": "34"
-        }
-    },
-    "Set Power 20": {
-        "name": "Set Power (-20dBm)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "TxPower",
-            "request": "28"
-        }
-    },
-    "Set Power 32": {
-        "name": "Set Power (-32dBm)",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "TxPower",
-            "request": "20"
-        }
-    },
-    "ZiGate-Power": {
-        "name": "ZiGate-Power",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "",
-        "display": {
-            "forceReturnLineAfter": "1"
         }
     }
 }

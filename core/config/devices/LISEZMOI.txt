@@ -15,12 +15,16 @@ Pendant la phase d'inclusion, Abeille va tenter d'identifier le modèle correspo
 
 Ce répertoire doit suivre la structure
     <identificateur>/<identificateur>.json
+    <identificateur>/<identificateur>-<variant1>.json
+    ...
+    <identificateur>/<identificateur>-<variantX>.json
 
     ATTENTION !! Voir 'identificateur' plus bas dans le format du fichier.
 
 Notes
-- Plusieurs signatures Zigbee peuvent utiliser le même modèle (cas d'un équipement vendu sous differentes marques)
-- Pour de très rares cas, d'autres modèles (à forcer à la main apres appairage) peuvent être utilisés.
+- Plusieurs signatures Zigbee peuvent utiliser le même modèle (cas d'un équipement vendu sous differentes marques).
+  Dans ce cas les signatures "alternatives" seront décrites via "alternateIds".
+- Pour de très rares cas, d'autres modèles (à forcer à la main apres appairage) peuvent être utilisés (modèle avec variante).
   Par ex l'équipement a toujours la meme signature mais une incompatibilité dans l'evolution de son firmware rendre
   le modèle par défaut inutilisable (ex: Cas sonde TSH317 Owon: EP=03 pour les anciens, 01 pour les nouveaux).
 
@@ -28,38 +32,45 @@ Notes
 Format de fichier
 =================
 
-Exemple: BASICZBR3.json
+Exemple
 
-  {
-    "BASICZBR3": {
-      "type": "Sonoff smart switch",
-      "manufacturer": "Sonoff",
-      "model": "BASICZBR3",
-      "genericType": "Generic",
-      "alternateIds": {
-        "BASICZBR30": {
-          "manufacturer": "if-different-from-top",
-          "model": "if-different-from-top",
-          "icon": "if-different-from-top",
-          "type": "if-different-from-top"
+    {
+        "BASICZBR3": {
+            "type": "Sonoff smart switch",
+            "manufacturer": "Sonoff",
+            "model": "BASICZBR3",
+            "genericType": "Generic",
+            "alternateIds": {
+                "BASICZBR30": {
+                  "manufacturer": "if-different-from-top",
+                  "model": "if-different-from-top",
+                  "icon": "if-different-from-top",
+                  "type": "if-different-from-top"
+                }
+            },
+            "timeout": "60",
+            "category": {
+                "automatism": "1"
+            },
+            "configuration": {
+                "icon": "Sonoff-BASICZBR3",
+                "mainEP": "01"
+            },
+            "variables": {
+                "comment": "Section optionnelle permettant de déclarer des variables par défaut"
+            },
+            "commands": {
+                "On": { "use": "On", "isVisible": 1 },
+                "Off": { "use": "Off", "isVisible": 1 },
+                "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+                "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+                "Group1": "grp_legrand-LED"
+            },
+            "private": {
+                "comment": "Section optionnelle pour la gestion des clusters privés"
+            }
         }
-      },
-      "timeout": "60",
-      "category": {
-        "automatism": "1"
-      },
-      "configuration": {
-        "icon": "Sonoff-BASICZBR3",
-        "mainEP": "01"
-      },
-      "commands": {
-        "On": { "use": "On", "isVisible": 1 },
-        "Off": { "use": "Off", "isVisible": 1 },
-        "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
-        "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" }
-      }
     }
-  }
 
 * Clef d'entrée/identificateur: OBLIGATOIRE, = nom du fichier sans extension (ex: BASICZBR3)
   ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous différentes marques.
@@ -103,6 +114,9 @@ Exemple: BASICZBR3.json
     Format RECOMMANDE: 'node_<Vendeur>-<Modele>.png'
   - paramType: ?
     "telecommande", "telecommande7groups"
+  - poll: Force la lecture des cluster 0006 & 0008 attribut 0000 de maniere répétitive.
+    A EVITER !! Preferer le polling par commande ("Polling": "cron1")
+    Ex: "poll": "1"
 
 * customization: optionnel
   Permet de corriger/forcer qq infos remontées par l'équipement.
@@ -112,8 +126,9 @@ Exemple: BASICZBR3.json
        },
 
 * commands: OBLIGATOIRE, liste des commandes implémentées
-  ATTENTION !! TOUS les nombres sont donnés en HEXA.
-    Ex: minInterval=1800. Si 1800sec alors c'est FAUX => minInterval=0708
+  ATTENTION !! Le format des données dépend de la commande.
+    Ex: configureReporting(): minInterval=1800. Si 1800sec alors c'est FAUX => minInterval=0708
+    Ex: configureReporting2(): minInterval=1800 => Si 1800sec alors ok
 
   Nouvelle syntaxe:
     "<nom_cmde_Jeedom>": { "use": "<nom_fichier_cmde_Abeille>", "params": "<xx=01&xy=0003>", "isVisible": 1, "execAtCreation": "yes" }
@@ -134,11 +149,11 @@ Exemple: BASICZBR3.json
         Type generique de la commande (ex: FLAP_UP pour un bouton 'monter' de volet).
     unit: Surcharge de l'unité par defaut.
         Permet de définir l'unité affichée avec l'information (cmde 'info').
-    notStandard: optionnel
+    notStandard: Optionnel
         Permet d'indiquer que cette commande (attribut du standard Zigbee) n'est pas standard.
         Ex: Dans le cas 0400-0000 (illuminance value), certains Xiaomi renvoient directement une valeur en Lux.
-    valueOffset: Surcharge de la formule de calcul à appliquer avant commande action.
-        Permet d'appliquer une formule par ex sur la valeur d'un slider avant envoi.
+    valueOffset: Optionnel.
+        Permet d'appliquer une formule sur la valeur avant action.
         Ex: "valueOffset": "#value#*10"
         Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
     returnStateTime: X
@@ -160,20 +175,11 @@ Exemple: BASICZBR3.json
 
 Support spécifique de cluster privés
 ====================================
-EN COURS !!!
 La syntaxe actuelle est la suivante :
 
     "private": {
         "ED00": { // CLUSTID
             "type": "tuya-zosung"
-        },
-        "0000-FF01": { // CLUSTID-ATTRID
-            "type": "xiaomi",
-            "01-21": {
-                "func": "numberDiv",
-                "div": 1000,
-                "info": "0001-01-0020"
-            }
         },
         "EF00": { // CLUSTID
             "type": "tuya",
@@ -181,5 +187,44 @@ La syntaxe actuelle est la suivante :
                 "function": "rcvValue",
                 "info": "01-measuredValue"
             },
+
+            // Fonctions supportées
+            // 'rcvValue'
+            // 'rcvValueEnum'
+            //     "function": "rcvValueEnum",
+            //     "enum": {
+            //          "00": "single",
+            //          "01": "double",
+            //          "02": "long"
+            //      }
+        },
+
+        "FCC0-0112": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "info": "0400-01-0000"
+        },
+        "0000-FF01": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "comment": "Xiaomi private case for <tag>-<type>",
+            "01-21": {
+                "func": "numberDiv",
+                "div": 1000,
+                "info": "0001-01-0020"
+            }
+        },
+        "0000-FF02": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "struct": 1,
+            "comment": "Xiaomi private case with 4C/struct data type",
+            "01-21": {
+                "func": "numberDiv",
+                "div": 1000,
+                "info": "0001-01-0020",
+                "comment": "Battery-Volt"
+            }
+        },
+        "FC00-00": { // CLUSTID-CMDID
+            "type": "generic",
+            "function": "philipsDecodeCmdFC00"
         }
     }

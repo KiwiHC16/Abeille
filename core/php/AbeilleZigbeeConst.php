@@ -229,6 +229,63 @@
         return "Unknown-".$status;
     }
 
+    /* Returns Zigbee ZDP status from code. */
+    function zbGetZDPStatus($status) {
+        $status = strtolower($status);
+
+        /* ZCL statuses */
+        $statusesTable = array (
+            "00" => "Success",
+            "80" => "Invalid request type", // INV_REQUESTTYPE
+            "81" => "Device not found", // DEVICE_NOT_FOUND
+            // INVALID_EP
+            // 0x82
+            // The supplied endpoint was equal to 0x00 or 0xff.
+            // NOT_ACTIVE
+            // 0x83
+            // The requested endpoint is not described by a simple de-scriptor.
+            // NOT_SUPPORTED
+            // 0x84
+            // The requested optional feature is not supported on the target device.
+            // TIMEOUT
+            // 0x85
+            // A timeout has occurred with the requested operation.
+            // NO_MATCH
+            // 0x86
+            // The end device bind request was unsuccessful due to a failure to match any suitable clusters.
+            // -
+            // 0x87
+            // Reserved.
+            // NO_ENTRY
+            // 0x88
+            // The unbind request was unsuccessful due to the coordi-nator or source device not having an entry in its binding table to unbind.
+            // NO_DESCRIPTOR
+            // 0x89
+            // A child descriptor was not available following a discovery request to a parent.
+            // INSUFFICIENT_SPACE
+            // 0x8a
+            // The device does not have storage space to support the requested operation.
+            // NOT_PERMITTED
+            // 0x8b
+            // The device is not in the proper state to support the re-quested operation.
+            // TABLE_FULL
+            // 0x8c
+            // The device does not have table space to support the op-eration.
+            // NOT_AUTHORIZED
+            // 0x8d
+            // The device has rejected the command due to security restrictions.
+            // DEVICE_BINDING_TABLE_FULL
+            // 0x8e
+            // The device does not have binding table space to support the operation.
+            // INVALID_INDEX
+            // 0x8f
+        );
+
+        if (array_key_exists($status, $statusesTable))
+            return $statusesTable[$status];
+        return "Unknown-".$status;
+    }
+
     // Clusters definition
     //  'name' = Cluster name
     //  'attributes' = Array. Server attributes
@@ -410,6 +467,13 @@
             ),
             // No received nor generated commands
         ),
+        "000F" => array(
+            "name" => "Binary Input",
+            "attributes" => array(
+                "0051" => array( "name" => "OutOfService", "access" => "RW", "dataType" => 0x10 ), // Type bool
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x10 ), // Type bool
+            ),
+        ),
         "0012" => array(
             "name" => "Multistate Input",
             "attributes" => array(
@@ -524,14 +588,14 @@
                 "0008" => array( "name" => "CurPosLiftPercent", "access" => "R", "dataType" => 0x20 ), // uint8
                 "0009" => array( "name" => "CurPosTiltPercent", "access" => "R", "dataType" => 0x20 ), // uint8
                 // Settings attributes
-                "0010" => array( "name" => "InstalledOpenLimitLift", "access" => "R" ),
-                "0011" => array( "name" => "InstalledClosedLimitLift", "access" => "R" ),
-                "0012" => array( "name" => "InstalledOpenLimitTilt", "access" => "R" ),
-                "0013" => array( "name" => "InstalledClosedLimitTilt", "access" => "R" ),
-                "0014" => array( "name" => "VelocityLift", "access" => "RW" ),
-                "0015" => array( "name" => "AccelTimeLift", "access" => "RW" ),
-                "0016" => array( "name" => "DecelTimeLift", "access" => "RW" ),
-                "0017" => array( "name" => "Mode", "access" => "RW" ),
+                "0010" => array( "name" => "InstalledOpenLimitLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0011" => array( "name" => "InstalledClosedLimitLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0012" => array( "name" => "InstalledOpenLimitTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0013" => array( "name" => "InstalledClosedLimitTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0014" => array( "name" => "VelocityLift", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0015" => array( "name" => "AccelTimeLift", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0016" => array( "name" => "DecelTimeLift", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0017" => array( "name" => "Mode", "access" => "RW", "dataType" => 0x18 ), // map8
                 "0018" => array( "name" => "IntermSetpointsLift", "access" => "RW" ),
                 "0019" => array( "name" => "IntermSetpointsTilt", "access" => "RW" ),
             ),
@@ -606,6 +670,12 @@
         ),
         "0301" => array(
             "name" => "Ballast Configuration",
+            "attributes" => array(
+                "0000" => array( "name" => "PhysicalMinLevel", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0001" => array( "name" => "PhysicalMaxLevel", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0010" => array( "name" => "MinLevel", "access" => "RW", "dataType" => 0x20 ), // uint8
+                "0011" => array( "name" => "MaxLevel", "access" => "RW", "dataType" => 0x20 ), // uint8
+            ),
         ),
         "0400" => array(
             "name" => "Illuminance Measurement",
@@ -674,6 +744,33 @@
                 "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x21 ), // uint16
             ),
         ),
+        "040C" => array(
+            "name" => "Carbon Monoxide (CO)",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "RP", "dataType" => 0x39 ), // single
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x39 ), // single
+            ),
+        ),
+        "040D" => array(
+            "name" => "Carbon Dioxide (CO2)",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "RP", "dataType" => 0x39 ), // single
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x39 ), // single
+            ),
+        ),
+        "042A" => array(
+            "name" => "PM2.5",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "RP", "dataType" => 0x39 ), // single
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x39 ), // single
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x39 ), // single
+            ),
+        ),
         "0500" => array(
             "name" => "IAS Zone",
             "attributes" => array(
@@ -731,6 +828,9 @@
                 "0302" => array( "name" => "Divisor", "access" => "R" ),
                 "0303" => array( "name" => "SummationFormatting", "access" => "R", "dataType" => 0x18 ), // map8
                 "0306" => array( "name" => "MeteringDeviceType", "access" => "R", "dataType" => 0x18 ), // map8
+
+                // Historical Consumption Attribute
+                "0400" => array( "name" => "InstantaneousDemand", "access" => "R", "dataType" => 0x2A ), // int24
             ),
             // Commands received: none
             // Commands generated
@@ -809,17 +909,35 @@
         "EF00" => array(
             "name" => "Tuya private ?",
         ),
+        "FC00" => array(
+            "name" => "Private", // Used by NoOn (SIN-4-FP-21) & Philips Hue
+        ),
         "FC01" => array(
             "name" => "Legrand private ?",
         ),
         "FC02" => array(
-            "name" => "Private", // Used by multi_Samjin
+            "name" => "Private", // Used by multi_Samjin & Profalux (MOT-C1Z10C)
+        ),
+        "FC20" => array(
+            "name" => "Profalux private ?",
+        ),
+        "FC21" => array(
+            "name" => "Profalux private ?",
         ),
         "FC40" => array(
             "name" => "Legrand private ?",
         ),
         "FC41" => array(
             "name" => "Legrand private ?",
+        ),
+        "FC57" => array(
+            "name" => "Ikea private ?",
+        ),
+        "FC7C" => array(
+            "name" => "Ikea private ?",
+        ),
+        "FC7E" => array(
+            "name" => "Ikea private ?",
         ),
         "FCC0" => array(
             "name" => "Xiaomi private ?",
@@ -932,5 +1050,133 @@
         if ($attr === false)
             return "Unknown-".$clustId."-".$attrId;
         return $attr['name'];
+    }
+
+    /* Returns zigbee profile name based on given 'profId' */
+    function zbGetProfile($profId) {
+        $profId = strtoupper($profId);
+
+        /* List of known zigbee profiles */
+        $profilesTable = array (
+            '0104'=>'ZigBee Home Automation (ZHA)',
+            'C05E'=>'Zigbee Link Layer (ZLL)',
+        );
+
+        if (array_key_exists($profId, $profilesTable))
+            return $profilesTable[$profId];
+        return "Unknown-".$profId;
+    }
+
+    /* Returns zigbee device name based on given 'profId/devId' couple. */
+    function zbGetDevice($profId, $devId) {
+        $profId = strtoupper($profId);
+        $devId = strtoupper($devId);
+
+        /* List of known devices per profile */
+        $devicesTable = array (
+            /* ZHA */
+            '0104' => array(
+                '0000'=>'On/Off Switch',
+                '0001'=>'Level Control Switch',
+                '0002'=>'On/Off Output',
+                '0003'=>'Level Controllable Output',
+                '0004'=>'Scene Selector',
+                '0005'=>'Configuration Tool',
+                '0006'=>'Remote Control',
+                '0007'=>'Combined Interface',
+                '0008'=>'Range Extender',
+                '0009'=>'Mains Power Outlet',
+                '000A'=>'Door Lock',
+                '000B'=>'Door Lock Controller',
+                '000C'=>'Simple Sensor',
+                '000D'=>'Consumption Awareness Device',
+
+                '0050'=>'Home Gateway',
+                '0051'=>'Smart Plug',
+                '0052'=>'White Goods',
+                '0053'=>'Meter Interface',
+
+                // Lighting
+                // List from ZigBee Lighting & Occupancy, Device Specification, Version 1.0
+                '0100'=>'On/Off Light',
+                '0101'=>'Dimmable Light',
+                '0102'=>'Color Dimmable Light',
+                '0103'=>'On/Off Light Switch',
+                '0104'=>'Dimmer Switch',
+                '0105'=>'Color Dimmer Switch',
+                '0106'=>'Light Sensor',
+                '0107'=>'Occupancy sensor',
+                '0108'=>'On/off ballast',
+                '0109'=>'Dimmable ballast',
+                '010A'=>'On/off plug-in unit',
+                '010B'=>'Dimmable plug-in unit',
+                '010C'=>'Color temperature light',
+                '010D'=>'Extended color light',
+                '010E'=>'Light level sensor',
+                '0800'=>'Color controller',
+                '0810'=>'Color scene controller',
+                '0820'=>'Non-color controller',
+                '0830'=>'Non-color scene controller',
+                '0840'=>'Control bridge',
+                '0850'=>'On/off sensor',
+
+                // Closures
+                '0200'=>'Shade',
+                '0201'=>'Shade Controller',
+                '0202'=>'Window Covering Device',
+                '0203'=>'Window Covering Controller',
+
+                // HVAC
+                '0300'=>'Heating/Cooling Unit',
+                '0301'=>'Thermostat',
+                '0302'=>'Temperature Sensor',
+                '0303'=>'Pump',
+                '0304'=>'Pump Controller',
+                '0305'=>'Pressure Sensor',
+                '0306'=>'Flow Sensor',
+                '0307'=>'Mini Split AC',
+
+                // Intruder Alarm Systems
+                '0400'=>'IAS Control and Indicating Equipment',
+                '0401'=>'IAS Ancillary Equipment',
+                '0402'=>'IAS Zone',
+                '0403'=>'IAS Warning Device',
+
+                // From Xiaomi
+                '5F01'=>'Xiaomi Temperature',
+
+                // From Legrand investigation
+                '0B04'=>'Electrical Measurement',
+
+                // Note: ZCL spec says valid devices are 0x0000 to 0xbfff (Standard device description).
+                //       Other values are reserved
+            ),
+            /* ZLL */
+            'C05E' => array(
+                // Lighting devices
+                '0000'=>'On/Off light',
+                '0010'=>'On/Off plug-in unit',
+                '0100'=>'Dimmable light',
+                '010A'=>'Proprio Prise Ikea',   // Pas dans le standard mais remonté par prise Ikea
+                '0110'=>'Dimmable plug-in unit',
+                '0200'=>'Color light',
+                '0210'=>'Extended color light',
+                '0220'=>'Color temperature light',
+
+                // Conroller devices
+                '0800'=>'Color controller',
+                '0810'=>'Color scene controller',
+                '0820'=>'Non-color controller',
+                '0830'=>'Non-color scene controller',
+                '0840'=>'Control bridge',
+                '0850'=>'On/Off sensor',
+            ),
+        );
+
+        if (!isset($devicesTable[$profId]))
+            return "Profil ".$profId." inconnu";
+        if (!isset($devicesTable[$profId][$devId]))
+            return "Device ".$devId." inconnu";
+        return $devicesTable[$profId][$devId];
     }
 ?>

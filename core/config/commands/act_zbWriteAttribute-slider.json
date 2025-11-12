@@ -1,0 +1,13 @@
+{
+    "act_zbWriteAttribute-slider": {
+        "comment": "Generic command to write any attribute from a slider",
+        "comment2": "Optional params: attrType=XX, dir=XX (default=00), manufId=XXXX",
+        "subType": "slider",
+        "configuration": {
+            "topic": "writeAttribute",
+            "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#&attrVal=#slider#"
+        },
+        "type": "action",
+        "logicalId": "writeAttr-#EP#-#CLUSTID#-#ATTRID#"
+    }
+}

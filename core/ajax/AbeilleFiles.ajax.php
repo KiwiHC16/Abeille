@@ -165,9 +165,11 @@
         if (init('action') == 'createLogsZipFile') {
             $status = 0;
             $error = "";
+            $zipFile = "";
 
-            $tmpDir = jeedom::getTmpFolder("Abeille");
-            $logsDir = $tmpDir."/AbeilleLogs";
+            $jLogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
+            $jTmpDir = jeedom::getTmpFolder("Abeille");
+            $logsDir = $jTmpDir."/AbeilleLogs";
             // Note: always rm to avoid conflict with AbeilleLogs file instead of dir.
             if (file_exists($logsDir)) {
                 $cmd = "sudo rm -rf ".$logsDir;
@@ -179,31 +181,46 @@
             exec('php '.__DIR__.'/../php/AbeilleSupportKeyInfos.php');
 
             /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
-            $jlogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
-            $cmd = "cd ".$jlogsDir."; sudo cp Abeille* ".$logsDir;
-            $cmd .= "; sudo cp http.error event ".$logsDir;
-            // $cmd .= "; sudo cp update ".$logsDir;
-            $cmd .= "; sudo cp ".$tmpDir."/*.log ".$logsDir;
-            // $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
-            exec($cmd, $out, $status);
+            if ($status == 0) {
+                // Tcharp38: Redirecting stderr avoid to have messages in 'http.error' and to catch them.
+                $cmd = "cd ".$jLogsDir;
+                $cmd .= "; sudo cp Abeille* ".$logsDir." 2>&1";
+                $cmd .= "; sudo cp http.error event ".$logsDir." 2>&1";
+                $cmd .= "; cd ".$jTmpDir." 2>&1";
+                $cmd .= "; sudo cp *.log ".$logsDir." 2>&1";
+                // Tcharp38: Ignoring error code during JSON copy (if no JSON this would lead to error on full cmd).
+                $cmd .= "; sudo cp *.json ".$logsDir." 2>&1 || true";
+                exec($cmd, $out, $status);
+                if ($status != 0) {
+                    $status = -1;
+                    $error = "Copie des logs impossible. Manque de place sur '/tmp' ?";
+                    if (sizeof($out) != 0) { // Tcharp38: This seems to not work. To be investigated
+                        $error .= "\n\nERR: ";
+                        foreach ($out as $idx => $line)
+                            $error .= $line;
+                    }
+                }
+            }
 
             // Special case for 'update': filtering out 'http://' or 'https://'
-            if ($fileIn = fopen($jlogsDir."/update", "r")) {
-                $fileOut = fopen($logsDir.'/update', 'w');
-                while(!feof($fileIn)) {
-                    $line = fgets($fileIn);
-                    $pos = strpos($line, "http");
-                    if ($pos !== false) {
-                        if (substr($line, $pos, 8) == "https://")
-                            $pos += 8;
-                        else
-                            $pos += 7;
-                        $start = substr($line, 0, $pos);
-                        fwrite($fileOut, $start." FILTERED\n");
-                    } else
-                        fwrite($fileOut, $line);
+            if ($status == 0) {
+                if ($fileIn = fopen($jLogsDir."/update", "r")) {
+                    $fileOut = fopen($logsDir.'/update', 'w');
+                    while(!feof($fileIn)) {
+                        $line = fgets($fileIn);
+                        $pos = strpos($line, "http");
+                        if ($pos !== false) {
+                            if (substr($line, $pos, 8) == "https://")
+                                $pos += 8;
+                            else
+                                $pos += 7;
+                            $start = substr($line, 0, $pos);
+                            fwrite($fileOut, $start." FILTERED\n");
+                        } else
+                            fwrite($fileOut, $line);
+                    }
+                    fclose($fileIn);
                 }
-                fclose($fileIn);
             }
 
             /* Searching for available compression tool */
@@ -211,29 +228,37 @@
             $tool = "gzip";
             // $tool = "bzip2";
 
-            $now = new DateTime;
-            $zipFile = "AbeilleLogs-".$now->format('ymd'); // 'AbeilleLogs-YYMMDD'
-            if ($tool == "gzip") {
-                /* gzip
-                -c => Write output on standard output
-                -r => Travel the directory structure recursively
-                */
-                $zipFile .= ".tar.gz";
-                $cmd = "cd ".$logsDir."; sudo tar cf - * | gzip -c >../".$zipFile."; cd ..; rm -rf AbeilleLogs";
-            }
-            if ($tool == "bzip2") {
-                /* bzip2
-                -c => Compress or decompress to standard output
-                -z => Compress
-                -q => Quiet
-                */
-                $zipFile .= ".bz2";
-                $cmd = "cd ".$logsDir."; sudo tar cvf - * | bzip2 -zqc >../".$zipFile."; cd ..; rm -rf AbeilleLogs";
-            }
+            if ($status == 0) {
+                $now = new DateTime;
+                $zipFile = "AbeilleLogs-".$now->format('ymd'); // 'AbeilleLogs-YYMMDD'
+                if ($tool == "gzip") {
+                    /* gzip
+                    -c => Write output on standard output
+                    -r => Travel the directory structure recursively
+                    */
+                    $zipFile .= ".tar.gz";
+                    $cmd = "cd ".$logsDir."; sudo tar cf - * | gzip -c >../".$zipFile."; cd ..; rm -rf AbeilleLogs";
+                } else if ($tool == "bzip2") {
+                    /* bzip2
+                    -c => Compress or decompress to standard output
+                    -z => Compress
+                    -q => Quiet
+                    */
+                    $zipFile .= ".bz2";
+                    $cmd = "cd ".$logsDir."; sudo tar cvf - * | bzip2 -zqc >../".$zipFile."; cd ..; rm -rf AbeilleLogs";
+                } else {
+                    $status = -1;
+                    $error = "Outil de compression non supporté: '${tool}'";
+                }
 
-            exec($cmd, $out, $status);
-            if ($status != 0)
-                $error = "Erreur '".$cmd."'";
+                if ($status == 0) {
+                    exec($cmd, $out, $status);
+                    if ($status != 0) {
+                        $status = -1;
+                        $error = "Compression des logs impossible. Manque de place sur /tmp ?";
+                    }
+                }
+            }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'zipFile' => $zipFile)));
         }
@@ -274,12 +299,12 @@
 
             if (!file_exists($path)) {
                 $status = 1;
-                $error = "Le fichier '".$file."' n'existe pas.";
+                $error = "Le fichier suivant n'existe pas: '${file}'";
             }
             if ($status == 0) {
                 if (unlink($path) == FALSE) {
                     $status = -1;
-                    $error = "Impossible de détruire '".$file."'.";
+                    $error = "Impossible de détruire '${file}'";
                 }
             }
 

@@ -123,6 +123,23 @@
         "0120" => array(
             "name" => "Configure reporting",
         ),
+
+        "0200" => array(
+            "name" => "Save record request",
+        ),
+        "0201" => array(
+            "name" => "Load record request",
+        ),
+        "0202" => array(
+            "name" => "Delete all records",
+        ),
+        "0300" => array(
+            "name" => "Host PDM available request", // Unused by Abeille
+        ),
+        "0302" => array(
+            "name" => "PDM loaded", // Unused by Abeille
+        ),
+
         "0530" => array(
             "name" => "?",
         ),
@@ -144,22 +161,6 @@
         ),
 
 
-        "0200" => array(
-            "name" => "Save record request",
-        ),
-        "0201" => array(
-            "name" => "Load record request",
-        ),
-        "0202" => array(
-            "name" => "Delete all records",
-        ),
-        "0300" => array(
-            "name" => "Host PDM available request", // Unused by Abeille
-        ),
-        "0302" => array(
-            "name" => "PDM loaded", // Unused by Abeille
-        ),
-
         "8001" => array(
             "name" => "Log message",
         ),
@@ -171,6 +172,9 @@
         ),
         "8007" => array(
             "name" => "“Factory New” Restart",
+        ),
+        "8008" => array(
+            "name" => "HeartBeat", // Zigate v2 >= 3.20: Unused by Abeille
         ),
         "8009" => array(
             "name" => "Network state response",
@@ -201,6 +205,9 @@
         ),
         "8035" => array(
             "name" => "PDM event code",
+        ),
+        "8040" => array(
+            "name" => "Network address response", // Unused by Abeille
         ),
         "8041" => array(
             "name" => "IEEE address response", // Unused by Abeille
@@ -268,8 +275,14 @@
         "80A7" => array(
             "name" => "?",
         ),
+        "8100" => array(
+            "name" => "Read individual attribute response", // Unused by Abeille
+        ),
         "8101" => array(
             "name" => "Default response", // Unused by Abeille
+        ),
+        "8102" => array(
+            "name" => "Attribute report", // Unused by Abeille
         ),
         "8110" => array(
             "name" => "Write attribute response", // Unused by Abeille
@@ -436,123 +449,6 @@
         if (array_key_exists($code, $zgPDMEvents))
             return $zgPDMEvents[$code];
         return "Unknown-".$code;
-    }
-
-    /* Returns zigbee profile name based on given 'profId' */
-    function zgGetProfile($profId) {
-        $profId = strtoupper($profId);
-
-        /* List of known zigbee profiles */
-        $profilesTable = array (
-            '0104'=>'ZigBee Home Automation (ZHA)',
-            'C05E'=>'Zigbee Link Layer (ZLL)',
-        );
-
-        if (array_key_exists($profId, $profilesTable))
-            return $profilesTable[$profId];
-        return "Unknown-".$profId;
-    }
-
-    /* Returns zigbee device name based on given 'profId/devId' couple. */
-    function zgGetDevice($profId, $devId) {
-        $profId = strtoupper($profId);
-        $devId = strtoupper($devId);
-
-        /* List of known devices per profile */
-        $devicesTable = array (
-            /* ZHA */
-            '0104' => array(
-                '0000'=>'On/Off Switch',
-                '0001'=>'Level Control Switch',
-                '0002'=>'On/Off Output',
-                '0003'=>'Level Controllable Output',
-                '0004'=>'Scene Selector',
-                '0005'=>'Configuration Tool',
-                '0006'=>'Remote Control',
-                '0007'=>'Combined Interface',
-                '0008'=>'Range Extender',
-                '0009'=>'Mains Power Outlet',
-                '000A'=>'Door Lock',
-                '000B'=>'Door Lock Controller',
-                '000C'=>'Simple Sensor',
-                '000D'=>'Consumption Awareness Device',
-
-                '0050'=>'Home Gateway',
-                '0051'=>'Smart Plug',
-                '0052'=>'White Goods',
-                '0053'=>'Meter Interface',
-
-                // Lighting
-                '0100'=>'On/Off Light',
-                '0101'=>'Dimmable Light',
-                '0102'=>'Color Dimmable Light',
-                '0103'=>'On/Off Light Switch',
-                '0104'=>'Dimmer Switch',
-                '0105'=>'Color Dimmer Switch',
-                '0106'=>'Light Sensor',
-                '0107'=>'Occupency Sensor',
-
-                // Legrand
-                '010A'=>'Legrand xxxx',
-
-                // Closures
-                '0200'=>'Shade',
-                '0201'=>'Shade Controller',
-                '0202'=>'Window Covering Device',
-                '0203'=>'Window Covering Controller',
-
-                // HVAC
-                '0300'=>'Heating/Cooling Unit',
-                '0301'=>'Thermostat',
-                '0302'=>'Temperature Sensor',
-                '0303'=>'Pump',
-                '0304'=>'Pump Controller',
-                '0305'=>'Pressure Sensor',
-                '0306'=>'Flow Sensor',
-                '0307'=>'Mini Split AC',
-
-                // Intruder Alarm Systems
-                '0400'=>'IAS Control and Indicating Equipment',
-                '0401'=>'IAs Ancillary Equipment',
-                '0402'=>'IAS Zone',
-                '0403'=>'IAS Warning Device',
-
-                // From Xiaomi
-                '5F01'=>'Xiaomi Temperature',
-
-                // From OSRAM investigation
-                '0810'=>'OSRAM Switch',
-
-                // From Legrand investigation
-                '0B04'=>'Electrical Measurement', // Attribut Id: 0x50B - Active Power
-            ),
-            /* ZLL */
-            'C05E' => array(
-                // Lighting devices
-                '0000'=>'On/Off light',
-                '0010'=>'On/Off plug-in unit',
-                '0100'=>'Dimmable light',
-                '010A'=>'Proprio Prise Ikea',   // Pas dans le standard mais remonté par prise Ikea
-                '0110'=>'Dimmable plug-in unit',
-                '0200'=>'Color light',
-                '0210'=>'Extended color light',
-                '0220'=>'Color temperature light',
-
-                // Conroller devices
-                '0800'=>'Color controller',
-                '0810'=>'Color scene controller',
-                '0820'=>'Non-color controller',
-                '0830'=>'Non-color scene controller',
-                '0840'=>'Control bridge',
-                '0850'=>'On/Off sensor',
-            ),
-        );
-
-        if (!isset($devicesTable[$profId]))
-            return "Profil ".$profId." inconnu";
-        if (!isset($devicesTable[$profId][$devId]))
-            return "Device ".$devId." inconnu";
-        return $devicesTable[$profId][$devId];
     }
 
     /* Returns zigate 8000 cmd status based on given '$status' value.

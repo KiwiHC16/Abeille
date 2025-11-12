@@ -14,9 +14,19 @@
     $hideLevel = false; // Display log level if false (configured thru logSetConf())
     $GLOBALS['tmpDir'] = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
 
+    // Convert Jeedm level number (100, 200... 1000) to Abeille (0 to 4)
+    function logJtoA($jLevel) {
+        if ( $jLevel == '100') return 4; // Debug
+        if ( $jLevel == '200') return 3; // Info
+        if ( $jLevel == '300') return 2; // Warning
+        if ( $jLevel == '400') return 1; // Default or error
+        if ( $jLevel == '1000') return 0; // Disabled
+        return 1;
+    }
+
     /* Get Abeille current log level as a number:
        0=none, 1=error/default, 2=warning, 3=info, 4=debug */
-    function logGetPluginLevel() {
+    function logGetLevelNumber() {
         // var_dump( config::getLogLevelPlugin()["log::level::Abeille"] );
         // si debug:  {"100":"1","200":"0","300":"0","400":"0","1000":"0","default":"0"}
         // si info:   {"100":"0","200":"1","300":"0","400":"0","1000":"0","default":"0"}
@@ -25,17 +35,27 @@
         // si aucun:  {"100":"0","200":"0","300":"0","400":"0","1000":"1","default":"0"}
         // si defaut: {"100":"0","200":"0","300":"0","400":"0","1000":"0","default":"1"}
         $logLevelPluginJson = config::getLogLevelPlugin()["log::level::Abeille"];
-        if ( $logLevelPluginJson[    '100'] ) return 4;
-        if ( $logLevelPluginJson[    '200'] ) return 3;
-        if ( $logLevelPluginJson[    '300'] ) return 2;
-        if ( $logLevelPluginJson[    '400'] ) return 1;
-        if ( $logLevelPluginJson[   '1000'] ) return 0;
+        if ( $logLevelPluginJson[    '100'] ) return 4; // Debug
+        if ( $logLevelPluginJson[    '200'] ) return 3; // Info
+        if ( $logLevelPluginJson[    '300'] ) return 2; // Warning
+        if ( $logLevelPluginJson[    '400'] ) return 1; // Default or error
+        if ( $logLevelPluginJson[   '1000'] ) return 0; // Disabled
         if ( $logLevelPluginJson['default'] ) return 1; // This one is set to 1 but should be found from conf
+    }
+
+    function logGetLevelByNumber($levelNb) {
+        $levelNames = ['none', 'error', 'warning', 'info', 'debug'];
+        return $levelNames[$levelNb];
+    }
+
+    function logGetLevelName() {
+        $levNumber = logGetLevelNumber();
+        return logGetLevelByNumber($levNumber);
     }
 
     /* Convert logLevel from string to number:
        0=none, 1=error/default, 2=warning, 3=info, 4=debug */
-    function logGetLevelNumber($logLevel) {
+    function logGetLevelByName($logLevel) {
 
         $levels = array(
             "NONE" => 0,
@@ -59,7 +79,7 @@
          If absolut path, this is the taken destination.
        'hideLevel' = Allows to disable display of log level if TRUE. */
     function logSetConf($lFile = '', $hideLevel = false) {
-        $GLOBALS["curLogLevelNb"] = logGetPluginLevel();
+        $GLOBALS["curLogLevelNb"] = logGetLevelNumber();
         $GLOBALS["logDir"] = "";
         $GLOBALS["logFile"] = "";
         $GLOBALS["logNbOfLines"] = 0;
@@ -80,6 +100,7 @@
         }
 
         /* What is number of lines in current log ? */
+        $GLOBALS["logNbOfLines"] = 0;
         $logPath = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
         if (file_exists($logPath) == false)
             return;
@@ -89,7 +110,20 @@
             logMessage("warning", "AbeilleLog: Impossible de mesurer la taille du log.");
             return;
         }
-        $GLOBALS["logNbOfLines"] = intval($out[0]);
+        if (count($out) != 0) // Why/when would it be 0 ?
+            $GLOBALS["logNbOfLines"] = intval($out[0]);
+    }
+
+    // To be called when log level has changed to update internal status
+    function logLevelChanged($level = "") {
+        if ($level == "")
+            $GLOBALS["curLogLevelNb"] = logGetLevelNumber();
+        else
+            $GLOBALS["curLogLevelNb"] = $level;
+        $levelName = logGetLevelByNumber($level);
+        logMessage('info', "Log level changed to '".$GLOBALS["curLogLevelNb"]."/{$levelName}'");
+        logMessage('info', "Test INFO");
+        logMessage('debug', "Test DEBUG");
     }
 
     /* Log given message to '$logFile' defined thru 'logSetConf()'.
@@ -102,7 +136,7 @@
         if ($logLevel != "") {
             if (!isset($GLOBALS["curLogLevelNb"]))
                 $GLOBALS["curLogLevelNb"] = 0;
-            if (logGetLevelNumber($logLevel) > $GLOBALS["curLogLevelNb"])
+            if (logGetLevelByName($logLevel) > $GLOBALS["curLogLevelNb"])
                 return; // Nothing to do for current log level
 
             $logLevel = strtolower(trim($logLevel));

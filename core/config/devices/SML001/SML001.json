@@ -13,8 +13,9 @@
         },
         "type": "Philips Presence Indoor",
         "commands": {
-            "etat": {
-                "use": "presence"
+            "Presence": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "isVisible": 1
             },
             "Luminosite": {
                 "use": "inf_zbAttr-0400-MeasuredValue",
@@ -75,9 +76,6 @@
                 "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

@@ -88,9 +88,13 @@
         "Surveiller": "Monitor",
 
         "Groupes": "Groups",
+        "Raffraichir la liste des groupes": "Refresh groups list",
+        "Supprimer tout les groupes": "Remove all groups",
+        "Suppression du groupe": "Remove this group",
+        "Ajouter un groupe": "Add group",
 
-        "Remplacement d'équipements": "Equipments replacement",
-        "Equipement HS à remplacer": "Dead equipment to replace",
+        "Transfert d'historique": "Historic transfer",
+        "Equipement HS": "Dead equipment",
         "Remplacé par": "Replaced by",
 
         "Migration d'équipements": "Equipments migration",
@@ -127,6 +131,8 @@
         "Nom logique": "Logical name",
         "Adresse (courte/IEEE)": "Addr (short/IEEE)",
         "Voir ici si présente": "See there",
+        "Toujours en écoute": "RX always ON",
+        "'Oui' si l'équipement est toujours en écoute": "'True' means device is always listening",
         "Identifiant Zigbee": "Zigbee ID",
         "Identificant Zigbee du modèle": "Zigbee model ID",
         "Identificant Zigbee du fabricant": "Zigbee manufacturer ID",

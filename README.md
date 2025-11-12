@@ -1,8 +1,8 @@
 # Abeille
 
-## Plugin pour Jeedom (Gateway ZiGate)
+## Plugin pour Jeedom (Passerelle 'ZiGate')
 
-Plugin pour Jeedom permettant de piloter un réseau ZigBee une passerelle ZiGate.
+Plugin pour Jeedom permettant de piloter un réseau ZigBee via une passerelle ZiGate.
 
 ## Documentations
 

@@ -1,0 +1,13 @@
+{
+    "inf_zbCmdC-0102-01DownClose": {
+        "comment": "Cluster 0102, 01/DownClose cmd, received from CLIENT side",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0102-cmd01",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "returnStateValue": 0,
+            "returnStateTime": 1
+        }
+    }
+}

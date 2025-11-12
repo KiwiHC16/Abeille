@@ -1,0 +1,15 @@
+{
+    "Tilt": {
+        "subType": "numeric",
+        "template": "",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "90",
+            "historizeRound": "0",
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "Tilt",
+        "unit": "deg"
+    }
+}

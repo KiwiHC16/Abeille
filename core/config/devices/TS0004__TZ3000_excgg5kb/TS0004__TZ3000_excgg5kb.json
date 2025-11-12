@@ -29,8 +29,7 @@
                 "execAtCreation": "Yes"
             },
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "On 1": {
                 "use": "act_zbCmdC-0006-On",

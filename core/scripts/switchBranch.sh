@@ -72,15 +72,16 @@ ERROR=0
 # This script is started from core/ajax. Moving to repo root.
 cd ../../
 
-echo "${PREFIX}Mise-à-jour (fetch) du repo git local"
-# TODO: Instead of fetch --all might be faster to do fetch on target branch only
-sudo git fetch --all >/dev/null
-if [ $? -ne 0 ]; then
-    echo "${PREFIX}= ERREUR"
-    ERROR=2
-else
-    echo "${PREFIX}= OK"
-fi
+# Fetch ALL must be done prior to 'switchBranch.sh' call
+# echo "${PREFIX}Mise-à-jour (fetch) du repo git local"
+# # TODO: Instead of fetch --all might be faster to do fetch on target branch only
+# sudo git fetch --all >/dev/null
+# if [ $? -ne 0 ]; then
+#     echo "${PREFIX}= ERREUR"
+#     ERROR=2
+# else
+#     echo "${PREFIX}= OK"
+# fi
 
 if [ ${ERROR} -eq 0 ]; then
     # Any local changes ?

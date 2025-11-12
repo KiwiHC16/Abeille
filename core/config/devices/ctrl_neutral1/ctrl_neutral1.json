@@ -61,13 +61,6 @@
             "Toggle 2": {
                 "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=02"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             }
         },
         "comment": "Reference: QBKG04LM"

@@ -4,6 +4,7 @@
         "model": "TS0205",
         "type": "Tuya smoke detector",
         "genericType": "Security",
+        "comment": "This device does not report battery percent",
         "timeout": "60",
         "category": {
             "security": "1"
@@ -18,6 +19,16 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
+            "Bind-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20",
+                "execAtCreation": "Yes"
+            },
             "Smoke alarm": {
                 "use": "inf_smoke-Alarm",
                 "params": "ep=01",
@@ -27,6 +38,10 @@
                 "use": "inf_tamper-Alarm",
                 "params": "ep=01",
                 "isVisible": "1"
+            },
+            "Battery-Low": {
+                "use": "inf_battery-Low",
+                "isVisible": 1
             },
             "Zone Status Changed": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
@@ -39,6 +54,10 @@
                     "01-tamperAlarm": {
                         "comment": "Bit 2 is tamper",
                         "valueOffset": "(#value#>>2)&1"
+                    },
+                    "01-batteryLow": {
+                        "comment": "Bit 3 is battery low",
+                        "valueOffset": "(#value#>>3)&1"
                     }
                 }
             }

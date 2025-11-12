@@ -8,15 +8,17 @@
         "configuration": {
             "mainEP": "01",
             "paramType": "telecommande7groups",
+            "icon": "Innr-RC110",
+            "batteryType": "2x1.5V"
+        },
+        "variables": {
             "groupEP1": "1001",
             "groupEP3": "3003",
             "groupEP4": "4004",
             "groupEP5": "5005",
             "groupEP6": "6006",
             "groupEP7": "7007",
-            "groupEP8": "8008",
-            "icon": "Innr-RC110",
-            "batteryType": "2x1.5V"
+            "groupEP8": "8008"
         },
         "category": {
             "light": "1"

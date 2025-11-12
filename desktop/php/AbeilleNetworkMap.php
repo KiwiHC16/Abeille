@@ -20,7 +20,7 @@
     // Filling 'networks'
     $networks = [];
     for ($zgId = 1; $zgId < maxNbOfZigate; $zgId++) {
-        if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+        if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
             continue;
         $networks[] = array(
             'zgId' => $zgId
@@ -39,16 +39,22 @@
     //     'levelChoice' => idx
     // )
     // Note: Peek only few fields allows to cleanup format
-    $nm = config::byKey('ab::networkMap', 'Abeille', [], true);
-    $networkMap = [];
-    $networkMap['levels'] = [];
-    if (isset($nm['levels'])) {
-        foreach ($nm['levels'] as $nml) {
-            if (!isset($nml['levelName']) || !isset($nml['mapDir']) || !isset($nml['mapFile']))
-                continue;
-            $networkMap['levels'][] = $nml;
-        }
-    }
+    // $nm = config::byKey('ab::networkMap', 'Abeille', [], true);
+    // logDebug('nm='.json_encode($nm));
+    // $networkMap = [];
+    // $networkMap['levels'] = [];
+    // if (isset($nm['levels'])) {
+    //     foreach ($nm['levels'] as $nml) {
+    //         if (!isset($nml['levelName']) || !isset($nml['mapDir']) || !isset($nml['mapFile']))
+    //             continue;
+    //         $networkMap['levels'][] = $nml;
+    //     }
+    // }
+    $networkMap = config::byKey('ab::networkMap', 'Abeille', [], true);
+    logDebug('networkMap='.json_encode($networkMap, JSON_UNESCAPED_SLASHES));
+    if (!isset($networkMap['levels']))
+        $networkMap['levels'] = [];
+    // Set default level & image if none
     if (count($networkMap['levels']) == 0) {
         $networkMap['levels'][] = array(
             'levelName' => 'Level 0',
@@ -56,44 +62,38 @@
             'mapFile' => 'AbeilleNetworkMap-1200.png'
         );
     }
-    // Checking that image exists
+    if (!isset($networkMap['levelChoice']))
+        $networkMap['levelChoice'] = 0;
+    else if (gettype($networkMap['levelChoice']) == "string")
+        $networkMap['levelChoice'] = intval($networkMap['levelChoice']); // In case stored as string
+
+    // Checking that image exists & fills $viewImages[]
+    $viewImages = [];
     foreach ($networkMap['levels'] as $levIdx => $lev) {
-        $path = __DIR__.'/';
-        $path .= (isset($lev['mapDir']) ? $lev['mapDir'] : 'images');
-        $path .= (isset($lev['mapFile']) ? $lev['mapFile'] : 'AbeilleNetworkMap-1200.png');
+        $relPath = (isset($lev['mapDir']) ? $lev['mapDir'] : 'images');
+        $relPath .= '/';
+        $relPath .= (isset($lev['mapFile']) ? $lev['mapFile'] : 'AbeilleNetworkMap-1200.png');
+        $path = __DIR__.'/../../'.$relPath;
+        logDebug("path=$path");
         if (!file_exists($path)) {
             $networkMap['levels'][$levIdx]['mapDir'] = 'images';
             $networkMap['levels'][$levIdx]['mapFile'] = 'AbeilleNetworkMap-1200.png';
         }
+
+        $iSize = getimagesize(__DIR__."/../../".$relPath);
+        $width = $iSize[0];
+        $height = $iSize[1];
+        $viewImages[] = Array(
+            "path" => $relPath, // Path relative to Abeille's root
+            "width" => $width,
+            "height" => $height
+        );
     }
-    if (isset($nm['levelChoice']))
-        $networkMap['levelChoice'] = $nm['levelChoice'];
-    else
-        $networkMap['levelChoice'] = 0;
-    logDebug('networkMap='.json_encode($networkMap));
+    logDebug('networkMap='.json_encode($networkMap, JSON_UNESCAPED_SLASHES));
+
     sendVarToJS('networkMap', $networkMap);
-    $levelChoice = $networkMap['levelChoice'];
-    sendVarToJS('viewLevel', $levelChoice);
-
-    require_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
-    $choice = $networkMap['levels'][$levelChoice];
-    logDebug('choice='.json_encode($choice));
-    $mapDir = isset($choice['mapDir']) ? $choice['mapDir'] : 'images';
-    $mapFile = isset($choice['mapFile']) ? $choice['mapFile'] : 'AbeilleNetworkMap-1200.png';
-    $userMap = $mapDir.'/'.$mapFile;
-
-    $iSize = getimagesize(__DIR__."/../../".$userMap);
-    $width = $iSize[0];
-    $height = $iSize[1];
-    $image = Array(
-        "path" => $userMap, // Path relative to Abeille's root
-        "width" => $width,
-        "height" => $height
-    );
-    // logDebug('image='.json_encode($image));
-    sendVarToJS('viewImage', $image);
-    sendVarToJS('maxX', $width);
-    sendVarToJS('maxY', $height);
+    sendVarToJS('viewLevel', $networkMap['levelChoice']);
+    sendVarToJS('viewImages', $viewImages);
 ?>
 
 <html>
@@ -102,106 +102,205 @@
 </head>
 
 <body>
-    <div style="background: #e9e9e9; font-weight: bold; padding: .4em 1em;">
-        Placement réseau (BETA, dev en cours)
-    </div>
-
-    <!-- <style>
-    td {
-        border: 1px solid black;
-    }
-    </style> -->
     <style>
-        #idGraph {
-        <?php
-            echo 'background-image: url("/plugins/Abeille/'.$image['path'].'");';
-            echo 'width: '.$image['width'].'px;';
-            echo 'height: '.$image['height'].'px;';
-        ?>
-            background-size: contain;
+        html, body{
+            height: 100%;
         }
-        .column {
+        .ab-container {
+            height: 100%;
+            display: block;
+        }
+        .ab-top {
+            background: #e9e9e9;
+            font-weight: bold;
+            padding: .4em 1em;
+            margin-bottom: 8px;
+        }
+        .ab-bottom {
+            height: 100%;
+        }
+        .ab-left-column, .ab-right-column{
+        }
+        .ab-left-column {
             float: left;
-            width: 50%;
+            height: 100%;
+            width: 110px;
+            margin-right:8px;
+        }
+        .ab-right-column {
+            width: auto;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
         }
         .disabledDiv {
             pointer-events: none;
             opacity: 0.4;
         }
-   </style>
+        .draggable {
+            cursor: move;
+        }
+        #idNodeMenuSelect {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+        }
+        .typeCoordinator-color {
+        color: #a65ba6;
+        }
+        .typeEndDevice-color {
+            color: #7BCC7B;
+        }
+        .typeRouter-color {
+            color: #00a2e8;
+        }
+        .typeUndefined-color {
+            color: #E5E500;
+        }
+        .ab-popup {
+            position: absolute;  <!-- Relative to parent -->
+            display: none;
+            cursor: pointer;
+            z-index: 1;
+            width: 160px;
+            background-color: #fff;
+            color: #555;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px 0;
+            top: 0px;
+            left: 0px;
+            margin-left: -80px;
+        }
+</style>
 
     <!-- <div class="row"> -->
-    <div>
-        <div id="idLeftBar" class="column" style="width:100px">
-            <div id="idDisplayPart">
-                <label>{{Affichage}}</label><br>
-                <!-- Level choice if more than 1 level -->
-                <?php
-                    $count = count($networkMap['levels']);
-                    if ($count > 1) {
-                        echo '<select id="idSelectLevel">';
-                        for ($l = 0; $l < $count; $l++ ) {
-                            $level = $networkMap['levels'][$l];
-                            if ($l == $levelChoice)
-                                $selected = "selected";
-                            else
-                                $selected = "";
-                            echo '<option value="'.$l.'" '.$selected.'>'.$level['levelName'].'</option>'."\n";
+    <div class="ab-container">
+        <div class="ab-top">
+            Placement réseau
+        </div>
+        <div class="ab-bottom">
+            <div class="column ab-left-column">
+                <div id="idDisplayPart">
+                    <label>{{Affichage}}</label><br>
+                    <!-- Level choice if more than 1 level -->
+                    <?php
+                        $count = count($networkMap['levels']);
+                        if ($count > 1) {
+                            echo '<select id="idSelectLevel">';
+                            for ($l = 0; $l < $count; $l++ ) {
+                                $level = $networkMap['levels'][$l];
+                                if ($l == $networkMap['levelChoice'])
+                                    $selected = "selected";
+                                else
+                                    $selected = "";
+                                echo '<option value='.$l.' '.$selected.'>'.$level['levelName'].'</option>'."\n";
+                            }
+                            echo '</select>';
                         }
-                        echo '</select>';
-                    }
 
-                    for ($n = 0; $n < count($networks); $n++ ) {
-                        $zgId = $networks[$n]['zgId'];
+                        for ($n = 0; $n < count($networks); $n++ ) {
+                            $zgId = $networks[$n]['zgId'];
 
-                        echo '<input type="checkbox" class="viewNet" id="idViewNet-'.$n.'" checked><label>Abeille '.$zgId.'</label><br>';
+                            echo '<input type="checkbox" class="viewNet" id="idViewNet-'.$n.'" checked><label>Abeille '.$zgId.'</label><br>';
+                        }
+                    ?>
+
+                    <!-- View options -->
+                    <input type="checkbox" id="idViewLinks" checked title="{{Affiche les liens entre équipements}}"><label>{{Liens}}</label>
+                    <button id="idRefreshLqi" style="width:100%;margin-right:7px" title="{{Force l'analyse du réseau}}">{{Analyser}}</button>
+                </div>
+
+                </br>
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th colspan="2">{{Légende}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="typeCoordinator-color"><i class="fas fa-square"></i></td>
+                        <td>{{Coordinateur}}</td>
+                    </tr>
+                    <tr>
+                        <td class="typeRouter-color"><i class="fas fa-square"></i></td>
+                        <td>{{Routeur}}</td>
+                    </tr>
+                    <tr>
+                        <td class="typeEndDevice-color"><i class="fas fa-square"></i></td>
+                        <td>{{Bout de chaine}}</td>
+                    </tr>
+                    <tr>
+                        <td class="typeUndefined-color"><i class="fas fa-square"></i></td>
+                        <td>{{Type inconnu}}</td>
+                    </tr>
+                    <tr>
+                        <td><img src="/plugins/Abeille/images/death.png" height="20px"></td>
+                        <td>{{Sans vie}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </br>
+                <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Mode config}}</button>
+                </br>
+                </br>
+                </br>
+                <div id="idConfigPart" class="disabledDiv">
+                    <label>{{Configuration}}</label></br>
+                    <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
+                    <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
+                    <button id="idMapsBtn" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
+                    <!-- TODO: Text size (to be stored in DB) -->
+                </div>
+            </div>
+
+            <!-- SVG reminder
+            viewPort = visible area of the SVG image. So should allow to see the full SVG.
+                Controlled with 'width' and 'height' attributes.
+                <svg width="500" height="300"></svg>
+            viewBox = zoom in/out part of the viewPort
+            -->
+
+            <div class="column ab-right-column">
+                <!-- <svg id="idDevices" class="ab-right-column" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)"> -->
+                <!-- Useful doc https://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/ -->
+                <svg id="idGraph" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" onload="makeDraggable(evt)">
+                </svg>
+
+                <!-- Node menu visible in config mode on nodeMenuBtn click -->
+                <select id="idNodeMenuSelect" style="width:100px" hidden>
+                <?php
+                    foreach ($networkMap['levels'] as $levIdx => $lev) {
+                        $levelName = $lev['levelName'];
+                        echo "<option value=\"$levIdx\">$levelName</option>";
                     }
                 ?>
+                </select>
 
-                <!-- View options -->
-                <input type="checkbox" id="idViewLinks" checked title="{{Affiche les liens entre équipements}}"><label>{{Liens}}</label>
-                <button id="idRefreshLqi" style="width:100%;margin-right:7px" title="{{Force l'analyse du réseau}}">{{Analyser}}</button>
+                <!-- Device infos pop up -->
+                <div id="idDevInfosPU" class="ab-popup">
+                    <span id="idDevName">Nom</span><br>
+                    <span id="idNetName">Réseau</span><br>
+                    <span id="idAddr">Adresse</span><br>
+                </div>
             </div>
-
-            </br>
-            </br>
-            </br>
-            <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Edition}}</button>
-            </br>
-            <div id="idConfigPart" class="disabledDiv">
-                <label>{{Configuration}}</label></br>
-                <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
-                <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
-                <button id="idMap" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
-                <!-- TODO: Text size (to be stored in DB) -->
-            </div>
-            </div>
-
-        <div id="idGraph" class="column">
-            <svg id="idDevices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
-            </svg>
         </div>
     </div>
 </body>
 </html>
 
 <script type="text/javascript">
-    viewLevel = 0; // Level idx to display
-    viewLinks = true; // Display links
-    // viewImage = Oject(); Map image to display
-    // networks = [] of Object(
-    //     'zgId' =>
-    //     'lqiTable' => // Network topology coming from LQI collect.
-    //     'devList' => new Object();
-    //     'devListNb' => x;
-    //     'linksList' => new Object();
-    // );
-    var jeedomDevices; // Jeedom known devices
-    let configMode = false;
+
+    console.log("networkMap=", networkMap);
+    console.log("viewLevel=", viewLevel);
+    console.log("viewImages=", viewImages);
 
     // Edition mode
     $("#idConfigMode").on("click", function() {
-        console.log("idConfigMode click");
+        console.log("idConfigMode click: configMode=", configMode);
+        configModeBtn = document.getElementById("idConfigMode");
         displayPart = document.getElementById("idDisplayPart");
         configPart = document.getElementById("idConfigPart");
         if (configMode) {
@@ -209,11 +308,16 @@
             configPart.classList.add("disabledDiv");
             viewLinks = document.getElementById("idViewLinks").checked;
             configMode = false;
+            configModeBtn.innerHTML = "Mode config";
+
+            let nodeMenuSelect = document.getElementById('idNodeMenuSelect');
+            nodeMenuSelect.style.display = 'none';
         } else {
             displayPart.classList.add("disabledDiv");
             configPart.classList.remove("disabledDiv"); // Reenable config part
             viewLinks = false;
             configMode = true;
+            configModeBtn.innerHTML = "Mode normal";
         }
         refreshPage();
     });
@@ -224,18 +328,42 @@
     //         makeDraggable(evt);
     // });
 
-    $("#idSelectLevel").on("change", function() {
-        viewLevel = document.getElementById("idSelectLevel").value;
-        console.log("Level changed to "+viewLevel);
-
-        lev = networkMap.levels[viewLevel];
-        console.log("Level=", lev);
-        viewImage.path = lev.mapDir + "/" + lev.mapFile;
-        console.log("viewImage=", viewImage);
+    // Display given 'viewLevel'
+    function refreshBackgroundMap(viewLevel) {
+        // lev = networkMap.levels[viewLevel];
+        console.log("refreshBackgroundMap("+viewLevel+")");
+        // viewImage.path = lev.mapDir + "/" + lev.mapFile;
+        console.log("viewImages=", viewImages);
 
         elm = document.getElementById("idGraph");
-        elm.style.backgroundImage = 'url("/plugins/Abeille/'+viewImage.path+'")';
+        elm.style.backgroundImage = 'url("/plugins/Abeille/'+viewImages[viewLevel].path+'")';
         console.log("idGraph elm=", elm);
+
+        w = viewImages[viewLevel].width;
+        h = viewImages[viewLevel].height;
+        // elm.setAttribute("style", "width:"+w+"px;height:"+h+"px");
+        elm.style.width = w+"px";
+        elm.style.height = h+"px";
+
+        // Get size of 'div' #idGraph to get image size
+        var rectangle = elm.getBoundingClientRect();
+        // x = rectangle.left;
+        // y = rectangle.top;
+        w = rectangle.width;
+        h = rectangle.height;
+        viewImageMaxX = w;
+        viewImageMaxY = h;
+        console.log("width=" + w + ", height=" + h);
+
+        // elm.setAttribute("viewBox", "0 0 "+w+" "+h);
+    };
+
+    $("#idSelectLevel").on("change", function() {
+        viewLevel = document.getElementById("idSelectLevel").value;
+        console.log("View level changed to "+viewLevel);
+
+        // Refresh page to display equipments on this level
+        refreshPage();
 
         // Saving user choice
         networkMap.levelChoice = viewLevel;
@@ -264,6 +392,13 @@
     /* Launch network scan for current Zigate */
     function refreshLqi() {
         console.log("refreshLqi()");
+
+        $("#md_modal").dialog({ title: "{{Analyse du réseau}}" });
+        $("#md_modal")
+            .load("index.php?v=d&plugin=Abeille&modal=AbeilleRefreshLQI.modal")
+            .dialog("open")
+            .dialog("option", "width", 700)
+            .dialog("option", "height", 350);
 
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
@@ -310,8 +445,7 @@
             url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: 'getTmpFile',
-                // file : "AbeilleLQI_MapData"+Ruche+".json.lock",
-                file : "AbeilleLQI-"+Ruche+".json.lock",
+                file : "AbeilleLQI.lock",
             },
             dataType: "json",
             global: false,
@@ -355,13 +489,13 @@
     // Ensure that device coordinates are within background map size
     function checkGrpLimits(grpX, grpY) {
         if (grpX < 0) grpX = 0;
-        // console.log("  maxX=", maxX);
-        if ((grpX + 50) > maxX)
-            grpX = maxX - 50;
+        // console.log("  viewImageMaxX=", viewImageMaxX);
+        if ((grpX + 50) > viewImageMaxX)
+            grpX = viewImageMaxX - 50;
         if (grpY < 0) grpY = 0;
-        // console.log("  maxY=", maxY);
-        if ((grpY + 50) > maxY)
-            grpY = maxY - 50;
+        // console.log("  viewImageMaxY=", viewImageMaxY);
+        if ((grpY + 50) > viewImageMaxY)
+            grpY = viewImageMaxY - 50;
 
         console.log("  grpX="+grpX+", grpY="+grpY);
         return {
@@ -371,6 +505,7 @@
     }
 
     // Ensure that device coordinates are within background map size
+    // Note: Requires 'viewImageMaxX' set by 'refreshBackgroundMap()'
     function checkPosLimits(devLogicId) {
         dev = devList[devLogicId];
         posX = dev['posX'];
@@ -379,17 +514,30 @@
         grpY = posY - 25;
 
         if (grpX < 0) grpX = 0;
-        // console.log("  maxX=", maxX);
-        if ((grpX + 50) > maxX)
-            grpX = maxX - 50;
+        // console.log("  viewImageMaxX=", viewImageMaxX);
+        if ((grpX + 50) > viewImageMaxX)
+            grpX = viewImageMaxX - 50;
         if (grpY < 0) grpY = 0;
-        // console.log("  maxY=", maxY);
-        if ((grpY + 50) > maxY)
-            grpY = maxY - 50;
+        // console.log("  viewImageMaxY=", viewImageMaxY);
+        if ((grpY + 50) > viewImageMaxY)
+            grpY = viewImageMaxY - 50;
 
-        console.log("  grpX="+grpX+", grpY="+grpY);
+        // console.log("  grpX="+grpX+", grpY="+grpY);
         dev['posX'] = grpX + 25;
         dev['posY'] = grpY + 25;
+    }
+
+    // Identify network index from 'devLogicId'
+    function devLogicId2Net(devLogicId) {
+        net = devLogicId.split('/');
+        netName = net[0]; // Ex: 'AbeilleX'
+        zgId = netName.substring(7);
+        for (n = 0; n < networks.length; n++) {
+            if (networks[n].zgId == zgId)
+                return n;
+        }
+
+        return 0; // Should return an error
     }
 
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
@@ -414,13 +562,18 @@
         // Called on 'mousedown' event
         function startDrag(evt) {
 
-            parentG = evt.target.parentNode;
-            if (!parentG.classList.contains('draggable'))
+            // Icon image should be draggable in config mode
+            if (!evt.target.classList.contains('draggable'))
                 return;
+
+            // parentG = evt.target.parentNode;
+            // if (!parentG.classList.contains('draggable'))
+            //     return;
 
             console.log("startDrag(), evt=", evt);
 
-            selectedElement = parentG;
+            parentG = evt.target.parentNode;
+            selectedElement = parentG; // Element to drag
             console.log("  selectedElement= ", selectedElement);
 
             mousePos = getMousePosition(evt);
@@ -495,19 +648,6 @@
 
             //     console.log("New position: "+JSON.stringify(offset));
             // }
-        }
-
-        // Identify network index from 'devLogicId'
-        function devLogicId2Net(devLogicId) {
-            net = devLogicId.split('/');
-            netName = net[0]; // Ex: 'AbeilleX'
-            zgId = netName.substring(7);
-            for (n = 0; n < networks.length; n++) {
-                if (networks[n].zgId == zgId)
-                    return n;
-            }
-
-            return 0; // Should return an error
         }
 
         function moveIt(evt, dragEnd) {
@@ -593,30 +733,6 @@
             moveIt(evt, true);
         }
     }
-
-    // /* Draw 'legend' area */
-    // function drawLegend(includeGroup) {
-    //     var legend = "";
-
-    //     if ( includeGroup ) { legend = legend + '<g id="legend">'; }
-
-    //     legend = legend + '<circle cx="100" cy="875" r="10" fill="red" />\n';
-    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="black" style="font-size: 8px;">Coordinator</text> </a>\n';
-
-    //     legend = legend + '<circle cx="100" cy="900" r="10" fill="blue" />\n';
-    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="black" style="font-size: 8px;">Routeur</a>\n';
-
-    //     legend = legend + '<circle cx="100" cy="925" r="10" fill="green" />\n';
-    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="black" style="font-size: 8px;">End Equipment</text> </a>\n';
-
-    //     legend = legend + '<circle cx="100" cy="950" r="10" fill="yellow" />\n';
-    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="black" style="font-size: 8px;">Dans Jeedom mais pas dans l audit du reseau</text> </a>\n';
-
-    //     if ( includeGroup ) { legend = legend + '</g>'; }
-
-    //     return legend;
-    // }
-
 
     // function selectSource(form) {
     //     Source = form.list.value;
@@ -777,17 +893,42 @@
         }
     }
 
+    // Retrieve list of devices registerd under Jeedom
+    // Note: BLOCKING function
     function getJeedomDevices() {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                jeedomDevices = JSON.parse(this.responseText);
-                console.log("jeedomDevices=", jeedomDevices);
-            }
-        };
+        // var xhr = new XMLHttpRequest();
+        // xhr.onreadystatechange = function() {
+        //     if (this.readyState == 4 && this.status == 200) {
+        //         jeedomDevices = JSON.parse(this.responseText);
+        //         console.log("jeedomDevices=", jeedomDevices);
+        //     }
+        // };
+        // xhr.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false);
+        // xhr.send();
 
-        xhr.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false);
-        xhr.send();
+        $.ajax({
+            type: 'POST',
+            url: "/plugins/Abeille/core/ajax/Abeille.ajax.php",
+            data: {
+                action: 'getEqList'
+            },
+            dataType: "json",
+            global: false,
+            cache: false,
+            async: false, // Blocking function
+            error: function (request, status, error) {
+                console.log("ERROR: Call to getEqList failed");
+            },
+            success: function (json_res) {
+                console.log("json_res=", json_res);
+                res = JSON.parse(json_res.result); // res.status, res.error, res.eqList
+                if (res.status != 0) {
+                } else {
+                    jeedomDevices = res.eqList;
+                    console.log("jeedomDevices=", jeedomDevices);
+                }
+            }
+        });
     }
 
     /* eqLogic/configuration settings (ab::settings) update */
@@ -813,7 +954,7 @@
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
-                action: 'saveSettings',
+                action: 'saveSettings', // TODO: Use saveEqConfig instead
                 eqId: eqId,
                 settings: JSON.stringify(settings)
             },
@@ -826,7 +967,7 @@
 
     /* 'config' DB update */
     function saveConfig() {
-        console.log("saveConfig()");
+        console.log("saveConfig(): config=", config);
 
         $.ajax({
             type: 'POST',
@@ -842,7 +983,20 @@
         });
     }
 
-    // Combine LQI + Jeedom infos
+    // Returns color according to Zigbee device type
+    function getDevColor(zbType) {
+        if (zbType == "Coordinator")
+            color = "#a65ba6";
+        else if (zbType == "Router")
+            color = "#00a2e8";
+        else if (zbType == "End Device")
+            color = "#7BCC7B";
+        else
+            color = "#E5E500";
+        return color;
+    }
+
+    // Build a device list per network, combining LQI table + Jeedom infos
     function buildDevList() {
         console.log("buildDevList()");
 
@@ -858,6 +1012,8 @@
             netw.linksList = new Object();
 
             lineId = 0; // To identify lines connecting nodes
+
+            // Listing devices on the network (from lqiTable)
             for (rLogicId in netw.lqiTable.routers) {
                 router = netw.lqiTable.routers[rLogicId];
                 // console.log("router " + rLogicId + "=", router);
@@ -869,22 +1025,30 @@
                     devR['addr'] = router['addr'];
                     devR['name'] = router['name'];
                     devR['icon'] = router['icon'];
-                    if (devR['addr'] == '0000')
-                        devR['color'] = "Red"; // Coordinator
-                    else
-                        devR['color'] = "Blue"; // Router
+                    if (devR['addr'] == '0000') {
+                        devR['color'] = getDevColor("Coordinator"); // Coordinator
+                    } else {
+                        devR['color'] = getDevColor("Router"); // Router
+                    }
                     if (typeof jeedomDevices[rLogicId] !== "undefined") {
                         devR['posX'] = jeedomDevices[rLogicId].x;
                         devR['posY'] = jeedomDevices[rLogicId].y;
-                        devR['posZ'] = jeedomDevices[rLogicId].z;
+                        devR['posZ'] = (typeof jeedomDevices[rLogicId].z !== "undefined") ? jeedomDevices[rLogicId].z : 0;
                         devR['jeedomId'] = jeedomDevices[rLogicId].id;
                         // devR['posChanged'] = false;
+                    } else {
+                        devR['posX'] = 0;
+                        devR['posY'] = 0;
+                        devR['posZ'] = 0;
                     }
                     devR['links'] = new Object();
 
                     netw.devList[rLogicId] = devR;
                     netw.devListNb++;
                 }
+
+                if (typeof router['dead'] !== "undefined")
+                    devR['dead'] = true;
 
                 for (nLogicId in router.neighbors) {
                     neighbor = router.neighbors[nLogicId];
@@ -897,16 +1061,17 @@
                         devN['addr'] = neighbor['addr'];
                         devN['name'] = neighbor['name'];
                         devN['icon'] = neighbor['icon'];
-                        if ( neighbor['type'] == "End Device" ) { devN['color'] = "Green"; }
-                        else if ( neighbor['type'] == "Router" ) { devN['color'] = "Blue"; }
-                        else if ( neighbor['type'] == "Coordinator" ) { devN['color'] = "Red"; }
-                        else devN['color'] = "Yellow";
+                        devN['color'] = getDevColor(neighbor['type'])
                         if (typeof jeedomDevices[nLogicId] !== "undefined") {
                             devN['posX'] = jeedomDevices[nLogicId].x;
                             devN['posY'] = jeedomDevices[nLogicId].y;
-                            devR['posZ'] = jeedomDevices[rLogicId].z;
+                            devN['posZ'] = (typeof jeedomDevices[nLogicId].z !== "undefined") ? jeedomDevices[nLogicId].z : 0;
                             devN['jeedomId'] = jeedomDevices[nLogicId].id;
                             // devN['posChanged'] = false;
+                        } else {
+                            devN['posX'] = 0;
+                            devN['posY'] = 0;
+                            devN['posZ'] = 0;
                         }
                         devN['links'] = new Object();
 
@@ -914,48 +1079,109 @@
                         netw.devListNb++;
                     } // End for (nLogicId in router.neighbors)
 
+                    if (typeof neighbor['dead'] !== "undefined")
+                        devN['dead'] = true;
+
                     devN['links'][lineId] = rLogicId;
                     devR['links'][lineId] = nLogicId;
                     netw.linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId, 'lqi': neighbor['lqi'] };
                     lineId++;
                 }
+
             } // End 'for (rLogicId in lqiTable.routers)'
+
+            // Checking devices in Jeedom but not visible on the network
+            for (jLogicId in jeedomDevices) {
+                jDev = jeedomDevices[jLogicId];
+                if (jDev.enabled == 0)
+                    continue; // Disabled => ignoring
+                if (typeof netw.devList[jLogicId] !== "undefined")
+                    continue; // Already in the list
+                if (jDev.addr.substring(0, 2) == "rc")
+                    continue; // Virtual remote control not displayed
+
+                // Adding dead device
+                devJ = new Object();
+                devJ['addr'] = jDev.addr;
+                devJ['name'] = jDev.name;
+                devJ['icon'] = jDev.icon;
+                devJ['color'] = getDevColor(jDev.zbType);
+                devJ['posX'] = jDev.x;
+                devJ['posY'] = jDev.y;
+                devJ['posZ'] = jDev.z;
+                devJ['jeedomId'] = jDev.id;
+                // TO BE REVISITED. Some devices are not reported in mgmt_lqi_rsp while not dead
+                // devJ['dead'] = true;
+
+                netw.devList[jLogicId] = devJ;
+                netw.devListNb++;
+            }
+
+            // Checking & updating devices positions
+            devListNb = netw.devListNb;
+            for (devLogicId in netw.devList) {
+                dev = netw.devList[devLogicId];
+                if (dev['addr'] == '0000')
+                    isCoordinator = true;
+                else
+                    isCoordinator = false;
+
+                if (dev['posX'] == 0) // 0 is forbidden
+                    netw.devList[devLogicId]['posX'] = setAutoX(isCoordinator, devListNb);
+                if (dev['posY'] == 0) // 0 is forbidden
+                    netw.devList[devLogicId]['posY'] = setAutoY(isCoordinator, devListNb);
+                if (typeof dev['posZ'] === "undefined")
+                    netw.devList[devLogicId]['posZ'] = 0;
+
+                // Can't do it there since refreshBackgroundMap() is not executed yet
+                // devList = netw.devList;
+                // checkPosLimits(devLogicId);
+            }
+
             console.log("Net "+n+" devList=", netw.devList);
         }
     }
 
     // Redraw full page
     function refreshPage() {
-
+        console.log("refreshPage(): viewLevel="+viewLevel);
         // if (typeof devList === "undefined") {
         //     console.log("refreshPage(): UNDEFINED devList");
         //     return;
         // }
 
+        refreshBackgroundMap(viewLevel);
+
         lesAbeilles = "";
-        for (n = 0; n < networks.length; n++) {
-            netw = networks[n];
+        for (netIdx = 0; netIdx < networks.length; netIdx++) {
+            netw = networks[netIdx];
 
             // Display of this network is enabled ?
-            elm = document.getElementById("idViewNet-"+n);
+            elm = document.getElementById("idViewNet-"+netIdx);
             if (!elm.checked)
                 continue;
 
-            devList = netw.devList;
-            devListNb = netw.devListNb;
-            for (devLogicId in devList) {
-                lesAbeilles += drawDevice(devLogicId);
-            }
-
             // Displaying links ?
             if (viewLinks)
-                drawLinks(n);
+                drawLinks(netIdx);
+
+            // Drawing devices after links to have them behind devices
+            lesAbeilles += drawDevices(netIdx);
         }
 
-        document.getElementById("idDevices").innerHTML = lesAbeilles;
+        document.getElementById("idGraph").innerHTML = lesAbeilles;
+
+        // If config mode, add event listener on node menu
+        if (configMode) {
+            const buttons = document.querySelectorAll(".nodeMenuBtn");
+            buttons.forEach(function(button) {
+                // console.log("la");
+                button.addEventListener("click", nodeMenuBtnCb);
+            });
+        }
     }
 
-    $("#idMap").on("click", function () {
+    $("#idMapsBtn").on("click", function () {
         $("#md_modal").dialog({ title: "{{Plan par niveau}}" });
         $("#md_modal")
             .load("index.php?v=d&plugin=Abeille&modal=AbeilleNetworkMap.modal")
@@ -966,78 +1192,127 @@
 
     // X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');
     // Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');
-    function setAutoX(isZigate) {
-        if (isZigate == true)
+    function setAutoX(isCoordinator, devListNb) {
+        if (isCoordinator == true)
             return centerX;
         posX = centerX + centerR * Math.cos(2 * Math.PI * autoXIdx / (devListNb - 1));
         autoXIdx++;
         return posX;
     }
 
-    function setAutoY(isZigate) {
-        if (isZigate == true)
+    function setAutoY(isCoordinator, devListNb) {
+        if (isCoordinator == true)
             return centerY;
         posY = centerY + centerR * Math.sin(2 * Math.PI * autoYIdx / (devListNb - 1));
         autoYIdx++;
         return posY;
     }
 
-    function drawDevice(devLogicId) {
-        console.log("drawDevice("+devLogicId+")");
-        dev = devList[devLogicId];
-        // console.log("dev=", dev);
+    function drawDevices(netIdx) {
+        console.log("drawDevices(netIdx="+netIdx+")");
 
-        nodeColor = dev['color'];
-        addr = dev['addr'];
-        if (addr == '0000')
-            isZigate = true;
-        else
-            isZigate = false;
-        if (dev['posX'] == 0) // 0 is forbidden
-            dev['posX'] = setAutoX(isZigate);
-        if (dev['posY'] == 0) // 0 is forbidden
-            dev['posY'] = setAutoY(isZigate);
+        netw = networks[netIdx];
+        devList = netw.devList;
+        allDevices = "";
+        for (devLogicId in devList) {
+            // Set by buildDevList()
+            // if (typeof devList[devLogicId]['posZ'] !== "undefined")
+            //     posZ = devList[devLogicId]['posZ'];
+            // else
+            //     posZ = 0;
+            if (devList[devLogicId]['posZ'] != viewLevel) {
+                console.log(devLogicId+" is not part of current level "+viewLevel);
+                continue;
+            }
+            dev = devList[devLogicId];
+            console.log("dev=", dev);
 
-        // dev['posX'] = 25;
-        // dev['posY'] = 25; // TEMP
+            nodeColor = dev['color'];
+            // addr = dev['addr'];
+            // if (addr == '0000')
+            //     isZigate = true;
+            // else
+            //     isZigate = false;
+            // Set by buildDevList()
+            // if (dev['posX'] == 0) // 0 is forbidden
+            //     dev['posX'] = setAutoX(isZigate);
+            // if (dev['posY'] == 0) // 0 is forbidden
+            //     dev['posY'] = setAutoY(isZigate);
 
-        // Checking limits vs map size
-        checkPosLimits(devLogicId);
+            // dev['posX'] = 25;
+            // dev['posY'] = 25; // TEMP
 
-        // Computing positions based on node central coordinates
-        posX = dev['posX'];
-        posY = dev['posY'];
-        // txtX = posX + 22;
-        // txtY = posY + 0;
-        txtX = 25;
-        txtY = -5; // Placed on top of group
-        grpX = posX - 25;
-        grpY = posY - 25;
-        // imgX = posX - 20;
-        // imgY = posY - 20;
-        imgX = 5;
-        imgY = 5;
+            // Checking limits vs map size
+            checkPosLimits(devLogicId);
 
-        if (configMode)
-            newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
-        else
+            // Computing positions based on node central coordinates
+            posX = dev['posX'];
+            posY = dev['posY'];
+            grpX = posX - 25;
+            grpY = posY - 25;
+            // imgX = posX - 20;
+            // imgY = posY - 20;
+            imgX = 5;
+            imgY = 5;
+            // Text is on top of the group
+            // txtX = posX + 22;
+            // txtY = posY + 0;
+            // txtX = 25;
+            // txtY = -5; // Placed on top of group
+            txtX = grpX;
+            txtY = grpY - 10;
+
+            // if (configMode)
+            //     newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
+            // else
+            //     newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
+            // newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
             newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
-        newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
-        if (configMode) {
-            // Add a button to select level
-            newG += '<rect x="50" rx="5" ry="5" width="25" height="25" />';
+            newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" onmouseover="displayDevInfos(\''+devLogicId+'\')" />';
+            // if (configMode) {
+            //     // Add a button to select level
+            //     newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(\''+devLogicId+'\')" />';
+            //     // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu()" />';
+            // }
+            if (configMode)
+                newG += '<image class="draggable" xlink:href="/plugins/Abeille/core/config/devices_images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+            else
+                newG += '<image xlink:href="/plugins/Abeille/core/config/devices_images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+            // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
+            // newG += '</g>';
+
+            if (typeof dev['dead'] !== 'undefined') {
+                deadX = 32;
+                deadY = 28;
+                newG += '<image xlink:href="/plugins/Abeille/images/death.png" x="'+deadX+'" y="'+deadY+'" height="20" />';
+            }
+
+            // newG += '<g id="'+devLogicId+'-txt" transform="translate('+txtX+', '+txtY+')">';
+            // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
+            newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
+            // newG += '</g>';
+
+            // If config mode, add a button to select level
+            if (configMode) {
+                // btnX = grpX + 25;
+                // btnY = grpY;
+                // newG += '<g id="'+devLogicId+'-btn" transform="translate('+btnX+', '+btnY+')">';
+                // newG += '<rect x="50" rx="5" ry="5" width="25" height="25" onclick="nodeMenu(this, \''+devLogicId+'\')" />';
+                newG += '<rect x="50" rx="5" ry="5" width="25" height="25" class="nodeMenuBtn" />';
+
+                // newG += '</g>';
+            }
+            newG += '</g>';
+            console.log("newG=", newG);
+
+            allDevices += newG;
         }
-        newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
-        newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
-        newG += '</g>';
 
-        // console.log("newG=", newG);
-
-        return newG;
+        return allDevices;
     }
 
     function drawLinks(n) {
-        console.log("drawLinks("+n+")");
+        console.log("drawLinks(netIdx="+n+")");
 
         netw = networks[n];
         linksList = netw.linksList;
@@ -1048,15 +1323,16 @@
             // Reminder: linksList[linkId] = { "src": ss, "dst": ddd }
             link = linksList[linkId];
             // console.log('link['+linkId+']=', link);
-            // linkId = link.id;
 
             srcDev = devList[link.src];
             x1 = srcDev['posX'];
             y1 = srcDev['posY'];
+            z1 = srcDev['posZ'];
 
             dstDev = devList[link.dst];
             x2 = dstDev['posX'];
             y2 = dstDev['posY'];
+            z2 = dstDev['posZ'];
 
             if (typeof link['lqi'] === 'undefined')
                 linkColor = "green";
@@ -1067,17 +1343,122 @@
             else
                 linkColor = "red";
 
-            lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+            if (z2 != z1) {
+                console.log("z2 != z1 => Link thru levels")
+                // Computing x3/y3 in the middle on the line to change line type
+                x3 = x1 + (x2 - x1) / 2;
+                y3 = y1 + (y2 - y1) / 2;
+                if (z1 == viewLevel) {
+                    lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x3+'" y2="'+y3+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+                    lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x3+'" y1="'+y3+'" x2="'+x2+'" y2="'+y2+'" stroke-dasharray="8" style="stroke:'+linkColor+';stroke-width:2"/>';
+                } else {
+                    lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x3+'" y2="'+y3+'" stroke-dasharray="8" style="stroke:'+linkColor+';stroke-width:2"/>';
+                    lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x3+'" y1="'+y3+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+                }
+            } else {
+                if (z1 != viewLevel) {
+                    console.log("Not corresponding view level => Link not displayed")
+                    continue;
+                }
+
+                lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+            }
         }
+    }
+
+    // Display node menu in config mode
+    function nodeMenuBtnCb(evt) {
+        console.log("nodeMenuBtnCb(), evt=", evt);
+
+        // TODO: Get mouse position
+        // var mousePos = getMousePosition(evt);
+        // console.log("  Mouse pos=", mousePos);
+        svg = document.getElementById("idGraph");
+        let CTM = svg.getScreenCTM();
+        x = (evt.clientX - CTM.e) / CTM.a;
+        y = (evt.clientY - CTM.f) / CTM.d;
+        console.log("x="+x+", y="+y)
+
+        currentGroup = evt.target.parentNode; // Parent group
+
+        // TODO: Move 'nodeMenu' to position
+        const nmElm = document.getElementById('idNodeMenuSelect');
+        nmElm.style.top = y+'px';
+        nmElm.style.left = x+'px';
+
+        nmElm.style.display = 'inline';
+    }
+
+    // Node menu select callback
+    $("#idNodeMenuSelect").on("change", function() {
+        posZ = document.getElementById("idNodeMenuSelect").value;
+        console.log("idNodeMenuSelect changed to '"+posZ+"'");
+
+        // Move corresponding node to proper level
+        devLogicId = currentGroup.id; // Ex: 'AbeilleX/yyyy'
+        console.log("Select change for devLogicId="+devLogicId);
+        netIdx = devLogicId2Net(devLogicId);
+        devList = networks[netIdx].devList;
+        devList[devLogicId]['posZ'] = posZ;
+        saveCoordinates(netIdx, devLogicId);
+
+        // Hide nodeMenuSelect
+        let nodeMenuSelect = document.getElementById('idNodeMenuSelect');
+        nodeMenuSelect.style.display = 'none';
+
+        // Refresh display
+        refreshPage();
+    });
+
+    // Called when mouse is on a device to display its infos
+    function displayDevInfos(devLogicId) {
+        console.log("displayDevInfos(" + devLogicId + ")");
+
+        return; // Currently disabled (work ongoing)
+
+        netIdx = devLogicId2Net(devLogicId); // Extract network index
+        dev = networks[netIdx].devList[devLogicId];
+        // console.log("networks=", networks);
+        // console.log("dev=", dev);
+
+        // Get device infos
+        devName = document.getElementById('idDevName');
+        devName.textContent = dev.name;
+        netName = document.getElementById('idNetName');
+        netName.textContent = "Abeille" + networks[netIdx].zgId;
+        addr = document.getElementById('idAddr');
+        addr.textContent = dev.addr;
+
+        // Display pop-up
+        devInfosPU = document.getElementById('idDevInfosPU');
+        devInfosPU.style.display = 'inline-block';
+        // devInfosPU.style.visibility = 'visible';
     }
 
     //-----------------------------------------------------------------------
     // MAIN
     //-----------------------------------------------------------------------
 
+    // viewLevel = 0; // Level idx to display. Updated from 'networkMap['levelChoice']
+    viewLinks = true; // Display links
+    // $viewImage = Array(
+    //     "path" => $userMapPath, // Path relative to Abeille's root
+    //     "width" => $width,
+    //     "height" => $height
+    // );
+    // networks = [] of Object(
+    //     'zgId' =>
+    //     'lqiTable' => // Network topology coming from LQI collect.
+    //     'devList' => new Object();
+    //     'devListNb' => x;
+    //     'linksList' => new Object();
+    // );
+    var jeedomDevices; // Jeedom known devices
+    let configMode = false;
+
     var networkInformation = "";
     var networkInformationProgress = "Processing";
-    var TopoSetReply = "";
+    // var TopoSetReply = "";
     var refreshLqiStatus; // Result of setInterval()
 
     var a = 10;
@@ -1116,9 +1497,6 @@
     //     1000  // ms
     // );
 
-    // Combine LQI + Jeedom infos
-    buildDevList();
-
     // Display options
     var viewLinks = true; // Set to false to hide links
 
@@ -1137,6 +1515,9 @@
     autoXIdx = 0;
     autoYIdx = 0;
 
+    // Combine LQI + Jeedom infos
+    buildDevList();
+
     refreshPage();
-    console.log("End of script");
+    // console.log("End of script");
 </script>

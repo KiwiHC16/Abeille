@@ -1,0 +1,34 @@
+***
+*** Abeille developer internal doc
+*** Dealing with Zigbee groups
+*** (C) Tcharp38
+***
+
+Reminder: Zigbee groups allow to "group" several target devices with a single "group address" and send group commands.
+This for example allow to switch On/Off several light bulb with a single group On/Off command sent to group instead of device.
+
+Target control
+==============
+
+Zigbee groups on server side (target devices) are quite easy to deal with since there are
+all commands available thru cluster 0004 to add/get/remove any group.
+Moreover these devices are ALWAYS ON meaning that we can send them a cmd at any time.
+
+Abeille is collecting & storing current group status in eqLogic DB thru "configuration/zigbee/groups" oject.
+Object is sorted per end point since each EP can be affected to a different set of groups.
+
+    "ab::zigbee": {
+        "groups" : {'01': '1001', '02': '2002'}
+    }
+
+Remote
+======
+
+On the other side (control device), this is much more complex.
+The remote control
+- has to support "sent to group"
+- is a device not always listening network
+
+If remote control is Abeille (virtual remote or any command from Abeille itself),
+groups are selected thru "variables" (currently in 'main' tab).
+These "variables" must be aligned to group to control.

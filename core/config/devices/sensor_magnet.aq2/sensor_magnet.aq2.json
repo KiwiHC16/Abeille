@@ -21,8 +21,9 @@
                 "invertBinary": "1",
                 "isVisible": 1
             },
-            "Battery-Volt": {
-                "use": "inf_batteryVoltAndPercent-285-300"
+            "Battery-VoltToPercent": {
+                "use": "inf_batteryVoltToPercent",
+                "params": "min=2.85&max=3"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"

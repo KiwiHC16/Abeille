@@ -15,15 +15,7 @@
             "automatism": "1"
         },
         "type": "Ikea signal repeater",
-        "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            }
-        },
+        "commands": [],
         "comment": "https://www.ikea.com/fr/fr/catalog/products/10400408/"
     }
 }

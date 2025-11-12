@@ -92,8 +92,9 @@
                 "nextLine": "after"
             }
         },
-        "tuyaEF00": {
-            "fromDevice": {
+        "private": {
+            "EF00": {
+                "type": "tuya",
                 "02": {
                     "function": "rcvThermostat-Mode",
                     "info": "01-mode",

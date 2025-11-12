@@ -3,8 +3,9 @@
         "manufacturer": "Livolo",
         "model": "TI0001",
         "type": "Livolo switch",
-        "genericType": "Outlet",
+        "genericType": "Light",
         "comment": "Needs to be paired on Channel 26! Then you can eventually switch the channel to 11 and Livolo devices will be switching automatically",
+        "comment2": "Uses transition field to define switch number",
         "timeout": "80",
         "configuration": {
             "mainEP": "06",
@@ -20,8 +21,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "On 1": {
                 "use": "act_zbCmdC-0008-MoveToLevelWithOnOff",
@@ -61,46 +61,35 @@
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
-            "Get-Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
-            },
             "LivoloSwitchTrick1": {
-                "use": "LivoloSwitchTrick1"
+                "use": "act_zbCmdC-0006-Toggle",
+                "execAtCreation": "Yes"
             },
             "LivoloSwitchTrick2": {
-                "use": "LivoloSwitchTrick2"
+                "use": "act_zbCmdC-0006-On",
+                "execAtCreation": "Yes"
             },
             "LivoloSwitchTrick3": {
-                "use": "LivoloSwitchTrick3"
+                "use": "act_zbCmdC-0006-On",
+                "logicalId": "trick-3",
+                "execAtCreation": "Yes"
             },
             "LivoloSwitchTrick4": {
-                "use": "LivoloSwitchTrick4"
+                "use": "act_zbCmdC-0006-On",
+                "logicalId": "trick-4",
+                "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0006&attrType=10&attrId=0000",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
+                "params": "clustId=0006&attrId=0000&attrType=10",
+                "execAtCreation": "Yes"
             },
-            "Bind-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0008",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
-            "SetReporting-0008-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=0008&attrId=0000&attrType=20",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
+            "Get-Status": {
                 "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
+                "params": "clustId=0006&attrId=0000",
+                "comment": "Polling every 5min to prevent Livolo to shut down",
+                "Polling": "cron5",
+                "execAtCreation": "Yes"
             }
         }
     }

@@ -3,7 +3,7 @@
         "comment": "Special model for old devices with EP 03. To be used as a 'forced model'",
         "manufacturer": "Owon",
         "zbManufacturer": "OWON",
-        "model": "THS317-ET",
+        "model": "THS317-ET 1st gen",
         "type": "Owon multi-sensor 1st gen",
         "genericType": "Environment",
         "timeout": "60",

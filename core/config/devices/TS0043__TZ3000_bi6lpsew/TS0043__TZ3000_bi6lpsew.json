@@ -7,7 +7,7 @@
             "TS0043__TZ3000_famkxci2": {
             },
             "TS0043__TZ3000_yw5tvzsk": {
-                "icon": "LoraTap-3GangRemote-2"
+                "icon": "Loratap-3GangRemote-2"
             },
             "TS0043__TZ3000_gbm10jnj": {
                 "manufacturer": "Moes",
@@ -19,7 +19,7 @@
         "timeout": "250",
         "configuration": {
             "mainEP": "01",
-            "icon": "LoraTap-3GangRemote"
+            "icon": "Loratap-3GangRemote"
         },
         "category": {
             "automatism": "1"

@@ -1,8 +1,8 @@
 {
     "inf_zbAttr-0500-ZoneStatus-Tamper": {
-        "comment": "0500/IAS Zone cluster, attrib 0002/ZoneStatus, type map16/0x19, bit 4",
+        "comment": "0500/IAS Zone cluster, attrib 0002/ZoneStatus (type map16/0x19) bit 4",
+        "comment2": "This can also be raised by a ZoneStatus-ChangeNotification",
         "subType": "binary",
-        "configuration": [],
         "type": "info",
         "logicalId": "#EP#-0500-0002-tamper",
         "template": "alert",

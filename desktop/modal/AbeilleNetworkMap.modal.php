@@ -63,7 +63,7 @@
     refreshLevels();
 
     function refreshLevels() {
-        console.log("refreshLevels(). networkMap=", networkMap);
+        console.log("refreshLevels(): networkMap=", networkMap);
         if (typeof networkMap === 'undefined')
             return;
 
@@ -76,7 +76,7 @@
         //     ),
         //     'levelChoice' => idx
         // )
-        console.log("networkMap=", networkMap);
+        // console.log("networkMap=", networkMap);
         for (const [idx, level] of Object.entries(networkMap.levels)) {
             // elm = document.getElementById("idLevelIdx-"+idx);
             // elm.value = idx;
@@ -120,11 +120,13 @@
         if (newNetworkMap != networkMap) {
             console.log("Saving new networkMap=", newNetworkMap);
             config = new Object();
-            config['ab::networkMap'] =  newNetworkMap;
+            config['ab::networkMap'] = newNetworkMap;
             saveConfig(config);
             networkMap = Object.assign(networkMap, newNetworkMap); // Update networkMap
         }
         $('#md_modal').dialog('close')
+
+        location.reload(true); // Reload page
     }
 
     // Add new map to index 'idx'

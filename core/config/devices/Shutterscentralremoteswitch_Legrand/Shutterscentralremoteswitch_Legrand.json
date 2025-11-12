@@ -1,0 +1,67 @@
+{
+    "Shutterscentralremoteswitch_Legrand": {
+        "manufacturer": "Legrand",
+        "model": "067646",
+        "type": "Legrand wireless shutter switch",
+        "genericType": "Shutter",
+        "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Legrand-ShutterSwitch",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2032"
+        },
+        "commands": {
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt",
+                "params": "ep=01"
+            },
+            "Battery-VoltToPercent": {
+                "use": "inf_batteryVoltToPercent",
+                "params": "min=2.5&max=3"
+            },
+            "Click": {
+                "use": "inf_click",
+                "comment": "value = Up, Down, Stop or None",
+                "returnStateTime": 1,
+                "returnStateValue": "None",
+                "isVisible": 1
+            },
+            "Up button": {
+                "use": "inf_zbCmdC-0102-00UpOpen",
+                "trigOut": {
+                    "01-click": { "valueOffset": "Up" }
+                }
+            },
+            "Down button": {
+                "use": "inf_zbCmdC-0102-01DownClose",
+                "trigOut": {
+                    "01-click": { "valueOffset": "Down" }
+                }
+            },
+            "Stop button": {
+                "use": "inf_zbCmdC-0102-02Stop",
+                "trigOut": {
+                    "01-click": { "valueOffset": "Stop" }
+                }
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Bind 01-000F-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=000F",
+                "execAtCreation": "Yes"
+            },
+            "Bind 01-0102-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0102",
+                "execAtCreation": "Yes"
+            }
+        }
+    }
+}

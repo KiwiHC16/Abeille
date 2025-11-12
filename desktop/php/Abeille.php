@@ -30,19 +30,33 @@
        $eqPerZigate[$zgId][id2] => id for next eq... */
     $eqPerZigate = array(); // All equipements id/addr per zigate
     foreach ($eqLogics as $eqLogic) {
+
         $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
         list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
         $zgId = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
         $eqId = $eqLogic->getId();
+        $eqParent = $eqLogic->getObject();
+        if (!is_object($eqParent))
+            $pName = "";
+        else
+            $pName = $eqParent->getName();
+
         $eq = [];
         $eq['id'] = $eqId;
         $eq['addr'] = $eqAddr;
+        $eq['isEnabled'] = $eqLogic->getIsEnable();
+        $eq['isVisible'] = $eqLogic->getIsVisible();
         $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
         $eq['jsonId'] = $eqModel ? $eqModel['modelName'] : '';
         $eq['name'] = $eqLogic->getName();
+        $eq['pName'] = $pName; // Parent name
+        $eq['icon'] = $eqLogic->getConfiguration('ab::icon', '');
+        if (isset($eqModel['variables']))
+            $eq['variables'] = $eqModel['variables'];
+
         if ($eqAddr == "0000") {
-            if (isset($eqPerZigate[$zgId][$eqId]))
+            if (isset($eqPerZigate[$zgId][$eqId])) // Tcharp38: Why would it be the case ? Can't remind that.
                 array_unshift($eqPerZigate[$zgId][$eqId], $eq);
             else
                 $eqPerZigate[$zgId][$eqId] = $eq;
@@ -52,9 +66,6 @@
     $GLOBALS['eqPerZigate'] = $eqPerZigate;
     echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
     echo '<script>var js_urlProducts = "'.urlProducts.'";</script>';
-
-    // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
-    // $parametersAbeille = AbeilleTools::getParameters();
 ?>
 
 <!-- For all modals on 'Abeille' page. -->
@@ -145,12 +156,17 @@
         tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="forceReturnLineAfter"/>{{Break après}}</label></span>';
         if (init(_cmd.type) == 'info') { // Info
             tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span>';
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span><br>';
+            if (_cmd.subType == "binary")
+                tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span><br>';
             tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
             tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
         } else if (init(_cmd.type) == 'action') {
             // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
             // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
+            if (_cmd.subType == "slider") {
+                tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
+                tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
+            }
         }
         tr += '</td>';
 

@@ -25,7 +25,7 @@ do
     # - 'core/config/devices_local' content except README/LISZEMOI
     # - 'core/config/commands/OBSOLETE'
     # - All '.xxx' or '.bak' files
-    if [[ "${F}" = *"Abeille.md5" ]]; then
+    if [[ "${F}" = *"Abeille.md5" ]] || [[ "${F}" = *"TODO.txt" ]]; then
         echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
         continue
     fi
@@ -33,7 +33,7 @@ do
         echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
         continue
     fi
-    if [[ "${F}" = "tmp/"* ]] || [[ "${F}" = "core/config/commands/OBSOLETE"* ]]; then
+    if [[ "${F}" = "tmp/"* ]] || [[ "${F}" = "docs/dev/"* ]]; then
         echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
         continue
     fi

@@ -29,6 +29,37 @@ if (window.location.href.indexOf("id=") > -1) {
 
 // console.log("LA2 eqId=", curEqId);
 
+// Additional code to hide checkboxes (class=beeChecked) when seach bar is used.
+// Jeedom code is already handling the 'eqLogicDisplayCard' class.
+document
+    .getElementById("in_searchEqlogic")
+    ?.addEventListener("keyup", function (event) {
+        var search = event.target.value;
+        if (search == "") {
+            document.querySelectorAll(".beeChecked").seen();
+            return;
+        }
+
+        document.querySelectorAll(".beeChecked").unseen(); // Hide all
+        search = jeedomUtils.normTextLower(search);
+        var text;
+        document
+            .querySelectorAll(".eqLogicDisplayCard .name")
+            .forEach((_name) => {
+                text = jeedomUtils.normTextLower(_name.textContent);
+                if (text.includes(search)) {
+                    // console.log("TOTO=", _name);
+                    eq = _name.closest(".eqLogicDisplayCard");
+                    // console.log("EQ=", eq);
+                    eqId = eq.getAttribute("data-eqlogic_id");
+                    // console.log("ID=", eqId);
+                    document
+                        .querySelector('[name="eqSelected-' + eqId + '"]')
+                        .seen();
+                }
+            });
+    });
+
 // Click generate on page reload too.
 $(".eqLogicDisplayCard").on("click", function () {
     console.log("eqLogicDisplayCard click");
@@ -61,44 +92,51 @@ function refreshEqInfos() {
             // console.log("json_res=", json_res);
             res = JSON.parse(json_res.result);
             eq = res.eq;
-            console.log("eq=", eq);
+            curEq = res.eq;
+            console.log("curEq=", curEq);
 
             // Updating global infos
-            zgId = eq.zgId;
-            eqAddr = eq.addr;
-            eqIeee = eq.ieee;
-            eqBatteryType = eq.batteryType;
-            curEq = {
-                zigbee: {
-                    addr: eq.addr,
-                },
-                model: {
-                    modelName: eq.model.modelName,
-                },
-            };
+            zgId = curEq.zgId;
+            eqAddr = curEq.addr;
+            eqIeee = curEq.ieee;
+            eqBatteryType = curEq.batteryType;
+            // curEq = {
+            //     zigbee: {
+            //         addr: eq.addr,
+            //     },
+            //     model: {
+            //         modelName: eq.model.modelName,
+            //     },
+            // };
 
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
 
             // Updating main tab
-            document.getElementById("idModelManuf").value = eq.model.manuf;
-            document.getElementById("idModelModel").value = eq.model.model;
-            document.getElementById("idModelType").value = eq.model.type;
+            document.getElementById("idModelManuf").value = curEq.model.manuf;
+            document.getElementById("idModelModel").value = curEq.model.model;
+            document.getElementById("idModelType").value = curEq.model.type;
 
             // Updating advanced tab
-            document.getElementById("idEqName").value = eq.name;
+            document.getElementById("idEqName").value = curEq.name;
             document.getElementById("idEqId").value = curEqId;
-            document.getElementById("idEqAddr").value = eq.addr;
-            document.getElementById("idZgType").value = eq.zgType;
-            document.getElementById("idZbModel").value = eq.zbModel;
-            document.getElementById("idZbManuf").value = eq.zbManuf;
+            document.getElementById("idEqAddr").value = curEq.addr;
+            document.getElementById("idZgType").value = curEq.zgType;
 
-            document.getElementById("idModelSig").value = eq.model.modelSig;
-            document.getElementById("idModelName").value = eq.model.modelName;
+            if (typeof curEq.zigbee.modelId != "undefined")
+                document.getElementById("idZbModel").value =
+                    curEq.zigbee.modelId;
+            if (typeof curEq.zigbee.manufId != "undefined")
+                document.getElementById("idZbManuf").value =
+                    curEq.zigbee.manufId;
+
+            document.getElementById("idModelSig").value = curEq.model.modelSig;
+            document.getElementById("idModelName").value =
+                curEq.model.modelName;
             document.getElementById("idModelSource").value =
-                eq.model.modelSource;
+                curEq.model.modelSource;
             // Reset model choice to 'auto' if model has been forced
-            if (eq.model.modelForced) {
+            if (curEq.model.modelForced) {
                 var $pRestoreModelAuto = $(
                     "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>"
                 );
@@ -109,32 +147,99 @@ function refreshEqInfos() {
                     .append($aRestoreModelAuto)
                     .insertAfter("#idModelChangeBtn");
             }
-            if (typeof eq.zigbee.manufCode != "undefined")
-                document.getElementById("idManufCode").value =
-                    eq.zigbee.manufCode;
+            if (typeof curEq.model.variables != "undefined") {
+                h = "";
+                for (const [vKey, vVal] of Object.entries(
+                    curEq.model.variables
+                )) {
+                    h += '<div class="form-group">';
+                    h +=
+                        '<label class="col-lg-3 control-label">' +
+                        vKey +
+                        "</label>";
+                    h += '<div class="col-lg-3">';
+                    h +=
+                        '<input type="text" id="idVar' +
+                        vKey +
+                        '" value="' +
+                        vVal +
+                        '"/>';
+                    h += "</div>";
+                    h += '<div class="col-lg-4">';
+                    h += "</div>";
+                    h += "</div>";
+                }
+                document.getElementById("idVariables").innerHTML = h;
+            }
 
-            if (typeof eq.zigbee.endPoints != "undefined") {
-                for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
+            if (typeof curEq.zigbee.logicalType != "undefined") {
+                switch (curEq.zigbee.logicalType) {
+                    case 0x00:
+                        logicalType = "{{Coordinateur}}";
+                        break;
+                    case 0x01:
+                        logicalType = "{{Routeur}}";
+                        break;
+                    case 0x02:
+                        logicalType = "{{End device}}";
+                        break;
+                    default:
+                        logicalType = curEq.zigbee.logicalType + "/?";
+                        break;
+                }
+            } else logicalType = "";
+            document.getElementById("idZbLogicalType").value = logicalType;
+
+            if (typeof curEq.zigbee.macCapa != "undefined") {
+                mc = parseInt(curEq.zigbee.macCapa, 16);
+                document.getElementById("idMacCapa").value = mc
+                    .toString(16)
+                    .toUpperCase();
+
+                console.log("maccap=", mc);
+                if ((mc >> 3) & 1) $("#idZbRxOnWhenIdle").show();
+                else $("#idZbRxOnWhenIdle").hide();
+            }
+
+            if (typeof curEq.zigbee.manufCode != "undefined")
+                document.getElementById("idManufCode").value =
+                    curEq.zigbee.manufCode;
+            if (typeof curEq.zigbee.imageType != "undefined")
+                document.getElementById("idImageType").value =
+                    curEq.zigbee.imageType;
+            if (typeof curEq.zigbee.endPoints != "undefined") {
+                for (const [epId, ep] of Object.entries(
+                    curEq.zigbee.endPoints
+                )) {
                     // console.log("LA epId=", epId + ", ep=", ep);
-                    if (typeof ep.dateCode != "undefined")
+                    if (
+                        typeof ep.dateCode != "undefined" &&
+                        ep.dateCode != false
+                    )
                         document.getElementById("idDateCode").value =
                             ep.dateCode;
-                    if (typeof ep.swBuildId != "undefined")
+                    if (
+                        typeof ep.swBuildId != "undefined" &&
+                        ep.swBuildId != false
+                    )
                         document.getElementById("idSwBuildId").value =
                             ep.swBuildId;
                 }
             }
 
             docUrl = document.getElementById("idDocUrl");
-            docUrl.setAttribute("href", js_urlProducts + "/" + eq.modelName);
-            if (eq.modelSource == "local") {
+            docUrl.setAttribute(
+                "href",
+                js_urlProducts + "/" + curEq.model.modelName
+            );
+            if (curEq.model.modelSource == "local") {
                 $("#idDelLocalBtn").show();
             }
-            if (eq.batteryType == "")
+            if (curEq.batteryType == "")
                 document.getElementById("idBatteryType").value = "{{Secteur}}";
             else
                 document.getElementById("idBatteryType").value =
-                    "{{Batterie}} " + eq.batteryType;
+                    "{{Batterie}} " + curEq.batteryType;
 
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
@@ -148,19 +253,20 @@ function refreshEqInfos() {
             }
 
             console.log("paramType: " + eq.paramType);
-            if (eq.paramType == "telecommande") {
+            if (curEq.paramType == "telecommande") {
                 document.getElementById("telecommande").style.display = "block";
             } else {
                 document.getElementById("telecommande").style.display = "none";
             }
-            if (eq.paramType == "telecommande7groups") {
-                document.getElementById("telecommande7groups").style.display =
-                    "block";
-            } else {
-                document.getElementById("telecommande7groups").style.display =
-                    "none";
-            }
-            if (eq.paramType == "paramABC") {
+            // Tcharp38: No longer required. Using 'variables' section
+            // if (eq.paramType == "telecommande7groups") {
+            //     document.getElementById("telecommande7groups").style.display =
+            //         "block";
+            // } else {
+            //     document.getElementById("telecommande7groups").style.display =
+            //         "none";
+            // }
+            if (curEq.paramType == "paramABC") {
                 document.getElementById("paramABC").style.display = "block";
             } else {
                 document.getElementById("paramABC").style.display = "none";
@@ -171,21 +277,18 @@ function refreshEqInfos() {
             for (let i = 0; i < advInfoCmds.length; i++) {
                 elm = advInfoCmds[i];
                 console.log("advInfoCmd=", advInfoCmds[i]);
-                // elm.classList.add('col-sm-5');
-                // elm.classList.add('cmd');
-                // elm.setAttribute('data-eqlogic_id', eqId);
                 cmdLogicId = elm.getAttribute("advInfo");
                 console.log("cmdLogicId=", cmdLogicId);
                 if (typeof eq.cmds[cmdLogicId] != "undefined") {
                     cmd = eq.cmds[cmdLogicId];
-                    console.log("cmd=", cmd);
+                    // console.log("cmd=", cmd);
                     cmdId = cmd.id;
                     cmdVal = cmd.val;
-                    console.log("cmdVal=", cmdVal);
+                    // console.log("cmdVal=", cmdVal);
                     // elm.setAttribute('data-cmd_id', cmdId);
                     child = elm.firstElementChild;
                     if (child != null) {
-                        console.log("child=", child);
+                        // console.log("child=", child);
                         child.id = "cmdId-" + cmdId;
                         child.setAttribute("value", cmdVal);
                     }
@@ -193,7 +296,9 @@ function refreshEqInfos() {
                     // jeedom.cmd.addUpdateFunction(cmdId, updateInfoCmd);
                     // Warning: addUpdateFunction() seems only available since v4.4 core
                     if (!isset(jeedom.cmd.update)) jeedom.cmd.update = [];
-                    jeedom.cmd.update[cmdId] = updateInfoCmd;
+                    if (cmdLogicId == "Time-TimeStamp")
+                        jeedom.cmd.update[cmdId] = updateInfoCmdTimestamp;
+                    else jeedom.cmd.update[cmdId] = updateInfoCmd;
                     console.log("jeedom.cmd.update=", jeedom.cmd.update);
                 }
             }
@@ -201,19 +306,19 @@ function refreshEqInfos() {
             // Settings default EP
             var items = document.getElementsByClassName("advEp");
             for (var i = 0; i < items.length; i++) {
-                items[i].value = eq.defaultEp;
+                items[i].value = curEq.defaultEp;
             }
 
             // Reset HW visible is type "PI"
-            if (eq.zgType == "PI" || eq.zgType == "PIv2") {
+            if (curEq.zgType == "PI" || curEq.zgType == "PIv2") {
                 resetHw = document.getElementById("idAdvResetHw");
                 resetHw.style.display = "block";
             }
 
             // Zigbee channel user choice
-            if (eq.zgChan != "") {
+            if (curEq.zgChan != "") {
                 select = document.getElementById("idZgChan");
-                select.value = eq.zgChan;
+                select.value = curEq.zgChan;
             }
         },
     });
@@ -222,19 +327,37 @@ function refreshEqInfos() {
 // This function is called each time a corresponding info cmd has a value update.
 // Reminder: jeedom.cmd.update[cmdId] = updateInfoCmd()
 function updateInfoCmd(_options) {
-    console.log("updateInfoCmd(): options=", _options);
     cmdId = _options.cmd_id;
-    // var elm2 = document.getElementById('cmdId-9999');
-    // console.log('elm2=', elm2);
+    value = _options.display_value;
+    console.log("updateInfoCmd(cmdId=" + cmdId + ", val=" + value + ")");
     var elm = document.getElementById("cmdId-" + cmdId);
     if (elm == null) {
         console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
         return;
     }
     console.log("elm=", elm);
-    if (true /*$isInput*/) elm.value = _options.display_value;
+    if (true /*$isInput*/) elm.value = value;
     // Not <input>. Assuming <span>
-    else elm.textContent = _options.display_value;
+    else elm.textContent = value;
+}
+
+// Same as updateInfoCmd() but dedicated to 'Time-Timestamp' info display
+function updateInfoCmdTimestamp(_options) {
+    cmdId = _options.cmd_id;
+    value = _options.display_value;
+    console.log(
+        "updateInfoCmdTimestamp(cmdId=" + cmdId + ", val=" + value + ")"
+    );
+    var elm = document.getElementById("cmdId-" + cmdId);
+    if (elm == null) {
+        console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
+        return;
+    }
+    // console.log("elm=", elm);
+    // Convert PHP timestamp to human readable time
+    dt = new Date(value * 1000);
+    console.log("dt=", dt);
+    elm.value = dt;
 }
 
 $("#in_searchEqlogicB")
@@ -349,77 +472,11 @@ function getSelectedEqs(zgId) {
 }
 
 /* Removes selected equipments for given zigate nb from Jeedom DB only. Zigate is untouched. */
-// function removeBeesJeedom(zgId) {
-//     console.log("removeBeesJeedom(zgId=" + zgId + ")");
-
-//     /* Any selected ? */
-//     var sel = getSelectedEqs(zgId);
-//     console.log(sel);
-//     if (sel["nb"] == 0) {
-//         alert("Aucun équipement sélectionné !");
-//         return;
-//     }
-//     var eqIdList = sel["ids"];
-//     console.log("eqIdList=" + eqIdList);
-
-//     var msg =
-//         "{{Vous êtes sur le point de supprimer les équipements selectionnés de Jeedom.";
-//     msg +=
-//         "<br><br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement au fur et à mesure de leur reveil et ce, tant qu'on ne les force pas à quitter le réseau.";
-//     msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
-//     bootbox.confirm(msg, function (result) {
-//         if (result == false) return;
-
-//         // Collecting addresses before EQ is removed
-//         var eqAddrList = sel["addrs"];
-//         console.log("eqAddrList=" + eqAddrList);
-
-//         $.ajax({
-//             type: "POST",
-//             url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
-//             data: {
-//                 action: "removeEqJeedom",
-//                 eqList: eqIdList,
-//             },
-//             dataType: "json",
-//             global: false,
-//             error: function (request, status, error) {
-//                 bootbox.alert("ERREUR 'removeEqJeedom' !");
-//             },
-//             success: function (json_res) {
-//                 window.location.reload();
-//                 res = JSON.parse(json_res.result);
-//                 if (res.status != 0) {
-//                     var msg =
-//                         "ERREUR ! Quelque chose s'est mal passé.\n" +
-//                         res.errors;
-//                     alert(msg);
-//                 } else {
-//                     // Informing parser that some equipements have to be considered "phantom"
-//                     var xhr = new XMLHttpRequest();
-//                     xhr.open(
-//                         "GET",
-//                         "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
-//                             js_queueXToParser +
-//                             "&msg=type:eqRemoved_net:Abeille" +
-//                             zgId +
-//                             "_eqList:" +
-//                             eqAddrList,
-//                         true
-//                     );
-//                     xhr.send();
-//                 }
-//             },
-//         });
-//     });
-// }
-
-/* Removes selected equipments for given zigate nb from Jeedom DB only. Zigate is untouched. */
-function removeSelectedEq(zgId) {
-    console.log("removeSelectedEq(zgId=" + zgId + ")");
+function removeSelectedEq(gtwId) {
+    console.log("removeSelectedEq(gtwId=" + gtwId + ")");
 
     /* Any selected ? */
-    var sel = getSelectedEqs(zgId);
+    var sel = getSelectedEqs(gtwId);
     console.log(sel);
     if (sel["nb"] == 0) {
         alert("{{Aucun équipement sélectionné !}}");
@@ -428,7 +485,100 @@ function removeSelectedEq(zgId) {
     var eqIdList = sel["ids"];
     console.log("eqIdList=" + eqIdList);
 
-    for (const eqId2 of eqIdList) removeEq(zgId, eqId2);
+    // TODO: Group messages and generate 1 remove action
+    // msg =
+    //     "{{Êtes-vous sûr de vouloir supprimer les équipements Abeille suivants}}<br><br>";
+    // eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
+    // for (const eqId2 of eqIdList) {
+    //     eqName = eqPerZigate[gtwId][eqId2]["name"];
+    //     msg += "- '<b>" + eqName + "</b>'<br>";
+
+    //     jeedom.eqLogic.getUseBeforeRemove({
+    //         id: eqId2,
+    //         error: function (error) {},
+    //         success: function (data) {
+    //             console.log("data=", data);
+    //             if (Object.keys(data).length == 0) {
+    //                 return;
+    //             }
+
+    //             msg += "  Utilisé par <br>";
+    //             var complement = null;
+    //             for (let i in data) {
+    //                 complement = "";
+    //                 if ("sourceName" in data[i]) {
+    //                     complement = " (" + data[i].sourceName + ")";
+    //                 }
+    //                 msg +=
+    //                     "- " +
+    //                     '<a href="' +
+    //                     data[i].url +
+    //                     '" target="_blank">' +
+    //                     data[i].type +
+    //                     "</a> : <b>" +
+    //                     data[i].name +
+    //                     "</b>" +
+    //                     complement +
+    //                     ' <sup><a href="' +
+    //                     data[i].url +
+    //                     '" target="_blank"><i class="fas fa-external-link-alt"></i></a></sup></br>';
+    //             }
+    //         },
+    //     });
+    // }
+
+    // bootbox.confirm(msg, function (result) {
+    //     if (result) {
+    //     }
+    // });
+
+    for (const eqId2 of eqIdList) removeEq(gtwId, eqId2);
+}
+
+/* saveEqLogic(): Called on equipement 'Save' button click */
+function saveEqLogic(eqLogic) {
+    console.log("saveEqLogic(), eqLogic=", eqLogic);
+
+    // Note: Expecting 'eq' to be defined as global val
+    if (typeof curEq == "undefined") {
+        console.log("OOOPS !! Unexpected case. Missing 'curEq'");
+        return;
+    }
+
+    console.log("curEq=", curEq);
+
+    // Tcharp38: Don't understand how to save specific fields in eqLogic/configuration so custom way
+    // Saving variables if any
+    // TODO: Variables are initialized from equipment model but since user can change them, better to move
+    //       them outside 'ab::eqModel'
+    if (typeof curEq.model.variables != "undefined") {
+        varUpdated = false;
+        for (const [vKey, vVal] of Object.entries(curEq.model.variables)) {
+            newVal = document.getElementById("idVar" + vKey).value;
+            if (newVal != vVal) {
+                curEq.model.variables[vKey] = newVal;
+                varUpdated = true;
+            }
+        }
+        if (varUpdated) {
+            console.log("VAR updated, curEq.model=", curEq.model);
+            $.ajax({
+                type: "POST",
+                url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+                data: {
+                    action: "saveEqConfig",
+                    eqId: eqId,
+                    eqConfKey: "ab::eqModel",
+                    eqConfVal: JSON.stringify(curEq.model),
+                },
+                dataType: "json",
+                global: false,
+                success: function (json_res) {},
+            });
+        }
+    }
+
+    return eqLogic;
 }
 
 /* Click on 'remove' button in equipement details page.
@@ -456,7 +606,7 @@ $(".eqLogicAction[data-action=abRemove]")
 
 /* Remove from Jeedom eq with ID 'eqId' but list first how it is used and ask confirmation to user */
 function removeEq(zgId, eqId) {
-    console.log("removeEq(" + eqId + ")");
+    console.log("removeEq(zgId=" + zgId +", eqId=" + eqId + ")");
 
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
     eqName = eqPerZigate[zgId][eqId]["name"];
@@ -521,7 +671,7 @@ function removeEq(zgId, eqId) {
                                     js_queueXToParser +
                                     "&msg=type:eqRemoved_net:Abeille" +
                                     zgId +
-                                    "_eqList:" +
+                                    "_addrList:" +
                                     eqAddrList,
                                 true
                             );
@@ -707,6 +857,7 @@ function replaceEq() {
     }
     // Ensure same jsonId
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
+    // console.log("eqPerZigate=", eqPerZigate);
     deadJsonId = eqPerZigate[deadZgId][deadId]["jsonId"];
     newJsonId = eqPerZigate[newZgId][newId]["jsonId"];
     if (deadJsonId != newJsonId) {
@@ -718,7 +869,11 @@ function replaceEq() {
     }
 
     var msg =
-        "{{Vous souhaitez remplacer '" + deadHName + "' par " + newHName + ".";
+        "{{Vous souhaitez remplacer}}<br> - " +
+        deadHName +
+        "<br>{{par}}<br> - " +
+        newHName +
+        "<br>";
 
     // if (dstZgId == srcZgId) {
     //     msg += "\n\nMais.. ca ne fait aucun sens.";
@@ -727,9 +882,8 @@ function replaceEq() {
     // }
 
     msg +=
-        "<br><br>L'équipement mort va recevoir les adresses du nouvel équipement.";
-    msg += "<br>Tout l'historique de l'équipement mort sera ainsi préservé.";
-    msg += "<br><br>On y va ?}}";
+        "<br>{{Pour récupérer l'historique de l'équipement mort, celui-ci va prendre les adresses du nouvel équipement.}}";
+    msg += "<br><br>{{On y va ?}}";
     bootbox.confirm(msg, function (result) {
         if (result == false) return;
 
@@ -1011,35 +1165,51 @@ function repairReturnChannel() {
 $("#idDelLocalBtn").on("click", function () {
     console.log("idDelLocalBtn click");
 
-    console.log("curEq=", curEq);
-    modelName = curEq.model.modelName;
-    path = "core/config/devices_local/" + modelName + "/" + modelName + ".json";
-    $.ajax({
-        type: "POST",
-        url: "plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
-        data: {
-            action: "delFile",
-            file: path,
-        },
-        dataType: "json",
-        global: false,
-        success: function (json_res) {
-            var msg = "{{Le modèle local a été supprimé}}.<br><br>";
-            msg +=
-                "L'équipement ayant été inclu avec ce modèle vous devez refaire une inclusion ou le recharger & reconfigurer pour être à jour.}}";
-            bootbox.confirm(msg, function (result) {
-                window.location.reload();
-            });
-        },
+    var msg =
+        "{{Vous êtes sur le point de supprimer le modèle local ayant servi à l'inclusion}}.<br>";
+    msg +=
+        "{{La réinitialisation à partir du modèle officiel est nécessaire}}.<br>";
+    msg += "<br>{{Etes vous sur de vouloir continuer ?}}";
+    bootbox.confirm(msg, function (result) {
+        if (result == false) return;
+
+        console.log("curEq=", curEq);
+        modelName = curEq.model.modelName;
+        path =
+            "core/config/devices_local/" +
+            modelName +
+            "/" +
+            modelName +
+            ".json";
+        $.ajax({
+            type: "POST",
+            url: "plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: {
+                action: "delFile",
+                file: path,
+            },
+            dataType: "json",
+            global: false,
+            success: function (json_res) {
+                // Local model removed
+                var xhttp = new XMLHttpRequest();
+                xhttp.open(
+                    "GET",
+                    "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
+                        curEqId,
+                    false
+                );
+                xhttp.send();
+            },
+        });
     });
 });
 
 // Update Jeedom equipement from model
 $("#idUpdateBtn").on("click", function () {
     console.log("update(" + curEqId + ")");
-    eqId = curEqId;
 
-    var msg = "{{Vous êtes sur le point de:<br>";
+    var msg = "{{Vous êtes sur le point de<br>";
     msg += "- Mettre à jour l'équipement Jeedom à partir de son modèle<br>";
     msg += "- Et reconfigurer l'équipement<br>";
     msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
@@ -1055,7 +1225,7 @@ $("#idUpdateBtn").on("click", function () {
         xhttp.open(
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=update&eqId=" +
-                eqId,
+                curEqId,
             false
         );
         xhttp.send();
@@ -1068,14 +1238,14 @@ $("#idReinitBtn").on("click", function () {
     console.log("reinit(" + curEqId + ")");
     eqId = curEqId;
 
-    var msg = "{{Vous êtes sur le point de:}}<br>";
+    var msg = "{{Vous êtes sur le point de}}<br>";
     msg +=
-        "- Réinitialiser cet équipement (équivalent à une nouvelle inclusion).<br>";
+        "- Réinitialiser cet équipement Jeedom à partir de son dernier modèle.<br>";
     msg += "- Et le reconfigurer.<br>";
     msg +=
-        "<br>Tout sera remis à jour à partir du modèle JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.<br>";
+        "<br>Tout sera remis à jour à partir du modèle excepté son nom, l'ID Jeedom ainsi que ses adresses.<br>";
     msg +=
-        "Le nom des commandes peut avoir changé et vous serez obligé de revoir les scénaris utilisant cet équipement.<br>";
+        "Attention ! Les commandes seront en ligne avec le dernier modèle, et vous pourriez être obligé de revoir les scénaris utilisant cet équipement.<br>";
 
     if (eqBatteryType != "") {
         msg +=
@@ -1128,6 +1298,9 @@ $("#idModelChangeBtn").on("click", function () {
             console.log("modelsList=", modelsList);
             // Populate html5 datalist
             Object.values(modelsList).forEach((model) => {
+                // We allow only official models for this case
+                if (model.modelSource != "Abeille") return;
+
                 var str = "";
                 // Zigbee signature
                 if (
@@ -1151,21 +1324,29 @@ $("#idModelChangeBtn").on("click", function () {
                 }
                 str += model.type;
 
+                var $opt = $("<option></option>");
+
                 // JSON id (including location)
-                if (typeof model.modelPath != "undefined")
+                if (typeof model.modelPath != "undefined") {
                     // modelPath is optional
                     str += " (" + model.modelPath + ")";
-                else
+                    $opt.attr("modelPath", model.modelPath);
+                } else {
                     str +=
                         " (" +
                         model.modelName +
                         "/" +
                         model.modelName +
                         ".json)";
+                    $opt.attr(
+                        "modelPath",
+                        model.modelName + "/" + model.modelNameh
+                    );
+                }
 
                 // Adding to datalist
-                var $opt = $("<option></option>");
                 $opt.attr("value", str);
+                $opt.attr("modelSource", model.modelSource); // Working ?
                 $datalist.append($opt);
 
                 // Display if it is current model of equipment
@@ -1184,11 +1365,24 @@ $("#idModelChangeBtn").on("click", function () {
     // Save button
     $content.find(".btn-success").on("click", function () {
         // Check user input
-        var strSaisie = $content.find("input[type=search]").val();
-        if ($datalist.find('option[value="' + strSaisie + '"]').length == 0) {
+        var userInput = $content.find("input[type=search]").val();
+        if ($datalist.find('option[value="' + userInput + '"]').length == 0) {
             alert("{{Erreur: vous devez choisir un modèle dans la liste.}}");
             return;
         }
+
+        // console.log("datalistfind=", $datalist.find('option[value="' + userInput + '"]'));
+        // dl = document.getElementById("abeille-all-models-list");
+        // opSelected = dl.querySelector(`[value="${userInput}"]`);
+        // console.log("opSelected=", opSelected);
+        // opSelected2 = dl.querySelector('option[value="' + userInput + '"]');
+        // console.log("opSelected2=", opSelected2);
+        // selectedOption = $('option[value="' + userInput + '"]');
+        // console.log("selectedOption=", selectedOption);
+        // console.log("selectedOption.ms=", selectedOption.attr['modelSource']);
+        // console.log("selectedOption.mp=", selectedOption.attr['modelPath']);
+        // console.log("selectedOption.dataset=", selectedOption.dataset);
+        // console.log("selectedOption.id=", selectedOption.attr['id']);
 
         // Ask confirmation (+ ask to wake up the equipment if it is on battery)
         var strSuppBatterie = "";
@@ -1210,16 +1404,16 @@ $("#idModelChangeBtn").on("click", function () {
                 type: "POST",
                 url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
                 data: {
-                    action: "setModelToDevice",
+                    action: "setForcedModel",
                     eqId: curEqId,
-                    modelChoice: strSaisie,
+                    userInput: userInput,
                 },
                 dataType: "json",
                 global: false,
                 success: function () {
                     // Second query: reset device using its (new) model
-                    console.log("Simulation clic sur Mise à jour...");
-                    $("#idUpdateBtn").trigger("click");
+                    // console.log("Simulation clic sur Mise à jour...");
+                    // $("#idUpdateBtn").trigger("click");
                 },
             });
         }
@@ -1238,14 +1432,14 @@ $("body").on("click", "a#linkRestoreAutoModel", function () {
                     type: "POST",
                     url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
                     data: {
-                        action: "disableManualModelForDevice",
+                        action: "removeForcedModel",
                         eqId: curEqId,
                     },
                     dataType: "json",
                     global: false,
                     success: function () {
                         // Let the user read the message, then refresh the page
-                        console.log("disableManualModelForDevice OK");
+                        console.log("removeForcedModel OK");
                         setTimeout(function () {
                             document.location.reload();
                         }, 3000);
@@ -1276,7 +1470,10 @@ function saveConfig(config) {
 }
 
 $("#idEqIcon").change(function () {
-    var text = "plugins/Abeille/images/node_" + $("#idEqIcon").val() + ".png";
+    var text =
+        "plugins/Abeille/core/config/devices_images/node_" +
+        $("#idEqIcon").val() +
+        ".png";
     //$("#icon_visu").attr('src',text);
     document.icon_visu.src = text;
 });
@@ -1355,9 +1552,8 @@ function sendZigate(action, param) {
             else payload = "value=0";
             break;
         case "setCertif":
-            if (param == "CE")
-                topic = "CmdAbeille" + zgId + "/0000/setCertificationCE";
-            else topic = "CmdAbeille" + zgId + "/0000/setCertificationFCC";
+            topic = "CmdAbeille" + zgId + "/0000/zgSetCertification";
+            payload = param; // 'CE' or 'FCC'
             break;
         case "startNetwork": // Not required for end user but for developper.
             topic = "CmdAbeille" + zgId + "/0000/zgStartNetwork";
@@ -1377,9 +1573,23 @@ function sendZigate(action, param) {
             else if (param == "Raw") payload = "mode=raw";
             else payload = "mode=hybrid";
             break;
-        case "setExtPANId": // Not critical. No need so far.
-            topic = "CmdAbeille" + zgId + "/0000/setExtendedPANID";
-            payload = "";
+        // case "setExtPANId":
+        //     topic = "CmdAbeille" + zgId + "/0000/zgSetExtendedPanId";
+        //     // Note: param = cmd logic id
+        //     cmd = eq.cmds[param];
+        //     cmdId = cmd.id;
+        //     extPanId = document.getElementById("cmdId-" + cmdId).value;
+        //     console.log("Ext PAN-ID=" + extPanId);
+        //     payload = "extPanId=" + extPanId;
+        //     break;
+        case "forceExtPANId":
+            topic = "CmdAbeille" + zgId + "/0000/zgForceExtendedPanId";
+            // Note: param = cmd logic id
+            cmd = eq.cmds[param];
+            cmdId = cmd.id;
+            extPanId = document.getElementById("cmdId-" + cmdId).value;
+            console.log("Ext PAN-ID=" + extPanId);
+            payload = "extPanId=" + extPanId;
             break;
         case "setChannel":
             msg =
@@ -1414,11 +1624,11 @@ function sendZigate(action, param) {
                     sendToZigate(topic, payload);
 
                     config = new Object();
-                    config["ab::zgChan" + zgId] = chan;
+                    config["ab::gtwChan" + zgId] = chan;
                     console.log("config=", config);
                     saveConfig(config);
 
-                    topic = "CmdAbeille" + zgId + "/0000/zgSstartNetwork";
+                    topic = "CmdAbeille" + zgId + "/0000/zgStartNetwork";
                     payload = "";
                     sendToZigate(topic, payload);
                 }
@@ -1431,8 +1641,9 @@ function sendZigate(action, param) {
             payload = "";
             break;
         case "setTXPower":
-            topic = "CmdAbeille" + zgId + "/0000/TxPower";
-            payload = "ff"; // TODO
+            topic = "CmdAbeille" + zgId + "/0000/zgSetTxPower";
+            var power = $("#idZgTxPower").val();
+            payload = "txPower=" + power; // TODO
             break;
         case "getTime":
             topic = "CmdAbeille" + zgId + "/0000/zgGetTimeServer";
@@ -1457,14 +1668,14 @@ function sendZigate(action, param) {
             break;
         case "zgErasePdm": // Erase PDM
             msg =
-                "{{Vous êtes sur le point de d'effacer la PDM de la zigate}} <b>" +
+                "{{Vous êtes sur le point d'effacer la PDM de la Zigate}} " +
                 zgId +
-                "</b>";
+                "<br><br>";
             msg +=
-                "{{<br>Tous les équipements connus de la zigate seront perdus et devront être réinclus.}}";
+                "{{Tous les équipements connus de la zigate seront perdus et devront être réinclus.}}<br>";
             msg +=
-                "{{<br>Si ils existent encore côté Jeedom ils passeront vite en time-out.}}";
-            msg += "{{<br><br>Etes vous sur de vouloir continuer ?}}";
+                "{{Si ils existent encore côté Jeedom ils passeront vite en time-out.}}<br><br>";
+            msg += "{{Etes vous sur de vouloir continuer ?}}";
             bootbox.confirm(msg, function (result) {
                 if (result)
                     sendToZigate("CmdAbeille" + zgId + "/0000/zgErasePdm", "");
@@ -1479,8 +1690,8 @@ function sendZigate(action, param) {
             file = "AbeillePdm-Abeille" + zgId + ".json";
             msg =
                 "{{Vous êtes sur le point d'écraser tout le contenu PDM de votre Zigate}}<br>";
-            msg += "{{à partir du fichier:}} '" + file + "'<br>";
-            msg += "<br>{{Etes vous sur de vouloir continuer ?}}";
+            msg += "{{à partir du fichier:}} '" + file + "'<br><br>";
+            msg += "{{Etes vous sur de vouloir continuer ?}}";
             bootbox.confirm(msg, function (result) {
                 if (result) {
                     // sendToZigate("CmdAbeille" + zgId + "/0000/zgErasePdm", "");
@@ -1505,9 +1716,6 @@ function sendZigate(action, param) {
 function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
     console.log("sendToCmd(" + action + ")");
 
-    selected = getSelected();
-    console.log("selected=", selected);
-
     function sendCmd(topic, payload) {
         var xhr = new XMLHttpRequest();
         msg =
@@ -1526,76 +1734,25 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
     }
 
     switch (action) {
-        case "getGroups":
-            if (selected.length == 0)
-                return alert("Aucun équipement sélectionné");
-            selected.forEach((eq) => {
-                sendCmd(
-                    "CmdAbeille" +
-                        eq["zgId"] +
-                        "/" +
-                        eq["addr"] +
-                        "/getGroupMembership",
-                    "ep=" + eq["mainEp"]
-                );
-                setTimeout(function () {
-                    location.reload(true);
-                }, 1000);
-            });
-            break;
-        case "addGroup":
-            if (selected.length == 0)
-                return alert("Aucun équipement sélectionné");
-            group = document.getElementById("idGroup").value;
-            if (group == "") return alert("Groupe non renseigné");
-            selected.forEach((eq) => {
-                console.log("eq=", eq);
-                sendCmd(
-                    "CmdAbeille" + eq["zgId"] + "/" + eq["addr"] + "/addGroup",
-                    "ep=" + eq["mainEp"] + "&group=" + group
-                );
-                setTimeout(function () {
-                    sendCmd(
-                        "CmdAbeille" +
-                            eq["zgId"] +
-                            "/" +
-                            eq["addr"] +
-                            "/getGroupMembership",
-                        "ep=" + eq["mainEp"]
-                    );
-                    location.reload(true);
-                }, 1000);
-            });
-            break;
-        case "removeGroup":
-            if (selected.length == 0)
-                return alert("Aucun équipement sélectionné");
-            group = document.getElementById("idGroup").value;
-            if (group == "") return alert("Groupe non renseigné");
-            selected.forEach((eq) => {
-                console.log("eq=", eq);
-                sendCmd(
-                    "CmdAbeille" + eq["zgId"] + "/0000/removeGroup",
-                    "address=" +
-                        eq["addr"] +
-                        "&DestinationEndPoint=" +
-                        eq["mainEp"] +
-                        "&groupAddress=" +
-                        group
-                );
-                setTimeout(function () {
-                    sendCmd(
-                        "CmdAbeille" +
-                            eq["zgId"] +
-                            "/" +
-                            eq["addr"] +
-                            "/getGroupMembership",
-                        "ep=" + eq["mainEp"]
-                    );
-                    location.reload(true);
-                }, 1000);
-            });
-            break;
+        // case "getGroups": // OBSOLETE !! Replaced by 'getGroups2'
+        //     selected = getSelected();
+        //     console.log("selected=", selected);
+        //     if (selected.length == 0)
+        //         return alert("Aucun équipement sélectionné");
+        //     selected.forEach((eq) => {
+        //         sendCmd(
+        //             "CmdAbeille" +
+        //                 eq["zgId"] +
+        //                 "/" +
+        //                 eq["addr"] +
+        //                 "/getGroupMembership",
+        //             "ep=" + eq["mainEp"]
+        //         );
+        //         setTimeout(function () {
+        //             location.reload(true);
+        //         }, 1000);
+        //     });
+        //     break;
         case "getGroups2":
             zgId = param1;
             addr = param2;
@@ -1608,6 +1765,114 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                 location.reload(true);
             }, 1000);
             break;
+        // case "addGroup": // OBSOLETE !! Replaced by 'addGroup2'
+        //     selected = getSelected();
+        //     console.log("selected=", selected);
+        //     if (selected.length == 0)
+        //         return alert("Aucun équipement sélectionné");
+        //     group = document.getElementById("idGroup").value;
+        //     if (group == "") return alert("Groupe non renseigné");
+        //     selected.forEach((eq) => {
+        //         console.log("eq=", eq);
+        //         sendCmd(
+        //             "CmdAbeille" + eq["zgId"] + "/" + eq["addr"] + "/addGroup",
+        //             "ep=" + eq["mainEp"] + "&group=" + group
+        //         );
+        //         setTimeout(function () {
+        //             sendCmd(
+        //                 "CmdAbeille" +
+        //                     eq["zgId"] +
+        //                     "/" +
+        //                     eq["addr"] +
+        //                     "/getGroupMembership",
+        //                 "ep=" + eq["mainEp"]
+        //             );
+        //             location.reload(true);
+        //         }, 1000);
+        //     });
+        //     break;
+        case "addGroup2":
+            zgId = param1;
+            addr = param2;
+            ep = param3;
+
+            // Open empty dialog
+            var myPopup = bootbox.dialog({
+                message: "<p></p>", // must not be empty
+                title: "{{Ajouter un groupe}}",
+                className: "abeille_GroupChoicePopup",
+            });
+
+            // Content template is defined in Abeille-Eq-Advanced-Device.php
+            var $content = myPopup.find(".bootbox-body");
+            $content.empty().append($("#idGroupChoicePopup").clone().show());
+
+            // Cancel button
+            $content.find(".btn-secondary").on("click", function () {
+                myPopup.find(".bootbox-close-button").trigger("click");
+            });
+
+            // OK button
+            $content.find(".btn-success").on("click", function () {
+                // group = document.getElementById("idGroup2").value;
+                group = $content.find("#idGroup2").val();
+                console.log("Group=" + group);
+
+                // Test if not empty and if valid hex
+                var re = /[0-9A-Fa-f]{4}/g;
+                if (group == "" || !re.test(group)) {
+                    alert("{{Groupe invalide}}");
+                    return;
+                }
+
+                sendCmd(
+                    "CmdAbeille" + zgId + "/" + addr + "/addGroup",
+                    "ep=" + ep + "&group=" + group
+                );
+                setTimeout(function () {
+                    sendCmd(
+                        "CmdAbeille" +
+                            zgId +
+                            "/" +
+                            addr +
+                            "/getGroupMembership",
+                        "ep=" + ep
+                    );
+                    location.reload(true);
+                }, 1000);
+            });
+            break;
+        // case "removeGroup": // OBSOLETE !! Replaced by 'removeGroup2'
+        //     selected = getSelected();
+        //     console.log("selected=", selected);
+        //     if (selected.length == 0)
+        //         return alert("Aucun équipement sélectionné");
+        //     group = document.getElementById("idGroup").value;
+        //     if (group == "") return alert("Groupe non renseigné");
+        //     selected.forEach((eq) => {
+        //         console.log("eq=", eq);
+        //         sendCmd(
+        //             "CmdAbeille" + eq["zgId"] + "/0000/removeGroup",
+        //             "address=" +
+        //                 eq["addr"] +
+        //                 "&DestinationEndPoint=" +
+        //                 eq["mainEp"] +
+        //                 "&groupAddress=" +
+        //                 group
+        //         );
+        //         setTimeout(function () {
+        //             sendCmd(
+        //                 "CmdAbeille" +
+        //                     eq["zgId"] +
+        //                     "/" +
+        //                     eq["addr"] +
+        //                     "/getGroupMembership",
+        //                 "ep=" + eq["mainEp"]
+        //             );
+        //             location.reload(true);
+        //         }, 1000);
+        //     });
+        //     break;
         case "removeGroup2":
             zgId = param1;
             addr = param2;
@@ -1615,12 +1880,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             group = param4;
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/removeGroup",
-                "address=" +
-                    addr +
-                    "&DestinationEndPoint=" +
-                    ep +
-                    "&groupAddress=" +
-                    group
+                "address=" + addr + "&ep=" + ep + "&group=" + group
             );
             setTimeout(function () {
                 location.reload(true);
@@ -1643,6 +1903,8 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             }, 1000);
             break;
         case "setGroupRemote":
+            selected = getSelected();
+            console.log("selected=", selected);
             if (selected.length == 0)
                 return alert("Aucun équipement sélectionné");
             group = document.getElementById("idGroup").value;
@@ -1667,6 +1929,8 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             });
             break;
         case "setGroupRemoteLegrand":
+            selected = getSelected();
+            console.log("selected=", selected);
             if (selected.length == 0)
                 return alert("Aucun équipement sélectionné");
             group = document.getElementById("idGroup").value;
@@ -1731,10 +1995,14 @@ function interrogate(request) {
         payload = "";
     } else if (request == "getBindingTable") {
         topic = "Cmd" + logicalId + "_getBindingTable";
-        payload = "address=" + eqAddr;
+        idx = document.getElementById("idIdx-BT").value;
+        // TODO: How to allow 1 digit and convert (ex 3 => 03) ?
+        if (idx != "") payload = "startIdx=" + idx;
+        else payload = "";
     } else if (request == "getNeighborTable") {
         topic = "Cmd" + logicalId + "_getNeighborTable";
         startIdx = document.getElementById("idStartIdx").value;
+        // TODO: How to allow 1 digit and convert (ex 3 => 03) ?
         payload = "startIndex=" + startIdx;
     } else if (request == "getActiveEndPoints") {
         topic = "Cmd" + logicalId + "_getActiveEndpoints";
@@ -1748,7 +2016,14 @@ function interrogate(request) {
         payload = "";
     } else if (request == "getIeeeAddress") {
         topic = "Cmd" + logicalId + "_getIeeeAddress";
-        payload = "";
+        reqType = document.getElementById("idMgmtIeeeReq-RT").value;
+        payload = "reqType=" + reqType;
+    } else if (request == "getNwkAddress") {
+        topic = "Cmd" + logicalId + "_getNwkAddress";
+        ieee = document.getElementById("idEqIeee").value;
+        payload = "ieee=" + ieee;
+        reqType = document.getElementById("idNwkAddrReq-RT").value;
+        payload += "_reqType=" + reqType;
     } else if (request == "mgmtNetworkUpdateReq") {
         topic = "Cmd" + logicalId + "_mgmtNetworkUpdateReq";
         scanChan = document.getElementById("idMgmtNwkUpdReqSC").value;
@@ -1830,6 +2105,7 @@ function interrogate(request) {
         clustId = document.getElementById("idClustIdB").value;
         // start = document.getElementById("idStartB").value;
         start = "00";
+        dir = document.getElementById("idDir-DiscoverCmdRx").value;
         payload =
             "addr=" +
             eqAddr +
@@ -1838,7 +2114,9 @@ function interrogate(request) {
             "_clustId=" +
             clustId +
             "_start=" +
-            start;
+            start +
+            "_dir=" +
+            dir;
     } else if (request == "discoverAttributesExt") {
         topic = "Cmd" + logicalId + "_discoverAttributesExt";
         ep = document.getElementById("idEpC").value;
@@ -1978,6 +2256,18 @@ function interrogate(request) {
         topic = "Cmd" + logicalId + "_removeAllGroups";
         ep = document.getElementById("idEp-RAG").value;
         payload = "ep=" + ep;
+    } else if (request == "0102-Apply") {
+        topic = "Cmd" + logicalId + "_cmd-0102";
+        ep = document.getElementById("idEp-0102").value;
+        cmdId = document.getElementById("idCmd-0102").value;
+        extra = document.getElementById("idExtra-0102").value;
+        // Check
+        if (cmdId > 2 && extra == "") {
+            alert("Valeur manquante pour cette commande");
+            return;
+        }
+        payload = "ep=" + ep + "_cmd=" + cmdId;
+        if (extra != "") payload += "_value=" + extra;
     } else if (request == "0201-SetPoint") {
         topic = "Cmd" + logicalId + "_cmd-0201";
         ep = document.getElementById("idEpC0201-00").value;
@@ -2003,9 +2293,17 @@ function interrogate(request) {
         if (duration != "") payload += "_duration=" + duration;
         if (sirenl != "") payload += "_sirenl=" + sirenl;
     } else if (request == "1000-GetGroups") {
+        // Clust 1000, cmd 0x41 to SERVER
         topic = "Cmd" + logicalId + "_cmd-1000";
         ep = document.getElementById("idEpC1000-41").value;
         payload = "ep=" + ep + "_cmd=41_startIdx=00";
+    } else if (request == "1000-GetGroupsResp") {
+        // Clust 1000, cmd 0x41 to CLIENT
+        topic = "Cmd" + logicalId + "_cmd-1000";
+        ep = document.getElementById("idEpC1000-41-Resp").value;
+        group = document.getElementById("idGrpC1000-41-Resp").value;
+        payload =
+            "ep=" + ep + "_cmd=41_total=00_startIdx=00_count=01_group=" + group;
     } else if (request == "1000-GetEndpoints") {
         topic = "Cmd" + logicalId + "_cmd-1000";
         ep = document.getElementById("idEpC1000-42").value;

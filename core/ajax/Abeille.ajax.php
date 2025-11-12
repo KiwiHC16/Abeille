@@ -62,6 +62,48 @@
         return true;
     }
 
+    function sendToX($queueName, $msg) {
+        global $abQueues;
+
+        $queueId = $abQueues[$queueName]['id'];
+        $queue = msg_get_queue($queueId);
+        $msgJson = json_encode($msg);
+
+        if (msg_send($queue, 1, $msgJson, false, false) == false) {
+            return false;
+        }
+        return true;
+    }
+
+    // stop=true (default) => Disable daemons auto-start and stop them
+    function pauseDaemons($stop = true, $dStatus = []) {
+        if ($stop) {
+            $dStatus['autoMode'] = config::byKey('deamonAutoMode', 'Abeille', 0);
+            if ($dStatus['autoMode'] == 1) {
+                logMessage('debug', 'Disabling daemons auto-startup');
+                config::save('deamonAutoMode', 0, 'Abeille');
+            }
+
+            $daemons = AbeilleTools::getRunningDaemons2();
+            /* 'daemons' reminder
+            $daemons = array(
+                'runningNb' => sizeof($daemons), // Nb of running daemons
+                'runBits' => $runBits, // 1 bit per running daemon
+                'daemons' => $daemons, // Detail on each daemon
+            ); */
+            $dStatus['running'] = ($daemons['runningNb'] > 0) ? true: false;
+            Abeille::deamon_stop();
+        } else {
+            if ($dStatus['running']) // Daemons were running
+                Abeille::deamon_start(); // Restarting daemons
+            if ($dStatus['autoMode'] == 1) {
+                logMessage('debug', 'Reenabling daemons auto-startup');
+                config::save('deamonAutoMode', 1, 'Abeille');
+            }
+        }
+        return $dStatus;
+    }
+
     try {
 
         require_once __DIR__.'/../../../../core/php/core.inc.php';
@@ -70,6 +112,7 @@
         include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()/getRunningDaemons2()
         require_once __DIR__.'/../php/AbeilleInstall.php'; // checkIntegrity()
         include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
+        include_once __DIR__.'/../php/AbeilleGit.php'; // gitFetchAll()
 
         include_file('core', 'authentification', 'php');
         if (!isConnect('admin')) {
@@ -131,12 +174,6 @@
             ajax::success(json_encode($status));
         }
 
-        if (init('action') == 'installSocat') {
-            $cmd = '/bin/bash '.__DIR__.'/../scripts/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-            exec($cmd, $out, $status);
-            ajax::success(json_encode($status));
-        }
-
         if (init('action') == 'checkWiringPi') {
             $prefix = logGetPrefix(""); // Get log prefix
             $cmd = '/bin/bash '.__DIR__."/../scripts/checkWiringPi.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
@@ -144,23 +181,42 @@
             ajax::success(json_encode($status));
         }
 
-        if (init('action') == 'installWiringPi') {
-            $cmd = '/bin/bash '.__DIR__.'/../scripts/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        // OBSOLETE: installWiringPi => installPackage + package=WiringPi
+        // if (init('action') == 'installWiringPi') {
+        //     $cmd = '/bin/bash '.__DIR__.'/../scripts/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     ajax::success();
+        // }
+
+        // OBSOLETE: installPiGpio => installPackage + package=PiGpio
+        // if (init('action') == 'installPiGpio') {
+        //     $cmd = '/bin/bash '.__DIR__.'/../scripts/installPiGpio.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     ajax::success();
+        // }
+
+        // OBSOLETE: installSocat => installPackage + package=socat
+        // if (init('action') == 'installSocat') {
+        //     $cmd = '/bin/bash '.__DIR__.'/../scripts/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        //     exec($cmd, $out, $status);
+        //     ajax::success(json_encode($status));
+        // }
+
+        // Package installation
+        // Supported packages: WiringPi, PiGpio, socat
+        if (init('action') == 'installPackage') {
+            $package = init('package');
+
+            $cmd = '/bin/bash '.__DIR__."/../scripts/installPackage.sh ${package} >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
             ajax::success();
         }
 
         if (init('action') == 'checkPiGpio') {
             $prefix = logGetPrefix(""); // Get log prefix
-            $cmd = '/bin/bash python '.__DIR__."/../scripts/checkPiGpio.py | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            $cmd = 'python3 '.__DIR__."/../scripts/checkPiGpio.py | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
             ajax::success(json_encode($status));
-        }
-
-        if (init('action') == 'installPiGpio') {
-            $cmd = '/bin/bash '.__DIR__.'/../scripts/installPiGpio.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-            exec($cmd, $out, $status);
-            ajax::success();
         }
 
         if (init('action') == 'checkTTY') {
@@ -171,7 +227,7 @@
             logSetConf('AbeilleConfig.log', true);
             logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort.', GpioLib='.$zgGpioLib);
 
-            Abeille::pauseDaemons(1);
+            $dStatus = pauseDaemons(true); // Stop daemons if running
 
             /* Checks port exists and is not already used */
             $prefix = logGetPrefix(""); // Get log prefix
@@ -185,7 +241,7 @@
                 $status = zgGetVersion($zgPort, $version);
             }
 
-            Abeille::pauseDaemons(0);
+            pauseDaemons(false, $dStatus); // Restart daemons if were running
 
             ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
         }
@@ -198,32 +254,32 @@
 
         /* Update FW but check parameters first, prior to shutdown daemon */
         if (init('action') == 'updateFirmware') {
-            $zgType = init('zgtype'); // "PI" or "DIN"
-            $zgPort = init('zgport');
+            $zgType = init('zgType'); // "PI"/"PIv2" or "DIN"
+            $zgPort = init('zgPort');
             $zgGpioLib = init('zgGpioLib');
-            $zgFwFile = init('fwfile');
+            $zgFwFile = init('fwFile');
             $erasePdm = init('erasePdm');
             $zgId = init('zgId');
 
             logSetConf('AbeilleConfig.log', true);
-            logMessage('debug', 'updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgGpioLib.', '.$zgPort.')');
+            logMessage('debug', "updateFirmware(${zgPort}, ${zgType}, ${zgGpioLib}, ${zgFwFile})");
 
-            if ($zgType == "PI")
-                $script = "updateFirmware.sh";
-            else
-                $script = "updateFirmwareDIN.sh";
+            // if (($zgType == "PI") || ($zgType == "PIv2"))
+                $script = "updateZigate.sh";
+            // else
+            //     $script = "updateFirmwareDIN.sh";
 
             logMessage('debug', 'Checking parameters');
-            $cmdToExec = $script." check ".$zgPort." ".$zgGpioLib;
+            $cmdToExec = $script." check ${zgPort} ${zgType} ${zgGpioLib} ${zgFwFile}";
             $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
             $version = 0; // FW version
             if ($status == 0) {
-                Abeille::pauseDaemons(1);
+                $dStatus = pauseDaemons(true); // Stop daemons if running
 
                 /* Updating FW and reset Zigate */
-                $cmdToExec = $script." flash ".$zgPort." ".$zgGpioLib." ".$zgFwFile;
+                $cmdToExec = $script." flash ${zgPort} ${zgType} ${zgGpioLib} ${zgFwFile}";
                 $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
                 exec($cmd, $out, $status);
 
@@ -235,9 +291,9 @@
                 //     $status = zgGetVersion($zgPort, $version);
                 // }
 
-                Abeille::pauseDaemons(0);
+                pauseDaemons(false, $dStatus); // Restart daemons if were running
 
-                if ($erasePdm) {
+                if (($status == 0) && $erasePdm) {
                     logMessage('info', 'Effacement de la PDM');
                     if (sendToCmd('TempoCmdAbeille'.$zgId.'/0000/zgErasePdm&time='.(time()+2), '') == false) {
                         $status = -1;
@@ -256,10 +312,10 @@
             ajax::success();
         }
 
-        /* Devloper mode: Switch GIT branch */
+        /* Devloper mode: Switch/update GIT branch */
         if (init('action') == 'switchBranch') {
             $branch = init('branch');
-            $updateOnly = init('updateOnly'); // TODO: No longer required
+            // $updateOnly = init('updateOnly'); // TODO: No longer required
 
             logSetConf('AbeilleConfig.log', true);
 
@@ -267,10 +323,10 @@
             $prefix = logGetPrefix(""); // Get log prefix
 
             /* Creating temp dir */
-            $tmp = __DIR__.'/../../tmp';
-            $doneFile = $tmp.'/switchBranch.done';
-            if (file_exists($tmp) == false)
-                mkdir($tmp);
+            $tmpDir = jeedom::getTmpFolder("Abeille");
+            $doneFile = $tmpDir.'/switchBranch.done';
+            if (file_exists($tmpDir) == false)
+                mkdir($tmpDir);
             else if (file_exists($doneFile))
                 unlink($doneFile); // Removing 'switchBranch.done' file
 
@@ -278,20 +334,20 @@
             $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd);
 
-            // logMessage('debug', 'Arret des démons');
-            // abeille::deamon_stop(); // Stopping daemon
-            Abeille::pauseDaemons(1);
+            gitFetchAll(false);
+
+            $dStatus = pauseDaemons(true); // Stop daemons if running
 
             $cmdToExec = "switchBranch.sh ".$branch.' "'.$prefix.'"';
             // $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
-            $cmd = '/bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
+            $cmd = '/bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd);
 
             // TODO: There is something to be revisited there
             // switch done in backbround but daemons are restarted BEFORE switch ended.
             // TODO: Wait for switch end ?
 
-            Abeille::pauseDaemons(0);
+            pauseDaemons(false, $dStatus); // Restart daemons if were running
 
             /* Note: Returning immediately but switch not completed yet. Anyway server side code
             might be completely different after switch */
@@ -410,7 +466,7 @@
                 /* Need to start AbeilleMonitor if not already running
                 and restart cmd & parser.
                 WARNING: If cron is not running, any (re)start should be avoided. */
-                $conf = AbeilleTools::getParameters();
+                $conf = AbeilleTools::getConfig();
                 AbeilleTools::restartDaemons($conf, "AbeilleMonitor AbeilleParser AbeilleCmd");
             }
 
@@ -558,24 +614,25 @@
                 $eq['logicId'] = $eqLogic->getLogicalId();
                 list($eqNet, $eqAddr) = explode("/", $eq['logicId']);
                 $eq['zgId'] = substr($eqNet, 7);
-                $eq['zgType'] = config::byKey('ab::zgType'.$eq['zgId'], 'Abeille', '', 1);
-                $eq['zgChan'] = config::byKey('ab::zgChan'.$eq['zgId'], 'Abeille', '', 1);
+                $eq['zgType'] = config::byKey('ab::gtwSubType'.$eq['zgId'], 'Abeille', '', 1);
+                $eq['zgChan'] = config::byKey('ab::gtwChan'.$eq['zgId'], 'Abeille', 0, 1); // 0=auto
                 $eq['addr'] = $eqAddr;
                 $eq['ieee'] = $eqLogic->getConfiguration('IEEE', '');
                 $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');
                 $eq['batteryType'] = $eqLogic->getConfiguration('battery_type', '');
 
-                $sig = $eqLogic->getConfiguration('ab::signature', []);
-                $eq['zbModel'] = isset($sig['modelId']) ? $sig['modelId'] : '';
-                $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
+                // OBSOLETE: Moved to 'ab::zigbee'
+                // $sig = $eqLogic->getConfiguration('ab::signature', []);
+                // $eq['zbModel'] = isset($sig['modelId']) ? $sig['modelId'] : '';
+                // $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
 
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
                 // logDebug('  eqModel='.json_encode($eqModel));
-                $eq['modelSig'] = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : ''; // TO BE REMOVED
-                $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : ''; // TO BE REMOVED
-                $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille'; // TO BE REMOVED
-                $eq['modelType'] = isset($eqModel['type']) ? $eqModel['type'] : ''; // TO BE REMOVED
-                $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false; // TO BE REMOVED
+                // $eq['modelSig'] = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : ''; // TO BE REMOVED
+                // $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : ''; // TO BE REMOVED
+                // $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille'; // TO BE REMOVED
+                // $eq['modelType'] = isset($eqModel['type']) ? $eqModel['type'] : ''; // TO BE REMOVED
+                // $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false; // TO BE REMOVED
                 $eq['model'] = array(
                     // Model infos
                     'modelSig' => isset($eqModel['modelSig']) ? $eqModel['modelSig'] : '',
@@ -587,9 +644,15 @@
                     'manuf' => isset($eqModel['manuf']) ? $eqModel['manuf'] : '',
                     'model' => isset($eqModel['model']) ? $eqModel['model'] : '',
                     'type' => isset($eqModel['type']) ? $eqModel['type'] : '',
+                    // 'variables' => optional
                 );
+                if (isset($eqModel['variables']))
+                    $eq['model']['variables'] = $eqModel['variables'];
 
-                $eq['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                $eq['zigbee'] = $zigbee;
+                $eq['zbModel'] = isset($zigbee['modelId']) ? $zigbee['modelId'] : '';
+                $eq['zbManuf'] = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
 
                 $eq['paramType'] = $eqLogic->getConfiguration('paramType', "");
 
@@ -612,6 +675,74 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
         }
 
+        // Get equipments list
+        if (init('action') == 'getEqList') {
+            $gtwId = init('gtwId', 0); // Default == all networks
+
+            $status = 0;
+            $error = "";
+            $eqList = [];
+
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $eqLogicId = $eqLogic->getLogicalId();
+                list($eqNet, $eqAddr) = explode("/", $eqLogicId);
+                if ($gtwId != 0) {
+                    $i = substr($eqNet, 7); // AbeilleX => X
+                    if ($i != $gtwId)
+                        continue; // Not under the requested network
+                }
+
+                // Trying to identify zigbee device type
+                $zbType = "";
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                if (isset($zigbee['logicalType'])) {
+                    switch($zigbee['logicalType']) {
+                    case 0: $zbType = "Coordinator"; break;
+                    case 1: $zbType = "Router"; break;
+                    case 2: $zbType = "End Device"; break;
+                    default: break;
+                    }
+                } else if (isset($zigbee['macCapa'])) {
+                    $mc = hexdec($zigbee['macCapa']);
+                    $devType = ($mc >> 1) & 0b1;
+                    if ($devType) {
+                        if ($eqAddr == "0000")
+                            $zbType = "Coordinator";
+                        else
+                        $zbType = "Router";
+                    } else
+                        $zbType = "End Device";
+                }
+
+                $eqParent = $eqLogic->getObject();
+                if (!is_object($eqParent))
+                    $objName = "";
+                else
+                    $objName = $eqParent->getName();
+
+                $settings = $eqLogic->getConfiguration('ab::settings', []);
+
+                $eq = array(
+                    'net' => $eqNet,
+                    'addr' => $eqAddr,
+                    'name' => $eqLogic->getName(),
+                    'id' => $eqLogic->getId(),
+                    'logicId' => $eqLogicId,
+                    'objectName' => $objName,
+                    'enabled' => $eqLogic->getIsEnable(),
+                    'zbType' => $zbType,
+                    'icon' => $eqLogic->getConfiguration('ab::icon', 'defaultUnknown'),
+                    'x' => isset($settings['physLocationX']) ? $settings['physLocationX'] : 0,
+                    'y' => isset($settings['physLocationY']) ? $settings['physLocationY'] : 0,
+                    'z' => isset($settings['physLocationZ']) ? $settings['physLocationZ'] : 0, // Level
+                );
+                $eqList[$eqLogicId] = $eq;
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eqList' => $eqList)));
+        }
+
         // Retrieves all informations suitable to fill health page
         if (init('action') == 'getHealthDatas') {
             $status = 0;
@@ -622,8 +753,11 @@
             foreach ($eqLogics as $eqLogic) {
                 $eqLogicId = $eqLogic->getLogicalId();
                 list($eqNet, $eqAddr) = explode("/", $eqLogicId);
+                if (($eqNet == "") || ($eqAddr == ""))
+                    continue; // Invalid
 
                 $e = [];
+                $e['jId'] = $eqLogic->getId();
                 $e['link'] = $eqLogic->getLinkToConfiguration();
                 $e['hName'] = $eqLogic->getHumanName(true);
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
@@ -658,13 +792,20 @@
                     $bat = $bat.'%';
                 $e['lastBat'] = $bat;
 
+                // Gateway specific additional infos
+                if ($eqAddr == "0000") {
+                    $gtwId = substr($eqNet, 7); // AbeilleX => X
+                    //$e['gtwTimeout'] = $eqLogic->getStatus('timeout');
+                    $e['gtwType'] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate');
+                }
+
                 if (!isset($eq[$eqNet]))
                     $eq[$eqNet] = [];
                 if (!isset($eq[$eqNet][$eqAddr]))
                     $eq[$eqNet][$eqAddr] = $e;
             }
 
-            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'equipments' => $eq)));
         } // End getHealthDatas
 
         // Read 'ab::settings' content
@@ -685,6 +826,7 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'settings' => $settings)));
         }
 
+        // TODO: OBSOLETE !!! Use 'saveEqConfig' instead, more generic
         // Change eqLogic 'ab::settings' content
         // Param: eqId = Equipment Jeedom ID
         // Param: settings = associative array of settings to change
@@ -707,6 +849,36 @@
                     logDebug('  settings['.$setKey.']='.$setVal);
                 }
                 $eqLogic->setConfiguration('ab::settings', $settings);
+                $eqLogic->save();
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        // Change eqLogic 'configuration' content
+        // Param: eqId = Equipment Jeedom ID
+        // Param: eqConfKey = eqLogic->configuration field to update (ex: 'ab::eqModel', 'ab::settings')
+        // Param: eqConfVal = value for eqLogic->configuration->eqConfKey (note: currently only ASSOCIATIVE ARRAY)
+        if (init('action') == 'saveEqConfig') {
+            $status = 0;
+            $error = "";
+
+            $eqId = init('eqId');
+            $eqConfKey = init('eqConfKey'); // ex: 'ab::eqModel', 'ab::settings'
+            $eqConfVal = init('eqConfVal');
+            $newArr = json_decode($eqConfVal, true); // currently only ASSOCIATIVE ARRAY
+
+            $eqLogic = Abeille::byId($eqId);
+            if (!is_object($eqLogic)) {
+                $error = "Invalid device ID ".$eqId;
+                $status = -1;
+            } else {
+                $curArr = $eqLogic->getConfiguration($eqConfKey, []);
+                foreach ($newArr as $setKey => $setVal) {
+                    $curArr[$setKey] = $setVal;
+                    logDebug("  ${eqConfKey}[${setKey}]=".json_encode($setVal, JSON_UNESCAPED_SLASHES));
+                }
+                $eqLogic->setConfiguration($eqConfKey, $curArr);
                 $eqLogic->save();
             }
 
@@ -739,6 +911,52 @@
             logDebug('configJson='.$configJson);
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'config' => $configJson)));
+        }
+
+        // Restart Abeille's daemons
+        if (init('action') == 'restartDaemons') {
+            $status = 0;
+            $error = "";
+
+            $config = AbeilleTools::getConfig();
+            AbeilleTools::restartDaemons($config, "");
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        // Return Abeille's running daemons
+        if (init('action') == 'getRunningDaemons') {
+            $status = 0;
+            $error = "";
+
+            $daemons = AbeilleTools::getRunningDaemons2();
+            /* 'daemons' reminder
+            $daemons = array(
+                'runningNb' => sizeof($daemons), // Nb of running daemons
+                'runBits' => $runBits, // 1 bit per running daemon
+                'daemons' => $daemons, // Detail on each daemon
+            ); */
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'daemons' => $daemons)));
+        }
+
+        // Log level may have changed. Informing daemons
+        if (init('action') == 'logLevelChanged') {
+            $jLevel = init('level'); // Jeedom level (100, 200, 400...)
+            $aLevel = logJtoA($jLevel); // Convert to Abeille level (0 to 4)
+
+            $status = 0;
+            $error = "";
+
+            $msg = array(
+                'type' => 'logLevelChanged',
+                'level' => $aLevel
+            );
+            sendToX('xToParser', $msg);
+            sendToX('xToCmd', $msg);
+            sendToX('xToAbeille', $msg);
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.

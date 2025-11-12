@@ -2,7 +2,8 @@
     "TS0201__TZ3210_ncw88jfq": {
         "manufacturer": "Tuya",
         "model": "Display",
-        "type": "Tuya temperature and humdity display sensor",
+        "type": "Tuya temperature & humidity display sensor",
+        "genericType":"Environment",
         "timeout": "60",
         "category": {
             "heating": "1"

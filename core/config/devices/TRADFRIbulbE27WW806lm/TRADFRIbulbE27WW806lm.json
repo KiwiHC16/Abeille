@@ -38,18 +38,6 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
-            },
-            "Level": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
@@ -73,6 +61,19 @@
                 "params": "clustId=0008&attrType=20&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
+            },
+            "Set brightness": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1,
+                "value": "Brightness"
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
             }
         },
         "comment": "Ref Ikea: 904.087.97"

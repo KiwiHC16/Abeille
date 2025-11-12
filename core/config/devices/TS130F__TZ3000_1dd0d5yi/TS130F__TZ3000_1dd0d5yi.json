@@ -3,6 +3,7 @@
         "manufacturer": "Moes",
         "model": "TS130F",
         "type": "Moes curtain module",
+        "genericType": "Shutter",
         "timeout": "60",
         "category": {
             "opening": "1"

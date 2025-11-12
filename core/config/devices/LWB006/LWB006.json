@@ -1,5 +1,8 @@
 {
     "LWB006": {
+        "manufacturer": "Philips",
+        "model": "?",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",
@@ -65,13 +68,6 @@
                 "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",

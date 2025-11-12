@@ -3,6 +3,12 @@
         "manufacturer": "Tuya",
         "model": "TS0505B",
         "type": "Tuya TS0505B GU10 color bulb",
+        "genericType": "Light",
+        "alternateIds": {
+            "TS0505B__TZ3210_mja6r5ix": {
+                "icon": "Generic-BulbE27-Color"
+            }
+        },
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -13,8 +19,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -27,14 +32,14 @@
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
             },
             "Bind 0006-ToZigate": {
                 "use": "act_zbBindToZigate",

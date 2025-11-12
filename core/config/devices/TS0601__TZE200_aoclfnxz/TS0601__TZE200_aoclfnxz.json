@@ -28,8 +28,9 @@
                 "nextLine": "after"
             }
         },
-        "tuyaEF00": {
-            "fromDevice": {
+        "private": {
+            "EF00": {
+                "type": "tuya",
                 "10": {
                     "function": "rcvValue",
                     "info": "01-setpoint"

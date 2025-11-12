@@ -1,18 +1,16 @@
 <?php
     require_once __DIR__.'/../php/AbeilleLog.php';
     require_once __DIR__.'/../config/Abeille.config.php';
-    require_once __DIR__.'/../php/AbeilleModels.php'; // getModelsList()
+    // require_once __DIR__.'/../php/AbeilleModels.php'; // getModelsList()
 
-    define('corePhpDir', __DIR__.'/../php/');
     define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
     define('devicesLocalDir', __DIR__.'/../config/devices_local/'); // Unsupported/user devices
     define('cmdsDir', __DIR__.'/../config/commands/'); // Abeille's supported commands
-    define('imagesDir', __DIR__.'/../../images/'); // Abeille's supported icons
+    define('imagesDir', __DIR__.'/../../core/config/devices_images/'); // Abeille's supported icons
 
     class AbeilleTools
     {
         const configDir = __DIR__.'/../config/';
-        const logDir = __DIR__."/../../../../log/";
 
         /**
          * Get Abeille log level.
@@ -70,7 +68,7 @@
          * @param string le message lui meme
          * @param string $message
          */
-        public static function deamonlogFilter($loglevel = 'NONE', $pluginName, $loggerName = 'Tools', $message = '') {
+        public static function deamonlogFilter($loglevel = 'NONE', $pluginName = 'Abeille', $loggerName = 'Tools', $message = '') {
             if (strlen($message) < 1) return;
             if (self::getNumberFromLevel($loglevel) <= self::getLogLevel($pluginName)) {
                 $loglevel = strtolower(trim($loglevel));
@@ -80,97 +78,6 @@
                 fwrite(STDOUT, '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $loglevel).'] '.$message.PHP_EOL);
             }
         }
-
-        /* Get list of supported devices ($from="Abeille"), or user/custom ones ($from="local")
-           Returns: false if error
-            or associative array $devicesList[$identifier] = array(
-                'modelSig' => model signature
-                'modelName' => model file
-                'modelSource' => model file location
-            ) */
-        // Note: OBSOLETE !! Use getModelsList() from AbeilleModels.php library
-        // public static function getDevicesList($from = "Abeille") {
-        //     $devicesList = [];
-
-        //     if ($from == "Abeille")
-        //         $rootDir = devicesDir;
-        //     else if ($from == "local")
-        //         $rootDir = devicesLocalDir;
-        //     else {
-        //         log::add('Abeille', 'error', "getDevicesList(): Emplacement JSON '".$from."' invalide");
-        //         return false;
-        //     }
-
-        //     $dh = opendir($rootDir);
-        //     if ($dh === false) {
-        //         log::add('Abeille', 'error', 'getDevicesList(): opendir('.$rootDir.')');
-        //         return false;
-        //     }
-        //     while (($dirEntry = readdir($dh)) !== false) {
-        //         /* Ignoring some entries */
-        //         if (in_array($dirEntry, array(".", "..")))
-        //             continue;
-        //         $fullPath = $rootDir.$dirEntry;
-        //         if (!is_dir($fullPath))
-        //             continue;
-
-        //         $fullPath = $rootDir.$dirEntry.'/'.$dirEntry.".json";
-        //         if (!file_exists($fullPath))
-        //             continue; // No local JSON model. Maybe just an auto-discovery ?
-
-        //         $dev = array(
-        //             'modelSig' => $dirEntry,
-        //             'modelName' => $dirEntry,
-        //             'modelSource' => $from
-        //         );
-
-        //         /* Check if config is compliant with other device identification */
-        //         $content = file_get_contents($fullPath);
-        //         $devMod = json_decode($content, true); // Device model
-        //         $devMod = $devMod[$dirEntry]; // Removing top key
-        //         // $dev['manufacturer'] = isset($devMod['manufacturer']) ? $devMod['manufacturer'] : '';
-        //         // $dev['model'] = isset($devMod['model']) ? $devMod['model']: '';
-        //         // $dev['type'] = $devMod['type'];
-        //         // $dev['icon'] = $devMod['configuration']['icon'];
-        //         $devicesList[$dirEntry] = $dev;
-
-        //         if (isset($devMod['alternateIds'])) {
-        //             $ai = $devMod['alternateIds'];
-        //             /* Reminder:
-        //                "alternateIds": {
-        //                   "alternateSigX": {
-        //                     "manufacturer": "manufX", // Optional
-        //                     "model": "modelX", // Optional
-        //                     "type": "typeX" // Optional
-        //                     "icon": "iconX" // Optional
-        //                   },
-        //                   "alternateSigY": {},
-        //                   "alternateSigZ": {}
-        //                } */
-        //             foreach ($ai as $aId => $aIdVal) {
-        //                 log::add('Abeille', 'debug', "getDevicesList(): Alternate ID '".$aId."' for '".$dirEntry."'");
-        //                 $dev = array(
-        //                     'modelSig' => $aId,
-        //                     'modelName' => $dirEntry,
-        //                     'modelSource' => $from
-        //                 );
-        //                 // manufacturer, model, type or icon overload
-        //                 // if (isset($aIdVal['manufacturer']))
-        //                 //     $dev['manufacturer'] = $aIdVal['manufacturer'];
-        //                 // if (isset($aIdVal['model']))
-        //                 //     $dev['model'] = $aIdVal['model'];
-        //                 // if (isset($aIdVal['type']))
-        //                 //     $dev['type'] = $aIdVal['type'];
-        //                 // if (isset($aIdVal['icon']))
-        //                 //     $dev['icon'] = $aIdVal['icon'];
-        //                 $devicesList[$aId] = $dev;
-        //             }
-        //         }
-        //     }
-        //     closedir($dh);
-
-        //     return $devicesList;
-        // } // End getDevicesList()
 
         /* Clean 'devices_local'.
            Returns: true=ok, false=error */
@@ -306,12 +213,13 @@
         }
 
         // Remove all 'commentX' from the top level of given 'tree'
+        // OBSOLETE: Use 'removeModelComments() from AbeilleModels.php
         public static function removeComments(&$tree) {
             foreach ($tree as $key => $val) {
                 if (substr($key, 0, 7) != "comment")
                     continue;
 
-                // log::add('Abeille', 'debug', "REMOVING '${key}' '${val}'");
+                // log::add('Abeille', 'debug', "REMOVING '{$key}' '{$val}'");
                 unset($tree[$key]);
             }
         }
@@ -322,6 +230,7 @@
          *  'newJCmdName' = cmd name to replace (coming from 'use')
          * Returns: array() or false if not found.
          */
+        // OBSOLETE: Use 'getCommandModel() from AbeilleModels.php
         public static function getCommandModel($modelName, $cmdFName, $newJCmdName = '') {
             $fullPath = cmdsDir.$cmdFName.'.json';
             if (!file_exists($fullPath)) {
@@ -357,316 +266,58 @@
             return $cmd;
         }
 
-        /*
-         * Read given device configuration from JSON file and associated commands.
-         * 'modelSig': Model signature (!= modelName if alternate signature)
-         * 'modelName': JSON file name without extension
-         * 'src': JSON file location (default=Abeille, or 'local')
-         * 'mode': 0/default=load commands too, 1=split cmd call & file
-         * Return: device associative array WITHOUT top level key (modelSig) or false if error.
-         */
-        public static function getDeviceModel($modelSig, $modelName, $src="Abeille", $mode=0) {
-            log::add('Abeille', 'debug', "getDeviceModel(${modelSig}, ${modelName}, ${src}, ${mode})");
+        // // Attempt to find corresponding model based on given zigbee signature.
+        // // Returns: associative array('modelSig', 'modelName, 'modelSource') or false
+        // // OBSOLETE: Use identifyModel() from AbeilleModels.php lib
+        // public static function findModel($zbModelId, $zbManufId) {
+        //     log::add('Abeille', 'debug', "  OBSOLETE findModel({$zbModelId}, {$zbManufId})");
 
-            $dbg = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-            log::add('Abeille', 'debug', "BACKTRACE: ".json_encode($dbg, JSON_UNESCAPED_SLASHES));
+        //     $identifier1 = $zbModelId.'_'.$zbManufId;
+        //     $identifier2 = $zbModelId;
 
-            if ($modelName == '') {
-                log::add('Abeille', 'error', "  getDeviceModel(): 'modelName' vide !");
-                return false;
-            }
+        //     // Search by <zbModelId>_<zbManufId>, starting from local models list
+        //     // $localModels = AbeilleTools::getDevicesList('local');
+        //     $localModels = getModelsList('local');
+        //     foreach ($localModels as $modelSig => $model) {
+        //         if ($modelSig == $identifier1) {
+        //             $identifier = $identifier1;
+        //             break;
+        //         }
+        //     }
+        //     if (!isset($identifier)) {
+        //         // Search by <zbModelId>_<zbManufId>, starting from offical models list
+        //         // $officialModels = AbeilleTools::getDevicesList('Abeille');
+        //         $officialModels = getModelsList('Abeille');
+        //         foreach ($officialModels as $modelSig => $model) {
+        //             if ($modelSig == $identifier1) {
+        //                 $identifier = $identifier1;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     if (!isset($identifier)) {
+        //         // Search by <zbModelId> in local models
+        //         foreach ($localModels as $modelSig => $model) {
+        //             if ($modelSig == $identifier2) {
+        //                 $identifier = $identifier2;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     if (!isset($identifier)) {
+        //         // Search by <zbModelId> in offical models
+        //         foreach ($officialModels as $modelSig => $model) {
+        //             if ($modelSig == $identifier2) {
+        //                 $identifier = $identifier2;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     if (!isset($identifier))
+        //         return false; // No model found
 
-            if (($src == 'Abeille') || ($src == ''))
-                $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
-            else
-                $modelPath = devicesLocalDir.$modelName.'/'.$modelName.'.json';
-            // log::add('Abeille', 'debug', '  modelPath='.$modelPath);
-            if (!is_file($modelPath)) {
-                // log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu. Utilisation du modèle par défaut.');
-                // $modelName = 'defaultUnknown';
-                // $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
-                log::add('Abeille', 'error', '  getDeviceModel(): Modèle \''.$modelName.'\' inconnu.');
-                return false;
-            }
-
-            $jsonContent = file_get_contents($modelPath);
-            $device = json_decode($jsonContent, true);
-            if (json_last_error() != JSON_ERROR_NONE) {
-                log::add('Abeille', 'error', '  Le modèle JSON \''.$modelName.'\' est corrompu.');
-                log::add('Abeille', 'debug', '  getDeviceModel(): content='.$jsonContent);
-                return false;
-            }
-
-            $device = $device[$modelName]; // Removing top key
-            $device['modelSig'] = ($modelSig != '') ? $modelSig : $modelName;
-            $device['jsonId'] = $modelName;
-            $device['jsonLocation'] = $src; // Official device or local one ?
-
-            /* Alternate signature support */
-            if ($device['modelSig'] != $modelName) {
-                /* Reminder:
-                    "alternateIds": {
-                        "alternateSigX": {
-                            "manufacturer": "manufX", // Optional
-                            "model": "modelX", // Optional
-                            "type": "typeX" // Optional
-                            "icon": "iconX" // Optional
-                        }
-                    } */
-                if (!isset($device['alternateIds'][$modelSig])) {
-                    // Internal error
-                    log::add('Abeille', 'error', "getDeviceModel(): Unexpected alternate sig '${modelSig}'");
-                } else {
-                    $alt = $device['alternateIds'][$modelSig];
-                    // manufacturer, model, type or icon overload
-                    if (isset($alt['manufacturer']))
-                        $device['manufacturer'] = $alt['manufacturer'];
-                    if (isset($alt['model']))
-                        $device['model'] = $alt['model'];
-                    if (isset($alt['type']))
-                        $device['type'] = $alt['type'];
-                    if (isset($alt['icon']))
-                        $device['configuration']['icon'] = $alt['icon'];
-                    if (isset($alt['batteryType']))
-                        $device['configuration']['batteryType'] = $alt['batteryType'];
-                    unset($device['alternateIds']); // Cleanup
-                }
-            }
-
-            // Removing all comments
-            self::removeComments($device);
-            if (isset($device['private']))
-                self::removeComments($device['private']);
-
-            if (isset($device['commands'])) {
-                if ($mode == 0) {
-                    $deviceCmds = array();
-                    $jsonCmds = $device['commands'];
-                    unset($device['commands']);
-                    foreach ($jsonCmds as $cmd1 => $cmd2) {
-                        /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
-                        $cmdFName = $cmd2['use']; // File name without '.json'
-                        $newCmd = self::getCommandModel($modelName, $cmdFName, $cmd1);
-                        if ($newCmd === false)
-                            continue; // Cmd does not exist.
-
-                        if (isset($cmd2['params'])) {
-                            // log::add('Abeille', 'debug', 'params='.json_encode($cmd2['params']));
-                            // log::add('Abeille', 'debug', 'newCmd BEFORE='.json_encode($newCmd));
-
-                            // Overwritting default settings with 'params' content
-                            // TODO: This should be done on 'configuration/request' only ??
-                            $paramsArr = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
-                            $text = json_encode($newCmd);
-                            foreach ($paramsArr as $p) {
-                                list($pName, $pVal) = explode("=", $p);
-                                // Case insensitive #xxx# replacement
-                                $text = str_ireplace('#'.$pName.'#', $pVal, $text);
-                            }
-                            $newCmd = json_decode($text, true);
-
-                            // Adding new (optional) parameters
-                            if (isset($newCmd[$cmd1]['configuration']['request'])) {
-                                $request = $newCmd[$cmd1]['configuration']['request'];
-                                // log::add('Abeille', 'debug', 'request BEFORE='.json_encode($request));
-                                $requestArr = explode('&', $request); // ep=01&clustId=0000 => ep=01, clustId=0000
-                                foreach ($paramsArr as $p) {
-                                    list($pName, $pVal) = explode("=", $p);
-                                    $found = false;
-                                    foreach ($requestArr as $r) {
-                                        list($rName, $rVal) = explode("=", $r);
-                                        if ($rName == $pName) {
-                                            $found = true;
-                                            break;
-                                        }
-                                    }
-                                    if ($found == false)
-                                        $request .= "&".$p; // Adding optional param
-                                }
-                                $newCmd[$cmd1]['configuration']['request'] = $request;
-                                // log::add('Abeille', 'debug', 'request AFTER='.json_encode($newCmd[$cmd1]['configuration']['request']));
-                            }
-
-                            // log::add('Abeille', 'debug', 'newCmd AFTER='.json_encode($newCmd));
-                        }
-
-                        if (isset($cmd2['isVisible'])) {
-                            $value = $cmd2['isVisible'];
-                            if ($value === "yes")
-                                $value = 1;
-                            else if ($value === "no")
-                                $value = 0;
-                            $newCmd[$cmd1]['isVisible'] = $value;
-                        }
-                        if (isset($cmd2['nextLine']))
-                            $newCmd[$cmd1]['nextLine'] = $cmd2['nextLine'];
-                        // {
-                        //     $value = $cmd2['nextLine'];
-                        //     if ($value === "after")
-                        //         $newCmd[$cmd1]['display']['forceReturnLineAfter'] = 1;
-                        //     else if ($value === "before")
-                        //         $newCmd[$cmd1]['display']['forceReturnLineBefore'] = 1;
-                        // }
-                        if (isset($cmd2['template']))
-                            $newCmd[$cmd1]['template'] = $cmd2['template'];
-                        if (isset($cmd2['subType']))
-                            $newCmd[$cmd1]['subType'] = $cmd2['subType'];
-                        if (isset($cmd2['unit']))
-                            $newCmd[$cmd1]['unit'] = $cmd2['unit'];
-                        if (isset($cmd2['isHistorized']))
-                            $newCmd[$cmd1]['isHistorized'] = $cmd2['isHistorized'];
-                        if (isset($cmd2['genericType']))
-                            $newCmd[$cmd1]['genericType'] = $cmd2['genericType'];
-                        if (isset($cmd2['logicalId']))
-                            $newCmd[$cmd1]['logicalId'] = $cmd2['logicalId'];
-                        if (isset($cmd2['invertBinary']))
-                            $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
-                        if (isset($cmd2['value']))
-                            $newCmd[$cmd1]['value'] = $cmd2['value'];
-                        if (isset($cmd2['disableTitle'])) // Disable title part of a subType 'message'
-                            $newCmd[$cmd1]['disableTitle'] = $cmd2['disableTitle'];
-
-                        if (isset($cmd2['execAtCreation']))
-                            $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
-                        if (isset($cmd2['execAtCreationDelay']))
-                            $newCmd[$cmd1]['configuration']['execAtCreationDelay'] = $cmd2['execAtCreationDelay'];
-                        if (isset($cmd2['minValue']))
-                            $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
-                        if (isset($cmd2['maxValue']))
-                            $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
-                        if (isset($cmd2['trigOut']))
-                            $newCmd[$cmd1]['configuration']['trigOut'] = $cmd2['trigOut'];
-                        if (isset($cmd2['historizeRound']))
-                            $newCmd[$cmd1]['configuration']['historizeRound'] = $cmd2['historizeRound'];
-                        if (isset($cmd2['calculValueOffset']))
-                            $newCmd[$cmd1]['configuration']['calculValueOffset'] = $cmd2['calculValueOffset'];
-                        if (isset($cmd2['repeatEventManagement']))
-                            $newCmd[$cmd1]['configuration']['repeatEventManagement'] = $cmd2['repeatEventManagement'];
-                        if (isset($cmd2['returnStateTime']))
-                            $newCmd[$cmd1]['configuration']['returnStateTime'] = $cmd2['returnStateTime'];
-                        if (isset($cmd2['returnStateValue']))
-                            $newCmd[$cmd1]['configuration']['returnStateValue'] = $cmd2['returnStateValue'];
-                        if (isset($cmd2['notStandard']))
-                            $newCmd[$cmd1]['configuration']['notStandard'] = $cmd2['notStandard'];
-                        if (isset($cmd2['valueOffset']))
-                            $newCmd[$cmd1]['configuration']['valueOffset'] = $cmd2['valueOffset'];
-                        if (isset($cmd2['listValue']))
-                            $newCmd[$cmd1]['configuration']['listValue'] = $cmd2['listValue'];
-                        if (isset($cmd2['Polling']))
-                            $newCmd[$cmd1]['configuration']['Polling'] = $cmd2['Polling'];
-
-                        // All overloads done. Let's check if any remaining variable
-                        // #EP# => replaced by ['configuration']['mainEP']
-                        $newCmdTxt = json_encode($newCmd);
-                        $mainEP = $device['configuration']['mainEP'];
-                        $newCmdTxt = str_ireplace('#EP#', $mainEP, $newCmdTxt);
-                        // Temp '#GROUPEPx#' support
-                        for ($g = 1; $g <= 8; $g++) {
-                            if (isset($device['configuration']["groupEP".$g])) {
-                                // Case insensitive #xxx# replacement
-                                $gVal = $device['configuration']["groupEP".$g];
-                                $newCmdTxt = str_ireplace('#GROUPEP'.$g.'#', $gVal, $newCmdTxt);
-                            }
-                        }
-                        $newCmd = json_decode($newCmdTxt, true);
-
-                        // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
-                        $deviceCmds += $newCmd;
-                    }
-
-                    // Adding base commands
-                    $baseCmds = array(
-                        'inf_addr-Short' => 'Short-Addr',
-                        'inf_addr-Ieee' => 'IEEE-Addr',
-                        'inf_linkQuality' => 'Link Quality',
-                        'inf_online' => 'Online',
-                        'inf_time-String' => 'Time-Time',
-                        'inf_time-Timestamp' => 'Time-TimeStamp'
-                    );
-                    foreach ($baseCmds as $cFName => $cJName) {
-                        $c = self::getCommandModel($modelName, $cFName, $cJName);
-                        if ($c !== false)
-                            $deviceCmds += $c;
-                    }
-
-                    $device['commands'] = $deviceCmds;
-                } else if ($mode == 1) {
-                    $jsonCmds = $device['commands'];
-                    foreach ($jsonCmds as $cmd1 => $cmd2) {
-                        // if (substr($cmd1, 0, 7) == "include") {
-                        //     /* Old command JSON format: "includeX": "json_cmd_name" */
-                        //     $cmdFName = $cmd2;
-                        //     $newCmd = self::getCommandModel($cmdFName);
-                        //     if ($newCmd === false)
-                        //         continue; // Cmd does not exist.
-                        // } else {
-                            /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
-                            $cmdFName = $cmd2['use']; // File name without '.json'
-                            $newCmd = self::getCommandModel($modelName, $cmdFName, $cmd1);
-                            if ($newCmd === false)
-                                continue; // Cmd does not exist.
-                        // }
-                        $cmdsFiles[$cmdFName] = $newCmd;
-                    }
-                } else if ($mode == 2) {
-                    /* Do not load commands in this mode */
-                }
-            } // End isset($device['commands'])
-
-            // log::add('Abeille', 'debug', 'getDeviceModel end');
-            return $device;
-        }
-
-        // Attempt to find corresponding model based on given zigbee signature.
-        // Returns: associative array('modelSig', 'modelName, 'modelSource') or false
-        public static function findModel($zbModelId, $zbManufId) {
-
-            $identifier1 = $zbModelId.'_'.$zbManufId;
-            $identifier2 = $zbModelId;
-
-            // Search by <zbModelId>_<zbManufId>, starting from local models list
-            // $localModels = AbeilleTools::getDevicesList('local');
-            $localModels = getModelsList('local');
-            foreach ($localModels as $modelSig => $model) {
-                if ($modelSig == $identifier1) {
-                    $identifier = $identifier1;
-                    break;
-                }
-            }
-            if (!isset($identifier)) {
-                // Search by <zbModelId>_<zbManufId>, starting from offical models list
-                // $officialModels = AbeilleTools::getDevicesList('Abeille');
-                $officialModels = getModelsList('Abeille');
-                foreach ($officialModels as $modelSig => $model) {
-                    if ($modelSig == $identifier1) {
-                        $identifier = $identifier1;
-                        break;
-                    }
-                }
-            }
-            if (!isset($identifier)) {
-                // Search by <zbModelId> in local models
-                foreach ($localModels as $modelSig => $model) {
-                    if ($modelSig == $identifier2) {
-                        $identifier = $identifier2;
-                        break;
-                    }
-                }
-            }
-            if (!isset($identifier)) {
-                // Search by <zbModelId> in offical models
-                foreach ($officialModels as $modelSig => $model) {
-                    if ($modelSig == $identifier2) {
-                        $identifier = $identifier2;
-                        break;
-                    }
-                }
-            }
-            if (!isset($identifier))
-                return false; // No model found
-
-            return $model;
-        }
+        //     return $model;
+        // }
 
         /**
          * return the config list from a file located in core/config directory
@@ -807,9 +458,9 @@
          *
          * @return array
          */
-        public static function getParameters() { // OBSOLETE: Use getConfig() instead
-            return AbeilleTools::getConfig();
-        }
+        // public static function getParameters() { // OBSOLETE: Use getConfig() instead
+        //     return AbeilleTools::getConfig();
+        // }
 
         public static function getConfig() {
             $config = array();
@@ -818,18 +469,18 @@
             $config['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.
             $config['parametersCheck_message'] = "";
 
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $config['ab::zgType'.$zgId] = config::byKey('ab::zgType'.$zgId, 'Abeille', '', 1);
-                $config['ab::zgPort'.$zgId] = config::byKey('ab::zgPort'.$zgId, 'Abeille', '', 1);
-                $config['ab::zgIpAddr'.$zgId] = config::byKey('ab::zgIpAddr'.$zgId, 'Abeille', '', 1);
-                $config['ab::zgEnabled'.$zgId] = config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N', 1);
-                $config['ab::zgIeeeAddrOk'.$zgId] = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
-                $config['ab::zgIeeeAddr'.$zgId] = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', '');
-                $chan = config::byKey('ab::zgChan'.$zgId, 'Abeille', 'niet');
-                if ($chan != 'niet')
-                    $config['ab::zgChan'.$zgId] = $chan;
-                $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
+            for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+                $config['ab::gtwType'.$gtwId] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate', 1);
+                $config['ab::gtwSubType'.$gtwId] = config::byKey('ab::gtwSubType'.$gtwId, 'Abeille', '', 1);
+                $config['ab::gtwPort'.$gtwId] = config::byKey('ab::gtwPort'.$gtwId, 'Abeille', '', 1);
+                $config['ab::gtwIpAddr'.$gtwId] = config::byKey('ab::gtwIpAddr'.$gtwId, 'Abeille', '', 1);
+                $config['ab::gtwEnabled'.$gtwId] = config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N', 1);
+                $config['ab::zgIeeeAddrOk'.$gtwId] = config::byKey('ab::zgIeeeAddrOk'.$gtwId, 'Abeille', 0);
+                $config['ab::zgIeeeAddr'.$gtwId] = config::byKey('ab::zgIeeeAddr'.$gtwId, 'Abeille', '');
+                $config['ab::gtwChan'.$gtwId] = config::byKey('ab::gtwChan'.$gtwId, 'Abeille', 0); // 0=auto
             }
+            $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
+            $config['ab::forceZigateHybridMode'] = config::byKey('ab::forceZigateHybridMode', 'Abeille', 'N');
             $config['ab::monitorId'] = config::byKey('ab::monitorId', 'Abeille', false);
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);
 
@@ -866,44 +517,6 @@
         /**
          * Check if any missing daemon and restart missing ones.
          *
-         * @param $parameters
-         * @param $running
-         * @return mixed
-         */
-        // public static function checkAllDaemons($parameters, $running)
-        // {
-        //     //remove all message before each check
-        //     AbeilleTools::clearSystemMessage($parameters,'all');
-
-        //     $status['state'] = "ok";
-        //     if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
-        //         $status['state'] = "nok";
-        //         AbeilleTools::restartMissingDaemons($parameters, $running);
-
-        //         //After restart daemons, if still are missing, then no hope.
-        //         if (AbeilleTools::isMissingDaemons($parameters, $running) == false) {
-        //             $status['state'] = "ok"; // Finally missing ones restarted properly
-        //         } else {
-        //             /* There are still some missing daemons */
-        //             $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
-        //             if (strlen($daemons) == 0) {
-        //                 /* Ouahhh.. not normal */
-        //                 AbeilleTools::clearSystemMessage($parameters, 'all');
-        //                 $status['state'] = "ok";
-        //             } else {
-        //                 log::add('Abeille', 'debug', '  '.__CLASS__.':'.__FUNCTION__.'(): Missing daemons '.$daemons);
-        //                 // AbeilleTools::sendMessageToRuche($daemons, 'Démons manquants: '.$daemons);
-        //             }
-        //         }
-        //     }
-
-        //     log::add('Abeille', 'debug', "checkAllDaemons() => ".$status['state']);
-        //     return $status;
-        // }
-
-        /**
-         * Check if any missing daemon and restart missing ones.
-         *
          * @param $config
          * @return array
          */
@@ -927,32 +540,42 @@
             );
 
             // Expected daemons
+            $nbGateways = 0;
             $nbZigates = 0;
             $expected = [];
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                if ($config['ab::zgEnabled'.$zgId] == "N")
+            for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+                if ($config['ab::gtwEnabled'.$gtwId] == "N")
                     continue;
 
-                $nbZigates++;
-                $expected[] = 'SerialRead'.$zgId;
+                $nbGateways++;
+                $gtwType = $config['ab::gtwType'.$gtwId];
+                $gtwSubType = $config['ab::gtwSubType'.$gtwId];
+                if ($gtwType == "zigate") {
+                    $nbZigates++;
 
-                // If type 'WIFI', socat daemon required too
-                if ($config['ab::zgType'.$zgId] == "WIFI") {
-                    $expected[] = 'Socat'.$zgId;
+                    $expected[] = 'SerialRead'.$gtwId;
+
+                    // If type 'WIFI', socat daemon required too
+                    if ($gtwSubType == "WIFI")
+                        $expected[] = 'Socat'.$gtwId;
+                } else { // gtwType == "ezsp"
+
                 }
             }
-            if ($nbZigates == 0) {
-                log::add('Abeille', 'debug', '  NO active zigate');
+            if ($nbGateways == 0) {
+                log::add('Abeille', 'debug', '  NO active gateway');
                 return $status;
             }
 
-            $expected[] = 'Parser';
-            $expected[] = 'Cmd';
-            log::add('Abeille', 'debug', '  expected='.json_encode($expected));
+            if ($nbZigates != 0) {
+                $expected[] = 'Parser';
+                $expected[] = 'Cmd';
+            }
+            log::add('Abeille', 'debug', '  expected='.json_encode($expected, JSON_UNESCAPED_SLASHES));
 
             // Running daemons
             $running = AbeilleTools::getRunningDaemons2();
-            log::add('Abeille', 'debug', '  running='.json_encode($running));
+            log::add('Abeille', 'debug', '  running='.json_encode($running, JSON_UNESCAPED_SLASHES));
 
             // Restart missing ones
             $restart = '';
@@ -969,7 +592,7 @@
                 AbeilleTools::restartDaemons($config, $restart);
 
             $status['running'] = $running;
-    // log::add('Abeille', 'debug', '  status='.json_encode($status));
+            // log::add('Abeille', 'debug', '  status='.json_encode($status));
             log::add('Abeille', 'debug', "checkAllDaemons2() => ".$status['state']);
             return $status;
         }
@@ -980,7 +603,8 @@
          * @return array
          */
         public static function getRunningDaemons(): array {
-            exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat).php /'", $running);
+            exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Ezsp).php /'", $running);
+            // TODO: Ezsp is not php but python3
             return $running;
         }
 
@@ -998,7 +622,9 @@
             exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
             /*  'pgrep -a socat' example:
                 16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
-            $processes = array_merge($running, $running2);
+            $cmd3 = "pgrep -a python3 | grep Abeille";
+            exec($cmd3, $running3); // Get all Abeille python3 daemons
+            $processes = array_merge($running, $running2, $running3);
 
             $daemons = [];
             $runBits = 0;
@@ -1013,6 +639,9 @@
                 } else if (strstr($line, "AbeilleMonitor") !== false) {
                     $shortName = "Monitor";
                     $runBits |= daemonMonitor;
+                } else if (strstr($line, "AbeilleMainD") !== false) {
+                    $shortName = "main";
+                    $runBits |= daemonMain;
                 } else if (strstr($line, "AbeilleSerialRead") !== false) {
                     $net = $lineArr[3]; // Ex 'Abeille1'
                     $zgId = substr($net, 7);
@@ -1026,8 +655,13 @@
                 } else if (strstr($line, "socat") !== false) {
                     $pos = strpos($line, wifiLink);
                     // TO BE COMPLETED if required
-                    $zgId = substr($line, $pos + strlen(wifiLink), 1); // WARNING: Currently limited to 1 to 9. Zigate 10 missing
+                    $zgId = substr($line, $pos + strlen(wifiLink), 1);
                     $shortName = "socat".$zgId;
+                } else if (strstr($line, "AbeilleEzsp") !== false) {
+                    $pos = strpos($line, "--gtwid=");
+                    $gtwId = substr($line, $pos + 8, 1); // 'xxx --gtwid=Y' => Y
+                    $shortName = "ezsp".$gtwId;
+                    // $runBits |= constant("daemonSocat".$zgId);
                 } else
                     $shortName = "Unknown";
                 $d = array(
@@ -1052,33 +686,28 @@
          * @return array
          */
         public
-        static function diffExpectedRunningDaemons($parameters, $running): array
+        static function diffExpectedRunningDaemons($config, $running): array
         {
-            $nbProcessExpected = 2; // parser and cmd
-
-            $activedZigate = 0;
             $found['cmd'] = 0;
             $found['parser'] = 0;
+            $found['main'] = 0;
+            $nbProcessExpected = 2; // parser and cmd
+
+            log::add('Abeille', 'debug', "config=".json_encode($config));
+            log::add('Abeille', 'debug', "running=".json_encode($running));
 
             // Count number of processes we should have based on configuration, init $found['process x'] to 0.
-            for ($n = 1; $n <= maxNbOfZigate; $n++) {
-                if ($parameters['ab::zgEnabled'.$n] == "Y") {
-                    $activedZigate++;
+            for ($n = 1; $n <= maxGateways; $n++) {
+                if ($config['ab::gtwEnabled'.$n] != "Y")
+                    continue;
 
-                    // e.g. "ab::zgType2":"WIFI", "ab::zgPort2":"/tmp/zigateWifi2"
-                    // SerialRead + Socat
-                    // if (stristr($parameters['ab::zgPort'.$n], '/tmp/zigateWifi')) {
-                    if ($parameters['ab::zgType'.$n] == "WIFI") {
-                        $nbProcessExpected += 2;
-                        $found['serialRead'.$n] = 0;
+                if ($config['ab::gtwType'.$n] == 'zigate') {
+                    $found['serialRead'.$n] = 0;
+                    $nbProcessExpected++;
+
+                    if ($config['ab::gtwSubType'.$n] == "WIFI") {
                         $found['socat'.$n] = 0;
-                    }
-
-                    // e.g. "ab::zgType1":"USB", "ab::zgPort1":"/dev/ttyUSB3"
-                    // SerialRead
-                    if (preg_match("(tty|monit)", $parameters['ab::zgPort'.$n])) {
                         $nbProcessExpected++;
-                        $found['serialRead'.$n] = 0;
                     }
                 }
             }
@@ -1101,8 +730,10 @@
                 else {
                     if (stristr($line, "abeilleparser.php"))
                         $found['parser']++;
-                    if (stristr($line, "abeillecmd.php"))
+                    else if (stristr($line, "abeillecmd.php"))
                         $found['cmd']++;
+                    else if (stristr($line, "abeillemaind.php"))
+                        $found['main']++;
                 }
             }
 
@@ -1110,66 +741,6 @@
 
             return $found;
         }
-
-        /**
-         * @param $isCron   is cron daemon for this plugin started
-         * @param $parameters (parametersCheck, parametersCheck_message, ab::defaultParent,
-         * ab::zgType,ab::zgPortX, ab::zgIpAddrX, ab::zgEnabled
-         * @param $running
-         * return true if any missing daemons
-         */
-        // public
-        // static function isMissingDaemons($parameters, $running): bool
-        // {
-        //     //no cron, no start requested
-        //     // if (AbeilleTools::isAbeilleCronRunning() == false) {
-        //     //     return false;
-        //     // }
-
-        //     $found = self::diffExpectedRunningDaemons($parameters, $running);
-        //     $nbProcessExpected = $found['expected'];
-        //     array_pop($found);
-        //     $result = $nbProcessExpected - array_sum($found);
-        //     // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.'::'.__FUNCTION__.':'.__LINE__.': '.($result == 0 ? 'false' : 'true').',   found: '.json_encode($found));
-        //     //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:'.($result==1?"Yes":"No"));
-        //     if ($result > 1) {
-        //         log::add('Abeille', 'Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
-        //         // message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
-        //     }
-
-        //     return $result > 0;
-        // }
-
-        /**
-         * @param array $parameters
-         * @param $running
-         */
-        // public
-        // static function restartMissingDaemons(array $parameters, $running)
-        // {
-        //     $lastLaunch = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
-        //     $found = self::diffExpectedRunningDaemons($parameters, $running);
-        //     array_splice($found, -1, 1);
-        //     //get socat first
-        //     arsort($found);
-        //     $found = array_reverse($found);
-        //     // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' : lastLaunch: '.$lastLaunch.', found:'.json_encode($found));
-
-        //     // $missing = "";
-        //     foreach ($found as $daemon => $value) {
-        //         if ($value == 0) {
-        //             // AbeilleTools::sendMessageToRuche($daemon,'relance de '.$daemon);
-        //             log::add('Abeille', 'debug', "Restarting ".$daemon);
-        //             // $missing .= ", $daemon";
-        //             $cmd = self::getStartCommand($parameters, $daemon);
-        //             // log::add('Abeille', 'info', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.': restarting Abeille'.$daemon. '/'. $value);
-        //             // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__ .': restarting  XXXXX  Abeille XXXXX'.$daemon.': '.$cmd);
-        //             exec($cmd.' &');
-        //         }
-
-        //     }
-        //     // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.': missing daemons:'.$missing);
-        // }
 
         /**
          * Stop given daemons list or all daemons.
@@ -1239,7 +810,7 @@
                 // exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
                 // $running = array_merge($running, $running2);
             }
-            log::add('Abeille', 'debug', '  stopDaemons(): running='.json_encode($running));
+            log::add('Abeille', 'debug', '  stopDaemons(): running='.json_encode($running, JSON_UNESCAPED_SLASHES));
 
             /* Reminder:
                 $running = array(
@@ -1293,7 +864,7 @@
             }
             if ($nbOfDaemons != 0) {
                 log::add('Abeille', 'debug', '  stopDaemons(): '.$nbOfDaemons.' daemons still active after '.daemonStopTimeout.' ms');
-                log::add('Abeille', 'debug', '  stopDaemons(): '.json_encode($running));
+                log::add('Abeille', 'debug', '  stopDaemons(): '.json_encode($running, JSON_UNESCAPED_SLASHES));
                 // for ($i = 0; $i < $nbOfDaemons; $i++) {
                 //     $arr = explode(" ", $running[$i]);
                 //     $pid = $arr[0];
@@ -1318,29 +889,43 @@
             if ($daemons == "") {
                 /* Note: starting input daemons first to not loose any returned
                 value/status as opposed to cmd being started first */
-                for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                    if ($config['ab::zgEnabled'.$zgId] != "Y")
-                        continue; // Zigate disabled
+                $nbZigates = 0;
+                for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+                    if ($config['ab::gtwEnabled'.$gtwId] != "Y")
+                        continue; // Gateway disabled
 
-                    if ($config['ab::zgType'.$zgId] == "WIFI") {
-                        if ($daemons != "")
-                            $daemons .= " ";
-                        $daemons .= "AbeilleSocat".$zgId;
-                    }
+                    $gtwType = $config['ab::gtwType'.$gtwId];
+                    $gtwSubType = $config['ab::gtwSubType'.$gtwId];
+
                     if ($daemons != "")
                         $daemons .= " ";
-                    $daemons .= "AbeilleSerialRead".$zgId;
+                    if ($gtwType == 'zigate') {
+                        $nbZigates++;
+
+                        if ($gtwSubType == "WIFI")
+                            $daemons .= "AbeilleSocat".$gtwId;
+
+                        // Adding serial read
+                        if ($daemons != "")
+                            $daemons .= " ";
+                        $daemons .= "AbeilleSerialRead".$gtwId;
+                    } else { // ezsp
+                        $daemons .= "AbeilleEzsp".$gtwId;
+                    }
                 }
+                if ($nbZigates > 0)
+                    $daemons .= " AbeilleParser AbeilleCmd AbeilleMainD";
+
                 if ($daemons == "") {
-                    message::add("Abeille", "Aucune zigate active. Veuillez corriger.");
+                    message::add("Abeille", "Aucune passerelle active. Veuillez corriger via la page de config.");
                     return false;
                 }
-                $daemons .= " AbeilleParser AbeilleCmd";
 
                 /* Starting 'AbeilleMonitor' daemon too if required */
                 if ($config['ab::monitorId'] !== false)
                     $daemons .= " AbeilleMonitor";
             }
+
             log::add('Abeille', 'debug', "  startDaemons(): ".$daemons);
             $daemonsArr = explode(" ", $daemons);
             foreach ($daemonsArr as $daemon) {
@@ -1359,6 +944,8 @@
          * @param string $daemons Deamons list to restart, space separated
          */
         public static function restartDaemons($config, $daemons = "") {
+
+            log::add('Abeille', 'debug', "  restartDaemons(daemons={$daemons})");
             if (AbeilleTools::stopDaemons($daemons) == false)
                 return false; // Error
 
@@ -1376,46 +963,64 @@
         public static function getStartCommand($config, $daemonFile): string {
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
-            $nb = (preg_match('/[0-9]/', $daemonFile, $matches) != true ? "" : $matches[0]);
+            $gtwId = (preg_match('/[0-9]/', $daemonFile, $matches) != true ? "" : $matches[0]);
             $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
-            $logDir = self::logDir;
+            $logsDir = logsDir;
             $tmpDir = jeedom::getTmpFolder("Abeille");
 
             unset($matches);
             $daemonFile = (preg_match('/[a-zA-Z]*/', $daemonFile, $matches) != true ? "" : strtolower($matches[0]));
 
             switch ($daemonFile) {
+            // Zigate specific daemons
             case 'cmd':
             case 'abeillecmd':
                 $daemonPhp = "AbeilleCmd.php";
-                $logCmd = " >>".$logDir."AbeilleCmd.log 2>&1";
+                $logCmd = " >>{$logsDir}AbeilleCmd.log 2>&1";
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$logCmd;
                 break;
             case 'parser':
             case 'abeilleparser':
                 $daemonPhp = "AbeilleParser.php";
-                $daemonLog = " >>".$logDir."AbeilleParser.log 2>&1";
+                $daemonLog = " >>{$logsDir}AbeilleParser.log 2>&1";
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$daemonLog;
                 break;
             case 'serialread':
             case 'abeilleserialread':
                 $daemonPhp = "AbeilleSerialRead.php";
-                $daemonParams = 'Abeille'.$nb.' '.$config['ab::zgPort'.$nb].' ';
-                $daemonLog = $logLevel." >>${tmpDir}/AbeilleSerialRead".$nb.".log 2>&1";
-                exec(system::getCmdSudo().'chmod 777 '.$config['ab::zgPort'.$nb].' > /dev/null 2>&1');
+                $daemonParams = 'Abeille'.$gtwId.' '.$config['ab::gtwPort'.$gtwId].' ';
+                $daemonLog = $logLevel." >>{$tmpDir}/AbeilleSerialRead".$gtwId.".log 2>&1";
+                exec(system::getCmdSudo().'chmod 777 '.$config['ab::gtwPort'.$gtwId].' > /dev/null 2>&1');
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
             case 'socat':
             case 'abeillesocat':
                 $daemonPhp = "AbeilleSocat.php";
-                $daemonParams = $config['ab::zgPort'.$nb].' '.$config['ab::zgIpAddr'.$nb].' '.$logLevel;
-                $daemonLog = " >>".$logDir."AbeilleSocat".$nb.'.log 2>&1';
+                $daemonParams = $config['ab::gtwPort'.$gtwId].' '.$config['ab::gtwIpAddr'.$gtwId].' '.$logLevel;
+                $daemonLog = " >>{$logsDir}AbeilleSocat".$gtwId.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
+            // EmberZnet/EZSP daemon
+            case 'ezsp':
+            case 'abeilleezsp':
+            case 'abeilleezspd':
+                $daemon = "AbeilleEzspD.py";
+                $daemonParams = "--gtwid={$gtwId} --gtwport=".$config['ab::gtwPort'.$gtwId];
+                $daemonLog = " >>{$logsDir}AbeilleEzsp".$gtwId.'.log 2>&1';
+                $cmd = $nohup." python3 ".corePythonDir.$daemon." ".$daemonParams.$daemonLog;
+                break;
+            // General monitoring daemon
             case 'monitor':
             case 'abeillemonitor':
                 $log = " >>".log::getPathToLog("AbeilleMonitor.log")." 2>&1";
                 $cmd = $php." -r \"require '".corePhpDir."AbeilleMonitor.php'; monRun();\"".$log;
+                break;
+            // Main daemon
+            case 'main':
+            case 'abeillemaind':
+                $daemonPhp = "AbeilleMainD.php";
+                $logCmd = " >>{$logsDir}AbeilleMainD.log 2>&1";
+                $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$logLevel.$logCmd;
                 break;
             default:
                 $cmd = "";
@@ -1423,45 +1028,45 @@
             return $cmd;
         }
 
-        /**
-         * send a message to a ruche according to the splitted daemonnameX
-         * where daemonname and zigateNbr are extracted.
-         *
-         * @param $daemon
-         */
-        public static function sendMessageToRuche($daemon, $message = "") {
-            global $abQueues;
+        // /**
+        //  * send a message to a ruche according to the splitted daemonnameX
+        //  * where daemonname and zigateNbr are extracted.
+        //  *
+        //  * @param $daemon
+        //  */
+        // public static function sendMessageToRuche($daemon, $message = "") {
+        //     global $abQueues;
 
-            $daemonName = (preg_match('/[a-zA-Z]*/', $daemon, $matches) != true ? $daemon : $matches[0]);
-            unset($matches);
-            $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);
-            $messageToSend = ($message == "") ? "" : "$daemonName: $message";
-            // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate '.$zigateNbr);
-            if ( strlen($messageToSend) > 2 ) {
-            Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM,
-                "Abeille$zigateNbr/0000/SystemMessage", $messageToSend);
-            }
-        }
+        //     $daemonName = (preg_match('/[a-zA-Z]*/', $daemon, $matches) != true ? $daemon : $matches[0]);
+        //     unset($matches);
+        //     $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);
+        //     $messageToSend = ($message == "") ? "" : "$daemonName: $message";
+        //     // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate '.$zigateNbr);
+        //     if ( strlen($messageToSend) > 2 ) {
+        //     Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM,
+        //         "Abeille$zigateNbr/0000/SystemMessage", $messageToSend);
+        //     }
+        // }
 
-        /**
-         * clean messages displayed by all zigates if no parameters or all
-         *
-         * @param array $parameters jeedom Abeille's config
-         * @param string $which number, from 1 to 9
-         */
-        public static function clearSystemMessage($parameters, $which = 'all') {
-            if ($which == 'all') {
-                for ($n = 1; $n <= maxNbOfZigate; $n++) {
-                    if ($parameters['ab::zgEnabled'.$n] == "Y") {
-                        // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$n);
-                        AbeilleTools::sendMessageToRuche("daemon$n", "");
-                    }
-                }
-            } else {
-                // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$which);
-                AbeilleTools::sendMessageToRuche("daemon$which", "");
-            }
-        }
+        // /**
+        //  * clean messages displayed by all zigates if no parameters or all
+        //  *
+        //  * @param array $parameters jeedom Abeille's config
+        //  * @param string $which number, from 1 to 9
+        //  */
+        // public static function clearSystemMessage($parameters, $which = 'all') {
+        //     if ($which == 'all') {
+        //         for ($n = 1; $n <= maxGateways; $n++) {
+        //             if ($parameters['ab::gtwEnabled'.$n] == "Y") {
+        //                 // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$n);
+        //                 AbeilleTools::sendMessageToRuche("daemon$n", "");
+        //             }
+        //         }
+        //     } else {
+        //         // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$which);
+        //         AbeilleTools::sendMessageToRuche("daemon$which", "");
+        //     }
+        // }
 
         // Unused
         // public static function checkRequired($type, $zigateNumber) {
@@ -1491,7 +1096,14 @@
          * Returns: true if ok, false if error
          */
         public static function setPIGpio() {
-            if (config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1)=="WiringPi") {
+            /* Configuring GPIO for PiZigate if one active found.
+                PiZigate reminder (using 'WiringPi' (default) or 'PiGpio'):
+                - port 0 = RESET
+                - port 2 = FLASH
+                - Production mode: FLASH=1, RESET=0 then 1 */
+            $gpioLib = config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1);
+            log::add('Abeille', 'debug', "  setPIGpio(): gpioLib='$gpioLib'");
+            if ($gpioLib == "WiringPi") {
                 exec("command gpio -v", $out, $ret);
                 if ($ret != 0) {
                     log::add('Abeille', 'error', 'WiringPi semble mal installé.');
@@ -1499,22 +1111,15 @@
                     return false;
                 }
 
-                /* Configuring GPIO for PiZigate if one active found.
-                    PiZigate reminder (using 'WiringPi'):
-                    - port 0 = RESET
-                    - port 2 = FLASH
-                    - Production mode: FLASH=1, RESET=0 then 1 */
-                log::add('Abeille', 'debug', 'AbeilleTools:setPIGpio(): Active PiZigate found => configuring GPIOs');
                 exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
                 return true;
-            }
-            if (config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1)=="PiGpio") {
-                exec("python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py");
+            } else if ($gpioLib == "PiGpio") {
+                exec("python3 ".__DIR__."/../scripts/resetPiZigate.py");
                 return true;
             }
 
-            log::add('Abeille', 'error', 'Pas de librairie GPIO definie pour la PiZigate.');
-            message::add('Abeille', 'Pas de librairie GPIO definie pour la PiZigate.');
+            log::add('Abeille', 'error', "Librairie GPIO $gpioLib invalide pour la PiZigate.");
+            message::add('Abeille', "Librairie GPIO $gpioLib invalide pour la PiZigate.");
         }
 
         /**
@@ -1527,6 +1132,18 @@
             if (!is_object($cron))
                 return false;
             if ($cron->running() == false)
+                return false;
+            return true;
+        }
+
+        /**
+         * Returns true is Abeille's main daemon is running.
+         *
+         * @return true if running, else false
+         */
+        public static function isAbeilleMainRunning() {
+            exec("pgrep -a php | grep AbeilleMainD | awk '{print $1}'", $mainArr);
+            if (count($mainArr) == 0)
                 return false;
             return true;
         }
@@ -1573,14 +1190,23 @@
             // Convert Base64URL to Base64 by replacing “-” with “+” and “_” with “/”
             $b64 = strtr($data, '-_', '+/');
 
-            // Adding padding if required to have length as multiple of 3 bytes
-            $len = strlen($b64) % 3;
-            if ($len)
-                $b64 .= '=';
-            if ($len > 1)
-                $b64 .= '=';
+            // Adding padding if required
+            $b64 = str_pad($b64, strlen($b64) % 4, '=', STR_PAD_RIGHT);
 
             return $b64;
+        }
+
+        // Returns 'msg_send' error description
+        public static function getMsgSendErr($errCode) {
+            $errDesc = array(
+                '11' => 'Queue full',
+                '13' => 'Permission denied',
+                '22' => 'Invalid argument' // EINVAL
+            );
+            if (isset($errDesc[$errCode]))
+                return $errDesc[$errCode];
+            else
+                return "?";
         }
     }
 ?>

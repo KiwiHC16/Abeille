@@ -6,8 +6,7 @@ print("Verification de l installation du package 'pigpio'")
 pi = pigpio.pi()       # specify host, default port
 
 if not pi.connected:
-   print("= ERREUR: Commande 'gpio' manquante ou non executable !")
-   print("=         Le package WiringPi est probablement mal installe.")
+   print("= ERREUR: Le package 'pigpio-python3' semble mal installé.")
    exit(1)
 
 print("= Ok")
@@ -27,8 +26,8 @@ print("Passage de la PiZiGate en mode flash")
 portReset = 17
 portFlash = 27
 
-pi.set_mode( portReset, pigpio.OUTPUT) 
-pi.set_mode( portFlash, pigpio.OUTPUT) 
+pi.set_mode( portReset, pigpio.OUTPUT)
+pi.set_mode( portFlash, pigpio.OUTPUT)
 
 pi.write( portReset, 1)
 pi.write( portFlash, 1)

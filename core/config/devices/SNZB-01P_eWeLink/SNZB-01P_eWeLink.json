@@ -1,0 +1,65 @@
+{
+    "SNZB-01P_eWeLink": {
+        "manufacturer": "Sonoff",
+        "model": "SNZB-01P",
+        "type": "Sonoff wireless button",
+        "genericType": "Light",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Sonoff-Button",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2477"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Click": {
+                "use": "inf_click",
+                "comment": "value = single, double or long",
+                "isVisible": 1
+            },
+            "Single click": {
+                "use": "inf_zbCmdC-0006-Toggle",
+                "trigOut": {
+                    "01-click": {
+                        "valueOffset": "single"
+                    }
+                }
+            },
+            "Double click": {
+                "use": "inf_zbCmdC-0006-On",
+                "trigOut": {
+                    "01-click": {
+                        "valueOffset": "double"
+                    }
+                }
+            },
+            "Long click": {
+                "use": "inf_zbCmdC-0006-Off",
+                "trigOut": {
+                    "01-click": {
+                        "valueOffset": "long"
+                    }
+                }
+            }
+        }
+    }
+}

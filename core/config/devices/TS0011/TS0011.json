@@ -27,9 +27,6 @@
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         },
         "comment": "https://github.com/KiwiHC16/Abeille/issues/1092"

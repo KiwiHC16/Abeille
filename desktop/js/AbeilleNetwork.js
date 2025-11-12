@@ -17,23 +17,27 @@
 var currentZigateLG = 1; // Current zigate displayed in links graph
 var prevTrackingMsg = ""; // Previous tracking message
 
-$("#tab_nodes")
+// $("#tab_nodes")
+$("#idLinksTableTab")
     .off("click")
     .on("click", function () {
+        console.log("idLinksTableTab click");
         /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
         displayLinksTable(1);
     });
 
-$("#tab_graph")
+// $("#tab_graph")
+$("#idLinksGraphTab")
     .off("click")
     .on("click", function () {
+        console.log("idLinksGraphTab click");
         /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
         displayLinksGraph(1);
     });
 
-$("#tab_summary")
-    .off("click")
-    .on("click", function () {});
+// $("#tab_summary")
+//     .off("click")
+//     .on("click", function () {});
 
 $("#nodeFrom")
     .off()
@@ -175,7 +179,7 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
         url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
         data: {
             action: "getTmpFile",
-            file: "AbeilleLQI-Abeille" + zgId + ".json.lock",
+            file: "AbeilleLQI.lock",
         },
         dataType: "json",
         global: false,
@@ -214,28 +218,28 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
                     $("#div_networkZigbeeAlert").hide();
                 }, 10000);
             } else {
-                var data = res.content;
-                console.log("Status='" + data + "'");
+                var content = res.content;
+                console.log("Status='" + content + "'");
                 var alertLevel = "success";
-                if (data.toLowerCase().includes("oops")) {
+                if (content.toLowerCase().includes("oops")) {
                     alertLevel = "danger";
                     _autoUpdate = 0;
-                } else if (data.toLowerCase().includes("done")) {
-                    // Reminder: done/<timestamp>/<status
-                    data = "Collecte terminée";
+                } else if (content.includes("= Collecte")) {
+                    // Reminder: '= Collecte terminée: <timestamp>/<status>'
+                    content = "Collecte terminée";
                     _autoUpdate = 0; // Stop status refresh
                 }
 
-                if (data != prevTrackingMsg) {
+                if (content != prevTrackingMsg) {
                     $("#div_networkZigbeeAlert").showAlert({
-                        message: data,
+                        message: content,
                         level: alertLevel,
                     });
-                    prevTrackingMsg = data;
+                    prevTrackingMsg = content;
                 }
 
                 /* Collect status display stops when "done" found */
-                // _autoUpdate = data.toLowerCase().includes("done")?0:1;
+                // _autoUpdate = content.toLowerCase().includes("done")?0:1;
                 if (_autoUpdate) {
                     // Next status update in 1s
                     setTimeout(function () {
@@ -691,246 +695,335 @@ function getNodeByLogicId(logicId, nodes, newNodes) {
     return null;
 }
 
-//TODO fix on click link color change, link color upon LQI quality, node name .....
-function displayLinksGraph(zgId) {
-    console.log("displayLinksGraph(" + zgId + ")");
-
-    // Load JSON-encoded data from the server.
+// Retrieve list of equipments registered in Jeedom
+function getEqList(gtwId) {
     var request = $.ajax({
         type: "POST",
-        url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+        url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
         data: {
-            action: "getTmpFile",
-            file: "AbeilleLQI-Abeille" + zgId + ".json",
+            action: "getEqList",
+            gwId: gtwId,
         },
         dataType: "json",
         cache: false,
     });
 
-    request.done(function (json) {
+    return request;
+}
+
+// Retrieve LQI table for gateway 'gtwId'
+function getLqiTable(gtwId) {
+    var request = $.ajax({
+        type: "POST",
+        url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+        data: {
+            action: "getTmpFile",
+            file: "AbeilleLQI-Abeille" + gtwId + ".json",
+        },
+        dataType: "json",
+        cache: false,
+    });
+
+    return request;
+}
+
+//TODO fix on click link color change, link color upon LQI quality, node name .....
+function displayLinksGraph(gtwId) {
+    console.log("displayLinksGraph(" + gtwId + ")");
+
+    // Get Jeedom equipements list => 'jeedomTable'
+    jeedomTableReq = getEqList(gtwId);
+    jeedomTableReq.fail(function () {
+        $("#div_networkZigbeeAlert").showAlert({
+            message:
+                "ERREUR: Impossible de récupérer la liste des équipements Jeedom",
+            level: "danger",
+        });
+    });
+
+    jeedomTableReq.done(function (json) {
         res = JSON.parse(json.result);
         if (res.status != 0) {
-            // -1 = Most probably file not found
             $("#div_networkZigbeeAlert").showAlert({
-                message:
-                    "{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}",
-                level: "danger",
-            });
-        } else if (res.content == "") {
-            $("#div_networkZigbeeAlert").showAlert({
-                message:
-                    "{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}",
+                message: "ERREUR: getEqList(" + gtwId + "): " + res.error,
                 level: "danger",
             });
         } else {
-            // console.log("res.content=", res.content);
-            var lqiTable = JSON.parse(res.content);
-            console.log("lqiTable=", lqiTable);
+            jeedomTable = res.eqList;
+            console.log("jeedomTable=", jeedomTable);
 
-            $("#idCurrentNetworkLG").empty().append(lqiTable.net);
-            const date = new Date(lqiTable.collectTime * 1000);
-            var out =
-                date.toLocaleDateString() + " " + date.toLocaleTimeString();
-            $("#idCurrentDateLG").empty().append(out);
-
-            if (lqiTable.routers.length == 0) {
-                console.log("No routers");
-                $("#idLinksGraphTab svg").remove(); // Remove previous one
-                return;
-            }
-
-            var graph = Viva.Graph.graph();
-            var showObject = document.getElementById("idShowObject").checked; // Checked to display parent object
-            // console.log("routers=", lqiTable.routers);
-            for (rLogicId in lqiTable.routers) {
-                router = lqiTable.routers[rLogicId];
-                console.log("Adding router " + rLogicId + "=", router);
-
-                // console.log(
-                //     "Adding router " + rLogicId + " (" + router["name"] + ")"
-                // );
-                if (showObject)
-                    nodeName = router.parentName + "/" + router.name;
-                else nodeName = router.name;
-                graph.addNode(rLogicId, {
-                    name: nodeName,
-                    type: router["type"],
-                    icon: router["icon"],
-                });
-
-                break; // TEMP
-                for (nLogicId in router.neighbors) {
-                    neighbor = router.neighbors[nLogicId];
-                    console.log("neighbor=", neighbor);
-
-                    if (showObject)
-                        nodeName = neighbor.parentName + "/" + neighbor.name;
-                    else nodeName = neighbor.name;
-
-                    graph.addNode(nLogicId, {
-                        name: nodeName,
-                        type: neighbor["type"],
-                        icon: neighbor["icon"],
+            lqiTableReq = getLqiTable(gtwId);
+            lqiTableReq.done(function (json) {
+                res = JSON.parse(json.result);
+                if (res.status != 0) {
+                    // -1 = Most probably file not found
+                    $("#div_networkZigbeeAlert").showAlert({
+                        message:
+                            "{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}",
+                        level: "danger",
                     });
+                } else if (res.content == "") {
+                    $("#div_networkZigbeeAlert").showAlert({
+                        message:
+                            "{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}",
+                        level: "danger",
+                    });
+                } else {
+                    // console.log("res.content=", res.content);
+                    var lqiTable = JSON.parse(res.content);
+                    console.log("lqiTable=", lqiTable);
 
-                    console.log(
-                        "Adding link from " + rLogicId + " to " + nLogicId
-                    );
-                    graph.addLink(rLogicId, nLogicId);
-                }
-            }
+                    $("#idCurrentNetworkLG").empty().append(lqiTable.net);
+                    const date = new Date(lqiTable.collectTime * 1000);
+                    var out =
+                        date.toLocaleDateString() +
+                        " " +
+                        date.toLocaleTimeString();
+                    $("#idCurrentDateLG").empty().append(out);
 
-            console.log("Render the graph.");
-            var graphics = Viva.Graph.View.svgGraphics();
-            var nodeSize = 50; // Node 50x50
-            var imgSize = 40; // Image 40x40 centered in node
-            graphics
-                .node(function (node) {
-                    console.log("node=", node);
+                    if (lqiTable.routers.length == 0) {
+                        console.log("No routers");
+                        $("#idLinksGraphTab svg").remove(); // Remove previous one
+                        return;
+                    }
 
-                    var nodeColor = "#E5E500";
-                    var nodeName = "?";
-                    var iconName = "defaultUnknown";
+                    var graph = Viva.Graph.graph();
+                    var showObject =
+                        document.getElementById("idShowObject").checked; // Checked to display parent object
 
-                    if (typeof node.data != "undefined") {
-                        if (typeof node.data.type != "undefined") {
-                            if (node.data.type == "Coordinator") {
-                                nodeColor = "#a65ba6";
-                            } else if (node.data.type == "End Device") {
-                                nodeColor = "#7BCC7B";
-                            } else if (node.data.type == "Router") {
-                                nodeColor = "#00a2e8";
-                            }
-                        }
-                        if (typeof node.data.name != "undefined") {
-                            nodeName = node.data.name;
-                        }
-                        if (typeof node.data.icon != "undefined") {
-                            iconName = node.data.icon;
+                    // console.log("routers=", lqiTable.routers);
+                    for (rLogicId in lqiTable.routers) {
+                        router = lqiTable.routers[rLogicId];
+                        console.log("Adding router " + rLogicId + "=", router);
+
+                        // console.log(
+                        //     "Adding router " + rLogicId + " (" + router["name"] + ")"
+                        // );
+                        if (showObject)
+                            nodeName = router.parentName + "/" + router.name;
+                        else nodeName = router.name;
+                        graph.addNode(rLogicId, {
+                            name: nodeName,
+                            type: router["type"],
+                            icon: router["icon"],
+                            dead:
+                                typeof router["dead"] != "undefined"
+                                    ? true
+                                    : false,
+                        });
+
+                        for (nLogicId in router.neighbors) {
+                            neighbor = router.neighbors[nLogicId];
+                            console.log("neighbor=", neighbor);
+
+                            if (showObject)
+                                nodeName =
+                                    neighbor.parentName + "/" + neighbor.name;
+                            else nodeName = neighbor.name;
+
+                            graph.addNode(nLogicId, {
+                                name: nodeName,
+                                type: neighbor["type"],
+                                icon: neighbor["icon"],
+                                dead: false,
+                            });
+
+                            console.log(
+                                "Adding link from " +
+                                    rLogicId +
+                                    " to " +
+                                    nLogicId
+                            );
+                            graph.addLink(rLogicId, nLogicId);
                         }
                     }
 
-                    svgText = Viva.Graph.svg("text")
-                        .attr("y", "-3px")
-                        .text(nodeName)
-                        .attr("fill", nodeColor);
-                    var img1 = Viva.Graph.svg("rect")
-                        .attr("width", nodeSize)
-                        .attr("height", nodeSize)
-                        .attr("fill", nodeColor);
-                    var img2 = Viva.Graph.svg("image")
-                        .attr("x", 5)
-                        .attr("y", 5)
-                        .attr("width", imgSize)
-                        .attr("height", imgSize)
-                        .link(
-                            "/plugins/Abeille/images/node_" + iconName + ".png"
-                        );
+                    // Display Jeedom devices that are not visible on the network
+                    for (devLogicId in jeedomTable) {
+                        found = graph.getNode(devLogicId);
+                        if (found != null) continue;
 
-                    var ui = Viva.Graph.svg("g");
-                    ui.append(svgText);
-                    ui.append(img1);
-                    ui.append(img2);
+                        // Jeedom device not found on network
+                        dev = jeedomTable[devLogicId];
+                        if (dev.enabled == 0) continue; // Disabled
 
-                    return ui;
-                })
-                .placeNode(function (nodeUI, pos) {
-                    nodeUI.attr(
-                        "transform",
-                        "translate(" +
-                            (pos.x - nodeSize / 3) +
-                            "," +
-                            (pos.y - nodeSize / 2.5) +
-                            ")"
-                    );
+                        graph.addNode(devLogicId, {
+                            name: dev.name,
+                            type: dev.zbType,
+                            icon: dev.icon,
+                            dead: true, // Add death image
+                        });
+                    }
+
+                    console.log("Render the graph.");
+                    var graphics = Viva.Graph.View.svgGraphics();
+                    var nodeSize = 50; // Node 50x50
+                    var imgSize = 40; // Image 40x40 centered in node
+                    var deathSize = 20; // Death image in bottom-right corner
+                    graphics
+                        .node(function (node) {
+                            // console.log("LAAAAA node=", node);
+
+                            var nodeColor = "#E5E500";
+                            var nodeName = "?";
+                            var iconName = "defaultUnknown";
+                            let deadNode = false;
+
+                            if (typeof node.data != "undefined") {
+                                if (typeof node.data.type != "undefined") {
+                                    if (node.data.type == "Coordinator") {
+                                        nodeColor = "#a65ba6";
+                                    } else if (node.data.type == "End Device") {
+                                        nodeColor = "#7BCC7B";
+                                    } else if (node.data.type == "Router") {
+                                        nodeColor = "#00a2e8";
+                                    }
+                                }
+                                if (typeof node.data.name != "undefined") {
+                                    nodeName = node.data.name;
+                                }
+                                if (typeof node.data.icon != "undefined") {
+                                    iconName = node.data.icon;
+                                }
+                                deadNode = node.data.dead;
+                            }
+
+                            svgText = Viva.Graph.svg("text")
+                                .attr("y", "-3px")
+                                .text(nodeName)
+                                .attr("fill", nodeColor);
+                            var img1 = Viva.Graph.svg("rect")
+                                .attr("width", nodeSize)
+                                .attr("height", nodeSize)
+                                .attr("fill", nodeColor);
+                            var img2 = Viva.Graph.svg("image")
+                                .attr("x", 5)
+                                .attr("y", 5)
+                                .attr("width", imgSize)
+                                .attr("height", imgSize)
+                                .link(
+                                    "/plugins/Abeille/core/config/devices_images/node_" +
+                                        iconName +
+                                        ".png"
+                                );
+                            var ui = Viva.Graph.svg("g");
+                            ui.append(svgText);
+                            ui.append(img1);
+                            ui.append(img2);
+                            if (deadNode) {
+                                var img3 = Viva.Graph.svg("image")
+                                    .attr("x", 31)
+                                    .attr("y", 28)
+                                    .attr("width", deathSize)
+                                    .attr("height", deathSize)
+                                    .link("/plugins/Abeille/images/death.png");
+                                ui.append(img3);
+                            }
+
+                            return ui;
+                        })
+                        .placeNode(function (nodeUI, pos) {
+                            // console.log("placeNode", nodeUI, pos);
+                            nodeUI.attr(
+                                "transform",
+                                "translate(" +
+                                    (pos.x - nodeSize / 3) +
+                                    "," +
+                                    (pos.y - nodeSize / 2.5) +
+                                    ")"
+                            );
+                        });
+
+                    var layout = Viva.Graph.Layout.forceDirected(graph, {
+                        springLength: 150,
+                        springCoeff: 0.0005,
+                        stableThreshold: 0.1,
+                        dragCoeff: 0.02,
+                        gravity: -0.5,
+                    });
+
+                    $("#idLinksGraphTabSVG svg").remove(); // Remove previous one
+
+                    var renderer = Viva.Graph.View.renderer(graph, {
+                        layout: layout,
+                        graphics: graphics,
+                        prerender: 10,
+                        container:
+                            document.getElementById("idLinksGraphTabSVG"),
+                    });
+                    renderer.run();
+                    /*setTimeout(function () {
+                            renderer.pause();
+                            renderer.reset();
+                        }, 200);
+                        */
+
+                    /* Get network collect time */
+                    // $.ajax({
+                    //     type: "POST",
+                    //     url: "plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+                    //     data: {
+                    //         action: "getTmpFileModificationTime",
+                    //         file: "AbeilleLQI_MapDataAbeille" + zgId + ".json",
+                    //     },
+                    //     dataType: "json",
+                    //     global: false,
+                    //     cache: false,
+                    //     error: function (request, status, error) {
+                    //         bootbox.alert(
+                    //             "ERREUR 'getTmpFileModificationTime' !<br>" +
+                    //                 "status=" +
+                    //                 status +
+                    //                 "<br>error=" +
+                    //                 error
+                    //         );
+                    //     },
+                    //     success: function (json_res) {
+                    //         console.log(json_res);
+                    //         res = JSON.parse(json_res.result);
+                    //         if (res.status != 0) {
+                    //             var msg =
+                    //                 "ERREUR ! Quelque chose s'est mal passé.\n" +
+                    //                 res.error;
+                    //             alert(msg);
+                    //         } else {
+                    //             // window.location.reload();
+                    //             $("#idCurrentNetworkLG")
+                    //                 .empty()
+                    //                 .append("Abeille" + zgId);
+                    //             console.log(
+                    //                 "getTmpFileModificationTime() => " + res.mtime
+                    //             );
+                    //             const date = new Date(res.mtime * 1000);
+                    //             var out =
+                    //                 date.toLocaleDateString() +
+                    //                 " " +
+                    //                 date.toLocaleTimeString();
+                    //             $("#idCurrentDateLG").empty().append(out);
+                    //             currentZigateLG = zgId;
+                    //         }
+                    //     },
+                    // });
+                    // }
+                }
+            });
+
+            lqiTableReq.fail(function () {
+                var msg =
+                    "Données du réseau non trouvées. Forcez la réinterrogation.";
+                $("#div_networkZigbeeAlert").showAlert({
+                    message: msg,
+                    level: "danger",
                 });
-
-            var layout = Viva.Graph.Layout.forceDirected(graph, {
-                springLength: 150,
-                springCoeff: 0.0005,
-                stableThreshold: 0.1,
-                dragCoeff: 0.02,
-                gravity: -0.5,
+                $("#graph_network svg").remove();
             });
 
-            $("#idLinksGraphTabSVG svg").remove(); // Remove previous one
-
-            var renderer = Viva.Graph.View.renderer(graph, {
-                layout: layout,
-                graphics: graphics,
-                prerender: 10,
-                container: document.getElementById("idLinksGraphTabSVG"),
+            lqiTableReq.always(function (data) {
+                window.setTimeout(function () {
+                    $("#div_networkZigbeeAlert").hide();
+                }, 10000);
             });
-            renderer.run();
-            /*setTimeout(function () {
-                    renderer.pause();
-                    renderer.reset();
-                }, 200);
-                */
-
-            /* Get network collect time */
-            // $.ajax({
-            //     type: "POST",
-            //     url: "plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
-            //     data: {
-            //         action: "getTmpFileModificationTime",
-            //         file: "AbeilleLQI_MapDataAbeille" + zgId + ".json",
-            //     },
-            //     dataType: "json",
-            //     global: false,
-            //     cache: false,
-            //     error: function (request, status, error) {
-            //         bootbox.alert(
-            //             "ERREUR 'getTmpFileModificationTime' !<br>" +
-            //                 "status=" +
-            //                 status +
-            //                 "<br>error=" +
-            //                 error
-            //         );
-            //     },
-            //     success: function (json_res) {
-            //         console.log(json_res);
-            //         res = JSON.parse(json_res.result);
-            //         if (res.status != 0) {
-            //             var msg =
-            //                 "ERREUR ! Quelque chose s'est mal passé.\n" +
-            //                 res.error;
-            //             alert(msg);
-            //         } else {
-            //             // window.location.reload();
-            //             $("#idCurrentNetworkLG")
-            //                 .empty()
-            //                 .append("Abeille" + zgId);
-            //             console.log(
-            //                 "getTmpFileModificationTime() => " + res.mtime
-            //             );
-            //             const date = new Date(res.mtime * 1000);
-            //             var out =
-            //                 date.toLocaleDateString() +
-            //                 " " +
-            //                 date.toLocaleTimeString();
-            //             $("#idCurrentDateLG").empty().append(out);
-            //             currentZigateLG = zgId;
-            //         }
-            //     },
-            // });
-            // }
         }
-    });
-
-    request.fail(function () {
-        var msg = "Données du réseau non trouvées. Forcez la réinterrogation.";
-        $("#div_networkZigbeeAlert").showAlert({
-            message: msg,
-            level: "danger",
-        });
-        $("#graph_network svg").remove();
-    });
-
-    request.always(function (data) {
-        window.setTimeout(function () {
-            $("#div_networkZigbeeAlert").hide();
-        }, 10000);
     });
 }
 
@@ -966,3 +1059,7 @@ $("#idShowObject").on("change", function (event) {
     console.log("idShowObject click");
     displayLinksGraph(currentZigateLG); // Refresh current links graph
 });
+
+// Default display
+// TODO: Should be set to first enabled gateway
+displayLinksTable(1);

@@ -74,8 +74,9 @@
                 "isVisible": "1"
             }
         },
-        "tuyaEF00": {
-            "fromDevice": {
+        "private": {
+            "EF00": {
+                "type": "tuya",
                 "02": {
                     "function": "rcvValue",
                     "info": "01-setpoint"

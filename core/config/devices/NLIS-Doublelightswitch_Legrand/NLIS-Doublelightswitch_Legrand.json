@@ -12,13 +12,6 @@
             "mainEP": "01"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
                 "isVisible": 1
@@ -87,17 +80,35 @@
                 "params": "ep=02&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
-            "LedOn": {
-                "use": "setLegrandLEDOn"
+            "LED": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FC01&attrId=0001&attrType=10&manufId=1021",
+                "listValue": "01|LED ON;00|LED OFF",
+                "isVisible": 1,
+                "trigOut": {
+                    "getLED": {}
+                }
             },
-            "LedOff": {
-                "use": "setLegrandLEDOff"
+            "Get LED": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=FC01&attrId=0001",
+                "execAtCreation": "yes",
+                "logicalId": "getLED"
             },
-            "LedOn_if_on": {
-                "use": "setLegrandLEDOn_if_on"
+            "LED if ON": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FC01&attrId=0002&attrType=10&manufId=1021",
+                "listValue": "01|LED ON if ON;00|LED OFF if ON",
+                "isVisible": 1,
+                "trigOut": {
+                    "getLEDifON": {}
+                }
             },
-            "LedOff_if_on": {
-                "use": "setLegrandLEDOff_if_on"
+            "Get LED if ON": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=FC01&attrId=0002",
+                "execAtCreation": "yes",
+                "logicalId": "getLEDifON"
             }
         }
     }

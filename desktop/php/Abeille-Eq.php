@@ -23,8 +23,7 @@
     <div class="input-group pull-right" style="display:inline-flex">
 		<span class="input-group-btn">
 			<a class="btn btn-success eqLogicAction btn-sm roundedLeft" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a>
-            <!-- <a class="btn btn-danger btn-sm eqLogicAction" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a> -->
-            <!-- Note: data-action set to 'abRemove' to not use Jeedom default behavior and intercept removal confirmation. -->
+            <!-- Note: data-action set to 'abRemove' instead of 'remove' to not use Jeedom default behavior and intercept removal confirmation. -->
             <a class="btn btn-danger btn-sm eqLogicAction" data-action="abRemove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
             <a class="btn btn-default eqLogicAction btn-sm roundedRight" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a>
 		</span>

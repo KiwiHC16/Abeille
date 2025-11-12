@@ -4,6 +4,11 @@
         "model": "GZCGQ01LM",
         "type": "Xiaomi smart light sensor",
         "genericType": "Environment",
+        "alternateIds": {
+            "sen_ill.agl01": {
+                "model": "GZCGQ11LM"
+           }
+        },
         "timeout": "60",
         "comment": "Does not support clust 0001 attrib 0021 reporting (battery percent)",
         "comment2": "Illuminance reporting set to 10mins",
@@ -16,13 +21,6 @@
             "light": "1"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "BindToZigate-Power": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0001",

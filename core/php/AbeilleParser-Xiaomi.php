@@ -84,7 +84,7 @@
             $value2 *= 100;
             $mapTxt .= 'div='.$div.', min='.$min.', max='.$max.', ';
         } else {
-            $m .= " => ERROR: Unexpected function '${func}'";
+            $m .= " => ERROR: Unexpected function '{$func}'";
             parserLog2('debug', $addr, $m);
             return;
         }
@@ -148,7 +148,7 @@
 
     // Decode tags only. For debugging purposes only
     function xiaomiDecodeTagsDebug($net, $addr, $clustId, $attrId, $pl) {
-        parserLog2('debug', $addr, "  Cluster ${clustId}, attrib ${attrId}: Decoding for debug purposes only");
+        parserLog2('debug', $addr, "  Cluster {$clustId}, attrib {$attrId}: Decoding for debug purposes only");
         $l = strlen($pl);
         for ($i = 0; $i < $l; ) {
             $tagId = substr($pl, $i + 0, 2);
@@ -349,8 +349,8 @@
                 },
                 "FCC0-00F7": {
                     "type": "xiaomi",
-                    "struct": 1,
-                    "01-21": { // <idx>-<type>
+                    "struct": 1, // Indicates to handle attr FCC0-00F7 as a 4C/structure
+                    "01-21": { // <type>-<data>
                         "func": "numberDiv",
                         "div": 1000,
                         "info": "0001-01-0020",
@@ -369,11 +369,11 @@
         $private = $eq['private'][$clustId.'-'.$attrId];
         if (isset($private['info'])) {
             // 'CLUSTER-ATTRIB' + 'info' syntax
-            $value = AbeilleParser::decodeDataType($pl2, $attrType, true, 0, $attrSize, $valueHex);
+            $value = AbeilleParser::decodeDataType($attrData, $attrType, true, 0, $attrSize, $valueHex);
 
             $m = '  AttrId='.$attrId
                 .', AttrType='.$attrType
-                .', ValueHex='.$valueHex.' => '.$value.' ==> '.$fromDev['info'].'='.$value;
+                .', ValueHex='.$valueHex.' => '.$value.' ==> '.$private['info'].'='.$value;
             parserLog2('debug', $addr, $m);
 
             $attrReportN[] = array(

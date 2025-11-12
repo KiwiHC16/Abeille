@@ -57,9 +57,6 @@
                 "use": "act_zbCmdC-0006-Off",
                 "params": "ep=03",
                 "isVisible": 1
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         },
         "comment": ""

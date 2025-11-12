@@ -144,8 +144,8 @@ fi
 
 # Add+commit
 # Note about changelog: should be pushed to AbeilleDoc too & html generated.
-echo "Adding 'Abeille.version', 'info.json', 'Abeille.md5' & 'Changelog.rst'"
-git add plugin_info/Abeille.version plugin_info/info.json plugin_info/Abeille.md5 docs/fr_FR/Changelog.rst
+echo "Adding 'Abeille.version', 'info.json', 'Abeille.md5' & 'Changelog.md'"
+git add plugin_info/Abeille.version plugin_info/info.json plugin_info/Abeille.md5 docs/fr_FR/Changelog.md
 if [ $? -ne 0 ]; then
     echo "= ERROR: git add failed"
     exit 23
@@ -225,18 +225,24 @@ if [ "${TARG_BRANCH}" == "stable" ]; then
         git commit -q -m "${VERSION} cleanup"
         if [ $? -ne 0 ]; then
             echo "= ERROR: Commit failed"
+            echo "=        cmd='git commit -q -m \"${VERSION} cleanup\"'"
             exit 32
         fi
     fi
 fi
 
-# Delete target branch & push new one
-REM=`git branch -a | grep remotes/${TARG_REPO}/${TARG_BRANCH}`
-if [ $? -eq 0 ]; then
+# Delete target branch (origin/beta) & push new one
+#REM=`git branch -a | grep remotes/${TARG_REPO}/${TARG_BRANCH}`
+REM=`git ls-remote ${TARG_REPO} ${TARG_BRANCH}`
+#if [ $? -eq 0 ]; then
+if [ "${REM}" != "" ]; then
     echo "Deleting ${TARG_REPO}/${TARG_BRANCH} branch"
     git push -q ${TARG_REPO} --delete ${TARG_BRANCH}
     if [ $? -ne 0 ]; then
-        echo "= ERROR: git push --delete failed"
+        echo "= ERROR: git push failed"
+        echo "=        cmd='git push -q ${TARG_REPO} --delete ${TARG_BRANCH}'"
+        echo "=   then cmd 'git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}'"
+        echo "=   then cmd 'git checkout -q ${CUR_BRANCH}'"
         exit 33
     fi
 fi
@@ -246,6 +252,8 @@ echo "Creating ${TARG_REPO}/${TARG_BRANCH} branch"
 git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git push failed"
+    echo "=        cmd='git push --force -q ${TARG_REPO} ${LOCAL_BRANCH}:${TARG_BRANCH}'"
+    echo "=   then cmd 'git checkout -q ${CUR_BRANCH}'"
     exit 34
 fi
 
@@ -253,9 +261,22 @@ echo "Switching back to '${CUR_BRANCH}' branch"
 git checkout -q ${CUR_BRANCH}
 if [ $? -ne 0 ]; then
     echo "= ERROR: git checkout failed"
-    exit 34
+    echo "=        cmd='git checkout -q ${CUR_BRANCH}'"
+    exit 35
 else
     echo "= Ok"
 fi
+
+# Now trying to update ../AbeilleDoc.git
+php .tools/gen_devices_list.php
+cd ../AbeilleDoc.git
+git pull
+cp ../Abeille.git/docs/fr_FR/Changelog.md source
+cp ../Abeille.git/CompatibilityList.rst source/devices
+./gen_docs.sh
+git add -u
+git commit -m "Changelog + compatibility list updates"
+git push
+cd ../Abeille.git
 
 exit 0

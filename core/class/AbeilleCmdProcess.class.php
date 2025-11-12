@@ -8,11 +8,11 @@
            Returns: true if ok, else false */
         function checkRequiredParams($required, $Command) {
             $paramError = false;
-            foreach ($required as $idx => $param) {
-                if (isset($Command[$param])) {
-                    if (gettype($Command[$param]) != "string")
+            foreach ($required as $param) {
+                if (isset($Command['cmdParams'][$param])) {
+                    if (gettype($Command['cmdParams'][$param]) != "string")
                         continue; // No other check on non string types
-                    if ($Command[$param] != '')
+                    if ($Command['cmdParams'][$param] != '')
                         continue; // String not empty => ok
                     cmdLog('error', "Cmd '".$Command['name']."': Paramètre '".$param."' vide !");
                 } else {
@@ -91,10 +91,10 @@
 
         // Generate ZCL header
         // hParams = array(
-        //     'clustSpecific' => false, // Optional: Frame type: false=general (default), true=cluster specific
+        //     'clustSpecific' => true, // Optional: Frame type: false=general (default), true=cluster specific
         //     'manufCode' => '', // Optional: Note: if != '' it enabled 'manufSpecific' flag
-        //     'toCli' => false, // Optional: Default direction = client to server
-        //     'disableDefaultRsp' => true, // Optional
+        //     'toCli' => true, // Optional: Direction: false=default=client2server, true=server2client
+        //     'disableDefaultRsp' => false, // Optional (default=true)
         //     'zclSqn' => 'xx', // Optional
         //     'cmdId' => 'xx' // Mandatory
         // )
@@ -119,6 +119,7 @@
             } else {
                 $manufSpecific = 1;
                 $manufCode = AbeilleTools::reverseHex($manufCode);
+                $zhTxt .= "/ManufCode={$manufCode}";
             }
             $toCli = $toCli ? 1 : 0;
             if ($toCli)
@@ -132,27 +133,27 @@
             $fcf = sprintf("%02X", $fcf);
 
             $zclHeader = $fcf.$manufCode.$zclSqn.$cmdId;
-            cmdLog('debug', '  zclHeader: '.$zhTxt.', SQN='.$zclSqn.', cmd='.$cmdId);
+            cmdLog('debug', '  zclHeader: '.$zhTxt.', SQN='.$zclSqn.', CmdId='.$cmdId);
             return $zclHeader;
         }
 
-        /**
-         * Converts signed decimal to hex (Two's complement)
-         *
-         * @param $value int, signed
-         *
-         * @return string, upper case hex value, both bytes padded left with zeros
-         */
-        function signed2hex($value, $size) {
-            $packed = pack('i', $value);
-            $hex='';
-            for ($i=0; $i < $size; $i++){
-                $hex .= strtoupper( str_pad( dechex(ord($packed[$i])) , 2, '0', STR_PAD_LEFT) );
-            }
-            $tmp = str_split($hex, 2);
-            $out = implode('', array_reverse($tmp));
-            return $out;
-        }
+        // /**
+        //  * Converts signed decimal to hex (Two's complement)
+        //  *
+        //  * @param $value int, signed
+        //  *
+        //  * @return string, upper case hex value, both bytes padded left with zeros
+        //  */
+        // function signed2hex($value, $size) {
+        //     $packed = pack('i', $value);
+        //     $hex='';
+        //     for ($i=0; $i < $size; $i++){
+        //         $hex .= strtoupper( str_pad( dechex(ord($packed[$i])) , 2, '0', STR_PAD_LEFT) );
+        //     }
+        //     $tmp = str_split($hex, 2);
+        //     $out = implode('', array_reverse($tmp));
+        //     return $out;
+        // }
 
         // Called to convert '#sliderXX#' or '#selectXX#' to 'XX'
         // 'XX' is always a decimal value
@@ -208,69 +209,84 @@
         //     return $strHexVal;
         // }
 
-        /* Format attribute value.
-           Return hex string formatted value according to its type.
-           WARNING: Returned hex string must still be reversed if >= 2B */
-        function formatAttribute($valIn, $type) {
-            // cmdLog('debug', "formatAttribute(".$valIn.", ".$type.")");
-            // Note: Slider/select conversion to be done in execute() function
-            if (substr($valIn, 0, 7) == "#slider") {
-                // $valIn = $this->sliderToHex($valIn, $type);
-                $valIn = substr($valIn, 7, -1); // Extracting decimal value
-            } else if (substr($valIn, 0, 7) == "#select") {
-                // $valIn = $this->sliderToHex($valIn, $type);
-                $valIn = substr($valIn, 7, -1); // Extracting decimal value
-            }
-            if ($valIn === false)
-                return false;
+        // OBSOLETE => replaced by zgFormatData() from 'AbeilleZigbee.php'
+        // /* Format attribute value.
+        //    Return hex string formatted value according to its type.
+        //    WARNING: Returned hex string must still be reversed if >= 2B */
+        // function formatAttribute($valIn, $type) {
+        //     // cmdLog('debug', "formatAttribute(".$valIn.", ".$type.")");
+        //     // Note: Slider/select conversion to be done in execute() function
+        //     if (substr($valIn, 0, 7) == "#slider") {
+        //         // $valIn = $this->sliderToHex($valIn, $type);
+        //         $valIn = substr($valIn, 7, -1); // Extracting decimal value
+        //     } else if (substr($valIn, 0, 7) == "#select") {
+        //         // $valIn = $this->sliderToHex($valIn, $type);
+        //         $valIn = substr($valIn, 7, -1); // Extracting decimal value
+        //     } else if (substr($valIn, 0, 2) == "0x") {
+        //         $valIn = hexdec($valIn);
+        //     }
+        //     if ($valIn === false)
+        //         return false;
 
-            $valOut = '';
-            switch ($type) {
-            case 'bool':
-            case '10':
-            case '18': // map8
-            case '20': // uint8
-            case '30': // enum8
-                $valOut = sprintf("%02X", $valIn);
-                break;
-            case 'uint16':
-            case '21':
-            case '31': // enum16
-                $valOut = sprintf("%04X", $valIn);
-                break;
-            case 'uint24':
-            case '22':
-                $valOut = sprintf("%06X", $valIn);
-                break;
-            case 'uint32':
-            case '23':
-                $valOut = sprintf("%08X", $valIn);
-                break;
-            case 'uint48':
-            case '25':
-                $valOut = sprintf("%012X", $valIn);
-                break;
-            case 'int16':
-            case '29':
-                $valOut = $this->signed2Hex($valIn, 2);
-                break;
-            case '42': // string
-                $len = sprintf("%02X", strlen($valIn));
-                $valOut = $len.bin2hex($valIn);
-                // cmdLog('debug', "len=".$len.", valOut=".$valOut);
-                break;
-            default:
-                cmdLog('error', "  formatAttribute(${valIn}, type=${type}) => Type non supporté");
-                $valOut = '12'; // Fake value
-            }
+        //     $valOut = '';
+        //     switch ($type) {
+        //     case 'bool':
+        //     case '10':
+        //     case '18': // map8
+        //     case '20': // uint8
+        //     case '30': // enum8
+        //         $valOut = sprintf("%02X", $valIn);
+        //         break;
+        //     case 'uint16':
+        //     case '21':
+        //     case '31': // enum16
+        //         $valOut = sprintf("%04X", $valIn);
+        //         break;
+        //     case 'uint24':
+        //     case '22':
+        //         $valOut = sprintf("%06X", $valIn);
+        //         break;
+        //     case 'uint32':
+        //     case '23':
+        //         $valOut = sprintf("%08X", $valIn);
+        //         break;
+        //     case 'uint48':
+        //     case '25':
+        //         $valOut = sprintf("%012X", $valIn);
+        //         break;
+        //     case '28': // int8
+        //         $valOut = $this->signed2Hex($valIn, 1);
+        //         break;
+        //     case '29': // int16
+        //     case 'int16':
+        //         $valOut = $this->signed2Hex($valIn, 2);
+        //         break;
+        //     case '2A': // int24
+        //         $valOut = $this->signed2Hex($valIn, 3);
+        //         break;
+        //     case '2B': // int32
+        //         $valOut = $this->signed2Hex($valIn, 4);
+        //         break;
+        //     case '39': // Single precision
+        //         $valOut = strrev(unpack('h*', pack('f', $valIn))[1]);
+        //         break;
+        //     case '42': // string
+        //         $len = sprintf("%02X", strlen($valIn));
+        //         $valOut = $len.bin2hex($valIn);
+        //         // cmdLog('debug', "len=".$len.", valOut=".$valOut);
+        //         break;
+        //     default:
+        //         cmdLog('error', "  formatAttribute({$valIn}, type={$type}) => Type non supporté");
+        //         $valOut = '12'; // Fake value
+        //     }
 
-            cmdLog('debug', "  formatAttribute(${valIn}, type=${type}) => valOut=${valOut}");
-            return $valOut;
-        }
+        //     cmdLog('debug', "  formatAttribute({$valIn}, type={$type}) => valOut={$valOut}");
+        //     return $valOut;
+        // }
 
         // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
         // Tcharp38: See https://github.com/KiwiHC16/Abeille/issues/2143#
-        function ReportParamXiaomi($dest,$Command) {
+        function ReportParamXiaomi($dest, $Command) {
             // Write Attribute request
             // Msg Type = 0x0110
 
@@ -296,17 +312,17 @@
             $cmd                    = "0110";
 
             $addrMode            = "02"; // Short Address -> 2
-            $address                = $Command['address'];
+            $address                = $Command['cmdParams']['address'];
             $srcEp         = "01";
             $dstEp    = "01";
-            $clusterId              = $Command['clusterId'];
+            $clusterId              = $Command['cmdParams']['clusterId'];
             $direction              = "00";
             $manufacturerSpecific   = "01";
-            $proprio                = $Command['Proprio'];
+            $proprio                = $Command['cmdParams']['Proprio'];
             $numberOfAttributes     = "01";
-            $attributeId            = $Command['attributeId'];
-            $attributeType          = $Command['attributeType'];
-            $value                  = $Command['value'];
+            $attributeId            = $Command['cmdParams']['attributeId'];
+            $attributeType          = $Command['cmdParams']['attributeType'];
+            $value                  = $Command['cmdParams']['value'];
 
             $data = $addrMode.$address.$srcEp.$dstEp.$clusterId.$direction.$manufacturerSpecific.$proprio.$numberOfAttributes.$attributeId.$attributeType.$value;
 
@@ -314,9 +330,9 @@
             // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
             $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
 
-            if (isset($Command['repeat'])) {
-                if ($Command['repeat']>1 ) {
-                    for ($x = 2; $x <= $Command['repeat']; $x++) {
+            if (isset($Command['cmdParams']['repeat'])) {
+                if ($Command['cmdParams']['repeat']>1 ) {
+                    for ($x = 2; $x <= $Command['cmdParams']['repeat']; $x++) {
                         sleep(5);
                         // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
@@ -324,123 +340,6 @@
                 }
             }
         }
-
-        // Tcharp38: Seems no longer used
-        // J'ai un probleme avec la command 0110, je ne parviens pas à l utiliser. Prendre setParam2 en atttendant.
-        // function setParam($dest,$address,$clusterId,$attributeId,$dstEp,$Param) {
-        //     /*
-        //         <address mode: uint8_t>
-        //         <target short address: uint16_t>
-        //         <source endpoint: uint8_t>
-        //         <destination endpoint: uint8_t>
-        //         <Cluster id: uint16_t>
-        //         <direction: uint8_t>
-        //         <manufacturer specific: uint8_t>
-        //         <manufacturer id: uint16_t>
-        //         <number of attributes: uint8_t>
-        //         <attributes list: data list of uint16_t  each>
-        //         Direction:
-        //         0 - from server to client
-        //         1 - from client to server
-        //         */
-
-        //     $priority               = $Command['priority'];
-
-        //     $cmd                    = "0110";
-        //     $length                  = "000E";
-
-        //     $addrMode            = "02";
-        //     // $address             = $Command['address'];
-        //     $srcEp         = "01";
-        //     // $dstEp = "01";
-        //     //$ClusterId            = "0006";
-        //     $Direction              = "01";
-        //     $manufacturerSpecific   = "00";
-        //     $manufacturerId         = "0000";
-        //     $numberOfAttributes     = "01";
-        //     $attributesList         = $attributeId;
-        //     $attributesList         = "Salon1         ";
-
-        //     $data = $addrMode.$address.$srcEp.$dstEp.$clusterId.$Direction.$manufacturerSpecific.$manufacturerId.$numberOfAttributes.$attributesList;
-
-        //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-        //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-        // }
-
-        // Tcharp38: No longer used
-        // /**
-        //  * setParam2: send the commande to zigate to send a write attribute on zigbee network
-        //  *
-        //  * @param dest
-        //  * @param address
-        //  * @param clusterId
-        //  * @param attributeId
-        //  * @param destinationEndPoint
-        //  * @param Param
-        //  * @param dataType
-        //  *
-        //  * @return none
-        //  */
-        // function setParam2( $dest, $address, $clusterId, $attributeId, $dstEp, $Param, $dataType) {
-        //     cmdLog('debug', "  command setParam2", $this->debug['processCmd']);
-
-        //     $priority = $Command['priority'];
-
-        //     $cmd = "0530";
-
-        //     // <address mode: uint8_t>              -> 1
-        //     // <target short address: uint16_t>     -> 2
-        //     // <source endpoint: uint8_t>           -> 1
-        //     // <destination endpoint: uint8_t>      -> 1
-
-        //     // <profile ID: uint16_t>               -> 2
-        //     // <cluster ID: uint16_t>               -> 2
-
-        //     // <security mode: uint8_t>             -> 1
-        //     // <radius: uint8_t>                    -> 1
-        //     // <data length: uint8_t>               -> 1  (22 -> 0x16)
-        //     // <data: auint8_t>
-        //     // APS Part <= data
-        //     // dummy 00 to align mesages                                            -> 1
-        //     // <target extended address: uint64_t>                                  -> 8
-        //     // <target endpoint: uint8_t>                                           -> 1
-        //     // <cluster ID: uint16_t>                                               -> 2
-        //     // <destination address mode: uint8_t>                                  -> 1
-        //     // <destination address:uint16_t or uint64_t>                           -> 8
-        //     // <destination endpoint (value ignored for group address): uint8_t>    -> 1
-        //     // => 34 -> 0x22
-
-        //     $addrMode            = "02";
-        //     $addr     = $address;
-        //     $srcEp         = "01";
-        //     $dstEp    = $dstEp;
-        //     $profId              = "0104";
-        //     $clustId              = $clusterId;
-        //     $secMode           = "02"; // ???
-        //     $radius                 = "30";
-        //     // $dataLength <- calculated later
-
-        //     $frameControl               = "00";
-        //     $transqactionSequenceNumber = "1A"; // to be reviewed
-        //     $commandWriteAttribute      = "02";
-
-        //     $attributeId = $attributeId[2].$attributeId[3].$attributeId[0].$attributeId[1]; // $attributeId;
-
-        //     $lengthAttribut = sprintf("%02s",dechex(strlen( $Param ))); // "0F";
-        //     $attributValue = ""; for ($i=0; $i < strlen($Param); $i++) { $attributValue .= sprintf("%02s",dechex(ord($Param[$i]))); }
-
-        //     $data2 = $frameControl.$transqactionSequenceNumber.$commandWriteAttribute.$attributeId.$dataType.$lengthAttribut.$attributValue;
-
-        //     $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-
-        //     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
-
-        //     $data = $data1.$data2;
-
-        //     // $length = sprintf("%04s", dechex(strlen($data) / 2));
-        //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
-        //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
-        // }
 
         /**
          * setParam3: send the commande to zigate to send a write attribute on zigbee network with a proprio field
@@ -450,7 +349,7 @@
          *
          * @return none
          */
-        function setParam3($dest,$Command) {
+        function setParam3($dest, $Command) {
             cmdLog('debug', "command setParam3", $this->debug['processCmd']);
 
             $priority = $Command['priority'];
@@ -480,13 +379,13 @@
             // <destination endpoint (value ignored for group address): uint8_t>    -> 1
             // => 34 -> 0x22
 
-            $addrMode                = "02";
-            $addr         = $Command['address'];
-            $srcEp             = "01";
+            $addrMode   = "02";
+            $addr       = $Command['cmdParams']['address'];
+            $srcEp      = "01";
 
-            if (isset($Command['destinationEndpoint'])) {
-                if ($Command['destinationEndpoint']>1 ) {
-                    $dstEp = $Command['destinationEndpoint'];
+            if (isset($Command['cmdParams']['destinationEndpoint'])) {
+                if ($Command['cmdParams']['destinationEndpoint']>1 ) {
+                    $dstEp = $Command['cmdParams']['destinationEndpoint'];
                 }
                 else {
                     $dstEp = "01";
@@ -497,7 +396,7 @@
             }
 
             $profId                  = "0104";
-            $clustId                  = $Command['clusterId'];
+            $clustId                  = $Command['cmdParams']['clusterId'];
 
             $secMode               = "02"; // ???
             $radius                     = "30";
@@ -512,16 +411,16 @@
 
             $frameControl = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
 
-            $Proprio                    = $Command['Proprio'][2].$Command['Proprio'][3].$Command['Proprio'][0].$Command['Proprio'][1];
+            $Proprio                    = $Command['cmdParams']['Proprio'][2].$Command['cmdParams']['Proprio'][3].$Command['cmdParams']['Proprio'][0].$Command['cmdParams']['Proprio'][1];
 
             $transqactionSequenceNumber = "1A"; // to be reviewed
             $commandWriteAttribute      = "02";
 
-            $attributeId                = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+            $attributeId                = $Command['cmdParams']['attributeId'][2].$Command['cmdParams']['attributeId'][3].$Command['cmdParams']['attributeId'][0].$Command['cmdParams']['attributeId'][1];
 
-            $dataType                   = $Command['attributeType'];
+            $dataType                   = $Command['cmdParams']['attributeType'];
 
-            $attributValue              = $Command['value'];
+            $attributValue              = $Command['cmdParams']['value'];
 
             $data2                      = $frameControl.$Proprio.$transqactionSequenceNumber.$commandWriteAttribute.$attributeId.$dataType.$attributValue;
 
@@ -544,7 +443,7 @@
          *
          * @return none
          */
-        function setParam4($dest,$Command) {
+        function setParam4($dest, $Command) {
 
             cmdLog('debug', "command setParam4", $this->debug['processCmd']);
 
@@ -576,12 +475,12 @@
             // => 34 -> 0x22
 
             $addrMode                = "02";
-            $addr = $Command['address'];
+            $addr = $Command['cmdParams']['address'];
             $srcEp             = "01";
-            if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
+            if ($Command['cmdParams']['destinationEndpoint']>1 ) { $dstEp = $Command['cmdParams']['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
 
             $profId                  = "0104";
-            $clustId                  = $Command['clusterId'];
+            $clustId                  = $Command['cmdParams']['clusterId'];
 
             $secMode               = "02"; // ???
             $radius                     = "30";
@@ -596,10 +495,10 @@
             $transqactionSequenceNumber = "1A"; // to be reviewed
             $commandWriteAttribute      = "02";
 
-            $attributeId                = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+            $attributeId                = $Command['cmdParams']['attributeId'][2].$Command['cmdParams']['attributeId'][3].$Command['cmdParams']['attributeId'][0].$Command['cmdParams']['attributeId'][1];
 
-            $dataType                   = $Command['attributeType'];
-            $attributValue              = $Command['value'];
+            $dataType                   = $Command['cmdParams']['attributeType'];
+            $attributValue              = $Command['cmdParams']['value'];
 
             $data2                      = $frameControl.$transqactionSequenceNumber.$commandWriteAttribute.$attributeId.$dataType.$attributValue;
 
@@ -656,12 +555,12 @@
             // => 34 -> 0x22
 
             $addrMode        = "02";
-            $addr = $Command['address'];
+            $addr = $Command['cmdParams']['address'];
             $srcEp     = "01";
-            if ($Command['EP']>1 ) { $dstEp = $Command['EP']; } else { $dstEp = "01"; } // $dstEp; // "01";
+            if ($Command['cmdParams']['ep']>1 ) { $dstEp = $Command['cmdParams']['ep']; } else { $dstEp = "01"; } // $dstEp; // "01";
 
             $profId          = "0104";
-            $clustId          = $Command['clusterId'];
+            $clustId          = $Command['cmdParams']['clusterId'];
 
             $secMode       = "02"; // ???
             $radius             = "30";
@@ -669,23 +568,23 @@
 
             $frameControlAPS    = "40";   // APS Control Field - If Ack Request 0x40 If no Ack then 0x00 - Avec 0x40 j'ai un default response
 
-            if ($Command['Proprio'] == '' ) {
+            if ($Command['cmdParams']['Proprio'] == '' ) {
                 $frameControlZCL    = "10";   // ZCL Control Field - Disable Default Response + Not Manufacturer Specific
             }
             else {
                 $frameControlZCL    = "14";   // ZCL Control Field - Disable Default Response + Manufacturer Specific
             }
-            $Proprio = $Command['Proprio'];
+            $Proprio = $Command['cmdParams']['Proprio'];
 
             $frameControl       = $frameControlZCL; // Ici dans cette commande c est ZCL qu'on control
 
             $transqactionSequenceNumber = "1A"; // to be reviewed
             $commandWriteAttribute      = "02";
 
-            $attributeId        = $Command['attributeId'][2].$Command['attributeId'][3].$Command['attributeId'][0].$Command['attributeId'][1];
+            $attributeId        = $Command['cmdParams']['attributeId'][2].$Command['cmdParams']['attributeId'][3].$Command['cmdParams']['attributeId'][0].$Command['cmdParams']['attributeId'][1];
 
-            $dataType           = $Command['attributeType'];
-            $attributValue      = $Command['value'];
+            $dataType           = $Command['cmdParams']['attributeType'];
+            $attributValue      = $Command['cmdParams']['value'];
 
             $data2 = $frameControl.$Proprio.$transqactionSequenceNumber.$commandWriteAttribute.$attributeId.$dataType.$attributValue;
 
@@ -701,7 +600,7 @@
         }
 
         // Generate a 'Read attribute request'
-        function readAttribute($priority, $dest, $addr, $dstEp, $clustId, $attribId, $manufId = '') {
+        function readAttribute($priority, $dest, $addr, $dstEp, $clustId, $attribId, $manufId = '', $repeat = 0) {
             /*
                 <address mode: uint8_t>
                 <target short address: uint16_t>
@@ -719,7 +618,7 @@
                 <attributes list: data list of uint16_t  each>
             */
 
-            $cmd = "0100"; // Cmd 100 request AckAPS based on ZigBee traces.
+            $zgCmd = "0100"; // Cmd 100 request AckAPS based on ZigBee traces.
 
             $addrMode = "02";
             // TODO: Check 'addr' size
@@ -750,11 +649,11 @@
                 $attribList .=  $attrId;
                 $nbAttr++;
             }
-            cmdLog('debug', "  readAttribute: ClustId=${clustId}, AttrList=${attribList}");
+            cmdLog('debug', "  readAttribute: ClustId={$clustId}, AttrList={$attribList}");
             $nbOfAttrib = sprintf("%02X", $nbAttr);
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
 
-            $this->addCmdToQueue2($priority, $dest, $cmd, $data, $addr, $addrMode);
+            $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $addr, $addrMode, $repeat);
         }
 
         /**
@@ -796,10 +695,10 @@
         //     $dest                   = $Command['dest'];
 
         //     $addrMode            = "02";
-        //     $addr     = $Command['address'];
+        //     $addr     = $Command['cmdParams']['address'];
         //     $srcEp         = "01";
-        //     $dstEp    = $Command['EP'];
-        //     $clustId              = $Command['clusterId'];
+        //     $dstEp    = $Command['cmdParams']['ep'];
+        //     $clustId              = $Command['cmdParams']['clusterId'];
         //     $profId              = "0104";
         //     $secMode           = "02";
         //     $radius                 = "1E";
@@ -809,7 +708,7 @@
         //     $cmdId                  = "00";
 
         //     $attributs = "";
-        //     $attributList           = explode(',',$Command['attributeId']);
+        //     $attributList           = explode(',',$Command['cmdParams']['attributeId']);
 
         //     foreach ($attributList as $attribut) {
         //         $attributs .= AbeilleTools::reverseHex(str_pad( $attribut, 4, "0", STR_PAD_LEFT));
@@ -843,7 +742,7 @@
         //     $cmd = "0100";
         //     $length = "000E";
         //     $addrMode = "02";
-        //     // $address = $Command['address'];
+        //     // $address = $Command['cmdParams']['address'];
         //     $srcEp = "01";
         //     $dstEp = "0B";
         //     //$ClusterId = "0006";
@@ -871,7 +770,7 @@
         //     $cmd = "0100";
         //     $length = "000E";
         //     $addrMode = "02";
-        //     // $address = $Command['address'];
+        //     // $address = $Command['cmdParams']['address'];
         //     $srcEp = "01";
         //     $dstEp = "03";
         //     //$ClusterId = "0006";
@@ -889,60 +788,6 @@
         //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
         // }
 
-        /**
-         * reviewPriority()
-         *
-         * See if we need to change the priority reaquested for a message
-         *
-         * @param Command
-         * @return priority re-evaluated
-         *
-         */
-        // function reviewPriority($Command) {
-        //     if (isset($Command['priority'])) {
-        //         // TODO: Eq Address and Group Address can't be distingueshed here. Probability to have a group address = eq address is low but exist.
-        //         if (isset($Command['address'])) {
-        //             if ($NE = Abeille::byLogicalId($Command['dest'].'/'.$Command['address'], 'Abeille')) {
-        //                 if ($NE->getIsEnable()) {
-        //                     if (( time() - strtotime($NE->getStatus('lastCommunication'))) < (60*$NE->getTimeout()) ) {
-        //                         if ($NE->getStatus('APS_ACK', '1') == '1') {
-        //                             return $Command['priority'];
-        //                         }
-        //                         else {
-        //                             cmdLog('debug', "  NE n a pas repondu lors de precedente commande alors je mets la priorite au minimum.");
-        //                             return priorityLostNE;
-        //                         }
-        //                     }
-        //                     else {
-        //                         cmdLog('debug', "  NE en Time Out alors je mets la priorite au minimum.");
-        //                         return priorityLostNE;
-        //                     }
-        //                 }
-        //                 else {
-        //                     /* Tcharp38: Preventing cmd to be sent if EQ is disabled is not good here.
-        //                     If EQ was disabled but now under pairing process (dev announce)
-        //                     this prevents interrogation of EQ and therefore reinclusion.
-        //                     This check should be done at source not here. At least don't filter
-        //                     requests from parser. */
-        //                     // cmdLog('debug', "  NE desactive, je n envoie pas de commande.");
-        //                     // return -1;
-        //                     return $Command['priority'];
-        //                 }
-        //             }
-        //             else {
-        //                 cmdLog('debug', "  NE n existe pas dans Abeille, une annonce/une commande de groupe, je ne touche pas à la priorite.");
-        //                 return $Command['priority'];
-        //             }
-        //         }
-        //         else {
-        //             return $Command['priority'];
-        //         }
-        //     }
-        //     else {
-        //         cmdLog('debug', "  priority not defined !!!");
-        //         return priorityInterrogation;
-        //     }
-        // }
 
         /**
          * processCmd()
@@ -1006,60 +851,11 @@
             // }
 
             // abeilleList abeilleListAll
-            if (isset($Command['abeilleList'])) {
+            if ($Command['name'] == 'abeilleList') {
+
                 cmdLog('debug', "  Get Abeilles List", $this->debug['processCmd']);
                 // $this->addCmdToQueue($priority,$dest,"0015","0000","");
                 $this->addCmdToQueue2(PRIO_NORM, $dest, "0015");
-                return;
-            }
-
-            if (isset($Command['setCertificationCE'])) {
-                cmdLog('debug', "  setCertificationCE", $this->debug['processCmd']);
-                $cmd = "0019";
-                $data = "01";
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
-            if (isset($Command['setCertificationFCC'])) {
-                cmdLog('debug', "  setCertificationFCC", $this->debug['processCmd']);
-                $cmd = "0019";
-                $data = "02";
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
-            //----------------------------------------------------------------------
-            // https://github.com/fairecasoimeme/ZiGate/issues/145
-            // PHY_PIB_TX_POWER_DEF (default - 0x80)
-            // PHY_PIB_TX_POWER_MIN (minimum - 0)
-            // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
-            if (isset($Command['TxPower'])  ) {
-                cmdLog('debug', "  TxPower", $this->debug['processCmd']);
-                $cmd = "0806";
-                $data = $Command['TxPower'];
-                if ($data < 10 ) $data = '0'.$data;
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
-            if (isset($Command['setExtendedPANID'])) {
-                cmdLog('debug', "  setExtendedPANID", $this->debug['processCmd']);
-                $cmd = "0020";
-                $data = $Command['setExtendedPANID'];
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                 return;
             }
 
@@ -1067,10 +863,9 @@
             // Bind
             // Title => 000B57fffe3025ad (IEEE de l ampoule)
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006
-            if (isset($Command['bind'])) // Tcharp38: OBSOLETE !! Use "bind0030" instead
-            {
+            if ($Command['name'] == 'bind') {
+
                 cmdLog('debug', "  command bind", $this->debug['processCmd']);
-                // Msg Type = 0x0030
                 $cmd = "0030";
 
                 // <target extended address: uint64_t>                                  -> 16
@@ -1081,23 +876,23 @@
                 // <destination endpoint (value ignored for group address): uint8_t>    -> 2
 
                 // $targetExtendedAddress  = "000B57fffe3025ad";
-                $targetExtendedAddress  = $Command['address'];
+                $targetExtendedAddress  = $Command['cmdParams']['address'];
                 //
-                if (isset($Command['targetEndpoint'])) {
-                    $targetEndpoint         = $Command['targetEndpoint'];
+                if (isset($Command['cmdParams']['targetEndpoint'])) {
+                    $targetEndpoint         = $Command['cmdParams']['targetEndpoint'];
                 }
                 else {
                     $targetEndpoint         = "01";
                 }
 
                 // $clustId              = "0006";
-                $clustId              = $Command['ClusterId'];
+                $clustId              = $Command['cmdParams']['clusterId'];
                 // $destinationAddressMode = "02";
                 $destinationAddressMode = "03";
 
                 // $destinationAddress     = "0000";
                 // $destinationAddress     = "00158D0001B22E24";
-                $destinationAddress     = $Command['reportToAddress'];
+                $destinationAddress     = $Command['cmdParams']['reportToAddress'];
 
                 $dstEp    = "01";
 
@@ -1109,8 +904,8 @@
             // BindToGroup
             // Pour Telecommande RC110
             // Tcharp38: Why the need of a 0530 based function ?
-            if (isset($Command['BindToGroup']))
-            {
+            if ($Command['name'] == 'BindToGroup') {
+
                 cmdLog('debug', "  command BindToGroup", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1138,7 +933,7 @@
                 // => 34 -> 0x22
 
                 $addrMode       = "02";
-                $addr           = $Command['address'];
+                $addr           = $Command['cmdParams']['address'];
                 $srcEpBind      = "00";
                 $dstEpBind      = "00";
                 $profIdBind     = "0000";
@@ -1148,11 +943,11 @@
 
                 $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
 
-                $targetExtendedAddress      = AbeilleTools::reverseHex($Command['targetExtendedAddress']);
-                $targetEndpoint             = $Command['targetEndpoint'];
-                $clustId                  = AbeilleTools::reverseHex($Command['clusterID']);
+                $targetExtendedAddress      = AbeilleTools::reverseHex($Command['cmdParams']['targetExtendedAddress']);
+                $targetEndpoint             = $Command['cmdParams']['targetEndpoint'];
+                $clustId                  = AbeilleTools::reverseHex($Command['cmdParams']['clusterId']);
                 $destinationAddressMode     = "01";
-                $reportToGroup              = AbeilleTools::reverseHex($Command['reportToGroup']);
+                $reportToGroup              = AbeilleTools::reverseHex($Command['cmdParams']['reportToGroup']);
 
                 $data2 = $dummy.$targetExtendedAddress.$targetEndpoint.$clustId .$destinationAddressMode.$reportToGroup;
                 $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
@@ -1200,7 +995,7 @@
             //     // => 34 -> 0x22
 
             //     $addrMode                = "02";
-            //     $addr         = $Command['address'];
+            //     $addr         = $Command['cmdParams']['address'];
             //     $srcEpBind         = "00";
             //     $dstEpBind    = "00";
             //     $profIdBind              = "0000";
@@ -1211,15 +1006,15 @@
 
             //     $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
 
-            //     if (strlen($Command['targetExtendedAddress']) < 2 ) {
+            //     if (strlen($Command['cmdParams']['targetExtendedAddress']) < 2 ) {
             //         cmdLog('debug', "  command bind short: param targetExtendedAddress is empty. Can t do. So return", $this->debug['processCmd']);
             //         return;
             //     }
-            //     $targetExtendedAddress = AbeilleTools::reverseHex($Command['targetExtendedAddress']);
+            //     $targetExtendedAddress = AbeilleTools::reverseHex($Command['cmdParams']['targetExtendedAddress']);
 
-            //     $targetEndpoint = $Command['targetEndpoint'];
+            //     $targetEndpoint = $Command['cmdParams']['targetEndpoint'];
 
-            //     $clustId = AbeilleTools::reverseHex($Command['clusterID']);
+            //     $clustId = AbeilleTools::reverseHex($Command['cmdParams']['clusterId']);
 
             //     $destinationAddressMode = "03";
             //     if (strlen($Command['destinationAddress']) < 2 ) {
@@ -1228,7 +1023,7 @@
             //     }
             //     $destinationAddress = AbeilleTools::reverseHex($Command['destinationAddress']);
 
-            //     $dstEp = $Command['destinationEndpoint'];
+            //     $dstEp = $Command['cmdParams']['destinationEndpoint'];
 
             //     $length = "0022";
 
@@ -1247,8 +1042,8 @@
             // setReport
             // Title => setReport
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
-            if (isset($Command['setReport'])) // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
-            {
+            if ($Command['name'] == 'setReport') { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
+
                 cmdLog('debug', "  WARNING: OBSOLETE: command setReport", $this->debug['processCmd']);
                 // Configure Reporting request
                 // Msg Type = 0x0120
@@ -1274,28 +1069,28 @@
                 //      Change : uint8_t                -> 2
 
                 $addrMode            = "02";
-                $addr     = $Command['address'];
-                if (isset( $Command['sourceEndpoint'] )) { $srcEp = $Command['sourceEndpoint']; } else { $srcEp = "01"; }
-                if (isset( $Command['targetEndpoint'] )) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
-                $ClusterId              = $Command['ClusterId'];
+                $addr     = $Command['cmdParams']['address'];
+                if (isset( $Command['cmdParams']['sourceEndpoint'] )) { $srcEp = $Command['cmdParams']['sourceEndpoint']; } else { $srcEp = "01"; }
+                if (isset( $Command['cmdParams']['targetEndpoint'] )) { $targetEndpoint = $Command['cmdParams']['targetEndpoint']; } else { $targetEndpoint = "01"; }
+                $ClusterId              = $Command['cmdParams']['clusterId'];
                 $direction              = "00";                     //
                 $manufacturerSpecific   = "00";                     //
                 $manufacturerId         = "0000";                   //
                 $numberOfAttributes     = "01";                     // One element at a time
 
-                if (isset( $Command['AttributeDirection'] )) { $AttributeDirection = $Command['AttributeDirection']; } else { $AttributeDirection = "00"; } // See if below
+                if (isset( $Command['cmdParams']['attributeDirection'] )) { $AttributeDirection = $Command['cmdParams']['attributeDirection']; } else { $AttributeDirection = "00"; } // See if below
 
-                $AttributeId            = $Command['AttributeId'];    // "0000"
+                $AttributeId            = $Command['cmdParams']['attributeId'];    // "0000"
 
                 if ($AttributeDirection == "00" ) {
-                    if (isset($Command['AttributeType'])) {$AttributeType = $Command['AttributeType']; }
+                    if (isset($Command['cmdParams']['attributeType'])) {$AttributeType = $Command['cmdParams']['attributeType']; }
                     else {
                         cmdLog('error', "  set Report with an AttributeType not defines for equipment: ". $addr." attribut: ".$AttributeId." can t process" , $this->debug['processCmd']);
                         return;
                     }
-                    if (isset($Command['MinInterval']))   { $MinInterval  = $Command['MinInterval']; } else { $MinInterval    = "0000"; }
-                    if (isset($Command['MaxInterval']))   { $MaxInterval  = $Command['MaxInterval']; } else { $MaxInterval    = "0000"; }
-                    if (isset($Command['Change']))        { $Change       = $Command['Change']; }      else { $Change         = "00"; }
+                    if (isset($Command['cmdParams']['minInterval']))   { $MinInterval  = $Command['cmdParams']['minInterval']; } else { $MinInterval    = "0000"; }
+                    if (isset($Command['cmdParams']['maxInterval']))   { $MaxInterval  = $Command['cmdParams']['maxInterval']; } else { $MaxInterval    = "0000"; }
+                    if (isset($Command['cmdParams']['change']))        { $Change       = $Command['cmdParams']['change']; }      else { $Change         = "00"; }
                     $Timeout = "ABCD";
                 }
                 else if ($AttributeDirection == "01" ) {
@@ -1303,7 +1098,7 @@
                     $MinInterval            = "3456";   // Need it to respect cmd 0120 format.
                     $MaxInterval            = "7890";
                     $Change                 = "12";
-                    if (isset($Command['Timeout']))   { $Timeout      = $Command['Timeout']; }     else { $Timeout        = "0000"; }
+                    if (isset($Command['cmdParams']['timeout']))   { $Timeout      = $Command['cmdParams']['timeout']; }     else { $Timeout        = "0000"; }
                 }
                 else {
                     cmdLog('error', "  set Report with an AttributeDirection (".$AttributeDirection.") not valid for equipment: ". $addr." attribut: ".$AttributeId." can t process", $this->debug['processCmd']);
@@ -1320,7 +1115,8 @@
             // Title => setReportRaw
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
             // For the time being hard coded to run tests but should replace setReport due to a bug on Timeout of command 0120. See my notes.
-            if (isset($Command['setReportRaw'])) { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
+            if ($Command['name'] == 'setReportRaw') { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
+
                 cmdLog('debug', "  WARNING: OBSOLETE: command setReportRaw", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1344,7 +1140,7 @@
                 // ....
 
                 $addrMode            = "02";
-                $addr     = $Command['address'];
+                $addr     = $Command['cmdParams']['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
                 $profId              = "0104";
@@ -1384,8 +1180,8 @@
 
             // CmdAbeille/0000/commissioningGroupAPS -> address=a048&groupId=AA00
             // Commission group for Ikea Telecommande On/Off still interrupteur
-            if (isset($Command['commissioningGroupAPS']))
-            {
+            if ($Command['name'] == 'commissioningGroupAPS') {
+
                 cmdLog('debug', "  commissioningGroupAPS", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1413,7 +1209,7 @@
                 // 001B Group Id
 
                 $addrMode            = "02";
-                $addr     = $Command['address'];
+                $addr     = $Command['cmdParams']['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
                 $profId              = "0104";
@@ -1428,11 +1224,11 @@
                 $total                  = "01";
                 $startIndex             = "00";
                 $count                  = "01";
-                $groupId                = AbeilleTools::reverseHex($Command['groupId']);
+                $groupId                = AbeilleTools::reverseHex($Command['cmdParams']['groupId']);
                 $groupType              = "00";
 
                 $data2 = $zclControlField.$transactionSequence.$cmdId.$total.$startIndex.$count.$groupId.$groupType;
-                $dataLength = sprintf( "%02s", dechex(strlen($data2) / 2));
+                $dataLength = sprintf("%02X", strlen($data2) / 2);
                 $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                 $data = $data1.$data2;
 
@@ -1444,8 +1240,8 @@
 
             // CmdAbeille/0000/commissioningGroupAPSLegrand -> address=a048&groupId=AA00
             // Commission group for Legrand Telecommande On/Off still interrupteur Issue #1290
-            if (isset($Command['commissioningGroupAPSLegrand']))
-            {
+            if ($Command['name'] == 'commissioningGroupAPSLegrand') {
+
                 cmdLog('debug', "  commissioningGroupAPSLegrand", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1473,7 +1269,7 @@
                 // 001B Group Id
 
                 $addrMode            = "02";
-                $addr     = $Command['address'];
+                $addr     = $Command['cmdParams']['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
                 $profId              = "0104";
@@ -1485,11 +1281,11 @@
                 $Manufacturer           = AbeilleTools::reverseHex("1021");
                 $transactionSequence    = "01";
                 $cmdId                  = "08";
-                $groupId                = AbeilleTools::reverseHex($Command['groupId']);
+                $groupId                = AbeilleTools::reverseHex($Command['cmdParams']['groupId']);
 
                 $data2 = $zclControlField.$Manufacturer.$transactionSequence.$cmdId.$groupId ;
 
-                $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
+                $dataLength = sprintf( "%02X", strlen($data2) / 2);
 
                 $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
@@ -1498,14 +1294,12 @@
 
                 $data = $data1.$data2;
 
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data );
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                 return;
             }
 
-            if (isset($Command['viewScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']))
-            {
+            if ($Command['name'] == 'viewScene') {
+
                 $cmd = "00A0";
 
                 // <address mode: uint8_t>
@@ -1516,12 +1310,12 @@
                 // <scene ID: uint8_t>
 
                 $addrMode = "02";                                    // Short Address -> 2
-                $address = $Command['address'];                         // -> 4
+                $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['DestinationEndPoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
-                $groupID = $Command['groupID'];
-                $sceneID = $Command['sceneID'];
+                $groupID = $Command['cmdParams']['groupId'];
+                $sceneID = $Command['cmdParams']['sceneID'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$groupID.$sceneID;
 
@@ -1531,8 +1325,8 @@
                 return;
             }
 
-            if (isset($Command['storeScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']))
-            {
+            if ($Command['name'] == 'storeScene') {
+
                 $cmd = "00A4";
 
                 // <address mode: uint8_t>
@@ -1543,12 +1337,12 @@
                 // <scene ID: uint8_t>
 
                 $addrMode = "02";                                    // Short Address -> 2
-                $address = $Command['address'];                         // -> 4
+                $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['DestinationEndPoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
-                $groupID = $Command['groupID'];
-                $sceneID = $Command['sceneID'];
+                $groupID = $Command['cmdParams']['groupId'];
+                $sceneID = $Command['cmdParams']['sceneID'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$groupID.$sceneID;
 
@@ -1558,8 +1352,8 @@
                 return;
             }
 
-            if (isset($Command['recallScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']))
-            {
+            if ($Command['name'] == 'recallScene') {
+
                 $cmd = "00A5";
 
                 // <address mode: uint8_t>
@@ -1570,12 +1364,12 @@
                 // <scene ID: uint8_t>
 
                 $addrMode   = "02";                                    // Short Address -> 2
-                $address    = $Command['address'];                         // -> 4
+                $address    = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp      = "01";                                 // -> 2
-                $dstEp      = $Command['DestinationEndPoint']; // -> 2
+                $dstEp      = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
-                $groupID    = $Command['groupID'];
-                $sceneID    = $Command['sceneID'];
+                $groupID    = $Command['cmdParams']['groupId'];
+                $sceneID    = $Command['cmdParams']['sceneID'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$groupID.$sceneID;
 
@@ -1585,8 +1379,8 @@
                 return;
             }
 
-            if (isset($Command['sceneGroupRecall']) && isset($Command['groupID']) && isset($Command['sceneID']))
-            {
+            if ($Command['name'] == 'sceneGroupRecall') {
+
                 $cmd = "00A5";
 
                 // <address mode: uint8_t>
@@ -1597,12 +1391,12 @@
                 // <scene ID: uint8_t>
 
                 $addrMode   = "01";                  // Group Address -> 1, Short Address -> 2
-                $address    = $Command['groupID'];   // -> 4
+                $address    = $Command['cmdParams']['groupId'];   // -> 4
                 $srcEp      = "01";                  // -> 2
                 $dstEp      = "02";                  // -> 2
 
-                $groupID    = $Command['groupID'];
-                $sceneID    = $Command['sceneID'];
+                $groupID    = $Command['cmdParams']['groupId'];
+                $sceneID    = $Command['cmdParams']['sceneID'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$groupID.$sceneID;
 
@@ -1612,8 +1406,8 @@
                 return;
             }
 
-            if (isset($Command['addScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) && isset($Command['sceneName']))
-            {
+            if ($Command['name'] == 'addScene') {
+
                 $cmd = "00A1";
 
                 // <address mode: uint8_t>
@@ -1628,18 +1422,18 @@
                 // <scene name data: data each element is uint8_t>
 
                 $addrMode   = "02";
-                $address    = $Command['address'];
+                $address    = $Command['cmdParams']['address'];
                 $srcEp      = "01";
-                $dstEp      = $Command['DestinationEndPoint'];
+                $dstEp      = $Command['cmdParams']['destinationEndpoint'];
 
-                $groupID    = $Command['groupID'];
-                $sceneID    = $Command['sceneID'];
+                $groupID    = $Command['cmdParams']['groupId'];
+                $sceneID    = $Command['cmdParams']['sceneID'];
 
                 $transitionTime         = "0001";
 
-                $sceneNameLength        = sprintf("%02s", (strlen( $Command['sceneName'] )/2));      // $Command['sceneNameLength'];
-                $sceneNameMaxLength     = sprintf("%02s", (strlen( $Command['sceneName'] )/2));      // $Command['sceneNameMaxLength'];
-                $sceneNameData          = $Command['sceneName'];
+                $sceneNameLength        = sprintf("%02s", (strlen( $Command['cmdParams']['sceneName'] )/2));      // $Command['sceneNameLength'];
+                $sceneNameMaxLength     = sprintf("%02s", (strlen( $Command['cmdParams']['sceneName'] )/2));      // $Command['sceneNameMaxLength'];
+                $sceneNameData          = $Command['cmdParams']['sceneName'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$groupID.$sceneID.$transitionTime.$sceneNameLength.$sceneNameMaxLength.$sceneNameData ;
 
@@ -1649,8 +1443,8 @@
                 return;
             }
 
-            if (isset($Command['getSceneMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint']))
-            {
+            if ($Command['name'] == 'getSceneMembership') {
+
                 $cmd = "00A6";
 
                 // <address mode: uint8_t>
@@ -1660,11 +1454,11 @@
                 // <group ID: uint16_t>
 
                 $addrMode = "02";                                    // Short Address -> 2
-                $address = $Command['address'];                         // -> 4
+                $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['DestinationEndPoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
-                $groupID = $Command['groupID'];
+                $groupID = $Command['cmdParams']['groupId'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$groupID ;
 
@@ -1674,8 +1468,8 @@
                 return;
             }
 
-            if (isset($Command['removeScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']))
-            {
+            if ($Command['name'] == 'removeScene') {
+
                 $cmd = "00A2";
 
                 //0x00A2
@@ -1687,12 +1481,12 @@
                 // <scene ID: uint8_t>
 
                 $addrMode = "02";                                    // Short Address -> 2
-                $address = $Command['address'];                         // -> 4
+                $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['DestinationEndPoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
-                $groupID = $Command['groupID'];
-                $sceneID = $Command['sceneID'];
+                $groupID = $Command['cmdParams']['groupId'];
+                $sceneID = $Command['cmdParams']['sceneID'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$groupID.$sceneID ;
 
@@ -1702,8 +1496,8 @@
                 return;
             }
 
-            if (isset($Command['removeSceneAll']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']))
-            {
+            if ($Command['name'] == 'removeSceneAll') {
+
                 $cmd = "00A3";
 
                 //0x00A3
@@ -1714,11 +1508,11 @@
                 // <group ID: uint16_t>
 
                 $addrMode = "02";                                    // Short Address -> 2
-                $address = $Command['address'];                         // -> 4
+                $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['DestinationEndPoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
-                $groupID = $Command['groupID'];
+                $groupID = $Command['cmdParams']['groupId'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$groupID ;
 
@@ -1728,15 +1522,15 @@
                 return;
             }
 
-            if (isset($Command['sceneLeftIkea']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']))
-            {
+            if ($Command['name'] == 'sceneLeftIkea') {
+
                 cmdLog('debug', "  Specific Command to simulate Ikea Telecommand < and >");
 
                 // Msg Type = 0x0530
                 $cmd = "0530";
 
                 $addrMode = "01"; // 01 pour groupe
-                $addr = $Command['address'];
+                $addr = $Command['cmdParams']['address'];
                 $srcEpBind = "01";
                 $dstEpBind = "01";
                 $profIdBind = "0104";
@@ -1766,14 +1560,12 @@
                 return;
             }
 
-            if (isset($Command['WindowsCoveringLevel']) && isset($Command['address']) && isset($Command['clusterCommand']))
-            {
-                // echo "Windows Covering test for Store Ikea: lift to %\n";
+            if ($Command['name'] == 'WindowsCoveringLevel') {
 
                 $cmd = '0530';
 
                 $addrMode            = "02";                // 01 pour groupe, 02 pour NE
-                $addr     = $Command['address'];
+                $addr     = $Command['cmdParams']['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
                 $profile                = "0104";
@@ -1800,8 +1592,8 @@
             }
 
             // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
-            if (isset($Command['WindowsCoveringGroup']) && isset($Command['address']) && isset($Command['clusterCommand']))
-            {
+            if ($Command['name'] == 'WindowsCoveringGroup') {
+
                 // 0x00FA    Windows covering (v3.0f only)
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
@@ -1820,10 +1612,10 @@
                 $cmd = "00FA";
 
                 $addrMode    = "04"; // 01 pour groupe, 02 pour NE, 03 pour , 04 pour broadcast
-                $address        = $Command['address'];
+                $address        = $Command['cmdParams']['address'];
                 $srcEp          = "01";
                 $detEP          = "01";
-                $clusterCommand = $Command['clusterCommand'];
+                $clusterCommand = $Command['cmdParams']['clusterCommand'];
 
                 $data = $addrMode.$address.$srcEp.$detEP.$clusterCommand;
 
@@ -1833,57 +1625,9 @@
                 return;
             }
 
-            // /* Expected format:
-            // net/0000 ActiveEndpointRequest address=<addr>*/
-            // if (isset($Command['ActiveEndPoint'])) // OBSOLETE: Use getActiveEndpoints instead
-            // {
-            //     $cmd = "0045";
-
-            //     // <target short address: uint16_t>
-
-            //     $address = $Command['address']; // -> 4
-
-            //     //  4 = 4/2 => 2
-            //     // $length = "0002";
-
-            //     $data = $address;
-
-            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-            //     return;
-            // }
-
-            //----------------------------------------------------------------------------
-            if (isset($Command['Network_Address_request']))
-            {
-                $cmd = "0040";
-
-                // <target short address: uint16_t> -> 4
-                // <extended address:uint64_t>      -> 16
-                // <request type: uint8_t>          -> 2
-                // <start index: uint8_t>           -> 2
-                // Request Type:
-                // 0 = Single Request 1 = Extended Request
-                // -> 24 / 2 = 12 => 0x0C
-
-                $address = $Command['address'];
-                $IeeeAddress = $Command['IEEEAddress'];
-                $requestType = "01";
-                $startIndex = "00";
-
-                $data = $address.$IeeeAddress.$requestType.$startIndex ;
-                // $length = "000C"; // A verifier
-
-                cmdLog('debug', '  Network_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
-
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
-
             // Don't know how to make it works
-            if (isset($Command['touchLinkFactoryResetTarget']))
-            {
+            if ($Command['name'] == 'touchLinkFactoryResetTarget') {
+
                 if ($Command['touchLinkFactoryResetTarget']=="DO")
                 {
                     // $this->addCmdToQueue($priority,$priority,$dest,"00D2","0000");
@@ -1892,8 +1636,9 @@
                 return;
             }
 
-            if (isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']))
-            {
+            // OBSOLETE !! Replaced by cmd-Private + fct=profaluxSetTiltLift
+            if ($Command['name'] == 'moveToLiftAndTiltBSO') {
+
                 cmdLog('debug', "  command moveToLiftAndTiltBSO", $this->debug['processCmd']);
 
                 $cmd = "0530";
@@ -1916,8 +1661,8 @@
                 // 41 Commad Id
                 // etc
 
-                $addrMode               = $Command['addressMode'];
-                $addr                   = $Command['address'];
+                $addrMode               = $Command['cmdParams']['addressMode'];
+                $addr                   = $Command['cmdParams']['address'];
                 $srcEp                  = "01";
                 $dstEp                  = "01";
                 $profId                 = "0104";
@@ -1931,11 +1676,11 @@
                 $cmdId                  = "10";  // Cmd Proprio Profalux
                 $option                 = "03";  // Je ne touche que le Tilt
                 // $Lift                   = "00";  // Not used / between 1 and 254 (see CurrentLevel attribute)
-                $Lift                   = sprintf( "%02s",dechex($Command['lift']));
+                $Lift                   = sprintf( "%02s",dechex($Command['cmdParams']['lift']));
                 // $Tilt                   = "2D";  // 2D move to 45deg / between 0 and 90 (See CurrentOrentation attribute)
-                $Tilt                   = sprintf( "%02s",dechex($Command['inclinaison']));  // 2D move to 45deg / between 0 and 90 (See CurrentOrentation attribute)
+                $Tilt                   = sprintf( "%02s",dechex($Command['cmdParams']['inclinaison']));  // 2D move to 45deg / between 0 and 90 (See CurrentOrentation attribute)
                 // $transitionTime         = "FFFF"; // FFFF ask the Tilt to move as fast as possible
-                $transitionTime         = sprintf( "%04s",dechex($Command['duration']));
+                $transitionTime         = sprintf( "%04s",dechex($Command['cmdParams']['duration']));
 
                 $data2 = $zclControlField.$ManfufacturerCode.$transactionSequence.$cmdId.$option.$Lift.$Tilt.$transitionTime ;
                 $dataLength = sprintf("%02X", strlen($data2) / 2);
@@ -1951,7 +1696,7 @@
             }
 
             // // setLevelStop => Obsolete: Use 'cmd-0008' + 'cmd=07' instead
-            // if (isset($Command['setLevelStop']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['sourceEndpoint']) && isset($Command['destinationEndpoint']))
+            // if (isset($Command['setLevelStop']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['addressMode']) && isset($Command['cmdParams']['sourceEndpoint']) && isset($Command['cmdParams']['destinationEndpoint']))
             // {
             //     // <address mode: uint8_t>
             //     // <target short address: uint16_t>
@@ -1959,10 +1704,10 @@
             //     // <destination endpoint: uint8_t>
 
             //     $cmd = "0084"; // Stop with OnOff = Cluster 0008, cmd 07
-            //     $addrMode            = $Command['addressMode'];
-            //     $address                = $Command['address'];
-            //     $srcEp         = $Command['sourceEndpoint'];
-            //     $dstEp    = $Command['destinationEndpoint'];
+            //     $addrMode            = $Command['cmdParams']['addressMode'];
+            //     $address                = $Command['cmdParams']['address'];
+            //     $srcEp         = $Command['cmdParams']['sourceEndpoint'];
+            //     $dstEp    = $Command['cmdParams']['destinationEndpoint'];
 
             //     $data = $addrMode.$address.$srcEp.$dstEp ;
 
@@ -1973,24 +1718,24 @@
             // }
 
             // WriteAttributeRequest ------------------------------------------------------------------------------------
-            if ((isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
-            {
+            if ($Command['name'] == 'WriteAttributeRequest') {
+
                 cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequest' command");
                 $this->setParam3( $dest, $Command );
                 return;
             }
 
             // WriteAttributeRequest ------------------------------------------------------------------------------------
-            if ((isset($Command['WriteAttributeRequestGeneric'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['attributeType']) && isset($Command['value']))
-            {
+            if ($Command['name'] == 'WriteAttributeRequestGeneric') {
+
                 cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestGeneric' command");
                 $this->setParamGeneric( $dest, $Command );
                 return;
             }
 
             // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
-            if ((isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
-            {
+            if ($Command['name'] == 'WriteAttributeRequestVibration') {
+
                 cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestVibration' command");
                 // Tcharp38: WHere is this code ??? $this->setParamXiaomi($dest, $Command);
                 // cmdLog('debug', "ERROR: WriteAttributeRequestVibration() CAN'T be executed. Missing setParamXiaomi()", $this->debug['processCmd']);
@@ -1999,66 +1744,17 @@
             }
 
             // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
-            if ((isset($Command['WriteAttributeRequestActivateDimmer'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
-            {
+            if ($Command['name'] == 'WriteAttributeRequestActivateDimmer') {
+
                 cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestActivateDimmer' command");
                 $this->setParam4( $dest, $Command );
                 return;
             }
 
-            // ReadAttributeRequest ------------------------------------------------------------------------------------
-            // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-            // if (isset($Command['ReadAttributeRequest'])) {
-            //     if (isset($Command['address']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) && isset($Command['Proprio']))
-            //         $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['EP'], $Command['clusterId'], $Command['attributeId'], $Command['Proprio'] );
-            //     else if ((isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']))
-            //         $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['EP'], $Command['clusterId'], $Command['attributeId']);
-            //     return;
-            // }
-
-            // if (isset($Command['readAttributeRequest'])) {
-            //     $this->readAttribute(PRIO_NORM, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId']);
-            //     return;
-            // }
-
-            // ReadAttributeRequestMulti ------------------------------------------------------------------------------------
-            // if ((isset($Command['ReadAttributeRequestMulti'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']))
-            // {
-            //     $this->getParamMulti( $Command );
-            //     return;
-            // }
-
-            // ReadAttributeRequest ------------------------------------------------------------------------------------
-            // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-            // if ((isset($Command['ReadAttributeRequestHue'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']))
-            // {
-            //     // echo "ReadAttributeRequest pour address: ".$Command['address']."\n";
-            //     // if ($Command['ReadAttributeRequest']==1 )
-            //     //{
-            //     // $this->getParamHue( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
-            //     $this->readAttribute($priority, $dest, $Command['address'], "0B", $Command['clusterId'], $Command['attributeId']);
-            //     //}
-            //     return;
-            // }
-
-            // ReadAttributeRequest ------------------------------------------------------------------------------------
-            // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-            // if ((isset($Command['ReadAttributeRequestOSRAM'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']))
-            // {
-            //     // echo "ReadAttributeRequest pour address: ".$Command['address']."\n";
-            //     // if ($Command['ReadAttributeRequest']==1 )
-            //     //{
-            //     // getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
-            //     $this->readAttribute($priority, $dest, $Command['address'], "03", $Command['clusterId'], $Command['attributeId']);
-            //     //}
-            //     return;
-            // }
-
             // Tcharp38 note: This is badly named. It is not a write attribute but
             // most probably a cluster 0502 cmd 00
             // OBSOLETE => Use 'cmd-0502' with 'cmd=00' instead
-            if (isset($Command['writeAttributeRequestIAS_WD'])) {
-                // Parameters: EP=#EP&mode=Flash&duration=#slider#
+            if ($Command['name'] == 'writeAttributeRequestIAS_WD') {
 
                     cmdLog('debug', "  command writeAttributeRequestIAS_WD", $this->debug['processCmd']);
                     // Msg Type = 0x0111
@@ -2079,18 +1775,18 @@
                     // <Strobe level : uint8_t>
 
                     $addrMode = "02";
-                    $addr = $Command['address'];
+                    $addr = $Command['cmdParams']['address'];
                     $srcEp = "01";
                     $dstEp = "01";
                     $direction = "01";
                     $manufacturerSpecific = "00";
                     $manufacturerId = "0000";
                     $warningMode = "04";
-                    if ($Command['mode'] == "Flash" )      $warningMode = "04";        // 14, 24, 34: semble faire le meme son meme si la doc indique: Burglar, Fire, Emergency / 04: que le flash
-                    if ($Command['mode'] == "Sound" )      $warningMode = "10";
-                    if ($Command['mode'] == "FlashSound" ) $warningMode = "14";
+                    if ($Command['cmdParams']['mode'] == "Flash" )      $warningMode = "04";        // 14, 24, 34: semble faire le meme son meme si la doc indique: Burglar, Fire, Emergency / 04: que le flash
+                    if ($Command['cmdParams']['mode'] == "Sound" )      $warningMode = "10";
+                    if ($Command['cmdParams']['mode'] == "FlashSound" ) $warningMode = "14";
                     $warningDuration = "000A"; // en seconde
-                    if ($Command['duration'] > 0 )         $warningDuration = sprintf("%04s", dechex($Command['duration']));
+                    if ($Command['cmdParams']['duration'] > 0 )         $warningDuration = sprintf("%04s", dechex($Command['cmdParams']['duration']));
                     // $strobeDutyCycle = "01";
                     // $strobeLevel = "F0";
 
@@ -2104,8 +1800,8 @@
             // Title => 000B57fffe3025ad (IEEE de l ampoule) <= to be reviewed
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
 
-            if (isset($Command['addGroupAPS'])  )
-            {
+            if ($Command['name'] == 'addGroupAPS') {
+
                 cmdLog('debug', "  command add group with APS", $this->debug['processCmd']);
                 // Msg Type = 0x0530
                 $cmd = "0530";
@@ -2131,7 +1827,7 @@
                 // => 16 -> 0x10
 
                 $addrMode = "02";
-                $addr = $Command['address'];
+                $addr = $Command['cmdParams']['address'];
                 $srcEpBind = "01";
                 $dstEpBind = "01";
                 $profIdBind = "0104";
@@ -2165,39 +1861,9 @@
                 return;
             }
 
-            if (isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']))
-            {
-                cmdLog('debug', "  Remove a group to a device", $this->debug['processCmd']);
-                //echo "Remove a group to an IKEA bulb\n";
-
-                // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
-                // 15:24:36.087 <- 01 80 00 00 04 54 00 B0 00 60 03
-                // 15:24:36.164 <- 01 80 60 00 07 08 B0 01 00 04 00 C2 98 03
-                // Add Group
-                // Message Description
-                // Msg Type = 0x0060 Command ID = 0x00
-                $cmd = "0063";
-                $length = "0007";
-                // <address mode: uint8_t>
-                //<target short address: uint16_t>
-                //<source endpoint: uint8_t>
-                //<destination endpoint: uint8_t>
-                //<group address: uint16_t>
-                $addrMode = "02";
-                $address = $Command['address'];
-                $srcEp = "01";
-                $dstEp = $Command['DestinationEndPoint'] ;
-                $groupAddress = $Command['groupAddress'];
-
-                $data = $addrMode.$address.$srcEp.$dstEp.$groupAddress ;
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
-
             // Replace Equipement
-            if (isset($Command['replaceEquipement']) && isset($Command['old']) && isset($Command['new']))
-            {
+            if ($Command['name'] == 'replaceEquipement') {
+
                 cmdLog('debug', "  Replace an Equipment", $this->debug['processCmd']);
 
                 $old = $Command['old'];
@@ -2220,9 +1886,9 @@
             }
 
             //
-            if (isset($Command['UpGroup']) && isset($Command['address']) && isset($Command['step']))
-            {
-                cmdLog('debug', '  UpGroup for: '.$Command['address'], $this->debug['processCmd']);
+            if ($Command['name'] == 'UpGroup') {
+
+                cmdLog('debug', '  UpGroup for: '.$Command['cmdParams']['address'], $this->debug['processCmd']);
                 // <address mode: uint8_t>          -> 2
                 // <target short address: uint16_t> -> 4
                 // <source endpoint: uint8_t>       -> 2
@@ -2235,14 +1901,14 @@
 
                 $cmd = "0082";
                 $length = "000A";
-                if (isset ( $Command['addressMode'] )) { $addrMode = $Command['addressMode']; } else { $addrMode = "02"; }
+                if (isset ( $Command['cmdParams']['addressMode'] )) { $addrMode = $Command['cmdParams']['addressMode']; } else { $addrMode = "02"; }
 
-                $address = $Command['address'];
+                $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                if (isset ( $Command['destinationEndpoint'] )) { $dstEp = $Command['destinationEndpoint'];} else { $dstEp = "01"; };
+                if (isset ( $Command['cmdParams']['destinationEndpoint'] )) { $dstEp = $Command['cmdParams']['destinationEndpoint'];} else { $dstEp = "01"; };
                 $onoff = "00";
                 $stepMode = "00"; // 00 : Up, 01 : Down
-                $stepSize = $Command['step'];
+                $stepSize = $Command['cmdParams']['step'];
                 $TransitionTime = "0005"; // 1/10s of a s
 
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $addrMode.$address.$srcEp.$dstEp.$onoff.$stepMode.$stepSize.$TransitionTime, $address);
@@ -2250,9 +1916,9 @@
                 return;
             }
 
-            if (isset($Command['DownGroup']) && isset($Command['address']) && isset($Command['step']))
-            {
-                cmdLog('debug', '  DownGroup for: '.$Command['address'], $this->debug['processCmd']);
+            if ($Command['name'] == 'DownGroup') {
+
+                cmdLog('debug', '  DownGroup for: '.$Command['cmdParams']['address'], $this->debug['processCmd']);
                 // <address mode: uint8_t>          -> 2
                 // <target short address: uint16_t> -> 4
                 // <source endpoint: uint8_t>       -> 2
@@ -2265,14 +1931,14 @@
 
                 $cmd = "0082";
                 $length = "000A";
-                if (isset ( $Command['addressMode'] )) { $addrMode = $Command['addressMode']; } else { $addrMode = "02"; }
+                if (isset ( $Command['cmdParams']['addressMode'] )) { $addrMode = $Command['cmdParams']['addressMode']; } else { $addrMode = "02"; }
 
-                $address = $Command['address'];
+                $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                if (isset ( $Command['destinationEndpoint'] )) { $dstEp = $Command['destinationEndpoint'];} else { $dstEp = "01"; };
+                if (isset ( $Command['cmdParams']['destinationEndpoint'] )) { $dstEp = $Command['cmdParams']['destinationEndpoint'];} else { $dstEp = "01"; };
                 $onoff = "00";
                 $stepMode = "01"; // 00 : Up, 01 : Down
-                $stepSize = $Command['step'];
+                $stepSize = $Command['cmdParams']['step'];
                 $TransitionTime = "0005"; // 1/10s of a s
 
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $addrMode.$address.$srcEp.$dstEp.$onoff.$stepMode.$stepSize.$TransitionTime, $address);
@@ -2280,103 +1946,10 @@
                 return;
             }
 
-            // // ON / OFF with no effects
-            // if (isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
-            // {
-            //     cmdLog('debug', '  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
-            //     // <address mode: uint8_t>
-            //     // <target short address: uint16_t>
-            //     // <source endpoint: uint8_t>
-            //     // <destination endpoint: uint8_t>
-            //     // <command ID: uint8_t>
-            //         // Command Id
-            //         // 0 - Off
-            //         // 1 - On
-            //         // 2 - Toggle
-
-            //     $zgCmd      = "0092";
-
-            //     $addrMode   = $Command['addressMode']; // 01: Group, 02: device
-            //     $address    = $Command['address'];
-            //     $srcEp      = "01";
-            //     $dstEp      = $Command['destinationEndpoint'];
-            //     $action     = $Command['action'];
-
-            //     $data = $addrMode.$address.$srcEp.$dstEp.$action;
-            //     $length = sprintf("%04X", strlen($data) / 2);
-
-            //     $priority = $Command['priority'];
-
-            //     $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $address, $addrMode);
-
-            //     // if ($addrMode == "02" ) {
-            //     //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-            //     //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
-            //     // }
-            //     return;
-            // }
-
-            // // ON / OFF with no effects RAW with no APS ACK
-            // // Not used as some eq have a strange behavior if the APS ACK is not set (e.g. Xiaomi Plug / should probably test again / bug from the eq ?)
-            // if (isset($Command['onoffraw']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
-            // {
-            //     cmdLog('debug', "  command setParam4", $this->debug['processCmd']);
-
-            //     $dest       = $Command['dest'];
-            //     $priority   = $Command['priority'];
-
-            //     $cmd = "0530";
-
-            //     // <address mode: uint8_t>              -> 1
-            //     // <target short address: uint16_t>     -> 2
-            //     // <source endpoint: uint8_t>           -> 1
-            //     // <destination endpoint: uint8_t>      -> 1
-
-            //     // <profile ID: uint16_t>               -> 2
-            //     // <cluster ID: uint16_t>               -> 2
-
-            //     // <security mode: uint8_t>             -> 1
-            //     // <radius: uint8_t>                    -> 1
-            //     // <data length: uint8_t>               -> 1  (22 -> 0x16)
-
-            //     // <data: auint8_t> APS Part <= data
-
-            //     $addrMode        = $Command['addressMode'];
-            //     $addr = $Command['address'];
-            //     $srcEp     = "01";
-            //     if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
-
-            //     $profId          = "0104";
-            //     $clustId          = "0006"; // $Command['clusterId'];
-
-            //     $secMode       = "02"; // ???
-            //     $radius             = "30";
-            //     // $dataLength <- calculated later
-
-            //     $frameControl               = "11"; // Ici dans cette commande c est ZCL qu'on control
-            //     $transqactionSequenceNumber = "1A"; // to be reviewed
-            //     $commandWriteAttribute      = $Command['action'];
-
-            //     $data2 = $frameControl.$transqactionSequenceNumber.$commandWriteAttribute;
-            //     $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-            //     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
-            //     $data = $data1.$data2;
-
-            //     $length = sprintf("%04s", dechex(strlen($data) / 2));
-
-            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
-            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
-
-            //     if ($addrMode == "02" ) {
-            //         $this->publishMosquitto( $abQueues["xToCmd"]['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$dstEp."&clusterId=0006&attributeId=0000" );
-            //     }
-            //     return;
-            // }
-
             // On / Off Timed Send
-            if (isset($Command['OnOffTimed']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) && isset($Command['onTime']) && isset($Command['offWaitTime']))
-            {
-                cmdLog('debug', '  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'].' - '.$Command['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd']);
+            if ($Command['name'] == 'OnOffTimed') {
+
+                cmdLog('debug', '  OnOff for: '.$Command['cmdParams']['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['cmdParams']['action'].' - '.$Command['cmdParams']['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd']);
                 // <address mode: uint8_t>    Status
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -2390,37 +1963,37 @@
                     // Time: Seconds
 
                 $zgCmd          = "0093";
-                $addrMode       = $Command['addressMode'];
-                $address        = $Command['address'];
+                $addrMode       = $Command['cmdParams']['addressMode'];
+                $address        = $Command['cmdParams']['address'];
                 $srcEp          = "01";
-                $dstEp          = $Command['destinationEndpoint'];
-                $action         = $Command['action'];
-                $onTime         = $Command['onTime'];
-                $offWaitTime    = $Command['offWaitTime'];
+                $dstEp          = $Command['cmdParams']['destinationEndpoint'];
+                $action         = $Command['cmdParams']['action'];
+                $onTime         = $Command['cmdParams']['onTime'];
+                $offWaitTime    = $Command['cmdParams']['offWaitTime'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$action.$onTime.$offWaitTime;
 
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $address, $addrMode);
 
                 // if ($addrMode == "02" ) {
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
+                //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
+                //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
 
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['onTime']), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['onTime']), "ep=".$dstEp."&clustId=0008&attrId=0000" );
+                //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['cmdParams']['onTime']), "ep=".$dstEp."&clustId=0006&attrId=0000" );
+                //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['cmdParams']['onTime']), "ep=".$dstEp."&clustId=0008&attrId=0000" );
                 // }
                 return;
             }
 
             // Take RGB (0-255) convert to X, Y and send the color
-            if (isset($Command['setColourRGB']))
-            {
+            if ($Command['name'] == 'setColourRGB') {
+
                 // The reverse transformation
                 // https://en.wikipedia.org/wiki/SRGB
 
-                $R=$Command['R'];
-                $G=$Command['G'];
-                $B=$Command['B'];
+                $R=$Command['cmdParams']['R'];
+                $G=$Command['cmdParams']['G'];
+                $B=$Command['cmdParams']['B'];
 
                 $a = 0.055;
 
@@ -2454,9 +2027,9 @@
                 $length = "000B";
 
                 $addrMode = "02";
-                $address = $Command['address'];
+                $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                $dstEp = $Command['destinationEndPoint'];
+                $dstEp = $Command['cmdParams']['destinationEndpoint'];
                 $colourX = str_pad( dechex($x), 4, "0", STR_PAD_LEFT);
                 $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
                 $duration = "0001";
@@ -2470,39 +2043,8 @@
                 return;
             }
 
-            // if (isset($Command['getManufacturerName']) && isset($Command['address']))
-            // {
-            //     if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-            //     $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0004");
-            //     return;
-            // }
+            if ($Command['name'] == 'MgtLeave') {
 
-            // if (isset($Command['getName']) && isset($Command['address']))
-            // {
-            //     if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-            //     $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0005");
-            //     return;
-            // }
-
-            // if (isset($Command['getLocation']) && isset($Command['address']))
-            // {
-            //     if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-            //     $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0010");
-            //     return;
-            // }
-
-            // Tcharp38: Seems no longer used
-            // if (isset($Command['setLocation']) && isset($Command['address']))
-            // {
-            //     if ($Command['location'] == "" ) { $Command['location'] = "Not Def"; }
-            //     if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-
-            //     $this->setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'], "42" );
-            //     return;
-            // }
-
-            if (isset($Command['MgtLeave']) && isset($Command['address']) && isset($Command['IEEE']))
-            {
                 // Zigbee specification
                 // 2.4.3.3.5   Mgmt_Leave_req
                 // (ClusterID=0x0034)
@@ -2523,10 +2065,10 @@
                 //      0 = Leave, removing children
                 //      1 = Leave, do not remove children
 
-                $address        = $Command['address'];
-                $IEEE           = $Command['IEEE'];
-                if (isset($Command['Rejoin'])) $Rejoin = $Command['Rejoin']; else $Rejoin = "00";
-                if (isset($Command['RemoveChildren']))  $RemoveChildren = $Command['RemoveChildren']; else $RemoveChildren = "01";
+                $address        = $Command['cmdParams']['address'];
+                $IEEE           = $Command['cmdParams']['IEEE'];
+                if (isset($Command['cmdParams']['Rejoin'])) $Rejoin = $Command['cmdParams']['Rejoin']; else $Rejoin = "00";
+                if (isset($Command['cmdParams']['RemoveChildren']))  $RemoveChildren = $Command['cmdParams']['RemoveChildren']; else $RemoveChildren = "01";
 
                 $data = $address.$IEEE.$Rejoin.$RemoveChildren;
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
@@ -2536,10 +2078,10 @@
                 return;
             }
 
-            // if (isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']))
+            // if (isset($Command['Remove']) && isset($Command['cmdParams']['address']) && isset($Command['cmdParams']['IEEE']))
             // https://github.com/KiwiHC16/Abeille/issues/332
-            if (isset($Command['Remove']) && isset($Command['ParentAddressIEEE']) && isset($Command['ChildAddressIEEE']))
-            {
+            if ($Command['name'] == 'Remove') {
+
                 // <target short address: uint64_t>
                 // <extended address: uint64_t>
                 $cmd = "0026";
@@ -2558,14 +2100,12 @@
                 // The ZDO of a device (for example, a Trust Center) shall issue this primitive when it wants to request that a parent device (for example, a router) remove one of its children from the network. For example, a Trust Center can use this primitive to remove a child device that fails to authenticate properly.
                 // APSME-REMOVE-DEVICE.request { ParentAddress IEEE, ChildAddress IEEE}
 
-                // $address        = $Command['address'];
-                $address        = $Command['ParentAddressIEEE'];
-                $IEEE           = $Command['ChildAddressIEEE'];
+                // $address        = $Command['cmdParams']['address'];
+                $address        = $Command['cmdParams']['ParentAddressIEEE'];
+                $IEEE           = $Command['cmdParams']['ChildAddressIEEE'];
 
                 $data = $address.$IEEE ;
 
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                 return;
             }
@@ -2587,27 +2127,52 @@
                  * Zigate specific commands
                  */
 
-                // Zigate specific command
+                // Zigate specific command: Set mode (raw, hybrid, normal)
                 if ($cmdName == 'zgSetMode') {
-                    $mode = $Command['mode'];
+                    $mode = $Command['cmdParams']['mode'];
                     if ($mode == "raw") {
                         $modeVal = "01";
                     } else if ($mode == "hybrid") {
                         $modeVal = "02";
                     } else // Normal
                         $modeVal = "00";
-                    cmdLog('debug', "  Setting mode ".$mode."/".$modeVal);
-                    // $this->addCmdToQueue($priority, $dest, "0002", "0001", $modeVal);
+                    cmdLog('debug', "  Setting mode {$modeVal}/{$mode}");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0002", $modeVal);
                     return;
                 }
 
-                // Zigate specific command
+                // Zigate specific command: Set certfication (CE, FCC)
+                else if ($cmdName == 'zgSetCertification') {
+                    $required = ['certif'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0019";
+                    $certif = $Command['cmdParams']['certif'];
+                    if ($certif == "CE")
+                        $data = "01";
+                    else if ($certif == "FCC")
+                        $data = "02";
+                    else {
+                        cmdLog('error', '  zgSetCertification: Certification invalide ! ('.$certif.')');
+                        return;
+                    }
+
+                    cmdLog('debug', "  zgSetCertification: Certif={$data}/{$certif}");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data);
+                    return;
+                }
+
+                // Zigate specific command: Enable/disable pairing mode
+                // Mandatory: 'mode' ('start' or 'stop')
                 else if ($cmdName == 'zgSetPermitMode') {
-                    $mode = $Command['mode'];
+                    $required = ['mode'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $mode = $Command['cmdParams']['mode'];
                     if ($mode == "start") {
                         $cmd = "0049";
-                        $length = "0004";
                         $data = "FFFCFE00";
                         // <target short address: uint16_t>
                         // <interval: uint8_t>
@@ -2619,26 +2184,11 @@
                         // TCsignificance:
                         // 0 = No change in authentication 1 = Authentication policy as spec
 
-                        // 09:08:29.156 -> 01 02 10 49 02 10 02 14 50 FF FC 1E 02 10 03
-                        // 01 : Start
-                        // 02 10 49: 00 49: Permit Joining request Msg Type = 0x0049
-                        // 02 10 02 14: Length:
-                        // 50: Chrksum
-                        // FF FC:<target short address: uint16_t>
-                        // 1E: <interval: uint8_t>
-                        // 02 10: <TCsignificance: uint8_t> 00
-
-                        // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
-                        // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data); //1E = 30 secondes
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
 
-                        // $CommandAdditionelle['permitJoin'] = "permitJoin";
-                        // $CommandAdditionelle['permitJoin'] = "Status";
-                        // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
+                        $this->sendToCmd(priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
                     } elseif ($mode == "stop") {
                         $cmd = "0049";
-                        $length = "0004";
                         $data = "FFFC0000";
                         // <target short address: uint16_t>
                         // <interval: uint8_t>
@@ -2650,26 +2200,12 @@
                         // TCsignificance:
                         // 0 = No change in authentication 1 = Authentication policy as spec
 
-                        // 09:08:29.156 -> 01 02 10 49 02 10 02 14 50 FF FC 1E 02 10 03
-                        // 01 : Start
-                        // 02 10 49: 00 49: Permit Joining request Msg Type = 0x0049
-                        // 02 10 02 14: Length:
-                        // 50: Chrksum
-                        // FF FC:<target short address: uint16_t>
-                        // 1E: <interval: uint8_t>
-                        // 02 10: <TCsignificance: uint8_t> 00
-
-                        // 09:08:29.193 <- 01 80 00 00 04 F4 00 39 00 49 03
-                        // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data); //1E = 30 secondes
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
 
-                        // $CommandAdditionelle['permitJoin'] = "permitJoin";
-                        // $CommandAdditionelle['permitJoin'] = "Status";
-                        // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status");
+                        $this->sendToCmd(priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status");
                     }
                     return;
-                }
+                } // End cmdName == 'zgSetPermitMode'
 
                 // Zigate specific command
                 else if ($cmdName == 'permitJoin') {
@@ -2702,26 +2238,23 @@
 
                 // Zigate specific command: Set Time server (v3.0f)
                 else if ($cmdName == 'zgSetTimeServer') {
-                    if (!isset($Command['time'])) {
+                    if (!isset($Command['cmdParams']['time'])) {
                         $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
-                        $Command['time'] = time() - $zgRef;
+                        $Command['cmdParams']['time'] = time() - $zgRef;
                     }
-                    cmdLog('debug', "  zgSetTimeServer, time=".$Command['time'], $this->debug['processCmd']);
+                    cmdLog('debug', "  zgSetTimeServer, time=".$Command['cmdParams']['time'], $this->debug['processCmd']);
 
                     /* Cmd 0016 reminder
                     payload = <timestamp UTC: uint32_t> from 2000-01-01 00:00:00
                     WARNING: PHP time() is based on 1st of jan 1970 and NOT 2000 !! */
                     $cmd = "0016";
-                    $data = sprintf("%08s", dechex($Command['time']));
-                    // $length = sprintf("%04s", dechex(strlen($data) / 2));
+                    $data = sprintf("%08s", dechex($Command['cmdParams']['time']));
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                     return;
                 }
 
                 // Zigate specific command
                 else if ($cmdName == 'zgGetTimeServer') {
-                    // $data = "";
-                    // $length = sprintf("%04s", dechex(strlen($data) / 2));
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0017");
                     return;
                 }
@@ -2733,6 +2266,21 @@
                 // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
                 else if ($cmdName == 'zgGetTxPower') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0807");
+                    return;
+                }
+
+                // Zigate specific command: Set TX power
+                // Mandatory params: 'txPower' (2B hexa string)
+                else if ($cmdName == 'zgSetTxPower') {
+                    $required = ['txPower'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0806";
+                    $data = $Command['cmdParams']['txPower'];
+
+                    cmdLog('debug', "  zgSetTxPower: txPower={$data}");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data);
                     return;
                 }
 
@@ -2751,7 +2299,7 @@
 
                 // Zigate specific command: Set LED, ON/1 or OFF/0
                 else if ($cmdName == 'zgSetLed') {
-                    if ($Command['value'] == 1)
+                    if ($Command['cmdParams']['value'] == 1)
                         $value = "01";
                     else
                         $value = "00";
@@ -2767,7 +2315,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $mask = $Command['mask'];
+                    $mask = $Command['cmdParams']['mask'];
                     if (!ctype_xdigit($mask)) {
                         cmdLog('error', '  Invalid channel mask. Not hexa ! ('.$mask.')');
                         return;
@@ -2775,6 +2323,39 @@
                     $mask = str_pad($mask, 8, '0', STR_PAD_LEFT); // Add any missing zeros
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0021", $mask);
+                    return;
+                }
+
+                // Zigate specific command: Set extended PAN-ID
+                // Mandatory params: 'extPanId'
+                // else if ($cmdName == 'zgSetExtendedPanId') {
+                //     $required = ['extPanId'];
+                //     if (!$this->checkRequiredParams($required, $Command))
+                //         return;
+
+                //     $zgCmd = "0020";
+                //     $extPanId = $Command['cmdParams']['extPanId'];
+                //     cmdLog('debug', "  zgSetExtendedPanId: extPanId={$extPanId}");
+
+                //     /* Note: This is NOT FUNCTIONAL.
+                //        Zigate always answers 04/busy. Probably because network started automatically */
+
+                //     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $extPanId, "0000");
+                //     return;
+                // }
+
+                // Zigate specific command: Force extended PAN-ID (FW >= AB01-0000)
+                // Mandatory params: 'extPanId'
+                else if ($cmdName == 'zgForceExtendedPanId') {
+                    $required = ['extPanId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "AB04";
+                    $extPanId = $Command['cmdParams']['extPanId'];
+                    cmdLog('debug', "  zgForceExtendedPanId: extPanId={$extPanId}");
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $extPanId, "0000");
                     return;
                 }
 
@@ -2799,7 +2380,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $file = $Command['file'];
+                    $file = $Command['cmdParams']['file'];
                     $path = __DIR__."/../../".$file;
                     if (!file_exists($path)) {
                         cmdLog('error', "  Le fichier suivant n'existe pas: '".$file."'");
@@ -2827,24 +2408,24 @@
                  */
 
                 // Zigbee command: Mgmt_Lqi_req
+                // Mandatory: Expecting 2 parameters: 'addr' & 'startIndex'
                 else if ($cmdName == 'getNeighborTable') {
-                    /* Expecting 2 parameters: 'addr' & 'startIndex' */
                     $required = ['addr', 'startIndex'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "004E";
+                    $zgCmd = "004E";
 
                     // <target short address: uint16_t>
                     // <Start Index: uint8_t>
 
-                    $addr = $Command['addr'];
-                    $startIndex = $Command['startIndex'];
+                    $addr = $Command['cmdParams']['addr'];
+                    $startIndex = $Command['cmdParams']['startIndex'];
 
                     $data = $addr.$startIndex ;
 
                     // Note: 004E seems to be ACKed command.
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, "02");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, "02");
                     return;
                 }
 
@@ -2853,29 +2434,26 @@
                 // Mandatory params: 'addr'
                 // Optional params: 'startIdx' (hex byte, default='00')
                 else if ($cmdName == 'getRoutingTable') {
-                    /* Checking that mandatory infos are there */
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
                     // Msg Type = 0x0530
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
                     // <source endpoint: uint8_t>
                     // <destination endpoint: uint8_t>
-
                     // <profile ID: uint16_t>
                     // <cluster ID: uint16_t>
-
                     // <security mode: uint8_t>
                     // <radius: uint8_t>
                     // <data length: uint8_t>
                     // <data: auint8_t>
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "00";
                     $dstEp      = "00";
                     $profId     = "0000";
@@ -2884,27 +2462,27 @@
                     $radius     = "30";
 
                     $sqn        = $this->genSqn();
-                    $startIdx   = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
+                    $startIdx   = isset($Command['cmdParams']['startIdx']) ? $Command['cmdParams']['startIdx'] : "00";
 
                     $data2 = $sqn.$startIdx;
                     $dataLength = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'getRoutingTable'
 
                 // Zigbee command: Get binding table (Mgmt_Bind_req)
-                // Mandatory params: 'address'
-                // Optional params: none
+                // Mandatory params: 'addr'
+                // Optional params: 'startIdx' (hex byte, default='00')
                 else if ($cmdName == 'getBindingTable') {
-                    $required = ['address'];
+                    $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
                     // Msg Type = 0x0530
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -2916,7 +2494,7 @@
                     // <radius: uint8_t>
 
                     $addrMode   = "02"; // Short addr mode
-                    $addr       = $Command['address'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "00";
                     $dstEp      = "00";
                     $profId     = "0000";
@@ -2925,20 +2503,20 @@
                     $radius     = "30";
 
                     $sqn        = $this->genSqn();
-                    $startIndex = "00";
+                    $startIndex = isset($Command['cmdParams']['startIdx']) ? $Command['cmdParams']['startIdx'] : "00";
 
                     $data2 = $sqn.$startIndex;
                     $dataLength = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
                 // Zigbee command: Bind to device or bind to group.
                 // Bind, thru command 0030 => generates 'Bind_req' / cluster 0021
-                // Mandatory params: addr, clustId, attrType, attrId
+                // Mandatory params: addr, ep, clustId, destAddr
                 // Optional params: destEp required if destAddr = device ieee addr
                 else if ($cmdName == 'bind0030') {
 
@@ -2946,7 +2524,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
                     // If 'destAddr' == IEEE then need 'destEp' too.
-                    if ((strlen($Command['destAddr']) == 16) && !isset($Command['destEp'])) {
+                    if ((strlen($Command['cmdParams']['destAddr']) == 16) && !isset($Command['cmdParams']['destEp'])) {
                         cmdLog('error', "  bind0030: Missing 'destEp'");
                         return;
                     }
@@ -2961,19 +2539,19 @@
                     // <destination endpoint (value ignored for group address): uint8_t>
 
                     // Source
-                    $addr = $Command['addr'];
+                    $addr = $Command['cmdParams']['addr'];
                     if (strlen($addr) != 16) {
                         cmdLog('error', "  bind0030: Invalid addr length (".$addr.")");
                         return;
                     }
-                    $ep = $Command['ep'];
-                    $clustId = $Command['clustId'];
+                    $ep = $Command['cmdParams']['ep'];
+                    $clustId = $Command['cmdParams']['clustId'];
 
                     // Dest
                     // $dstAddr: 01=16bit group addr, destEp ignored
                     // $dstAddr: 03=64bit ext addr, destEp required
-                    $dstAddr = $Command['destAddr'];
-                    $dstEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
+                    $dstAddr = $Command['cmdParams']['destAddr'];
+                    $dstEp = isset($Command['cmdParams']['destEp']) ? $Command['cmdParams']['destEp'] : "00"; // destEp ignored if group address
                     if (strlen($dstAddr) == 4) {
                         $dstAddrMode = "01";
                         $dstTxt = "group ".$dstAddr;
@@ -3002,7 +2580,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
                     // If 'destAddr' == IEEE then need 'destEp' too.
-                    if ((strlen($Command['destAddr']) == 16) && !isset($Command['destEp'])) {
+                    if ((strlen($Command['cmdParams']['destAddr']) == 16) && !isset($Command['cmdParams']['destEp'])) {
                         cmdLog('error', "  unbind0031: Missing 'destEp'");
                         return;
                     }
@@ -3017,25 +2595,25 @@
                     // <destination endpoint (value ignored for group address): uint8_t>
 
                     // Source
-                    $addr = $Command['addr'];
+                    $addr = $Command['cmdParams']['addr'];
                     if (strlen($addr) != 16) {
                         cmdLog('error', "  unbind0031: Invalid addr length (".$addr.")");
                         return;
                     }
-                    $ep = $Command['ep'];
-                    $clustId = $Command['clustId'];
+                    $ep = $Command['cmdParams']['ep'];
+                    $clustId = $Command['cmdParams']['clustId'];
 
                     // Dest
                     // $dstAddr: 01=16bit group addr, destEp ignored
                     // $dstAddr: 03=64bit ext addr, destEp required
-                    $dstAddr = $Command['destAddr'];
+                    $dstAddr = $Command['cmdParams']['destAddr'];
                     if (strlen($dstAddr) == 4) {
                         $dstAddrMode = "01";
                         $dstEp = '';
                         $dstTxt = 'group '.$dstAddr;
                     } else if (strlen($dstAddr) == 16) {
                         $dstAddrMode = "03";
-                        $dstEp = $Command['destEp'];
+                        $dstEp = $Command['cmdParams']['destEp'];
                         $dstTxt = 'device '.$dstAddr.'/EP-'.$dstEp;
                     } else {
                         cmdLog('error', "  unbind0031: Invalid dest addr length (".$dstAddr.")");
@@ -3050,13 +2628,15 @@
                 } // End $cmdName == 'unbind0031'
 
                 // Zigbee command: IEEE address request (IEEE_addr_req)
-                else if ($cmdName == 'getIeeeAddress') { // IEEE_addr_req + IEEE_addr_rsp
+                // Mandatory: 'addr'
+                // Optional: 'reqType' (default=00/single dev resp), 'priority'
+                else if ($cmdName == 'getIeeeAddress') { // IEEE_addr_req => IEEE_addr_rsp
                     /* Checking that mandatory infos are there */
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0041";
+                    $zgCmd = "0041";
 
                     // <target short address: uint16_t>
                     // <short address: uint16_t>
@@ -3066,40 +2646,72 @@
                     $priority       = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
                     // See https://github.com/fairecasoimeme/ZiGate/issues/386#
                     // Both address must be the same.
-                    $address        = $Command['addr'];
-                    $shortAddress   = $Command['addr'];
-                    $requestType    = "00"; // 00=single device response
+                    $addr           = $Command['cmdParams']['addr'];
+                    $shortAddr      = $Command['cmdParams']['addr'];
+                    $reqType        = isset($Command['cmdParams']['reqType']) ? $Command['cmdParams']['reqType'] : "00"; // 00=single device response, 01=extended
                     $startIndex     = "00";
 
-                    $data = $address.$shortAddress.$requestType.$startIndex ;
+                    cmdLog('debug', "  getIeeeAddress: addr={$addr}, type={$reqType}");
+                    $data = $addr.$shortAddr.$reqType.$startIndex ;
 
-                    $this->addCmdToQueue2($priority, $dest, $cmd, $data, $address);
+                    $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $addr);
+                    return;
+                }
+
+                // Zigbee command: Network address request (NWK_addr_req)
+                // Mandatory: 'ieee'
+                // Optional: 'reqType' (00=single=default, 01=extended)
+                else if ($cmdName == 'getNwkAddress') {
+                    $required = ['ieee'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0040";
+
+                    // <target short address: uint16_t> // Tcharp38: What for ??
+                    // <extended address:uint64_t>
+                    // <request type: uint8_t> 0 = Single Request 1 = Extended Request
+                    // <start index: uint8_t>
+
+                    $addr = '0000'; // What for ?
+                    $ieee = $Command['cmdParams']['ieee'];
+                    $reqType = isset($Command['cmdParams']['reqType']) ? $Command['cmdParams']['reqType'] : "00";
+                    $startIndex = "00";
+
+                    $data = $addr.$ieee.$reqType.$startIndex ;
+
+                    cmdLog('debug', "  getNwkAddress: IEEE={$ieee}, ReqType={$reqType}");
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
                 }
 
                 // Zigbee command: Active endpoints request (Active_EP_req)
                 // Mandatory params: 'addr'
+                // Optional: 'priority'
                 else if ($cmdName == 'getActiveEndpoints') {
-                    /* Checking that mandatory infos are there */
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0045";
+                    $zgCmd = "0045";
 
                     // <target short address: uint16_t>
 
-                    $priority = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
-                    $addr = $Command['addr'];
+                    $prio = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
+                    $addr = $Command['cmdParams']['addr'];
                     $addrMode = "02"; // Short addr with ACK
 
+                    cmdLog('debug', "  getActiveEndpoints: Prio={$prio}, Addr={$addr}");
                     $data = $addr;
 
-                    $this->addCmdToQueue2($priority, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2($prio, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
                 // Zigbee command: Simple descriptor request (Simple_Desc_req)
+                // Mandatory: 'addr' + 'ep'
+                // Optional: 'priority'
                 else if ($cmdName == 'getSimpleDescriptor') {
                     $required = ['addr', 'ep'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -3108,13 +2720,16 @@
                     // <target short address: uint16_t>
                     // <endpoint: uint8_t>
 
-                    $cmd = "0043";
-                    $addr = sprintf("%04X", hexdec($Command['addr']));
-                    $ep = sprintf("%02X", hexdec($Command['ep']));
+                    $zgCmd = "0043";
+                    $prio = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
+                    $addr = sprintf("%04X", hexdec($Command['cmdParams']['addr']));
+                    $addrMode = "02"; // Short addr with ACK
+                    $ep = sprintf("%02X", hexdec($Command['cmdParams']['ep']));
 
+                    cmdLog('debug', "  getSimpleDescriptor: Prio={$prio}, Addr={$addr}, EP={$ep}");
                     $data = $addr.$ep;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2($prio, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
@@ -3126,12 +2741,13 @@
 
                     // <target short address: uint16_t>
 
-                    $cmd = "0042";
-                    $addr = sprintf("%04X", hexdec($Command['addr']));
+                    $zgCmd = "0042";
+                    $addr = sprintf("%04X", hexdec($Command['cmdParams']['addr']));
+                    $addrMode = "02"; // Short addr with ACK
 
                     $data = $addr;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
@@ -3155,13 +2771,13 @@
                     //      0 = Leave, removing children
                     //      1 = Leave, do not remove children
 
-                    $ieee = $Command['IEEE'];
-                    if (isset($Command['Rejoin']))
-                        $rejoin = $Command['Rejoin'];
+                    $ieee = $Command['cmdParams']['IEEE'];
+                    if (isset($Command['cmdParams']['Rejoin']))
+                        $rejoin = $Command['cmdParams']['Rejoin'];
                     else
                         $rejoin = "00";
-                    if (isset($Command['RemoveChildren']))
-                        $RemoveChildren = $Command['RemoveChildren'];
+                    if (isset($Command['cmdParams']['RemoveChildren']))
+                        $RemoveChildren = $Command['cmdParams']['RemoveChildren'];
                     else
                         $RemoveChildren = "01";
 
@@ -3197,10 +2813,10 @@
 
                     $cmd                = "004A";
 
-                    $addr               = $Command['addr'];
-                    $scanChan           = isset($Command['scanChan']) ? hexdec($Command['scanChan']) : 0x7FFF800;
+                    $addr               = $Command['cmdParams']['addr'];
+                    $scanChan           = isset($Command['cmdParams']['scanChan']) ? hexdec($Command['cmdParams']['scanChan']) : 0x7FFF800;
                     $scanChan           = sprintf("%08X", $scanChan);
-                    $scanDuration       = isset($Command['scanDuration']) ? $Command['scanDuration'] : "01";
+                    $scanDuration       = isset($Command['cmdParams']['scanDuration']) ? $Command['cmdParams']['scanDuration'] : "01";
                     $scanDuration       = strtoupper($scanDuration);
                     if ($scanDuration == "FE") // Channel change request
                         $scanCount      = "00";
@@ -3228,13 +2844,81 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    if (isset($Command['manufId']))
-                        $manufId = $Command['manufId'];
-                    else
-                        $manufId = '';
-                    $this->readAttribute(PRIO_NORM, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId'], $manufId);
+                    $manufId = isset($Command['cmdParams']['manufId']) ? $Command['cmdParams']['manufId'] : '';
+                    $repeat = isset($Command['repeat']) ? $Command['repeat']: 0;
+                    $this->readAttribute(PRIO_NORM, $dest, $Command['cmdParams']['addr'], $Command['cmdParams']['ep'], $Command['cmdParams']['clustId'], $Command['cmdParams']['attrId'], $manufId, $repeat);
                     return;
                 }
+
+                // ZCL global: Generic 'read attribute request' function based on 0530 zigate msg
+                // Mandatory params: 'addr', 'ep', 'clustId', 'attrId'
+                // Optional : 'priority', 'manufCode'
+                else if ($cmdName == 'readAttribute2') {
+                    /* Checking that mandatory infos are there */
+                    $required = ['ep', 'clustId', 'attrId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <cluster ID: uint16_t>
+                    // <profile ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    // ZCL header
+                        // Frame control
+                        // Manuf code
+                        // SQN
+                        // Command ID
+                    // Write attribute record 1
+                        // Attribute id
+                        // Attribute data type
+                        // Attribute data
+                    // ...
+                    // Write attribute record X
+
+                    $priority   = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
+                    $repeat   = isset($Command['repeat']) ? $Command['repeat'] : 0;
+
+                    $addrMode   = "02";
+                    $addr       = $Command['cmdParams']['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['cmdParams']['ep'];
+                    $clustId    = $Command['cmdParams']['clustId'];
+                    $profId     = "0104";
+                    $secMode    = "02"; // ???
+                    $radius     = "30"; // ???
+
+                    /* ZCL header */
+                    $hParams = array(
+                        'manufCode' => isset($Command['cmdParams']['manufCode']) ? $Command['cmdParams']['manufCode'] : '',
+                        'cmdId' => '00', // Read Attributes
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
+
+                    cmdLog('debug', "  readAttribute2: AttrId=".$Command['cmdParams']['attrId']);
+
+                    $list = explode(',', $Command['cmdParams']['attrId']);
+                    $attrIdList = '';
+                    foreach ($list as $attrId) {
+                        if (strlen($attrId) != 4) {
+                            cmdLog('error', "  readAttribute2(): Format attribut ({$attrId}) incorrect => ignoré.");
+                            continue;
+                        }
+                        $attrIdList .= AbeilleTools::reverseHex($attrId);
+                    }
+
+                    $data2 = $zclHeader.$attrIdList;
+                    $dataLength = sprintf("%02X", strlen($data2) / 2);
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
+                    $data = $data1.$data2;
+                    $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode, $repeat);
+                    return;
+                } // End 'readAttribute2'
 
                 // Generic 'write attribute request' function based on 0110 Zigate msg.
                 // ZCL global: writeAttribute command
@@ -3245,16 +2929,16 @@
                     $required = ['ep', 'clustId', 'attrId', 'attrVal'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
-                    if (!isset($Command['attrType'])) {
+                    if (!isset($Command['cmdParams']['attrType'])) {
                         /* Attempting to find attribute type according to its id */
-                        $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
+                        $attr = zbGetZCLAttribute($Command['cmdParams']['clustId'], $Command['cmdParams']['attrId']);
                         if (($attr === false) || !isset($attr['dataType'])) {
                             cmdLog('error', "  writeAttribute: 'attrType' manquant");
                             return;
                         }
                         $attrType = sprintf("%02X", $attr['dataType']);
                     } else
-                        $attrType = $Command['attrType'];
+                        $attrType = $Command['cmdParams']['attrType'];
 
                     /* Cmd 0110 reminder:
                         <address mode: uint8_t>	Data Indication
@@ -3273,32 +2957,35 @@
                     */
 
                     $priority   = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
+                    $repeat   = isset($Command['repeat']) ? $Command['repeat'] : 0;
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
-                    $clustId    = $Command['clustId'];
-                    $dir        = (isset($Command['dir']) ? $Command['dir'] : "00"); // 00 = to server side, 01 = to client site
-                    if (isset($Command['manufId']) && ($Command['manufId'] != "0000")) {
+                    $dstEp      = $Command['cmdParams']['ep'];
+                    $clustId    = $Command['cmdParams']['clustId'];
+                    $dir        = (isset($Command['cmdParams']['dir']) ? $Command['cmdParams']['dir'] : "00"); // 00 = to server side, 01 = to client site
+                    if (isset($Command['cmdParams']['manufId']) && ($Command['cmdParams']['manufId'] != "0000")) {
                         $manufSpecific  = "01";
-                        $manufCode      = $Command['manufId'];
+                        $manufCode      = $Command['cmdParams']['manufId'];
                     } else {
                         $manufSpecific  = "00";
                         $manufCode      = "0000";
                     }
                     $nbOfAttributes = "01";
-                    $attrVal = $this->formatAttribute($Command['attrVal'], $attrType);
+                    // $attrVal = $this->formatAttribute($Command['cmdParams']['attrVal'], $attrType);
+                    $attrVal = zbFormatData($Command['cmdParams']['attrVal'], $attrType);
                     if ($attrVal === false)
                         return;
-                    $attrList = $Command['attrId'].$attrType.$attrVal;
+                    $attrId = $Command['cmdParams']['attrId'];
+                    $attrList = $attrId.$attrType.$attrVal;
 
-                    cmdLog('debug', "  writeAttribute: Dir=${dir}, ManufCode=${manufCode}, AttrType=${attrType}, AttrVal=${attrVal}");
+                    cmdLog('debug', "  writeAttribute: Dir={$dir}, ManufCode={$manufCode}, AttrId={$attrId}, AttrType={$attrType}, AttrVal={$attrVal}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufCode.$nbOfAttributes.$attrList;
 
-                    $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode);
+                    $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode, $repeat);
                     return;
-                }
+                } // cmdName == 'writeAttribute'
 
                 // ZCL global: Generic 'write attribute request' function based on 0530 zigate msg
                 // Tcharp38 note: not clear yet why it can be required but 0110 is still a nightmare. Doc is weak and too
@@ -3310,14 +2997,14 @@
                     $required = ['ep', 'clustId', 'attrId', 'attrVal'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
-                    if (!isset($Command['attrType'])) {
+                    if (!isset($Command['cmdParams']['attrType'])) {
                         /* Attempting to find attribute type according to its id */
-                        $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
+                        $attr = zbGetZCLAttribute($Command['cmdParams']['clustId'], $Command['cmdParams']['attrId']);
                         if (($attr === false) || !isset($attr['dataType'])) {
                             cmdLog('debug', "  command writeAttribute0530 ERROR: Missing 'attrType'");
                             return;
                         }
-                        $Command['attrType'] = sprintf("%02X", $attr['dataType']);
+                        $Command['cmdParams']['attrType'] = sprintf("%02X", $attr['dataType']);
                     }
 
                     // <address mode: uint8_t>
@@ -3343,37 +3030,38 @@
                     // Write attribute record X
 
                     $priority   = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
+                    $repeat   = isset($Command['repeat']) ? $Command['repeat'] : 0;
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
-                    $clustId    = $Command['clustId'];
+                    $dstEp      = $Command['cmdParams']['ep'];
+                    $clustId    = $Command['cmdParams']['clustId'];
                     $profId     = "0104";
                     $secMode    = "02"; // ???
                     $radius     = "30";
                     // $dataLength <- calculated later
 
                     // ZCL header
-                    $dir        = hexdec(isset($Command['dir']) ? $Command['dir'] : "00");
+                    $dir        = hexdec(isset($Command['cmdParams']['dir']) ? $Command['cmdParams']['dir'] : "00");
                     $fcf        = sprintf("%02X", ($dir << 3) | 00);
-                    $sqn        = isset($Command['sqn']) ? $Command['sqn'] : $this->genSqn();
+                    $sqn        = isset($Command['cmdParams']['sqn']) ? $Command['cmdParams']['sqn'] : $this->genSqn();
                     $cmd        = "02"; // Write Attributes
                     $zclHeader  = $fcf.$sqn.$cmd;
 
                     // Write attribute record
-                    $attrId     = AbeilleTools::reverseHex($Command['attrId']);
-                    $dataType   = $Command['attrType'];
-                    $attrVal    = AbeilleTools::reverseHex($Command['attrVal']);
+                    $attrId     = AbeilleTools::reverseHex($Command['cmdParams']['attrId']);
+                    $dataType   = $Command['cmdParams']['attrType'];
+                    $attrVal    = AbeilleTools::reverseHex($Command['cmdParams']['attrVal']);
 
-                    cmdLog('debug', "  writeAttribute0530: Dir=${dir}, AttrType=".$Command['attrType'].", AttrVal=${attrVal}");
+                    cmdLog('debug', "  writeAttribute0530: Dir={$dir}, AttrType=".$Command['cmdParams']['attrType'].", AttrVal={$attrVal}");
                     $data2 = $zclHeader.$attrId.$dataType.$attrVal;
 
                     $dataLength = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode);
+                    $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode, $repeat);
                     return;
                 }
 
@@ -3407,18 +3095,18 @@
 
                     $cmd            = "0140";
                     $addrMode       = "02";
-                    $addr           = $Command['addr'];
+                    $addr           = $Command['cmdParams']['addr'];
                     $srcEp          = "01";
-                    $dstEp          = sprintf("%02X", hexdec($Command['ep']));
-                    $clustId        = sprintf("%04X", hexdec($Command['clustId']));
-                    $attrId         = isset($Command['startAttrId']) ? $Command['startAttrId']: "0000";
-                    if (!isset($Command['dir']))
+                    $dstEp          = sprintf("%02X", hexdec($Command['cmdParams']['ep']));
+                    $clustId        = sprintf("%04X", hexdec($Command['cmdParams']['clustId']));
+                    $attrId         = isset($Command['cmdParams']['startAttrId']) ? $Command['cmdParams']['startAttrId']: "0000";
+                    if (!isset($Command['cmdParams']['dir']))
                         $dir        = '00'; // Default: to server side
                     else
-                        $dir        = $Command['dir']; // '00' = server cluster atttrib, '01' = client cluster attrib
+                        $dir        = $Command['cmdParams']['dir']; // '00' = server cluster atttrib, '01' = client cluster attrib
                     $manufSpec      = "00"; //  1 – Yes	 0 – No
                     $manufId        = "0000";
-                    $maxAttrId      = isset($Command['maxAttrId']) ? $Command['maxAttrId'] : "FF";
+                    $maxAttrId      = isset($Command['cmdParams']['maxAttrId']) ? $Command['cmdParams']['maxAttrId'] : "FF";
                     cmdLog('debug', '  discoverAttributes: dir='.$dir.', startAttrId='.$attrId.", maxAttr=".$maxAttrId, $this->debug['processCmd']);
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$attrId.$dir.$manufSpec.$manufId.$maxAttrId;
@@ -3429,13 +3117,13 @@
 
                 // ZCL global: Discover commands received
                 // Mandatory params: 'addr', 'ep', 'clustId'
-                // Optional params: 'startId' (default=00), 'max' (default=FF)
+                // Optional params: 'startId' (default=00), 'max' (default=FF), 'dir' (00=toServer=default, 01=toClient)
                 else if ($cmdName == 'discoverCommandsReceived') {
                     $required = ['addr', 'ep', 'clustId'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -3454,35 +3142,32 @@
                     //  ....
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
-                    $clustId    = $Command['clustId'];
+                    $clustId    = $Command['cmdParams']['clustId'];
                     $secMode    = "02";
                     $radius     = "1E";
+                    $dir        = isset($Command['cmdParams']['dir']) ? $Command['cmdParams']['dir'] : '00'; // 00 = to server side, 01 = to client site
 
                     /* ZCL header */
-                    // $fcf        = "10"; // Frame Control Field
-                    // $sqn        = $this->genSqn();
-                    // $cmdId      = "11"; // Discover Commands Received
-                    // cmdLog('debug', '  fcf='.$fcf.', sqn='.$sqn.", cmdId=".$cmdId);
                     $hParams = array(
                         'cmdId' => '11', // Discover Commands Received
+                        'toCli' => ($dir == "00") ? false : true,
                     );
                     $zclHeader = $this->genZclHeader($hParams);
 
-                    $startId    = isset($Command['startId']) ? $Command['startId'] : "00";
-                    $max        = isset($Command['max']) ? $Command['max'] : "FF";
-
-                    // $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+                    $startId    = isset($Command['cmdParams']['startId']) ? $Command['cmdParams']['startId'] : "00";
+                    $max        = isset($Command['cmdParams']['max']) ? $Command['cmdParams']['max'] : "FF";
+                    cmdLog('debug', "  discoverCommandsReceived: startId={$startId}, max={$max}");
                     $data2 = $zclHeader.$startId.$max;
 
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End 'discoverCommandsReceived'
 
@@ -3513,11 +3198,11 @@
                     //  ....
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
-                    $clustId    = $Command['clustId'];
+                    $clustId    = $Command['cmdParams']['clustId'];
                     $secMode    = "02";
                     $radius     = "1E";
 
@@ -3530,8 +3215,8 @@
                     );
                     $zclHeader = $this->genZclHeader($hParams);
 
-                    $startId    = isset($Command['startId']) ? $Command['startId'] : "00";
-                    $max        = isset($Command['max']) ? $Command['max'] : "FF";
+                    $startId    = isset($Command['cmdParams']['startId']) ? $Command['cmdParams']['startId'] : "00";
+                    $max        = isset($Command['cmdParams']['max']) ? $Command['cmdParams']['max'] : "FF";
                     // $data2 = $fcf.$sqn.$cmdId.$startId.$max;
                     $data2 = $zclHeader.$startId.$max;
 
@@ -3569,11 +3254,11 @@
                     //  ....
 
                     $addrMode       = "02";
-                    $addr           = $Command['addr'];
+                    $addr           = $Command['cmdParams']['addr'];
                     $srcEp          = "01";
-                    $dstEp          = $Command['ep'];
+                    $dstEp          = $Command['cmdParams']['ep'];
                     $profId         = "0104";
-                    $clustId        = $Command['clustId'];
+                    $clustId        = $Command['cmdParams']['clustId'];
                     $secMode        = "02";
                     $radius         = "1E";
 
@@ -3583,14 +3268,14 @@
                     $cmdId          = "01"; // Read Attributes Response
                     $data2 = $fcf.$sqn.$cmdId;
 
-                    // if (!isset($Command['attrId']) || !isset($Command['status']) || !isset($Command['attrType'])) {}
+                    // if (!isset($Command['cmdParams']['attrId']) || !isset($Command['cmdParams']['status']) || !isset($Command['cmdParams']['attrType'])) {}
                     //     cmdLog('debug', "  ERROR: Missing '".$param."'");
                     //     return;
                     // }
-                    $attrId = AbeilleTools::reverseHex($Command['attrId']);
-                    $status = $Command['status'];
-                    $attrType = $Command['attrType'];
-                    $attrVal = AbeilleTools::reverseHex($Command['attrVal']);
+                    $attrId = AbeilleTools::reverseHex($Command['cmdParams']['attrId']);
+                    $status = $Command['cmdParams']['status'];
+                    $attrType = $Command['cmdParams']['attrType'];
+                    $attrVal = AbeilleTools::reverseHex($Command['cmdParams']['attrVal']);
                     $data2 = $data2.$attrId.$status.$attrType.$attrVal;
 
                     $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
@@ -3629,11 +3314,11 @@
 
                     $cmd            = "0530";
                     $addrMode       = "02";
-                    $addr           = $Command['addr'];
+                    $addr           = $Command['cmdParams']['addr'];
                     $srcEp          = "01";
-                    $dstEp          = $Command['ep'];
+                    $dstEp          = $Command['cmdParams']['ep'];
                     $profId         = "0104";
-                    $clustId        = $Command['clustId'];
+                    $clustId        = $Command['cmdParams']['clustId'];
                     $secMode        = "02";
                     $radius         = "1E";
 
@@ -3646,8 +3331,8 @@
                     );
                     $zclHeader = $this->genZclHeader($hParams);
 
-                    $startId        = isset($Command['startId']) ? $Command['startId'] : "0000";
-                    $max            = isset($Command['max']) ? $Command['max'] : "FF";
+                    $startId        = isset($Command['cmdParams']['startId']) ? $Command['cmdParams']['startId'] : "0000";
+                    $max            = isset($Command['cmdParams']['max']) ? $Command['cmdParams']['max'] : "FF";
                     // $data2 = $fcf.$sqn.$cmdId.$startId.$max;
                     $data2 = $zclHeader.$startId.$max;
 
@@ -3667,14 +3352,14 @@
                     $required = ['addr', 'clustId', 'attrId'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
-                    if (!isset($Command['attrType'])) {
+                    if (!isset($Command['cmdParams']['attrType'])) {
                         /* Attempting to find attribute type according to its id */
-                        $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
+                        $attr = zbGetZCLAttribute($Command['cmdParams']['clustId'], $Command['cmdParams']['attrId']);
                         if (($attr === false) || !isset($attr['dataType'])) {
                             cmdLog('debug', "  command configureReporting ERROR: Missing 'attrType'");
                             return;
                         }
-                        $Command['attrType'] = sprintf("%02X", $attr['dataType']);
+                        $Command['cmdParams']['attrType'] = sprintf("%02X", $attr['dataType']);
                     }
 
                     $cmd = "0530";
@@ -3696,17 +3381,17 @@
                     //  ....
 
                     $addrMode       = "02";
-                    $addr           = $Command['addr'];
+                    $addr           = $Command['cmdParams']['addr'];
                     $srcEp          = "01";
-                    $dstEp          = $Command['ep'];
+                    $dstEp          = $Command['cmdParams']['ep'];
                     $profId         = "0104";
-                    $clustId        = $Command['clustId'];
+                    $clustId        = $Command['cmdParams']['clustId'];
                     $secMode        = "02";
                     $radius         = "1E";
 
                     /* ZCL header */
-                    if (isset($Command['manufId'])) {
-                        $manufId = $Command['manufId'];
+                    if (isset($Command['cmdParams']['manufId'])) {
+                        $manufId = $Command['cmdParams']['manufId'];
                         $fcf = "14"; // Frame Control Field
                     } else {
                         $manufId = '';
@@ -3717,13 +3402,13 @@
 
                     /* Attribute Reporting Configuration Record */
                     $dir                    = "00";
-                    $attrId                 = AbeilleTools::reverseHex($Command['attrId']);
-                    $attrType               = $Command['attrType'];
-                    $minInterval            = isset($Command['minInterval']) ? $Command['minInterval'] : "0000";
-                    $maxInterval            = isset($Command['maxInterval']) ? $Command['maxInterval'] : "0000";
+                    $attrId                 = AbeilleTools::reverseHex($Command['cmdParams']['attrId']);
+                    $attrType               = $Command['cmdParams']['attrType'];
+                    $minInterval            = isset($Command['cmdParams']['minInterval']) ? $Command['cmdParams']['minInterval'] : "0000";
+                    $maxInterval            = isset($Command['cmdParams']['maxInterval']) ? $Command['cmdParams']['maxInterval'] : "0000";
                     $changeVal              = ''; // Reportable change.
-                    if (isset($Command['changeVal'])) {
-                        $changeVal = $Command['changeVal'];
+                    if (isset($Command['cmdParams']['changeVal'])) {
+                        $changeVal = $Command['cmdParams']['changeVal'];
                     } else {
                         // switch ($attrType) {
                         // case "21": // Uint16
@@ -3762,24 +3447,24 @@
                 } // End 'configureReporting'
 
                 // ZCL global: Configure reporting command (2)
-                // Mandatory parameters: addr, clustId, attrId
+                // Mandatory parameters: addr, ep, clustId, attrId
                 // Optional params: manufCode (2B hex), dir (1B hex, default=00)
                 // Mandatory extra params if dir=00: attrType (1B hex), minInterval (number), maxInterval (number), changeVal (number)
                 // Mandatory extra params if dir=01: timeout (number)
                 else if ($cmdName == 'configureReporting2') {
                     /* Mandatory infos: addr, clustId, attrId. 'attrType' can be auto-detected */
-                    $required = ['addr', 'clustId', 'attrId'];
+                    $required = ['addr', 'ep', 'clustId', 'attrId'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $dir = isset($Command['dir']) ? $Command['dir'] : '00';
+                    $dir = isset($Command['cmdParams']['dir']) ? $Command['cmdParams']['dir'] : '00';
 
                     if ($dir == '00') {
                         // attrType is optional because can be guessed thanks to clustId/attrId
-                        $attrType = isset($Command['attrType']) ? $Command['attrType'] : '';
+                        $attrType = isset($Command['cmdParams']['attrType']) ? $Command['cmdParams']['attrType'] : '';
                         if ($attrType == '') {
                             /* Attempting to find attribute type according to its id */
-                            $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
+                            $attr = zbGetZCLAttribute($Command['cmdParams']['clustId'], $Command['cmdParams']['attrId']);
                             if (($attr === false) || !isset($attr['dataType'])) {
                                 cmdLog('error', "  command configureReporting2 ERROR: Missing 'attrType'");
                                 return;
@@ -3816,41 +3501,43 @@
                     //  ....
 
                     $addrMode       = "02";
-                    $addr           = $Command['addr'];
+                    $addr           = $Command['cmdParams']['addr'];
                     $srcEp          = "01";
-                    $dstEp          = $Command['ep'];
+                    $dstEp          = $Command['cmdParams']['ep'];
                     $profId         = "0104";
-                    $clustId        = $Command['clustId'];
+                    $clustId        = $Command['cmdParams']['clustId'];
                     $secMode        = "02";
                     $radius         = "1E";
-                    $attrId         = $Command['attrId'];
+                    $attrId         = $Command['cmdParams']['attrId'];
 
                     /* ZCL header */
                     $hParams = array(
-                        'manufCode' => isset($Command['manufCode']) ? $Command['manufCode'] : '',
+                        'manufCode' => isset($Command['cmdParams']['manufCode']) ? $Command['cmdParams']['manufCode'] : '',
                         'cmdId' => '06', // Configure reporting
                     );
                     $zclHeader = $this->genZclHeader($hParams);
 
                     /* Attribute Reporting Configuration Record */
                     if ($dir == '00') {
-                        $minInterval = isset($Command['minInterval']) ? $Command['minInterval'] : 0;
-                        $maxInterval = isset($Command['maxInterval']) ? $Command['maxInterval'] : 0;
-                        $changeVal   = isset($Command['changeVal']) ? $Command['changeVal'] : 1;
+                        $minInterval = isset($Command['cmdParams']['minInterval']) ? $Command['cmdParams']['minInterval'] : 0;
+                        $maxInterval = isset($Command['cmdParams']['maxInterval']) ? $Command['cmdParams']['maxInterval'] : 0;
+                        $changeVal   = isset($Command['cmdParams']['changeVal']) ? $Command['cmdParams']['changeVal'] : 1;
 
                         if ($maxInterval == 0xffff) {
                             cmdLog('debug', "  configureReporting2: Disable reporting");
-                            // 'changeVal' must 0 for that case
+                            // 'changeVal' must be 0 for that case
                             $changeVal = 0;
                         } else if (($maxInterval == 0) && ($minInterval != 0xffff)) {
-                            cmdLog('debug', "  configureReporting2: No periodic reporting");
+                            // If this value is set to 0x0000, and the minimum reporting interval field does not equal 0xffff there SHALL
+                            // be no periodic reporting, but change based reporting SHALL still be operational.
+                            cmdLog('debug', "  configureReporting2: No periodic reporting but change val based only");
                             if ($changeVal == 0) {
                                 cmdLog('error', "  configureReporting2: 'changeVal' ne peut etre 0");
                                 return;
                             }
                         } else if (($maxInterval == 0) && ($minInterval == 0xffff)) {
                             cmdLog('debug', "  configureReporting2: Revert to default reporting");
-                            // 'changeVal' must 0 for that case
+                            // 'changeVal' must be 0 for that case
                             $changeVal = 0;
                         } else {
                             if ($maxInterval < $minInterval) {
@@ -3859,17 +3546,20 @@
                             }
                         }
 
-                        $minInterval = $this->formatAttribute($minInterval, "uint16");
-                        $maxInterval = $this->formatAttribute($maxInterval, "uint16");
+                        // $minInterval = $this->formatAttribute($minInterval, "uint16");
+                        // $maxInterval = $this->formatAttribute($maxInterval, "uint16");
+                        $minInterval = zbFormatData($minInterval, "uint16");
+                        $maxInterval = zbFormatData($maxInterval, "uint16");
 
                         // 'changeVal' must be omitted if 'discrete' data types
                         $dt = hexdec($attrType);
                         if ((($dt >= 0x08) && ($dt <= 0x1f)) || (($dt >= 0x30) && ($dt <= 0x31)) || ($dt >= 0xe8)) // Discrete types
                             $changeVal = '';
                         else
-                            $changeVal = $this->formatAttribute($changeVal, $attrType);
+                            // $changeVal = $this->formatAttribute($changeVal, $attrType);
+                            $changeVal = zbFormatData($changeVal, $attrType);
 
-                        cmdLog('debug', "  configureReporting2: AttrType='${attrType}', Min='${minInterval}', Max='${maxInterval}', ChangeVal='${changeVal}'");
+                        cmdLog('debug', "  configureReporting2: AttrId={$attrId}, AttrType={$attrType}, Min={$minInterval}, Max={$maxInterval}, ChangeVal={$changeVal}");
                         $attrId = AbeilleTools::reverseHex($attrId);
                         $minInterval = AbeilleTools::reverseHex($minInterval);
                         $maxInterval = AbeilleTools::reverseHex($maxInterval);
@@ -3877,7 +3567,7 @@
 
                         $data2 = $zclHeader.'00'.$attrId.$attrType.$minInterval.$maxInterval.$changeVal;
                     } else {
-                        $timeout = $Command['timeout'];
+                        $timeout = $Command['cmdParams']['Timeout'];
                         $timeout = sprintf("%04X", $timeout);
                         $timeout = AbeilleTools::reverseHex($timeout);
 
@@ -3913,16 +3603,16 @@
 
                     $cmd        = "0122";
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
-                    $clustId    = $Command['clustId'];
+                    $dstEp      = $Command['cmdParams']['ep'];
+                    $clustId    = $Command['cmdParams']['clustId'];
                     $dir        = "00"; // 00=attribute is reported, 01=attribute is received
                     $nbOfAttr   = "01";
                     $manufSpecific = "00";
                     $manufId    = "0000";
                     $attrDir    = "00";
-                    $attrId     = $Command['attrId'];
+                    $attrId     = $Command['cmdParams']['attrId'];
 
                     $data =  $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$nbOfAttr.$manufSpecific.$manufId.$attrDir.$attrId;
 
@@ -3958,9 +3648,9 @@
                     //  ....
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = '0000';
                     $secMode    = "02";
@@ -4000,10 +3690,10 @@
                     // <time: uint16_t> Time: Seconds
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['EP'];
-                    $duration   = (isset($Command['duration']) && ($Command['duration'] != '')) ? $Command['duration'] : '0010';
+                    $dstEp      = $Command['cmdParams']['EP'];
+                    $duration   = (isset($Command['cmdParams']['duration']) && ($Command['cmdParams']['duration'] != '')) ? $Command['cmdParams']['duration'] : '0010';
 
                     cmdLog('debug', '  identifySend: ep='.$dstEp.', duration='.$duration);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$duration;
@@ -4024,19 +3714,45 @@
                     //<source endpoint: uint8_t>
                     //<destination endpoint: uint8_t>
                     //<group address: uint16_t>
-                    $zgCmd        = "0060";
+                    $zgCmd      = "0060";
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
-                    $group      = $Command['group'];
+                    $dstEp      = $Command['cmdParams']['ep'];
+                    $group      = $Command['cmdParams']['group'];
 
-                    cmdLog('debug', '  addGroup: ep='.$dstEp.', group='.$group);
+                    cmdLog('debug', '  addGroup: Ep='.$dstEp.', Group='.$group);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$group;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End cluster 0004, $cmdName == 'addGroup'
+
+                // ZCL cluster 0004 specific: removeGroup, sent to server
+                // Mandatory params: 'addr', 'ep', & 'group'
+                else if ($cmdName == 'removeGroup') {
+                    $required = ['addr', 'ep', 'group']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0063";
+                    // <address mode: uint8_t>
+                    //<target short address: uint16_t>
+                    //<source endpoint: uint8_t>
+                    //<destination endpoint: uint8_t>
+                    //<group address: uint16_t>
+                    $addrMode = "02";
+                    $addr = $Command['cmdParams']['addr'];
+                    $srcEp = "01";
+                    $dstEp = $Command['cmdParams']['ep'] ;
+                    $group = $Command['cmdParams']['group'];
+
+                    cmdLog('debug', '  removeGroup: Ep='.$dstEp.', Group='.$group);
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$group;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                } // End $cmdName == 'removeGroup'
 
                 // ZCL cluster 0004 specific: getGroupMembership, sent to server
                 // Mandatory params: 'addr', 'ep'
@@ -4054,9 +3770,9 @@
                     // <group list:data>
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $ep         = $Command['ep'];
+                    $ep         = $Command['cmdParams']['ep'];
                     $groupCount = "00";
                     $groupList  = "";
 
@@ -4077,10 +3793,10 @@
                 // Mandatory params: addrGroup & cmd if addrMode=01/group
                 // Mandatory params: cmd if addrMode=04/broadcast
                 else if ($cmdName == 'cmd-0006') {
-                    $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos for dev addr
-                    $required2 = ['addrGroup', 'cmd']; // Mandatory infos for group addr
+                    $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos when addressing device
+                    $required2 = ['addrGroup', 'cmd']; // Mandatory infos when addressin group
                     $required3 = ['cmd']; // Mandatory infos for broadcast
-                    $addrMode   = isset($Command['addrMode']) ? $Command['addrMode'] : "02"; // 01=Group, 02=device (default), 04=broadcast
+                    $addrMode   = isset($Command['cmdParams']['addrMode']) ? $Command['cmdParams']['addrMode'] : "02"; // 01=Group, 02=device (default), 04=broadcast
                     if ($addrMode == '01') {
                         $required = $required2; // Group command
                     } else if ($addrMode == '04') {
@@ -4091,17 +3807,17 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmdId = $Command['cmd'];
+                    $cmdId = $Command['cmdParams']['cmd'];
 
                     if (($cmdId == '00') || ($cmdId == '01') || ($cmdId == '02')) { // Off, on, or toggle
                         $zgCmd      = "0092";
 
-                        $addr       = ($addrMode == '02') ? $Command['addr'] : (($addrMode == '01') ? $Command['addrGroup'] : 'DEAD');
+                        $addr       = ($addrMode == '02') ? $Command['cmdParams']['addr'] : (($addrMode == '01') ? $Command['cmdParams']['addrGroup'] : 'DEAD');
                         $srcEp      = "01";
-                        $dstEp      = ($addrMode == '02') ? $Command['ep'] : '01';
-                        $cmdId      = $Command['cmd'];
+                        $dstEp      = ($addrMode == '02') ? $Command['cmdParams']['ep'] : '01';
+                        $cmdId      = $Command['cmdParams']['cmd'];
 
-                        cmdLog('debug', "  cmd-0006: addrMode=${addrMode}, addr=${addr}, cmd=${cmdId}");
+                        cmdLog('debug', "  cmd-0006: AddrMode={$addrMode}, Addr={$addr}, CmdId={$cmdId}");
                         $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId;
 
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
@@ -4128,9 +3844,9 @@
                     // <group list:data>
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $ep         = $Command['ep'];
+                    $ep         = $Command['cmdParams']['ep'];
                     $groupCount = "00";
                     $groupList  = "";
 
@@ -4147,18 +3863,18 @@
                 } // End cluster 0004, $cmdName == 'removeAllGroups'
 
                 // ZCL cluster 0008/Level control specific: (received) commands
-                // Mandatory params: addr, EP, Level (in dec, %), duration (dec)
+                // Mandatory params: addr, ep, level (decimal, %), duration (decimal)
                 // Optional params: duration (default=0001)
                 else if ($cmdName == 'setLevel') {
-                    $required = ['addr', 'Level']; // Mandatory infos
+                    $required = ['addr', 'ep', 'level']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
-                    if (($Command['Level'] < 0) || ($Command['Level'] > 100)) {
-                        cmdLog('error', "  setLevel: 'Level' en dehors de la plage 0->100");
+                    if (($Command['cmdParams']['level'] < 0) || ($Command['cmdParams']['level'] > 100)) {
+                        cmdLog('error', "  setLevel: 'level' en dehors de la plage 0->100");
                         return;
                     }
-                    $zgCmd = "0081"; // Move to level with/without on/off
 
+                    $zgCmd = "0081"; // Move to level with/without on/off
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
                     // <source endpoint: uint8_t>
@@ -4167,26 +3883,26 @@
                     // <Level: uint8_t >
                     // <Transition Time: uint16_t>
 
-                    if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
-                    $addr       = $Command['addr'];
+                    if (isset($Command['cmdParams']['addrMode'])) $addrMode = $Command['cmdParams']['addrMode']; else $addrMode = "02";
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['EP'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $onOff      = "01";
-                    $l          = intval($Command['Level'] * 255 / 100);
+                    $l          = intval($Command['cmdParams']['level'] * 255 / 100);
                     $level      = sprintf("%02X", $l);
-                    $duration   = isset($Command['duration']) ? sprintf("%04X", $Command['duration']) : "0001";
-                    cmdLog('debug', "  setLevel: onOff=".$onOff.", level=".$level.", duration=".$duration);
+                    $duration   = isset($Command['cmdParams']['duration']) ? sprintf("%04X", $Command['cmdParams']['duration']) : "0001";
+                    cmdLog('debug', "  setLevel: OnOff=".$onOff.", Level=".$level.", Duration=".$duration);
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
 
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     // if ($addrMode == "02") {
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
 
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
                     // }
                     return;
                 }
@@ -4212,23 +3928,23 @@
                     // <Transition Time: uint16_t>
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['EP'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $onoff      = "01";
-                    $level      = sprintf("%02X", $Command['Level']);
-                    $duration   = isset($Command['duration']) ? sprintf("%04X", $Command['duration']) : "0001";
+                    $level      = sprintf("%02X", $Command['cmdParams']['Level']);
+                    $duration   = isset($Command['cmdParams']['duration']) ? sprintf("%04X", $Command['cmdParams']['duration']) : "0001";
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
 
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     // if ($addrMode == "02") {
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
 
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['cmdParams']['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
                     // }
                     return;
                 }
@@ -4240,28 +3956,28 @@
                 else if ($cmdName == 'cmd-0008') {
                     $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos
                     $required2 = ['addr', 'ep', 'cmd', 'level']; // Mandatory infos for 00 & 04
-                    if (isset($Command['cmd']) && ($Command['cmd'] == "07"))
+                    if (isset($Command['cmdParams']['cmd']) && ($Command['cmdParams']['cmd'] == "07"))
                         $required = $required1;
                     else
                         $required = $required2;
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmdId = $Command['cmd'];
+                    $cmdId = $Command['cmdParams']['cmd'];
 
                     // TO BE COMPLETED
                     if (($cmdId == '00') || ($cmdId == '04')) { // Move to Level without (00) or with On/Off (04)
                         $zgCmd      = "0081";
                         $addrMode   = "02"; // Assuming short addr
-                        $addr       = $Command['addr'];
+                        $addr       = $Command['cmdParams']['addr'];
                         $srcEp      = "01";
-                        $dstEp      = $Command['ep'];
+                        $dstEp      = $Command['cmdParams']['ep'];
                         if ($cmdId == '00')
                             $onOff = "00";
                         else
                             $onOff = "01";
-                        $level      = sprintf("%02X", intval($Command['level']));
-                        $duration   = isset($Command['duration']) ? sprintf("%04X", $Command['duration']) : "0001";
+                        $level      = sprintf("%02X", intval($Command['cmdParams']['level']));
+                        $duration   = isset($Command['cmdParams']['duration']) ? sprintf("%04X", $Command['cmdParams']['duration']) : "0001";
                         cmdLog('debug', '  cmd-0008: onOff='.$onOff.', level='.$level.', duration='.$duration);
 
                         $data       = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
@@ -4270,9 +3986,9 @@
                     } else if ($cmdId == '07') { // Stop with OnOff
                         $zgCmd      = "0084"; // Stop with OnOff = Cluster 0008, cmd 07
                         $addrMode   = "02"; // Assuming short addr
-                        $addr       = $Command['addr'];
+                        $addr       = $Command['cmdParams']['addr'];
                         $srcEp      = "01";
-                        $dstEp      = $Command['ep'];
+                        $dstEp      = $Command['cmdParams']['ep'];
 
                         $data       = $addrMode.$addr.$srcEp.$dstEp;
 
@@ -4290,8 +4006,8 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $manufCode = $Command['manufCode'];
-                    $imgType = $Command['imgType'];
+                    $manufCode = $Command['cmdParams']['manufCode'];
+                    $imgType = $Command['cmdParams']['imgType'];
                     if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode]) || !isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
                         cmdLog('debug', "  ERROR: No such FW", $this->debug['processCmd']);
                         return;
@@ -4313,17 +4029,17 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $manufCode = $Command['manufCode'];
-                    $imgType = $Command['imgType'];
+                    $manufCode = $Command['cmdParams']['manufCode'];
+                    $imgType = $Command['cmdParams']['imgType'];
                     if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode]) || !isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
                         return;
                     }
                     $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
 
                     $addrMode = "02";
-                    $addr = $Command['addr'];
+                    $addr = $Command['cmdParams']['addr'];
                     $srcEp = "01"; // Zigate is source
-                    $dstEp = $Command['ep'];
+                    $dstEp = $Command['cmdParams']['ep'];
                     $status = "00";
                     $imgVersion = $fw['fileVersion'];
                     $queryJitter = "64"; // x64 = 100
@@ -4339,11 +4055,15 @@
                     $required = ['addr', 'ep', 'manufCode', 'imgType', 'imgOffset', 'maxData']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
-                    $manufCode = $Command['manufCode'];
-                    $imgType = $Command['imgType'];
-                    $imgOffset = $Command['imgOffset'];
-                    $maxData = $Command['maxData'];
+                    $manufCode = $Command['cmdParams']['manufCode'];
+                    $imgType = $Command['cmdParams']['imgType'];
+                    $imgOffset = $Command['cmdParams']['imgOffset'];
+                    $maxData = $Command['cmdParams']['maxData'];
 
+                    if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode]) || !isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
+                        cmdLog('debug', "  otaImageBlockResponse WARNING: ManufCode={$manufCode}, ImgType={$imgType} => NO FW. Request ignored");
+                        return;
+                    }
                     $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
                     $imgVers = $fw['fileVersion'];
                     $imgSize = $fw['fileSize'];
@@ -4355,7 +4075,7 @@
                     // if (hexdec($dataSize) > 48)
                     //     $dataSize = "30"; // Required ?
                     $realOffset = $fw['startIdx'] + hexdec($imgOffset);
-                    cmdLog('debug', "  Reading data from real offset ".$realOffset, $this->debug['processCmd']);
+                    cmdLog('debug', "  otaImageBlockResponse: Offset={$realOffset}, ImgSize={$imgSize}");
                     fseek($fh, $realOffset, SEEK_SET);
                     $data = fread($fh, hexdec($dataSize));
                     $data = strtoupper(bin2hex($data));
@@ -4368,10 +4088,10 @@
                     //     self._ota['image']['header']['manufacturer_code'],
                     //     data_size, *ota_data_to_send)
                     $addrMode = "02";
-                    $addr = $Command['addr'];
+                    $addr = $Command['cmdParams']['addr'];
                     $srcEp = "01";
-                    $dstEp = $Command['ep'];
-                    $sqn = $Command['sqn'] ? $Command['sqn'] : $this->genSqn();
+                    $dstEp = $Command['cmdParams']['ep'];
+                    $sqn = $Command['cmdParams']['sqn'] ? $Command['cmdParams']['sqn'] : $this->genSqn();
                     $status = "00";
                     // $imgOffset
                     // $imgVers
@@ -4383,15 +4103,17 @@
                     $data2 = $addrMode.$addr.$srcEp.$dstEp.$sqn.$status;
                     $data2 .= $imgOffset.$imgVers.$imgType.$manufCode.$dataSize.$data;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0502", $data2, $addr);
+                    // $this->addCmdToQueue2(PRIO_LOW, $dest, "0502", $data2, $addr, $addrMode);
+                    // ACK mode does not work. SQN sent back is 00 but ACK/8011 is sent with SQN!=0
+                    $this->addCmdToQueue2(PRIO_LOW, $dest, "0502", $data2, $addr);
 
                     if ($imgOffset == "00000000") {
                         $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
-                        $eqPath = $eqLogic->getHumanName();
-                        message::add("Abeille", $eqPath.": Mise-à-jour du firmware démarrée", "");
+                        $eqHName = $eqLogic->getHumanName();
+                        message::add("Abeille", $eqHName.": Mise-à-jour du firmware démarrée", "");
                     }
                     return;
-                }
+                } // End 'otaImageBlockResponse'
 
                 // ZCL cluster 0019 specific: Inform device to apply new image
                 else if ($cmdName == 'otaUpgradeEndResponse') {
@@ -4424,9 +4146,9 @@
                     //  ....
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = '0019';
                     $secMode    = "02";
@@ -4435,7 +4157,7 @@
                     /* ZCL header */
                     $fcf        = "19"; // Frame Control Field
                     $sqn        = $this->genSqn();
-                    $cmdId      = $Command['cmd'];
+                    $cmdId      = $Command['cmdParams']['cmd'];
 
                     $data2 = $fcf.$sqn.$cmdId;
 
@@ -4446,8 +4168,8 @@
                     //         return;
                     //     $plType = "02"; // queryJitter + manufCode + imgType
                     //     $queryJitter = "32"; // 0x01 – 0x64
-                    //     $manufCode = AbeilleTools::reverseHex($Command['manufCode']);
-                    //     $imageType = AbeilleTools::reverseHex($Command['imgType']);
+                    //     $manufCode = AbeilleTools::reverseHex($Command['cmdParams']['manufCode']);
+                    //     $imageType = AbeilleTools::reverseHex($Command['cmdParams']['imgType']);
                     //     $data2 .= $plType.$queryJitter.$manufCode.$imageType;
                     // } else
 
@@ -4456,12 +4178,12 @@
                     //     $required = ['status', 'manufCode', 'imgType', 'imgVersion', 'imgSize']; // Mandatory infos
                     //     if (!$this->checkRequiredParams($required, $Command))
                     //         return;
-                    //     $status = $Command['status'];
+                    //     $status = $Command['cmdParams']['status'];
                     //     if ($status != '00')
                     //         $data2 = $fcf.$sqn.$cmdId.$status;
                     //     else {
-                    //         $manufCode = AbeilleTools::reverseHex($Command['manufCode']);
-                    //         $imageType = AbeilleTools::reverseHex($Command['imgType']);
+                    //         $manufCode = AbeilleTools::reverseHex($Command['cmdParams']['manufCode']);
+                    //         $imageType = AbeilleTools::reverseHex($Command['cmdParams']['imgType']);
                     //         $fileVersion = AbeilleTools::reverseHex($Command['imgVersion']);
                     //         $imageSize = AbeilleTools::reverseHex($Command['imgSize']);
                     //         $data2 .= $status.$manufCode.$imageType.$fileVersion.$imageSize;
@@ -4473,10 +4195,10 @@
                     //     $required = ['manufCode', 'imgType', 'imgOffset', 'maxData']; // Mandatory infos
                     //     if (!$this->checkRequiredParams($required, $Command))
                     //         return;
-                    //     $manufCode = $Command['manufCode'];
-                    //     $imgType = $Command['imgType'];
-                    //     $imgOffset = $Command['imgOffset'];
-                    //     $maxData = $Command['maxData'];
+                    //     $manufCode = $Command['cmdParams']['manufCode'];
+                    //     $imgType = $Command['cmdParams']['imgType'];
+                    //     $imgOffset = $Command['cmdParams']['imgOffset'];
+                    //     $maxData = $Command['cmdParams']['maxData'];
 
                     //     $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
                     //     $imgVers = $fw['fileVersion'];
@@ -4545,9 +4267,9 @@
                     //  ....
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = '0020';
                     $secMode    = "02";
@@ -4556,7 +4278,7 @@
                     /* ZCL header */
                     $fcf        = "19"; // Frame Control Field
                     $sqn        = $this->genSqn();
-                    $cmdId      = $Command['cmd'];
+                    $cmdId      = $Command['cmdParams']['cmd'];
 
                     $data2 = $fcf.$sqn.$cmdId;
 
@@ -4605,10 +4327,10 @@
                 //     $cmd = "00FA";
 
                 //     $addrMode       = "02"; // 01 pour groupe, 02 pour NE
-                //     $address        = $Command['address'];
+                //     $address        = $Command['cmdParams']['address'];
                 //     $srcEp          = "01";
                 //     $detEP          = "01";
-                //     $clusterCommand = $Command['clusterCommand'];
+                //     $clusterCommand = $Command['cmdParams']['clusterCommand'];
 
                 //     $data = $addrMode.$address.$srcEp.$detEP.$clusterCommand;
 
@@ -4618,15 +4340,15 @@
 
                 // ZCL cluster 0102/Window covering specific cmds
                 // Mandatory params: addr, ep, cmd
-                //      + value (décimal) for cmd '04'/'05'/'06'/'07'
+                //      + value (décimal) for cmd '04'/'05'/'07'/'08'
                 // Optional params: none
                 else if ($cmdName == 'cmd-0102') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
-                    $cmdId = $Command['cmd'];
-                    if ($cmdId == '04' || $cmdId == '05' || $cmdId == '06' || $cmdId == '07')
-                        if (!isset($Command['value'])) {
+                    $cmdId = $Command['cmdParams']['cmd'];
+                    if ($cmdId == '04' || $cmdId == '05' || $cmdId == '07' || $cmdId == '08')
+                        if (!isset($Command['cmdParams']['value'])) {
                             cmdLog('error', "  cmd-0102: Champ 'value' non renseigné");
                             return;
                         }
@@ -4643,20 +4365,20 @@
                     $zgCmd        = "00FA";
 
                     $addrMode   = "02"; // 01 pour groupe, 02 pour NE
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $extra      = '';
-                    $value      = (isset($Command['value']) ? (int)$Command['value'] : 0);
-                    if ($cmdId == "04" || $cmdId == "06")
+                    $value      = (isset($Command['cmdParams']['value']) ? (int)$Command['cmdParams']['value'] : 0);
+                    if ($cmdId == "04" || $cmdId == "07")
                         $extra = sprintf("%04X", $value); // uint16
-                    else if ($cmdId == "05" || $cmdId == "07")
+                    else if ($cmdId == "05" || $cmdId == "08")
                         $extra = sprintf("%02X", $value); // uint8
 
-                    cmdLog('debug', '  cmd-0102: cmdId='.$cmdId.', extra='.$extra);
+                    cmdLog('debug', "  cmd-0102: CmdId={$cmdId}, Extra={$extra}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId.$extra;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-0102'
 
@@ -4687,14 +4409,14 @@
                     //  ....
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = '0201';
                     $secMode    = "02";
                     $radius     = "1E";
-                    $cmdId      = $Command['cmd'];
+                    $cmdId      = $Command['cmdParams']['cmd'];
 
                     /* ZCL header */
                     // Dir = 0 = to server
@@ -4711,14 +4433,14 @@
                         // 0x00 Heat (adjust Heat Setpoint)
                         // 0x01 Cool (adjust Cool Setpoint)
                         // 0x02 Both (adjust Heat Setpoint and Cool Setpoint)
-                        $mode = isset($Command['mode']) ? $Command['mode'] : "00";
+                        $mode = isset($Command['cmdParams']['mode']) ? $Command['cmdParams']['mode'] : "00";
                         if (($mode != '00') && ($mode != '01') && ($mode != '02')) {
-                            cmdLog('error', "  cmd-0201: SetPoint raise/lower: Mode invalide: '${mode}'");
+                            cmdLog('error', "  cmd-0201: SetPoint raise/lower: Mode invalide: '{$mode}'");
                             return;
                         }
                         // Amount = signed 8-bit int, value for increase or decrease in steps of 0.1°C.
-                        $amount = $Command['amount'];
-                        cmdLog('debug', "  cmd-0201: Cmd=00, Mode=${mode}, Amount=${amount}");
+                        $amount = $Command['cmdParams']['amount'];
+                        cmdLog('debug', "  cmd-0201: Cmd=00, Mode={$mode}, Amount={$amount}");
                         $data2 = $zclHeader.$mode.$amount;
                     } else {
                         cmdLog('error', "  cmd-0201: Commande ".$cmdId." non supportée");
@@ -4748,14 +4470,14 @@
                     // <transition time: uint16_t >
 
                     $zgCmd        = "00B7"; // Move to color
-                    if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
-                    $addr       = $Command['addr'];
+                    if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    if (isset($Command['EP'])) $dstEp = $Command['EP']; else $dstEp = "01";
-                    $colourX    = $Command['X'];
-                    $colourY    = $Command['Y'];
-                    if (isset($Command['duration']) && $Command['duration']>0)
-                        $duration = sprintf("%04s", dechex($Command['duration']));
+                    if (isset($Command['cmdParams']['ep'])) $dstEp = $Command['cmdParams']['ep']; else $dstEp = "01";
+                    $colourX    = $Command['cmdParams']['X'];
+                    $colourY    = $Command['cmdParams']['Y'];
+                    if (isset($Command['cmdParams']['duration']) && $Command['cmdParams']['duration']>0)
+                        $duration = sprintf("%04s", dechex($Command['cmdParams']['duration']));
                     else
                         $duration = "0001";
 
@@ -4781,14 +4503,14 @@
 
                     $zgCmd = "00C0"; // 00C0=Move to colour temperature
 
-                    if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
-                    $addr       = $Command['addr'];
+                    if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    if (isset($Command['EP'])) $dstEp = $Command['EP']; else $dstEp = "01";
+                    if (isset($Command['cmdParams']['ep'])) $dstEp = $Command['cmdParams']['ep']; else $dstEp = "01";
                     // Color temp K = 1,000,000 / ColorTempMireds,
                     // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
                     // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.
-                    $tempK = intval($Command['slider']);
+                    $tempK = intval($Command['cmdParams']['slider']);
                     if ($tempK == 0)
                         $tempMireds = "0000";
                     else {
@@ -4806,7 +4528,7 @@
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     if ($addrMode == "02") {
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
+                        $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
                     }
                     return;
                 }
@@ -4836,9 +4558,9 @@
 
                     $zgCmd        = "0530";
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = '0500'; // IAS Zone
                     $secMode    = "02";
@@ -4848,9 +4570,9 @@
                     $fcf        = "11"; // Frame Control Field
                     $sqn        = $this->genSqn();
 
-                    $cmdId      = $Command['cmd'];
+                    $cmdId      = $Command['cmdParams']['cmd'];
                     if ($cmdId == "00") { // Zone enroll response
-                        $data2 = $fcf.$sqn.$cmdId.'00'.$Command['zoneId'];
+                        $data2 = $fcf.$sqn.$cmdId.'00'.$Command['cmdParams']['zoneId'];
                     } else {
                         cmdLog('error', "  Unsupported cmdId ".$cmdId);
                         return;
@@ -4889,9 +4611,9 @@
 
                     $zgCmd        = "0530";
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = '0501'; // IAS ACE
                     $secMode    = "02";
@@ -4901,7 +4623,7 @@
                     $fcf        = "11"; // Frame Control Field
                     $sqn        = $this->genSqn();
 
-                    $cmdId      = $Command['cmd'];
+                    $cmdId      = $Command['cmdParams']['cmd'];
                     if ($cmdId == "05") { // Get Panel Status Response
                         $panelStatus = "00";
                         $secRemaining = "00";
@@ -4950,9 +4672,9 @@
 
                     $zgCmd        = "0530";
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = '0502'; // IAS WD
                     $secMode    = "02";
@@ -4963,9 +4685,9 @@
                     $sqn        = $this->genSqn();
 
                     // Use cases: #2242, #2550
-                    $cmdId      = $Command['cmd'];
+                    $cmdId      = $Command['cmdParams']['cmd'];
                     if ($cmdId == "00") { // Start warning
-                        $mode = isset($Command['mode']) ? $Command['mode'] : 'emergency'; // Warning mode: Emergency
+                        $mode = isset($Command['cmdParams']['mode']) ? $Command['cmdParams']['mode'] : 'emergency'; // Warning mode: Emergency
                         $mode = strtolower($mode);
                         switch ($mode) {
                         case 'stop':
@@ -4984,15 +4706,15 @@
                         default:
                             $mode = 3; break;
                         }
-                        if (isset($Command['strobe']))
-                            $strobe = ($Command['strobe'] == 'on') ? 1 : 0;
+                        if (isset($Command['cmdParams']['strobe']))
+                            $strobe = ($Command['cmdParams']['strobe'] == 'on') ? 1 : 0;
                         else {
                             if ($mode == 0) // Warning mode == stop
                                 $strobe = 0; // Strobe OFF
                             else
                                 $strobe = 1; // Strobe ON
                         }
-                        $sirenl = isset($Command['sirenl']) ? $Command['sirenl'] : 'high'; // Siren level
+                        $sirenl = isset($Command['cmdParams']['sirenl']) ? $Command['cmdParams']['sirenl'] : 'high'; // Siren level
                         $sirenl = strtolower($sirenl);
                         switch ($sirenl) {
                         case 'low':
@@ -5013,7 +4735,7 @@
                             $sirenl = 2;
                             break;
                         }
-                        $duration = isset($Command['duration']) ? $Command['duration'] : 10; // Default=10sec
+                        $duration = isset($Command['cmdParams']['duration']) ? $Command['cmdParams']['duration'] : 10; // Default=10sec
 
                         cmdLog('debug', "  Start warning: Using mode=".$mode.", strobe=".$strobe.", sirenl=".$sirenl.", duration=".$duration);
                         $map8 = ($mode << 4) | ($strobe << 2) | $sirenl;
@@ -5035,6 +4757,9 @@
                 } // End $cmdName == 'cmd-0502'
 
                 // ZCL cluster 1000 specific: (received) commands
+                // Mandatory:
+                // Optional: 'dir' (00=toServer=default, 01=toClient)
+                //   Other optional parameters depending on 'cmd' & 'dir'.
                 else if ($cmdName == 'cmd-1000') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -5058,35 +4783,78 @@
                     //  ....
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = '1000';
                     $secMode    = "02";
                     $radius     = "1E";
+                    $dir        = (isset($Command['cmdParams']['dir']) ? $Command['cmdParams']['dir'] : "00"); // 00 = to server side, 01 = to client site
+                    $cmdId      = $Command['cmdParams']['cmd'];
 
                     /* ZCL header */
-                    $fcf        = "11"; // Frame Control Field
-                    $sqn        = $this->genSqn();
-                    $cmdId      = $Command['cmd'];
+                    // $fcf        = "11"; // Frame Control Field
+                    // $sqn        = $this->genSqn();
+                    $hParams = array(
+                        'clustSpecific' => true,
+                        'toCli' => ($dir == "00") ? false : true,
+                        'cmdId' => $cmdId,
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
 
-                    if ($cmdId == "41") { // Get Group Identifiers Request Command
-                        $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
-                        $data2 = $fcf.$sqn.$cmdId.$startIdx;
-                    } else if ($cmdId == "42") { // Get endpoint list request
-                        $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
-                        $data2 = $fcf.$sqn.$cmdId.$startIdx;
-                    } else {
-                        cmdLog('debug', "  ERROR: Unsupported cluster 1000 command ".$cmdId);
-                        return;
+                    if ($dir == "00") { // To server
+                        // 0x00 Scan request M 13.3.2.2.1
+                        // 0x02 Device information request M 13.3.2.2.2
+                        // 0x06 Identify request M 13.3.2.2.3
+                        // 0x07 Reset to factory new request M 13.3.2.2.4
+                        // 0x10 Network start request M 13.3.2.2.5
+                        // 0x12 Network join router request M 13.3.2.2.6
+                        // 0x14 Network join end device request M 13.3.2.2.7
+                        // 0x16 Network update request M 13.3.2.2.8
+                        // 0x41 Get group identifiers request O* 13.3.2.2.9
+                        // 0x42 Get endpoint list request O
+                        if ($cmdId == "41") { // Get Group Identifiers Request Command
+                            $startIdx = isset($Command['cmdParams']['startIdx']) ? $Command['cmdParams']['startIdx'] : "00";
+                            $data2 = $zclHeader.$startIdx;
+                        } else if ($cmdId == "42") { // Get endpoint list request
+                            $startIdx = isset($Command['cmdParams']['startIdx']) ? $Command['cmdParams']['startIdx'] : "00";
+                            $data2 = $zclHeader.$startIdx;
+                        } else {
+                            cmdLog('debug', "  ERROR: Unsupported cluster 1000 command {$cmdId} to SERVER");
+                            return;
+                        }
+                    } else { // To client
+                        // 0x01 Scan response Mandatory
+                        // 0x03 Device information response Mandatory
+                        // 0x11 Network start response Mandatory
+                        // 0x13 Network join router response Mandatory
+                        // 0x15 Network join end device response Mandatory
+                        // 0x40 Endpoint information Optional
+                        // 0x41 Get group identifiers response Mandatory if get group identifiers request command is generated; otherwise Optional
+                        // 0x42 Get endpoint list response
+                        if ($cmdId == "41") { // Get Group Identifiers Response
+                            $total = isset($Command['cmdParams']['total']) ? $Command['cmdParams']['total'] : "00";
+                            $startIdx = isset($Command['cmdParams']['startIdx']) ? $Command['cmdParams']['startIdx'] : "00";
+                            $count = isset($Command['cmdParams']['count']) ? $Command['cmdParams']['count'] : "01";
+                            if (!isset($Command['cmdParams']['group'])) {
+                                cmdLog('error', "  Missing 'group' for cmd 1000-{$cmdId} to CLIENT");
+                                return;
+                            }
+                            $group = $Command['cmdParams']['group'];
+                            cmdLog('debug', "  cmd-1000-41 to client: total={$total}, startIdx={$startIdx}, count={$count}, group={$group}");
+                            $data2 = $zclHeader.$total.$startIdx.$count.$group.'00';
+                        } else {
+                            cmdLog('debug', "  ERROR: Unsupported cluster 1000 command {$cmdId} to CLIENT");
+                            return;
+                        }
                     }
-                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
 
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
@@ -5123,9 +4891,9 @@
                     define('DataType_ENUM',   "04");
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = 'EF00';
                     $secMode    = "02";
@@ -5138,7 +4906,7 @@
 
                     $status         = "00";
                     $counterTuya    = "33"; // Set to 1, in traces increasse all the time. Not sure if mandatory to increase.
-                    $cmdTuya        = $Command['cmd'];
+                    $cmdTuya        = $Command['cmdParams']['cmd'];
                     if ($cmdTuya==GotoLevel) $type = DataType_VALUE; else $type = DataType_ENUM;
                     $function         = "00";
                     if ($type==DataType_VALUE) $len = "04"; else $len="01";
@@ -5168,9 +4936,9 @@
                     $zgCmd      = "0530";
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
                     $clustId    = 'EF00';
                     $secMode    = "02";
@@ -5178,16 +4946,16 @@
 
                     // Tuya fields
                     // Command sent to device and its format fully depends on device himself.
-                    if ($Command['cmd'] == 'internetStatus') {
+                    if ($Command['cmdParams']['cmd'] == 'internetStatus') {
                         $hParams = array(
                             'clustSpecific' => true,
-                            'manufCode' => $Command['manufCode'],
+                            'manufCode' => $Command['cmdParams']['manufCode'],
                             'cmdId' => '25' // Response to internet status request
                         );
                         $zclHeader = $this->genZclHeader($hParams);
 
-                        $tSqn       = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
-                        $tData      = $Command['data']; // Supposed to be 00 (NOT connected), 01 (connected) or 02 (timeout)
+                        $tSqn       = isset($Command['cmdParams']['tuyaSqn']) ? $Command['cmdParams']['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
+                        $tData      = $Command['cmdParams']['data']; // Supposed to be 00 (NOT connected), 01 (connected) or 02 (timeout)
                         $tLen       = sprintf("%04X", strlen($tData) / 2);
 
                         cmdLog2('debug', $addr, '  internetStatus: tSqn='.$tSqn.', tLen='.$tLen.', tData='.$tData);
@@ -5197,9 +4965,7 @@
                         $fcf        = "11"; // Frame Control Field
                         $sqn        = $this->genSqn();
                         $cmdId      = "00"; // TY_DATA_REQUEST, 0x00, The gateway sends data to the Zigbee module.
-                        // cmdLog2('debug', $addr, '  BEN: Command : '.json_encode($Command) );
-                        $dp = tuyaCmd2Dp($Command);
-                        // cmdLog2('debug', $addr, '  BEN: dp : '.json_encode($dp) );
+                        $dp = tuyaCmd2Dp($Command['cmdParams']);
                         if ($dp === false) {
                             return;
                         }
@@ -5211,11 +4977,11 @@
                             return;
                         }
 
-                        $tSqn = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
+                        $tSqn = isset($Command['cmdParams']['tuyaSqn']) ? $Command['cmdParams']['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
                         $dpId = $dp['id'];
                         $dpLen = sprintf("%04X", $dpLen);
 
-                        // cmdLog2('debug', $addr, '  BEN: '.$Command['cmd'].': tSqn='.$tSqn.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
+                        // cmdLog2('debug', $addr, '  BEN: '.$Command['cmdParams']['cmd'].': tSqn='.$tSqn.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
                         $data2 = $fcf.$sqn.$cmdId.$tSqn.$dpId.$dpType.$dpLen.$dpData;
                     }
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
@@ -5227,23 +4993,22 @@
                 } // End $cmdName == 'cmd-tuyaEF00'
 
                 // Generic way to support private cluster/cmd
-                // Mandatory params: 'addr', 'ep', 'fct', 'cmd' & 'message'
+                // Mandatory params: 'addr', 'ep', 'fct'
+                // Optional: anything. The command is passed to function as it is.
                 else if ($cmdName == 'cmd-Private') {
-                    $required = ['addr', 'ep', 'fct', 'cmd', 'message']; // Mandatory infos
+                    $required = ['addr', 'ep', 'fct']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $addr       = $Command['addr'];
-                    $ep         = $Command['ep'];
-                    $fctName    = $Command['fct'];
-                    $cmd        = $Command['cmd'];
-                    $message    = $Command['message'];
+                    $addr       = $Command['cmdParams']['addr'];
+                    $ep         = $Command['cmdParams']['ep'];
+                    $fctName    = $Command['cmdParams']['fct'];
                     if (function_exists($fctName)) {
-                        $fctName($dest, $addr, $ep, $cmd, $message);
+                        $fctName($dest, $addr, $ep, $Command);
                     } else if (method_exists($this, $fctName)) {
-                        $this->$fctName($dest, $addr, $ep, $cmd, $message);
+                        $this->$fctName($dest, $addr, $ep, $Command);
                     } else {
-                        cmdLog2('error', $addr, "  Commande privée: Fonction '${fctName}' inconnue");
+                        cmdLog2('error', $addr, "  Commande privée: Fonction '{$fctName}' inconnue");
                     }
                     return;
                 } // End 'cmd-Private'
@@ -5272,9 +5037,9 @@
                     // $priority = $Command['priority'];
                     $cmd        = "0530";
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    if ($Command['EP']>1 ) { $dstEp = $Command['EP']; } else { $dstEp = "01"; } // $dstEp; // "01";
+                    if ($Command['cmdParams']['ep']>1 ) { $dstEp = $Command['cmdParams']['ep']; } else { $dstEp = "01"; } // $dstEp; // "01";
                     $profId     = "0104";
                     $clustId    = "FC41";
                     $secMode    = "02"; // ???
@@ -5286,7 +5051,7 @@
                     $command    = "00";
 
                     // $data = "00"; // 00 = Off, 02 = Auto, 03 = On.
-                    $data = $Command['Mode'];
+                    $data = $Command['cmdParams']['mode'];
                     $data2 = $fcf.$manufId.$sqn.$command.$data;
                     $dataLength = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
@@ -5307,23 +5072,23 @@
                     $zgCmd      = "0530";
 
                     $addrMode   = "02";
-                    $addr       = $Command['addr'];
+                    $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['ep'];
+                    $dstEp      = $Command['cmdParams']['ep'];
                     $profId     = "0104";
-                    $clustId    = $Command['clustId'];
+                    $clustId    = $Command['cmdParams']['clustId'];
                     $secMode    = "02";
                     $radius     = "1E";
 
                     $hParams = array(
                         'clustSpecific' => true,
-                        'manufCode' => isset($Command['manufCode']) ? $Command['manufCode'] : '',
-                        'cmdId' => $Command['cmd']
+                        'manufCode' => isset($Command['cmdParams']['manufCode']) ? $Command['cmdParams']['manufCode'] : '',
+                        'cmdId' => $Command['cmdParams']['cmd']
                     );
                     $zclHeader = $this->genZclHeader($hParams);
-                    $data = $Command['data'];
+                    $data = $Command['cmdParams']['data'];
 
-                    cmdLog('debug', "  genericCmd: ep=${dstEp}, clustId=${clustId}, zclHeader=${zclHeader}, data=${data}");
+                    cmdLog('debug', "  genericCmd: ep={$dstEp}, clustId={$clustId}, zclHeader={$zclHeader}, data={$data}");
                     $data2 = $zclHeader.$data;
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
 

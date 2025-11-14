@@ -9,6 +9,7 @@
 -   Améliorations: Interne, changement nom démons: AbeilleCmd/Parser => AbeilleCmdD/ParserD.
 -   Corrections: Pages santé. Status des démons revu.
 -   Corrections: Placement réseau. Image par défaut si plan utilisateur plus disponible.
+-   Améliorations: Modèle 'TS130F_TZ3000_vd43bbfq: Ajout 'Calibration'.
 
 ## 251024-BETA-1
 

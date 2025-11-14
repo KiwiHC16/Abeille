@@ -42,6 +42,23 @@
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=0102&attrId=0008&attrType=20",
                 "execAtCreation": "yes"
+            },
+            "Calibration": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=0102&attrId=F001&attrType=30",
+                "listValue": "0|On;1|Off",
+                "value": "Calibration status",
+                "isVisible": "1"
+            },
+            "Get calibration status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0102&attrId=F001",
+                "execAtCreation": "yes"
+            },
+            "Calibration status": {
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0102&attrId=F001",
+                "comment": "Just to update 'Calibration' list"
             }
         }
     }

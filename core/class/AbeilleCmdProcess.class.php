@@ -850,15 +850,6 @@
             //     return;
             // }
 
-            // abeilleList abeilleListAll
-            if ($Command['name'] == 'abeilleList') {
-
-                cmdLog('debug', "  Get Abeilles List", $this->debug['processCmd']);
-                // $this->addCmdToQueue($priority,$dest,"0015","0000","");
-                $this->addCmdToQueue2(PRIO_NORM, $dest, "0015");
-                return;
-            }
-
             //----------------------------------------------------------------------
             // Bind
             // Title => 000B57fffe3025ad (IEEE de l ampoule)
@@ -2400,6 +2391,14 @@
                         $pl = $pdmId.$pdm['size'].$pdm['data'];
                         $this->addCmdToQueue2(PRIO_NORM, $dest, "AB02", $pl);
                     }
+                    return;
+                }
+
+                // Zigate specifc ? Get device list. What is that ?
+                else if ($cmdName == 'zgGetDevicesList') {
+
+                    cmdLog('debug', "  zgGetDevicesList");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0015");
                     return;
                 }
 

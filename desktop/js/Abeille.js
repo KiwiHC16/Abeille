@@ -1704,6 +1704,10 @@ function sendZigate(action, param) {
                 return;
             });
             break;
+        case "zgGetDevicesList": // Cmd 0015
+            topic = "CmdAbeille" + zgId + "/0000/zgGetDevicesList";
+            payload = "";
+            break;
         default:
             console.log("ERROR: Unsupported action '" + action + "'");
             return; // Nothing to do

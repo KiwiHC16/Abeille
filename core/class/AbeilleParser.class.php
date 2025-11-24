@@ -4833,58 +4833,40 @@
         }
 
         /* Get devices list response */
-        // Tcharp38: Useless
-        // function decode8015($dest, $payload, $lqi)
-        // {
-        //     // <device list – data each entry is 13 bytes>
-        //     // <ID: uint8_t>
-        //     // <Short address: uint16_t>
-        //     // <IEEE address: uint64_t>
-        //     // <Power source: bool_t> 0 – battery 1- AC power
-        //     // <LinkQuality : uint8_t> 1-255
+        // Tcharp38: What list is it ?
+        function decode8015($dest, $payload, $lqi) {
 
-        //     // Id Short IEEE             Power  LQ
-        //     // 00 ffe1  00158d0001d5c421 00     a6
-        //     // 01 c4bf  00158d0001215781 00     aa
-        //     // 02 4f34  00158d00016d8d4f 00     b5
-        //     // 03 304a  00158d0001a66ca3 00     a4
-        //     // 04 cc0D  00158d0001d6c177 00     b3
-        //     // 05 3c58  00158d00019f9199 00     9a
-        //     // 06 7c3b  000B57fffe2c82e9 00     bb
-        //     // 07 7c54  00158d000183afeb 01     c3
-        //     // 08 3db8  00158d000183af7b 01     c5
-        //     // 32 553c  000B57fffe3025ad 01     9f
-        //     // 00 -> Pourquoi 00 ?
+            // <device list – data each entry is 13 bytes>
+            // <ID: uint8_t>
+            // <Short address: uint16_t>
+            // <IEEE address: uint64_t>
+            // <Power source: bool_t> 0 – battery 1- AC power
+            // <LinkQuality : uint8_t> 1-255
 
-        //     parserLog('debug', $dest.', Type=8015/Get devices list response, Payload='.$payload);
+            parserLog2('debug', '0000', $dest.', Type=8015/Get devices list response, Payload='.$payload);
 
-        //     $nb = (strlen($payload) - 2) / 26;
-        //     parserLog('debug','  Nombre d\'abeilles: '.$nb);
+            $nb = (strlen($payload) - 2) / 26;
+            for ($i = 0; $i < $nb; $i++) {
 
-        //     for ($i = 0; $i < $nb; $i++) {
+                $addr = substr($payload, $i * 26 + 2, 4);
 
-        //         $srcAddr = substr($payload, $i * 26 + 2, 4);
+                $ieee = substr($payload, $i * 26 + 6, 16);
+                // $this->msgToAbeille($dest."/".$srcAddr, "IEEE", "Addr", $ieee);
 
-        //         // Envoie IEEE
-        //         $dataAddr = substr($payload, $i * 26 + 6, 16);
-        //         $this->msgToAbeille($dest."/".$srcAddr, "IEEE", "Addr", $dataAddr);
+                $powerSource = substr($payload, $i * 26 + 22, 2);
+                // $this->msgToAbeille($dest."/".$srcAddr, "Power", "Source", $powerSource);
 
-        //         // Envoie Power Source
-        //         $dataPower = substr($payload, $i * 26 + 22, 2);
-        //         $this->msgToAbeille($dest."/".$srcAddr, "Power", "Source", $dataPower);
+                $dataLink = hexdec(substr($payload, $i * 26 + 24, 2));
+                // $this->msgToAbeille($dest."/".$srcAddr, "Link", "Quality", $dataLink);
 
-        //         // Envoie Link Quality
-        //         $dataLink = hexdec(substr($payload, $i * 26 + 24, 2));
-        //         $this->msgToAbeille($dest."/".$srcAddr, "Link", "Quality", $dataLink);
-
-        //         parserLog('debug', '  i='.$i.': '
-        //                         .'ID='.substr($payload, $i * 26 + 0, 2)
-        //                         .', ShortAddr='.$srcAddr
-        //                         .', ExtAddr='.$dataAddr
-        //                         .', PowerSource (0:battery - 1:AC)='.$dataPower
-        //                         .', LinkQuality='.$dataLink   );
-        //     }
-        // }
+                parserLog('debug', '  i='.$i.': '
+                    .'ID='.substr($payload, $i * 26 + 0, 2)
+                    .', Addr='.$addr
+                    .', ExtAddr='.$ieee
+                    .', PowerSource (0:battery - 1:AC)='.$powerSource
+                    .', LQI='.$dataLink);
+            }
+        }
 
         /* 8017/Get Time Server Response (FW >= 3.0f) */
         function decode8017($dest, $payload, $lqi) {

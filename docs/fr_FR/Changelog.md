@@ -10,6 +10,7 @@
 -   Corrections: Pages santé. Status des démons revu.
 -   Corrections: Placement réseau. Image par défaut si plan utilisateur plus disponible.
 -   Améliorations: Modèle 'TS130F__TZ3000_fccpjz5z': Ajout 'Calibration'.
+-   Améliorations: Onglet avancé Zigate: Ajout 'Get devices list'.
 
 ## 251024-BETA-1
 

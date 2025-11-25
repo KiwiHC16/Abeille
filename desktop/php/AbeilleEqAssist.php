@@ -1310,7 +1310,7 @@
                 // }
 
                 // Extracting zone type for door/window case (zoneType=='0016')
-                if (isset(ep.servClusters["0500"]['attributes']['0001'])) {
+                if (isset(ep.servClusters["0500"]['attributes']['0001']))
                     zoneType = ep.servClusters["0500"]['attributes']['0001'];
                 else
                     zoneType = '';

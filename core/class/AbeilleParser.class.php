@@ -4854,16 +4854,17 @@
                 // $this->msgToAbeille($dest."/".$srcAddr, "IEEE", "Addr", $ieee);
 
                 $powerSource = substr($payload, $i * 26 + 22, 2);
+                $powerSourceStr = ($powerSource == "01") ? "AC" : "Bat";
                 // $this->msgToAbeille($dest."/".$srcAddr, "Power", "Source", $powerSource);
 
                 $dataLink = hexdec(substr($payload, $i * 26 + 24, 2));
                 // $this->msgToAbeille($dest."/".$srcAddr, "Link", "Quality", $dataLink);
 
-                parserLog('debug', '  i='.$i.': '
+                parserLog('debug', '  Idx='.$i.': '
                     .'ID='.substr($payload, $i * 26 + 0, 2)
                     .', Addr='.$addr
-                    .', ExtAddr='.$ieee
-                    .', PowerSource (0:battery - 1:AC)='.$powerSource
+                    .', IEEE='.$ieee
+                    .", PowerSrc=$powerSource/$powerSourceStr"
                     .', LQI='.$dataLink);
             }
         }

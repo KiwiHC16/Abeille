@@ -19,6 +19,12 @@
             "batteryType": "1x3.7V Solar"
         },
         "commands": {
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01",

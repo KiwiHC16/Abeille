@@ -101,9 +101,11 @@
 			if (strpos($line, 'E: DEVLINKS=') !== false) {
 				$serial_by_ids = explode(' ', trim(str_replace(array('E: DEVLINKS=', '"'), '', $line)));
 				foreach ($serial_by_ids as $devLink) {
-					if (strpos($devLink, '/serial/by-id') !== false) {
-						$byId[] = trim($devLink);
-					}
+					if (strpos($devLink, '/serial/by-id') === false)
+                        continue;
+                    /* Note: devLink may not exist. Ignoring then */
+                    if (file_exists(trim($devLink)))
+                        $byId[] = trim($devLink);
 				}
 			}
         }
@@ -137,9 +139,8 @@
     foreach (ls('/dev/', 'ttyS*') as $value) {
         addPortDetails($value);
     }
-    // KiwiHC16: 3 lignes suivantes necessaire pour KiwiHC16. Dans mon multi Zigate j ai des liens créés automatiquement pour ne pas les melanger lors d un reboot.
     foreach (ls('/dev/', 'tty*') as $value) {
-        // Ignoring ttyUSBx or ttyACMx already in the list
+        // Ignoring ttyUSBx, ttyACMx or ttySx already in the list
         if (substr($value, 0, 6) == "ttyUSB")
             continue;
         if (substr($value, 0, 6) == "ttyACM")
@@ -148,33 +149,42 @@
             continue;
         if (substr($value, 0, 5) == "ttyGS") // Gadget Serial.. could not be a Zigate
             continue;
-        $port  = [];
+        $port = [];
         $port['real'] = "/dev/$value";
         $port['name'] = $value;
         $GLOBALS['portsList'][] = $port;
     }
 
-    /* Quick review of used serial ports since now using '/dev/serial/by-id' in priority.
-       Ex: When '/dev/ttyUSB0' was used, it could be now '/dev/serial/by-id/xxx' link to 'ttyUSB0' */
-    // TODO: To be moved to install.php
-    // for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
-    //     if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
-    //         continue;
-    //     $gtwType = config::byKey("ab::gtwType{$gtwId}", 'Abeille', 'zigate', true);
-    //     $gtwSubType = config::byKey("ab::gtwSubType{$gtwId}", 'Abeille', '', true);
-    //     if (($gtwType == "zigate") && ($gtwSubType == "WIFI"))
-    //         continue;
-    //     $gtwPort = config::byKey("ab::gtwPort{$gtwId}", 'Abeille', '', true);
+    /* Serial ports last step: ensure that current working port is in the list.
+       Note that this is only required since '/dev/serial/by-id' could be used prior to '/dev/ttyXX' */
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+        if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
+            continue;
+        $gtwType = config::byKey("ab::gtwType{$gtwId}", 'Abeille', 'zigate', true);
+        $gtwSubType = config::byKey("ab::gtwSubType{$gtwId}", 'Abeille', '', true);
+        if (($gtwType == "zigate") && ($gtwSubType == "WIFI"))
+            continue;
+        $gtwPort = config::byKey("ab::gtwPort{$gtwId}", 'Abeille', '', true);
 
-    //     foreach($GLOBALS['portsList'] as $p) {
-    //         if (!isset($p['alias']))
-    //             continue;
-    //         if ($gtwPort == $p['alias']) {
-    //             config::save("ab::gtwPort{$gtwId}", $p['real'], 'Abeille');
-    //             break;
-    //         }
-    //     }
-    // }
+        $found = false;
+        foreach($GLOBALS['portsList'] as $p) {
+            if ($p['real'] == $gtwPort) {
+                $found = true;
+                break; // Ok, in the list
+            }
+        }
+        if (!$found) {
+            if (file_exists($gtwPort)) {
+                // Port still exists but not longer in the list ... Adding
+                // Note this may be due to use of '/dev/serial/by-id' prior to '/dev/ttyXX'
+                $port = [];
+                $port['real'] = $gtwPort;
+                $port['name'] = $gtwPort;
+                $GLOBALS['portsList'][] = $port;
+            }
+            // else... this is unexpected. Not in the list and selected should lead to error for an active Zigate
+        }
+    }
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
     function getCmdValueByLogicId($eqId, $logicId) {

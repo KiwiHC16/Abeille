@@ -2425,7 +2425,7 @@
                     .', NRxOnWhenIdle='.$N['rxOnWhenIdle']
                     .', NRelationship='.$N['relationship']
                     .', NDepth='.$N['depth']
-                    .', NLQI='.$N['lqi']);
+                    .', NLQI='.hexdec($N['lqi']));
             }
             $toLqiCollector['nList'] = $nList;
             $this->msgToLQICollector($toLqiCollector);
@@ -4833,7 +4833,7 @@
         }
 
         /* Get devices list response */
-        // Tcharp38: What list is it ?
+        // Tcharp38: What list is it ? Seems to be equivalent to Zigate neighbor table.
         function decode8015($dest, $payload, $lqi) {
 
             // <device list – data each entry is 13 bytes>

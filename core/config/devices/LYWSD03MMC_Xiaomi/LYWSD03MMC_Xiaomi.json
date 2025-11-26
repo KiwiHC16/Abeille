@@ -1,0 +1,78 @@
+{
+    "LYWSD03MMC_Xiaomi": {
+        "manufacturer": "Xiaomi",
+        "model": "LYWSD03MMC",
+        "type": "Xiaomi temperature/humidity display",
+        "genericType": "Environment",
+        "comment": "Bluetooth device that can be reflashed to Zigbee",
+        "timeout": "60",
+        "category": {
+            "default": "1"
+        },
+        "configuration": {
+            "icon": "Xiaomi-TempHumidityDisplay",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2032"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "SetReporting 01-0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=3600&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Temperature": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0402&attrId=0000"
+            },
+            "SetReporting 01-0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0402&attrId=0000&attrType=29&minInterval=540&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 9 to 10mins"
+            },
+            "Bind 01-0402-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Humidity": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0405&attrId=0000"
+            },
+            "SetReporting 01-0405-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0405&attrId=0000&attrType=21&minInterval=540&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 9 to 10mins"
+            },
+            "Bind 01-0405-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0405",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

@@ -606,7 +606,7 @@ $(".eqLogicAction[data-action=abRemove]")
 
 /* Remove from Jeedom eq with ID 'eqId' but list first how it is used and ask confirmation to user */
 function removeEq(zgId, eqId) {
-    console.log("removeEq(zgId=" + zgId +", eqId=" + eqId + ")");
+    console.log("removeEq(zgId=" + zgId + ", eqId=" + eqId + ")");
 
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
     eqName = eqPerZigate[zgId][eqId]["name"];
@@ -1706,6 +1706,10 @@ function sendZigate(action, param) {
             break;
         case "zgGetDevicesList": // Cmd 0015
             topic = "CmdAbeille" + zgId + "/0000/zgGetDevicesList";
+            payload = "";
+            break;
+        case "zgAB05": // Cmd AB05
+            topic = "CmdAbeille" + zgId + "/0000/zgAB05";
             payload = "";
             break;
         default:

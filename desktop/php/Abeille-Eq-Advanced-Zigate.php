@@ -220,6 +220,12 @@
             <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgGetDevicesList', '')" title="{{Cmd 0015/get devices list}}">{{Interroger}}</a>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">DEV MODE: Get infos (AB05)</label>
+        <div class="col-sm-5">
+            <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgAB05', '')" title="{{Cmd AB05}}">{{Interroger}}</a>
+        </div>
+    </div>
 <?php } ?>
 
 <hr>

@@ -2402,6 +2402,14 @@
                     return;
                 }
 
+                // Zigate specifc: Command AB05 for FW >= AB01-0001
+                else if ($cmdName == 'zgAB05') {
+
+                    cmdLog('debug', "  zgAB05");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB05");
+                    return;
+                }
+
                 /*
                  * Zigbee standard commands
                  */

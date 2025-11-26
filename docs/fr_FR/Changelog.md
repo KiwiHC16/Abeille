@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Nouveau: Support Xiaomi temp/humidité LCD LYWSD03MMC (2777).
+-   Nouveau: Support Wiser Odace S520513W (2774).
 
 ## 251125-BETA-2, 251125-BETA-1
 

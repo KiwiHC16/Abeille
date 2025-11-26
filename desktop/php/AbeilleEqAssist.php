@@ -1023,7 +1023,7 @@
                     cmds["Status"+clustIdx]["nextLine"] = "after";
                     // Adding bind + configureReporting but assuming supported
                     cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
-                    cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrId=0000&attrType=10", "yes");
+                    cmds["SetReporting "+epId+"-0006-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrId=0000&attrType=10", "yes");
                 }
             }
             onOffIdx++;

@@ -1,0 +1,78 @@
+{
+    "NHROTARYDIMMER1_SchneiderElectric": {
+        "manufacturer": "Schneider",
+        "model": "S520513W",
+        "type": "Schneider rotary dimmer",
+        "genericType": "Light",
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Schneider-RotaryDimmer",
+            "mainEP": "03"
+        },
+        "commands": {
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=03",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=03",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=03"
+            },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=03&clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=03",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Bind 03-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=03&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 03-0006": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=03&clustId=0006&attrId=0000&attrType=10",
+                "execAtCreation": "yes"
+            },
+            "Set Brightness": {
+                "use": "act_setLevel-Light",
+                "params": "ep=03",
+                "isVisible": "1",
+                "value": "Brightness"
+            },
+            "Get Brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=03&clustId=0008&attrId=0000"
+            },
+            "Brightness": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "params": "ep=03",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Bind 03-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=03&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 03-0008-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=03&clustId=0008&attrId=0000&attrType=20",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

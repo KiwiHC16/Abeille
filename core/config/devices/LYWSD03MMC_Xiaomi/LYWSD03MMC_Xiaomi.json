@@ -19,20 +19,6 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
-            "SetReporting 01-0001-0021": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=3600&maxInterval=3600",
-                "execAtCreation": "yes"
-            },
-            "Bind 01-0001-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0001",
-                "execAtCreation": "yes"
-            },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "nextLine": "after"
-            },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "params": "ep=01",
@@ -41,17 +27,6 @@
             "Get Temperature": {
                 "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0402&attrId=0000"
-            },
-            "SetReporting 01-0402-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0402&attrId=0000&attrType=29&minInterval=540&maxInterval=600",
-                "execAtCreation": "yes",
-                "comment": "Reporting every 9 to 10mins"
-            },
-            "Bind 01-0402-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0402",
-                "execAtCreation": "yes"
             },
             "Humidity": {
                 "use": "inf_zbAttr-0405-MeasuredValue",
@@ -62,16 +37,55 @@
                 "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0405&attrId=0000"
             },
+            "Bind 01-0402-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0405-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0405",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0402&attrId=0000&attrType=29&minInterval=540&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 9 to 10mins"
+            },
             "SetReporting 01-0405-0000": {
                 "use": "act_zbConfigureReporting2",
                 "params": "ep=01&clustId=0405&attrId=0000&attrType=21&minInterval=540&maxInterval=600",
                 "execAtCreation": "yes",
                 "comment": "Reporting every 9 to 10mins"
             },
-            "Bind 01-0405-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0405",
+            "SetReporting 01-0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=3600&maxInterval=3600",
                 "execAtCreation": "yes"
+            },
+            "Init 1": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0201&attrId=0010,0011,0102,0103,0104,0105",
+                "logicalId": "init1",
+                "execAtCreation": "Yes"
+            },
+            "Init 2": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0402&attrId=0010",
+                "logicalId": "init2",
+                "execAtCreation": "Yes"
+            },
+            "Init 3": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0405&attrId=0010",
+                "logicalId": "init3",
+                "execAtCreation": "Yes"
             }
         }
     }

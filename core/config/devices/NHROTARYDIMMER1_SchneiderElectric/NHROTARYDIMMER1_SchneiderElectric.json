@@ -37,16 +37,6 @@
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Bind 03-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=03&clustId=0006",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 03-0006": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=03&clustId=0006&attrId=0000&attrType=10",
-                "execAtCreation": "yes"
-            },
             "Set Brightness": {
                 "use": "act_setLevel-Light",
                 "params": "ep=03",
@@ -63,9 +53,24 @@
                 "isVisible": "1",
                 "nextLine": "after"
             },
+            "Bind 03-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=03&clustId=0006",
+                "execAtCreation": "yes"
+            },
             "Bind 03-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=03&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "Bind 03-0301-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=03&clustId=0301",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 03-0006-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=03&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
             "SetReporting 03-0008-0000": {

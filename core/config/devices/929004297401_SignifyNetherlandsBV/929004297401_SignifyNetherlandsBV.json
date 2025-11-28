@@ -12,10 +12,6 @@
             "mainEP": "0B"
         },
         "commands": {
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "nextLine": "after"
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "params": "ep=0B",

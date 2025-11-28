@@ -1,0 +1,46 @@
+{
+    "LYWSD03MMC-z_Xiaomi": {
+        "manufacturer": "Xiaomi",
+        "model": "LYWSD03MMC-TLC",
+        "alternateIds": {
+            "LYWSD03MMC-bz_Xiaomi": {}
+        },
+        "type": "Xiaomi temperature/humidity display",
+        "genericType": "Environment",
+        "comment": "Bluetooth device that can be reflashed to Zigbee",
+        "comment2": "For devices with TLC FW",
+        "timeout": "60",
+        "category": {
+            "default": "1"
+        },
+        "configuration": {
+            "icon": "Xiaomi-TempHumidityDisplay",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2032"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Temperature": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0402&attrId=0000"
+            },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Humidity": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0405&attrId=0000"
+            }
+        }
+    }
+}

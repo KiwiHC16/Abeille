@@ -1196,11 +1196,10 @@
                     cmds["Set Color Temp"] = newCmd("act_zbCmdC-0300-MoveToColorTemp");
                     cmds["Set Color Temp"]["isVisible"] = 1;
 
+                    cmds["Get ColorTemperature"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0007");
+
                     cmds["Color Temp"] = newCmd("inf_zbAttr-0300-ColorTemperatureMireds");
                     cmds["Color Temp"]["isVisible"] = 1;
-                    // if (currentMode == 2) // ColorTemperatureMireds
-                    //     cmds["ColorTemperature"]["isVisible"] = 1;
-                    cmds["Get ColorTemperature"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0007");
                 }
 
                 cmds["Bind "+epId+"-0300-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0300", "yes");

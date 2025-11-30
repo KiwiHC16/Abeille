@@ -1,13 +1,11 @@
 {
     "inf_zbAttr-0300-ColorTemperatureMireds": {
         "comment": "Cluster 0300/color control, attrib 0007/ColorTemperatureMireds, type uint16",
-        "isVisible": 0,
-        "name": "ColorTemperatureMireds",
-        "isHistorized": "0",
         "subType": "numeric",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "All"
+            "visibilityCategory": "All",
+            "historizeRound": 0
         },
         "type": "info",
         "logicalId": "0300-#EP#-0007",

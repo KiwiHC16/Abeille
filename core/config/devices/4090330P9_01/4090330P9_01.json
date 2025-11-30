@@ -11,11 +11,11 @@
         },
         "type": "Hue Ensis Dessus",
         "commands": {
-            "etat": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
-            "CurrentLevel-0008": {
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
@@ -41,25 +41,25 @@
             "Colour": {
                 "use": "Colour"
             },
-            "Set White": {
+            "White": {
                 "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=6000&Y=6000",
                 "logicalId": "#EP#-Set-White",
                 "isVisible": 1
             },
-            "Set Blue": {
+            "Blue": {
                 "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=228F&Y=228F",
                 "logicalId": "#EP#-Set-Blue",
                 "isVisible": 1
             },
-            "Set Red": {
+            "Red": {
                 "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=AE13&Y=51EB",
                 "logicalId": "#EP#-Set-Red",
                 "isVisible": 1
             },
-            "Set Green": {
+            "Green": {
                 "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=147A&Y=D709",
                 "logicalId": "#EP#-Set-Green",

@@ -1126,37 +1126,37 @@
 
                 // Color mode
                 if (isset(attributes['0008'])) {
+                    cmds["Get Color Mode"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0008");
                     cmds["Color Mode"] = newCmd("inf_zbAttr-0300-ColorMode");
                     // cmds["Color Mode"]["isVisible"] = 1;
-                    cmds["Get Color Mode"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0008");
                 }
 
                 // Hue/saturation mode
                 if (isset(attributes['0000'])) {
+                    cmds["Get Current HUE"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0000");
                     cmds["Current HUE"] = newCmd("inf_zbAttr-0300-CurrentHue");
                     // if (currentMode == 0) // If HUE + saturation
                     //     cmds["Current HUE"]["isVisible"] = 1;
-                    cmds["Get Current HUE"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0000");
                 }
                 if (isset(attributes['0001'])) {
+                    cmds["Get Current Saturation"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0001");
                     cmds["Current Saturation"] = newCmd("inf_zbAttr-0300-CurrentSaturation");
                     // if (currentMode == 0) // If HUE + saturation
                     //     cmds["Current Saturation"]["isVisible"] = 1;
-                    cmds["Get Current Saturation"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0001");
                 }
 
                 // X/Y mode
                 if (isset(attributes['0003'])) {
+                    cmds["Get Current X"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0003");
                     cmds["Current X"] = newCmd("inf_zbAttr-0300-CurrentX");
                     // if (currentMode == 1) // If X + Y
                     //     cmds["Current X"]["isVisible"] = 1;
-                    cmds["Get Current X"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0003");
                 }
                 if (isset(attributes['0004'])) {
+                    cmds["Get Current Y"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0004");
                     cmds["Current Y"] = newCmd("inf_zbAttr-0300-CurrentY");
                     // if (currentMode == 1) // If X + Y
                     //     cmds["Current Y"]["isVisible"] = 1;
-                    cmds["Get Current Y"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0004");
                 }
                 if (isset(attributes['0003']) || isset(attributes['0004'])) {
                     // Associated commands to X/Y mode:
@@ -1187,12 +1187,6 @@
 
                 // ColorTemperatureMireds
                 if (isset(attributes['0007'])) {
-                    // cmds["Set 2700K"] = newCmd("act_zbCmdC-0300-MoveToColorTemp", "slider=2700");
-                    // if (currentMode == 2) // ColorTemperatureMireds
-                    //     cmds["Set 2700K"]["isVisible"] = 1;
-                    // cmds["Set 4000K"] = newCmd("act_zbCmdC-0300-MoveToColorTemp", "slider=4000");
-                    // if (currentMode == 2) // ColorTemperatureMireds
-                    //     cmds["Set 4000K"]["isVisible"] = 1;
                     cmds["Set Color Temp"] = newCmd("act_zbCmdC-0300-MoveToColorTemp");
                     cmds["Set Color Temp"]["isVisible"] = 1;
 

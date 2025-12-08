@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 251209-BETA-1
+
 -   Nouveau: Support Xiaomi temp/humidité LCD LYWSD03MMC (2777).
 -   Nouveau: Support Wiser Odace S520513W (2774).
 -   Nouveau: Zigate: Support cmd interne AB05 (FW >= AB010001)

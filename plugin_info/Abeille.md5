@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="251125-BETA-2"
+# VERSION="251209-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -39,7 +39,7 @@ c697264a367aa536ef60425b7fcf88ea *core/ajax/AbeilleZigate.ajax.php
 8e57aeb486beca83f2d005447c2f2923 *core/class/Abeille.class.php
 75c34cd58ca9876cd7d088350cc3b69d *core/class/AbeilleCmd.class.php
 ba846bba3296594cc4684d73909bda05 *core/class/AbeilleCmdPrepare.class.php
-2aec5b781e6fc7c0278c764d91389925 *core/class/AbeilleCmdProcess.class.php
+07adb8388b34ade2f672479dbe4628ac *core/class/AbeilleCmdProcess.class.php
 ca19f75b7ba1eb2566d214a9ee3cb5f7 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 f01814b1501cffb3caaf0baabcc7bc4c *core/class/AbeilleParser.class.php
@@ -206,7 +206,7 @@ d5687722c6381912e0f1ce8b4e88fa0a *core/config/commands/inf_zbAttr-000C-StatusFla
 d7d6fe9459f9f154805c6dfd3ec4586e *core/config/commands/inf_zbAttr-0201-OccupiedHeatingSetpoint.json
 f78ff2906bb7993261a4617f347c89bc *core/config/commands/inf_zbAttr-0201-SystemMode.json
 a74ba3b19d1c0bc1efd078d735e58ce6 *core/config/commands/inf_zbAttr-0300-ColorMode.json
-c4332417d321dd61962d144bf20b18e9 *core/config/commands/inf_zbAttr-0300-ColorTemperatureMireds.json
+89c830f40e04e4879678a50e8615284a *core/config/commands/inf_zbAttr-0300-ColorTemperatureMireds.json
 d75420894ef938ba4a62c2cbbd22b648 *core/config/commands/inf_zbAttr-0300-CurrentHue.json
 578d51fb4a09dac6d2e630169f6d4078 *core/config/commands/inf_zbAttr-0300-CurrentSaturation.json
 9d625dbbaeb0931def024a2ddc348e68 *core/config/commands/inf_zbAttr-0300-CurrentX.json
@@ -350,7 +350,7 @@ bb29e9dc0138e173492e83c24e8dcb6c *core/config/devices/3AFE130104020015/3AFE13010
 3e57e2d61724e30b5a1de58046ac2806 *core/config/devices/3AFE170100510001/3AFE170100510001.json
 b2d07bb7151c488ad6032fc813df558c *core/config/devices/3AFE280100510001/3AFE280100510001.json
 b709e03e4038374ccb585100c88a7e7e *core/config/devices/4-digital-input/4-digital-input.json
-3c64ce26999e21f6a7d854dd521b62e4 *core/config/devices/4090330P9_01/4090330P9_01.json
+a8a9ddcf5b2593d326f9b2f4d71b2b89 *core/config/devices/4090330P9_01/4090330P9_01.json
 2e6c18183ce786c13b321b55f7a901c7 *core/config/devices/4090330P9_02/4090330P9_02.json
 90e32badf2777d202c8f256300ef71e0 *core/config/devices/511.201/511.201.json
 165ca7ab586c8f647d360025244b2221 *core/config/devices/511.202/511.202.json
@@ -361,6 +361,8 @@ f3edbecbc3f692a9ff6979b77d7bce03 *core/config/devices/82c167c95ed746cdbd21d6817f
 56d546d91dc1821bf7435768eceae6e9 *core/config/devices/82c167c95ed746cdbd21d6817f72c593_ORVIBO/notes.txt
 3e4f4f8e402ab18c0a06aca7f3d2b246 *core/config/devices/898ca74409a740b28d5841661e72268d/898ca74409a740b28d5841661e72268d.json
 c3871124b2a8c3b7407fa7f5cbf2fb01 *core/config/devices/898ca74409a740b28d5841661e72268d/discovery.json
+17a2791efe8e71fc42a3b9da7e0d18e1 *core/config/devices/929004297401_SignifyNetherlandsBV/929004297401_SignifyNetherlandsBV.json
+7c7a2d4b1e95ce811521cdc38f5c721e *core/config/devices/929004297401_SignifyNetherlandsBV/discovery-929004297401_SignifyNetherlandsBV.json
 e54a6d17641a9da8a6c682ade9741405 *core/config/devices/A60STW_LEDVANCE/A60STW_LEDVANCE.json
 90a2b5362434ca8e7f55b1fd3bf107e7 *core/config/devices/A60STW_LEDVANCE/ledvance.discovery.json
 396f68f6d7056e8cbb143b80e84f06af *core/config/devices/A60TWZ3/A60TWZ3.json
@@ -492,6 +494,10 @@ f316486f0b26d537f08a05b3a84c0dbf *core/config/devices/LXEK-1_Adeo/LXEK-1_Adeo.js
 c984e7f4e029552eb971ae85e985ce02 *core/config/devices/LXEK-1_Adeo/discovery.json
 6b58b549a39ecee311c3a688d8055456 *core/config/devices/LXX60-CS27LX1.0/LXX60-CS27LX1.0.json
 2b626c0bb0a48cc6f35178d0c19e3d6e *core/config/devices/LXX60-CS27LX1.0/discovery-LXX60-CS27LX1.0_3ASmartHomeDE.json
+8aa7e7fdbc7a7e044123315e8ba02432 *core/config/devices/LYWSD03MMC-z_Xiaomi/LYWSD03MMC-z_Xiaomi.json
+11dad74f05a591c4629cff4963441117 *core/config/devices/LYWSD03MMC-z_Xiaomi/discovery-LYWSD03MMC-z_Xiaomi.json
+4a2d27f045d1a2e3428b201d0f9fdbca *core/config/devices/LYWSD03MMC_Xiaomi/LYWSD03MMC_Xiaomi.json
+262b3ecd457c70f25fdc192d1bc05c7e *core/config/devices/LYWSD03MMC_Xiaomi/discovery-LYWSD03MMC_Xiaomi.json
 921f098a2f3968b6a015e288ae50df3e *core/config/devices/Lamp_01/Lamp_01.json
 a4482f9cf28e9b89471037de4062cb65 *core/config/devices/LightifySwitchMini_OSRAM/LightifySwitchMini_OSRAM.json
 0f851ba6193f0c95885b2d2336557b96 *core/config/devices/LightifySwitchMini_OSRAM/discovery.json
@@ -504,6 +510,8 @@ ec4c365dfbcef22c285caa0cad6a210b *core/config/devices/MOT-C1Z06C/notes.txt
 ef378ecb1e5a7f4d96962bffd28f0322 *core/config/devices/MS01/MS01.json
 dadafccafd3fb1d01e5f4c7df5ce7741 *core/config/devices/Micromoduleswitch/Micromoduleswitch.json
 956e9454e80aa20920c47e3d61de2146 *core/config/devices/MotionSensor-A/MotionSensor-A.json
+608f84528518b7753898ed3a90a10363 *core/config/devices/NHROTARYDIMMER1_SchneiderElectric/NHROTARYDIMMER1_SchneiderElectric.json
+2dbc19f9847d2749fe90232482d983ac *core/config/devices/NHROTARYDIMMER1_SchneiderElectric/discovery-NHROTARYDIMMER1_SchneiderElectric.1.json
 8162cb1c729e6cb3f2d75c8c074fecd5 *core/config/devices/NLIS-Doublelightswitch_Legrand/NLIS-Doublelightswitch_Legrand.json
 6eab75a9d65b5bf5bb8aaa34bb79c6fc *core/config/devices/NLIS-Doublelightswitch_Legrand/discovery.json
 7a12e3ae338f4727190fe89348953e1f *core/config/devices/OSP210_innr/OSP210_innr.json
@@ -1152,6 +1160,7 @@ eac3f2fbff21d69dda44e61a5b16c3a4 *core/config/devices_images/node_Owon-PIR.png
 8241012385542efa86248f28d1d405c3 *core/config/devices_images/node_PAR16RGBWZ3.png
 c6d0633524dde492fc571404ff9b76d5 *core/config/devices_images/node_PSE03-v1.1.0.png
 ae536215e67247fc3aebd2273f3ab115 *core/config/devices_images/node_PaulmannLicht-DimmingController.png
+ed1ec07ced795bad1f9df461d59481ad *core/config/devices_images/node_Philips-ColorPanel.png
 f186dd81fa0dc3eae3841b90259799c7 *core/config/devices_images/node_Philips-MotionSensor-1.png
 b3147ce74c5cd569b5fbfcef1e094d98 *core/config/devices_images/node_Philips-MotionSensor-2.png
 81f486f95b4cb7ab0718e54b723f5687 *core/config/devices_images/node_Philips-Remote.png
@@ -1176,6 +1185,7 @@ bbb236b12dbe2d3b97ee97c5edb2990a *core/config/devices_images/node_SML002.png
 93e88b4f3913e434c149ca673340f43f *core/config/devices_images/node_SP220.png
 fb7d711d6845fe71e1068401ffca7017 *core/config/devices_images/node_SPZB0001.png
 eb08c53a2108caf722abbd9aba88187a *core/config/devices_images/node_Saswell-SAS980SWT.png
+e08f2e4f0ab33871ec137d9337a4df3b *core/config/devices_images/node_Schneider-RotaryDimmer.png
 6ebbd7d8c9ad92399559b884f753c815 *core/config/devices_images/node_Schneider-Wiser-Plug.png
 f5199051586048acbbb22b00fcaa9d9f *core/config/devices_images/node_Silvercrest-HG06106C.png
 79e3815a5e7afc4bca48ec1d0d4250e8 *core/config/devices_images/node_Silvercrest-HG06337-FR.png
@@ -1285,6 +1295,7 @@ d58878feb61769085ce8dcbfb4bd345b *core/config/devices_images/node_Xiaomi-Plug-EU
 a10e0b0828d6219d0a61c1487826e138 *core/config/devices_images/node_Xiaomi-Plug.png
 c22f70fd2103815987ca316f7bd74fb1 *core/config/devices_images/node_Xiaomi-SmartPlug.png
 80389ff65c75b2fd2ffce003ff5192b9 *core/config/devices_images/node_Xiaomi-SmokeSensor.png
+98818afc9944fbe131eff92c41f00ce7 *core/config/devices_images/node_Xiaomi-TempHumidityDisplay.png
 67a5a6a4f1a04ec22d87468742791291 *core/config/devices_images/node_Xiaomi-TempSensor-1.png
 9b54cfd55c8e746d21eb3add8827ab87 *core/config/devices_images/node_Xiaomi-TempSensor-2.png
 66c02fb8d40bbe5d838c672e821ea7ff *core/config/devices_images/node_Xiaomi-Vibration.png
@@ -1400,7 +1411,7 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 56ed2d6a626cf57f866bfdd1012a84a1 *core/scripts/switchBranch.sh
 71c43beb0fdcc6ec41532ea1443f4504 *core/scripts/updateZigate.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
-236358119020b2d39b1c55cb8f58b6f1 *desktop/js/Abeille.js
+036ac75aad2a59818eb59c58d7fa9b3e *desktop/js/Abeille.js
 a54d5f0b473ccd5969cd30da1a355b6f *desktop/js/AbeilleNetwork.js
 d0d1ca56ff2c7b9b33e3f9e1b392e3ba *desktop/modal/Abeille-OTA.modal.php
 67a4a2fe92fa2fa0fd844fe617517c45 *desktop/modal/AbeilleCompatibility.modal.php
@@ -1420,7 +1431,7 @@ fd1b207c4ad744e872558c8e833c69cf *desktop/php/Abeille-Eq-Advanced-Common.php
 ee90cf3e43e72a31e9e7db9889c34997 *desktop/php/Abeille-Eq-Advanced-Device.php
 ee308142eb5f8ab3fea7b7e382812880 *desktop/php/Abeille-Eq-Advanced-Interrogations.php
 e159e231448191c6d7a92bd4f04a295c *desktop/php/Abeille-Eq-Advanced-Specific.php
-b001ca954858cf2b5dfbc62fef4a3e60 *desktop/php/Abeille-Eq-Advanced-Zigate.php
+edfca0031ca949fdbba3031b7c4a5566 *desktop/php/Abeille-Eq-Advanced-Zigate.php
 8f1defffb69c61242db008e5b0145452 *desktop/php/Abeille-Eq-Advanced.php
 bb4f1f9ed4a7865cf3f52f24d9d14186 *desktop/php/Abeille-Eq-Cmds.php
 500b2b9ba3705b4340764e7f79017d0b *desktop/php/Abeille-Eq-Main.php
@@ -1432,7 +1443,7 @@ f5fc03f691f2d1fd87932a9e2f119ff2 *desktop/php/Abeille-Groups.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 30a5951b65bb1959054beff6ba9ea77d *desktop/php/Abeille-TopButtons.php
 5be53dbefb4253491ae120a372546838 *desktop/php/Abeille.php
-12fb75e445bef7dbcacae792238a9f60 *desktop/php/AbeilleEqAssist.php
+f6add953663279607ec7a2c2cbb451cf *desktop/php/AbeilleEqAssist.php
 4516d84ab76c42d1132cebc1ebe22dbe *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
 25c62538c9d1dff6a31ae1b9cbb0e2a3 *desktop/php/AbeilleMaintenance-Logs.php
@@ -1469,7 +1480,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/ZiGate_API_Developper.xls
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/tuya_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-5dc0966ea6d929f768b7f57a1f821716 *docs/fr_FR/Changelog.md
+cacc00c19e477733da064391620a3ef8 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1478,11 +1489,11 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-95154b64d2fef42f185364605e6b747e *plugin_info/Abeille.version
+7aa9013a03723788635dc97ac11fec5c *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 53c5bfa84bdb512350b04db09c7d0e7a *plugin_info/configuration.php
-d9802544ab98bd5a568cc3e1c8dabb45 *plugin_info/info.json
+84a59f0c8d5436b6a9bd339384522402 *plugin_info/info.json
 3fd0725d918e184139db41f938d73456 *plugin_info/install.php
 00114805346229e0bf93f3961b3143a7 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
@@ -1882,6 +1893,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/xmlhttpMQTTSend.php
 ab45dc6fed08407de72aa24a25a17f46 *resources/fw_zigate/zigatev1-0003-0323-legacy.bin
 1aa395c7afe456eedb78337044f04724 *resources/fw_zigate/zigatev1-0004-0323-opdm.bin
 01e9676405180bc282b9da9b1e02749c *resources/fw_zigate/zigatev1-AB01-0000-opdm.bin
+ec11ed8a584b992450c977b072890d33 *resources/fw_zigate/zigatev1-AB01-0001-opdm-dev.bin
 636143f7c4ebe0b85bd18c7ec8f3c443 *resources/fw_zigate/zigatev2-0005-0322-opdm.bin
 5409d7e3ae8919a0aa572794ff40d954 *resources/prog_jennic-0.7-Abeille/Makefile
 b72399d5a204b159944b19883ea99870 *resources/prog_jennic-0.7-Abeille/README.md

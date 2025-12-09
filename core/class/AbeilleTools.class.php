@@ -465,10 +465,11 @@
         public static function getConfig() {
             $config = array();
 
-            // Tcharp38: Should not be there
-            $config['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.
+            // Tcharp38: getConfig() should be called once while a checkConfig() will be called by each deamon_info()
+            $config['parametersCheck'] = 'ok';
             $config['parametersCheck_message'] = "";
 
+            $nbValidGateways = 0;
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 $config['ab::gtwType'.$gtwId] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate', 1);
                 $config['ab::gtwSubType'.$gtwId] = config::byKey('ab::gtwSubType'.$gtwId, 'Abeille', '', 1);
@@ -478,12 +479,21 @@
                 $config['ab::zgIeeeAddrOk'.$gtwId] = config::byKey('ab::zgIeeeAddrOk'.$gtwId, 'Abeille', 0);
                 $config['ab::zgIeeeAddr'.$gtwId] = config::byKey('ab::zgIeeeAddr'.$gtwId, 'Abeille', '');
                 $config['ab::gtwChan'.$gtwId] = config::byKey('ab::gtwChan'.$gtwId, 'Abeille', 0); // 0=auto
+
+                if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
+                    continue;
+                // Tcharp38: More checks to do
+                $nbValidGateways++;
             }
             $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
             $config['ab::forceZigateHybridMode'] = config::byKey('ab::forceZigateHybridMode', 'Abeille', 'N');
             $config['ab::monitorId'] = config::byKey('ab::monitorId', 'Abeille', false);
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);
 
+            if ($nbValidGateways == 0) {
+                $config['parametersCheck'] = 'nok';
+                $config['parametersCheck_message'] = "No enabled or valid gateway";
+            }
             return $config;
         }
 

@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Interne: Gestion des dependances.
+
 ## 251209-BETA-1
 
 -   Nouveau: Support Xiaomi temp/humidité LCD LYWSD03MMC (2777).

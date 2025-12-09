@@ -857,51 +857,32 @@ class Abeille extends eqLogic {
     //     }
     // }
 
-    /* Called from Jeedom to install dependencies */
-    public static function dependancy_install() {
-        log::add('Abeille', 'debug', 'dependancy_install()');
+    /* Called from Jeedom to install dependencies.
+       Tcharp38: No longer used since 'packages.json' arrival but which Jeedom version ? */
+    // public static function dependancy_install() {
+    //     log::add('Abeille', 'debug', 'dependancy_install()');
 
-        message::add("Abeille", "Installation des dépendances en cours.", "N'oubliez pas de lire la documentation: https://kiwihc16.github.io/AbeilleDoc");
-        log::remove(__CLASS__.'_update');
-        $result = [
-            'script' => __DIR__.'/../scripts/installDependencies.sh '.jeedom::getTmpFolder('Abeille').'/dependencies_progress',
-            'log' => log::getPathToLog(__CLASS__.'_update')
-        ];
+    //     message::add("Abeille", "Installation des dépendances en cours.", "N'oubliez pas de lire la documentation: https://kiwihc16.github.io/AbeilleDoc");
+    //     log::remove(__CLASS__.'_update');
+    //     $result = [
+    //         'script' => __DIR__.'/../scripts/installDependencies.sh '.jeedom::getTmpFolder('Abeille').'/dependencies_progress',
+    //         'log' => log::getPathToLog(__CLASS__.'_update')
+    //     ];
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
-    /* Called from Jeedom to display dependencies status */
+    /* Called from Jeedom to display dependencies status.
+       Tcharp38: Still required (but updated) using official 'packages.json' way */
     public static function dependancy_info() {
+
         log::add('Abeille', 'debug', 'dependancy_info()');
-
-        // // Called by js dans plugin.class.js(getDependancyInfo) -> plugin.ajax.php(dependancy_info())
-        // // $dependancy_info['state'] pour affichage
-        // // state = [ok / nok / in_progress (progression/duration)] / state
-        // // il n ' y plus de dépendance hotmis pour la zigate wifi (socat) qui est installé par un script a part.
-        // $debug_dependancy_info = 1;
-
-        // $return = array();
-        // $return['state'] = 'ok';
-        // $return['progress_file'] = jeedom::getTmpFolder('Abeille').'/dependencies_progress';
-
-        // // Check package socat
-        // // Tcharp38: Wrong. This dependancy is required only if wifi zigate. Should not impact those using USB or PI
-        // $cmd = "command -v socat";
-        // exec($cmd, $output_dpkg, $return_var);
-        // if ($return_var == 1) {
-        //     message::add("Abeille", "Le package socat est nécéssaire pour l'utilisation de la zigate Wifi. Si vous avez la zigate usb, vous pouvez ignorer ce message");
-        //     log::add('Abeille', 'warning', 'Le package socat est nécéssaire pour l\'utilisation de la zigate Wifi.');
-        // }
-
-        // if ($debug_dependancy_info) log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return));
-
-        // return $return;
-
         $return = array();
-        $return['log'] = log::getPathToLog(__CLASS__ . '_update');
-        $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependencies_progress';
-        if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependencies_progress')) {
+        // $return['log'] = log::getPathToLog(__CLASS__ . '_update');
+        // $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependencies_progress';
+        $return['log'] = log::getPathToLog(__CLASS__ . '_packages');
+        $return['progress_file'] = '/tmp/jeedom_install_in_progress_Abeille';
+        if (file_exists($return['progress_file'])) {
             $return['state'] = 'in_progress';
         } else {
             // python3 is the only base dependency but may need socat for Wifi Zigates, or a GPIO lib for PI Zigates

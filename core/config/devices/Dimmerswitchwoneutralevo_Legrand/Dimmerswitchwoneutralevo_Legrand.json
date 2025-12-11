@@ -3,6 +3,7 @@
         "manufacturer": "Legrand",
         "model": "077701LA",
         "type": "Legrand wired switch without neutral",
+        "comment": "Reporting seems to not work if write attrib 0006/0008 from Abeille but ok from buttons",
         "genericType": "Light",
         "category": {
             "light": "1"
@@ -47,11 +48,11 @@
             "Set Brightness": {
                 "use": "act_setLevel-Light",
                 "params": "ep=01",
-                "isVisible": "1",
-                "value": "Brightness",
                 "trigOut": {
                     "getBrightness": {}
-                }
+                },
+                "isVisible": "1",
+                "value": "Brightness"
             },
             "Get Brightness": {
                 "use": "act_zbReadAttribute",
@@ -63,26 +64,6 @@
                 "params": "ep=01",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Bind 01-0003-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0003",
-                "execAtCreation": "yes"
-            },
-            "Bind 01-0301-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0301",
-                "execAtCreation": "yes"
-            },
-            "Bind 01-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0006",
-                "execAtCreation": "yes"
-            },
-            "Bind 01-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0008",
-                "execAtCreation": "yes"
             },
             "Device mode": {
                 "use": "act_zbWriteAttribute-list",
@@ -131,23 +112,48 @@
                 "use": "act_zbWriteAttribute-list",
                 "params": "clustId=FC01&attrId=0002&attrType=10&manufId=1021",
                 "listValue": "1|LED ON if ON;0|LED OFF if ON",
-                "value": "LEDifON status",
+                "value": "LED_if_ON status",
                 "isVisible": 1,
                 "trigOut": {
                     "getLEDifON": {}
                 }
             },
-            "Get LED if ON": {
+            "Get LED_if_ON": {
                 "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=FC01&attrId=0002",
                 "execAtCreation": "yes",
                 "logicalId": "getLEDifON"
             },
-            "LEDifON status": {
+            "LED_if_ON status": {
                 "use": "inf_generic-NumericBadge",
                 "params": "ep=01",
                 "logicalId": "FC01-01-0002",
                 "nextLine": "after"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0003-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0003",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-000F-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=000F",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0301-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0301",
+                "execAtCreation": "yes"
             }
         }
     }

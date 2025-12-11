@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Améliorations: Interne: Gestion des dependances.
+-   Améliorations: Support variateur Legrand 077701LA (2756).
 
 ## 251209-BETA-1
 

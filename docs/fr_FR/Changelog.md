@@ -2,6 +2,7 @@
 
 -   Améliorations: Interne: Gestion des dependances.
 -   Améliorations: Support variateur Legrand 077701LA (2756).
+-   Nouveau: Support Ikea INSPELNING (2781).
 
 ## 251209-BETA-1
 

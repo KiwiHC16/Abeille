@@ -3,6 +3,9 @@
 -   Améliorations: Interne: Gestion des dependances.
 -   Améliorations: Support variateur Legrand 077701LA (2756).
 -   Nouveau: Support Ikea INSPELNING (2781).
+-   Améliorations: Modèle de commande: 'act_setLevel-Light' => 'act_setLevel-Percent-Light'.
+-   Améliorations: Modèle de commande: Ajout 'act_setLevel-Percent-Shutter'.
+-   Améliorations: Support modèle Profalux 'MOT-C1Z06C' (2721).
 
 ## 251209-BETA-1
 

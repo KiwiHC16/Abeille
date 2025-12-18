@@ -81,7 +81,7 @@
                 "execAtCreation": "yes"
             },
             "Set Level 1": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "params": "ep=01",
                 "isVisible": "1"
             },
@@ -106,7 +106,7 @@
                 "execAtCreation": "yes"
             },
             "Set Level 2": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "params": "ep=02",
                 "isVisible": "1"
             },

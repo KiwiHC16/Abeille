@@ -47,7 +47,7 @@
                 "execAtCreation": "yes"
             },
             "Set Brightness": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "params": "ep=0B",
                 "isVisible": "1",
                 "value": "Brightness"

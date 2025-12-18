@@ -1,5 +1,5 @@
 {
-    "act_setLevel-Light": {
+    "act_setLevel-Percent-Light": {
         "comment": "Cluster 0008, Move to level with OnOff cmd 04",
         "comment2": "For LIGHT control with slider 0 to 100%",
         "subType": "slider",

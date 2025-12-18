@@ -54,7 +54,7 @@
                 "params": "clustId=0008&attrId=0000"
             },
             "Set Level": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
             "Bind-0008-ToZigate": {

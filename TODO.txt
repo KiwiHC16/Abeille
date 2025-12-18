@@ -1,3 +1,8 @@
+calculValueOffset
+    Pour cmde info mais AUSSI pour cmde action.
+    Dans les 2 cas configurable via interface Jeedom => onglet 'configuration', 'Formule de calcul'
+    Donc remplacer "valueOffset" des cmdes action => "calculValueOffset" pour support dans Jeedom.
+    
 PollingOnCmdChange, PollingOnCmdChangeDelay
     Remplacer
         "PollingOnCmdChange": "0006-#EP#-0000",

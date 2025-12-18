@@ -1,0 +1,12 @@
+{
+    "inf_zbAttr-0B04-ACPowerDiv": {
+        "comment": "0x0605 ACPowerDivisor uint16/0x21",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0B04-#EP#-0605"
+    }
+}

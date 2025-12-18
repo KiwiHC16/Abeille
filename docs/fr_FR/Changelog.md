@@ -6,6 +6,7 @@
 -   Améliorations: Modèle de commande: 'act_setLevel-Light' => 'act_setLevel-Percent-Light'.
 -   Améliorations: Modèle de commande: Ajout 'act_setLevel-Percent-Shutter'.
 -   Améliorations: Support modèle Profalux 'MOT-C1Z06C' (2721).
+-   Améliorations: Interne. Constantes cluster 0B04.
 
 ## 251209-BETA-1
 

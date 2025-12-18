@@ -50,32 +50,6 @@
                 "params": "ep=01&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
-            "Set Brightness": {
-                "use": "act_setLevel-Percent-Light",
-                "params": "ep=01",
-                "isVisible": "1",
-                "value": "Brightness"
-            },
-            "Get Brightness": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0008&attrId=0000"
-            },
-            "Brightness": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "params": "ep=01",
-                "isVisible": "1",
-                "nextLine": "after"
-            },
-            "Bind 01-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0008",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 01-0008-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0008&attrId=0000&attrType=20",
-                "execAtCreation": "yes"
-            },
             "Get Total power": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0000"
@@ -85,6 +59,11 @@
                 "params": "div=1000",
                 "unit": "KWh",
                 "isVisible": "1"
+            },
+            "SetReporting 0702-TotalPower": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0702&attrId=0000&attrType=25",
+                "execAtCreation": "yes"
             },
             "Get RMS Voltage": {
                 "use": "act_zbReadAttribute",
@@ -113,6 +92,14 @@
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=0B04&attrId=0508&attrType=21&changeVal=50",
                 "execAtCreation": "yes"
+            },
+            "SetReporting 0B04-ACPowerDiv": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=0605&attrType=21&minInterval=10&changeVal=1",
+                "execAtCreation": "yes"
+            },
+            "AC power div": {
+                "use": "inf_zbAttr-0B04-ACPowerDiv"
             },
             "Get Active Power": {
                 "use": "act_zbReadAttribute",

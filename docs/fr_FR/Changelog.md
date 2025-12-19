@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 251219-BETA-1
+## 251219-BETA-2, 251219-BETA-1
 
 **Modèles d'équipement**
 

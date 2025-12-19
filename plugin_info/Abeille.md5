@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="251219-BETA-1"
+# VERSION="251219-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -39,7 +39,7 @@ c697264a367aa536ef60425b7fcf88ea *core/ajax/AbeilleZigate.ajax.php
 1e315591b62c2467f9df7acc758ae017 *core/class/Abeille.class.php
 75c34cd58ca9876cd7d088350cc3b69d *core/class/AbeilleCmd.class.php
 ba846bba3296594cc4684d73909bda05 *core/class/AbeilleCmdPrepare.class.php
-07adb8388b34ade2f672479dbe4628ac *core/class/AbeilleCmdProcess.class.php
+e2d5427a59e7cf9ed5be59fe212f24c9 *core/class/AbeilleCmdProcess.class.php
 ca19f75b7ba1eb2566d214a9ee3cb5f7 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 f01814b1501cffb3caaf0baabcc7bc4c *core/class/AbeilleParser.class.php
@@ -1416,7 +1416,7 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 56ed2d6a626cf57f866bfdd1012a84a1 *core/scripts/switchBranch.sh
 71c43beb0fdcc6ec41532ea1443f4504 *core/scripts/updateZigate.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
-036ac75aad2a59818eb59c58d7fa9b3e *desktop/js/Abeille.js
+724cc831d88fb9fb96e7779bb990767f *desktop/js/Abeille.js
 a54d5f0b473ccd5969cd30da1a355b6f *desktop/js/AbeilleNetwork.js
 d0d1ca56ff2c7b9b33e3f9e1b392e3ba *desktop/modal/Abeille-OTA.modal.php
 67a4a2fe92fa2fa0fd844fe617517c45 *desktop/modal/AbeilleCompatibility.modal.php
@@ -1434,7 +1434,7 @@ d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 ba5d3876440060b92f5404b83d2a8fa6 *desktop/php/Abeille-Bees.php
 fd1b207c4ad744e872558c8e833c69cf *desktop/php/Abeille-Eq-Advanced-Common.php
 ee90cf3e43e72a31e9e7db9889c34997 *desktop/php/Abeille-Eq-Advanced-Device.php
-ee308142eb5f8ab3fea7b7e382812880 *desktop/php/Abeille-Eq-Advanced-Interrogations.php
+1c3ebebc79e62c4c12db68ecc9734138 *desktop/php/Abeille-Eq-Advanced-Interrogations.php
 e159e231448191c6d7a92bd4f04a295c *desktop/php/Abeille-Eq-Advanced-Specific.php
 edfca0031ca949fdbba3031b7c4a5566 *desktop/php/Abeille-Eq-Advanced-Zigate.php
 8f1defffb69c61242db008e5b0145452 *desktop/php/Abeille-Eq-Advanced.php
@@ -1486,7 +1486,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/misc/ZiGate_API_Developper.xls
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/tuya_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-75f5c3b71fa34ef5c0233e72726a0f09 *docs/fr_FR/Changelog.md
+2769175188feeecc07cbfa9645d57349 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1495,11 +1495,11 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-fc4e7790f592fc473c4104f906b10858 *plugin_info/Abeille.version
+6605e9c086d6badf889e18da0fd38157 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 53c5bfa84bdb512350b04db09c7d0e7a *plugin_info/configuration.php
-07e2349c51e7156264b3831f708dbe61 *plugin_info/info.json
+6803ec72cece153c8c678785ab591145 *plugin_info/info.json
 3fd0725d918e184139db41f938d73456 *plugin_info/install.php
 fa66c2e280e095a90334aa2c690f9158 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

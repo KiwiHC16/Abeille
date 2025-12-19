@@ -1,12 +1,33 @@
-</br>
+<br>
 <legend><i class="fas fa-cogs"></i> {{Migration d'équipements}}
 	<?php
 	echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'Utilisation.html#migration-d-equipements"><i class="fas fa-book"></i>{{Documentation}}</a>';
 	?>
 </legend>
-<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
+<?php
+	// If more than 1 enabled gateway, allow migration
+	if ($activeGateways > 1)
+		$singleNet = false;
+	else
+		$singleNet = true;
 
-		<br/>
+	if ($singleNet)
+		echo '<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">';
+	else
+		echo '<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px; display:none">';
+?>
+		<br>
+		Il n'y a qu'un seul réseau Abeille actif (1 seule passerelle) => Pas de migration possible.
+		<br>
+		<br>
+</div>
+<?php
+	if ($singleNet)
+		echo '<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px; display:none">';
+	else
+		echo '<div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">';
+?>
+		<br>
 		<label class="col-sm-2 control-label">{{Equipement à migrer}}:</label>
     	<div class="col-sm-10">
 			<select id="idEq" style="width : 40%">
@@ -36,7 +57,5 @@
 			</select>
 		</div>
 		<a class="btn btn-warning" onclick="migrateEq()">{{Migrer}}</a>
-		</br><br/>
+		</br><br>
 </div>
-
-

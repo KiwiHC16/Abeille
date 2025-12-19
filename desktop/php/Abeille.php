@@ -23,12 +23,13 @@
     echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
 
-    $eqLogics = eqLogic::byType('Abeille');
     /* Creating a per Zigate list of eq ids.
        For each zigate, the first eq is the zigate.
        $eqPerZigate[$zgId][id1] => id for zigate
        $eqPerZigate[$zgId][id2] => id for next eq... */
     $eqPerZigate = array(); // All equipements id/addr per zigate
+    $activeGateways = 0; // Number of active networks
+    $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
 
         $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
@@ -60,10 +61,13 @@
                 array_unshift($eqPerZigate[$zgId][$eqId], $eq);
             else
                 $eqPerZigate[$zgId][$eqId] = $eq;
+            if ($eq['isEnabled'])
+                $activeGateways++;
         } else
             $eqPerZigate[$zgId][$eqId] = $eq;
     }
-    $GLOBALS['eqPerZigate'] = $eqPerZigate;
+    $GLOBALS['eqPerZigate'] = $eqPerZigate; // TODO: To align on daemons, replace to $GLOBALS['devices'][net][addr]
+
     echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
     echo '<script>var js_urlProducts = "'.urlProducts.'";</script>';
 ?>

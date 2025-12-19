@@ -7,6 +7,7 @@
 -   Améliorations: Modèle de commande: Ajout 'act_setLevel-Percent-Shutter'.
 -   Améliorations: Support modèle Profalux 'MOT-C1Z06C' (2721).
 -   Améliorations: Interne. Constantes cluster 0B04.
+-   Améliorations: Migration d'équipement possible que si plusieurs réseaux Abeille actifs (2780).
 
 ## 251209-BETA-1
 

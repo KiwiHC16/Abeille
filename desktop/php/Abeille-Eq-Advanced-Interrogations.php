@@ -324,6 +324,8 @@
         ?>
     </div>
 </div>
+
+<!-- Cluster 0004 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0004/addGroup">ZCL: 0004 - Add group</label>
     <div class="col-sm-5">
@@ -355,6 +357,8 @@
         ?>
     </div>
 </div>
+
+<!-- Cluster 0102 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0102/WindowCovering">ZCL: 0102 - Window covering</label>
     <div class="col-sm-5">
@@ -366,6 +370,8 @@
         <input id="idExtra-0102" title="{{Valeur}}" placeholder="{{Valeur}}" style="width:60px" />
     </div>
 </div>
+
+<!-- Cluster 0201 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0201, Setpoint Raise/Lower (cmd 00)">ZCL: 0201 - Raise/lower</label>
     <div class="col-sm-5">
@@ -373,20 +379,34 @@
             addButton("{{Modifier}}", "btn-danger", "0201-SetPoint");
             addEpInput("idEpC0201-00");
         ?>
-        <input id="idAmountC0201-00" title="{{Step: format hex 2 car}}" placeholder="{{Amount}}" style="width:60px" />
+        <input id="idAmountC0201-00" title="{{Step: format hex 2 car}}" placeholder="{{Amount}}" style="width:60px; margin-left: 8px" />
+    </div>
+</div>
+
+<!-- Cluster 0300/Color control support -->
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0300, Mote to Hue (cmd 00)">ZCL: 0300/Color ctrl - 00/Move to Hue</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Appliquer}}", "btn-danger", "0300-MoveToHue");
+            addEpInput("idEp-MTH");
+        ?>
+        <input id="idHue-MTH" title="{{Hue: format hex 2 car}}" placeholder="{{Hue}}" style="width:60px; margin-left: 8px" />
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Cluster 0300, Mote to color (cmd 07)">ZCL: 0300 - Move to color</label>
+    <label class="col-sm-3 control-label" title="Cluster 0300, Mote to color (cmd 07)">ZCL: 0300/Color ctrl - 07/Move to color</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Appliquer}}", "btn-danger", "0300-MoveToColor");
             addEpInput("idEp-MTC");
         ?>
-        <input id="idX-MTC" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px" />
-        <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px" />
+        <input id="idX-MTC" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px; margin-left: 8px" />
+        <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px; margin-left: 8px" />
     </div>
 </div>
+
+<!-- Cluster 0502 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0502/IAS WD, Start warning (cmd 00)">ZCL: 0502 - Start warning</label>
     <div class="col-sm-5">
@@ -400,6 +420,8 @@
         ?>
     </div>
 </div>
+
+<!-- Cluster 1000 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41) to SERVER">ZCL: 1000 - Groupes req</label>
     <div class="col-sm-5">

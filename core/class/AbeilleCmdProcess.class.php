@@ -4462,7 +4462,39 @@
                     return;
                 } // End 'cmd-0201'
 
-                // ZCL cluster 0300/color control: Move to Colour
+                // ZCL cluster 0300/color control: 00/Move to Hue
+                else if ($cmdName == 'moveToHue') {
+                    $required = ['addr', 'ep', 'hue']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <hue: uint8_t>
+                    // <direction: uint8_t>
+                    // <transition time: uint16_t>
+
+                    $zgCmd        = "00B0"; // Move to HUE
+                    if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
+                    $addr       = $Command['cmdParams']['addr'];
+                    $srcEp      = "01";
+                    if (isset($Command['cmdParams']['ep'])) $dstEp = $Command['cmdParams']['ep']; else $dstEp = "01";
+                    $hue    = $Command['cmdParams']['hue'];
+                    $dir = '00'; // 0x00 Shortest distance, 0x01 Longest distance, 0x02 Up, 0x03 Down
+                    if (isset($Command['cmdParams']['duration']) && $Command['cmdParams']['duration']>0)
+                        $duration = sprintf("%04s", dechex($Command['cmdParams']['duration']));
+                    else
+                        $duration = "0001";
+
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$hue.$dir.$duration;
+
+                    $this->addCmdToQueue2(PIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                }
+
+                // ZCL cluster 0300/color control: 07/Move to Colour
                 else if ($cmdName == 'setColour') {
                     $required = ['addr', 'X', 'Y']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -4490,7 +4522,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 

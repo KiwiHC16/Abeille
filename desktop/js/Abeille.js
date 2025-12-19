@@ -2282,6 +2282,11 @@ function interrogate(request) {
         payload = "ep=" + ep + "_cmd=00";
         amount = document.getElementById("idAmountC0201-00").value;
         if (amount != "") payload += "_amount=" + amount;
+    } else if (request == "0300-MoveToHue") {
+        topic = "Cmd" + logicalId + "_moveToHue";
+        ep = document.getElementById("idEp-MTH").value;
+        hue = document.getElementById("idHue-MTH").value;
+        payload = "ep=" + ep + "_hue=" + hue;
     } else if (request == "0300-MoveToColor") {
         topic = "Cmd" + logicalId + "_setColour";
         ep = document.getElementById("idEp-MTC").value;

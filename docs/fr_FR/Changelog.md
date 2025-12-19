@@ -1,5 +1,26 @@
 # ChangeLog
 
+**Modèles d'équipement**
+
+    - ATTENTION ! Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).
+    - ATTENTION ! Modèle DS01/SBZB-04 modifié. Revoir vos scenarios si besoin.
+
+**Zigates v2/+**
+
+    - Malheureusement ce modèle montre de grosses instabilités et ne doit pas être considéré pour une solution robuste.
+    - Le FW **v3.22** est le meilleur FW du moment (éviter 3.A0, trop de soucis).
+
+**Zigates v1**
+
+    - FW **AB01-0000** recommandé.
+    - Si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - Note: La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Note: Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 -   Améliorations: Interne: Gestion des dependances.
 -   Améliorations: Support variateur Legrand 077701LA (2756).
 -   Nouveau: Support Ikea INSPELNING (2781).
@@ -126,28 +147,6 @@
 -   Corrections: Affichage des groupes Zigbee.
 
 ## 250216-BETA-1
-
-**Modèles d'équipement**
-
-    - ATTENTION ! Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).
-    - ATTENTION ! Modèle DS01/SBZB-04 modifié. Revoir vos scenarios si besoin.
-
-**Zigates v2/+**
-
-    - Malheureusement ce modèle montre de grosses instabilités et ne doit pas être considéré pour une solution robuste.
-    - Le FW **v3.22** est le meilleur FW du moment (éviter 3.A0, trop de soucis).
-
-**Zigates v1**
-
-    - FW **v3.23 OPDM** ou **AB01-0000** recommandé.
-    - Le dernier FW officiel est le v3.23. Il est FORTEMENT recommandé de basculer dessus pour ne pas faire façe à des soucis déja corrigés.
-    - D'autre part si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
 -   Améliorations: Sonoff SNZB-04 (DS01), modèle revu (2743).
 -   Corrections: Mise-à-jour OTA, otaImageBlockResponse, ajout ACK + prio LOW.

@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Améliorations: Détail équipement revu.
+-   Corrections: Erreur javascript lors ouverture page des équipements.
 
 ## 251219-BETA-2, 251219-BETA-1
 

@@ -21,10 +21,13 @@ var curEq = {}; // Updated by refreshEqInfos()
 // console.log("LA1 eqId=", curEqId);
 
 // Executed on page load/refresh
+// TODO: to be revisited. Should not be called with equipments page refresh (ex index.php?v=d&m=Abeille&p=Abeille&id=Abeille)
 if (window.location.href.indexOf("id=") > -1) {
     let params = new URL(document.location).searchParams;
-    curEqId = params.get("id");
-    refreshEqInfos();
+    if (params.get("id") != "Abeille") {
+        curEqId = params.get("id");
+        refreshEqInfos();
+    }
 }
 
 // console.log("LA2 eqId=", curEqId);

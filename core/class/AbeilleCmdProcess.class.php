@@ -508,8 +508,6 @@
 
             $data                       = $data1.$data2;
 
-            // $length                      = sprintf("%04s",dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
             $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         }
 
@@ -594,8 +592,6 @@
 
             $data = $data1.$data2;
 
-            // $length = sprintf("%04s", dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
             $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         }
 
@@ -4490,7 +4486,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$hue.$dir.$duration;
 
-                    $this->addCmdToQueue2(PIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
@@ -4522,7 +4518,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration;
 
-                    $this->addCmdToQueue2(PIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 

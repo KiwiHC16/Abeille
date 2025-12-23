@@ -2,6 +2,7 @@
 
 -   Améliorations: Détail équipement revu.
 -   Corrections: Erreur javascript lors ouverture page des équipements.
+-   Corrections: Cmdes internes 'setColor' & 'moveToHue'.
 
 ## 251219-BETA-2, 251219-BETA-1
 

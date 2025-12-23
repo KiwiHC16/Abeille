@@ -118,9 +118,6 @@
 
 <!-- Scripts -->
 <?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
-<script>
-    // TODO: addCmdToTable() to be moved to Abeille.js but need to fix remaining PHP code in it.
-</script>
 <?php include_file('core', 'plugin.template', 'js'); ?>
 <script>
     // test

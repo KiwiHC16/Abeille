@@ -659,14 +659,16 @@
                 $jCmds = Cmd::byEqLogicId($eqId);
                 $eq['cmds'] = [];
                 foreach ($jCmds as $cmdLogic) {
-                    $cmdId = $cmdLogic->getId();
                     $cmdLogicId = $cmdLogic->getLogicalId('');
-                    if ($cmdLogic->getType() == 'info')
+                    $cmdType = $cmdLogic->getType();
+                    if ($cmdType == 'info')
                         $cmdVal = $cmdLogic->execCmd();
                     else
                         $cmdVal = '';
                     $eq['cmds'][$cmdLogicId] = array(
-                        'id' => $cmdId,
+                        'id' => $cmdLogic->getId(),
+                        'name' => $cmdLogic->getName(),
+                        'type' => $cmdType, // 'info' or 'action'
                         'val' => $cmdVal
                     );
                 }

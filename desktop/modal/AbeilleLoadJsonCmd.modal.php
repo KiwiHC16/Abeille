@@ -76,7 +76,8 @@
                     addCmdToTable(_cmd);
                     $('.cmd:last .cmdAttr[data-l1key=type]').trigger('change')
 
-                    $('#idModalText').empty().append("Ok.<br />Commande ajoutée en fin de tableau.<br /><br />Pensez à mettre à jour, entre autre, #EP# is besoin et sauvegarder.<br /><br />");
+                    $('#idModalText').empty().append("Ok.<br>Commande ajoutée en fin de tableau.<br><br>Pensez à mettre à jour, entre autre, #EP# is besoin et sauvegarder.<br><br>");
+                    $('#idLoadCmdJson').hide(); // Hide load button
                 }
             }
         });

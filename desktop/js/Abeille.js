@@ -600,6 +600,18 @@ $(".eqLogicAction[data-action=abRemove]")
         }
         eqId = $(".eqLogicAttr[data-l1key=id]").value();
         eqLogicalId = $(".eqLogicAttr[data-l1key=logicalId]").value();
+        // Logical ID should be like 'Abeille1/5C88'
+        if (eqLogicalId.length != 13) {
+            // Abnormal case.
+            jeedom.eqLogic.remove({
+                type: "Abeille",
+                id: eqId,
+                success: function () {
+                    // TODO: How to go back to equipments page ?
+                }
+            });
+            return;
+        }
         zgId = eqLogicalId.substring(7, 8);
         console.log(
             "eqId=" + eqId + ", logicId=" + eqLogicalId + " => zgId=" + zgId

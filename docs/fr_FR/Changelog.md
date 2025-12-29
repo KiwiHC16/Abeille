@@ -1,5 +1,7 @@
 # ChangeLog
 
+-   Améliorations: Suppression possible d'un équipement mal défini (pas d'ID logique).
+
 ## 251228-BETA-1
 
 -   Améliorations: Détail équipement revu.

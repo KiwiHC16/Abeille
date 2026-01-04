@@ -533,7 +533,7 @@
                     $destSerial = $GLOBALS['zigates'][$zgId]['port'];
                     // Note: Using file_exists() to avoid PHP warning when port issue.
                     if (!file_exists($destSerial) || (($f = fopen($destSerial, "w")) == false)) {
-                        cmdLog("debug", "  '$destSerial' port not accessible => '$cmd' cmd ignored.");
+                        cmdLog("debug", "  '$destSerial' port not accessible => Cmd ignored.");
                         continue; // Move to next Zigate
                     }
                     $this->writeToDest($f, $destSerial, $cmd['cmd'], $cmd['datas']);

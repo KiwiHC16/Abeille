@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 251228-BETA-1
+## 260104-STABLE-1, 251228-BETA-1
 
 **Modèles d'équipement**
 

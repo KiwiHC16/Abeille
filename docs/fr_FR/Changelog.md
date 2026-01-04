@@ -2,12 +2,6 @@
 
 ## 251228-BETA-1
 
--   Améliorations: Détail équipement revu.
--   Corrections: Erreur javascript lors ouverture page des équipements.
--   Corrections: Cmdes internes 'setColor' & 'moveToHue'.
-
-## 251219-BETA-2, 251219-BETA-1
-
 **Modèles d'équipement**
 
     - ATTENTION ! Modèle RWL021 modifié. Revoir vos scenarios si besoin. (voir 1243).
@@ -28,6 +22,12 @@
       - Note: La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
       - Note: Les firmwares avant 3.1e sont forcement 'legacy'.
       - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+-   Améliorations: Détail équipement revu.
+-   Corrections: Erreur javascript lors ouverture page des équipements.
+-   Corrections: Cmdes internes 'setColor' & 'moveToHue'.
+
+## 251219-BETA-2, 251219-BETA-1
 
 -   Améliorations: Interne: Gestion des dependances.
 -   Améliorations: Support variateur Legrand 077701LA (2756).

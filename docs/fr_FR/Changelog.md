@@ -1,6 +1,7 @@
 # ChangeLog
 
 -   Améliorations: Suppression possible d'un équipement mal défini (pas d'ID logique).
+-   Nouveauté: Vue des équipements sour format 'liste'.
 
 ## 251228-BETA-1
 

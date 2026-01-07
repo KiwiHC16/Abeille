@@ -774,27 +774,48 @@ function removeBees(zgId) {
 
 /* Called when 'setTimeout' button is pressed
    Allows to modify timeout of selected equipements. */
-function setBeesTimeout(zgId) {
-    console.log("setBeesTimeout(zgId=" + zgId + ")");
+// function setBeesTimeout(zgId) {
+//     console.log("setBeesTimeout(zgId=" + zgId + ")");
 
-    var sel = getSelectedEqs(zgId);
-    console.log(sel);
-    if (sel["nb"] == 0) {
-        alert("Aucun équipement sélectionné !");
-        return;
-    }
-    $("#abeilleModal").dialog({
-        title: "{{Modification du timeout}}",
+//     var sel = getSelectedEqs(zgId);
+//     console.log(sel);
+//     if (sel["nb"] == 0) {
+//         alert("Aucun équipement sélectionné !");
+//         return;
+//     }
+//     $("#abeilleModal").dialog({
+//         title: "{{Modification du timeout}}",
+//         autoOpen: false,
+//         resizable: false,
+//         modal: true,
+//         height: 300,
+//         width: 400,
+//     });
+//     $("#abeilleModal")
+//         .load(
+//             "index.php?v=d&plugin=Abeille&modal=setBeesTimeout.abeille&zgId=" +
+//                 zgId
+//         )
+//         .dialog("open");
+// }
+
+/* Equipments list view. */
+function listView(gtwId) {
+
+    console.log("listView(gtwId=" + gtwId + ")");
+
+    $("#md_modal").dialog({
+        title: "{{Vue liste}}",
         autoOpen: false,
         resizable: false,
         modal: true,
         height: 300,
         width: 400,
     });
-    $("#abeilleModal")
+    $("#md_modal")
         .load(
-            "index.php?v=d&plugin=Abeille&modal=setBeesTimeout.abeille&zgId=" +
-                zgId
+            "index.php?v=d&plugin=Abeille&modal=AbeilleEqList.modal&gtwId=" +
+                gtwId
         )
         .dialog("open");
 }

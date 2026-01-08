@@ -973,6 +973,7 @@
                         continue;
                     }
                     // Note: No IEEE for virtual remote control (addr=rcXX)
+                    // Note: $GLOBALS['devices'][$net][$addr]['zigbee'] seems to be never set
                     $ieee = isset($GLOBALS['devices'][$net][$addr]['zigbee']['ieee']) ? $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] : '?';
                     unset($GLOBALS['devices'][$net][$addr]);
                     // TODO: Instead of removing, might be worth flaging it to not loose infos if rejoin
@@ -1547,19 +1548,24 @@
        Note: For performances enhancements, update is done at max every 10sec. Any changes below would be ignored. */
     function updateTimestamp2($net, $addr, $timestamp, $lqi = null) {
 
+        // $GLOBALS['devices'][$net][$addr] now built at startup
+        // if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {
+        //     $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+        //     if (!is_object($eqLogic)) {
+        //         logMessage('debug', "  Unknown device '{$net}/{$addr}'");
+        //         return; // Unknown device
+        //     }
+        //     if (!isset($GLOBALS['devices'][$net]))
+        //         $GLOBALS['devices'][$net] = [];
+        //     if (!isset($GLOBALS['devices'][$net][$addr]))
+        //         $GLOBALS['devices'][$net][$addr] = array(
+        //             'eqLogic' => $eqLogic,
+        //             'timestamp' => 0
+        //         );
+        // }
         if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {
-            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!is_object($eqLogic)) {
-                logMessage('debug', "  Unknown device '{$net}/{$addr}'");
-                return; // Unknown device
-            }
-            if (!isset($GLOBALS['devices'][$net]))
-                $GLOBALS['devices'][$net] = [];
-            if (!isset($GLOBALS['devices'][$net][$addr]))
-                $GLOBALS['devices'][$net][$addr] = array(
-                    'eqLogic' => $eqLogic,
-                    'timestamp' => 0
-                );
+            logMessage('debug', "  updateTimestamp2(): Unknown device '$net/$addr'");
+            return; // Unknown device
         }
         $device = &$GLOBALS['devices'][$net][$addr];
 
@@ -1887,6 +1893,22 @@
         $timestamp
     */
     $GLOBALS['devices'] = [];
+    $eqLogics = eqLogic::byType('Abeille');
+    foreach ($eqLogics as $eqLogic) {
+        $eqLogicId = $eqLogic->getLogicalId();
+        list($net, $addr) = explode("/", $eqLogicId);
+        $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
+        if ($gtwId == '')
+            continue; // Incorrect case
+
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+        if (!isset($GLOBALS['devices'][$net][$addr]))
+            $GLOBALS['devices'][$net][$addr] = array(
+                'eqLogic' => $eqLogic,
+                'timestamp' => 0
+            );
+    }
 
     try {
         // Essaye de recuperer les etats des equipements

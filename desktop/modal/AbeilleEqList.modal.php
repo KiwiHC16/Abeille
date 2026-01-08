@@ -70,7 +70,7 @@
         console.log("removeDevice(gtwId="+ gtwId + ", eqId=" + eqId + ")");
 
         removed = {};
-        // Excluded local devices (ex: Abeille remote control with addr 'rcXX')
+        // Excluding local devices (ex: Abeille remote control with addr 'rcXX')
         addr = eqPerZigate[gtwId][eqId]['addr'];
         if (addr.substring(0, 2) != "rc") {
             removed[gtwId] = []; // Addresses list

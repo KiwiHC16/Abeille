@@ -621,13 +621,14 @@ $(".eqLogicAction[data-action=abRemove]")
 
 /* Remove from Jeedom eq with ID 'eqId' but list first how it is used and ask confirmation to user */
 function removeEq(zgId, eqId) {
+
     console.log("removeEq(zgId=" + zgId + ", eqId=" + eqId + ")");
 
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
     eqName = eqPerZigate[zgId][eqId]["name"];
     eqAddr = eqPerZigate[zgId][eqId]["addr"];
-    eqAddrList = new Array();
-    eqAddrList.push(eqAddr);
+    // eqAddrList = new Array();
+    // eqAddrList.push(eqAddr);
 
     jeedom.eqLogic.getUseBeforeRemove({
         id: eqId,
@@ -668,6 +669,16 @@ function removeEq(zgId, eqId) {
             text = text.substring(0, text.length - 2);
             bootbox.confirm(text, function (result) {
                 if (result) {
+
+                    removed = {};
+                    // Excluding local devices (ex: Abeille remote control with addr 'rcXX')
+                    addr = eqPerZigate[zgId][eqId]['addr'];
+                    if (addr.substring(0, 2) != "rc") {
+                        removed[zgId] = []; // Addresses list
+                        removed[zgId].push(addr);
+                    }
+                    console.log("removed=", removed);
+
                     jeedom.eqLogic.remove({
                         type: "Abeille",
                         id: eqId,
@@ -679,18 +690,41 @@ function removeEq(zgId, eqId) {
                         },
                         success: function () {
                             // Inform parser & cmd that this equipement has been removed
-                            var xhr = new XMLHttpRequest();
-                            xhr.open(
-                                "POST",
-                                "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
-                                    js_queueXToParser +
-                                    "&msg=type:eqRemoved_net:Abeille" +
-                                    zgId +
-                                    "_addrList:" +
-                                    eqAddrList,
-                                true
-                            );
-                            xhr.send();
+                            // var xhr = new XMLHttpRequest();
+                            // xhr.open(
+                            //     "POST",
+                            //     "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
+                            //         js_queueXToParser +
+                            //         "&msg=type:eqRemoved_net:Abeille" +
+                            //         zgId +
+                            //         "_addrList:" +
+                            //         eqAddrList,
+                            //     true
+                            // );
+                            // xhr.send();
+                            domUtils.ajax({ // Inform daemons that device removed
+                                type: "POST",
+                                url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+                                data: {
+                                    action: "eqRemoved",
+                                    removed: JSON.stringify(removed),
+                                },
+                                dataType: 'json',
+                                global: false,
+                                error: function(error) {
+                                    jeedomUtils.showAlert({
+                                        message: error.message,
+                                        level: 'danger'
+                                    })
+                                },
+                                success: function(data) {
+                                    //Do stuff
+                                    // jeedomUtils.showAlert({
+                                    //     message: 'All good dude!',
+                                    //     level: 'success'
+                                    // })
+                                }
+                            })
 
                             var vars = getUrlVars();
                             var url = "index.php?";

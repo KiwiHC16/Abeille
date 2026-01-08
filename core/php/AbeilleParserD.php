@@ -687,13 +687,35 @@
                         $GLOBALS['sendToCli']['ieee'] = $msg['ieee'];
                     } else if ($msg['type'] == 'readOtaFirmwares') {
                         otaReadFirmwares(); // Reread available firmwares
-                    } else if ($msg['type'] == 'eqRemoved') {
+                    } else if ($msg['type'] == 'eqRemoved') { // OBSOLETE !! To remove. 'eqRemoved2' instead
                         logMessage('debug', 'Some equipments removed from Jeedom');
                         // Some equipments removed from Jeedom => phantoms if still in network
                         // $msg['net'] = Abeille network (AbeilleX)
                         // $msg['addrList'] = Eq addr separated by ','
                         $net = $msg['net'];
                         $arr = explode(',', $msg['addrList']);
+                        foreach ($arr as $addr) {
+                            if (!isset($GLOBALS['devices'][$net])) {
+                                logMessage('debug', "  ERROR: Unknown network ".$net);
+                                continue;
+                            }
+                            if (!isset($GLOBALS['devices'][$net][$addr])) {
+                                logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
+                                continue;
+                            }
+                            // Note: No IEEE for virtual remote control (addr=rcXX)
+                            $ieee = isset($GLOBALS['devices'][$net][$addr]['zigbee']['ieee']) ? $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] : '?';
+                            unset($GLOBALS['devices'][$net][$addr]);
+                            // TODO: Instead of removing, might be worth flaging it to not loose infos if rejoin
+                            logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");
+                        }
+                    } else if ($msg['type'] == 'eqRemoved2') {
+                        logMessage('debug', 'Some equipments removed from Jeedom');
+                        // Some equipments removed from Jeedom => phantoms if still in network
+                        // $msg['net'] = Abeille network (AbeilleX)
+                        // $msg['addrList'] = Eq addr separated by '/'
+                        $net = $msg['net'];
+                        $arr = explode('/', $msg['addrList']);
                         foreach ($arr as $addr) {
                             if (!isset($GLOBALS['devices'][$net])) {
                                 logMessage('debug', "  ERROR: Unknown network ".$net);

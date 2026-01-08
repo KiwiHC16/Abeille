@@ -955,6 +955,33 @@
             return;
         } // End 'eqMigrated'
 
+        /* Some equipments removed from Jeedom. */
+        if ($msg['type'] == "eqRemoved2") {
+                logMessage('debug', '  Some equipments removed from Jeedom');
+                // Some equipments removed from Jeedom => phantoms if still in network
+                // $msg['net'] = Abeille network (AbeilleX)
+                // $msg['addrList'] = Eq addr separated by '/'
+                $net = $msg['net'];
+                $arr = explode('/', $msg['addrList']);
+                foreach ($arr as $addr) {
+                    if (!isset($GLOBALS['devices'][$net])) {
+                        logMessage('debug', "  ERROR: Unknown network ".$net);
+                        continue;
+                    }
+                    if (!isset($GLOBALS['devices'][$net][$addr])) {
+                        logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
+                        continue;
+                    }
+                    // Note: No IEEE for virtual remote control (addr=rcXX)
+                    $ieee = isset($GLOBALS['devices'][$net][$addr]['zigbee']['ieee']) ? $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] : '?';
+                    unset($GLOBALS['devices'][$net][$addr]);
+                    // TODO: Instead of removing, might be worth flaging it to not loose infos if rejoin
+                    logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");
+                }
+
+            return;
+        } // End 'eqRemoved2'
+
         /* Parser has received a "leave indication" */
         if ($msg['type'] == "leaveIndication") {
             /* $msg reminder
@@ -1444,7 +1471,8 @@
             return;
         } // End 'addGroupResponse'/'removeGroupResponse'/'getGroupMembershipResponse'
 
-        logMessage('debug', "  msgFromParser(): Ignored msg ".json_encode($msg));
+        // If msg is unhandled, this is probably an error
+        logMessage('error', "  msgFromParser(): Unexpected msg ".json_encode($msg));
     } // End msgFromParser()
 
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */

@@ -608,7 +608,7 @@ $(".eqLogicAction[data-action=abRemove]")
                 id: eqId,
                 success: function () {
                     // TODO: How to go back to equipments page ?
-                }
+                },
             });
             return;
         }
@@ -801,7 +801,6 @@ function removeBees(zgId) {
 
 /* Equipments list view. */
 function listView(gtwId) {
-
     console.log("listView(gtwId=" + gtwId + ")");
 
     $("#md_modal").dialog({
@@ -811,6 +810,9 @@ function listView(gtwId) {
         modal: true,
         height: 300,
         width: 400,
+        close: function (ev, ui) {
+            window.location.reload();
+        },
     });
     $("#md_modal")
         .load(

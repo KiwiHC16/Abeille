@@ -33,35 +33,50 @@
 </table>
 
 <script>
-    // TODO: Need to update page on modal exit => window.location.reload();
+    // console.log ("js_eqPerZigate=", js_eqPerZigate);
+    eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
+    console.log ("eqPerZigate=", eqPerZigate);
+
+    updateDevicesTable();
 
     function updateDevicesTable() {
 
         console.log("updateDevicesTable()");
 
-        eval("let eqPerZigate = JSON.parse(js_eqPerZigate);");
-        console.log ("eqPerZigate=", eqPerZigate);
-        
         tr = "";
-        for (const [gtwId, eqId] of Object.entries(eqPerZigate)) {
+        for (const [gtwId, devicesById] of Object.entries(eqPerZigate)) {
 
-            eqName = eqPerZigate[gtwId][eqId]["name"];
-            eqAddr = eqPerZigate[gtwId][eqId]["addr"];
+            // console.log("gtwId="+gtwId+", devicesById=", devicesById);
+            for (const [eqId, dev] of Object.entries(devicesById)) {
 
-            tr += "<tr>";
-            tr += "<td>" + eqName + "</td>";
-            tr += "<td>" + eqAddr + "</td>";
-            tr += '<td><button type="button" class="btn btn-secondary" onclick="removeDevice(\'' + eqId + '\')">{{Supprimer}}</button></td>';
-            tr += "</tr>";
+                // console.log ("eqId="+eqId+", dev=", dev);
+                eqName = dev["name"];
+                eqAddr = dev["addr"];
+
+                tr += "<tr>";
+                tr += "<td>" + eqName + "</td>";
+                tr += "<td>" + eqAddr + "</td>";
+                tr += '<td><button type="button" class="btn btn-secondary" onclick="removeDevice(\'' + gtwId + '\', \'' + eqId + '\')">{{Supprimer}}</button></td>';
+                tr += "</tr>";
+            }
         }
 
-        $("#idDevicesTable tbody").append(tr);
+        $("#idDevicesTable tbody").empty().append(tr);
     }
 
     // Remove device whose Jeedom ID is 'eqId', then update 'devicesTable'
-    function removeDevice(eqId) {
+    function removeDevice(gtwId, eqId) {
 
-        console.log("removeDevice(eqId=" + eqId + ")");
+        console.log("removeDevice(gtwId="+ gtwId + ", eqId=" + eqId + ")");
+
+        removed = {};
+        // Excluded local devices (ex: Abeille remote control with addr 'rcXX')
+        addr = eqPerZigate[gtwId][eqId]['addr'];
+        if (addr.substring(0, 2) != "rc") {
+            removed[gtwId] = []; // Addresses list
+            removed[gtwId].push(addr);
+        }
+        console.log("removed=", removed);
 
         jeedom.eqLogic.remove({
             type: "Abeille",
@@ -73,10 +88,36 @@
                 });
             },
             success: function () {
-                // Update devices table
+                delete eqPerZigate[gtwId][eqId];
+                updateDevicesTable(); // Update devices table
+
+                if (removed.length == 0)
+                    return; // Possible if Abeille remote control removed
+
+                domUtils.ajax({ // Inform daemons that device removed
+                    type: "POST",
+                    url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+                    data: {
+                        action: "eqRemoved",
+                        removed:  JSON.stringify(removed),
+                    },
+                    dataType: 'json',
+                    global: false,
+                    error: function(error) {
+                        jeedomUtils.showAlert({
+                            message: error.message,
+                            level: 'danger'
+                        })
+                    },
+                    success: function(data) {
+                        //Do stuff
+                        // jeedomUtils.showAlert({
+                        //     message: 'All good dude!',
+                        //     level: 'success'
+                        // })
+                    }
+                })
             },
         });
     }
-
-    updateDevicesTable();
 </script>

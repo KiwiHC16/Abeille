@@ -2,6 +2,7 @@
 
 -   Améliorations: Suppression possible d'un équipement mal défini (pas d'ID logique).
 -   Nouveauté: Vue des équipements sour format 'liste'.
+-   Amélioration: Suppression d'un équipement à partir de la vue 'liste'.
 
 ## 251228-BETA-1
 

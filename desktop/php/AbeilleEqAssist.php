@@ -1180,9 +1180,9 @@
                     cmds["Green"]["isVisible"] = 1;
                     cmds["Green"]["logicalId"] = "SetGreen";
 
-                    cmds["RGB"] = newCmd("setRGB");
-                    cmds["RGB"]["isVisible"] = 1;
-                    cmds["RGB"]["nextLine"] = "after";
+                    cmds["Color"] = newCmd("act_moveToColor-RGB");
+                    cmds["Color"]["isVisible"] = 1;
+                    cmds["Color"]["nextLine"] = "after";
                 }
 
                 // ColorTemperatureMireds

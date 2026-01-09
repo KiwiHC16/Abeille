@@ -1,8 +1,9 @@
 # ChangeLog
 
 -   Améliorations: Suppression possible d'un équipement mal défini (pas d'ID logique).
--   Nouveauté: Vue des équipements sour format 'liste'.
+-   Nouveauté: Vue des équipements en format 'liste'.
 -   Amélioration: Suppression d'un équipement à partir de la vue 'liste'.
+-   Nouveauté: Ajout cmd interne 'cmd-0300-moveToColor-RGB'.
 
 ## 251228-BETA-1
 

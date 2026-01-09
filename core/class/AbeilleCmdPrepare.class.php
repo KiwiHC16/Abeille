@@ -865,7 +865,7 @@
                                         );
                     }
                     break;
-            case "setColourRGB":
+            case "setColourRGB": // OBSOLETE !! To be replaced by 'cmd-0300-moveToColor-RGB'
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -886,17 +886,17 @@
                 $this->msgToAbeille('Abeille/'.$address.'/ColourRGB',  $parameters['color']);
 
                 $Command = array(
-                                    "name" => "setColourRGB",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "cmdParams" => array(
-                                        "address" => $address,
-                                        "R" => $rouge,
-                                        "G" => $vert,
-                                        "B" => $bleu,
-                                        "destinationEndPoint" => $parameters['EP'],
-                                    )
-                                );
+                    "name" => "setColourRGB",
+                    "priority" => $priority,
+                    "dest" => $dest,
+                    "cmdParams" => array(
+                        "address" => $address,
+                        "R" => $rouge,
+                        "G" => $vert,
+                        "B" => $bleu,
+                        "ep" => $parameters['EP'],
+                    )
+                );
                 break;
             case "setRouge":
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
@@ -925,7 +925,7 @@
                                         "R" => $parameters['color']/100*255,
                                         "G" => $vert/100*255,
                                         "B" => $bleu/100*255,
-                                        "destinationEndPoint" => $parameters['EP'],
+                                        "ep" => $parameters['EP'],
                                     )
                                 );
                 break;
@@ -956,7 +956,7 @@
                         "R" => $rouge/100*255,
                         "G" => $parameters['color']/100*255,
                         "B" => $bleu/100*255,
-                        "destinationEndPoint" => $parameters['EP'],
+                        "ep" => $parameters['EP'],
                     )
                 );
                 break;
@@ -987,7 +987,7 @@
                                         "R" => $rouge/100*255,
                                         "G" => $vert/100*255,
                                         "B" => $parameters['color']/100*255,
-                                        "destinationEndPoint" => $parameters['EP'],
+                                        "ep" => $parameters['EP'],
                                     )
                                 );
                 break;

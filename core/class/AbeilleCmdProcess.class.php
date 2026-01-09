@@ -1973,6 +1973,7 @@
             }
 
             // Take RGB (0-255) convert to X, Y and send the color
+            // OBSOLETE: To be replaced by 'cmd-0300-moveToColor-RGB'
             if ($Command['name'] == 'setColourRGB') {
 
                 // The reverse transformation
@@ -2008,25 +2009,21 @@
                 $x = $x*255*255;
                 $y = $y*255*255;
 
-                // Meme commande que la commande du dessus
-                $cmd = "00B7";
-                // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
-                $length = "000B";
+                $zgCmd = "00B7";
 
                 $addrMode = "02";
                 $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                $dstEp = $Command['cmdParams']['destinationEndpoint'];
+                $dstEp = $Command['cmdParams']['ep'];
                 $colourX = str_pad( dechex($x), 4, "0", STR_PAD_LEFT);
                 $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
                 $duration = "0001";
 
-                cmdLog( 'debug', "  colourX: ".$colourX." colourY: ".$colourY, $this->debug['processCmd'] );
+                cmdLog('debug', "  setColourRGB: dstEp=$dstEp, colourX=".$colourX." colourY=".$colourY);
 
-                $data = $addrMode.$address.$srcEp.$dstEp.$colourX.$colourY.$duration ;
+                $data = $addrMode.$address.$srcEp.$dstEp.$colourX.$colourY.$duration;
 
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $address, $addrMode);
                 return;
             }
 
@@ -4490,7 +4487,7 @@
                     return;
                 }
 
-                // ZCL cluster 0300/color control: 07/Move to Colour
+                // ZCL cluster 0300/color control: 07/Move to Color
                 else if ($cmdName == 'setColour') {
                     $required = ['addr', 'X', 'Y']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -4521,6 +4518,65 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
+
+                // ZCL cluster 0300/color control: 07/Move to Color
+                // Take RGB (0-255) convert to X, Y
+                else if ($cmdName == 'cmd-0300-moveToColor-RGB') {
+                    $required = ['addr', 'ep', 'color']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // Reminder: color value = '#RRGGBB'
+                    $R = hexdec(substr($Command['cmdParams']['color'], 1, 2));
+                    $G = hexdec(substr($Command['cmdParams']['color'], 3, 2));
+                    $B = hexdec(substr($Command['cmdParams']['color'], 5, 2));
+
+                    // The reverse transformation
+                    // https://en.wikipedia.org/wiki/SRGB
+
+                    $a = 0.055;
+
+                    // are in the range 0 to 1. (A range of 0 to 255 can simply be divided by 255.0).
+                    $Rsrgb = $R / 255;
+                    $Gsrgb = $G / 255;
+                    $Bsrgb = $B / 255;
+
+                    if ($Rsrgb <= 0.04045 ) { $Rlin = $Rsrgb/12.92; } else { $Rlin = pow( ($Rsrgb+$a)/(1+$a), 2.4); }
+                    if ($Gsrgb <= 0.04045 ) { $Glin = $Gsrgb/12.92; } else { $Glin = pow( ($Gsrgb+$a)/(1+$a), 2.4); }
+                    if ($Bsrgb <= 0.04045 ) { $Blin = $Bsrgb/12.92; } else { $Blin = pow( ($Bsrgb+$a)/(1+$a), 2.4); }
+
+                    $X = 0.4124 * $Rlin + 0.3576 * $Glin + 0.1805 *$Blin;
+                    $Y = 0.2126 * $Rlin + 0.7152 * $Glin + 0.0722 *$Blin;
+                    $Z = 0.0193 * $Rlin + 0.1192 * $Glin + 0.9505 *$Blin;
+
+                    if (($X + $Y + $Z)!=0 ) {
+                        $x = $X / ( $X + $Y + $Z );
+                        $y = $Y / ( $X + $Y + $Z );
+                    }
+                    else {
+                        echo "Can t do the convertion.";
+                    }
+
+                    $x = $x*255*255;
+                    $y = $y*255*255;
+
+                    $zgCmd = "00B7";
+
+                    $addrMode = "02";
+                    $addr = $Command['cmdParams']['addr'];
+                    $srcEp = "01";
+                    $dstEp = $Command['cmdParams']['ep'];
+                    $colorX = str_pad(dechex($x), 4, "0", STR_PAD_LEFT);
+                    $colorY = str_pad(dechex($y), 4, "0", STR_PAD_LEFT);
+                    $duration = "0001";
+
+                    cmdLog('debug', "  moveToColor-RGB: dstEp=$dstEp, R/G/B=$R/$G/$B => X/Y=$colorX/$colorY");
+
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$colorX.$colorY.$duration;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                } // End 'cmd-0300-moveToColor-RGB'
 
                 // ZCL cluster 0300/color control: Move to Colour Temperature
                 // Mandatory params: addr, EP, slider (temp in K)

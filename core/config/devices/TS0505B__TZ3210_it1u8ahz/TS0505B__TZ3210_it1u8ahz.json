@@ -11,7 +11,7 @@
         },
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "light": "1"
         },
         "configuration": {
             "icon": "Generic-BulbGU10-Color",
@@ -51,16 +51,17 @@
                 "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
-            "Set Level": {
+            "Set Brightness": {
                 "use": "act_setLevel-Percent-Light",
+                "value": "Brightness",
                 "isVisible": 1
             },
-            "Current Level": {
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Get Current Level": {
+            "Get Brightness": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
@@ -133,8 +134,8 @@
                 "logicalId": "#EP#-Set-Green",
                 "isVisible": "1"
             },
-            "Set RGB": {
-                "use": "setRGB",
+            "Color": {
+                "use": "act_moveToColor-RGB",
                 "isVisible": 1,
                 "nextLine": "after"
             },

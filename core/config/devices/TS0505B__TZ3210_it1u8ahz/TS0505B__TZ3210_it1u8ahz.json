@@ -135,7 +135,7 @@
                 "isVisible": "1"
             },
             "Color": {
-                "use": "act_moveToColor-RGB",
+                "use": "act_colorChoice",
                 "isVisible": 1,
                 "nextLine": "after"
             },

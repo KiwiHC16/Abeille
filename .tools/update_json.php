@@ -629,6 +629,14 @@
                     );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "setRGB") {
+                    $commands2["Color"] = Array(
+                        "use" => "at_colorChoice",
+                        "params" => "",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED to 'Color'.\n";
                 }
 
                 // Cluster 0405 updates

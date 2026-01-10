@@ -1,5 +1,6 @@
 {
-    "act_moveToColor-RGB": {
+    "act_colorChoice": {
+        "comment": "Receive color sub type and convert to X/Y for moveToColor",
         "logicalId": "#EP#-moveToColor-RGB",
         "subType": "color",
         "configuration": {

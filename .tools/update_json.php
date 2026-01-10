@@ -631,7 +631,7 @@
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else if ($cmdFName == "setRGB") {
                     $commands2["Color"] = Array(
-                        "use" => "at_colorChoice",
+                        "use" => "act_colorChoice",
                         "params" => "",
                         "isVisible" => 1,
                     );

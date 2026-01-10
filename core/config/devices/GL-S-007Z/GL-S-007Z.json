@@ -5,7 +5,7 @@
         "type": "Gledopto GU10 Bulb RGB+CCT",
         "genericType": "Light",
         "alternateIds": {
-            "GL-S-007Z(lk)": {}
+            "GL-S-007Z(lk)": []
         },
         "comment": "Cool white or warm white or color",
         "timeout": "60",
@@ -124,10 +124,10 @@
                 "logicalId": "#EP#-Set-Green",
                 "isVisible": 1
             },
-            "Set RGB": {
-                "use": "setRGB",
-                "isVisible": 1,
-                "nextLine": "after"
+            "Color": {
+                "use": "act_colorChoice",
+                "params": "",
+                "isVisible": 1
             },
             "Cool white": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",

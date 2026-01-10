@@ -143,8 +143,10 @@
             "RGB": {
                 "use": "setColourRGB"
             },
-            "setRGB": {
-                "use": "setRGB"
+            "Color": {
+                "use": "act_colorChoice",
+                "params": "",
+                "isVisible": 1
             },
             "colorRouge": {
                 "use": "colorRouge"

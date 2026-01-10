@@ -1976,6 +1976,8 @@
             // OBSOLETE: To be replaced by 'cmd-0300-moveToColor-RGB'
             if ($Command['name'] == 'setColourRGB') {
 
+                cmdLog('debug', "  WARNING: OBSOLETE command 'setColourRGB'. Use 'cmd-0300-moveToColor-RGB' instead.");
+
                 // The reverse transformation
                 // https://en.wikipedia.org/wiki/SRGB
 

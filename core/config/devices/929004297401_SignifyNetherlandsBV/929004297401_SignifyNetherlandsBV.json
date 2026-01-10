@@ -131,10 +131,10 @@
                 "isVisible": "1",
                 "logicalId": "SetGreen"
             },
-            "RGB": {
-                "use": "setRGB",
-                "isVisible": "1",
-                "nextLine": "after"
+            "Color": {
+                "use": "act_colorChoice",
+                "params": "",
+                "isVisible": 1
             },
             "Set Color Temp": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",

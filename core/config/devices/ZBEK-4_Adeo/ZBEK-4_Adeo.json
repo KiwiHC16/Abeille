@@ -128,10 +128,10 @@
                 "logicalId": "#EP#-Set-Green",
                 "isVisible": "1"
             },
-            "RGB": {
-                "use": "setRGB",
-                "isVisible": "1",
-                "nextLine": "after"
+            "Color": {
+                "use": "act_colorChoice",
+                "params": "",
+                "isVisible": 1
             },
             "ColorTemperature": {
                 "use": "inf_zbAttr-0300-ColorTemperatureMireds"

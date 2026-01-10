@@ -866,6 +866,8 @@
                     }
                     break;
             case "setColourRGB": // OBSOLETE !! To be replaced by 'cmd-0300-moveToColor-RGB'
+
+                cmdLog('debug', "  WARNING: OBSOLETE command 'setColourRGB'. Use 'cmd-0300-moveToColor-RGB' instead.");
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);

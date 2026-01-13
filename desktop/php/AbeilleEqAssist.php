@@ -1203,9 +1203,11 @@
             if (isset(ep.servClusters["0400"]) && isset(ep.servClusters["0400"]['attributes'])) {
                 attributes = ep.servClusters["0400"]['attributes'];
                 if (isset(attributes['0000'])) {
+                    cmds["Get Illuminance"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0400&attrId=0000");
+
                     cmds["Illuminance"] = newCmd("inf_zbAttr-0400-MeasuredValue", "ep="+epId);
                     cmds["Illuminance"]["isVisible"] = 1;
-                    cmds["Get Illuminance"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0400&attrId=0000");
+
                     cmds["Bind "+epId+"-0400-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0400", "yes");
                     cmds["SetReporting "+epId+"-0400-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0400&attrType=21&attrId=0000&minInterval=300&maxInterval=600&changeVal=0", "yes");
                     cmds["SetReporting "+epId+"-0400-0000"]["comment"] = "Reporting every 5 to 10mins";
@@ -1216,9 +1218,11 @@
             if (isset(ep.servClusters["0402"]) && isset(ep.servClusters["0402"]['attributes'])) {
                 attributes = ep.servClusters["0402"]['attributes'];
                 if (isset(attributes['0000'])) {
+                    cmds["Get Temperature"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
+
                     cmds["Temperature"] = newCmd("inf_zbAttr-0402-MeasuredValue", "ep="+epId);
                     cmds["Temperature"]["isVisible"] = 1;
-                    cmds["Get Temperature"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
+
                     cmds["SetReporting "+epId+"-0402-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0402&attrId=0000&attrType=29&minInterval=540&maxInterval=600", "yes");
                     cmds["SetReporting "+epId+"-0402-0000"]["comment"] = "Reporting every 9 to 10mins";
                     cmds["Bind "+epId+"-0402-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0402", "yes");
@@ -1231,9 +1235,11 @@
             if (isset(ep.servClusters["0405"]) && isset(ep.servClusters["0405"]['attributes'])) {
                 attributes = ep.servClusters["0405"]['attributes'];
                 if (isset(attributes['0000'])) {
+                    cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
+
                     cmds["Humidity"] = newCmd("inf_zbAttr-0405-MeasuredValue", "ep="+epId);
                     cmds["Humidity"]["isVisible"] = 1;
-                    cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
+
                     cmds["SetReporting "+epId+"-0405-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0405&attrId=0000&attrType=21&minInterval=540&maxInterval=600", "yes");
                     cmds["SetReporting "+epId+"-0405-0000"]["comment"] = "Reporting every 9 to 10mins";
                     cmds["Bind "+epId+"-0405-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0405", "yes");
@@ -1248,7 +1254,7 @@
                 if (isset(attributes['0000'])) {
                     cmds["Occupancy"] = newCmd("inf_zbAttr-0406-Occupancy");
                     cmds["Occupancy"]["isVisible"] = 1;
-                    // cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "clustId=0405&attrId=0000");
+
                     cmds["Bind "+epId+"-0406-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0406", "yes");
                     cmds["SetReporting "+epId+"-0406-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0406&attrId=0000&attrType=18", "yes");
                     // if (minTimeout > 10)
@@ -1262,6 +1268,7 @@
                 if (isset(attributes['0000'])) {
                     cmds["CO"] = newCmd("inf_zbAttr-040C-MeasuredValue");
                     cmds["CO"]["isVisible"] = 1;
+
                     cmds["Bind "+epId+"-040C-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=040C", "yes");
                     cmds["SetReporting "+epId+"-040C-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=040C&attrId=0000&attrType=39", "yes");
                 }
@@ -1273,6 +1280,7 @@
                 if (isset(attributes['0000'])) {
                     cmds["CO2"] = newCmd("inf_zbAttr-040D-MeasuredValue");
                     cmds["CO2"]["isVisible"] = 1;
+
                     cmds["Bind "+epId+"-040D-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=040D", "yes");
                     cmds["SetReporting "+epId+"-040D-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=040D&attrId=0000&attrType=39", "yes");
                 }
@@ -1284,6 +1292,7 @@
                 if (isset(attributes['0000'])) {
                     cmds["PM2.5"] = newCmd("inf_zbAttr-042A-MeasuredValue");
                     cmds["PM2.5"]["isVisible"] = 1;
+
                     cmds["Bind "+epId+"-042A-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=042A", "yes");
                     cmds["SetReporting "+epId+"-042A-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=042A&attrId=0000&attrType=39", "yes");
                 }

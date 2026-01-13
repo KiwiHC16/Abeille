@@ -60,6 +60,11 @@
                 "unit": "KWh",
                 "isVisible": "1"
             },
+            "Bind 0702-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0702",
+                "execAtCreation": "yes"
+            },
             "SetReporting 0702-TotalPower": {
                 "use": "act_zbConfigureReporting2",
                 "params": "clustId=0702&attrId=0000&attrType=25",

@@ -118,24 +118,6 @@
             "RGB": {
                 "use": "setColourRGB"
             },
-            "colorRouge": {
-                "use": "colorRouge"
-            },
-            "setRouge": {
-                "use": "setRouge"
-            },
-            "colorVert": {
-                "use": "colorVert"
-            },
-            "setVert": {
-                "use": "setVert"
-            },
-            "colorBleu": {
-                "use": "colorBleu"
-            },
-            "setBleu": {
-                "use": "setBleu"
-            },
             "Set 2200K": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "params": "slider=2200",

@@ -118,27 +118,6 @@
             "RGB": {
                 "use": "setColourRGB"
             },
-            "colorRouge": {
-                "use": "colorRouge"
-            },
-            "setRouge": {
-                "use": "setRouge",
-                "logicalId": "#EP#-setRouge"
-            },
-            "colorVert": {
-                "use": "colorVert"
-            },
-            "setVert": {
-                "use": "setVert",
-                "logicalId": "#EP#-setVert"
-            },
-            "colorBleu": {
-                "use": "colorBleu"
-            },
-            "setBleu": {
-                "use": "setBleu",
-                "logicalId": "#EP#-setBleu"
-            },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",
                 "nextLine": "after"

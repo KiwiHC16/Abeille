@@ -145,24 +145,6 @@
             },
             "RGB": {
                 "use": "setColourRGB"
-            },
-            "colorRouge": {
-                "use": "colorRouge"
-            },
-            "setRouge": {
-                "use": "setRouge"
-            },
-            "colorVert": {
-                "use": "colorVert"
-            },
-            "setVert": {
-                "use": "setVert"
-            },
-            "colorBleu": {
-                "use": "colorBleu"
-            },
-            "setBleu": {
-                "use": "setBleu"
             }
         },
         "comment": "https://github.com/KiwiHC16/Abeille/issues/1219"

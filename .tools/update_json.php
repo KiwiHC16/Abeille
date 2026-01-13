@@ -645,6 +645,12 @@
                     );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
+                } else if (($cmdUse == "colorRouge") || ($cmdUse == "colorVert") || ($cmdUse == "colorBleu")) {
+                    echo "  Cmd '{$cmdJName}' REMOVED.\n";
+                    $devUpdated = true;
+                } else if (($cmdUse == "setRouge") || ($cmdUse == "setVert") || ($cmdUse == "setBleu")) {
+                    echo "  Cmd '{$cmdJName}' REMOVED.\n";
+                    $devUpdated = true;
                 }
 
                 // Cluster 0405 updates

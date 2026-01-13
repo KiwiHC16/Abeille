@@ -90,8 +90,10 @@
                 "use": "inf_zbAttr-0300-CurrentY",
                 "isVisible": 1
             },
-            "Colour": {
-                "use": "Colour"
+            "Color": {
+                "use": "act_colorChoice",
+                "params": "",
+                "isVisible": 1
             },
             "Set White": {
                 "use": "act_zbCmdC-0300-MoveToColor",
@@ -130,11 +132,6 @@
             },
             "RGB": {
                 "use": "setColourRGB"
-            },
-            "Color": {
-                "use": "act_colorChoice",
-                "params": "",
-                "isVisible": 1
             },
             "colorRouge": {
                 "use": "colorRouge"

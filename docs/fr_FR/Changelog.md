@@ -6,6 +6,7 @@
 -   Nouveauté: Ajout cmd interne 'cmd-0300-moveToColor-RGB'.
 -   Nouveauté: Nouvelle cmd 'act_colorChoice' pour remplacer 'setRGB'.
 -   Améliorations: Support Ikea INSPELNING (2781).
+-   Améliorations: Modèle cmde 'Colour' remplacé par 'act_colorChoice'.
 
 ## 251228-BETA-1
 

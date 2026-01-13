@@ -14,7 +14,7 @@ oject_id => Parent ID (ex: room ID)
 
 eqType_name => 'Abeille'
 
-generic_type => 
+generic_type =>
 
 configuration
     IEEE => to be moved in ab::zigbee
@@ -24,7 +24,7 @@ configuration
     ab::zigbee
         endPoints
             01
-                servClusters => ex '0000/0003/FFFF/0006'
+                servClusters => Supported server clusters separated by '/': ex '0000/0003/FFFF/0006'
                 modelId => from cluster 0000 if supported
                 manufId => from cluster 0000 if supported
                 dateCode => from cluster 0000 if supported

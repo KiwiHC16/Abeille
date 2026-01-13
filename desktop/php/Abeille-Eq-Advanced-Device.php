@@ -131,3 +131,41 @@
         <a class="btn btn-danger" id="idRepairBtn" title="{{Tente de corriger l'état interne de l'équipement}}">{{Réparer}}</a>
     </div>
 </div>
+
+<?php
+    if (isset($dbgDeveloperMode))
+        echo '<div class="form-group">';
+    else
+        echo '<div class="form-group" hidden>';
+?>
+<!-- <div class="form-group"> -->
+    <label class="col-sm-3 control-label">{{Support du cluster color}}</label>
+    <div class="col-sm-5">
+        <a class="btn btn-danger" id="idInspectColorBtn" title="{{Analyse pour le support du cluster 0300}}">{{Inspecter}}</a>
+    </div>
+</div>
+
+<script>
+    /* Repair: Equipment repair popup */
+    $("#idInspectColorBtn").on("click", function () {
+        console.log("idInspectColorBtn click: curEqId=" + curEqId);
+
+        $("#md_modal").dialog({
+            title: "{{Analyse cluster 0300}}",
+            autoOpen: false,
+            resizable: false,
+            modal: true,
+            height: 300,
+            width: 400,
+            // close: function (ev, ui) {
+            //     window.location.reload();
+            // },
+        });
+        $("#md_modal")
+            .load(
+                "index.php?v=d&plugin=Abeille&modal=AbeilleColorInspector.modal&eqId=" +
+                    curEqId
+            )
+            .dialog("open");
+    });
+</script>

@@ -9,6 +9,7 @@
 -   Améliorations: Modèle cmde 'Colour' remplacé par 'act_colorChoice'.
 -   Améliorations: Suppression cmdes 'colorRouge/colorVert/colorBleu' => cmd 'act_ColorChoice'.
 -   Améliorations: Suppression cmdes 'setRouge/setVert/setBleu' => cmd 'act_ColorChoice'.
+-   Nouveauté: Analyse support cluster 0300 (Mode dev pour l'instant).
 
 ## 251228-BETA-1
 

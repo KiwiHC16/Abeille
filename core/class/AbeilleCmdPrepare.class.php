@@ -901,6 +901,8 @@
                 );
                 break;
             case "setRouge":
+                cmdLog('debug', "  WARNING: OBSOLETE command '$action'. Device model to be reloaded.");
+
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
 
                 $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
@@ -932,6 +934,8 @@
                                 );
                 break;
             case "setVert":
+                cmdLog('debug', "  WARNING: OBSOLETE command '$action'. Device model to be reloaded.");
+
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
 
                 $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
@@ -963,6 +967,8 @@
                 );
                 break;
             case "setBleu":
+                cmdLog('debug', "  WARNING: OBSOLETE command '$action'. Device model to be reloaded.");
+
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
 
                 $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();

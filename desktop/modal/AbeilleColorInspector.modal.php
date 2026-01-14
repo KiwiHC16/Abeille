@@ -1,123 +1,133 @@
 <?php
-    require_once __DIR__.'/../../core/config/Abeille.config.php';
+    // require_once __DIR__.'/../../core/config/Abeille.config.php';
     // include_once __DIR__.'/../../core/php/AbeilleOTA.php';
 
-    echo '<script>var js_otaDir = "'.otaDir.'";</script>'; // PHP to JS
-    $abQueues = $GLOBALS['abQueues'];
-    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
-    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
+    // echo '<script>var js_otaDir = "'.otaDir.'";</script>'; // PHP to JS
+    // $abQueues = $GLOBALS['abQueues'];
+    // echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
+    // echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
     // echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>
 
-<h3>{{Equipements}}</h3>
-<table id="idDevicesTable">
-<tbody>
-<tr><th>{{Nom}}</th><th width="40px">Addr</th></tr>
-<?php
-    // $eqLogics = eqLogic::byType('Abeille');
-    // foreach ($eqLogics as $eqLogic) {
-    //     $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
-    //     list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
-    //     if ($eqAddr == "0000")
-    //         continue; // Ignoring gateways
-    //     $eqName = $eqLogic->getName();
-    //     $eqId = $eqLogic->getId();
-
-    //     echo '<tr>';
-    //     echo '<td>'.$eqName.'</td><td>'.$eqAddr.'</td>';
-    //     echo '<td><button type="button" class="btn btn-secondary" onclick="removeDevice(\''.$eqId.'\')">{{Supprimer}}</button></td>';
-    //     echo '</tr>';
-    // }
-?>
-</tbody>
-</table>
+<div>
+    <table id="idCiSteps">
+        <tr>
+            <th width="50px">Status</th>
+            <th width="300px">Etape</th>
+        </tr>
+    </table>
+</div>
+<br>
+<p style="text-align:center; margin-top:30px">
+    <a id="idCiCloseBtn" class="btn btn-secondary">{{Annuler}}</a>
+    <a id="idCiRetryBtn" class="btn btn-success" title="{{Continue le process}}" onclick="ci_openReturnChannel">{{Continuer}}</a>
+</p>
 
 <script>
-    // console.log ("js_eqPerZigate=", js_eqPerZigate);
-    eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
-    console.log ("eqPerZigate=", eqPerZigate);
+    ci_steps = new Object();
+    ci_openReturnChannel();
 
-    updateDevicesTable();
+    // Retry button: Continue
+    // popup.find("#idCiRetryBtn").on("click", function () {
+    //     ci_openReturnChannel();
+    // });
 
-    function updateDevicesTable() {
+    // Close button
+    // popup.find("#idCiCloseBtn").on("click", function () {
+    //     myPopup.find(".bootbox-close-button").trigger("click");
+    //     // Refresh the page
+    //     location.reload();
+    // });
 
-        console.log("updateDevicesTable()");
+    /* Open return channel */
+    function ci_openReturnChannel() {
+        console.log("ci_openReturnChannel(), curEqId=" + curEqId);
 
-        tr = "";
-        for (const [gtwId, devicesById] of Object.entries(eqPerZigate)) {
-
-            // console.log("gtwId="+gtwId+", devicesById=", devicesById);
-            for (const [eqId, dev] of Object.entries(devicesById)) {
-
-                // console.log ("eqId="+eqId+", dev=", dev);
-                eqName = dev["name"];
-                eqAddr = dev["addr"];
-
-                tr += "<tr>";
-                tr += "<td>" + eqName + "</td>";
-                tr += "<td>" + eqAddr + "</td>";
-                tr += '<td><button type="button" class="btn btn-secondary" onclick="removeDevice(\'' + gtwId + '\', \'' + eqId + '\')">{{Supprimer}}</button></td>';
-                tr += "</tr>";
-            }
-        }
-
-        $("#idDevicesTable tbody").empty().append(tr);
+        var url = "plugins/Abeille/core/php/AbeilleColorInspector.php";
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.responseType = "text";
+        xhr.onload = ci_checkReturnChannel;
+        // request.onreadystatechange = returnChannelStateChange;
+        var data = new FormData();
+        data.append("eqId", curEqId);
+        xhr.send(data);
     }
 
-    // Remove device whose Jeedom ID is 'eqId', then update 'devicesTable'
-    function removeDevice(gtwId, eqId) {
-
-        console.log("removeDevice(gtwId="+ gtwId + ", eqId=" + eqId + ")");
-
-        removed = {};
-        // Excluding local devices (ex: Abeille remote control with addr 'rcXX')
-        addr = eqPerZigate[gtwId][eqId]['addr'];
-        if (addr.substring(0, 2) != "rc") {
-            removed[gtwId] = []; // Addresses list
-            removed[gtwId].push(addr);
+    /* Color Inspector: Treat async infos received from server to display them. */
+    function ci_checkReturnChannel() {
+        // console.log("receiveInfos()");
+        // console.log("Got='"+this.responseText+"'");
+        if (this.responseText == "") {
+            console.log("ci_checkReturnChannel() => EMPTY");
+            // openRepairReturnChannel();
+            return;
         }
-        console.log("removed=", removed);
+        console.log("ci_checkReturnChannel(), resp=", this.responseText);
 
-        jeedom.eqLogic.remove({
-            type: "Abeille",
-            id: eqId,
-            error: function (error) {
-                $.fn.showAlert({
-                    message: error.message,
-                    level: "danger",
-                });
-            },
-            success: function () {
-                delete eqPerZigate[gtwId][eqId];
-                updateDevicesTable(); // Update devices table
+        // console.log("ci_steps=", ci_steps);
+        resp = JSON.parse(this.responseText);
+        // console.log("resp=", resp);
+        resp.forEach((m) => {
+            console.log("m=", m);
+            if (m.type == "step") {
+                stepName = m.name;
+                stepStatus = m.status;
 
-                if (removed.length == 0)
-                    return; // Possible if Abeille remote control removed
+                let myTable = document.getElementById("idCiSteps");
+                // console.log("myTable=", myTable);
 
-                domUtils.ajax({ // Inform daemons that device removed
-                    type: "POST",
-                    url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
-                    data: {
-                        action: "eqRemoved",
-                        removed:  JSON.stringify(removed),
-                    },
-                    dataType: 'json',
-                    global: false,
-                    error: function(error) {
-                        jeedomUtils.showAlert({
-                            message: error.message,
-                            level: 'danger'
-                        })
-                    },
-                    success: function(data) {
-                        //Do stuff
-                        // jeedomUtils.showAlert({
-                        //     message: 'All good dude!',
-                        //     level: 'success'
-                        // })
-                    }
-                })
-            },
+                // New or already known step ?
+                if (typeof ci_steps[stepName] == "undefined") {
+                    console.log(
+                        "new step '" + stepName + "' => status='" + stepStatus + "'"
+                    );
+                    ci_steps[stepName] = new Object();
+
+                    let row = myTable.insertRow(-1); // We are adding at the end
+                    rowIndex = row.rowIndex;
+                    ci_steps[stepName]["rowIndex"] = rowIndex;
+                    // console.log("rowIndex=" + rowIndex);
+                    cell0 = row.insertCell(0);
+                    cell1 = row.insertCell(1);
+                    cell0.innerHTML = stepStatus;
+                    cell1.innerHTML = stepName;
+                    // console.log("myTable NOW=", myTable);
+                } else {
+                    step = ci_steps[stepName];
+                    rowIndex = step.rowIndex;
+                    console.log(
+                        "known step '" +
+                            stepName +
+                            "' => index=" +
+                            rowIndex +
+                            ", status='" +
+                            stepStatus +
+                            "'"
+                    );
+                    cell0 = myTable.rows[rowIndex].cells[0];
+                    cell0.innerHTML = stepStatus;
+                }
+                ci_steps[stepName]["status"] = stepStatus;
+            }
         });
+
+        // Do we still need to interrogate device ?
+        missingInfo = false;
+        for (const [stepName, step] of Object.entries(ci_steps)) {
+            // console.log("toto stepName=" + stepName + " step=", step);
+            if (step.status != "ok") {
+                console.log("Still missing infos for step '" + stepName + "'");
+                missingInfo = true;
+                break;
+            }
+        }
+        if (!missingInfo) {
+            // Rename 'cancel' to 'close'
+            document.getElementById("idCiCloseBtn").innerHTML = "{{Fermer}}";
+            // Hide 'retry' button
+            document.getElementById("idCiRetryBtn").style.display = "none";
+        }
+        // if (missingInfo) openRepairReturnChannel();
     }
 </script>

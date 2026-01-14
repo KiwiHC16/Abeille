@@ -47,15 +47,15 @@
                 "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
-            "Set Level": {
+            "Set Brightness": {
                 "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
-            "Get Level": {
+            "Get Brightness": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "Level": {
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1",
                 "nextLine": "after"

@@ -86,19 +86,24 @@
             msgToCli("step", "No color cluster support for this device.");
             return;
         }
+
+        // Next steps ??
+        // Supported server attributes ?
+        // Configure reporting ok on ?
+        // Test
     }
 
     /*--------------------------------------------------------------------------------------------------*/
     /* Main
     /*--------------------------------------------------------------------------------------------------*/
 
-    logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleColorDiscover.log", true);
-    logMessage("", ">>> AbeilleColorDiscover starting");
+    logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleColorInspector.log", true);
+    logMessage("", ">>> AbeilleColorInspector starting");
 
     if (!isset($_POST['eqId'])) {
         $msgToCli = array('type' => 'error', 'errMsg' => 'Missing equipment ID');
         echo json_encode($msgToCli);
-        logMessage("", "<<< AbeilleColorDiscover exiting on error.");
+        logMessage("", "<<< AbeilleColorInspector exiting on error.");
         exit(1);
     }
 
@@ -115,5 +120,5 @@
     inspectDevice($eqId, $eqLogic);
     echo json_encode($messages);
 
-    logMessage("", "<<< AbeilleColorDiscover exiting.");
+    logMessage("", "<<< AbeilleColorInspector exiting.");
 ?>

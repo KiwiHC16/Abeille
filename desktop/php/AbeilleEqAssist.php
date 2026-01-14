@@ -90,7 +90,7 @@
                 <?php echo '<input type="text" value="'.$eqLogic->getName().'" readonly>'; ?>
             </div>
             <?php if (isset($dbgTcharp38)) { ?>
-            <a class="btn btn-warning" title="Met à jour Jeedom à partir du fichier JSON" onclick="updateJeedom()">Mettre à jour</a>
+            <!-- <a class="btn btn-warning" title="Met à jour Jeedom à partir du fichier JSON" onclick="updateJeedom()">Mettre à jour</a> -->
             <?php } ?>
         </div>
     </div>
@@ -167,9 +167,9 @@
                 <br>
                 <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <?php if (isset($dbgTcharp38)) { ?>
-                <a class="btn btn-success pull-left" title="Genère le modèle JSON" onclick="zigbeeToModel()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour modèle</a>
+                <!-- <a class="btn btn-success pull-left" title="Genère le modèle JSON" onclick="zigbeeToModel()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour modèle</a>
                 <input type="file" id="files" name="files[]" multiple />
-                <output id="list"></output>
+                <output id="list"></output> -->
                 <?php } ?>
                 <br>
                 <br>
@@ -190,7 +190,7 @@
                             // else
                                 echo '<input id="idJsonName" type="text" value="'.$jsonName.'">';
                         ?>
-                        <a class="btn btn-default" title="(Re)lire" onclick="readConfig()">(Re)lire</a>
+                        <a class="btn btn-default" title="(Re)lire" onclick="readDeviceModel()">(Re)lire</a>
                         <a class="btn btn-alert" title="Créer/mettre à jour le modèle JSON" onclick="writeModel()">Ecrire modèle</a>
                         <a class="btn btn-default" title="Télécharger le modèle JSON" onclick="downloadConfig()"><i class="fas fa-file-download"></i> Télécharger modèle</a>
                         <a class="btn btn-default" title="Importer un 'discovery.json'" onclick="importDiscovery()"><i class="fas fa-file-upload"></i> Importer 'discovery'</a>
@@ -327,7 +327,7 @@
 
     /* Read JSON if defined */
     if (js_jsonName != '')
-        readConfig();
+        readDeviceModel();
 
     // /* Attempt to detect main supported attributs */
     // function refreshAttributsList(epIdx, cliClust, clustIdx) {
@@ -650,9 +650,9 @@
 
     /* Read JSON.
        Called from JSON read/reload button. */
-    function readConfig() {
-        console.log("readConfig()");
+    function readDeviceModel() {
 
+        console.log("readDeviceModel()");
         js_jsonName = document.getElementById("idJsonName").value;
 
         /* TODO: Check if there is any user modification and ask user to cancel them */
@@ -661,16 +661,16 @@
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
             data: {
-                action: 'readDeviceConfig',
-                jsonId: js_jsonName,
-                jsonLocation: js_jsonLocation,
+                action: 'readDeviceModel',
+                modelName: js_jsonName,
+                modelSrc: js_jsonLocation,
                 mode: 1 // 1=Do not merge commands & command files
             },
             dataType: 'json',
             global: false,
             // async: false,
             error: function (request, status, error) {
-                bootbox.alert("ERREUR 'readConfig' !<br>Votre installation semble corrompue.<br>"+error);
+                bootbox.alert("ERREUR 'readDeviceModel' !<br>Votre installation semble corrompue.<br>"+error);
                 status = -1;
             },
             success: function (json_res) {

@@ -1052,7 +1052,7 @@
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
                 // Note: If device is a light bulb, need to use 'act_setLevel-Light'
-                cmds["Set "+cmdName] = newCmd("act_setLevel-Light", "ep="+epId);
+                cmds["Set "+cmdName] = newCmd("act_setLevel-Percent-Light", "ep="+epId);
                 cmds["Set "+cmdName]["isVisible"] = 1;
                 cmds["Set "+cmdName]["value"] = cmdName; // Slider default value
                 cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
@@ -1060,6 +1060,7 @@
                 cmds[cmdName] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
                 cmds[cmdName]["isVisible"] = 1;
                 cmds[cmdName]["nextLine"] = "after";
+
                 cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
                 cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrId=0000&attrType=20", "yes");
             }
@@ -1180,7 +1181,7 @@
                     cmds["Green"]["isVisible"] = 1;
                     cmds["Green"]["logicalId"] = "SetGreen";
 
-                    cmds["Color"] = newCmd("act_moveToColor-RGB");
+                    cmds["Color"] = newCmd("act_colorChoice");
                     cmds["Color"]["isVisible"] = 1;
                     cmds["Color"]["nextLine"] = "after";
                 }

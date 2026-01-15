@@ -11,6 +11,7 @@
 -   Améliorations: Suppression cmdes 'setRouge/setVert/setBleu' => cmd 'act_ColorChoice'.
 -   Nouveauté: (En cours) Analyse support cluster 0300 (Mode dev pour l'instant).
 -   Corrections: Assistant modèle.
+-   Nouveauté: Support LTA009 ampoule E27 (2782).
 
 ## 251228-BETA-1
 

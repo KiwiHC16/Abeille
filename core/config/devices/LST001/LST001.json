@@ -11,11 +11,23 @@
         },
         "type": "Hue LightStrip 1re g\u00e9n\u00e9ration",
         "commands": {
-            "etat": {
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "isVisible": 1
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "nextLine": "after"
+            },
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
-            "CurrentLevel-0008": {
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
@@ -27,15 +39,7 @@
                 "use": "inf_zbAttr-0300-CurrentY",
                 "isVisible": 1
             },
-            "On": {
-                "use": "act_zbCmdC-0006-On",
-                "isVisible": 1
-            },
-            "Off": {
-                "use": "act_zbCmdC-0006-Off",
-                "isVisible": 1
-            },
-            "Set Level": {
+            "Set Brightness": {
                 "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
@@ -80,7 +84,7 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Get-CurrentLevel": {
+            "Get-Brightness": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
@@ -111,18 +115,7 @@
                 "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "ColourRGB": {
-                "use": "ColourRGB"
-            },
-            "RGB": {
-                "use": "setColourRGB"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
-        },
-        "comment": ""
+        }
     }
 }

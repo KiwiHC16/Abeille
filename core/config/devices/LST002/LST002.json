@@ -1,5 +1,8 @@
 {
     "LST002": {
+        "manufacturer": "Philips",
+        "model": "LST002",
+        "type": "lightstripe philips hue plus",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",
@@ -9,13 +12,8 @@
         "category": {
             "light": "1"
         },
-        "type": "lightstripe philips hue plus",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
@@ -35,7 +33,15 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
-            "Set Level": {
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "nextLine": "after"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
+            },
+            "Set Brightness": {
                 "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
@@ -80,7 +86,7 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Get-CurrentLevel": {
+            "Get-Brightness": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
@@ -111,18 +117,7 @@
                 "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "ColourRGB": {
-                "use": "ColourRGB"
-            },
-            "RGB": {
-                "use": "setColourRGB"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
-        },
-        "comment": ""
+        }
     }
 }

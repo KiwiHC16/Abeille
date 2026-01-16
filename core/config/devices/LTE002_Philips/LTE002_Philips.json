@@ -14,8 +14,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": "1"
+                "use": "act_zbCmdC-Identify"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -31,15 +30,15 @@
                 "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=0B"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=0B&clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=0B",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=0B&clustId=0006&attrId=0000"
             },
             "Bind 0B-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -51,20 +50,20 @@
                 "params": "ep=0B&clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
-            "Set Level": {
+            "Set Brightness": {
                 "use": "act_setLevel-Percent-Light",
                 "params": "ep=0B",
                 "isVisible": "1"
             },
-            "Level": {
+            "Get Brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=0B&clustId=0008&attrId=0000"
+            },
+            "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "params": "ep=0B",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=0B&clustId=0008&attrId=0000"
             },
             "Bind 0B-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -80,13 +79,13 @@
                 "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "isVisible": "1"
             },
-            "Color Temp": {
-                "use": "inf_zbAttr-0300-ColorTemperatureMireds",
-                "isVisible": "1"
-            },
             "Get ColorTemperature": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0007"
+            },
+            "Color Temp": {
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds",
+                "isVisible": "1"
             },
             "Bind 0B-0300-ToZigate": {
                 "use": "act_zbBindToZigate",

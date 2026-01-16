@@ -78,58 +78,10 @@
                 "params": "ep=0B&clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "yes"
             },
-            "Get Color Mode": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0300&attrId=0008"
-            },
-            "Color Mode": {
-                "use": "inf_zbAttr-0300-ColorMode"
-            },
-            "Get Current X": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0300&attrId=0003"
-            },
-            "Current X": {
-                "use": "inf_zbAttr-0300-CurrentX"
-            },
-            "Get Current Y": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0300&attrId=0004"
-            },
-            "Current Y": {
-                "use": "inf_zbAttr-0300-CurrentY"
-            },
-            "White": {
-                "use": "act_zbCmdC-0300-MoveToColor",
-                "params": "X=6000&Y=6000",
-                "isVisible": "1",
-                "logicalId": "SetWhite"
-            },
-            "Blue": {
-                "use": "act_zbCmdC-0300-MoveToColor",
-                "params": "X=228F&Y=228F",
-                "isVisible": "1",
-                "logicalId": "SetBlue"
-            },
-            "Red": {
-                "use": "act_zbCmdC-0300-MoveToColor",
-                "params": "X=AE13&Y=51EB",
-                "isVisible": "1",
-                "logicalId": "SetRed"
-            },
-            "Green": {
-                "use": "act_zbCmdC-0300-MoveToColor",
-                "params": "X=147A&Y=D709",
-                "isVisible": "1",
-                "logicalId": "SetGreen"
-            },
-            "Color": {
-                "use": "act_colorChoice",
-                "isVisible": "1",
-                "nextLine": "after"
-            },
             "Set Color Temp": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",
+                "minValue": 2200,
+                "maxValue": 6500,
                 "isVisible": "1"
             },
             "Get ColorTemperature": {

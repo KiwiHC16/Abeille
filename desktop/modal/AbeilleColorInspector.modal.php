@@ -56,8 +56,7 @@
 
     /* Color Inspector: Treat async infos received from server to display them. */
     function ci_checkReturnChannel() {
-        // console.log("receiveInfos()");
-        // console.log("Got='"+this.responseText+"'");
+
         if (this.responseText == "") {
             console.log("ci_checkReturnChannel() => EMPTY");
             // openRepairReturnChannel();

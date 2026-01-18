@@ -49,11 +49,12 @@
     }
 
     function msgToCli2($type, $value, $value2 = '') {
+        $messages = [];
         if ($type == "step")
-            $msgToCli = array('type' => $type, 'name' => $value, 'status' => $value2);
+            $messages[] = array('type' => $type, 'name' => $value, 'status' => $value2);
         else
-            $msgToCli = array('type' => 'ERROR');
-        echo json_encode($msgToCli);
+            $messages[] = array('type' => 'ERROR');
+        echo json_encode($messages);
     }
 
     function saveEqConfig($eqLogic, $key, $value) {

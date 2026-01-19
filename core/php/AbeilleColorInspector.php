@@ -55,6 +55,8 @@
         else
             $messages[] = array('type' => 'ERROR');
         echo json_encode($messages);
+        flush();
+        logMessage("debug", "MsgToCli=".json_encode($messages));
     }
 
     function saveEqConfig($eqLogic, $key, $value) {
@@ -181,9 +183,11 @@
             $exitCI = true;
             break;
         }
+        logMessage('debug', "  Color cluster supported on EP $colorSupportedEpId");
 
-        // Next steps ??
+        // Need supported attributes ? Could be better to just check write/read on required attribute.
         // Supported server attributes ? => Where to store them if this process is recalled multiple times ?
+        msgToCli2("step", "Requesting color cluster server attributes.");
 
         // Try moveToColor (X/Y)
         // Auto report ? or read back ? => 0300-EP-0007
@@ -193,7 +197,10 @@
         // Try set color temp (moveToColorTemp)
         // Auto report ? or read back ? => 0300-EP-0007
         // Same question after configure reporting done
+
+        break;
     }
 
+    msgToCli2("exit", "Closing color inspector.");
     logMessage("", "<<< AbeilleColorInspector exiting.");
 ?>

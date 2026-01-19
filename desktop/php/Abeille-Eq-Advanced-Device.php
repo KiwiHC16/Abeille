@@ -8,6 +8,57 @@
 ?>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Modèle d'équipement}}</label>
+    <div class="col-sm-9">
+        <input id="idModelSig" readonly style="width:240px" title="{{Signature du modèle utilisé}}" value="" />
+        <input id="idModelName" readonly style="width:240px" title="{{Nom du modèle utilisé}}" value="" />
+        <input id="idModelSource" readonly style="width:80px" title="{{Source du modèle}}" value="" />
+        <a class="btn btn-danger" id="idDelLocalBtn" title="{{Supprime la version locale du modèle}} (devices_local)" style="display:none"><i class="far fa-trash-alt"></i></a>
+        <a class="btn btn-default" id="idUpdateBtn" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>
+        <a class="btn btn-danger" id="idReinitBtn" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l'équipement comme s'il s'agissait d'une nouvelle inclusion}}">{{Réinitialiser}}</a>
+        <a class="btn btn-danger" id="idModelChangeBtn" style="margin-left:8px" title="{{Utilisateurs avancés - Forcer un modèle particulier}}">{{Forcer modèle}}</a>
+
+    </div>
+
+    <!-- Forced model choice popup -->
+    <div class="abeille-model-change-popup-content" style="display:none">
+        <h3 style="margin-top:0">{{Choix du modèle d'équipement}}</h3>
+        <p>{{Lors de l'ajout d'un équipement, Abeille identifie automatiquement le modèle à partir de sa signature Zigbee. L'équipement est ensuite automatiquement configuré.}}</p>
+        <p>{{Toutefois, si le modèle identifié n'est pas le bon (rare), ou si votre équipement n'est pas encore connu d'Abeille, vous pouvez forcer ici l'utilisation d'un modèle de votre choix parmi tous les équipements connus.}}</p>
+
+        <p class="alert alert-warning">{{Cette fonction est destinée aux utilisteurs avancés, ne l'utilisez que si vous comprenez parfaitement ce que vous faites.}}</p>
+
+        <p>
+            <label>{{Modèle actuel de votre équipement}}: </label>
+            <br>
+            <span class='current-model'>-- Aucun --</span>
+        </p>
+
+        <p>
+            <label>{{Choisissez le modèle à appliquer}}: </label>
+            <br>
+            <input type="search" style="width:100%; box-sizing:border-box" list="abeille-all-models-list" placeholder="{{ Recherchez par fabricant, modèle, ou nom de fichier JSON }}">
+        </p>
+
+        <p style="text-align:center; margin-top:30px">
+            <a class="btn btn-secondary">{{Annuler}}</a>
+            <a class="btn btn-success" title="{{Enregistrer le modèle choisi et reconfigurer l'équipement}}">{{Appliquer le modèle}}</a>
+        </p>
+    </div>
+
+    <!-- Abeille's models list if user wants to force a different one -->
+    <datalist id="abeille-all-models-list"></datalist>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
+    <div class="col-sm-5">
+        <input id="idZbModel" readonly title="{{Identificant Zigbee du modèle}}" value="" />
+        <input id="idZbManuf" readonly style="margin-left:4px;width:200px" title="{{Identificant Zigbee du fabricant}}" value="" />
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
     <div class="col-sm-5">
         <input id="idEqAddr" type="text" value="" readonly>
@@ -65,58 +116,6 @@
         <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
     </div>
 </div>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
-    <div class="col-sm-5">
-        <input id="idZbModel" readonly title="{{Identificant Zigbee du modèle}}" value="" />
-        <input id="idZbManuf" readonly style="margin-left:4px;width:200px" title="{{Identificant Zigbee du fabricant}}" value="" />
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{Modèle d'équipement}}</label>
-    <div class="col-sm-9">
-        <input id="idModelSig" readonly style="width:240px" title="{{Signature du modèle utilisé}}" value="" />
-        <input id="idModelName" readonly style="width:240px" title="{{Nom du modèle utilisé}}" value="" />
-        <input id="idModelSource" readonly style="width:80px" title="{{Source du modèle}}" value="" />
-        <a class="btn btn-danger" id="idDelLocalBtn" title="{{Supprime la version locale du modèle}} (devices_local)" style="display:none"><i class="far fa-trash-alt"></i></a>
-        <a class="btn btn-default" id="idUpdateBtn" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>
-        <a class="btn btn-danger" id="idReinitBtn" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l'équipement comme s'il s'agissait d'une nouvelle inclusion}}">{{Réinitialiser}}</a>
-        <a class="btn btn-danger" id="idModelChangeBtn" style="margin-left:8px" title="{{Utilisateurs avancés - Forcer un modèle particulier}}">{{Forcer modèle}}</a>
-
-    </div>
-
-    <!-- Forced model choice popup -->
-    <div class="abeille-model-change-popup-content" style="display:none">
-        <h3 style="margin-top:0">{{Choix du modèle d'équipement}}</h3>
-        <p>{{Lors de l'ajout d'un équipement, Abeille identifie automatiquement le modèle à partir de sa signature Zigbee. L'équipement est ensuite automatiquement configuré.}}</p>
-        <p>{{Toutefois, si le modèle identifié n'est pas le bon (rare), ou si votre équipement n'est pas encore connu d'Abeille, vous pouvez forcer ici l'utilisation d'un modèle de votre choix parmi tous les équipements connus.}}</p>
-
-        <p class="alert alert-warning">{{Cette fonction est destinée aux utilisteurs avancés, ne l'utilisez que si vous comprenez parfaitement ce que vous faites.}}</p>
-
-        <p>
-            <label>{{Modèle actuel de votre équipement}}: </label>
-            <br>
-            <span class='current-model'>-- Aucun --</span>
-        </p>
-
-        <p>
-            <label>{{Choisissez le modèle à appliquer}}: </label>
-            <br>
-            <input type="search" style="width:100%; box-sizing:border-box" list="abeille-all-models-list" placeholder="{{ Recherchez par fabricant, modèle, ou nom de fichier JSON }}">
-        </p>
-
-        <p style="text-align:center; margin-top:30px">
-            <a class="btn btn-secondary">{{Annuler}}</a>
-            <a class="btn btn-success" title="{{Enregistrer le modèle choisi et reconfigurer l'équipement}}">{{Appliquer le modèle}}</a>
-        </p>
-    </div>
-
-    <!-- Abeille's models list if user wants to force a different one -->
-    <datalist id="abeille-all-models-list"></datalist>
-</div>
-
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Assistant de découverte}}</label>

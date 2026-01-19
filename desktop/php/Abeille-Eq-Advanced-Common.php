@@ -23,16 +23,16 @@
 </div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
-    <div advInfo="Time-Time" class="col-sm-5">
-        <input type="text" id="tofill" value="tofill" readonly>
+    <label class="col-sm-3 control-label">{{Nom logique}}</label>
+    <div class="col-sm-5">
+        <input type="text" class="eqLogicAttr" data-l1key="logicalId"></input>
     </div>
 </div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">{{Nom logique}}</label>
-    <div class="col-sm-5">
-        <input type="text" class="eqLogicAttr" data-l1key="logicalId"></input>
+    <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
+    <div advInfo="Time-Time" class="col-sm-5">
+        <input type="text" id="tofill" value="tofill" readonly>
     </div>
 </div>
 

@@ -1,3 +1,6 @@
+Status Zigbee
+    A ajouter pour savoir si a quitté le réseau (si oui quand), ou si dans le réseau.
+
 calculValueOffset
     Pour cmde info mais AUSSI pour cmde action.
     Dans les 2 cas configurable via interface Jeedom => onglet 'configuration', 'Formule de calcul'

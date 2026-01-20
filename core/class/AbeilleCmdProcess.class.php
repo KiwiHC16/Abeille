@@ -4626,6 +4626,48 @@
                     return;
                 }
 
+                // ZCL cluster 0300/color control: 4B/Move Color Temperature
+                // Mandatory params: addr, ep, slider (temp in K)
+                // Note: slider=0 is specific value to force tempMireds=0000
+                else if ($cmdName == 'cmd-0300-moveColorTemperature') {
+                    $required = ['addr', 'ep']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <target short address: uint16_t>     4
+                    // <source endpoint: uint8_t>           2
+                    // <destination endpoint: uint8_t>      2
+                    // <colour temperature: uint16_t>       4
+                    // <transition time: uint16_t>          4
+
+                    $zgCmd = "00C0"; // 00C0=Move color temperature
+
+                    $addrMode = isset($Command['cmdParams']['addrMode']) ? $Command['cmdParams']['addrMode']: "02";
+                    $addr     = $Command['cmdParams']['addr'];
+                    $srcEp    = "01";
+                    $dstEp    = isset($Command['cmdParams']['ep']) ? $Command['cmdParams']['ep'] : "01";
+                    // Color temp K = 1,000,000 / ColorTempMireds,
+                    // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
+                    // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.
+                    $tempK = intval($Command['cmdParams']['slider']);
+                    if ($tempK == 0)
+                        $tempMireds = "0000";
+                    else {
+                        if ($tempK < 15.32)
+                            $tempK = 15.32;
+                        else if ($tempK > 1000000)
+                            $tempK = 1000000;
+                        $tempMireds  = sprintf("%04X", 1000000 / $tempK);
+                    }
+                    $transition = "0001"; // Transition time
+
+                    cmdLog('debug', '  moveColorTemp: TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
+
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                } // End 'cmd-0300-MoveColorTemperature'
+
                 // ZCL cluster 0500/IAS Zone commands
                 // Mantatory params: 'addr', 'ep', 'cmd' (00 or 01)
                 // Optional params for cmd 00/zone enroll response:

@@ -405,6 +405,17 @@
         <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px; margin-left: 8px" />
     </div>
 </div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0300, Move Color Temperature (cmd 4B)">ZCL: 0300/Color ctrl - 4B/Move Color Temperature</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Appliquer}}", "btn-danger", "0300-MoveColorTemperature");
+            addEpInput("idEp-MCT");
+        ?>
+        <!-- <input id="idX-MCT" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px; margin-left: 8px" />
+        <input id="idY-MCT" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px; margin-left: 8px" /> -->
+    </div>
+</div>
 
 <!-- Cluster 0502 support -->
 <div class="form-group">

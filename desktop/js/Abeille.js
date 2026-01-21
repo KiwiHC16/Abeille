@@ -2365,8 +2365,8 @@ function interrogate(request) {
         X = document.getElementById("idX-MTC").value;
         Y = document.getElementById("idY-MTC").value;
         payload = "EP=" + ep + "_X=" + X + "_Y=" + Y;
-    } else if (request == "cmd0300-moveColorTemperature-K") { // Cluster 0300, cmd 0x4B
-        topic = "Cmd" + logicalId + "_0300-moveColorTemperature-K";
+    } else if (request == "cmd0300-MoveColorTemperature-K") { // Cluster 0300, cmd 0x4B
+        topic = "Cmd" + logicalId + "_cmd-0300-moveColorTemperature-K";
         ep = document.getElementById("idEp-MCT").value;
         tempK = document.getElementById("idTempK-MCT").value;
         payload = "ep=" + ep + "_tempK=" + tempK;

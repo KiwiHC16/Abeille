@@ -4627,7 +4627,7 @@
                 }
 
                 // ZCL cluster 0300/color control: 4B/Move Color Temperature
-                // Mandatory params: addr, ep, tempK (in K)
+                // Mandatory params: addr, ep, tempK (in K, decimal)
                 else if ($cmdName == 'cmd-0300-moveColorTemperature-K') {
                     $required = ['addr', 'ep', 'tempK']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))

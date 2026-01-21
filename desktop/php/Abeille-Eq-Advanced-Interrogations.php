@@ -412,7 +412,7 @@
             addButton("{{Appliquer}}", "btn-danger", "cmd0300-MoveColorTemperature-K");
             addEpInput("idEp-MCT");
         ?>
-        <input id="idTempK-MCT" title="{{Temperature en Kelvin: format hex 4 car}}" placeholder="{{TempK}}" style="width:60px; margin-left: 8px" />
+        <input id="idTempK-MCT" title="{{Temperature en Kelvin: format decimal}}" placeholder="{{TempK}}" style="width:60px; margin-left: 8px" />
     </div>
 </div>
 

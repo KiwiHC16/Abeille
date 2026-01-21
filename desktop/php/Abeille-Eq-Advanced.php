@@ -138,15 +138,15 @@
             require_once __DIR__.'/../../core/php/AbeilleZigbeeConst.php';
             include 'Abeille-Eq-Advanced-Common.php';
 
-            echo '<div id="idAdvZigate" style="display:none;">';
-            include 'Abeille-Eq-Advanced-Zigate.php'; // Hidden by default
+            echo '<div id="idAdvZigate" style="display:none;">'; // Hidden by default
+            include 'Abeille-Eq-Advanced-Zigate.php';
             echo '</div>';
 
-            echo '<div id="idAdvDevices" style="display:none;">';
-            include 'Abeille-Eq-Advanced-Device.php';
+            echo '<div id="idAdvDevices" style="display:none;">'; // Hidden by default
             include 'Abeille-Eq-Advanced-Specific.php';
             echo '</div>';
 
+            include 'Abeille-Eq-Advanced-Device.php'; // Zigbee
             include 'Abeille-Eq-Advanced-Interrogations.php';
         ?>
     </fieldset>

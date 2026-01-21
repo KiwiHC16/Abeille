@@ -2368,7 +2368,9 @@ function interrogate(request) {
     } else if (request == "cmd0300-MoveColorTemperature-K") { // Cluster 0300, cmd 0x4B
         topic = "Cmd" + logicalId + "_cmd-0300-moveColorTemperature-K";
         ep = document.getElementById("idEp-MCT").value;
-        tempK = document.getElementById("idTempK-MCT").value;
+        // Expecting decimal string for Kelvin.
+        tempK = Number(document.getElementById("idTempK-MCT").value);
+        console.log("tempK=", tempK, typeof(tempK));
         payload = "ep=" + ep + "_tempK=" + tempK;
     } else if (request == "0502-StartWarning") {
         topic = "Cmd" + logicalId + "_cmd-0502";

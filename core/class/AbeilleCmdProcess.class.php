@@ -4627,10 +4627,9 @@
                 }
 
                 // ZCL cluster 0300/color control: 4B/Move Color Temperature
-                // Mandatory params: addr, ep, slider (temp in K)
-                // Note: slider=0 is specific value to force tempMireds=0000
-                else if ($cmdName == 'cmd-0300-moveColorTemperature') {
-                    $required = ['addr', 'ep']; // Mandatory infos
+                // Mandatory params: addr, ep, tempK (in K)
+                else if ($cmdName == 'cmd-0300-moveColorTemperature-K') {
+                    $required = ['addr', 'ep', 'tempK']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4649,7 +4648,7 @@
                     // Color temp K = 1,000,000 / ColorTempMireds,
                     // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
                     // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.
-                    $tempK = intval($Command['cmdParams']['slider']);
+                    $tempK = intval($Command['cmdParams']['tempK']);
                     if ($tempK == 0)
                         $tempMireds = "0000";
                     else {
@@ -4666,7 +4665,7 @@
 
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
-                } // End 'cmd-0300-MoveColorTemperature'
+                } // End 'cmd-0300-MoveColorTemperature-K'
 
                 // ZCL cluster 0500/IAS Zone commands
                 // Mantatory params: 'addr', 'ep', 'cmd' (00 or 01)

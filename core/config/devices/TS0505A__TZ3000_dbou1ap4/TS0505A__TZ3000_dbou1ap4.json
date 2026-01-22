@@ -111,7 +111,7 @@
                 "params": "clustId=0300&attrId=0008"
             },
             "Color": {
-                "use": "act_colorChoice",
+                "use": "act_setColorChoice-RGB",
                 "params": "",
                 "isVisible": 1
             },

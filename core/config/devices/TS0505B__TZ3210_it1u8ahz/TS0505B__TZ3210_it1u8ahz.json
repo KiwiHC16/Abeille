@@ -135,9 +135,9 @@
                 "isVisible": "1"
             },
             "Color": {
-                "use": "act_colorChoice",
-                "isVisible": 1,
-                "nextLine": "after"
+                "use": "act_setColorChoice-RGB",
+                "params": "",
+                "isVisible": 1
             },
             "Cool white": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",

@@ -62,7 +62,7 @@
                 "use": "setTemperatureLight"
             },
             "Color": {
-                "use": "act_colorChoice",
+                "use": "act_setColorChoice-RGB",
                 "params": "",
                 "isVisible": 1
             },

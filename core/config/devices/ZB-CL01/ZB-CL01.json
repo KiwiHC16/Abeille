@@ -42,7 +42,7 @@
                 "isVisible": 1
             },
             "Color": {
-                "use": "act_colorChoice",
+                "use": "act_setColorChoice-RGB",
                 "params": "",
                 "isVisible": 1
             },

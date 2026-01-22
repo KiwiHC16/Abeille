@@ -629,17 +629,25 @@
                     );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdUse."' UPDATED.\n";
-                } else if ($cmdUse == "setRGB") {
+                // } else if ($cmdUse == "setRGB") {
+                //     $commands2["Color"] = Array(
+                //         "use" => "act_colorChoice",
+                //         "params" => "",
+                //         "isVisible" => 1,
+                //     );
+                //     $devUpdated = true;
+                //     echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
+                // } else if ($cmdUse == "Colour") {
+                //     $commands2["Color"] = Array(
+                //         "use" => "act_colorChoice",
+                //         "params" => "",
+                //         "isVisible" => 1,
+                //     );
+                //     $devUpdated = true;
+                //     echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
+                } else if ($cmdUse == "act_colorChoice") {
                     $commands2["Color"] = Array(
-                        "use" => "act_colorChoice",
-                        "params" => "",
-                        "isVisible" => 1,
-                    );
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
-                } else if ($cmdUse == "Colour") {
-                    $commands2["Color"] = Array(
-                        "use" => "act_colorChoice",
+                        "use" => "act_setColorChoice-RGB",
                         "params" => "",
                         "isVisible" => 1,
                     );

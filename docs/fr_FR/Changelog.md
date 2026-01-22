@@ -4,11 +4,11 @@
 - Nouveauté: Vue des équipements en format 'liste'.
 - Amélioration: Suppression d'un équipement à partir de la vue 'liste'.
 - Nouveauté: Ajout cmd interne 'cmd-0300-moveToColor-RGB'.
-- Nouveauté: Nouvelle cmd 'act_colorChoice' pour remplacer 'setRGB'.
+- Nouveauté: Nouvelle cmd 'act_setColorChoice-RBG' pour remplacer 'setRGB'.
 - Améliorations: Support Ikea INSPELNING (2781).
-- Améliorations: Modèle cmde 'Colour' remplacé par 'act_colorChoice'.
-- Améliorations: Suppression cmdes 'colorRouge/colorVert/colorBleu' => cmd 'act_ColorChoice'.
-- Améliorations: Suppression cmdes 'setRouge/setVert/setBleu' => cmd 'act_ColorChoice'.
+- Améliorations: Modèle cmde 'Colour' remplacé par 'act_setColorChoice-RBG'.
+- Améliorations: Suppression cmdes 'colorRouge/colorVert/colorBleu' => cmd 'act_setColorChoice-RBG'.
+- Améliorations: Suppression cmdes 'setRouge/setVert/setBleu' => cmd 'act_setColorChoice-RBG'.
 - Nouveauté: (En cours) Analyse support cluster 0300 (Mode dev pour l'instant).
 - Corrections: Assistant modèle.
 - Nouveauté: Support LTA009 ampoule E27 (2782).

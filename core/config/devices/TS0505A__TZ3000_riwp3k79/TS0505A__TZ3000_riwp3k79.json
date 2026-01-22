@@ -148,8 +148,12 @@
                 "calculValueOffset": "intval(1000000\\/#value#)",
                 "isVisible": 1
             },
-            "setTemperatureLight_1700_4900": {
-                "use": "setTemperatureLight_1700_4900"
+            "Set Temperature": {
+                "use": "act_setColorTemp-K",
+                "params": "",
+                "minValue": "1700",
+                "maxValue": "4900",
+                "isVisible": 1
             }
         }
     }

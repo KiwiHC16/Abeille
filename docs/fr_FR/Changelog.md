@@ -7,14 +7,15 @@
 - Nouveauté: Nouvelle cmd 'act_setColorChoice-RBG' pour remplacer 'setRGB'.
 - Améliorations: Support Ikea INSPELNING (2781).
 - Améliorations: Modèle cmde 'Colour' remplacé par 'act_setColorChoice-RBG'.
-- Améliorations: Suppression cmdes 'colorRouge/colorVert/colorBleu' => cmd 'act_setColorChoice-RBG'.
-- Améliorations: Suppression cmdes 'setRouge/setVert/setBleu' => cmd 'act_setColorChoice-RBG'.
+- Améliorations: Suppression modèle cmdes 'colorRouge/colorVert/colorBleu' => cmd 'act_setColorChoice-RBG'.
+- Améliorations: Suppression modèle cmdes 'setRouge/setVert/setBleu' => cmd 'act_setColorChoice-RBG'.
 - Nouveauté: (En cours) Analyse support cluster 0300 (Mode dev pour l'instant).
 - Corrections: Assistant modèle.
 - Nouveauté: Support LTA009 ampoule E27 (2782).
 - Nouveauté: Ajout cmd interne 'cmd-0300-moveColorTemperature-K'.
 - Nouveauté: Ajout modèle cmd 'act_setColorTemp-K'.
 - Améliorations: Remplacement modèle cmde 'setTemperatureLight' => cmd 'act_setColorTemp-K'.
+- Améliorations: Remplacement modèle cmde 'setTemperatureLight_1700_4900' => cmd 'act_setColorTemp-K'.
 
 ## 251228-BETA-1
 

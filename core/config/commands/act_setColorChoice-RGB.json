@@ -1,0 +1,14 @@
+{
+    "act_setColorChoice-RGB": {
+        "comment": "Receive color sub type and convert to X/Y for moveToColor",
+        "logicalId": "#EP#-moveToColor-RGB",
+        "subType": "color",
+        "configuration": {
+            "topic": "cmd-0300-moveToColor-RGB",
+            "request": "ep=#EP#&color=#color#",
+            "visibilityCategory": "All"
+        },
+        "type": "action",
+        "genericType": "LIGHT_SET_COLOR"
+    }
+}

@@ -4575,16 +4575,15 @@
                     cmdLog('debug', "  moveToColor-RGB: dstEp=$dstEp, R/G/B=$R/$G/$B => X/Y=$colorX/$colorY");
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$colorX.$colorY.$duration;
-
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End 'cmd-0300-moveToColor-RGB'
 
-                // ZCL cluster 0300/color control: Move to Colour Temperature
-                // Mandatory params: addr, EP, slider (temp in K)
+                // ZCL cluster 0300/color control: Move color temperature
+                // Mandatory params: addr, EP, slider (temp in K, decimal)
                 // Note: slider=0 is specific value to force tempMireds=0000
                 else if ($cmdName == 'setTemperature') {
-                    $required = ['addr', 'slider']; // Mandatory infos
+                    $required = ['addr', 'EP', 'slider']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4594,12 +4593,12 @@
                     // <colour temperature: uint16_t>       4
                     // <transition time: uint16_t>          4
 
-                    $zgCmd = "00C0"; // 00C0=Move to colour temperature
+                    $zgCmd = "00C0"; // 00C0=Move color temperature
 
                     if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
-                    $addr       = $Command['cmdParams']['addr'];
-                    $srcEp      = "01";
-                    if (isset($Command['cmdParams']['ep'])) $dstEp = $Command['cmdParams']['ep']; else $dstEp = "01";
+                    $addr   = $Command['cmdParams']['addr'];
+                    $srcEp  = "01";
+                    $dstEp  = $Command['cmdParams']['EP'];
                     // Color temp K = 1,000,000 / ColorTempMireds,
                     // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
                     // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.
@@ -4614,14 +4613,14 @@
                         $tempMireds  = sprintf("%04X", 1000000 / $tempK);
                     }
                     $transition = "0001"; // Transition time
-
                     cmdLog('debug', '  setTemperature: TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
+
                     $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
-
+                    // TODO: Remove that read back. Should be done only if not reporting. Model dependant !!
                     if ($addrMode == "02") {
-                        $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
+                        $this->sendToCmd(PRIO_NORM, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
                     }
                     return;
                 }
@@ -4644,7 +4643,7 @@
                     $addrMode = isset($Command['cmdParams']['addrMode']) ? $Command['cmdParams']['addrMode']: "02";
                     $addr     = $Command['cmdParams']['addr'];
                     $srcEp    = "01";
-                    $dstEp    = isset($Command['cmdParams']['ep']) ? $Command['cmdParams']['ep'] : "01";
+                    $dstEp    = $Command['cmdParams']['ep'];
                     // Color temp K = 1,000,000 / ColorTempMireds,
                     // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
                     // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.

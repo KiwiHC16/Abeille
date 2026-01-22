@@ -14,6 +14,7 @@
 - Nouveauté: Support LTA009 ampoule E27 (2782).
 - Nouveauté: Ajout cmd interne 'cmd-0300-moveColorTemperature-K'.
 - Nouveauté: Ajout modèle cmd 'act_setColorTemp-K'.
+- Améliorations: Remplacement modèle cmde 'setTemperatureLight' => cmd 'act_setColorTemp-K'.
 
 ## 251228-BETA-1
 

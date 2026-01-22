@@ -659,6 +659,16 @@
                 } else if (($cmdUse == "setRouge") || ($cmdUse == "setVert") || ($cmdUse == "setBleu")) {
                     echo "  Cmd '{$cmdJName}' REMOVED.\n";
                     $devUpdated = true;
+                } else if ($cmdUse == "setTemperatureLight") {
+                    $commands2["Set Temperature"] = Array(
+                        "use" => "act_setColorTemp-K",
+                        "params" => "",
+                        "minValue" => "2200", // Taken from obsolete 'setTemperatureLight'
+                        "maxValue" => "4000", // Taken from obsolete 'setTemperatureLight'
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
                 }
 
                 // Cluster 0405 updates

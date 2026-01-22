@@ -66,8 +66,12 @@
                 "calculValueOffset": "intval(1000000\\/#value#)",
                 "isVisible": 1
             },
-            "setTemperatureLight": {
-                "use": "setTemperatureLight"
+            "Set Temperature": {
+                "use": "act_setColorTemp-K",
+                "params": "",
+                "minValue": "2200",
+                "maxValue": "4000",
+                "isVisible": 1
             },
             "Color": {
                 "use": "act_setColorChoice-RGB",

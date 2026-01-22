@@ -689,6 +689,26 @@
                     );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
+                } else if ($cmdUse == "setTemperatureLight1") {
+                    $commands2["Set Temperature"] = Array(
+                        "use" => "act_setColorTemp-K",
+                        "params" => "",
+                        "minValue" => "2700", // Taken from obsolete 'setTemperatureLight1'
+                        "maxValue" => "5000", // Taken from obsolete 'setTemperatureLight1'
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
+                } else if ($cmdUse == "setTemperatureLight2") {
+                    $commands2["Set Temperature"] = Array(
+                        "use" => "act_setColorTemp-K",
+                        "params" => "",
+                        "minValue" => "2000", // Taken from obsolete 'setTemperatureLight2'
+                        "maxValue" => "6500", // Taken from obsolete 'setTemperatureLight2'
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
                 }
 
                 // Cluster 0405 updates

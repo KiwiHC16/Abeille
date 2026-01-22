@@ -142,8 +142,12 @@
                 "maxValue": "6500",
                 "isVisible": 1
             },
-            "setTemperatureLight": {
-                "use": "setTemperatureLight2"
+            "Set Temperature": {
+                "use": "act_setColorTemp-K",
+                "params": "",
+                "minValue": "2000",
+                "maxValue": "6500",
+                "isVisible": 1
             },
             "Set 5000K": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",

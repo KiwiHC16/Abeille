@@ -2518,8 +2518,8 @@
 
                 // Zigbee command: Bind to device or bind to group.
                 // Bind, thru command 0030 => generates 'Bind_req' / cluster 0021
-                // Mandatory params: addr, ep, clustId, destAddr
-                // Optional params: destEp required if destAddr = device ieee addr
+                // Mandatory params: addr, ep, clustId, destAddr, destEp (only if destAddr==IEEE)
+                // Optional params: none
                 else if ($cmdName == 'bind0030') {
 
                     $required = ['addr', 'ep', 'clustId', 'destAddr'];
@@ -2531,7 +2531,7 @@
                         return;
                     }
 
-                    $cmd = "0030";
+                    $zgCmd = "0030";
 
                     // <target extended address: uint64_t>
                     // <target endpoint: uint8_t>
@@ -2565,10 +2565,10 @@
                         return;
                     }
                     cmdLog('debug', '  bind0030: '.$addr.'/EP-'.$ep.'/Clust-'.$clustId.' to '.$dstTxt);
-                    $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
 
                     // Note: Bind is sent with ACK request
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, "02");
+                    $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, "02");
                     return;
                 } // End $cmdName == 'bind0030'
 

@@ -100,6 +100,8 @@
              */
 
             case "BindToGroup": // OBSOLETE: Use 'bind0030' instead
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -205,6 +207,8 @@
 
             // case "setReportSpirit": // OBSOLETE: Use 'configureReporting' instead
             case "setReport": // OBSOLETE: Use 'configureReporting2' instead
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -263,185 +267,6 @@
              * Unsorted yet
              */
 
-            // Tcharp38: Should no longer be required
-            // case "AnnonceManufacturer":
-            //     if (strlen($msg) == 2) {
-            //         $Command = array(
-            //             "ReadAttributeRequest" => "1",
-            //             "priority" => $priority,
-            //             "dest" => $dest,
-            //             "address" => $address,
-            //             "clusterId" => "0000",
-            //             "attributeId" => "0004",
-            //             "EP" => $msg,
-            //         );
-            //     }
-            //     break;
-            // Tcharp38: Should no longer required
-            // case "Annonce":
-            //     if (strlen($msg) == 2) {
-            //         $Command = array(
-            //             "ReadAttributeRequest" => "1",
-            //             "priority" => $priority,
-            //             "dest" => $dest,
-            //             "address" => $address,
-            //             "clusterId" => "0000",
-            //             "attributeId" => "0005",
-            //             "EP" => $msg,
-            //         );
-            //     } else {
-            //         if ($msg == "Default") {
-            //             $Command = array(
-            //                 "ReadAttributeRequest" => "1",
-            //                 "priority" => $priority,
-            //                 "dest" => $dest,
-            //                 "address" => $address,
-            //                 "clusterId" => "0000",
-            //                 "attributeId" => "0005",
-            //                 "EP" => "01",
-            //             );
-            //         }
-            //         if ($msg == "Hue") {
-            //             $Command = array(
-            //                 "ReadAttributeRequestHue" => "1",
-            //                 "priority" => $priority,
-            //                 "dest" => $dest,
-            //                 "address" => $address,
-            //                 "clusterId" => "0000",
-            //                 "attributeId" => "0005",
-            //                 "EP" => "0B",
-            //             );
-            //         }
-            //         if ($msg == "OSRAM") {
-            //             $Command = array(
-            //                 "ReadAttributeRequestOSRAM" => "1",
-            //                 "priority" => $priority,
-            //                 "dest" => $dest,
-            //                 "address" => $address,
-            //                 "clusterId" => "0000",
-            //                 "attributeId" => "0005",
-            //                 "EP" => "03",
-            //             );
-            //         }
-            //     }
-            //     break;
-            // Tcharp38: No longer required
-            // case "AnnonceProfalux":
-            //     if ($msg == "Default") {
-            //         $Command = array(
-            //             "ReadAttributeRequest" => "1",
-            //             "priority" => $priority,
-            //             "dest" => $dest,
-            //             "address" => $address,
-            //             "clusterId" => "0000",
-            //             "attributeId" => "0010",
-            //             "EP" => "03",
-            //         );
-            //     }
-            //     break;
-            // case "OnOffRaw":
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //         $Command = array(
-            //             "onoffraw"              => "1",
-            //             "dest"                  => $dest,
-            //             "priority"              => $priority,
-            //             "addressMode"           => "02",
-            //             "address"               => $address,
-            //             "destinationEndpoint"   => $parameters['EP'],
-            //             "action"                => $convertOnOff[$parameters['Action']],
-            //         );
-            //     }
-            //     break;
-            // case "OnOff": // OBSOLETE: Replaced by 'cmd-0006'
-
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //         $Command = array(
-            //             "onoff"                 => "1",
-            //             "dest"                  => $dest,
-            //             "priority"              => priorityUserCmd,
-            //             "addressMode"           => "02",
-            //             "address"               => $address,
-            //             "destinationEndpoint"   => $parameters['EP'],
-            //             "action"                => $convertOnOff[$parameters['Action']]
-            //         );
-            //     }
-            //     else {
-            //         $Command = array(
-            //             "onoff"                 => "1",
-            //             "dest"                  => $dest,
-            //             "priority"              => priorityUserCmd,
-            //             "addressMode"           => "02",
-            //             "address"               => $address,
-            //             "destinationEndpoint"   => "01",
-            //             "action"                => $convertOnOff[$msg]
-            //         );
-            //     }
-            //     break;
-            // case "OnOff2":
-            //     $Command = array(
-            //         "onoff"                 => "1",
-            //         "dest"                  => $dest,
-            //         "priority"              => $priority,
-            //         "addressMode"           => "02",
-            //         "address"               => $address,
-            //         "destinationEndpoint"   => "02",
-            //         "action"                => $convertOnOff[$msg],
-            //     );
-            //     break;
-            // case "OnOff3":
-            // case "OnOffOSRAM":
-            //     $Command = array(
-            //         "onoff"                 => "1",
-            //         "dest"                  => $dest,
-            //         "priority"              => $priority,
-            //         "addressMode"           => "02",
-            //         "address"               => $address,
-            //         "destinationEndpoint"   => "03",
-            //         "action"                => $convertOnOff[$msg],
-            //     );
-            //     break;
-            // case "OnOff4":
-            //     $Command = array(
-            //         "onoff"                 => "1",
-            //         "dest"                  => $dest,
-            //         "priority"              => $priority,
-            //         "addressMode"           => "02",
-            //         "address"               => $address,
-            //         "destinationEndpoint"   => "04",
-            //         "action"                => $convertOnOff[$msg],
-            //     );
-            //     break;
-            // case "OnOffHue":
-            //     $Command = array(
-            //         "onoff"                 => "1",
-            //         "dest"                  => $dest,
-            //         "priority"              => $priority,
-            //         "addressMode"           => "02",
-            //         "address"               => $address,
-            //         "destinationEndpoint"   => "0B",
-            //         "action"                => $convertOnOff[$msg],
-            //     );
-            //     break;
-            // case "commandLegrand":
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //     }
-
-            //     $Command = array(
-            //         "commandLegrand" => "1",
-            //         "addressMode" => "02",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "address" => $address,
-            //         "destinationEndpoint" => $parameters['EP'],
-            //         "Mode" => $parameters['Mode'],
-            //     );
-            //     break;
             case "UpGroup":
                 $Command = array(
                     "name" => "UpGroup",
@@ -531,6 +356,8 @@
                             );
                 break;
             case "WriteAttributeRequest":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -550,6 +377,8 @@
                             );
                 break;
             case "WriteAttributeRequestVibration":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -570,6 +399,8 @@
                                 );
                 break;
             case "WriteAttributeRequestHostFlag":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -591,6 +422,8 @@
                                 );
                 break;
             case "WriteAttributeRequestTemperatureSpiritConsigne":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -613,6 +446,8 @@
                 break;
             case "WriteAttributeRequestValveSpiritConsigne":
             case "WriteAttributeRequestTrvSpiritMode":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -634,6 +469,8 @@
                                 );
                 break;
             case "WriteAttributeRequestGeneric":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -665,6 +502,8 @@
                                 );
                 break;
             case "WriteAttributeRequestActivateDimmer":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -867,7 +706,7 @@
                     break;
             case "setColourRGB": // OBSOLETE !! To be replaced by 'cmd-0300-moveToColor-RGB'
 
-                cmdLog('debug', "  WARNING: OBSOLETE command 'setColourRGB'. Use 'cmd-0300-moveToColor-RGB' instead.");
+                cmdLog('debug', "  WARNING: Using OBSOLETE command 'setColourRGB'. Use 'cmd-0300-moveToColor-RGB' instead.");
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -901,7 +740,7 @@
                 );
                 break;
             case "setRouge":
-                cmdLog('debug', "  WARNING: OBSOLETE command '$action'. Device model to be reloaded.");
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'. Device model to be reloaded.");
 
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
 
@@ -934,7 +773,7 @@
                                 );
                 break;
             case "setVert":
-                cmdLog('debug', "  WARNING: OBSOLETE command '$action'. Device model to be reloaded.");
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'. Device model to be reloaded.");
 
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
 
@@ -967,7 +806,7 @@
                 );
                 break;
             case "setBleu":
-                cmdLog('debug', "  WARNING: OBSOLETE command '$action'. Device model to be reloaded.");
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'. Device model to be reloaded.");
 
                 $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
 
@@ -1072,6 +911,8 @@
 
 
             case "writeAttributeRequestIAS_WD":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
+
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = $this->proper_parse_str($msg);
@@ -1088,53 +929,6 @@
                                     )
                 );
                 break;
-
-            /*
-             * Cluster 0001/Identify support
-             */
-
-            // case "identifySend":
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //     }
-            //     $Command = array(
-            //                         "identifySend" => "1",
-            //                         "priority" => $priority,
-            //                         "dest" => $dest,
-            //                         "address" => $address,
-            //                         "duration" => $parameters['duration'],
-            //                         "DestinationEndPoint" => $parameters['EP'],
-            //                         );
-            //     break;
-            // case "identifySendHue":
-            //     $keywords = preg_split("/[=&]+/", $msg);
-            //     $Command = array(
-            //                         "identifySend" => "1",
-            //                         "priority" => $priority,
-            //                         "dest" => $dest,
-            //                         "address" => $address,
-            //                         "duration" => "0010",
-            //                         "DestinationEndPoint" => "0B",
-            //                         );
-            //     break;
-
-            /*
-             * Cluster 0004/Groups support
-             */
-
-            // case "removeGroup":
-            //     // if ($parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
-            //     if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
-            //     $Command = array(
-            //                         "removeGroup"              => "1",
-            //                         "priority"                 => $priority,
-            //                         "dest"                     => $dest,
-            //                         "address"                  => $parameters['address'],
-            //                         "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-            //                         "groupAddress"             => $parameters['groupAddress'],
-            //                         );
-            //     break;
 
             /*
              * Cluster 0005/Scenes support

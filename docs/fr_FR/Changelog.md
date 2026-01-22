@@ -16,6 +16,7 @@
 - Nouveauté: Ajout modèle cmd 'act_setColorTemp-K'.
 - Améliorations: Remplacement modèle cmde 'setTemperatureLight' => cmd 'act_setColorTemp-K'.
 - Améliorations: Remplacement modèle cmde 'setTemperatureLight_1700_4900' => cmd 'act_setColorTemp-K'.
+- Améliorations: Remplacement modèle cmde 'setTemperatureLight_2700_6500' => cmd 'act_setColorTemp-K'.
 
 ## 251228-BETA-1
 

@@ -57,8 +57,12 @@
                 "historizeRound": "0",
                 "isVisible": 1
             },
-            "setTemperatureLight_2700_6500": {
-                "use": "setTemperatureLight_2700_6500"
+            "Set Temperature": {
+                "use": "act_setColorTemp-K",
+                "params": "",
+                "minValue": "2700",
+                "maxValue": "6500",
+                "isVisible": 1
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",

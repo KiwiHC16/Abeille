@@ -679,6 +679,16 @@
                     );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
+                } else if ($cmdUse == "setTemperatureLight_2700_6500") {
+                    $commands2["Set Temperature"] = Array(
+                        "use" => "act_setColorTemp-K",
+                        "params" => "",
+                        "minValue" => "2700", // Taken from obsolete 'setTemperatureLight_2700_6500'
+                        "maxValue" => "6500", // Taken from obsolete 'setTemperatureLight_2700_6500'
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdUse."' UPDATED to 'Color'.\n";
                 }
 
                 // Cluster 0405 updates

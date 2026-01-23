@@ -1916,7 +1916,13 @@
                 } else if ($clustId == "0300") {
                     if ($attrId == "0007") {
                         // Color temperature in kelvins = 1,000,000 / ColorTemperatureMireds
-                        $newVal = 1000000 / $newVal;
+                        // 0x0000 indicates an undefined value.
+                        // 0xffff indicates an invalid value.
+                        if (($newVal == 0x0) || ($newVal == 0xffff)) {
+                            parserLog('debug', "  Invalid or undefined value => returning 15.32 Kelvins");
+                            $newVal = 15.32;
+                        } else
+                            $newVal = 1000000 / $newVal;
                     }
                 } else if ($clustId == "0400") {
                     if ($attrId == "0000") {

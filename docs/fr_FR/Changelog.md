@@ -12,12 +12,14 @@
 - Nouveauté: (En cours) Analyse support cluster 0300 (Mode dev pour l'instant).
 - Corrections: Assistant modèle.
 - Nouveauté: Support LTA009 ampoule E27 (2782).
-- Nouveauté: Ajout cmd interne 'cmd-0300-moveColorTemperature-K'.
+- Nouveauté: Ajout cmd interne 'cmd-0300-moveToColorTemperature-K'.
 - Nouveauté: Ajout modèle cmd 'act_setColorTemp-K'.
 - Améliorations: Remplacement modèle cmde 'setTemperatureLight' => cmd 'act_setColorTemp-K'.
 - Améliorations: Remplacement modèle cmde 'setTemperatureLight_1700_4900' => cmd 'act_setColorTemp-K'.
 - Améliorations: Remplacement modèle cmde 'setTemperatureLight_2700_6500' => cmd 'act_setColorTemp-K'.
 - Améliorations: Remplacement modèle cmde 'setTemperatureLight1/setTemperatureLight2' => cmd 'act_setColorTemp-K'.
+- Correction: Interne parser: Crash si 'ColorTemperatureMireds' == 0x0 ou 0xFFFF.
+- Correction: Cmde interne 'setColour'.
 
 ## 251228-BETA-1
 

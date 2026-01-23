@@ -240,6 +240,38 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL: {{Configurer le reporting}}</label>
+    <div class="col-sm-9">
+        <?php
+            addButton("{{Configurer}}", "btn-danger", "configureReporting2");
+            addEpInput("idEpCR2");
+            addClusterList("idClustIdCR2");
+            addAttrInput("idAttrIdCR2");
+            addTypeList("idAttrTypeCR2");
+            addManufCodeInput("idManufCodeCR2");
+        ?>
+        <input id="idMinCR2" title="{{Interval min. Format décimal}}" placeholder="{{Min}}" style="width:60px" />
+        <input id="idMaxCR2" title="{{Interval max. Format décimal}}" placeholder="{{Max}}" style="width:60px" />
+        <input id="idChangeCR2" title="{{Change. Format décimal dépendant de l'attribut}}" placeholder="{{Change}}" />
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL:  {{Configurer le reporting}} (OBSOLETE)</label>
+    <div class="col-sm-9">
+        <?php
+            addButton("{{Configurer}}", "btn-danger", "configureReporting");
+            addEpInput("idEpCR");
+            addClusterList("idClustIdCR");
+            addAttrInput("idAttrIdCR");
+            addTypeList("idAttrTypeCR");
+            addManufCodeInput("idManufIdCR");
+        ?>
+        <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
+        <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />
+        <input id="idChangeCR" title="{{Change. Format hex string dépendant de l'attribut}}" placeholder="{{Change}}" />
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="discoverCommandsReceived">ZCL: Découverte des commandes RX</label>
     <div class="col-sm-5">
         <?php
@@ -268,38 +300,6 @@
             addEpInput("idEpC");
             addClusterList("idClustIdC");
         ?>
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut (BETA)">ZCL: {{Configurer le reporting}}</label>
-    <div class="col-sm-9">
-        <?php
-            addButton("{{Configurer}}", "btn-danger", "configureReporting2");
-            addEpInput("idEpCR2");
-            addClusterList("idClustIdCR2");
-            addAttrInput("idAttrIdCR2");
-            addTypeList("idAttrTypeCR2");
-            addManufCodeInput("idManufCodeCR2");
-        ?>
-        <input id="idMinCR2" title="{{Interval min. Format numérique}}" placeholder="{{Min}}" style="width:60px" />
-        <input id="idMaxCR2" title="{{Interval max. Format numérique}}" placeholder="{{Max}}" style="width:60px" />
-        <input id="idChangeCR2" title="{{Change. Format numérique dépendant de l'attribut}}" placeholder="{{Change}}" />
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL:  {{Configurer le reporting}} (OBSOLETE)</label>
-    <div class="col-sm-9">
-        <?php
-            addButton("{{Configurer}}", "btn-danger", "configureReporting");
-            addEpInput("idEpCR");
-            addClusterList("idClustIdCR");
-            addAttrInput("idAttrIdCR");
-            addTypeList("idAttrTypeCR");
-            addManufCodeInput("idManufIdCR");
-        ?>
-        <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
-        <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />
-        <input id="idChangeCR" title="{{Change. Format hex string dépendant de l'attribut}}" placeholder="{{Change}}" />
     </div>
 </div>
 
@@ -406,13 +406,14 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Cluster 0300, Move Color Temperature (cmd 4B)">ZCL: 0300/Color ctrl - 4B/Move Color Temperature</label>
+    <label class="col-sm-3 control-label" title="Cluster 0300, Move Color Temperature (cmd 0A)">ZCL: 0300/Color ctrl - 0A/Move To Color Temperature</label>
     <div class="col-sm-5">
         <?php
-            addButton("{{Appliquer}}", "btn-danger", "cmd0300-MoveColorTemperature-K");
+            addButton("{{Appliquer}}", "btn-danger", "cmd0300-MoveToColorTemperature-K");
             addEpInput("idEp-MCT");
         ?>
         <input id="idTempK-MCT" title="{{Temperature en Kelvin: format decimal}}" placeholder="{{TempK}}" style="width:60px; margin-left: 8px" />
+        <input id="idTransition-MCT" title="{{Temps de transition en 1/10 sec: format decimal}}" placeholder="{{Transition}}" style="width:60px; margin-left: 8px" />
     </div>
 </div>
 

@@ -247,23 +247,20 @@
 
             // Last 'topic' replacement step for remaining #var# to be filled with eqModel['variables']
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            if (stripos($topic, "#") !== false) {
-                log::add('Abeille', 'debug', "-- topic: Unreplaced variable found");
-                if (isset($eqModel['variables'])) {
-                    log::add('Abeille', 'debug', "-- topic: Checking unreplaced variables against eqModel['variables']");
-                    while (true) {
-                        $pos = stripos($topic, "#");
-                        if ($pos === false)
-                            break; // No more '#'
-                        $sb = substr($topic, $pos + 1);
-                        $pos = stripos($sb, "#");
-                        $varNameUp = strtoupper(substr($sb, 0, $pos));
-                        log::add('Abeille', 'debug', "-- topic: varNameUp='$varNameUp'");
-                        if (isset($eqModel['variables'][$varNameUp])) {
-                            $var = $eqModel['variables'][$varNameUp];
-                            $topic = str_ireplace("#$varNameUp#", $var, $topic);
-                            log::add('Abeille', 'debug', "-- topic: '#$varNameUp#' replaced by '$var' => topic='{$topic}'");
-                        }
+            if ((stripos($topic, "#") !== false) && isset($eqModel['variables'])) {
+                log::add('Abeille', 'debug', "-- topic: Checking unreplaced variables against eqModel['variables']");
+                while (true) {
+                    $pos = stripos($topic, "#");
+                    if ($pos === false)
+                        break; // No more '#'
+                    $sb = substr($topic, $pos + 1);
+                    $pos = stripos($sb, "#");
+                    $varNameUp = strtoupper(substr($sb, 0, $pos));
+                    log::add('Abeille', 'debug', "-- topic: varNameUp='$varNameUp'");
+                    if (isset($eqModel['variables'][$varNameUp])) {
+                        $var = $eqModel['variables'][$varNameUp];
+                        $topic = str_ireplace("#$varNameUp#", $var, $topic);
+                        log::add('Abeille', 'debug', "-- topic: '#$varNameUp#' replaced by '$var' => topic='{$topic}'");
                     }
                 }
             }

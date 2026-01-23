@@ -815,37 +815,6 @@
             // }
             $dest       = $Command['dest'];
 
-            //---- PDM ------------------------------------------------------------------
-            // if (isset($Command['PDM'])) {
-
-            //     if (isset($Command['req']) && $Command['req'] == "E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE") {
-            //         $cmd = "8300";
-
-            //         $PDM_E_STATUS_OK = "00";
-            //         $data = $PDM_E_STATUS_OK;
-
-            //         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-            //     }
-
-            //     if (isset($Command['req']) && $Command['req'] == "E_SL_MSG_PDM_EXISTENCE_RESPONSE") {
-            //         $cmd = "8208";
-
-            //         $recordId = $Command['recordId'];
-
-            //         $recordExist = "00";
-
-            //         if ($recordExist == "00" ) {
-            //             $size = '0000';
-            //             $persistedData = "";
-            //         }
-
-            //         $data = $recordId.$recordExist.$size;
-
-            //         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-            //     }
-            //     return;
-            // }
-
             //----------------------------------------------------------------------
             // Bind
             // Title => 000B57fffe3025ad (IEEE de l ampoule)
@@ -3603,7 +3572,7 @@
                     // Attribute direction : uint8_t
                     // Attribute id : uint16_t
 
-                    $cmd        = "0122";
+                    $zgCmd      = "0122";
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
@@ -3616,9 +3585,10 @@
                     $attrDir    = "00";
                     $attrId     = $Command['cmdParams']['attrId'];
 
+                    cmdLog('debug', "  readReportingConfig: EP=$dstEp, ClustId=$clustId, AttrId=$attrId");
                     $data =  $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$nbOfAttr.$manufSpecific.$manufId.$attrDir.$attrId;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // Edn 'readReportingConfig'
 
@@ -3932,7 +3902,7 @@
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['cmdParams']['ep'];
+                    $dstEp      = $Command['cmdParams']['EP'];
                     $onoff      = "01";
                     $level      = sprintf("%02X", $Command['cmdParams']['Level']);
                     $duration   = isset($Command['cmdParams']['duration']) ? sprintf("%04X", $Command['cmdParams']['duration']) : "0001";
@@ -4491,7 +4461,7 @@
 
                 // ZCL cluster 0300/color control: 07/Move to Color
                 else if ($cmdName == 'setColour') {
-                    $required = ['addr', 'X', 'Y']; // Mandatory infos
+                    $required = ['addr', 'EP', 'X', 'Y']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4507,15 +4477,16 @@
                     if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    if (isset($Command['cmdParams']['ep'])) $dstEp = $Command['cmdParams']['ep']; else $dstEp = "01";
-                    $colourX    = $Command['cmdParams']['X'];
-                    $colourY    = $Command['cmdParams']['Y'];
+                    $dstEp      = $Command['cmdParams']['EP'];
+                    $colorX     = $Command['cmdParams']['X'];
+                    $colorY     = $Command['cmdParams']['Y'];
                     if (isset($Command['cmdParams']['duration']) && $Command['cmdParams']['duration']>0)
                         $duration = sprintf("%04s", dechex($Command['cmdParams']['duration']));
                     else
                         $duration = "0001";
 
-                    $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration;
+                    cmdLog('debug', "  setColour: EP=$dstEp, X/Y=$colorX/$colorY, Duration=$duration");
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$colorX.$colorY.$duration;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
@@ -4579,7 +4550,7 @@
                     return;
                 } // End 'cmd-0300-moveToColor-RGB'
 
-                // ZCL cluster 0300/color control: Move color temperature
+                // ZCL cluster 0300/color control: 0A/Move To Color Temperature
                 // Mandatory params: addr, EP, slider (temp in K, decimal)
                 // Note: slider=0 is specific value to force tempMireds=0000
                 else if ($cmdName == 'setTemperature') {
@@ -4587,13 +4558,13 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    // <target short address: uint16_t>     4
-                    // <source endpoint: uint8_t>           2
-                    // <destination endpoint: uint8_t>      2
-                    // <colour temperature: uint16_t>       4
-                    // <transition time: uint16_t>          4
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <colour temperature: uint16_t>
+                    // <transition time: uint16_t> => Time in 1/10th of sec
 
-                    $zgCmd = "00C0"; // 00C0=Move color temperature
+                    $zgCmd = "00C0"; // 00C0=Move To Color Temperature
 
                     if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
                     $addr   = $Command['cmdParams']['addr'];
@@ -4612,7 +4583,7 @@
                             $tempK = 1000000;
                         $tempMireds  = sprintf("%04X", 1000000 / $tempK);
                     }
-                    $transition = "0001"; // Transition time
+                    $transition = "0001"; // Default = 1/10s
                     cmdLog('debug', '  setTemperature: TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
@@ -4625,20 +4596,21 @@
                     return;
                 }
 
-                // ZCL cluster 0300/color control: 4B/Move Color Temperature
+                // ZCL cluster 0300/color control: 0A/Move To Color Temperature
                 // Mandatory params: addr, ep, tempK (in K, decimal)
-                else if ($cmdName == 'cmd-0300-moveColorTemperature-K') {
+                // Optional params: transition (in 1/10th of sec, decimal), addrMode ("02" or "01"/GroupAddr)
+                else if ($cmdName == 'cmd-0300-moveToColorTemperature-K') {
                     $required = ['addr', 'ep', 'tempK']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    // <target short address: uint16_t>     4
-                    // <source endpoint: uint8_t>           2
-                    // <destination endpoint: uint8_t>      2
-                    // <colour temperature: uint16_t>       4
-                    // <transition time: uint16_t>          4
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <colour temperature: uint16_t>
+                    // <transition time: uint16_t> => Time in 1/10th of sec
 
-                    $zgCmd = "00C0"; // 00C0=Move color temperature
+                    $zgCmd = "00C0"; // 00C0=Move To Color Temperature
 
                     $addrMode = isset($Command['cmdParams']['addrMode']) ? $Command['cmdParams']['addrMode']: "02";
                     $addr     = $Command['cmdParams']['addr'];
@@ -4657,12 +4629,13 @@
                             $tempK = 1000000;
                         $tempMireds  = sprintf("%04X", 1000000 / $tempK);
                     }
-                    $transition = "0001"; // Transition time
+                    $transition = isset($Command['cmdParams']['transition']) ? $Command['cmdParams']['transition'] : 1; // In 1/10th of sec
+                    $transition = sprintf("%04X", $transition);
 
-                    cmdLog('debug', '  moveColorTemp: TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
+                    cmdLog('debug', '  moveToColorTemp: TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End 'cmd-0300-MoveColorTemperature-K'
 
@@ -5148,10 +5121,10 @@
 
                 // Legrand private cluster FC41.
                 // TODO: Should be replaced by 'cmd-Private'
-                // Mandatory params: 'addr', 'Mode'
-                // Optional params: 'priority', 'EP'
+                // Mandatory params: 'addr', 'Mode', 'EP'
+                // Optional params: 'priority'
                 else if ($cmdName == 'commandLegrand') {
-                    $required = ['addr', 'Mode']; // Mandatory infos
+                    $required = ['addr', 'EP', 'Mode']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -5172,7 +5145,7 @@
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    if ($Command['cmdParams']['ep']>1 ) { $dstEp = $Command['cmdParams']['ep']; } else { $dstEp = "01"; } // $dstEp; // "01";
+                    $dstEp      = $Command['cmdParams']['EP'];
                     $profId     = "0104";
                     $clustId    = "FC41";
                     $secMode    = "02"; // ???

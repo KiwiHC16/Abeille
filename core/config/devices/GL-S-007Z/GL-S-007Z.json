@@ -49,7 +49,7 @@
             },
             "SetReporting 0006-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0006&attrType=10&attrId=0000",
+                "params": "clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
@@ -130,25 +130,25 @@
                 "isVisible": 1
             },
             "Cool white": {
-                "use": "act_zbCmdC-0300-MoveToColorTemp",
-                "params": "slider=0",
+                "use": "act_setColorTemp-K",
+                "params": "slider=0&transition=3",
                 "subType": "other",
                 "logicalId": "#EP#-Set-Cool",
                 "isVisible": 1
             },
             "Warm white": {
-                "use": "act_zbCmdC-0300-MoveToColorTemp",
-                "params": "slider=200",
+                "use": "act_setColorTemp-K",
+                "params": "slider=200&transition=3",
                 "subType": "other",
                 "logicalId": "#EP#-Set-Warm",
                 "isVisible": 1
             },
-            "Color Temperature": {
-                "use": "inf_zbAttr-0300-ColorTemperatureMireds"
-            },
             "Get ColorTemperatureMireds": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0007"
+            },
+            "Color Temperature": {
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds"
             }
         }
     }

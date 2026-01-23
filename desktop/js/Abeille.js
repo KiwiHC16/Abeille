@@ -141,10 +141,10 @@ function refreshEqInfos() {
             // Reset model choice to 'auto' if model has been forced
             if (curEq.model.modelForced) {
                 var $pRestoreModelAuto = $(
-                    "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>"
+                    "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>",
                 );
                 var $aRestoreModelAuto = $(
-                    '<a href="#" id="linkRestoreAutoModel" style="text-decoration:underline;">{{ Rétablir le fonctionnement normal (modèle auto)}}</a>'
+                    '<a href="#" id="linkRestoreAutoModel" style="text-decoration:underline;">{{ Rétablir le fonctionnement normal (modèle auto)}}</a>',
                 );
                 $pRestoreModelAuto
                     .append($aRestoreModelAuto)
@@ -153,7 +153,7 @@ function refreshEqInfos() {
             if (typeof curEq.model.variables != "undefined") {
                 h = "";
                 for (const [vKey, vVal] of Object.entries(
-                    curEq.model.variables
+                    curEq.model.variables,
                 )) {
                     h += '<div class="form-group">';
                     h +=
@@ -212,7 +212,7 @@ function refreshEqInfos() {
                     curEq.zigbee.imageType;
             if (typeof curEq.zigbee.endPoints != "undefined") {
                 for (const [epId, ep] of Object.entries(
-                    curEq.zigbee.endPoints
+                    curEq.zigbee.endPoints,
                 )) {
                     // console.log("LA epId=", epId + ", ep=", ep);
                     if (
@@ -233,7 +233,7 @@ function refreshEqInfos() {
             docUrl = document.getElementById("idDocUrl");
             docUrl.setAttribute(
                 "href",
-                js_urlProducts + "/" + curEq.model.modelName
+                js_urlProducts + "/" + curEq.model.modelName,
             );
             if (curEq.model.modelSource == "local") {
                 $("#idDelLocalBtn").show();
@@ -349,7 +349,7 @@ function updateInfoCmdTimestamp(_options) {
     cmdId = _options.cmd_id;
     value = _options.display_value;
     console.log(
-        "updateInfoCmdTimestamp(cmdId=" + cmdId + ", val=" + value + ")"
+        "updateInfoCmdTimestamp(cmdId=" + cmdId + ", val=" + value + ")",
     );
     var elm = document.getElementById("cmdId-" + cmdId);
     if (elm == null) {
@@ -421,7 +421,7 @@ $("#bt_maintenancePage").on("click", function () {
 
 $("#bt_graph").on("click", function () {
     window.open(
-        "plugins/Abeille/desktop/php/AbeilleGraph.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All"
+        "plugins/Abeille/desktop/php/AbeilleGraph.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All",
     );
 });
 
@@ -440,7 +440,7 @@ function createRemote(zgId) {
         "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille" +
             zgId +
             "_zigate_createRemote",
-        false
+        false,
     ); // False pour bloquer sur la recuperation du fichier
     xmlhttpMQTTSendTimer.send();
     // location.reload(true);
@@ -462,7 +462,7 @@ function getSelectedEqs(zgId) {
     eval("var eqZigate = JSON.parse(js_eqZigate" + zgId + ");"); // List of eq IDs for current zigate
     for (const [eqId2, eq] of Object.entries(eqZigate)) {
         var checked = document.getElementById(
-            "idBeeChecked" + zgId + "-" + eq.id
+            "idBeeChecked" + zgId + "-" + eq.id,
         ).checked;
         if (checked == false) continue;
 
@@ -614,14 +614,13 @@ $(".eqLogicAction[data-action=abRemove]")
         }
         zgId = eqLogicalId.substring(7, 8);
         console.log(
-            "eqId=" + eqId + ", logicId=" + eqLogicalId + " => zgId=" + zgId
+            "eqId=" + eqId + ", logicId=" + eqLogicalId + " => zgId=" + zgId,
         );
         removeEq(zgId, eqId);
     });
 
 /* Remove from Jeedom eq with ID 'eqId' but list first how it is used and ask confirmation to user */
 function removeEq(zgId, eqId) {
-
     console.log("removeEq(zgId=" + zgId + ", eqId=" + eqId + ")");
 
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
@@ -669,10 +668,9 @@ function removeEq(zgId, eqId) {
             text = text.substring(0, text.length - 2);
             bootbox.confirm(text, function (result) {
                 if (result) {
-
                     removed = {};
                     // Excluding local devices (ex: Abeille remote control with addr 'rcXX')
-                    addr = eqPerZigate[zgId][eqId]['addr'];
+                    addr = eqPerZigate[zgId][eqId]["addr"];
                     if (addr.substring(0, 2) != "rc") {
                         removed[zgId] = []; // Addresses list
                         removed[zgId].push(addr);
@@ -702,29 +700,30 @@ function removeEq(zgId, eqId) {
                             //     true
                             // );
                             // xhr.send();
-                            domUtils.ajax({ // Inform daemons that device removed
+                            domUtils.ajax({
+                                // Inform daemons that device removed
                                 type: "POST",
                                 url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
                                 data: {
                                     action: "eqRemoved",
                                     removed: JSON.stringify(removed),
                                 },
-                                dataType: 'json',
+                                dataType: "json",
                                 global: false,
-                                error: function(error) {
+                                error: function (error) {
                                     jeedomUtils.showAlert({
                                         message: error.message,
-                                        level: 'danger'
-                                    })
+                                        level: "danger",
+                                    });
                                 },
-                                success: function(data) {
+                                success: function (data) {
                                     //Do stuff
                                     // jeedomUtils.showAlert({
                                     //     message: 'All good dude!',
                                     //     level: 'success'
                                     // })
-                                }
-                            })
+                                },
+                            });
 
                             var vars = getUrlVars();
                             var url = "index.php?";
@@ -851,7 +850,7 @@ function listView(gtwId) {
     $("#md_modal")
         .load(
             "index.php?v=d&plugin=Abeille&modal=AbeilleEqList.modal&gtwId=" +
-                gtwId
+                gtwId,
         )
         .dialog("open");
 }
@@ -889,7 +888,7 @@ function monitorIt(zgId, zgPort) {
                     "status=" +
                     status +
                     "<br>error=" +
-                    error
+                    error,
             );
         },
         success: function (json_res) {
@@ -1182,7 +1181,11 @@ function repairReturnChannel() {
             // New or already known step ?
             if (typeof repairSteps[stepName] == "undefined") {
                 console.log(
-                    "new step '" + stepName + "' => status='" + stepStatus + "'"
+                    "new step '" +
+                        stepName +
+                        "' => status='" +
+                        stepStatus +
+                        "'",
                 );
                 repairSteps[stepName] = new Object();
 
@@ -1205,7 +1208,7 @@ function repairReturnChannel() {
                         rowIndex +
                         ", status='" +
                         stepStatus +
-                        "'"
+                        "'",
                 );
                 cell0 = myTable.rows[rowIndex].cells[0];
                 cell0.innerHTML = stepStatus;
@@ -1269,7 +1272,7 @@ $("#idDelLocalBtn").on("click", function () {
                     "GET",
                     "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
                         curEqId,
-                    false
+                    false,
                 );
                 xhttp.send();
             },
@@ -1298,7 +1301,7 @@ $("#idUpdateBtn").on("click", function () {
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=update&eqId=" +
                 curEqId,
-            false
+            false,
         );
         xhttp.send();
     });
@@ -1332,7 +1335,7 @@ $("#idReinitBtn").on("click", function () {
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
                 eqId,
-            false
+            false,
         );
         xhttp.send();
     });
@@ -1412,7 +1415,7 @@ $("#idModelChangeBtn").on("click", function () {
                         ".json)";
                     $opt.attr(
                         "modelPath",
-                        model.modelName + "/" + model.modelNameh
+                        model.modelName + "/" + model.modelNameh,
                     );
                 }
 
@@ -1465,7 +1468,7 @@ $("#idModelChangeBtn").on("click", function () {
         if (
             confirm(
                 "{{L'équipement sera reconfiguré à partir du modèle choisi. Souhaitez-vous vraiment appliquer ce modèle ?}}" +
-                    strSuppBatterie
+                    strSuppBatterie,
             )
         ) {
             // Close dialog
@@ -1518,7 +1521,7 @@ $("body").on("click", "a#linkRestoreAutoModel", function () {
                     },
                 });
             }
-        }
+        },
     );
 
     return false; // prevent default
@@ -1603,7 +1606,7 @@ function sendZigate(action, param) {
             global: false,
             error: function (request, status, error) {
                 bootbox.alert(
-                    "ERREUR 'sendMsgToCmd' !<br>Votre installation semble corrompue."
+                    "ERREUR 'sendMsgToCmd' !<br>Votre installation semble corrompue.",
                 );
             },
             success: function (json_res) {
@@ -1676,7 +1679,8 @@ function sendZigate(action, param) {
             bootbox.confirm(msg, function (result) {
                 if (result) {
                     var chan = $("#idZgChan").val();
-                    if (chan == 0) mask = 0x7fff800; // All channels = auto
+                    if (chan == 0)
+                        mask = 0x7fff800; // All channels = auto
                     else mask = 1 << chan;
                     mask = mask.toString(16);
                     // Note: missing leading 0 completed in AbeilleCmdProcess.
@@ -1770,7 +1774,7 @@ function sendZigate(action, param) {
                     // Why this order is not respected ?? Erase is executed AFTER restore
                     sendToZigate(
                         "CmdAbeille" + zgId + "/0000/zgRestorePdm",
-                        "file=" + "tmp/" + file
+                        "file=" + "tmp/" + file,
                     );
                 }
                 return;
@@ -1807,7 +1811,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             xhr.open(
                 "GET",
                 msg + "&topic=" + topic + "&payload=" + payload,
-                false
+                false,
             );
         else xhr.open("GET", msg + "&topic=" + topic, false);
         xhr.send();
@@ -1839,7 +1843,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             ep = param3;
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/getGroupMembership",
-                "ep=" + ep
+                "ep=" + ep,
             );
             setTimeout(function () {
                 location.reload(true);
@@ -1907,7 +1911,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
 
                 sendCmd(
                     "CmdAbeille" + zgId + "/" + addr + "/addGroup",
-                    "ep=" + ep + "&group=" + group
+                    "ep=" + ep + "&group=" + group,
                 );
                 setTimeout(function () {
                     sendCmd(
@@ -1916,7 +1920,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                             "/" +
                             addr +
                             "/getGroupMembership",
-                        "ep=" + ep
+                        "ep=" + ep,
                     );
                     location.reload(true);
                 }, 1000);
@@ -1960,7 +1964,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             group = param4;
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/removeGroup",
-                "address=" + addr + "&ep=" + ep + "&group=" + group
+                "address=" + addr + "&ep=" + ep + "&group=" + group,
             );
             setTimeout(function () {
                 location.reload(true);
@@ -1972,11 +1976,11 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             ep = param3;
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/removeAllGroups",
-                "ep=" + ep
+                "ep=" + ep,
             );
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/getGroupMembership",
-                "ep=" + ep
+                "ep=" + ep,
             );
             setTimeout(function () {
                 location.reload(true);
@@ -1993,7 +1997,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                 console.log("eq=", eq);
                 sendCmd(
                     "CmdAbeille" + eq["zgId"] + "/0000/commissioningGroupAPS",
-                    "address=" + eq["addr"] + "&groupId=" + group
+                    "address=" + eq["addr"] + "&groupId=" + group,
                 );
                 setTimeout(function () {
                     sendCmd(
@@ -2002,7 +2006,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                             "/" +
                             eq["addr"] +
                             "/getGroupMembership",
-                        "ep=" + eq["mainEp"]
+                        "ep=" + eq["mainEp"],
                     );
                     location.reload(true);
                 }, 1000);
@@ -2021,7 +2025,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                     "CmdAbeille" +
                         eq["zgId"] +
                         "/0000/commissioningGroupAPSLegrand",
-                    "address=" + eq["addr"] + "&groupId=" + group
+                    "address=" + eq["addr"] + "&groupId=" + group,
                 );
                 setTimeout(function () {
                     sendCmd(
@@ -2030,7 +2034,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                             "/" +
                             eq["addr"] +
                             "/getGroupMembership",
-                        "ep=" + eq["mainEp"]
+                        "ep=" + eq["mainEp"],
                     );
                     location.reload(true);
                 }, 1000);
@@ -2040,7 +2044,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             zgId = param1;
             sendCmd(
                 "CmdAbeille" + zgId + "/0000/zgSetPermitMode",
-                "mode=start"
+                "mode=start",
             );
             location.reload(true);
             $("#div_alert").showAlert({
@@ -2365,13 +2369,16 @@ function interrogate(request) {
         X = document.getElementById("idX-MTC").value;
         Y = document.getElementById("idY-MTC").value;
         payload = "EP=" + ep + "_X=" + X + "_Y=" + Y;
-    } else if (request == "cmd0300-MoveColorTemperature-K") { // Cluster 0300, cmd 0x4B
-        topic = "Cmd" + logicalId + "_cmd-0300-moveColorTemperature-K";
+    } else if (request == "cmd0300-MoveToColorTemperature-K") {
+        // Cluster 0300, cmd 0x0A
+        topic = "Cmd" + logicalId + "_cmd-0300-moveToColorTemperature-K";
         ep = document.getElementById("idEp-MCT").value;
         // Expecting decimal string for Kelvin.
         tempK = Number(document.getElementById("idTempK-MCT").value);
-        console.log("tempK=", tempK, typeof(tempK));
+        console.log("tempK=", tempK, typeof tempK);
         payload = "ep=" + ep + "_tempK=" + tempK;
+        transition = document.getElementById("idTransition-MCT").value;
+        if (transition != "") payload += "_transition=" + Number(transition);
     } else if (request == "0502-StartWarning") {
         topic = "Cmd" + logicalId + "_cmd-0502";
         ep = document.getElementById("idEp-SW").value;
@@ -2433,7 +2440,7 @@ function interrogate(request) {
             topic +
             "&payload=" +
             payload,
-        false
+        false,
     );
     xhttp.send();
 
@@ -2448,7 +2455,7 @@ function addCmdToTable(_cmd) {
         _cmd.configuration = {};
     }
     console.log(
-        "addCmdToTable(typ=" + _cmd.type + ", jName=" + _cmd.name + ")"
+        "addCmdToTable(typ=" + _cmd.type + ", jName=" + _cmd.name + ")",
     );
 
     var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';

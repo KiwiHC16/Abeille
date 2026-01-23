@@ -253,7 +253,7 @@
                     if ($newCmd === false)
                         continue; // Cmd does not exist.
 
-                    if (isset($cmd2['params'])) {
+                    if (isset($cmd2['params']) && ($cmd2['params'] != "")) {
                         // logMessage('debug', 'params='.json_encode($cmd2['params']));
                         // logMessage('debug', 'newCmd BEFORE='.json_encode($newCmd));
 

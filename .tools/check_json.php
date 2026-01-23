@@ -473,7 +473,7 @@
                             continue;
                         }
                         $func = $dpVal['function'];
-                        $supportedFunc = ['rcvValue', 'rcvValueEnum', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
+                        $supportedFunc = ['rcvValue', 'rcvValueEnum', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1', 'rcvThermostat-Mode', 'rcvValve-Status'];
                         if (!in_array($func, $supportedFunc)) {
                             $error = newDevError($devModName, "ERROR", "Invalid function '$func' for private/$pKey DP $dpId");
                             continue;

@@ -1,6 +1,7 @@
 # coding: utf-8
 
-# TODO: pigpio-python seems to depend on a daemon. How to check it is running ?
+import subprocess
+import time
 
 print("Vérification de l'installation du package 'pigpio'")
 
@@ -12,9 +13,19 @@ except ImportError as e:
 
 pi = pigpio.pi()       # specify host, default port
 if not pi.connected:
-   print("= ERREUR: Le package PiGpio semble mal installé ou démon pas démarré.")
-   print("=         'sudo pigpiod' manquant ?")
-   exit(1)
+   print("= pigpiod non démarré, tentative de démarrage...")
+   try:
+      subprocess.run(['sudo', 'pigpiod'], check=True)
+      time.sleep(1)  # Attendre que le démon démarre
+      pi = pigpio.pi()  # Réessayer la connexion
+      if not pi.connected:
+         print("= ERREUR: Impossible de se connecter à pigpiod après démarrage.")
+         exit(1)
+      print("= pigpiod démarré avec succès")
+   except subprocess.CalledProcessError:
+      print("= ERREUR: Impossible de démarrer pigpiod.")
+      print("=         Vérifiez que pigpio est installé: sudo apt-get install pigpio")
+      exit(1)
 
 print("= Ok")
 exit(0)

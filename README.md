@@ -15,6 +15,7 @@ Plugin Jeedom pour le contrôle de réseaux ZigBee via passerelles ZiGate et EZS
 - Jeedom 4.0 ou supérieur
 - Python 3 avec pyserial
 - Passerelle ZiGate ou compatible EZSP
+- Pour PiZigate : package pigpio (`sudo apt-get install pigpio python3-pigpio`). Le démon `pigpiod` est démarré automatiquement si nécessaire.
 
 ## Documentation
 

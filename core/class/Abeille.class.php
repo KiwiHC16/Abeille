@@ -54,7 +54,13 @@ class Abeille extends eqLogic {
 
             if ($result != '')
                 $result .= ", ";
-            $result .= config::byKey('ab::gtwPort'.$gtwId, 'Abeille', '');
+
+            $port = config::byKey('ab::gtwPort'.$gtwId, 'Abeille', '');
+            $usbPort = jeedom::getUsbMapping($port);
+            if ($usbPort != $port)
+                $result .= $port . ' (' . $usbPort . ')';
+            else
+                $result .= $port;
         }
 
         $return[] = array(

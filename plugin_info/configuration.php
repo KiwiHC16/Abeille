@@ -1027,12 +1027,15 @@
                 window.checkWiringPiOngoing = false;
             },
             success: function (res) {
-                if (res.result == 0) {
-                    // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                    document.getElementById("idWiringPiStatus").value = "OK";
-                } else {
-                    // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
-                    document.getElementById("idWiringPiStatus").value = "NOK";
+                var elem = document.getElementById("idWiringPiStatus");
+                if (elem) {
+                    if (res.result == 0) {
+                        // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                        elem.value = "OK";
+                    } else {
+                        // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                        elem.value = "NOK";
+                    }
                 }
                 window.checkWiringPiOngoing = false;
             }
@@ -1058,12 +1061,15 @@
                 window.checkPiGpioOngoing = false;
             },
             success: function (res) {
-                if (res.result == 0) {
-                    // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                    document.getElementById("idPiGpioStatus").value = "OK";
-                } else {
-                    // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
-                    document.getElementById("idPiGpioStatus").value = "NOK";
+                var elem = document.getElementById("idPiGpioStatus");
+                if (elem) {
+                    if (res.result == 0) {
+                        // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                        elem.value = "OK";
+                    } else {
+                        // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                        elem.value = "NOK";
+                    }
                 }
                 window.checkPiGpioOngoing = false;
             }

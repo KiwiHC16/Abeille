@@ -44,7 +44,13 @@ class Abeille extends eqLogic {
      * @return advice comment by question mark icon
      * @return state  if the test was successful or not
      */
-    public static function health() {
+    /**
+     * healthPort
+     * Returns the list of USB ports used by the plugin for display in the global health page header.
+     *
+     * @return string Comma-separated list of ports with USB mapping
+     */
+    public static function healthPort() {
         $result = '';
         for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
             if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') == 'N')
@@ -62,10 +68,13 @@ class Abeille extends eqLogic {
             else
                 $result .= $port;
         }
+        return $result;
+    }
 
+    public static function health() {
         $return[] = array(
             'test' => 'Ports: ',            // title of the line
-            'result' => $result,            // Text which be printed in the line
+            'result' => self::healthPort(), // Text which be printed in the line
             'advice' => 'Ports utilisés',   // Text printed when mouse is on question mark icon
             'state' => true,                // Status du plugin: true line will be green, false line will be red.
         );

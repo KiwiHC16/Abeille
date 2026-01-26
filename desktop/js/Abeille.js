@@ -29,39 +29,28 @@ if (window.location.href.indexOf("id=") > -1) {
 
 // console.log("LA2 eqId=", curEqId);
 
-// Custom search filter to hide/show the entire wrapper div (checkbox + card together).
-// Uses capturing phase (true) to run before Jeedom's handler and stopImmediatePropagation
-// to prevent Jeedom's default filter from also running on bee wrappers.
-document
-    .getElementById("in_searchEqlogic")
-    ?.addEventListener("keyup", function (event) {
-        var search = event.target.value;
-
-        // Filter all bee wrappers (checkbox + card together)
-        document.querySelectorAll(".eqBeeWrapper").forEach(function(wrapper) {
-            var card = wrapper.querySelector(".eqLogicDisplayCard");
-            if (!card) return;
-
-            if (search == "") {
-                // Show all wrappers when search is empty
-                wrapper.style.display = '';
-                card.style.display = '';
-            } else {
-                // Check if card name matches search
-                var nameEl = card.querySelector(".name");
-                if (nameEl) {
-                    var text = jeedomUtils.normTextLower(nameEl.textContent);
-                    var searchNorm = jeedomUtils.normTextLower(search);
-                    var matches = text.includes(searchNorm);
-                    wrapper.style.display = matches ? '' : 'none';
-                    card.style.display = matches ? '' : 'none';
+// Sync wrapper visibility with card visibility using MutationObserver.
+// When Jeedom's filter hides/shows a card, we sync the wrapper (checkbox + card together).
+(function() {
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                var card = mutation.target;
+                var wrapper = card.closest('.eqBeeWrapper');
+                if (wrapper) {
+                    // Sync wrapper display with card display
+                    var cardDisplay = window.getComputedStyle(card).display;
+                    wrapper.style.display = (cardDisplay === 'none') ? 'none' : '';
                 }
             }
         });
+    });
 
-        // Stop Jeedom's default filter from running
-        event.stopImmediatePropagation();
-    }, true);
+    // Observe all eqLogicDisplayCard elements inside eqBeeWrapper for style changes
+    document.querySelectorAll('.eqBeeWrapper .eqLogicDisplayCard').forEach(function(card) {
+        observer.observe(card, { attributes: true, attributeFilter: ['style'] });
+    });
+})();
 
 // Click generate on page reload too.
 $(".eqLogicDisplayCard").on("click", function () {

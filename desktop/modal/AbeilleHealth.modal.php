@@ -220,14 +220,16 @@
                         // Updating gateway status if coordinator (addr 0000) & enabled
                         if ((addr == '0000') && (gtwEnabled == 1)) {
                             let gtwSpan = document.getElementById("idGtw"+gtwId);
-                            if (e.gtwType == 'zigate')
-                                gtwSpan.textContent = "Zigate " + gtwId;
-                            else
-                                gtwSpan.textContent = "Ezsp " + gtwId;
-                            if (e.timeout)
-                                gtwSpan.className = "label label-danger";
-                            else
-                                gtwSpan.className = "label label-success";
+                            if (gtwSpan) {
+                                if (e.gtwType == 'zigate')
+                                    gtwSpan.textContent = "Zigate " + gtwId;
+                                else
+                                    gtwSpan.textContent = "Ezsp " + gtwId;
+                                if (e.timeout)
+                                    gtwSpan.className = "label label-danger";
+                                else
+                                    gtwSpan.className = "label label-success";
+                            }
                         }
                     }
                 }

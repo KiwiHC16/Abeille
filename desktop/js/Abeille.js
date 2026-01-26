@@ -29,18 +29,24 @@ if (window.location.href.indexOf("id=") > -1) {
 
 // console.log("LA2 eqId=", curEqId);
 
-// Additional code to hide checkboxes (class=beeChecked) when seach bar is used.
+// Additional code to hide checkboxes (class=beeChecked) when search bar is used.
 // Jeedom code is already handling the 'eqLogicDisplayCard' class.
 document
     .getElementById("in_searchEqlogic")
     ?.addEventListener("keyup", function (event) {
         var search = event.target.value;
         if (search == "") {
-            document.querySelectorAll(".beeChecked").seen();
+            // Show all checkboxes
+            document.querySelectorAll(".beeChecked").forEach(function(el) {
+                el.style.display = '';
+            });
             return;
         }
 
-        document.querySelectorAll(".beeChecked").unseen(); // Hide all
+        // Hide all checkboxes
+        document.querySelectorAll(".beeChecked").forEach(function(el) {
+            el.style.display = 'none';
+        });
         search = jeedomUtils.normTextLower(search);
         var text;
         document
@@ -48,14 +54,12 @@ document
             .forEach((_name) => {
                 text = jeedomUtils.normTextLower(_name.textContent);
                 if (text.includes(search)) {
-                    // console.log("TOTO=", _name);
-                    eq = _name.closest(".eqLogicDisplayCard");
-                    // console.log("EQ=", eq);
-                    eqId = eq.getAttribute("data-eqlogic_id");
-                    // console.log("ID=", eqId);
-                    document
-                        .querySelector('[name="eqSelected-' + eqId + '"]')
-                        .seen();
+                    var eq = _name.closest(".eqLogicDisplayCard");
+                    var eqId = eq.getAttribute("data-eqlogic_id");
+                    var checkbox = document.querySelector('[name="eqSelected-' + eqId + '"]');
+                    if (checkbox) {
+                        checkbox.style.display = '';
+                    }
                 }
             });
     });

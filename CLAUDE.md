@@ -59,11 +59,25 @@ AbeilleEzspD.py       → EZSP daemon: Silicon Labs protocol support
 ```
 
 **Message Queues** (defined in `core/config/Abeille.config.php`):
-- `xToCmd` - Commands to send
-- `xToParser` - Messages to parser
-- `xToAbeille` - Messages to main daemon
-- `parserToLQI` - Link quality updates
-- `parserToRoutes` - Route table data
+
+| Queue | ID | Max Size | Purpose |
+|-------|-----|----------|---------|
+| `xToCmd` | 0xAB04BC | 1024 | Commands to AbeilleCmd daemon |
+| `xToParser` | 0xAB0336 | 2048 | Messages to parser daemon |
+| `xToAbeille` | 0xAB026D | 1024 | Messages to main daemon (AbeilleMainD) |
+| `parserToLQI` | 0xAB00E1 | 2048 | Link quality indicator updates |
+| `parserToRoutes` | 0xAB00E2 | 2048 | Route table data |
+| `parserToCmdAck` | 0xAB03E7 | 512 | ACK messages (8000/8011/8012) from parser to cmd |
+| `parserToAssist` | 0xAB008D | 512 | Data to equipment assistant |
+| `parserToCli` | 0xAB02D4 | 1024 | Parser to CLI output |
+| `xToMon` | 0xAB0081 | 1024 | Messages to monitor |
+
+**Priority System**:
+```php
+define('priorityMax', 1);           // PRIO_HIGH - User actions (real-time)
+define('priorityInterrogation', 2); // PRIO_NORM - State queries
+define('priorityMin', 3);           // PRIO_LOW  - Background tasks
+```
 
 ### Core Classes
 
@@ -76,6 +90,61 @@ AbeilleEzspD.py       → EZSP daemon: Silicon Labs protocol support
 | `AbeilleCmdQueue` | Queue priority management (MAX=1, NORMAL=2, MIN=3) |
 | `AbeilleParser` | Response parsing, device discovery, attribute extraction (293KB) |
 | `AbeilleTools` | Utilities: hex conversion, JSON handling, logging |
+
+### Message Queue Architecture
+
+```
+┌─────────────────┐
+│  Jeedom Core    │  msgToCmd() / msgToParser()
+│  (PHP/AJAX)     │
+└────────┬────────┘
+         │
+         ↓
+┌─────────────────────────────────────────────────────────────┐
+│                 SYSTEM V IPC QUEUES                         │
+├─────────────────────────────────────────────────────────────┤
+│  xToCmd ──────────────────────► AbeilleCmd.php              │
+│                                 (command daemon)            │
+│                                       │                     │
+│  xToParser ───────────────────► AbeilleParser.php           │
+│       ↑                         (parser daemon)             │
+│       │                               │                     │
+│  SerialRead ◄────────────────── ZiGate/EZSP                 │
+│  (serial port daemon)           (hardware)                  │
+│                                       │                     │
+│  parserToCmdAck ◄────────────────────┘                      │
+│  (8000/8011/8012 ACKs)                                      │
+│                                                             │
+│  xToAbeille ──────────────────► AbeilleMainD.php            │
+│                                 (main daemon)               │
+│                                                             │
+│  parserToLQI ─────────────────► AbeilleLQI.php              │
+│  parserToRoutes ──────────────► AbeilleRoutes.php           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Sending messages**:
+```php
+// Send to main daemon
+$msg = array('topic' => $topic, 'payload' => $payload);
+msg_send($queueXToAbeille, 1, json_encode($msg), false, false);
+
+// Send to command daemon with priority
+$msg = array('priority' => $priority, 'topic' => $topic, 'payload' => $payload);
+msg_send($queueXToCmd, 1, json_encode($msg), false, false);
+```
+
+**Receiving messages** (non-blocking):
+```php
+msg_receive($queue, 0, $msgType, $maxSize, $msgJson, false, MSG_IPC_NOWAIT, $errCode);
+// Error 7 = Message too big, Error 42 = No message
+```
+
+**Command Queue with ACK management** (in `AbeilleCmdQueue.class.php`):
+- Each ZiGate has priority queues: `$GLOBALS['zigates'][$zgId]['cmdQueue'][$priority]`
+- Commands track: status, retries, timeout, sqn/sqnAps for ACK correlation
+- Throughput regulation: 100ms delay between commands, NPDU limit check
+- NO-ACK devices automatically moved to low priority queue
 
 ### Device/Command System
 

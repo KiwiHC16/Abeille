@@ -30,31 +30,38 @@ if (window.location.href.indexOf("id=") > -1) {
 // console.log("LA2 eqId=", curEqId);
 
 // Custom search filter to hide/show the entire wrapper div (checkbox + card together).
-// This replaces Jeedom's default filtering for eqLogicDisplayCard elements in Abeille.
+// Uses capturing phase (true) to run before Jeedom's handler and stopImmediatePropagation
+// to prevent Jeedom's default filter from also running on bee wrappers.
 document
     .getElementById("in_searchEqlogic")
     ?.addEventListener("keyup", function (event) {
         var search = event.target.value;
 
-        // Get all equipment cards
-        document.querySelectorAll(".eqLogicThumbnailContainer .eqLogicDisplayCard").forEach(function(card) {
-            var wrapper = card.parentElement;
-            if (!wrapper) return;
+        // Filter all bee wrappers (checkbox + card together)
+        document.querySelectorAll(".eqBeeWrapper").forEach(function(wrapper) {
+            var card = wrapper.querySelector(".eqLogicDisplayCard");
+            if (!card) return;
 
             if (search == "") {
                 // Show all wrappers when search is empty
                 wrapper.style.display = '';
+                card.style.display = '';
             } else {
                 // Check if card name matches search
                 var nameEl = card.querySelector(".name");
                 if (nameEl) {
                     var text = jeedomUtils.normTextLower(nameEl.textContent);
                     var searchNorm = jeedomUtils.normTextLower(search);
-                    wrapper.style.display = text.includes(searchNorm) ? '' : 'none';
+                    var matches = text.includes(searchNorm);
+                    wrapper.style.display = matches ? '' : 'none';
+                    card.style.display = matches ? '' : 'none';
                 }
             }
         });
-    });
+
+        // Stop Jeedom's default filter from running
+        event.stopImmediatePropagation();
+    }, true);
 
 // Click generate on page reload too.
 $(".eqLogicDisplayCard").on("click", function () {

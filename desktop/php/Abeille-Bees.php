@@ -53,8 +53,8 @@
             $icon = 'node_defaultUnknown.png';
 
         // $eqId = $eqLogic->getId();
-        // Note: idBeeChecked needs a special code to be filtered out when using the search bar
-        echo 	'<div>';
+        // Note: eqBeeWrapper class is used by Abeille.js to filter checkbox + card together
+        echo 	'<div class="eqBeeWrapper">';
         echo        '<input id="idBeeChecked'.$zgId.'-'.$eqId.'" class="beeChecked" type="checkbox" name="eqSelected-'.$eqId.'" />';
         echo 	    '<br/>';
         echo 	    '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="'.$eqId.'">';

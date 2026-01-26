@@ -754,6 +754,23 @@ class Abeille extends eqLogic {
                     - port 0 = RESET
                     - port 2 = FLASH
                     - Production mode: FLASH=1, RESET=0 then 1 */
+
+                // Check pigpiod availability when using PiGpio library
+                $gpioLib = config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1);
+                if ($gpioLib == "PiGpio") {
+                    exec("command -v pigpiod", $out, $ret);
+                    if ($ret != 0) {
+                        log::add('Abeille', 'info', "PiZigate {$gtwId}: pigpiod non trouvé, installation en cours...");
+                        exec(system::getCmdSudo() . "apt-get install -y pigpio python3-pigpio 2>&1", $installOut, $installRet);
+                        if ($installRet != 0) {
+                            log::add('Abeille', 'error', "PiZigate {$gtwId}: Echec installation pigpio: " . implode("\n", $installOut));
+                            message::add("Abeille", "PiZigate {$gtwId}: Impossible d'installer pigpio automatiquement. Veuillez l'installer manuellement: sudo apt-get install pigpio python3-pigpio");
+                        } else {
+                            log::add('Abeille', 'info', "PiZigate {$gtwId}: pigpio installé avec succès");
+                        }
+                    }
+                }
+
                 AbeilleTools::setPIGpio(); // Found an active PI Zigate. Configure GPIO (needed once).
             }
         }

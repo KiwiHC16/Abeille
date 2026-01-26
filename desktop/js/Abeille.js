@@ -29,39 +29,31 @@ if (window.location.href.indexOf("id=") > -1) {
 
 // console.log("LA2 eqId=", curEqId);
 
-// Additional code to hide checkboxes (class=beeChecked) when search bar is used.
-// Jeedom code is already handling the 'eqLogicDisplayCard' class.
+// Custom search filter to hide/show the entire wrapper div (checkbox + card together).
+// This replaces Jeedom's default filtering for eqLogicDisplayCard elements in Abeille.
 document
     .getElementById("in_searchEqlogic")
     ?.addEventListener("keyup", function (event) {
         var search = event.target.value;
-        if (search == "") {
-            // Show all checkboxes
-            document.querySelectorAll(".beeChecked").forEach(function(el) {
-                el.style.display = '';
-            });
-            return;
-        }
 
-        // Hide all checkboxes
-        document.querySelectorAll(".beeChecked").forEach(function(el) {
-            el.style.display = 'none';
-        });
-        search = jeedomUtils.normTextLower(search);
-        var text;
-        document
-            .querySelectorAll(".eqLogicDisplayCard .name")
-            .forEach((_name) => {
-                text = jeedomUtils.normTextLower(_name.textContent);
-                if (text.includes(search)) {
-                    var eq = _name.closest(".eqLogicDisplayCard");
-                    var eqId = eq.getAttribute("data-eqlogic_id");
-                    var checkbox = document.querySelector('[name="eqSelected-' + eqId + '"]');
-                    if (checkbox) {
-                        checkbox.style.display = '';
-                    }
+        // Get all equipment cards
+        document.querySelectorAll(".eqLogicThumbnailContainer .eqLogicDisplayCard").forEach(function(card) {
+            var wrapper = card.parentElement;
+            if (!wrapper) return;
+
+            if (search == "") {
+                // Show all wrappers when search is empty
+                wrapper.style.display = '';
+            } else {
+                // Check if card name matches search
+                var nameEl = card.querySelector(".name");
+                if (nameEl) {
+                    var text = jeedomUtils.normTextLower(nameEl.textContent);
+                    var searchNorm = jeedomUtils.normTextLower(search);
+                    wrapper.style.display = text.includes(searchNorm) ? '' : 'none';
                 }
-            });
+            }
+        });
     });
 
 // Click generate on page reload too.

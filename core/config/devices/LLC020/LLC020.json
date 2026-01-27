@@ -19,14 +19,6 @@
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "CurrentX": {
-                "use": "inf_zbAttr-0300-CurrentX",
-                "isVisible": 1
-            },
-            "CurrentY": {
-                "use": "inf_zbAttr-0300-CurrentY",
-                "isVisible": 1
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
@@ -38,9 +30,6 @@
             "Set Level": {
                 "use": "act_setLevel-Light",
                 "isVisible": 1
-            },
-            "Colour": {
-                "use": "Colour"
             },
             "Set White": {
                 "use": "act_zbCmdC-0300-MoveToColor",
@@ -66,14 +55,6 @@
                 "logicalId": "#EP#-Set-Green",
                 "isVisible": 1
             },
-            "Get-ColorX": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0300&attrId=0003"
-            },
-            "Get-ColorY": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0300&attrId=0004"
-            },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
@@ -86,56 +67,8 @@
                 "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
-            "Bind-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0006",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
-            "Bind-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0008",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
-            "SetReporting-0006-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=0006&attrType=10&attrId=0000",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
-            },
-            "SetReporting-0008-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "clustId=0008&attrId=0000&attrType=20",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
-            },
-            "ColourRGB": {
-                "use": "ColourRGB"
-            },
-            "RGB": {
-                "use": "setColourRGB"
-            },
             "setRGB": {
                 "use": "setRGB"
-            },
-            "colorRouge": {
-                "use": "colorRouge"
-            },
-            "setRouge": {
-                "use": "setRouge"
-            },
-            "colorVert": {
-                "use": "colorVert"
-            },
-            "setVert": {
-                "use": "setVert"
-            },
-            "colorBleu": {
-                "use": "colorBleu"
-            },
-            "setBleu": {
-                "use": "setBleu"
             },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",

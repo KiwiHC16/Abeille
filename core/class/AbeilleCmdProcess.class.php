@@ -385,7 +385,7 @@
 
             if (isset($Command['cmdParams']['destinationEndpoint'])) {
                 if ($Command['cmdParams']['destinationEndpoint']>1 ) {
-                    $dstEp = $Command['cmdParams']['destinationEndpoint'];
+                    $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
                 }
                 else {
                     $dstEp = "01";
@@ -477,7 +477,7 @@
             $addrMode                = "02";
             $addr = $Command['cmdParams']['address'];
             $srcEp             = "01";
-            if ($Command['cmdParams']['destinationEndpoint']>1 ) { $dstEp = $Command['cmdParams']['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
+            $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
 
             $profId                  = "0104";
             $clustId                  = $Command['cmdParams']['clusterId'];
@@ -1312,7 +1312,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
                 $sceneID = $Command['cmdParams']['sceneID'];
@@ -1339,7 +1339,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
                 $sceneID = $Command['cmdParams']['sceneID'];
@@ -1366,7 +1366,7 @@
                 $addrMode   = "02";                                    // Short Address -> 2
                 $address    = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp      = "01";                                 // -> 2
-                $dstEp      = $Command['cmdParams']['destinationEndpoint']; // -> 2
+                $dstEp      = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
 
                 $groupID    = $Command['cmdParams']['groupId'];
                 $sceneID    = $Command['cmdParams']['sceneID'];
@@ -1424,7 +1424,7 @@
                 $addrMode   = "02";
                 $address    = $Command['cmdParams']['address'];
                 $srcEp      = "01";
-                $dstEp      = $Command['cmdParams']['destinationEndpoint'];
+                $dstEp      = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
 
                 $groupID    = $Command['cmdParams']['groupId'];
                 $sceneID    = $Command['cmdParams']['sceneID'];
@@ -1456,7 +1456,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
 
@@ -1483,7 +1483,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
                 $sceneID = $Command['cmdParams']['sceneID'];
@@ -1510,7 +1510,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
 
@@ -1905,7 +1905,7 @@
 
                 $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                if (isset ( $Command['cmdParams']['destinationEndpoint'] )) { $dstEp = $Command['cmdParams']['destinationEndpoint'];} else { $dstEp = "01"; };
+                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
                 $onoff = "00";
                 $stepMode = "00"; // 00 : Up, 01 : Down
                 $stepSize = $Command['cmdParams']['step'];
@@ -1935,7 +1935,7 @@
 
                 $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                if (isset ( $Command['cmdParams']['destinationEndpoint'] )) { $dstEp = $Command['cmdParams']['destinationEndpoint'];} else { $dstEp = "01"; };
+                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
                 $onoff = "00";
                 $stepMode = "01"; // 00 : Up, 01 : Down
                 $stepSize = $Command['cmdParams']['step'];
@@ -1966,7 +1966,7 @@
                 $addrMode       = $Command['cmdParams']['addressMode'];
                 $address        = $Command['cmdParams']['address'];
                 $srcEp          = "01";
-                $dstEp          = $Command['cmdParams']['destinationEndpoint'];
+                $dstEp          = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
                 $action         = $Command['cmdParams']['action'];
                 $onTime         = $Command['cmdParams']['onTime'];
                 $offWaitTime    = $Command['cmdParams']['offWaitTime'];
@@ -2029,7 +2029,7 @@
                 $addrMode = "02";
                 $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                $dstEp = $Command['cmdParams']['destinationEndpoint'];
+                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
                 $colourX = str_pad( dechex($x), 4, "0", STR_PAD_LEFT);
                 $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
                 $duration = "0001";
@@ -4473,7 +4473,7 @@
                     if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    if (isset($Command['cmdParams']['ep'])) $dstEp = $Command['cmdParams']['ep']; else $dstEp = "01";
+                    $dstEp = $Command['cmdParams']['ep'] ?? $Command['cmdParams']['EP'] ?? "01";
                     $colourX    = $Command['cmdParams']['X'];
                     $colourY    = $Command['cmdParams']['Y'];
                     if (isset($Command['cmdParams']['duration']) && $Command['cmdParams']['duration']>0)
@@ -4506,7 +4506,7 @@
                     if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    if (isset($Command['cmdParams']['ep'])) $dstEp = $Command['cmdParams']['ep']; else $dstEp = "01";
+                    $dstEp = $Command['cmdParams']['ep'] ?? $Command['cmdParams']['EP'] ?? "01";
                     // Color temp K = 1,000,000 / ColorTempMireds,
                     // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
                     // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.

@@ -26,7 +26,34 @@ fi
 
 FULLDEV=$1
 GATEWAY_ID=${2:-""}
-log "Port: $FULLDEV, Gateway: $GATEWAY_ID"
+USB_SERIAL=${3:-""}  # Optional: USB device serial number for reliable identification
+log "Port: $FULLDEV, Gateway: $GATEWAY_ID, USB Serial: $USB_SERIAL"
+
+# Function to find device by USB serial number
+find_device_by_serial() {
+    local search_serial="$1"
+    for tty in /sys/class/tty/ttyUSB*; do
+        [ -e "$tty" ] || continue
+        local serial_file="$tty/device/../../serial"
+        if [ -e "$serial_file" ]; then
+            local serial=$(cat "$serial_file" 2>/dev/null)
+            if [ "$serial" = "$search_serial" ]; then
+                basename "$tty"
+                return 0
+            fi
+        fi
+    done
+    return 1
+}
+
+# Function to get USB serial from current device
+get_device_serial() {
+    local dev="$1"
+    local serial_file="/sys/class/tty/$dev/device/../../serial"
+    if [ -e "$serial_file" ]; then
+        cat "$serial_file" 2>/dev/null
+    fi
+}
 
 # Resolve symlinks (e.g., /dev/serial/by-id/...)
 if [[ "${FULLDEV}" == "/dev/serial/by-id"* ]]; then
@@ -42,7 +69,16 @@ if [[ "${FULLDEV}" == "/dev/serial/by-id"* ]]; then
 else
     DEV=${FULLDEV#/dev/}
 fi
-log "Device name: $DEV"
+
+# Try to get USB serial number if not provided
+if [ -z "$USB_SERIAL" ] && [ -e "/sys/class/tty/$DEV" ]; then
+    USB_SERIAL=$(get_device_serial "$DEV")
+    if [ -n "$USB_SERIAL" ]; then
+        log "Detected USB serial number: $USB_SERIAL"
+    fi
+fi
+
+log "Device name: $DEV, USB Serial: $USB_SERIAL"
 
 # Step 1: Kill Abeille daemons to release file descriptors
 log "Step 1: Stopping Abeille daemons..."
@@ -134,19 +170,39 @@ else
     log "WARNING: Could not identify USB port, skipping power cycle"
 fi
 
-# Step 5: Check if device node was created by udev
-log "Step 5: Checking device node after power cycle..."
+# Step 5: Find device by USB serial number (most reliable method)
+log "Step 5: Locating device after power cycle..."
 sleep 1
 
-# Check what device was created
-NEW_DEV=""
-for d in /dev/ttyUSB*; do
-    if [ -e "$d" ]; then
-        NEW_DEV=$(basename "$d")
-        log "Found device: $d"
-        break
+FOUND_DEV=""
+
+# First, try to find by USB serial number (most reliable)
+if [ -n "$USB_SERIAL" ]; then
+    log "Searching for device with USB serial: $USB_SERIAL"
+    FOUND_DEV=$(find_device_by_serial "$USB_SERIAL")
+    if [ -n "$FOUND_DEV" ]; then
+        log "Found device by serial number: $FOUND_DEV"
+        DEV="$FOUND_DEV"
+    else
+        log "Device with serial $USB_SERIAL not found in sysfs yet"
     fi
-done
+fi
+
+# Fallback: check what devices exist
+if [ -z "$FOUND_DEV" ]; then
+    for d in /sys/class/tty/ttyUSB*; do
+        if [ -e "$d" ]; then
+            FOUND_DEV=$(basename "$d")
+            FOUND_SERIAL=$(get_device_serial "$FOUND_DEV")
+            log "Found device in sysfs: $FOUND_DEV (serial: $FOUND_SERIAL)"
+            # Use first found device if no serial match
+            if [ -z "$USB_SERIAL" ] || [ "$FOUND_SERIAL" = "$USB_SERIAL" ]; then
+                DEV="$FOUND_DEV"
+                break
+            fi
+        fi
+    done
+fi
 
 # Step 6: Create device node manually if needed (Docker/udev issue)
 if [ ! -e "/dev/$DEV" ]; then

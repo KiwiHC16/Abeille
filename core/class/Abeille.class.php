@@ -83,6 +83,39 @@ class Abeille extends eqLogic {
     }
 
     /**
+     * isRunningInDocker
+     * Detects if Jeedom is running inside a Docker container.
+     * Used to apply Docker-specific workarounds (e.g., USB device recovery).
+     *
+     * @return bool True if running in Docker, false otherwise
+     */
+    public static function isRunningInDocker() {
+        static $isDocker = null;
+
+        if ($isDocker === null) {
+            $isDocker = false;
+
+            // Check for /.dockerenv file (most common indicator)
+            if (file_exists('/.dockerenv')) {
+                $isDocker = true;
+            }
+            // Check cgroup for docker/lxc indicators
+            elseif (file_exists('/proc/1/cgroup')) {
+                $cgroup = @file_get_contents('/proc/1/cgroup');
+                if ($cgroup !== false && (strpos($cgroup, 'docker') !== false || strpos($cgroup, 'lxc') !== false)) {
+                    $isDocker = true;
+                }
+            }
+            // Check for container environment variable
+            elseif (getenv('container') !== false) {
+                $isDocker = true;
+            }
+        }
+
+        return $isDocker;
+    }
+
+    /**
      * executePollCmds
      * Execute commands with "Polling" flag according to given "period".
      *
@@ -307,10 +340,18 @@ class Abeille extends eqLogic {
                     else {
                         log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$gtwId." depuis plus de 2min => reset");
                         $dir = __DIR__."/../scripts";
-                        $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
+
+                        // Use Docker-aware recovery script if running in container
+                        if (self::isRunningInDocker()) {
+                            log::add('Abeille', 'debug', 'Docker mode detected, using dockerUsbRecovery.sh');
+                            $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./dockerUsbRecovery.sh ".$zgPort." ".$gtwId." 1>/tmp/jeedom/Abeille/dockerUsbRecovery.log 2>&1 &";
+                        } else {
+                            $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
+                        }
+
                         log::add('Abeille', 'debug', 'Performing power cycle on port \''.$zgPort.'\'');
                         exec($cmd, $output, $exitCode);
-                        if ($exitCode != 0)
+                        if ($exitCode != 0 && !self::isRunningInDocker())
                             message::add("Abeille", "La Zigate ".$gtwId." semble plantée mais impossible de lui faire un cycle OFF/ON.");
                     }
                 } else if (($zgType == "PI") || ($zgType == "PIv2")) {

@@ -140,11 +140,151 @@ msg_receive($queue, 0, $msgType, $maxSize, $msgJson, false, MSG_IPC_NOWAIT, $err
 // Error 7 = Message too big, Error 42 = No message
 ```
 
-**Command Queue with ACK management** (in `AbeilleCmdQueue.class.php`):
-- Each ZiGate has priority queues: `$GLOBALS['zigates'][$zgId]['cmdQueue'][$priority]`
-- Commands track: status, retries, timeout, sqn/sqnAps for ACK correlation
-- Throughput regulation: 100ms delay between commands, NPDU limit check
-- NO-ACK devices automatically moved to low priority queue
+### Command Queue System (AbeilleCmdQueue.class.php)
+
+The AbeilleCmd daemon processes commands via a sophisticated priority-based queue system with ACK handling.
+
+#### Queue Structure per ZiGate
+
+Each gateway maintains 3 priority queues:
+```php
+$GLOBALS['zigates'][$gtwId]['cmdQueue'] = [
+    1 => [],  // PRIO_HIGH - User actions (real-time)
+    2 => [],  // PRIO_NORM - State queries
+    3 => [],  // PRIO_LOW  - Background tasks
+];
+```
+
+#### Command Entry Structure
+
+```php
+$cmd = array(
+    'dest'      => 'Abeille1',      // Target gateway
+    'addr'      => 'A4C1',          // Device short address
+    'cmd'       => '0092',          // ZiGate command (hex)
+    'datas'     => '...',           // Command payload
+    'zgOnly'    => false,           // true = ZiGate-only (no network)
+    'status'    => '',              // '' = unsent, 'SENT' = transmitted
+    'try'       => 4,               // Retry attempts remaining
+    'sentTime'  => 0,               // Unix timestamp when sent
+    'timeout'   => 8,               // Seconds before timeout (4 if no ACK)
+    'sqn'       => '',              // ZiGate sequence number
+    'sqnAps'    => '',              // Network sequence number (for ACK match)
+    'ackAps'    => true,            // true = wait for device ACK
+    'waitFor'   => 'ACK',           // Expected response: 'ACK', '8000', or cmd
+    'repeat'    => 0,               // Retries on device NO-ACK
+);
+```
+
+#### Priority Selection Algorithm
+
+Commands are selected from highest to lowest priority (1→3):
+```php
+foreach (range(priorityMax, priorityMin) as $priority) {
+    if (count($zg['cmdQueue'][$priority]) > 0) {
+        $cmd = $zg['cmdQueue'][$priority][0];
+        break;  // Take first non-empty queue
+    }
+}
+```
+
+#### Dynamic Priority Adjustment
+
+Devices with communication issues are automatically downgraded:
+```php
+// In addCmdToQueue2() - AbeilleCmdQueue.class.php:299-306
+if ($priority != PRIO_LOW) {
+    if ($dev['zigbee']['txStatus'] == 'noack') {
+        $priority = PRIO_LOW;  // Prevent blocking other devices
+    }
+}
+```
+
+#### Throughput Regulation
+
+Two throttling mechanisms prevent network congestion:
+
+| Regulation | Condition | Effect |
+|------------|-----------|--------|
+| Throughput | `tp_time > now` | 100ms delay between commands |
+| NDPU | `nPDU > 7` | Stop if >7 PDUs pending in network |
+
+```php
+if ($zg['tp_time'] > microtime(true))
+    $regulation = "Throughput";
+else if ($zg['nPDU'] > 7)
+    $regulation = "NDPU";
+```
+
+During regulation, ZiGate-only commands (not transmitted to network) can bypass the queue.
+
+#### ACK Message Types
+
+| Type | Source | Meaning | Next Action |
+|------|--------|---------|-------------|
+| `8000` | ZiGate | Command accepted/rejected | Check status, wait for 8011 if ackAps |
+| `8011` | Network | Device ACK/NACK | Update txStatus, retry if needed |
+| `8012` | Network | Message routed | Intermediate, wait for 8011 |
+
+**8000 Status Codes:**
+- `00` - Success
+- `01` - Bad parameter
+- `02` - Unhandled command
+- `03` - Command failed
+- `04` - Busy (transient, retry)
+- `05` - Stack already started
+- `06` - Unknown endpoint
+- `14` - Message too big
+
+#### Retry Mechanisms
+
+Two independent retry systems:
+
+1. **`try` counter** - Automatic retries for ZiGate errors
+   - Initialized to `maxRetryDefault + 1` (4 attempts)
+   - Decremented on each send
+   - Command removed when try = 0
+
+2. **`repeat` counter** - Explicit retries for device NO-ACK
+   - Set at command creation
+   - Only used if 8011 indicates device didn't ACK
+   - Resets command status to unsent
+
+#### Main Loop Execution (10ms cycle)
+
+```php
+while (true) {
+    processAcksQueue();      // 1. Handle ACKs (priority)
+    processCmdQueues();      // 2. Send queued commands
+    processXToCmdQueue();    // 3. Receive new commands
+    execTempoCmdAbeille();   // 4. Execute delayed commands
+    time_nanosleep(0, 10000000);  // 5. Yield 10ms
+}
+```
+
+**Key insight:** ACKs are processed BEFORE sending new commands to ensure status updates are applied.
+
+#### Command Flow Summary
+
+```
+1. User/Jeedom → msg_send(xToCmd, priority, {topic, payload})
+2. processXToCmdQueue() → prepareCmd() → AbeilleCmdPrepare
+3. addCmdToQueue2() → duplicate check → NO-ACK check → pushZigateCmd()
+4. processCmdQueues() → priority scan → regulation check → writeToDest()
+5. ZiGate → 8000 → processAcksQueue() → wait for 8011 if ackAps
+6. Network → 8011 → update txStatus → remove or retry
+```
+
+#### Key Constants
+
+| Constant | Value | Purpose |
+|----------|-------|---------|
+| `maxRetryDefault` | 3 | Max ZiGate retries (+1 = 4 attempts) |
+| ACK timeout | 8s | With `ackAps=true` |
+| No-ACK timeout | 4s | ZiGate-only commands |
+| Throughput delay | 100ms | Between commands |
+| Soft reset delay | 1000ms | After cmd 0011 |
+| NDPU limit | 7 | Max pending network PDUs |
 
 ### Device/Command System
 

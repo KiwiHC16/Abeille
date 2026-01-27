@@ -1812,6 +1812,7 @@
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
     if ($daemons["main"] > 1){
         logMessage('error', "Un démon 'main' est déja lancé ! ".json_encode($daemons));
+        AbeilleTools::captureDaemonDebugInfo('AbeilleMainD', $daemons);
         exit(3);
     }
 

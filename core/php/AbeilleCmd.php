@@ -405,6 +405,7 @@
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
     if ($daemons["cmd"] > 1){
         logMessage('error', "Un démon 'cmd' est déja lancé ! ".json_encode($daemons));
+        AbeilleTools::captureDaemonDebugInfo('AbeilleCmd', $daemons);
         exit(3);
     }
 

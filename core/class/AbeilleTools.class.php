@@ -1208,5 +1208,78 @@
             else
                 return "?";
         }
+
+        /**
+         * Capture daemon debug information when a daemon is already running.
+         * Writes detailed system state to a dedicated log file for later analysis.
+         *
+         * @param string $daemonName Name of the daemon that detected the conflict
+         * @param array $daemons Result from diffExpectedRunningDaemons()
+         */
+        public static function captureDaemonDebugInfo($daemonName, $daemons) {
+            $logDir = __DIR__ . '/../../log/';
+            $logFile = $logDir . 'daemon_conflict_debug.log';
+
+            // Ensure log directory exists
+            if (!is_dir($logDir)) {
+                @mkdir($logDir, 0755, true);
+            }
+
+            $timestamp = date('Y-m-d H:i:s');
+            $separator = str_repeat('=', 80);
+
+            $output = "\n" . $separator . "\n";
+            $output .= "DAEMON CONFLICT DETECTED: " . $timestamp . "\n";
+            $output .= "Daemon: " . $daemonName . "\n";
+            $output .= $separator . "\n\n";
+
+            // Daemon status from diffExpectedRunningDaemons
+            $output .= "--- DAEMON STATUS (diffExpectedRunningDaemons) ---\n";
+            $output .= json_encode($daemons, JSON_PRETTY_PRINT) . "\n\n";
+
+            // Get detailed running daemons info
+            $output .= "--- RUNNING DAEMONS (getRunningDaemons2) ---\n";
+            $running = self::getRunningDaemons2();
+            $output .= json_encode($running, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n\n";
+
+            // Raw process list
+            $output .= "--- RAW PROCESS LIST (pgrep) ---\n";
+            exec("pgrep -a php | grep Abeille", $phpProcesses);
+            exec("pgrep -a python3 | grep Abeille", $pythonProcesses);
+            exec("pgrep -a socat", $socatProcesses);
+            $output .= "PHP processes:\n";
+            foreach ($phpProcesses as $proc) {
+                $output .= "  " . $proc . "\n";
+            }
+            $output .= "Python3 processes:\n";
+            foreach ($pythonProcesses as $proc) {
+                $output .= "  " . $proc . "\n";
+            }
+            $output .= "Socat processes:\n";
+            foreach ($socatProcesses as $proc) {
+                $output .= "  " . $proc . "\n";
+            }
+            $output .= "\n";
+
+            // System memory info
+            $output .= "--- SYSTEM MEMORY ---\n";
+            exec("free -h", $memInfo);
+            foreach ($memInfo as $line) {
+                $output .= $line . "\n";
+            }
+            $output .= "\n";
+
+            // Load average
+            $output .= "--- LOAD AVERAGE ---\n";
+            $output .= file_get_contents('/proc/loadavg') . "\n";
+
+            $output .= $separator . "\n";
+
+            // Write to file
+            @file_put_contents($logFile, $output, FILE_APPEND | LOCK_EX);
+
+            // Also log to standard Abeille log
+            log::add('Abeille', 'warning', "Daemon conflict debug info captured to " . $logFile);
+        }
     }
 ?>

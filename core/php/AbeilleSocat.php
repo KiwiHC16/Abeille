@@ -58,6 +58,7 @@
     #Two at least expected,the original and this one
     if ($daemons["socat".$zgId] > 1) {
         logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
+        AbeilleTools::captureDaemonDebugInfo('AbeilleSocat'.$zgId, $daemons);
         exit(3);
     }
 

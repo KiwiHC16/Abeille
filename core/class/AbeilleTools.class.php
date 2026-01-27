@@ -603,7 +603,7 @@
          * @return array
          */
         public static function getRunningDaemons(): array {
-            exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Ezsp).php /'", $running);
+            exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|MainD|Ezsp).php /'", $running);
             // TODO: Ezsp is not php but python3
             return $running;
         }

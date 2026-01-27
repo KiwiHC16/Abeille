@@ -68,7 +68,8 @@
                 "isVisible": 1
             },
             "setRGB": {
-                "use": "setRGB"
+                "use": "setRGB",
+                "isVisible": 1
             },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",

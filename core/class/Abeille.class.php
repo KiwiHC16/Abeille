@@ -856,7 +856,7 @@ class Abeille extends eqLogic {
         if (logGetLevelNumber() == 4) {
             $jLines = log::getConfig('maxLineLog');
             if ($jLines < 5000)
-                message::add("Abeille", "Vous êtes en mode debug mais le nombre de lignes est inférieur à 5000 (".$jLines."). Il est recommandé d'augmenter ce nombre pour tout besoin de support.");
+                log::add('Abeille', 'warning', "Vous êtes en mode debug mais le nombre de lignes est inférieur à 5000 (".$jLines."). Il est recommandé d'augmenter ce nombre pour tout besoin de support.");
         }
 
         log::add('Abeille', 'debug', 'deamon_start(): Ended');

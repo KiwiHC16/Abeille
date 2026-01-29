@@ -767,7 +767,8 @@
                 foreach($running2['daemons'] as $daemonName => $daemon) {
                     $found = false;
                     foreach($toStopArr as $daemonToStop) {
-                        if (strstr($daemon['cmd'], $daemonToStop) !== false) {
+                        // Check daemon name (case-insensitive) OR command content
+                        if (strcasecmp($daemonName, $daemonToStop) === 0 || strstr($daemon['cmd'], $daemonToStop) !== false) {
                             $found = true;
                             break;
                         }

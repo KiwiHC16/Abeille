@@ -50,15 +50,44 @@
     $zgId = (int)substr($serial, strlen(wifiLink)); // '/tmp/zigateWifiX' => Zigate number X (ex: 1)
     logSetConf("AbeilleSocat".$zgId.".log", true); // Log to file with line nb check
 
-    //check already running
+    // Use lock file to prevent race condition when multiple instances start simultaneously
+    $lockFile = "/tmp/AbeilleSocat".$zgId.".lock";
+    $lockFp = fopen($lockFile, 'c');
+    if ($lockFp === false) {
+        logMessage('error', 'Impossible de créer le fichier lock '.$lockFile);
+        exit(4);
+    }
+
+    // Try to acquire exclusive lock (non-blocking)
+    if (!flock($lockFp, LOCK_EX | LOCK_NB)) {
+        logMessage('info', 'Une autre instance est en cours de démarrage, attente...');
+        // Wait up to 5 seconds for lock
+        $gotLock = false;
+        for ($i = 0; $i < 10; $i++) {
+            usleep(500000); // 500ms
+            if (flock($lockFp, LOCK_EX | LOCK_NB)) {
+                $gotLock = true;
+                break;
+            }
+        }
+        if (!$gotLock) {
+            logMessage('error', 'Impossible d\'obtenir le lock après 5s, abandon');
+            fclose($lockFp);
+            exit(5);
+        }
+    }
+
+    //check already running (after lock acquired)
     $parameters = AbeilleTools::getConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
-    #Two at least expected,the original and this one
+    #Check if socat daemon already running (not counting this instance which just started)
     if ($daemons["socat".$zgId] > 1) {
         logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
         AbeilleTools::captureDaemonDebugInfo('AbeilleSocat'.$zgId, $daemons);
+        flock($lockFp, LOCK_UN);
+        fclose($lockFp);
         exit(3);
     }
 
@@ -95,6 +124,11 @@
     // $cmd = $cmd.' 2>&1';
 
     logMessage('debug', 'cmd='.$cmd);
+
+    // Release lock before exec() as socat will run for a long time
+    flock($lockFp, LOCK_UN);
+    fclose($lockFp);
+    @unlink($lockFile);
 
     exec($cmd, $output, $result_code);
     if ($result_code != 0)

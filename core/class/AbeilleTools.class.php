@@ -1114,7 +1114,8 @@
                 exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
                 return true;
             } else if ($gpioLib == "PiGpio") {
-                exec("python3 ".__DIR__."/../scripts/resetPiZigate.py");
+                $pigpiodHost = config::byKey('ab::pigpiodHost', 'Abeille', '127.0.0.1', 1);
+                exec("python3 ".__DIR__."/../scripts/resetPiZigate.py --host=".$pigpiodHost);
                 return true;
             }
 

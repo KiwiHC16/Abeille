@@ -1,13 +1,20 @@
 import pigpio
 import time
+import sys
 
-print("Verification de l installation du package 'pigpio'")
+# Parse command line arguments for --host
+host = '127.0.0.1'
+for arg in sys.argv[1:]:
+    if arg.startswith('--host='):
+        host = arg.split('=')[1]
 
-pi = pigpio.pi()       # specify host, default port
+print(f"Connexion a pigpiod sur {host}")
+
+pi = pigpio.pi(host)
 
 if not pi.connected:
-   print("= ERREUR: Commande 'gpio' manquante ou non executable !")
-   print("=         Le package WiringPi est probablement mal installe.")
+   print(f"= ERREUR: Impossible de se connecter a pigpiod sur {host}")
+   print("=         Verifiez que pigpiod est demarre sur le host.")
    exit(1)
 
 print("= Ok")
@@ -24,21 +31,20 @@ print("Redemarrage de la PiZiGate")
 # GPIO 14 TXD
 # GPIO 15 RXD
 
-
 portReset = 17
 portFlash = 27
 
-pi.set_mode( portReset, pigpio.OUTPUT) 
-pi.set_mode( portFlash, pigpio.OUTPUT) 
+pi.set_mode(portReset, pigpio.OUTPUT)
+pi.set_mode(portFlash, pigpio.OUTPUT)
 
-pi.write( portReset, 1)
-pi.write( portFlash, 1)
+pi.write(portReset, 1)
+pi.write(portFlash, 1)
 time.sleep(1)
-pi.write( portReset, 0)
+pi.write(portReset, 0)
 time.sleep(1)
-pi.write( portReset, 1)
+pi.write(portReset, 1)
+
+pi.stop()
 
 print("= Ok. Vous pouvez fermer cette fenetre de log.")
 exit(0)
-
-

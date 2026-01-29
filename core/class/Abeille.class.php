@@ -799,15 +799,51 @@ class Abeille extends eqLogic {
                 // Check pigpiod availability when using PiGpio library
                 $gpioLib = config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1);
                 if ($gpioLib == "PiGpio") {
-                    exec("command -v pigpiod", $out, $ret);
-                    if ($ret != 0) {
-                        log::add('Abeille', 'info', "PiZigate {$gtwId}: pigpiod non trouvé, installation en cours...");
-                        exec(system::getCmdSudo() . "apt-get install -y pigpio python3-pigpio 2>&1", $installOut, $installRet);
-                        if ($installRet != 0) {
-                            log::add('Abeille', 'error', "PiZigate {$gtwId}: Echec installation pigpio: " . implode("\n", $installOut));
-                            message::add("Abeille", "PiZigate {$gtwId}: Impossible d'installer pigpio automatiquement. Veuillez l'installer manuellement: sudo apt-get install pigpio python3-pigpio");
+                    $pigpiodHost = config::byKey('ab::pigpiodHost', 'Abeille', '127.0.0.1', 1);
+                    $pigpiodPort = 8888;
+
+                    // Test si pigpiod est accessible (local ou distant)
+                    $socket = @fsockopen($pigpiodHost, $pigpiodPort, $errno, $errstr, 2);
+                    if ($socket) {
+                        fclose($socket);
+                        log::add('Abeille', 'debug', "PiZigate {$gtwId}: pigpiod accessible sur {$pigpiodHost}:{$pigpiodPort}");
+                    } else {
+                        log::add('Abeille', 'warning', "PiZigate {$gtwId}: pigpiod non accessible sur {$pigpiodHost}:{$pigpiodPort}");
+
+                        if ($pigpiodHost == '127.0.0.1' || $pigpiodHost == 'localhost') {
+                            // Mode local: installer et démarrer pigpiod localement
+                            exec("command -v pigpiod", $out, $ret);
+                            if ($ret != 0) {
+                                log::add('Abeille', 'info', "PiZigate {$gtwId}: pigpiod non trouvé, installation en cours...");
+                                exec(system::getCmdSudo() . "apt-get install -y pigpio python3-pigpio 2>&1", $installOut, $installRet);
+                                if ($installRet != 0) {
+                                    log::add('Abeille', 'error', "PiZigate {$gtwId}: Echec installation pigpio: " . implode("\n", $installOut));
+                                    message::add("Abeille", "PiZigate {$gtwId}: Impossible d'installer pigpio automatiquement. Veuillez l'installer manuellement: sudo apt-get install pigpio python3-pigpio");
+                                } else {
+                                    log::add('Abeille', 'info', "PiZigate {$gtwId}: pigpio installé avec succès");
+                                }
+                            }
+                            // Démarrer pigpiod localement
+                            exec("pgrep pigpiod", $pgrep);
+                            if (count($pgrep) == 0) {
+                                exec(system::getCmdSudo() . "/usr/bin/pigpiod 2>&1", $startOut, $startRet);
+                                if ($startRet == 0) {
+                                    log::add('Abeille', 'info', "PiZigate {$gtwId}: pigpiod démarré localement");
+                                    usleep(500000);
+                                }
+                            }
                         } else {
-                            log::add('Abeille', 'info', "PiZigate {$gtwId}: pigpio installé avec succès");
+                            // Mode distant (Docker): démarrer pigpiod sur le host via SSH
+                            log::add('Abeille', 'info', "PiZigate {$gtwId}: Tentative de démarrage de pigpiod sur le host {$pigpiodHost}...");
+                            // Essayer via systemctl sur le host Docker (gateway par défaut)
+                            exec("ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 root@{$pigpiodHost} 'systemctl start pigpiod' 2>&1", $sshOut, $sshRet);
+                            if ($sshRet == 0) {
+                                log::add('Abeille', 'info', "PiZigate {$gtwId}: pigpiod démarré sur le host via SSH");
+                                usleep(500000);
+                            } else {
+                                log::add('Abeille', 'error', "PiZigate {$gtwId}: Impossible de démarrer pigpiod sur le host: " . implode("\n", $sshOut));
+                                message::add("Abeille", "PiZigate {$gtwId}: pigpiod non accessible sur {$pigpiodHost}. Démarrez-le manuellement sur le host: sudo systemctl start pigpiod");
+                            }
                         }
                     }
                 }

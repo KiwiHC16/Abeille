@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 260125-BETA-1
+## 260202-STABLE-1, 260125-BETA-1
 
 - Améliorations: Suppression possible d'un équipement mal défini (pas d'ID logique).
 - Nouveauté: Vue des équipements en format 'liste'.

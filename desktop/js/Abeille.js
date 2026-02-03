@@ -543,13 +543,16 @@ function saveEqLogic(eqLogic) {
     // Saving variables if any
     // TODO: Variables are initialized from equipment model but since user can change them, better to move
     //       them outside 'ab::eqModel'
-    if (typeof curEq.model.variables != "undefined") {
+    if (typeof curEq.model != "undefined" && typeof curEq.model.variables != "undefined") {
         varUpdated = false;
         for (const [vKey, vVal] of Object.entries(curEq.model.variables)) {
-            newVal = document.getElementById("idVar" + vKey).value;
-            if (newVal != vVal) {
-                curEq.model.variables[vKey] = newVal;
-                varUpdated = true;
+            var inputElem = document.getElementById("idVar" + vKey);
+            if (inputElem) {
+                newVal = inputElem.value;
+                if (newVal != vVal) {
+                    curEq.model.variables[vKey] = newVal;
+                    varUpdated = true;
+                }
             }
         }
         if (varUpdated) {
@@ -559,12 +562,13 @@ function saveEqLogic(eqLogic) {
                 url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
                 data: {
                     action: "saveEqConfig",
-                    eqId: eqId,
+                    eqId: curEq.id,
                     eqConfKey: "ab::eqModel",
                     eqConfVal: JSON.stringify(curEq.model),
                 },
                 dataType: "json",
                 global: false,
+                async: false, // Must be synchronous - page reloads after Jeedom save
                 success: function (json_res) {},
             });
         }

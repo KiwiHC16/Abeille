@@ -3035,8 +3035,17 @@ class Abeille extends eqLogic {
             $eqModelInfos['private'] = $model['private'];
         // else if (isset($model['fromDevice'])) // OBSOLETE soon => replaced by 'private'
         //     $eqModelInfos['fromDevice'] = $model['fromDevice'];
-        if (isset($model['variables'])) // Optional variables
-            $eqModelInfos['variables'] = $model['variables'];
+        if (isset($model['variables'])) { // Optional variables
+            // Preserve user-set variables on 'update', reset on 'reset'
+            if ($action == 'update') {
+                $curEqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $curVars = isset($curEqModel['variables']) ? $curEqModel['variables'] : [];
+                // Model defaults first, then user values (user values take priority)
+                $eqModelInfos['variables'] = array_merge($model['variables'], $curVars);
+            } else {
+                $eqModelInfos['variables'] = $model['variables'];
+            }
+        }
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
         // generic_type

@@ -591,6 +591,8 @@
             if ((time() - $last) > 30) {
                 $AbeilleCmdQueue->displayStatus();
                 $last = time();
+                // Memory leak fix: force garbage collection periodically to reclaim memory
+                gc_collect_cycles();
             }
 
             // Free CPU time

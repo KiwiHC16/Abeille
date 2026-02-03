@@ -657,7 +657,14 @@
         }
 
         logMessage('debug', 'Reading messages queues');
+        $gcCounter = 0; // Memory leak fix: counter for periodic garbage collection
         while (true) {
+            // Memory leak fix: force garbage collection every 1000 iterations to reclaim memory
+            $gcCounter++;
+            if ($gcCounter >= 1000) {
+                gc_collect_cycles();
+                $gcCounter = 0;
+            }
 
             // Wait (block) for any input messages
             // - Those coming from AbeilleSerialRead

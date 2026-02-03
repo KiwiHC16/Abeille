@@ -123,6 +123,16 @@
 
             for ($msgIdx = 0; $msgIdx < $count; ) {
                 $msg = $tempoMessageQueue[$msgIdx];
+
+                // Memory leak fix: remove expired commands (older than 5 minutes)
+                // This prevents unbounded queue growth if commands are never dispatched
+                if ($msg['time'] + 300 < $now) {
+                    cmdLog("debug", "  Removing expired tempo cmd (>5min old): idx=$msgIdx, topic=".$msg['topic']);
+                    array_splice($tempoMessageQueue, $msgIdx, 1);
+                    $count = count($tempoMessageQueue);
+                    continue;
+                }
+
                 if ($msg['time'] > $now) {
                     $msgIdx++;
                     continue;

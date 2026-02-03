@@ -209,6 +209,21 @@
             // Create or update SQN entry
             $eq['sqnList'][$sqn]['fcf'] = $fcf;
             $eq['sqnList'][$sqn]['time'] = time();
+
+            // Memory leak fix: cleanup old SQN entries (> 2 seconds) to prevent unbounded growth
+            $now = time();
+            foreach ($eq['sqnList'] as $oldSqn => $entry) {
+                if ($entry['time'] + 2 < $now) {
+                    unset($eq['sqnList'][$oldSqn]);
+                }
+            }
+            // Additional safeguard: limit sqnList to max 100 entries (keep most recent)
+            if (count($eq['sqnList']) > 100) {
+                // Sort by time and keep only the 50 most recent
+                uasort($eq['sqnList'], function($a, $b) { return $b['time'] - $a['time']; });
+                $eq['sqnList'] = array_slice($eq['sqnList'], 0, 50, true);
+            }
+
             return false;
         }
 

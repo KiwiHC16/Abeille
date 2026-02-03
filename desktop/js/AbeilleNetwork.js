@@ -17,6 +17,21 @@
 var currentZigateLG = 1; // Current zigate displayed in links graph
 var prevTrackingMsg = ""; // Previous tracking message
 
+// Memory leak fix: store timeout IDs to allow cleanup on page navigation
+var abeilleNetworkTimeouts = [];
+
+// Memory leak fix: cleanup function to clear all pending timeouts
+function clearAbeilleNetworkTimeouts() {
+    abeilleNetworkTimeouts.forEach(function(timeoutId) {
+        clearTimeout(timeoutId);
+    });
+    abeilleNetworkTimeouts = [];
+}
+
+// Memory leak fix: cleanup on page unload or navigation
+window.addEventListener('beforeunload', clearAbeilleNetworkTimeouts);
+$(document).on('jeeObject-postLoad jeeObject-preSave', clearAbeilleNetworkTimeouts);
+
 // $("#tab_nodes")
 $("#idLinksTableTab")
     .off("click")
@@ -59,9 +74,10 @@ function refreshLqiTable(zgId, page) {
     console.log("refreshLqiTable(zgId=" + zgId + ", page=" + page + ")");
 
     /* Collect status displayed every 1sec */
-    setTimeout(function () {
+    // Memory leak fix: store timeout ID for cleanup
+    abeilleNetworkTimeouts.push(setTimeout(function () {
         trackLQICollectStatus(true, zgId);
-    }, 1000);
+    }, 1000));
 
     $.ajax({
         url: "/plugins/Abeille/core/php/AbeilleLQI.php?zigate=" + zgId,
@@ -75,9 +91,10 @@ function refreshLqiTable(zgId, page) {
                 message: "ERREUR ! Impossible de démarrer la collecte.",
                 level: "danger",
             });
-            window.setTimeout(function () {
+            // Memory leak fix: store timeout ID for cleanup
+            abeilleNetworkTimeouts.push(window.setTimeout(function () {
                 $("#div_networkZigbeeAlert").hide();
-            }, 10000);
+            }, 10000));
         },
         success: function (data, status, jqhr) {
             //console.log("refreshLqiTable success status: " + status);
@@ -95,9 +112,10 @@ function refreshLqiTable(zgId, page) {
                     message: data,
                     level: "danger",
                 });
-                window.setTimeout(function () {
+                // Memory leak fix: store timeout ID for cleanup
+                abeilleNetworkTimeouts.push(window.setTimeout(function () {
                     $("#div_networkZigbeeAlert").hide();
-                }, 10000);
+                }, 10000));
             }
         },
     });
@@ -192,9 +210,10 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
                 level: "danger",
             });
             _autoUpdate = 0;
-            setTimeout(function () {
+            // Memory leak fix: store timeout ID for cleanup
+            abeilleNetworkTimeouts.push(setTimeout(function () {
                 $("#div_networkZigbeeAlert").hide();
-            }, 10000);
+            }, 10000));
         },
         success: function (json_res) {
             res = JSON.parse(json_res.result); // res.status, res.error, res.content
@@ -206,17 +225,19 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
                     level: "danger",
                 });
                 _autoUpdate = 0;
-                setTimeout(function () {
+                // Memory leak fix: store timeout ID for cleanup
+                abeilleNetworkTimeouts.push(setTimeout(function () {
                     $("#div_networkZigbeeAlert").hide();
-                }, 10000);
+                }, 10000));
             } else if (res.content == "") {
                 $("#div_networkZigbeeAlert").showAlert({
                     message: "{{Fichier lock vide}}",
                     level: "danger",
                 });
-                setTimeout(function () {
+                // Memory leak fix: store timeout ID for cleanup
+                abeilleNetworkTimeouts.push(setTimeout(function () {
                     $("#div_networkZigbeeAlert").hide();
-                }, 10000);
+                }, 10000));
             } else {
                 var content = res.content;
                 console.log("Status='" + content + "'");
@@ -242,14 +263,16 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
                 // _autoUpdate = content.toLowerCase().includes("done")?0:1;
                 if (_autoUpdate) {
                     // Next status update in 1s
-                    setTimeout(function () {
+                    // Memory leak fix: store timeout ID for cleanup
+                    abeilleNetworkTimeouts.push(setTimeout(function () {
                         trackLQICollectStatus(_autoUpdate, zgId);
-                    }, 1000);
+                    }, 1000));
                 } else {
                     // Keep last message 10sec then hide
-                    setTimeout(function () {
+                    // Memory leak fix: store timeout ID for cleanup
+                    abeilleNetworkTimeouts.push(setTimeout(function () {
                         $("#div_networkZigbeeAlert").hide();
-                    }, 10000);
+                    }, 10000));
                 }
             }
         },

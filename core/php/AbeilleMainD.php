@@ -1883,7 +1883,14 @@
 
         // Blocking queue read
         logMessage('debug', 'Infinite listening to queueXToMain');
+        $gcCounter = 0; // Memory leak fix: counter for periodic garbage collection
         while (true) {
+            // Memory leak fix: force garbage collection every 1000 iterations to reclaim memory
+            $gcCounter++;
+            if ($gcCounter >= 1000) {
+                gc_collect_cycles();
+                $gcCounter = 0;
+            }
             logMessage('debug', 'msg_receive(xToAbeille): msg_qnum='.msg_stat_queue($queueXToMain)["msg_qnum"]);
 
             if (@msg_receive($queueXToMain, 0, $rxMsgType, $queueXToMainMax, $msgJson, false, 0, $errCode) == false) {

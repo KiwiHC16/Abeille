@@ -31,8 +31,10 @@ if (window.location.href.indexOf("id=") > -1) {
 
 // Sync wrapper visibility with card visibility using MutationObserver.
 // When Jeedom's filter hides/shows a card, we sync the wrapper (checkbox + card together).
+// Memory leak fix: store observer reference globally to allow disconnect on page unload
+var abeilleCardObserver = null;
 (function() {
-    var observer = new MutationObserver(function(mutations) {
+    abeilleCardObserver = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                 var card = mutation.target;
@@ -48,9 +50,25 @@ if (window.location.href.indexOf("id=") > -1) {
 
     // Observe all eqLogicDisplayCard elements inside eqBeeWrapper for style changes
     document.querySelectorAll('.eqBeeWrapper .eqLogicDisplayCard').forEach(function(card) {
-        observer.observe(card, { attributes: true, attributeFilter: ['style'] });
+        abeilleCardObserver.observe(card, { attributes: true, attributeFilter: ['style'] });
     });
 })();
+
+// Memory leak fix: disconnect observer when page is unloaded or navigated away
+window.addEventListener('beforeunload', function() {
+    if (abeilleCardObserver) {
+        abeilleCardObserver.disconnect();
+        abeilleCardObserver = null;
+    }
+});
+
+// Also disconnect when Jeedom navigates to another page (SPA navigation)
+$(document).on('jeeObject-postLoad jeeObject-preSave', function() {
+    if (abeilleCardObserver) {
+        abeilleCardObserver.disconnect();
+        abeilleCardObserver = null;
+    }
+});
 
 // Click generate on page reload too.
 $(".eqLogicDisplayCard").on("click", function () {

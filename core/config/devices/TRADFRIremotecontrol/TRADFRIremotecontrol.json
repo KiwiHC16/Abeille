@@ -11,6 +11,9 @@
             "icon": "Ikea-Remote-5buttons",
             "batteryType": "1x3V CR2032"
         },
+        "variables": {
+            "addrGroup": "XXXX"
+        },
         "category": {
             "light": "1"
         },

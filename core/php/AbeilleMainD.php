@@ -355,6 +355,10 @@
             logMessage('debug', "message(topic='".$topic."', payload='".$payload."')");
         }
 
+        // Skip Time-Time processing entirely (CPU optimization)
+        if ($cmdId == "Time-Time") {
+            return;
+        }
         $nodeid = $net.'/'.$addr;
         $value = $payload;
         $type = 'topic';         // type = topic car pas json

@@ -1495,11 +1495,12 @@
         else
             $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
 
-        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
-        if (is_object($cmdLogic))
-        //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
-        // else
-            $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
+        // Online command update disabled (CPU optimization - not used)
+        //         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
+        //         if (is_object($cmdLogic))
+        //         //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
+        //         // else
+        //             $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
 
         list($net, $addr) = explode("/", $eqLogicId);
         if ($addr != "0000") { // Not a gateway
@@ -1571,11 +1572,12 @@
         else
             $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
 
-        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
-        if (is_object($cmdLogic))
-        //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
-        // else
-            $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
+        // Online command update disabled (CPU optimization - not used)
+        //         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
+        //         if (is_object($cmdLogic))
+        //         //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
+        //         // else
+        //             $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
 
         list($net, $addr) = explode("/", $eqLogicId);
         if ($addr != "0000") { // Not a gateway

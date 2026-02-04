@@ -61,7 +61,7 @@
                     continue;
 
                 // Model and its optional variants is named '<modelName>[-<variant>].json'
-                logDebug("{$dirEntry} => dirEntry2='{$dirEntry2}'");
+                // logDebug("{} => dirEntry2='{}'"); // Disabled for CPU optimization
                 if (substr($dirEntry2, 0, $deLen) != $dirEntry)
                     continue; // Discovery or other file but not a model
 

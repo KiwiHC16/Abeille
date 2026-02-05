@@ -1117,17 +1117,6 @@
            Ex: 53494E2D342D322D3230002000000014000000CCCB0020B1020100900000003D = 'SIN-4-2-20        ÌË  ±    ='
          */
         function cleanModelId($hexString) {
-            //remove all space in names for easier filename handling
-            // $hexString = str_replace(' ', '', $hexString);
-
-            // On enleve le / comme par exemple le nom des equipements Legrand
-            // $hexString = str_replace('/', '', $hexString);
-
-            // On enleve le * Ampoules GU10 Philips #1778
-            // $hexString = str_replace('*', '', $hexString);
-
-            // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-            // $hexString = str_replace("\0", '', $hexString);
 
             $m = '';
             for ($i = 0; $i < strlen($hexString); $i += 2) {
@@ -1149,15 +1138,18 @@
                 $m = $m.$in2;
             }
 
-            // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
-            if ($m == "lumi.sens") $m = "lumi.sensor_ht";
+            // Covered by alternateIds
+            // if ($m == "lumi.sens") $m = "lumi.sensor_ht";
 
+            // Covered by alternateIds
             // if ($hexString == "TRADFRI Signal Repeater") $hexString = "TRADFRI signal repeater";
 
-            if ($m == "lumi.sensor_swit") $m = "lumi.sensor_switch.aq3";
+            // Covered by alternateIds
+            // if ($m == "lumi.sensor_swit") $m = "lumi.sensor_switch.aq3";
 
             // Work-around: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
-            if (strpos($m, "sensor_86sw2") > 2) { $m="lumi.sensor_86sw2"; }
+            // Covered by alternateIds ??
+            // if (strpos($m, "sensor_86sw2") > 2) { $m="lumi.sensor_86sw2"; }
 
             if (!strncasecmp($m, "lumi.", 5))
                 $m = substr($m, 5); // Remove leading "lumi." case insensitive

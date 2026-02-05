@@ -3,6 +3,9 @@
         "manufacturer": "Xiaomi",
         "model": "Temp",
         "type": "Xiaomi temp sensor",
+        "alternateIds": {
+            "sens": []
+        },
         "genericType": "Environment",
         "timeout": "60",
         "configuration": {

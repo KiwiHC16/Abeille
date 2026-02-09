@@ -617,12 +617,12 @@
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('error', "removeForcedModel '{$net}/{$addr}': Equipement inconnu.");
+                logMessage('error', "removeForcedModel '$net/$addr': Equipement inconnu.");
                 return;
             }
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
             if (!isset($zigbee['modelId']) || !isset($zigbee['manufId'])) {
-                logMessage('warning', "removeForcedModel '{$net}/{$addr}': Identifiant Zigbee incomplet => réparer");
+                logMessage('warning', "removeForcedModel '$net/$addr': Identifiant Zigbee incomplet => réparer");
                 logMessage('debug', "zigbee=".json_encode($zigbee, JSON_UNESCAPED_SLASHES));
                 return;
             }
@@ -662,7 +662,7 @@
         /* Parser has found a new device. Basic Jeedom entry to be created. */
         if ($msg['type'] == "newDevice") {
             $ieee = $msg['ieee'];
-            logMessage('debug', "  msgFromParser(): New device: ".$net.'/'.$addr.", ieee=".$ieee);
+            logMessage('debug', "  $net/$addr, is NEW device, ieee=$ieee");
 
             newJeedomDevice($net, $addr, $ieee);
 
@@ -671,7 +671,7 @@
 
         /* Transmit status has changed. */
         if ($msg['type'] == "eqTxStatusUpdate") {
-            logMessage('debug', "  msgFromParser(): TX status update: ".$net.'/'.$addr.", status=".$msg['txStatus']);
+            logMessage('debug', "  $net/$addr, TX status update: Status=".$msg['txStatus']);
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (is_object($eqLogic)) {
@@ -686,13 +686,13 @@
 
         /* Parser has found device infos to update. */
         if ($msg['type'] == "deviceUpdates") {
-            logMessage('debug', "  msgFromParser(): '{$net}/{$addr}/{$ep}' device updates, ".json_encode($msg['updates'], JSON_UNESCAPED_SLASHES));
+            logMessage('debug', "  $net/$addr/$ep device updates, ".json_encode($msg['updates'], JSON_UNESCAPED_SLASHES));
 
             $eqChanged = false;
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
                 if (!isset($msg['updates']['ieee'])) {
-                    logMessage('debug', "  ERROR: Unknown '{$net}/{$addr}' device and no IEEE update.");
+                    logMessage('debug', "  ERROR: Unknown '$net/$addr' device and no IEEE update.");
                     return;
                 }
                 $ieee = $msg['updates']['ieee'];
@@ -706,9 +706,9 @@
                     list($net2, $addr2) = explode( "/", $eqLogicId2);
                     $eqLogic->setLogicalId($net.'/'.$addr);
                     if ($net != $net2)
-                        logMessage('debug', '  '.$eqLogic->getHumanName().": Migrated from '{$net2}/{$addr2}' to '{$net}/{$addr}'");
+                        logMessage('debug', '    '.$eqLogic->getHumanName().": Migrated from '{$net2}/{$addr2}' to '$net/$addr'");
                     else
-                        logMessage('debug', '  '.$eqLogic->getHumanName().": Addr updated from {$addr2} to {$addr}");
+                        logMessage('debug', '    '.$eqLogic->getHumanName().": Addr updated from {$addr2} to {$addr}");
                     $eqLogic->setIsEnable(1);
                     $eqChanged = true;
                     // $informCmd = true;
@@ -724,18 +724,18 @@
                 else if ($updKey == 'logicalType') { // Node descriptor/logical type
                     $zigbee['logicalType'] = $updVal;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[logicalType]' updated to {$updVal}");
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[logicalType]' updated to {$updVal}");
                 } else if ($updKey == 'macCapa') {
                     $zigbee['macCapa'] = $updVal;
                     $mc = hexdec($zigbee['macCapa']);
                     $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powered
                     $zigbee['rxOnWhenIdle'] = ($mc >> 3) & 0b1;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[macCapa]' updated to ".$updVal);
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[macCapa]' updated to ".$updVal);
                 } else if ($updKey == 'rxOnWhenIdle') {
                     $zigbee['rxOnWhenIdle'] = $updVal;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[rxOnWhenIdle]' updated to ".$updVal);
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[rxOnWhenIdle]' updated to ".$updVal);
                 } else if ($updKey == 'endPoints') {
                     $zigbee['endPoints'] = $updVal;
                     // Cleanup old bugs
@@ -744,55 +744,55 @@
                             unset($zigbee['endPoints'][$epId2]);
                     }
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to {$jsonUpdVal}");
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'profId') {
                     $zigbee['endPoints'][$ep]['profId'] = $updVal;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][profId]' updated to {$jsonUpdVal}");
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][profId]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'devId') {
                     $zigbee['endPoints'][$ep]['devId'] = $updVal;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][devId]' updated to {$jsonUpdVal}");
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][devId]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'servClusters') {
                     $zigbee['endPoints'][$ep]['servClusters'] = $updVal;
                     if (strpos($updVal, '0004') !== false)
                         $zigbee['groups'][$ep] = '';
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][servClusters]' updated to {$jsonUpdVal}");
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][servClusters]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'manufId') {
                     if (!isset($zigbee['endPoints'][$ep]['manufId'])) {
                         $zigbee['endPoints'][$ep]['manufId'] = $updVal;
                         $zigbeeChanged = true;
-                        logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][manufId]' updated to '{$updVal}'");
+                        logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][manufId]' updated to '{$updVal}'");
                     }
                 } else if ($updKey == 'modelId') {
                     if (!isset($zigbee['endPoints'][$ep]['modelId'])) {
                         $zigbee['endPoints'][$ep]['modelId'] = $updVal;
                         $zigbeeChanged = true;
-                        logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][modelId]' updated to '{$updVal}'");
+                        logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][modelId]' updated to '{$updVal}'");
                     }
                 } else if ($updKey == 'location') {
                     if (!isset($zigbee['endPoints'][$ep]['location'])) {
                         $zigbee['endPoints'][$ep]['location'] = $updVal;
                         $zigbeeChanged = true;
-                        logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][location]' updated to '{$updVal}'");
+                        logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][location]' updated to '{$updVal}'");
                     }
                 } else if ($updKey == 'manufCode') {
                     $zigbee['manufCode'] = $updVal;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[manufCode]' updated to ".$updVal);
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[manufCode]' updated to ".$updVal);
                 } else if ($updKey == 'imageType') {
                     $zigbee['imageType'] = $updVal;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[imageType]' updated to ".$updVal);
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[imageType]' updated to ".$updVal);
                 } else if ($updKey == 'dateCode') { // Clust/attr = 0000-0006
                     $zigbee['endPoints'][$ep]['dateCode'] = $updVal;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][dateCode]' updated to '{$updVal}'");
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][dateCode]' updated to '{$updVal}'");
                 } else if ($updKey == 'swBuildId') { // Clust/attr = 0000-4000
                     $zigbee['endPoints'][$ep]['swBuildId'] = $updVal;
                     $zigbeeChanged = true;
-                    logMessage('debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][swBuildId]' updated to '{$updVal}'");
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][swBuildId]' updated to '{$updVal}'");
                 }
             }
             if ($zigbeeChanged) {
@@ -1067,20 +1067,21 @@
             */
 
             if ($msg['type'] == "attributesReportN")
-                logMessage('debug', "  msgFromParser(): Attributes report by name from '{$net}/{$addr}/{$ep}'");
+                $txt = "  $net/$addr/$ep attributes report";
             else
-                logMessage('debug', "  msgFromParser(): Read attributes response by name from '{$net}/{$addr}/{$ep}'");
+                $txt = "  $net/$addr/$ep read attributes response";
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                logMessage('debug', "    Unknown device '{$net}/{$addr}'");
+                logMessage('debug', $txt.": UNKNOWN device");
                 return; // Unknown device
             }
 
+            logMessage('debug', $txt);
             foreach ($msg['attributes'] as $attr) {
                 $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $attr['name']);
                 if (!is_object($cmdLogic)) {
-                    logMessage('debug', "    ".$attr['name']." = ? => Unknown Jeedom command");
+                    logMessage('debug', "    ".$attr['name']."/? => Unknown Jeedom command");
                 } else {
                     $cmdName = $cmdLogic->getName();
                     if ($cmdLogic->getType() == "action") {
@@ -1106,9 +1107,9 @@
                         // WARNING: value might not be the final one if 'calculValueOffset' is used
                         $cvo = $cmdLogic->getConfiguration('calculValueOffset', '');
                         if ($cvo == '')
-                            logMessage('debug', "    ".$attr['name']." = '".$cmdName."' => ".$attr['value']." ".$unit);
+                            logMessage('debug', "    ".$attr['name']."/'$cmdName' => ".$attr['value']." ".$unit);
                         else
-                            logMessage('debug', "    ".$attr['name']." = '".$cmdName."' => ".$attr['value']." (calculValueOffset=".$cvo.")");
+                            logMessage('debug', "    ".$attr['name']."/'$cmdName' => ".$attr['value']." (calculValueOffset=".$cvo.")");
     // logMessage('debug', "  checkAndUpdateCmd(), attr['value']=".json_encode($attr['value']));
                         // if ($eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']) != true)
                         //     logMessage('debug', "    WARNING: checkAndUpdateCmd() failed");
@@ -1126,7 +1127,9 @@
             }
 
             // Updating equipment life status
+    // logMessage('debug', "LA3");
             updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+    // logMessage('debug', "LA4");
             return;
         } // End 'attributesReportN' or 'readAttributesResponseN'
 
@@ -1138,11 +1141,11 @@
                 'time' => time(),
                 'lqi' => $lqi
             */
-            logMessage('debug', "  msgFromParser(): Device '{$net}/{$addr}' is ALIVE");
+            logMessage('debug', "  msgFromParser(): Device '$net/$addr' is ALIVE");
 
             // $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             // if (!is_object($eqLogic)) {
-            //     logMessage('debug', "  Unknown device '{$net}/{$addr}'");
+            //     logMessage('debug', "  Unknown device '$net/$addr'");
             //     return; // Unknown device
             // }
             // updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
@@ -1164,7 +1167,7 @@
                 'time' => time()
             ); */
 
-            logMessage('debug', "  msgFromParser(): ".$net.", Zigate version ".$msg['major']."-".$msg['minor']);
+            logMessage('debug', "  $net, Zigate version ".$msg['major']."-".$msg['minor']);
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 logMessage('debug', "  ERROR: No zigate for network ".$net);
@@ -1218,7 +1221,7 @@
                 'time' => time()
              */
 
-            logMessage('debug', "  msgFromParser(): ".$net.", Zigate timeServer ".$msg['time']);
+            logMessage('debug', "  $net, Zigate timeServer ".$msg['time']);
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 logMessage('debug', "    ERROR: No zigate for network ".$net);
@@ -1243,7 +1246,7 @@
                 'time' => time()
              */
 
-            logMessage('debug', "  msgFromParser(): ".$net.", Zigate power ".$msg['power']);
+            logMessage('debug', "  $net, Zigate power ".$msg['power']);
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 logMessage('debug', "    ERROR: No zigate for network ".$net);
@@ -1273,7 +1276,7 @@
                 'time' => time()
             ); */
 
-            logMessage('debug', "  msgFromParser(): ".$net.", network state, ieee=".$msg['ieee'].", chan=".$msg['chan']);
+            logMessage('debug', "  $net, network state, ieee=".$msg['ieee'].", chan=".$msg['chan']);
 
             checkZgIeee($net, $msg['ieee']);
 
@@ -1324,7 +1327,7 @@
                 'time' => time()
             ); */
 
-            logMessage('debug', "  msgFromParser(): ".$net.", network started, ieee=".$msg['ieee'].", chan=".$msg['chan']);
+            logMessage('debug', "  $net, network started, ieee=".$msg['ieee'].", chan=".$msg['chan']);
 
             checkZgIeee($net, $msg['ieee']);
 
@@ -1361,7 +1364,7 @@
                 'time' => time()
             ); */
 
-            logMessage('debug', "  msgFromParser(): ".$net.", permit join, status=".$msg['status']);
+            logMessage('debug', "  $net, permit join, status=".$msg['status']);
             $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 logMessage('debug', "    ERROR: No zigate for network ".$net);
@@ -1385,7 +1388,7 @@
             // 'status' => $status,
             // 'time' => time(),
             // 'lqi' => $lqi,
-            logMessage('debug', "  msgFromParser(): ".$net."/".$addr.", Bind response, status=".$msg['status']);
+            logMessage('debug', "  $net/$addr, Bind response, status=".$msg['status']);
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if ($eqLogic)
@@ -1402,7 +1405,7 @@
             // 'ieee' => $ieee,
             // 'time' => time(),
             // 'lqi' => $lqi,
-            logMessage('debug', "  msgFromParser(): ".$net."/".$addr.", IEEE addr response, ieee=".$msg['ieee']);
+            logMessage('debug', "  $net/$addr, IEEE addr response, ieee=".$msg['ieee']);
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!$eqLogic) {
@@ -1433,7 +1436,7 @@
             // 'groups' => $grp
             // 'time' => time(),
             // 'lqi' => $lqi
-            logMessage('debug', "  msgFromParser(): ".$net."/".$addr."/".$ep.", ".$msg['type'].", groups=".$msg['groups']);
+            logMessage('debug', "  $net/$addr/$ep, ".$msg['type'].", groups=".$msg['groups']);
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
                 logMessage('debug', "    Unknown device '".$net."/".$addr."'");
@@ -1498,12 +1501,14 @@
     function updateTimestamp($eqLogic, $timestamp, $lqi = null) {
         $eqLogicId = $eqLogic->getLogicalId();
         $eqId = $eqLogic->getId();
+// logMessage('debug', "LA10");
 
         // logMessage('debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
 
         // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
         $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
 
+// logMessage('debug', "LA10.1, eqLogicalId=$eqLogicalId, eqId=$eqId");
         /* Tcharp38 note:
            The cases hereafter could be removed. Using 'lastCommunication' allows to no longer
            use these 3 specific & redondant commands. To be discussed. */
@@ -1520,12 +1525,14 @@
         else
             $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
 
+// logMessage('debug', "LA10.2");
         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
         if (is_object($cmdLogic))
         //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
         // else
             $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
 
+// logMessage('debug', "LA10.3");
         list($net, $addr) = explode("/", $eqLogicId);
         if ($addr != "0000") { // Not a gateway
             if ($lqi !== null) {
@@ -1541,6 +1548,7 @@
             $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
             // Warning: lastCommunication update is not transmitted to client as not an info cmd
         }
+// logMessage('debug', "LA11");
     }
 
     /* Update all infos related to last communication time & LQI of given device.
@@ -1552,7 +1560,7 @@
         // if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {
         //     $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
         //     if (!is_object($eqLogic)) {
-        //         logMessage('debug', "  Unknown device '{$net}/{$addr}'");
+        //         logMessage('debug', "  Unknown device '$net/$addr'");
         //         return; // Unknown device
         //     }
         //     if (!isset($GLOBALS['devices'][$net]))
@@ -1741,6 +1749,7 @@
         //         "valueOffset": "(#value#>>2)&1"
         //     }
         // }
+// logMessage('debug', "LA0");
         $toList = $cmdLogic->getConfiguration('ab::trigOut', []);
         foreach ($toList as $trigLogicId => $to) {
             if (isset($to['valueOffset']))
@@ -1755,6 +1764,7 @@
         // }
 
         // Trig another command (PollingOnCmdChange keyword) ?
+// logMessage('debug', "LA1");
         global $abQueues;
         $cmds = cmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
         $cmdLogicId = $cmdLogic->getLogicalId();
@@ -1774,6 +1784,7 @@
                 msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
             }
         }
+// logMessage('debug', "LA2");
     }
 
     /* Trig another command defined by 'trigLogicId'.
@@ -1859,8 +1870,8 @@
     /* Main daemon starting.
         This means that other daemons have started too. Abeille can communicate with them */
 
-    $queueXToMain = msg_get_queue($abQueues["xToAbeille"]["id"]);
-    $queueXToMainMax = $abQueues["xToAbeille"]["max"];
+    $queueXToMain = msg_get_queue($abQueues["xToMainD"]["id"]);
+    $queueXToMainMax = $abQueues["xToMainD"]["max"];
     $queueXToParser = msg_get_queue($abQueues['xToParser']['id']);
     $queueXToCmd = msg_get_queue($abQueues['xToCmd']['id']);
 
@@ -1933,16 +1944,16 @@
         // Blocking queue read
         logMessage('debug', 'Infinite listening to queueXToMain');
         while (true) {
-            logMessage('debug', 'msg_receive(xToAbeille): msg_qnum='.msg_stat_queue($queueXToMain)["msg_qnum"]);
+            logMessage('debug', 'msg_receive(xToMainD): msg_qnum='.msg_stat_queue($queueXToMain)["msg_qnum"]);
 
             if (@msg_receive($queueXToMain, 0, $rxMsgType, $queueXToMainMax, $msgJson, false, 0, $errCode) == false) {
                 if ($errCode == 7) {
                     msg_receive($queueXToMain, 0, $rxMsgType, $queueXToMainMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                    logMessage('error', "Message (xToAbeille) trop grand ignoré: ".$msgJson);
+                    logMessage('error', "Message (xToMainD) trop grand ignoré: ".$msgJson);
                     continue; // Continue without sleeping
                 }
 
-                logMessage('debug', 'msg_receive(xToAbeille) ERROR '.$errCode);
+                logMessage('debug', 'msg_receive(xToMainD) ERROR '.$errCode);
                 usleep(500000); // Sleep 500ms
                 continue;
             }

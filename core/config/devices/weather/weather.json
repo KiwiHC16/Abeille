@@ -12,7 +12,7 @@
         "category": {
             "heating": "1"
         },
-        "type": "Xiaomi temp/humidity/pressure sensor",
+        "type": "Xiaomi temp-humidity-pressure sensor",
         "commands": {
             "Battery-Volt": {
                 "use": "inf_batteryVoltAndPercent-285-300"

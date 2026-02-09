@@ -1,0 +1,13 @@
+{
+    "inf_zbAttr-0403-ScaledValue": {
+        "comment": "0403/Pressure cluster, attrib 0010/ScaledValue",
+        "subType": "numeric",
+        "template": "badge",
+        "isHistorized": 0,
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0403-#EP#-0010",
+        "unit": "Pa",
+        "genericType": "PRESSURE"
+    }
+}

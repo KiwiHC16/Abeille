@@ -35,6 +35,11 @@
                 "calculValueOffset": "#value#*10",
                 "unit": "hPa",
                 "isVisible": 1
+            },
+            "Pressure-Scaled": {
+                "use": "inf_zbAttr-0403-ScaledValue",
+                "calculValueOffset": "#value#*10",
+                "unit": "hPa"
             }
         },
         "private": {

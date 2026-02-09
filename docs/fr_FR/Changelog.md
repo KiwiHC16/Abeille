@@ -4,6 +4,7 @@
 - Correction: Xiaomi WSDCGQ11LM: Pression revue (2784).
 - Amélioration: Cmde pression 'inf_zbAttr-0403-MeasuredValue' => 'inf_zbAttr-0403-MeasuredValue-hPa'.
 - Amélioration: Ajout FW 0005-0324 pour Zigate v2/+.
+- Amélioration: Xiaomi WSDCGQ11LM: Ajout 'Pressure-Scaled' (2784).
 
 ## 260202-STABLE-1, 260125-BETA-1
 

@@ -132,6 +132,9 @@
     foreach (ls('/dev/', 'ttyS*') as $value) {
         $GLOBALS['portsList'][] = getPortDetails($value);
     }
+    foreach (ls('/dev/', 'tty_*') as $value) {
+        $GLOBALS['portsList'][] = getPortDetails($value);
+    }
     // KiwiHC16: 3 lignes suivantes necessaire pour KiwiHC16. Dans mon multi Zigate j ai des liens créés automatiquement pour ne pas les melanger lors d un reboot.
     foreach (ls('/dev/', 'tty*') as $value) {
         // Ignoring ttyUSBx or ttyACMx already in the list
@@ -142,6 +145,8 @@
         if (substr($value, 0, 4) == "ttyS")
             continue;
         if (substr($value, 0, 5) == "ttyGS") // Serial gadget.. not a Zigate
+            continue;
+        if (substr($value, 0, 4) == "tty_") // Already listed above
             continue;
         $port  = [];
         $port['name'] = "/dev/$value";

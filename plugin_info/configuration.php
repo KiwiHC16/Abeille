@@ -931,7 +931,7 @@
         }
         if (allowUpdFw) {
             $("#idUpdFw"+gtwId).show();
-            updateFwList(gtwId, gtwType, gtwSubType);
+            buildFwList(gtwId, gtwType, gtwSubType);
         }
     }
 
@@ -1229,8 +1229,9 @@
     }
 
     // Build available firmwares drop-down list
-    function updateFwList(gtwId, gtwType, gtwSubType) {
-        console.log("updateFwList("+gtwId+","+gtwType+","+gtwSubType+")");
+    function buildFwList(gtwId, gtwType, gtwSubType) {
+
+        console.log("buildFwList("+gtwId+","+gtwType+","+gtwSubType+")");
 
         let fwList = document.getElementById("idFW"+gtwId);
         // Clear current list
@@ -1266,6 +1267,7 @@
 
     /* Called when FW update button is pressed */
     function updateZigateFw(gtwId) {
+
         console.log("updateZigateFw(gtwId="+gtwId+")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
         // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
@@ -1288,6 +1290,7 @@
 
     // Update FW
     function updateZigateFw2(zgId, zgType, zgFW) {
+
         let zgPort = $("#idSelSP"+zgId).val();
         let zgGpioLib = $("#idGpioLib").val();
         let curFw = document.getElementById("idFwVersion"+zgId).value;
@@ -1327,9 +1330,14 @@
                 msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée}}.<br><br>';
         } else {
             if (newIsOpdm == false) {
-                msg += "{{Passer d'une version 'OPDM' vers 'legacy' n'est pas recommandé. Opération interdite.}}<br><br>";
-                bootbox.confirm(msg, function (result) {});
-                return;
+                msg += "{{Passer d'une version 'OPDM' vers 'legacy' n'est PAS recommandé !}}<br><br>";
+                if ((typeof js_dbgDeveloperMode == 'undefined')) {
+                    msg += "{{Opération interdite.}}<br><br>";
+                    bootbox.confirm(msg, function (result) {});
+                    return;
+                } else {
+                    msg += "{{Mode DEV: Opération autorisée mais ATTENTION !}}<br><br>";
+                }
             }
         }
         bootbox.confirm(msg, function (result) {
@@ -1345,8 +1353,8 @@
 
     // Select & upload custom firmware
     function uploadCustomFw() {
-        console.log("uploadCustomFw()");
 
+        console.log("uploadCustomFw()");
         return new Promise((resolve, reject) => {
             var input = document.createElement('input');
             input.type = 'file';
@@ -1438,6 +1446,7 @@
     /* Called when 'developer mode' must be enabled or disabled.
     This means creating or deleting "tmp/debug.json" file. */
     function xableDevMode(enable) {
+
         console.log("xableDevMode(enable="+enable+")");
         if (enable == 1) {
             /* Enable developer mode by creating debug.json then restart */

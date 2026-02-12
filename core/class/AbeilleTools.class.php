@@ -1224,7 +1224,7 @@
 
             // Ensure log directory exists
             if (!is_dir($logDir)) {
-                @mkdir($logDir, 0755, true);
+                @mkdir($logDir, 0775, true);
             }
 
             $timestamp = date('Y-m-d H:i:s');

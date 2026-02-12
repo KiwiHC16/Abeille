@@ -702,7 +702,7 @@
                     // Neither ab::networkMap nor ab::userMap
                     $from = __DIR__."/../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
                     if (file_exists($from)) {
-                        mkdir(__DIR__."/../tmp/network_maps", 0744, true);
+                        mkdir(__DIR__."/../tmp/network_maps", 0775, true);
                         $to = __DIR__."/../tmp/network_maps/userMap.png";
                         rename($from, $to);
                         log::add('Abeille', 'debug', '  Renamed '.$from." to ".$to);

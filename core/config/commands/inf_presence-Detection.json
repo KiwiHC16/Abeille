@@ -1,13 +1,12 @@
 {
     "inf_presence-Detection": {
         "comment": "A generic attribut to display a PRESENCE DETECTION ALARM",
-        "comment3": "Tcharp38: Can we map on a Zigbee standard attribute ?",
         "subType": "binary",
-        "template": "",
+        "template": "presence",
         "type": "info",
         "logicalId": "#EP#-presence",
         "unit": "",
         "invertBinary": 1,
-        "genericType": "ALARM_STATE"
+        "genericType": "PRESENCE"
     }
 }

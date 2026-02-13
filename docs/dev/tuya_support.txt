@@ -32,7 +32,7 @@ Handling Tuya private cluster is done thru "private" structure
     "private": {
                     "EF00": {
                         "type": "tuya",
-                        "00": { "function": "rcvValueDiv", "info": "0006-01-0000", "div": 10 },
+                        "00": { "function": "rcvValue", "info": "0006-01-0000", "div": 10 },
                         "01": { "function": "rcvValue", "info": "0008-01-0000" },
                         "02": {
                             "function": "rcvValueEnum",
@@ -55,15 +55,15 @@ Handling Tuya private cluster is done thru "private" structure
 
     This allows to list data-points to take into account (other are ignored), and how to handle them before sending information to given command logical ID.
 
-    Example: "00": { "function": "rcvValueDiv", "info": "0006-01-0000", "div": 10 }
+    Example: "00": { "function": "rcvValue", "info": "0006-01-0000", "div": 10 }
 
         Datapoint 00 is a value that will be divided by 10 and sent to command with "0006-01-0000" logical ID.
 
 Possible functions:
 
-    rcvValue => Extract value. TODO: AND apply div and/or mult if defined.
-    rcvValueDiv => TO REMOVE. Idem 'rcvValue' with 'div' declared.
-    rcvValueMult => TO REMOVE. Idem 'rcvValue' with 'mult' declared.
+    rcvValue => Extract value. Apply mult then div if defined.
+    rcvValueDiv => OBSOLETE !! Use 'rcvValue' with 'div' declared.
+    rcvValueMult => OBSOLETE !! Use 'rcvValue' with 'mult' declared.
     rcvValueEnum => Convert value to string.
     rcvValue0Is1 => If 0, 1 (true) transmitted to Jeedom, else 0 (false).
     rcvValve-Status => TO REMOVE. Identical to rcvValueEnum with "ON" & "OFF" strings ?

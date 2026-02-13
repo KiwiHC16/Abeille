@@ -6,6 +6,7 @@
 ***
 
 '/' char is forbidden in Jeedom command names (ex: 'Get Volt/Percent' is bad => lead to 'Get VoltPercent').
+Maybe not forbidden but to be handled differently.
 
 checkAndUpdateCmd()
 ===================
@@ -32,3 +33,17 @@ Penser au "save()".
 
 $cmdLogic->setValue("toto");  // A voir. Ca devrait donc etre le nom d'une cmde info existante
 $cmdLogic->save();
+
+returnStateTime & retunStateValue
+=================================
+Il y a qqch de bizarre à clarifier la pour les infos binaires.
+
+Définir dans le modele d'équipement (surcharge) ou modèle de commande
+
+            "returnStateValue": 0,
+            "returnStateTime": 1
+
+alors que ca semble ok avec
+
+            "returnStateValue": "0",
+            "returnStateTime": "1"

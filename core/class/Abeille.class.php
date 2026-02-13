@@ -3086,7 +3086,7 @@ class Abeille extends eqLogic {
                 if (isset($mCmd["unit"]))
                     $cmdLogic->setUnite($mCmd["unit"]);
                 else
-                    $cmdLogic->setUnite(null); // Clear unit
+                    $cmdLogic->setUnite(""); // Clear unit
 
                 $cmdLogic->setName($mCmdName);
 
@@ -3139,12 +3139,13 @@ class Abeille extends eqLogic {
             }
 
             /* Updating command 'configuration' fields.
-               In case of update, some fields may no longer be required ($unusedConfKeys).
-               They are removed if not defined in JSON model. */
-            $toRemove = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'topic', 'Polling', 'RefreshData', 'listValue'];
-            array_push($toRemove, 'ab::trigOut', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
-            array_push($toRemove, 'ab::valueOffset', 'ab::repeat');
-            $rmOnlyIfReset = $toRemove;
+               $rmIfUnset = List of fields to remove if unset in model.
+               $rmOnlyIfReset = List of fields to remove if unset in model AND if 'action' == 'reset'. */
+            $rmIfUnset = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'topic', 'Polling', 'RefreshData', 'listValue'];
+            array_push($rmIfUnset, 'ab::trigOut', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
+            array_push($rmIfUnset, 'ab::valueOffset', 'ab::repeat');
+            array_push($rmIfUnset, 'returnStateTime', 'returnStateValue');
+            $rmOnlyIfReset = $rmIfUnset;
             array_push($rmOnlyIfReset, 'minValue', 'maxValue', 'calculValueOffset', 'repeatEventManagement');
             // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)
             $toRename = ['trigOut', 'notStandard', 'valueOffset', 'repeat'];
@@ -3164,8 +3165,8 @@ class Abeille extends eqLogic {
                         $keyIdx = array_search($confKey, $rmOnlyIfReset);
                         unset($rmOnlyIfReset[$keyIdx]);
                     } else {
-                        $keyIdx = array_search($confKey, $toRemove);
-                        unset($toRemove[$keyIdx]);
+                        $keyIdx = array_search($confKey, $rmIfUnset);
+                        unset($rmIfUnset[$keyIdx]);
                     }
                 }
             }
@@ -3174,7 +3175,7 @@ class Abeille extends eqLogic {
             if ($action == 'reset')
                 $toRm = $rmOnlyIfReset;
             else
-                $toRm = $toRemove;
+                $toRm = $rmIfUnset;
             foreach ($toRm as $confKey) {
                 // If key is defined but set to null, no way to detect this. So force remove all the time.
                 // if ($cmdLogic->getConfiguration($confKey) == null)

@@ -262,7 +262,10 @@
                         $paramsArr = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
                         $text = json_encode($newCmd);
                         foreach ($paramsArr as $p) {
-                            list($pName, $pVal) = explode("=", $p);
+                            $pArr = explode("=", $p);
+                            if (count($pArr) != 2)
+                                continue;
+                            list($pName, $pVal) = $pArr;
                             // Case insensitive #xxx# replacement
                             $text = str_ireplace('#'.$pName.'#', $pVal, $text);
                         }
@@ -274,7 +277,10 @@
                             // logMessage('debug', 'request BEFORE='.json_encode($request));
                             $requestArr = explode('&', $request); // ep=01&clustId=0000 => ep=01, clustId=0000
                             foreach ($paramsArr as $p) {
-                                list($pName, $pVal) = explode("=", $p);
+                                $pArr = explode("=", $p);
+                                if (count($pArr) != 2)
+                                    continue;
+                                list($pName, $pVal) = $pArr;
                                 $found = false;
                                 foreach ($requestArr as $r) {
                                     list($rName, $rVal) = explode("=", $r);

@@ -53,11 +53,6 @@ RefreshData
     Supprimer ce support ? Voir #2580 => ERROR bind0030
     En lien avec le point suivant (updateField)
 
-Lorsqu'un equipement quitte le réseau
-    il doit etre désactivé
-    plus aucun envoi ne doit lui etre fait
-    parser doit prevenir cmd sur leave, ou abeille => cmd ?
-
 switch branch & update
     Les demons ne sont pas arretes pendant la mise à jour.
     Qqch n'est pas propre

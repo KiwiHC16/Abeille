@@ -13,9 +13,6 @@
             "mainEP": "01"
         },
         "commands": {
-            "Magic packet": {
-                "use": "act_tuyaConfigureMagicPacket"
-            },
             "Presence": {
                 "use": "inf_presence-Detection",
                 "params": "ep=01",
@@ -35,21 +32,22 @@
                     }
                 }
            },
-            "Get Illuminance": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0400&attrId=0000"
-            },
             "Illuminance": {
                 "use": "inf_zbAttr-0400-MeasuredValue",
                 "params": "ep=01",
                 "isVisible": "1"
             },
-            "Distance": {
+            "Motion state": {
                 "use": "inf_generic-NumericBadge",
-                "unit": "m",
-                "logicalId": "targetDistance",
+                "logicalId": "01-motionState",
+                "comment": "none=0, large=1, medium=2, small=3, far=4, near=5",
                 "isVisible": "1",
                 "nextLine": "before"
+            },
+            "LED state": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-ledState",
+                "isVisible": 1
             }
         },
         "private": {
@@ -57,14 +55,21 @@
                 "type": "tuya",
                 "comment": "Visible DPs: 01=Status, 65=?, 6A=Illuminance",
                 "comment2": "Many other DPs during pairing",
+                "01": {
+                    "function": "rcvValue",
+                    "info": "01-presence"
+                },
                 "65": {
                     "function": "rcvValue",
-                    "div": 100,
-                    "info": "targetDistance"
+                    "info": "01-motionState"
                 },
                 "6A": {
                     "function": "rcvValue",
                     "info": "0400-01-0000"
+                },
+                "6B": {
+                    "function": "rcvValue",
+                    "info": "01-ledState"
                 }
             }
         }

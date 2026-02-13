@@ -126,6 +126,11 @@ function refreshEqInfos() {
             document.getElementById("idEqAddr").value = curEq.addr;
             document.getElementById("idZgType").value = curEq.zgType;
 
+            if (typeof curEq.zigbee.status != "undefined")
+                document.getElementById("idZbStatus").value =
+                    curEq.zigbee.status;
+            else
+                document.getElementById("idZbStatus").value = "?";
             if (typeof curEq.zigbee.modelId != "undefined")
                 document.getElementById("idZbModel").value =
                     curEq.zigbee.modelId;

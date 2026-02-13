@@ -8,6 +8,7 @@
 - Amélioration: Modèle ZG-205Z/A.
 - Amélioration: Modèle ZG-204ZM (2741).
 - Amélioration: Support Tuya: 'rcvValue' peut etre combiné avec 'mult' et/ou 'div'.
+- Amélioration: Ajout 'status' Zigbee 'joined' or 'left' + 'status_time'.
 
 ## 260202-STABLE-1, 260125-BETA-1
 

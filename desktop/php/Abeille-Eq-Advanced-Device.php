@@ -51,6 +51,13 @@
 </div>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Status Zigbee}}</label>
+    <div class="col-sm-5">
+        <input id="idZbStatus" readonly title="{{Status}}" value="" />
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
     <div class="col-sm-5">
         <input id="idZbModel" readonly title="{{Identificant Zigbee du modèle}}" value="" />

@@ -22,6 +22,8 @@ configuration
     ab::icon
 
     ab::zigbee
+        status => 'joined'=In network, 'left'=left network
+        status_time => Timestamp for joined or left status
         endPoints
             01
                 servClusters => Supported server clusters separated by '/': ex '0000/0003/FFFF/0006'

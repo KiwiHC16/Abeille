@@ -283,6 +283,11 @@
         $eqLogic->setObject_id($config['ab::defaultParent']);
         $eqLogic->setConfiguration('IEEE', $ieee);
         $eqLogic->setIsVisible(0); // Hidden by default
+        $zigbee = Array(
+            'status' => 'joined',
+            'status_time' => time()
+        );
+        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
         $eqLogic->setIsEnable(1);
         $eqLogic->save();
 
@@ -996,7 +1001,7 @@
             */
 
             $ieee = $msg['ieee'];
-            logMessage('debug', "  msgFromParser(): Leave indication for ".$net."/".$ieee.", rejoin=".$msg['rejoin']);
+            logMessage('debug', "  $net/$ieee, Leave indication, rejoin=".$msg['rejoin']);
 
             /* Look for corresponding equipment (identified via its IEEE addr) */
             $all = eqLogic::byType('Abeille');
@@ -1011,7 +1016,7 @@
 
                 $ieee2 = $eqLogic2->getConfiguration('IEEE', '');
                 if ($ieee2 == '') {
-                    logMessage('debug', "  msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId2."' config.");
+                    logMessage('debug', "    WARNING. No IEEE addr in '".$eqLogicId2."' config.");
                     $cmd = $eqLogic2->getCmd('info', 'IEEE-Addr');
                     if (is_object($cmd)) {
                         $ieee2 = $cmd->execCmd();
@@ -1021,7 +1026,7 @@
                         //           since IEEE always provided with device announce.
                         $eqLogic2->setConfiguration('IEEE', $ieee2);
                         $eqLogic2->save();
-                        logMessage('debug', "  msgFromParser(): Missing IEEE addr corrected");
+                        logMessage('debug', "    Missing IEEE addr corrected");
                     }
                 }
                 if ($ieee2 != $ieee)
@@ -1033,6 +1038,10 @@
 
             if (isset($eqLogic)) {
                 $eqLogic->setIsEnable(0);
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                $zigbee['status'] = 'left';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
 
                 /* Display message only if NOT in include mode */
                 if (checkInclusionStatus($net) !== 1)
@@ -1044,7 +1053,7 @@
 
                 updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             } else
-                logMessage('debug', 'msgFromParser(): WARNING: Device with IEEE '.$ieee.' NOT found in Jeedom');
+                logMessage('debug', '    WARNING: Device with IEEE '.$ieee.' NOT found in Jeedom');
 
             return;
         } // End 'leaveIndication'

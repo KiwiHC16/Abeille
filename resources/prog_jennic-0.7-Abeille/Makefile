@@ -29,18 +29,19 @@ source := uart.c JN51xx_BootLoader.c Firmware.c main.c
 CFLAGS = -Wall -O2
 
 # Define to trace bootloader comms
-# CFLAGS += -DDEBUG_BOOTLOADER
+CFLAGS += -DDEBUG_BOOTLOADER
 
 # Define to trace firmware image info
-# CFLAGS += -DDEBUG_FIRMWARE
+CFLAGS += -DDEBUG_FIRMWARE
 
 # Define to trace serial comms
 # CFLAGS += -DDEBUG_UART
 
 
-# OBJ := $(source:.c=.o)
-BUILDDIR = build/
-OBJ := $(addprefix $(BUILDDIR), $(source:.c=.o))
+# OBJS := $(source:.c=.o)
+# BUILDDIR = build/
+BUILDDIR = ../../tmp/JennicBuildDir/
+OBJS := $(addprefix $(BUILDDIR), $(source:.c=.o))
 
 PROJ_CFLAGS += -I../source/ -DDBG_ENABLE
 #PROJ_CFLAGS += -DVERSION="\"$(shell if [ -f version.txt ]; then cat version.txt; else svnversion ../source; fi)\""
@@ -52,18 +53,18 @@ TARGET = $(BUILDDIR)JennicModuleProgrammer
 
 all: $(BUILDDIR) $(TARGET)
 
-$(TARGET): $(OBJ)
+$(TARGET): $(OBJS)
 	$(CC) $^ $(LDFLAGS) $(PROJ_LDFLAGS) -o $@
 
 $(BUILDDIR)%.o: source/%.c
 	$(CC) -I. $(CFLAGS) $(PROJ_CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(TARGET)
+	rm -f $(OBJS) $(TARGET)
 
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
 show:
 	@echo "BUILDDIR=$(BUILDDIR)"
-	@echo "OBJ=$(OBJ)"
+	@echo "OBJS=$(OBJS)"

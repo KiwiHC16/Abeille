@@ -1,9 +1,10 @@
 #! /bin/bash
-# Note: This script is launched from Abeille/core/ajax directory
-# Note: The port must NOT be used during this script execution. This is NOT CHECKED so far.
+# User script to be launched from Abeille's root
+# Dump EEPROM of Zigate V1 type "PI"
+# WARNING: This requires an updated version of 'JennicModuleProgrammer'.
 
 ABEILLEROOT=${PWD}
-V2PROG=${ABEILLEROOT}/resources/DK6Programmer
+# V2PROG=${ABEILLEROOT}/resources/DK6Programmer
 V1PROG=${ABEILLEROOT}/tmp/JennicBuildDir/JennicModuleProgrammer
 
 # Display process ($1=Process ID)
@@ -86,8 +87,8 @@ while [[ $# -gt 0 ]]; do
     else
         if [ "${PORT}" == "" ]; then
             PORT=$1
-        elif [ "${TYPE}" == "" ]; then
-            TYPE=$1
+        # elif [ "${TYPE}" == "" ]; then
+        #     TYPE=$1
         elif [ "${GPIOLIB}" == "" ]; then
             GPIOLIB=$1
         elif [ "${DUMPFILE}" == "" ]; then
@@ -103,16 +104,16 @@ if [ "${PORT}" == "" ]; then
     echo "ERROR: Missing port name (ex: /dev/ttyS1)"
     exit 1
 fi
-if [ "${TYPE}" == "" ]; then
-    echo "ERROR: Missing Zigate type (PIv2 allowed)"
-    exit 1
-fi
+# if [ "${TYPE}" == "" ]; then
+#     echo "ERROR: Missing Zigate type (PIv2 allowed)"
+#     exit 1
+# fi
 # if [ ${TYPE} != "PI" ] && [ ${TYPE} != "PIv2" ]; then
-if [ ${TYPE} != "PIv2" ]; then
-    echo "= ERROR: Invalid Zigate type ! (PIv2 allowed)"
-    echo "=        dumpZigate.sh <zigatePort> <zigateType> <gpioLib> <dumpFile>"
-    exit 1
-fi
+#     echo "= ERROR: Invalid Zigate type ! (PI allowed)"
+#     echo "=        dumpZigate.sh <zigatePort> <zigateType> <gpioLib> <dumpFile>"
+#     exit 1
+# fi
+TYPE="PI"
 if [ "${TYPE}" == "PI" ] || [ "${TYPE}" == "PIv2" ]; then
     if [ "${GPIOLIB}" == "" ]; then
         echo "ERROR: Missing GPIO lib (PiGpio or WiringPi)"
@@ -208,7 +209,7 @@ echo
 if [ ${TYPE} == "PI" ]; then
     # JN5168: Flash appli from 0x00080000 to 0x000C0000
     # NOTE: Current version DOES NOT support 'dump' option
-    ${V1PROG} -V 3 -s ${PORT} -P 115200 -d FLASH:0xC0000@0x80000=${DUMPFILE}
+    ${V1PROG} -V 3 -s ${PORT} -P 115200 -E ${DUMPFILE}
 elif [ ${TYPE} == "PIv2" ]; then
     # JN5189: Flash area (640KB) from 0x0000_0000 to 0x0009_FFFF
     ${V2PROG} -V 3 -s ${PORT} -P 115200 -d FLASH:0x9FFFF@0=${DUMPFILE}

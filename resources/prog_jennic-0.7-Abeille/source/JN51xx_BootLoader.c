@@ -982,14 +982,6 @@ int iBL_DownloadFirmwareToRam(tsFW_Info *psFW_Info, uint64_t *pu64MAC_Address)
 }
 #endif
 
-
-
-
-
-
-
-
-
 /****************************************************************************
  *
  * NAME: iBL_ReadChipId
@@ -1509,7 +1501,6 @@ static int iBL_WriteMessage(int iUartFd, teBL_MessageType eType, uint8_t u8Heade
  ****************************************************************************/
 static teBL_Response eBL_ReadMessage(int iUartFd, int iTimeoutMicroseconds, teBL_MessageType *peType, uint8_t *pu8Length, uint8_t *pu8Data)
 {
-
 	int n;
 	teStatus eStatus;
 	uint8_t au8Msg[256];

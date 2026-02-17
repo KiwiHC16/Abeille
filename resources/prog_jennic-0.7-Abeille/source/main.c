@@ -317,13 +317,13 @@ printf("optarg'%s'\n", optarg);
         }
     }
 
-    if (e2pDumpFile)
-    {
-        printf("Trying to dump EEPROM\n");
+    if (e2pDumpFile) {
 		if (BL_DownloadExtensionToRamBeforeErase(iUartFd, &sFW_Info) != 0)
             return -1;
-    } else {
-        printf("e2pDumpFile is NULL\n");
+
+        uint8_t buf[4 * 1024];
+        if (BL_EEPROMRead(iUartFd, 0, (uint8_t)(4 * 1024), buf) != 0)
+            return -1;
     }
 
 	if (iErase)

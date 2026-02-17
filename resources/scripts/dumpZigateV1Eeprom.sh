@@ -123,6 +123,16 @@ if [ "${TYPE}" == "PI" ] || [ "${TYPE}" == "PIv2" ]; then
         exit 1
     fi
 fi
+if [ ! -e "${V1PROG}" ]; then
+    cd resources/prog_jennic-0.7-Abeille
+    make
+    cd ..
+    if [ ! -e "${V1PROG}" ]; then
+        echo "ERROR: Could not find programmer."
+        echo "       Path='${V1PROG}'"
+        exit 1
+    fi
+fi
 
 # Let's start
 echo "Checking Zigate type ${TYPE} access on port ${PORT}"

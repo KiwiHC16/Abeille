@@ -802,6 +802,8 @@ teStatus BL_EEPROMErase(int iUartFd, uint32_t iEraseAll)
 /* Tcharp38 addition => TO BE TESTED */
 teStatus BL_EEPROMRead(int iUartFd, uint32_t u32Address, uint8_t u8Length, uint8_t *pu8Buffer)
 {
+    printf("Entered BL_EEPROMRead()\n");
+
     uint8_t u8RxDataLen = 0;
     uint8_t au8CmdBuffer[6];
     teBL_Response eResponse = 0;

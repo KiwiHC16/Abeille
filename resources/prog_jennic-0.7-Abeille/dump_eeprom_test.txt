@@ -1,0 +1,289 @@
+root@Bidouille:/var/www/html/plugins/Abeille# cd resources/prog_jennic-0.7-Abeille/; make; cd ../../
+cc -I. -Wall -O2 -DDEBUG_BOOTLOADER -DDEBUG_FIRMWARE -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/JN51xx_BootLoader.c -o ../../tmp/JennicBuildDir/JN51xx_BootLoader.o
+cc -I. -Wall -O2 -DDEBUG_BOOTLOADER -DDEBUG_FIRMWARE -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/main.c -o ../../tmp/JennicBuildDir/main.o
+cc ../../tmp/JennicBuildDir/uart.o ../../tmp/JennicBuildDir/JN51xx_BootLoader.o ../../tmp/JennicBuildDir/Firmware.o ../../tmp/JennicBuildDir/main.o   -o ../../tmp/JennicBuildDir/JennicModuleProgrammer
+root@Bidouille:/var/www/html/plugins/Abeille# ./resources/scripts/dumpZigateV1Eeprom.sh  /dev/ttyS1 WiringPi toto.dump
+Checking Zigate type PI access on port /dev/ttyS1
+- /dev/ttyS1 port found
+- Port seems free
+Configuring PI Zigate for 'flash' mode (lib=WiringPi)
+gpio version: 2.20
+Copyright (c) 2012-2014 Gordon Henderson
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type: gpio -warranty
+
+Board details:
+  Type: Orange Pi Zero, Revision: Unknown, Memory: 512MB, Maker: Unknown
+Dumping Zigate content
+- Port tty: /dev/ttyS1
+- Type    : PI
+- Lib GPIO: WiringPi
+- File    : toto.dump
+
+JennicModuleProgrammer Version: 0.7-r56124-Abeille
+opt='V'
+opt='s'
+opt='P'
+opt='E'
+optarg'toto.dump'
+Get Chip ID
+
+Send Data :02 32 30
+Got length 7
+Got Data 33 00 10 40 86 86 64
+Reading 6x data
+
+Send Data :08 1f 62 00 00 00 04 00 71
+Got length 7
+Got Data 20 00 00 08 00 06 29
+JN516x Bootloader version 0x00080006
+
+Send Data :08 1f 00 15 00 01 04 00 07
+Got length 7
+Got Data 20 00 ff ff ff f7 2f
+JN516x RAM size 64k
+JN516x Flash size 128k
+JN516x Bootloader version 0x00080006
+JN516x Supported firmware 0x07030008
+
+Send Data :08 1f 70 15 00 01 08 00 7b
+Got length 11
+Got Data 20 00 ff ff ff ff ff ff ff ff 2b
+No customer MAC address - using factory
+
+Send Data :08 1f 80 15 00 01 08 00 8b
+Got length 11
+Got Data 20 00 00 15 8d 00 01 ed 33 65 09
+- Detected Chip: JN5168
+- MAC Address  : 00:15:8D:00:01:ED:33:65
+Setting baudrate: 115200
+BL_eSetBaudrate: Actual baud rate set 111111
+
+Send Data :03 27 09 2d
+Got length 3
+Got Data 28 00 2b
+Trying to dump EEPROM
+
+Text Start 0x00000000 - Len 0 bytes
+BSS  Start 0x00000000 - Len 0 bytes
+Reset entry point 0x64ddffb6
+Wake entry point 0x28ddffb6
+Send Data :86 1d 00 04 00 04 0a 14 2a 54 00 00 02 04 00 00 00 00 00 00 04 00 47 a4 40 05 45 04 a6 04 c7 38 e0 10 8c e0 17 08 00 40 38 e0 0a 8c e0 38 00 00 80 2c 01 20 0d 40 2c e1 60 00 f8 2c e1 20 2c e1 60 38 40 e3 d3 04 74 ff 98 e0 a2 00 80 00 8c e0 00 00 00 80 8c 00 00 00 00 00 98 e0 e3 01 00 00 8c e0 00 00 00 80 d8 e0 c2 20 8c e0 00 00 00 80 38 e0 e2 8c e0 00 00 00 80 6c e3 20 08 e4 6c 67 20 2d 03 00 2c c3 11
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000400: 0x0a142a54
+
+Send Data :08 1f 00 04 00 04 80 00 97
+Got length 131
+Got Data 20 00 0a 14 2a 54 00 00 02 04 00 00 00 00 00 00 04 00 47 a4 40 05 45 04 a6 04 c7 38 e0 10 8c e0 17 08 00 40 38 e0 0a 8c e0 38 00 00 80 2c 01 20 0d 40 2c e1 60 00 f8 2c e1 20 2c e1 60 38 40 e3 d3 04 74 ff 98 e0 a2 00 80 00 8c e0 00 00 00 80 8c 00 00 00 00 00 98 e0 e3 01 00 00 8c e0 00 00 00 80 d8 e0 c2 20 8c e0 00 00 00 80 38 e0 e2 8c e0 00 00 00 80 6c e3 20 08 e4 6c 67 20 2d 03 00 2c c3 29
+Loading:   5%
+
+Send Data :86 1d 80 04 00 04 20 2c a3 10 2d 43 30 98 e0 04 01 00 00 8c e0 10 00 00 80 d8 e0 c3 08 8c e0 00 00 00 80 8c e0 50 00 00 80 94 e7 ff fe 00 00 41 07 2f 00 48 8c 40 00 00 00 00 8c 40 00 00 00 00 98 e0 e3 01 00 00 8c e0 00 00 00 80 38 e0 a2 8c e0 00 00 00 80 8c 00 10 00 00 80 8c 00 38 00 00 80 8c 00 17 08 00 40 00 ea 8c e0 00 00 00 80 8c e3 40 08 00 80 d2 ce 8f 40 8c e3 60 08 00 80 d2 ce 6a 40 8c e3 50 6c
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000480: 0x202ca310
+
+Send Data :08 1f 80 04 00 04 80 00 17
+Got length 131
+Got Data 20 00 20 2c a3 10 2d 43 30 98 e0 04 01 00 00 8c e0 10 00 00 80 d8 e0 c3 08 8c e0 00 00 00 80 8c e0 50 00 00 80 94 e7 ff fe 00 00 41 07 2f 00 48 8c 40 00 00 00 00 8c 40 00 00 00 00 98 e0 e3 01 00 00 8c e0 00 00 00 80 38 e0 a2 8c e0 00 00 00 80 8c 00 10 00 00 80 8c 00 38 00 00 80 8c 00 17 08 00 40 00 ea 8c e0 00 00 00 80 8c e3 40 08 00 80 d2 ce 8f 40 8c e3 60 08 00 80 d2 ce 6a 40 8c e3 50 d4
+Loading:  10%
+
+Send Data :86 1d 00 05 00 04 08 00 80 d2 ce 5d 80 8c e3 70 08 00 80 60 e7 52 3e 07 3c 60 e0 3d 6c e7 f9 60 67 12 0c 80 00 60 47 b4 40 00 47 a8 00 00 60 98 80 00 00 c0 00 a4 00 83 60 00 00 00 60 98 80 00 00 80 00 a4 00 e3 60 00 00 00 60 98 80 00 00 40 00 a4 00 9d 60 00 00 47 c8 00 a4 40 34 00 00 00 a4 40 53 ff ff ff 04 c3 24 a3 00 24 e3 80 6c e7 10 08 a7 24 63 c0 6c 63 18 24 e6 40 6c e7 08 08 67 08 65 47 d2 48 d5
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000500: 0x080080d2
+
+Send Data :08 1f 00 05 00 04 80 00 96
+Got length 131
+Got Data 20 00 08 00 80 d2 ce 5d 80 8c e3 70 08 00 80 60 e7 52 3e 07 3c 60 e0 3d 6c e7 f9 60 67 12 0c 80 00 60 47 b4 40 00 47 a8 00 00 60 98 80 00 00 c0 00 a4 00 83 60 00 00 00 60 98 80 00 00 80 00 a4 00 e3 60 00 00 00 60 98 80 00 00 40 00 a4 00 9d 60 00 00 47 c8 00 a4 40 34 00 00 00 a4 40 53 ff ff ff 04 c3 24 a3 00 24 e3 80 6c e7 10 08 a7 24 63 c0 6c 63 18 24 e6 40 6c e7 08 08 67 08 65 47 d2 48 ec
+Loading:  15%
+
+Send Data :86 1d 80 05 00 04 47 aa 41 98 80 00 00 80 00 00 60 84 c0 3e b0 00 20 41 06 d0 00 80 98 60 00 00 80 00 a4 00 16 60 00 00 38 60 10 00 88 a4 00 8f c0 00 00 98 e0 8d b0 00 20 8c e0 2c 0c 00 40 98 e0 fe b0 00 20 8c e0 1c 0c 00 40 0e f0 98 e0 05 61 80 00 d3 da 71 00 01 b8 0e 30 84 e0 3e b0 00 20 3c 27 00 00 e8 64 e0 3a 80 e0 3e b0 00 20 98 80 00 00 80 00 00 60 41 07 d0 00 80 98 60 00 00 80 00 a4 00 10 60 e7
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000580: 0x47aa4198
+
+Send Data :08 1f 80 05 00 04 80 00 16
+Got length 131
+Got Data 20 00 47 aa 41 98 80 00 00 80 00 00 60 84 c0 3e b0 00 20 41 06 d0 00 80 98 60 00 00 80 00 a4 00 16 60 00 00 38 60 10 00 88 a4 00 8f c0 00 00 98 e0 8d b0 00 20 8c e0 2c 0c 00 40 98 e0 fe b0 00 20 8c e0 1c 0c 00 40 0e f0 98 e0 05 61 80 00 d3 da 71 00 01 b8 0e 30 84 e0 3e b0 00 20 3c 27 00 00 e8 64 e0 3a 80 e0 3e b0 00 20 98 80 00 00 80 00 00 60 41 07 d0 00 80 98 60 00 00 80 00 a4 00 10 60 5e
+Loading:  21%
+
+Send Data :86 1d 00 06 00 04 00 00 01 a0 00 60 a4 00 37 60 00 00 34 63 80 40 03 1d 00 60 a4 00 c4 e0 00 00 05 63 05 43 01 80 0c 88 01 b8 00 60 a4 00 33 60 00 00 34 63 80 41 03 b0 98 c0 f9 61 80 00 d3 8c d5 7f 98 e0 05 61 80 00 d2 da 71 00 01 60 0d e0 00 60 a4 00 d7 60 00 00 d8 e1 10 40 08 ec c0 67 3f 7f 60 6a 1a 3e 03 50 01 98 01 a0 d3 56 c7 df 44 8b 59 41 0a e9 00 ef 20 e1 a0 c4 e1 20 80 38 c0 e4 d2 8e 6e d8 38
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000600: 0x000001a0
+
+Send Data :08 1f 00 06 00 04 80 00 95
+Got length 131
+Got Data 20 00 00 00 01 a0 00 60 a4 00 37 60 00 00 34 63 80 40 03 1d 00 60 a4 00 c4 e0 00 00 05 63 05 43 01 80 0c 88 01 b8 00 60 a4 00 33 60 00 00 34 63 80 41 03 b0 98 c0 f9 61 80 00 d3 8c d5 7f 98 e0 05 61 80 00 d2 da 71 00 01 60 0d e0 00 60 a4 00 d7 60 00 00 d8 e1 10 40 08 ec c0 67 3f 7f 60 6a 1a 3e 03 50 01 98 01 a0 d3 56 c7 df 44 8b 59 41 0a e9 00 ef 20 e1 a0 c4 e1 20 80 38 c0 e4 d2 8e 6e d8 02
+Loading:  26%
+
+Send Data :86 1d 80 06 00 04 d3 ce 6d 80 38 c0 84 d2 8e 62 d8 38 c0 a4 d2 8e 68 28 38 c0 f8 d2 ce 6f d8 0f 42 38 c0 6c d2 8e 65 30 d3 ce 6b 00 38 c0 4c d2 ce 6d 58 0f 6c 38 c0 1c d2 8e 6b 00 38 c0 16 d2 ce 6d 98 0f 0a 38 e0 9c 20 e1 20 38 e0 28 d2 d6 76 98 c5 61 e0 80 6d 6b 18 c4 e1 10 80 6c e7 08 61 6b 39 c4 e1 50 80 61 6b 39 c5 41 d0 80 6d 4a 18 c4 e1 30 80 6c e7 08 61 4a 39 c4 e1 70 80 61 4a 39 c4 c1 f0 80 ea
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000680: 0xd3ce6d80
+
+Send Data :08 1f 80 06 00 04 80 00 15
+Got length 131
+Got Data 20 00 d3 ce 6d 80 38 c0 84 d2 8e 62 d8 38 c0 a4 d2 8e 68 28 38 c0 f8 d2 ce 6f d8 0f 42 38 c0 6c d2 8e 65 30 d3 ce 6b 00 38 c0 4c d2 ce 6d 58 0f 6c 38 c0 1c d2 8e 6b 00 38 c0 16 d2 ce 6d 98 0f 0a 38 e0 9c 20 e1 20 38 e0 28 d2 d6 76 98 c5 61 e0 80 6d 6b 18 c4 e1 10 80 6c e7 08 61 6b 39 c4 e1 50 80 61 6b 39 c5 41 d0 80 6d 4a 18 c4 e1 30 80 6c e7 08 61 4a 39 c4 e1 70 80 61 4a 39 c4 c1 f0 80 50
+Loading:  31%
+
+Send Data :86 1d 00 07 00 04 6c c6 18 c4 e1 08 80 6c e7 08 60 c6 39 c4 e1 48 80 60 c6 39 c4 a1 c8 80 6c a5 18 c4 e1 28 80 6c e7 08 60 a5 39 c4 e1 68 80 60 a5 39 c5 21 a8 80 6d 29 10 c4 41 88 80 6c 42 10 c4 e1 b0 80 6c e7 10 c5 01 90 80 6d 08 10 c4 61 a0 80 c4 81 60 80 60 a9 29 60 c2 31 60 e7 51 61 08 59 a4 00 2d 3f ff ff d0 60 33 f0 0e e0 38 e0 ec 20 e1 20 d0 70 b0 f0 c4 c1 a0 80 00 68 41 06 a0 00 60 a4 00 7a 6d
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000700: 0x6cc618c4
+
+Send Data :08 1f 00 07 00 04 80 00 94
+Got length 131
+Got Data 20 00 6c c6 18 c4 e1 08 80 6c e7 08 60 c6 39 c4 e1 48 80 60 c6 39 c4 a1 c8 80 6c a5 18 c4 e1 28 80 6c e7 08 60 a5 39 c4 e1 68 80 60 a5 39 c5 21 a8 80 6d 29 10 c4 41 88 80 6c 42 10 c4 e1 b0 80 6c e7 10 c5 01 90 80 6d 08 10 c4 61 a0 80 c4 81 60 80 60 a9 29 60 c2 31 60 e7 51 61 08 59 a4 00 2d 3f ff ff d0 60 33 f0 0e e0 38 e0 ec 20 e1 20 d0 70 b0 f0 c4 c1 a0 80 00 68 41 06 a0 00 60 a4 00 7a 56
+Loading:  36%
+
+Send Data :86 1d 80 07 00 04 c0 00 00 20 01 a0 0c 6c 38 e0 cc 20 e1 20 20 01 60 20 01 e0 30 e0 61 20 e1 10 20 e1 90 20 01 a0 00 86 0d f4 38 e0 04 20 e1 20 d8 61 a0 80 a4 00 4d bf ff ff 05 83 c5 41 90 80 30 61 60 04 8c 04 aa a4 00 d9 1f ff df 30 8a 40 20 01 a0 0e a4 38 e0 64 20 e1 20 00 82 01 80 d0 50 b9 10 a4 00 ce 1f ff df 3e 03 1a 41 03 50 00 e7 20 e1 a0 0e 80 20 01 a0 6c e3 11 20 e1 60 20 61 e0 00 82 0d 18 70
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000780: 0xc0000020
+
+Send Data :08 1f 80 07 00 04 80 00 14
+Got length 131
+Got Data 20 00 c0 00 00 20 01 a0 0c 6c 38 e0 cc 20 e1 20 20 01 60 20 01 e0 30 e0 61 20 e1 10 20 e1 90 20 01 a0 00 86 0d f4 38 e0 04 20 e1 20 d8 61 a0 80 a4 00 4d bf ff ff 05 83 c5 41 90 80 30 61 60 04 8c 04 aa a4 00 d9 1f ff df 30 8a 40 20 01 a0 0e a4 38 e0 64 20 e1 20 00 82 01 80 d0 50 b9 10 a4 00 ce 1f ff df 3e 03 1a 41 03 50 00 e7 20 e1 a0 0e 80 20 01 a0 6c e3 11 20 e1 60 20 61 e0 00 82 0d 18 cb
+Loading:  42%
+
+Send Data :86 1d 00 08 00 04 38 e0 96 20 e1 20 00 8a 01 80 41 4b 1a a4 00 62 80 00 00 41 03 50 00 e7 20 e1 a0 0e 80 20 01 a0 6c e3 09 20 e1 60 6c e3 11 20 e1 e0 20 61 10 00 8a 0f d0 38 e0 14 20 e1 20 0d 4b d8 61 a0 80 a4 00 84 bf ff ff 05 83 38 e0 44 20 e1 20 20 01 a0 00 84 0c 20 30 e7 01 20 e1 20 00 88 0c 80 00 84 01 80 30 e4 80 3e 07 30 00 a0 30 41 20 0e c0 60 e2 2c 24 e7 00 60 c6 3a 00 b8 d3 48 5a ff d8 e1 c7
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000800: 0x38e09620
+
+Send Data :08 1f 00 08 00 04 80 00 9b
+Got length 131
+Got Data 20 00 38 e0 96 20 e1 20 00 8a 01 80 41 4b 1a a4 00 62 80 00 00 41 03 50 00 e7 20 e1 a0 0e 80 20 01 a0 6c e3 09 20 e1 60 6c e3 11 20 e1 e0 20 61 10 00 8a 0f d0 38 e0 14 20 e1 20 0d 4b d8 61 a0 80 a4 00 84 bf ff ff 05 83 38 e0 44 20 e1 20 20 01 a0 00 84 0c 20 30 e7 01 20 e1 20 00 88 0c 80 00 84 01 80 30 e4 80 3e 07 30 00 a0 30 41 20 0e c0 60 e2 2c 24 e7 00 60 c6 3a 00 b8 d3 48 5a ff d8 e1 f3
+Loading:  47%
+
+Send Data :86 1d 80 08 00 04 10 40 08 e5 c0 c7 3f bf 31 44 80 00 60 a4 00 a6 20 00 00 34 63 04 40 03 af 00 60 3e 0a 20 a4 00 5e 20 00 00 01 60 0c 90 00 60 a4 00 12 20 00 00 34 63 04 40 03 af d8 e1 10 40 08 eb 00 60 c4 87 3f bf a4 00 6a 20 00 00 01 78 d3 54 b7 bf 00 60 a4 00 44 20 00 00 34 63 04 40 03 af c4 e1 20 80 38 c0 84 d2 ce 68 4b 98 60 00 00 80 00 00 80 a4 00 a8 c0 00 00 98 60 00 00 40 00 00 80 a4 00 e0 9f
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000880: 0x104008e5
+
+Send Data :08 1f 80 08 00 04 80 00 1b
+Got length 131
+Got Data 20 00 10 40 08 e5 c0 c7 3f bf 31 44 80 00 60 a4 00 a6 20 00 00 34 63 04 40 03 af 00 60 3e 0a 20 a4 00 5e 20 00 00 01 60 0c 90 00 60 a4 00 12 20 00 00 34 63 04 40 03 af d8 e1 10 40 08 eb 00 60 c4 87 3f bf a4 00 6a 20 00 00 01 78 d3 54 b7 bf 00 60 a4 00 44 20 00 00 34 63 04 40 03 af c4 e1 20 80 38 c0 84 d2 ce 68 4b 98 60 00 00 80 00 00 80 a4 00 a8 c0 00 00 98 60 00 00 40 00 00 80 a4 00 e0 2b
+Loading:  52%
+
+Send Data :86 1d 00 09 00 04 c0 00 00 98 e0 04 85 e0 00 0c 40 cc e1 60 40 00 ff cc e1 20 40 cc e1 60 40 41 07 4f 47 d2 60 00 10 46 c7 3f 00 60 a4 40 c1 c0 00 00 84 60 be b0 00 20 a4 40 ee c0 00 00 47 a8 00 a4 00 99 c0 00 00 a4 00 e5 c0 00 00 41 03 5f a4 00 29 c0 00 00 47 b8 00 47 a2 00 a4 00 6b ff ff ff 38 60 f9 a4 00 9b ff ff ff 00 60 a4 00 8b ff ff ff 05 83 00 60 a4 00 e3 ff ff ff 05 63 00 60 a4 00 bd ff ff 1f
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000900: 0xc0000098
+
+Send Data :08 1f 00 09 00 04 80 00 9a
+Got length 131
+Got Data 20 00 c0 00 00 98 e0 04 85 e0 00 0c 40 cc e1 60 40 00 ff cc e1 20 40 cc e1 60 40 41 07 4f 47 d2 60 00 10 46 c7 3f 00 60 a4 40 c1 c0 00 00 84 60 be b0 00 20 a4 40 ee c0 00 00 47 a8 00 a4 00 99 c0 00 00 a4 00 e5 c0 00 00 41 03 5f a4 00 29 c0 00 00 47 b8 00 47 a2 00 a4 00 6b ff ff ff 38 60 f9 a4 00 9b ff ff ff 00 60 a4 00 8b ff ff ff 05 83 00 60 a4 00 e3 ff ff ff 05 63 00 60 a4 00 bd ff ff 2a
+Loading:  57%
+
+Send Data :86 1d 80 09 00 04 ff 05 43 a4 00 85 ff ff ff 6d 6b 10 61 4a 59 6d 8c 08 60 6a 61 47 b2 00 47 a4 40 05 44 3e 03 38 2c 01 00 00 60 00 80 00 a0 00 c0 01 00 a4 00 d6 40 00 00 81 40 be b0 00 20 47 b4 40 d8 a5 00 ff 6c 63 20 6c e4 41 08 67 6c 63 40 60 84 23 34 84 c0 08 64 8c 60 21 00 00 80 00 ec 8c e0 01 00 00 80 8c a0 11 00 00 80 47 d2 48 cc f0 7a 01 34 c7 e0 41 03 88 84 e0 7e b0 00 20 00 f8 80 e0 7e b0 b6
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000980: 0xff0543a4
+
+Send Data :08 1f 80 09 00 04 80 00 1a
+Got length 131
+Got Data 20 00 ff 05 43 a4 00 85 ff ff ff 6d 6b 10 61 4a 59 6d 8c 08 60 6a 61 47 b2 00 47 a4 40 05 44 3e 03 38 2c 01 00 00 60 00 80 00 a0 00 c0 01 00 a4 00 d6 40 00 00 81 40 be b0 00 20 47 b4 40 d8 a5 00 ff 6c 63 20 6c e4 41 08 67 6c 63 40 60 84 23 34 84 c0 08 64 8c 60 21 00 00 80 00 ec 8c e0 01 00 00 80 8c a0 11 00 00 80 47 d2 48 cc f0 7a 01 34 c7 e0 41 03 88 84 e0 7e b0 00 20 00 f8 80 e0 7e b0 03
+Loading:  63%
+
+Send Data :86 1d 00 0a 00 04 00 20 90 e6 00 20 00 20 24 e7 00 8c e0 29 00 00 80 3c 26 c0 98 e0 00 80 80 00 64 e0 3a 8c e0 09 00 00 80 84 e0 7e b0 00 20 3c 07 00 00 68 64 60 1a 47 d2 48 80 00 7e b0 00 20 6c 63 60 8c 60 21 00 00 80 00 e6 8c e0 01 00 00 80 8c e0 47 f0 00 80 94 e7 00 00 00 08 40 07 2f 98 e0 00 00 00 08 8c e0 17 f0 00 80 8c 00 29 00 00 80 47 d2 48 47 aa 00 05 a3 05 44 05 85 41 85 84 38 e0 8c 20 e4 f0
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000a00: 0x002090e6
+
+Send Data :08 1f 00 0a 00 04 80 00 99
+Got length 131
+Got Data 20 00 00 20 90 e6 00 20 00 20 24 e7 00 8c e0 29 00 00 80 3c 26 c0 98 e0 00 80 80 00 64 e0 3a 8c e0 09 00 00 80 84 e0 7e b0 00 20 3c 07 00 00 68 64 60 1a 47 d2 48 80 00 7e b0 00 20 6c 63 60 8c 60 21 00 00 80 00 e6 8c e0 01 00 00 80 8c e0 47 f0 00 80 94 e7 00 00 00 08 40 07 2f 98 e0 00 00 00 08 8c e0 17 f0 00 80 8c 00 29 00 00 80 47 d2 48 47 aa 00 05 a3 05 44 05 85 41 85 84 38 e0 8c 20 e4 c6
+Loading:  68%
+
+Send Data :86 1d 80 0a 00 04 d0 38 e0 82 20 e4 30 20 04 b0 20 04 70 00 60 a4 00 da ff ff ff 00 80 0c 20 38 e0 9a 20 e4 b0 38 e0 64 20 e4 70 00 84 60 e4 54 31 67 d0 05 44 0d a0 30 8a d0 04 6d 3e 04 20 c4 ab ff ff a4 00 ff 7f ff ff 01 58 01 78 44 ca 57 41 0c 70 04 6d 47 ca 00 a4 40 46 ff ff ff 47 ba 00 47 a6 10 05 c3 01 a0 01 80 3e 0d 50 41 8e 2c 00 60 a4 00 7f 7f ff ff 8d 80 21 00 00 80 00 ea 8c e0 01 00 00 80 cc
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000a80: 0xd038e082
+
+Send Data :08 1f 80 0a 00 04 80 00 19
+Got length 131
+Got Data 20 00 d0 38 e0 82 20 e4 30 20 04 b0 20 04 70 00 60 a4 00 da ff ff ff 00 80 0c 20 38 e0 9a 20 e4 b0 38 e0 64 20 e4 70 00 84 60 e4 54 31 67 d0 05 44 0d a0 30 8a d0 04 6d 3e 04 20 c4 ab ff ff a4 00 ff 7f ff ff 01 58 01 78 44 ca 57 41 0c 70 04 6d 47 ca 00 a4 40 46 ff ff ff 47 ba 00 47 a6 10 05 c3 01 a0 01 80 3e 0d 50 41 8e 2c 00 60 a4 00 7f 7f ff ff 8d 80 21 00 00 80 00 ea 8c e0 01 00 00 80 7a
+Loading:  73%
+
+Send Data :86 1d 00 0b 00 04 00 e0 8c 00 11 00 00 80 00 f8 38 c0 08 d2 ce 6a ff 04 6a a4 00 84 ff ff ff 0c 4c 00 68 a4 00 b3 7f ff ff 8d 80 21 00 00 80 38 e0 50 8c e0 01 00 00 80 8c e0 71 00 00 80 2c e1 00 8c e0 71 00 00 80 2c e1 20 8c e0 71 00 00 80 2c e1 10 8c e0 71 00 00 80 2c e1 30 41 03 90 8c 00 29 00 00 80 31 61 08 04 6b 04 81 38 a0 08 a4 00 cf 2f ff df 24 e1 d8 38 c0 8c d2 ce 63 60 2c e1 78 94 e7 00 ff 2e
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000b00: 0x00e08c00
+
+Send Data :08 1f 00 0b 00 04 80 00 98
+Got length 131
+Got Data 20 00 00 e0 8c 00 11 00 00 80 00 f8 38 c0 08 d2 ce 6a ff 04 6a a4 00 84 ff ff ff 0c 4c 00 68 a4 00 b3 7f ff ff 8d 80 21 00 00 80 38 e0 50 8c e0 01 00 00 80 8c e0 71 00 00 80 2c e1 00 8c e0 71 00 00 80 2c e1 20 8c e0 71 00 00 80 2c e1 10 8c e0 71 00 00 80 2c e1 30 41 03 90 8c 00 29 00 00 80 31 61 08 04 6b 04 81 38 a0 08 a4 00 cf 2f ff df 24 e1 d8 38 c0 8c d2 ce 63 60 2c e1 78 94 e7 00 ff 19
+Loading:  79%
+
+Send Data :86 1d 80 0b 00 04 ff ff 98 c0 00 64 9a 82 d2 ce 69 a0 24 e1 98 38 c0 30 d2 8e 6f 20 38 e0 30 20 e1 98 2c e1 48 00 f8 2c e1 08 04 6a 04 8b 00 a8 a4 00 a3 7f ff ff 04 6a 38 80 90 38 a0 30 a4 00 20 7f ff ff 2c c1 48 8d 80 21 00 00 80 00 ea 8c e0 01 00 00 80 8c c0 11 00 00 80 04 6a 04 8b 00 a0 a4 00 29 7f ff ff 01 b8 31 8c 02 38 e0 fc d2 da 7d f7 47 b6 10 cc f0 40 05 60 e7 21 60 63 1b 60 e7 18 cc f0 00 0b
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000b80: 0xffff98c0
+
+Send Data :08 1f 80 0b 00 04 80 00 18
+Got length 131
+Got Data 20 00 ff ff 98 c0 00 64 9a 82 d2 ce 69 a0 24 e1 98 38 c0 30 d2 8e 6f 20 38 e0 30 20 e1 98 2c e1 48 00 f8 2c e1 08 04 6a 04 8b 00 a8 a4 00 a3 7f ff ff 04 6a 38 80 90 38 a0 30 a4 00 20 7f ff ff 2c c1 48 8d 80 21 00 00 80 00 ea 8c e0 01 00 00 80 8c c0 11 00 00 80 04 6a 04 8b 00 a0 a4 00 29 7f ff ff 01 b8 31 8c 02 38 e0 fc d2 da 7d f7 47 b6 10 cc f0 40 05 60 e7 21 60 63 1b 60 e7 18 cc f0 00 bc
+Loading:  84%
+
+Send Data :86 1d 00 0c 00 04 05 47 d2 48 cc f0 60 05 60 e7 19 60 84 23 60 e7 20 cc f0 20 05 47 d2 48 47 ac 00 05 45 05 66 04 a7 24 41 f0 cc f0 40 01 38 e7 08 cc f0 00 01 d1 d0 32 c0 40 03 68 cc f0 40 09 6c e7 89 34 e7 c0 3d e3 38 64 e3 3a 3e 07 18 cc d0 40 09 6c e3 88 94 e7 00 00 60 00 94 c6 ff ff 9f ff 60 e7 31 cc f0 00 09 3c 02 00 d8 e0 00 08 64 c0 3a 40 04 30 98 e6 00 20 00 00 3e 07 32 38 e6 20 3c 2a 00 64 4a
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000c00: 0x0547d248
+
+Send Data :08 1f 00 0c 00 04 80 00 9f
+Got length 131
+Got Data 20 00 05 47 d2 48 cc f0 60 05 60 e7 19 60 84 23 60 e7 20 cc f0 20 05 47 d2 48 47 ac 00 05 45 05 66 04 a7 24 41 f0 cc f0 40 01 38 e7 08 cc f0 00 01 d1 d0 32 c0 40 03 68 cc f0 40 09 6c e7 89 34 e7 c0 3d e3 38 64 e3 3a 3e 07 18 cc d0 40 09 6c e3 88 94 e7 00 00 60 00 94 c6 ff ff 9f ff 60 e7 31 cc f0 00 09 3c 02 00 d8 e0 00 08 64 c0 3a 40 04 30 98 e6 00 20 00 00 3e 07 32 38 e6 20 3c 2a 00 64 7a
+Loading:  89%
+
+Send Data :86 1d 80 0c 00 04 c7 32 38 e6 40 3c 2b 00 64 c7 32 cc d0 20 00 00 ee cc f0 28 00 3e 08 3c 60 e0 3d 6c e7 f9 cc f0 08 00 cc b0 10 00 47 bc 00 cc 70 30 00 47 d2 48 cc 90 00 00 cc f0 60 00 6c 63 c0 38 63 80 94 63 9f 00 00 00 94 e7 60 ff ff ff 60 63 39 cc 70 20 00 47 d2 48 04 83 00 6e a4 40 1b ff ff ff cc 70 40 00 3e 03 18 47 d2 48 cc 70 60 00 34 63 80 47 d2 48 00 e0 d1 e0 3f 80 6c e3 40 90 e7 10 20 00 39
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 128 at address 0x04000c80: 0xc73238e6
+
+Send Data :08 1f 80 0c 00 04 80 00 1f
+Got length 131
+Got Data 20 00 c7 32 38 e6 40 3c 2b 00 64 c7 32 cc d0 20 00 00 ee cc f0 28 00 3e 08 3c 60 e0 3d 6c e7 f9 cc f0 08 00 cc b0 10 00 47 bc 00 cc 70 30 00 47 d2 48 cc 90 00 00 cc f0 60 00 6c 63 c0 38 63 80 94 63 9f 00 00 00 94 e7 60 ff ff ff 60 63 39 cc 70 20 00 47 d2 48 04 83 00 6e a4 40 1b ff ff ff cc 70 40 00 3e 03 18 47 d2 48 cc 70 60 00 34 63 80 47 d2 48 00 e0 d1 e0 3f 80 6c e3 40 90 e7 10 20 00 89
+Loading:  94%
+
+Send Data :82 1d 00 0d 00 04 20 2c e7 40 6c e7 40 d8 e7 28 0d 08 f0 2c e7 40 3e 07 38 04 67 47 d2 48 d1 e0 33 80 6c e3 40 90 e7 10 20 00 20 2c e7 40 6c e7 40 d8 e7 00 0d 08 f0 2c 87 00 47 d2 48 00 e0 d1 e0 3f 80 6c e3 40 90 e7 10 20 00 20 2c e7 40 6c e7 40 d8 e7 00 0d 08 f0 2c e7 40 3e 07 38 04 67 47 d2 48 47 a4 00 31 41 10 04 c3 0c c0 24 e4 00 20 e6 00 00 d8 00 98 00 bf d0 7e 52 ff 47 b4 00 00 00 0f
+Got length 3
+Got Data 1e 00 1d
+Wrote chunk length 124 at address 0x04000d00: 0x202ce740
+
+Send Data :08 1f 00 0d 00 04 7c 00 62
+Got length 127
+Got Data 20 00 20 2c e7 40 6c e7 40 d8 e7 28 0d 08 f0 2c e7 40 3e 07 38 04 67 47 d2 48 d1 e0 33 80 6c e3 40 90 e7 10 20 00 20 2c e7 40 6c e7 40 d8 e7 00 0d 08 f0 2c 87 00 47 d2 48 00 e0 d1 e0 3f 80 6c e3 40 90 e7 10 20 00 20 2c e7 40 6c e7 40 d8 e7 00 0d 08 f0 2c e7 40 3e 07 38 04 67 47 d2 48 47 a4 00 31 41 10 04 c3 0c c0 24 e4 00 20 e6 00 00 d8 00 98 00 bf d0 7e 52 ff 47 b4 00 00 00 c6
+Loading: 100%
+
+Starting module application
+Send Data :06 21 24 05 00 04 02
+Got length 3
+Got Data 22 00 21
+BL_eSetBaudrate: Actual baud rate set 38461
+
+Send Data :03 27 1a 3e
+Got length 3
+Got Data 28 00 2b
+
+Send Data :03 36 01 34
+Got length 3
+Got Data 37 00 34
+
+Erase OK
+Send Data :06 21 66 00 00 00 41
+Got length 3
+Got Data 22 00 21
+= Success
+Restoring PI Zigate GPIOs config for prod mode
+gpio version: 2.20
+Copyright (c) 2012-2014 Gordon Henderson
+This is free software with ABSOLUTELY NO WARRANTY.
+For details type: gpio -warranty
+
+Board details:
+  Type: Orange Pi Zero, Revision: Unknown, Memory: 512MB, Maker: Unknown
+= Tout s'est bien passé. Vous pouvez fermer ce log.
+root@Bidouille:/var/www/html/plugins/Abeille#

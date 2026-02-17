@@ -136,8 +136,9 @@ int main(int argc, char *argv[])
         signed char opt;
         int option_index;
 
-        while ((opt = getopt_long(argc, argv, "hs:V:f:vI:P:m:E", long_options, &option_index)) != -1)
+        while ((opt = getopt_long(argc, argv, "hs:V:f:vI:P:m:E:", long_options, &option_index)) != -1)
         {
+printf("opt='%c'\n", opt);
             switch (opt)
             {
                 case 0:
@@ -201,9 +202,10 @@ int main(int argc, char *argv[])
                     break;
 
                 case 'E': // Dump EEPROM
+printf("optarg'%s'\n", optarg);
                     e2pDumpFile = optarg;
-
                     break;
+
                 default: /* '?' */
                     print_usage_exit(argv);
             }
@@ -320,6 +322,8 @@ int main(int argc, char *argv[])
         printf("Trying to dump EEPROM\n");
 		if (BL_DownloadExtensionToRamBeforeErase(iUartFd, &sFW_Info) != 0)
             return -1;
+    } else {
+        printf("e2pDumpFile is NULL\n");
     }
 
 	if (iErase)

@@ -25,9 +25,9 @@
  * This software is owned by NXP B.V. and/or its supplier and is protected
  * under applicable copyright laws. All rights are reserved. We grant You,
  * and any third parties, a license to use this software solely and
- * exclusively on NXP products [NXP Microcontrollers such as JN5148, JN5142, JN5139]. 
+ * exclusively on NXP products [NXP Microcontrollers such as JN5148, JN5142, JN5139].
  * You, and any third parties must reproduce the copyright and warranty notice
- * and any other legend of ownership on each copy or partial copy of the 
+ * and any other legend of ownership on each copy or partial copy of the
  * software.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -75,14 +75,14 @@ typedef struct
 {
     uint32_t            u32ChipId;
     uint32_t            u32SupportedFirmware;
-    
+
     uint32_t            u32RamSize;
     uint32_t            u32FlashSize;
-    
+
     uint32_t            u32BootloaderVersion;
 
     uint32_t            u32CustomerSettings;
-    
+
     uint8_t             au8MacAddress[8];
 } tsChipDetails;
 

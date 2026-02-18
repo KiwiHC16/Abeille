@@ -68,3 +68,7 @@ $(BUILDDIR):
 show:
 	@echo "BUILDDIR=$(BUILDDIR)"
 	@echo "OBJS=$(OBJS)"
+
+# WORKG ONGOING to convert .bin to .bin.h
+bin2h:
+	od -t x1 Build/FlashProgrammerExtension/FlashProgrammerExtension_JN5168.bin

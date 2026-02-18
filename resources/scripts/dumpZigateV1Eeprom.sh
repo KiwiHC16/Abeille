@@ -3,6 +3,9 @@
 # Dump EEPROM of Zigate V1 type "PI"
 # WARNING: This requires an updated version of 'JennicModuleProgrammer'.
 
+#### NOTE !! NOT WORKING yet.
+#### Reading EEPROM returns F6 error. Pb with flash programmer extension ??
+
 ABEILLEROOT=${PWD}
 # V2PROG=${ABEILLEROOT}/resources/DK6Programmer
 V1PROG=${ABEILLEROOT}/tmp/JennicBuildDir/JennicModuleProgrammer

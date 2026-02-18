@@ -322,7 +322,8 @@ printf("optarg'%s'\n", optarg);
             return -1;
 
         uint8_t buf[4 * 1024];
-        if (BL_EEPROMRead(iUartFd, 0, (uint8_t)(4 * 1024), buf) != 0)
+        // if (BL_EEPROMRead(iUartFd, 0, (uint8_t)(4 * 1024), buf) != 0)
+        if (BL_EEPROMRead(iUartFd, 0, (uint8_t)(4), buf) != 0)
             return -1;
     }
 

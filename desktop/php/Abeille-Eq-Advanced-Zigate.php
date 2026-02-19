@@ -226,6 +226,13 @@
             <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgAB05', '')" title="{{Cmd AB05}}">{{Interroger}}</a>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">DEV MODE: Dump EEPROM (AB06)</label>
+        <div class="col-sm-5">
+            <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgAB06', '')" title="{{Cmd AB06}}">{{Interroger}}</a>
+            <input id="idDEIdx" title="{{Segment index (Décimal: 0 to 63)}}" value="" style="width:30px; margin-left: 4px" />
+        </div>
+    </div>
 <?php } ?>
 
 <hr>

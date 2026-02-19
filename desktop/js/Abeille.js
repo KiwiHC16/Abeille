@@ -129,8 +129,7 @@ function refreshEqInfos() {
             if (typeof curEq.zigbee.status != "undefined")
                 document.getElementById("idZbStatus").value =
                     curEq.zigbee.status;
-            else
-                document.getElementById("idZbStatus").value = "?";
+            else document.getElementById("idZbStatus").value = "?";
             if (typeof curEq.zigbee.modelId != "undefined")
                 document.getElementById("idZbModel").value =
                     curEq.zigbee.modelId;
@@ -1789,9 +1788,14 @@ function sendZigate(action, param) {
             topic = "CmdAbeille" + zgId + "/0000/zgGetDevicesList";
             payload = "";
             break;
-        case "zgAB05": // Cmd AB05
+        case "zgAB05": // FW >= AB01-0001. Cmd AB05 = List useful infos
             topic = "CmdAbeille" + zgId + "/0000/zgAB05";
             payload = "";
+            break;
+        case "zgAB06": // FW >= AB01-0001. Cmd AB06 = Dump EEPROM
+            topic = "CmdAbeille" + zgId + "/0000/zgAB06";
+            idx = document.getElementById("idDEIdx").value;
+            if (idx != "") payload = "idx=" + idx;
             break;
         default:
             console.log("ERROR: Unsupported action '" + action + "'");

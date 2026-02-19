@@ -5605,6 +5605,23 @@
             msgToMainD($msg);
         }
 
+        /* 9999/Extended error */
+        function decode9999($net, $payload, $lqi) {
+            /* FW >= 3.1e
+               Extended Status: uint8_t */
+            $extStatus = substr($payload, 0, 2);
+
+            $zgId = substr($net, 7); // AbeilleX => X
+            $extra = '';
+            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['nPdu']))
+                $extra = ', NPDU='.$GLOBALS['zigate'.$zgId]['nPdu'];
+            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['aPdu']))
+                $extra .= ', APDU='.$GLOBALS['zigate'.$zgId]['aPdu'];
+
+            $decoded = '9999/Extended error'.', ExtStatus='.$extStatus.$extra;
+            parserLog('debug', $net.', Type='.$decoded);
+        }
+
         // PDM dump response (Abeille's firmware only)
         function decodeAB01($net, $payload, $lqi) {
             $id = substr($payload, 0, 4);
@@ -5664,21 +5681,27 @@
             msgToCmdAck($msg);
         }
 
-        /* 9999/Extended error */
-        function decode9999($net, $payload, $lqi) {
-            /* FW >= 3.1e
-               Extended Status: uint8_t */
-            $extStatus = substr($payload, 0, 2);
+        // Dump EEPROM response (Abeille's FW >= AB01-0001)
+        function decodeAB07($net, $payload, $lqi) {
+            $idx = substr($payload, 0, 2);
+            $data = substr($payload, 2);
 
-            $zgId = substr($net, 7); // AbeilleX => X
-            $extra = '';
-            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['nPdu']))
-                $extra = ', NPDU='.$GLOBALS['zigate'.$zgId]['nPdu'];
-            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['aPdu']))
-                $extra .= ', APDU='.$GLOBALS['zigate'.$zgId]['aPdu'];
+            parserLog('debug', $net.', Type=AB06/EEPROM dump response'
+                .', Idx='.$idx
+                .', Data='.$data);
 
-            $decoded = '9999/Extended error'.', ExtStatus='.$extStatus.$extra;
-            parserLog('debug', $net.', Type='.$decoded);
+            $jTmpDir = jeedom::getTmpFolder("Abeille");
+            $outFile = $jTmpDir."/Abeille-EepromDump.bin";
+            if ($idx == 0)
+                $f = fopen($outFile, "wb");
+            else
+                $f = fopen($outFile, "ab");
+            if ($f === false) {
+                parserLog('debug', "  ERROR: Failed to open '$outFile'");
+                return;
+            }
+            fwrite($f, pack("H*", $data));
+            fclose($f);
         }
 
         // /**

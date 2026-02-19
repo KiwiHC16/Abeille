@@ -2374,6 +2374,19 @@
                     return;
                 }
 
+                // Zigate specifc: Command AB06 for FW >= AB01-0001
+                // Optional param: 'idx' for segment index
+                else if ($cmdName == 'zgAB06') {
+
+                    // Segment idx should be 0 to 63, or 255 for ALL segments
+                    $idx = isset($Command['cmdParams']['idx']) ? $Command['cmdParams']['idx'] : 255;
+                    cmdLog('debug', "  zgAB06: Idx=$idx");
+
+                    $data = sprintf("%02X", $idx);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB06", $data);
+                    return;
+                }
+
                 /*
                  * Zigbee standard commands
                  */

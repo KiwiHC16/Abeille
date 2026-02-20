@@ -81,6 +81,13 @@ $(".eqLogicDisplayCard").on("click", function () {
     refreshEqInfos();
 });
 
+// When switching tabs, the scrollable .eqLogic container auto-scrolls to the
+// newly visible tab pane, pushing the tab navigation out of view. Scroll back
+// to the top so the tabs remain visible.
+$('.eqLogic .nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function () {
+    $(this).closest('.eqLogic').scrollTop(0);
+});
+
 function refreshEqInfos() {
     console.log("refreshEqInfos(" + curEqId + ")");
     eqId = curEqId;

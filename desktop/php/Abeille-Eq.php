@@ -20,14 +20,16 @@
 ?>
 
 <div class="col-xs-12 eqLogic" style="display: none;">
-    <!-- Sticky wrapper: keeps buttons + tabs visible at top of scrollable container -->
+    <!-- Sticky wrapper: keeps buttons + tabs visible at top of scrollable container.
+         Jeedom's initRowOverflow() makes .eqLogic scrollable (fixed height + overflow-y:auto).
+         The buttons+tabs exceed the 50px reserved by .tab-content's max-height, so .eqLogic scrolls
+         and the tabs disappear. Sticky positioning keeps them pinned at top. -->
     <style>
         .eqLogic .ab-sticky-header {
             position: sticky;
             top: 0;
             z-index: 10;
-            background: var(--bg-color, #fff);
-            padding-bottom: 2px;
+            background: rgb(var(--bg-color, 255, 255, 255));
         }
     </style>
     <div class="ab-sticky-header">

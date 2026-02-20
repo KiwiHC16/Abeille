@@ -81,6 +81,17 @@ $(".eqLogicDisplayCard").on("click", function () {
     refreshEqInfos();
 });
 
+// Fix: when switching tabs, the browser scrolls to the anchor target, hiding
+// the tab bar. Use scrollIntoView on the nav-tabs after tab switch to ensure
+// the tabs remain visible regardless of which ancestor container scrolled.
+$(document).on('click', '.eqLogic .nav-tabs a[data-toggle="tab"]', function () {
+    var navTabs = $(this).closest('.nav-tabs')[0];
+    // Multiple timeouts to catch async browser scroll at different timings
+    setTimeout(function () { navTabs.scrollIntoView({block: 'nearest', behavior: 'instant'}); }, 0);
+    setTimeout(function () { navTabs.scrollIntoView({block: 'nearest', behavior: 'instant'}); }, 50);
+    setTimeout(function () { navTabs.scrollIntoView({block: 'nearest', behavior: 'instant'}); }, 150);
+});
+
 function refreshEqInfos() {
     console.log("refreshEqInfos(" + curEqId + ")");
     eqId = curEqId;

@@ -20,19 +20,6 @@
 ?>
 
 <div class="col-xs-12 eqLogic" style="display: none;">
-    <!-- Sticky wrapper: keeps buttons + tabs visible at top of scrollable container.
-         Jeedom's initRowOverflow() makes .eqLogic scrollable (fixed height + overflow-y:auto).
-         The buttons+tabs exceed the 50px reserved by .tab-content's max-height, so .eqLogic scrolls
-         and the tabs disappear. Sticky positioning keeps them pinned at top. -->
-    <style>
-        .eqLogic .ab-sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            background: rgb(var(--bg-color, 255, 255, 255));
-        }
-    </style>
-    <div class="ab-sticky-header">
     <div class="input-group pull-right" style="display:inline-flex">
 		<span class="input-group-btn">
 			<a class="btn btn-success eqLogicAction btn-sm roundedLeft" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a>
@@ -48,7 +35,6 @@
         <li role="presentation"               ><a href="#idAdvanced" aria-controls="home" role="tab" data-toggle="tab">                                            <i class="fas fa-list-alt">         </i> {{Avancé}}     </a></li>
         <li role="presentation"               ><a href="#idCommands" aria-controls="home" role="tab" data-toggle="tab">                                            <i class="fas fa-align-left">       </i> {{Commandes}}  </a></li>
     </ul>
-    </div> <!-- End ab-sticky-header -->
 
     <div class="tab-content">
         <!-- Displays Jeedom specifics  -->

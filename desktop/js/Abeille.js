@@ -81,11 +81,14 @@ $(".eqLogicDisplayCard").on("click", function () {
     refreshEqInfos();
 });
 
-// When switching tabs, the scrollable .eqLogic container auto-scrolls to the
-// newly visible tab pane, pushing the tab navigation out of view. Scroll back
-// to the top so the tabs remain visible.
-$('.eqLogic .nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function () {
-    $(this).closest('.eqLogic').scrollTop(0);
+// Jeedom's initRowOverflow() makes .eqLogic a scrollable container (fixed
+// height + overflow-y:auto). When switching tabs the browser auto-scrolls the
+// container to the newly visible tab pane, pushing the tab bar out of view.
+// Use event delegation + setTimeout so the scrollTop reset runs after the
+// browser's asynchronous scroll-into-view.
+$(document).on('click', '.eqLogic .nav-tabs a[data-toggle="tab"]', function () {
+    var container = $(this).closest('.eqLogic');
+    setTimeout(function () { container.scrollTop(0); }, 0);
 });
 
 function refreshEqInfos() {

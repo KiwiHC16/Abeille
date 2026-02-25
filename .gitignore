@@ -64,3 +64,4 @@ AbeilleLQI_MapDataAbeille5.json.lock
 .settings/org.eclipse.wst.common.project.facet.core.xml
 
 .DS_Store
+__pycache__/

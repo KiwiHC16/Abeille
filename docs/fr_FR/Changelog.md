@@ -10,6 +10,7 @@
 - Amélioration: Support Tuya: 'rcvValue' peut etre combiné avec 'mult' et/ou 'div'.
 - Amélioration: Ajout 'status' interne Zigbee 'joined' or 'left' + 'status_time'.
 - Amélioration: Interne. Support dump EEPROM avec FW >= AB01-0001.
+- Amélioration: Interne. Support PDM max size avec FW >= AB01-0001.
 
 ## 260202-STABLE-1, 260125-BETA-1
 

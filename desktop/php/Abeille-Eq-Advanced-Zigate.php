@@ -200,7 +200,16 @@
     </div>
 </div>
 
-<!-- PDM dump => Only with Abeille firmwares (version 'ABxxyyyy') and currently in dev mode -->
+<div class="form-group">
+    <label class="col-sm-3 control-label">Get devices list (0015)</label>
+    <div class="col-sm-5">
+        <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgGetDevicesList', '')" title="{{Cmd 0015/get devices list}}">{{Interroger}}</a>
+    </div>
+</div>
+
+<!-- Commands available with Abeille's specific FW (version 'ABxxyyyy') >= AB01-0001 -->
+
+<!-- Other commands available with Abeille's specific FW and dev mode -->
 <?php if (isset($dbgDeveloperMode)) { ?>
     <div class="form-group">
         <label class="col-sm-3 control-label">DEV MODE: {{Sauvegarde PDM}}</label>
@@ -215,12 +224,6 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label">DEV MODE: Get devices list (0015)</label>
-        <div class="col-sm-5">
-            <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgGetDevicesList', '')" title="{{Cmd 0015/get devices list}}">{{Interroger}}</a>
-        </div>
-    </div>
-    <div class="form-group">
         <label class="col-sm-3 control-label">DEV MODE: Get infos (AB05)</label>
         <div class="col-sm-5">
             <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgAB05', '')" title="{{Cmd AB05}}">{{Interroger}}</a>
@@ -231,6 +234,13 @@
         <div class="col-sm-5">
             <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgAB06', '')" title="{{Cmd AB06}}">{{Interroger}}</a>
             <input id="idDEIdx" title="{{Segment index (Décimal: 0 to 63)}}" value="" style="width:30px; margin-left: 4px" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">DEV MODE: Get max PDM entries (AB08)</label>
+        <div class="col-sm-5">
+            <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgAB08', '')" title="{{Cmd AB08}}">{{Interroger}}</a>
+            <input id="idPdmId" title="{{PDM ID (4B, hexa)}}" value="" style="width:40px; margin-left: 4px" />
         </div>
     </div>
 <?php } ?>

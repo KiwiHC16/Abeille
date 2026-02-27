@@ -1797,6 +1797,11 @@ function sendZigate(action, param) {
             idx = document.getElementById("idDEIdx").value;
             if (idx != "") payload = "idx=" + idx;
             break;
+        case "zgAB08": // FW >= AB01-0001. Cmd AB08 = Get PDM table max entries
+            topic = "CmdAbeille" + zgId + "/0000/zgAB08";
+            pdmId = document.getElementById("idPdmId").value;
+            if (pdmId != "") payload = "pdmId=" + pdmId;
+            break;
         default:
             console.log("ERROR: Unsupported action '" + action + "'");
             return; // Nothing to do

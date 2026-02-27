@@ -2387,6 +2387,21 @@
                     return;
                 }
 
+                // Zigate specifc: Command AB08 for FW >= AB01-0001
+                // Mandatory param: 'pdmId' for PDM ID
+                else if ($cmdName == 'zgAB08') {
+                    $required = ['pdmId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // PDM ID:
+                    $pdmId = $Command['cmdParams']['pdmId'];
+                    cmdLog('debug', "  zgAB08: PdmId=$pdmId");
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB08", $pdmId);
+                    return;
+                }
+
                 /*
                  * Zigbee standard commands
                  */

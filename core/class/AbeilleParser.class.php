@@ -5704,6 +5704,17 @@
             fclose($f);
         }
 
+        // PDM table max entries response (Abeille's FW >= AB01-0001)
+        function decodeAB09($net, $payload, $lqi) {
+            $pdmId = substr($payload, 0, 4);
+            $max = substr($payload, 4, 2);
+
+            parserLog('debug', $net.', Type=AB09/PDM table max response'
+                .', PDMID='.$pdmId
+                .', Max='.$max);
+
+        }
+
         // /**
         //  * WHile processing AbeilleParser can schedule action by adding action in the queue like for exemple:
         //  * $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$ieee );

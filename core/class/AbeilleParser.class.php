@@ -5622,7 +5622,7 @@
             parserLog('debug', $net.', Type='.$decoded);
         }
 
-        // PDM dump response (Abeille's firmware only)
+        // PDM dump response (Abeille's firmware only >= AB01-0000)
         function decodeAB01($net, $payload, $lqi) {
             $id = substr($payload, 0, 4);
             $status = substr($payload, 4, 2); // 00=OK, 01=does not exist, 02=Found but truncated
@@ -5650,7 +5650,7 @@
             );
 
             if ($last) {
-                // Dump to file 'tmp/AbeillePdm-AbeilleX.json'
+                // Dump to file '/tmp/jeedom/Abeille/AbeillePdm-AbeilleX.json'
                 $table = [];
                 $table['signature'] = "Abeille PDM tables";
                 $table['net'] = $net;
@@ -5658,7 +5658,8 @@
                 $table['fwVersion'] = $GLOBALS['zigate'.$zgId]['fwVersionMaj'].'-'.$GLOBALS['zigate'.$zgId]['fwVersionMin'];
                 $table['pdms'] = $GLOBALS['zigate'.$zgId]['pdms'];
                 $json = json_encode($table);
-                file_put_contents(__DIR__."/../../tmp/AbeillePdm-".$net.".json", $json);
+                $jTmpDir = jeedom::getTmpFolder("Abeille");
+                file_put_contents("$jTmpDir/AbeillePdm-".$net.".json", $json);
             }
         }
 
@@ -5691,7 +5692,7 @@
                 .', Data='.$data);
 
             $jTmpDir = jeedom::getTmpFolder("Abeille");
-            $outFile = $jTmpDir."/Abeille-EepromDump.bin";
+            $outFile = $jTmpDir."/AbeilleEEPROM-$net.bin";
             if ($idx == 0)
                 $f = fopen($outFile, "wb");
             else

@@ -17,6 +17,7 @@
 // Note: 'eqId' seems overwritten somewhere.
 var curEqId = -1;
 var curEq = {}; // Updated by refreshEqInfos()
+var curZgId = -1;
 
 // console.log("LA1 eqId=", curEqId);
 
@@ -100,6 +101,7 @@ function refreshEqInfos() {
 
             // Updating global infos
             zgId = curEq.zgId;
+            curZgId = curEq.zgId;
             eqAddr = curEq.addr;
             eqIeee = curEq.ieee;
             eqBatteryType = curEq.batteryType;
@@ -2731,4 +2733,16 @@ function resetPiZigate() {
         global: false,
         success: function (json_res) {},
     });
+}
+
+/* Download PDM (need to be saved first) */
+function downloadPdm() {
+    path = js_jTmpDir + "/AbeillePdm-Abeille" + curZgId + ".json";
+    window.open(
+        "plugins/Abeille/core/php/AbeilleDownload.php?pathfile=" +
+            path +
+            "&addext=json",
+        "_blank",
+        null,
+    );
 }

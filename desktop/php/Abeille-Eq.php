@@ -3,6 +3,8 @@
 
 <?php
     $jTmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+
+    // Passing some infos to javascript
     echo '<script>';
     echo 'let js_jTmpDir = "'.$jTmpDir.'";';
     echo '</script>';

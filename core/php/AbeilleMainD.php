@@ -1294,11 +1294,6 @@
                 logMessage('debug', "    ERROR: No zigate for network ".$net);
                 return;
             }
-            // $ieee = $eqLogic->getConfiguration('IEEE', '');
-            // if (($ieee != '') && ($ieee != $msg['ieee'])) {
-            //     logMessage('debug', "  ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
-            //     return;
-            // }
             $curIeee = $eqLogic->getConfiguration('IEEE', '');
             if ($curIeee != $msg['ieee']) {
                 $eqLogic->setConfiguration('IEEE', $msg['ieee']);

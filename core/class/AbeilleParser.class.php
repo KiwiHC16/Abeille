@@ -4612,7 +4612,7 @@
             $msgDecoded = '8009/Network state response, Addr='.$addr.', ExtAddr='.$extAddr.', PANId='.$panId.', ExtPANId='.$extPanId.', Chan='.$chan;
             parserLog2('debug', $addr, $dest.', Type='.$msgDecoded, "8009");
 
-            $this->whoTalked[] = $dest.'/'.$addr;
+            // $this->whoTalked[] = $dest.'/'.$addr;
 
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))

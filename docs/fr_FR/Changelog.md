@@ -12,6 +12,7 @@
 - Amélioration: Interne. Support dump EEPROM avec FW >= AB01-0001.
 - Amélioration: Interne. Support PDM max size avec FW >= AB01-0001.
 - Amélioration: Interne. Ajout 'show_pdm.php' pour analyse DUMP PDM.
+- Amélioration: Onglet 'avancé' d'une Zigate pour FW >= AB01-0001.
 
 ## 260202-STABLE-1, 260125-BETA-1
 

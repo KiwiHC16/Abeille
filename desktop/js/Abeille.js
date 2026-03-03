@@ -18,6 +18,7 @@
 var curEqId = -1;
 var curEq = {}; // Updated by refreshEqInfos()
 var curZgId = -1;
+var curFwVersion = 0; // Integer
 
 // console.log("LA1 eqId=", curEqId);
 
@@ -95,13 +96,28 @@ function refreshEqInfos() {
         success: function (json_res) {
             // console.log("json_res=", json_res);
             res = JSON.parse(json_res.result);
-            eq = res.eq;
+            eq = res.eq; // Obsolete. Use 'curEq' instead
             curEq = res.eq;
             console.log("curEq=", curEq);
 
             // Updating global infos
-            zgId = curEq.zgId;
+            zgId = curEq.zgId; // Obsolete. Use 'curZgId' instead
             curZgId = curEq.zgId;
+            if (typeof curEq.cmds["FW-Version"] != "undefined") {
+                // Version format = MMMM-nnnn (ex: AB01-0000)
+                cmd = curEq.cmds["FW-Version"];
+                // console.log("cmd=", cmd);
+                fwVersion = cmd.val;
+                // console.log("fwVersion=", fwVersion, typeof fwVersion);
+                fwVersion =
+                    fwVersion.substring(0, 4) + fwVersion.substring(5, 9);
+                fwVersionInt = parseInt(fwVersion, 16);
+                console.log(
+                    "fwVersion=" + fwVersion + "=> fwVersionInt=",
+                    fwVersionInt,
+                );
+            }
+
             eqAddr = curEq.addr;
             eqIeee = curEq.ieee;
             eqBatteryType = curEq.batteryType;
@@ -310,6 +326,20 @@ function refreshEqInfos() {
                     else jeedom.cmd.update[cmdId] = updateInfoCmd;
                     console.log("jeedom.cmd.update=", jeedom.cmd.update);
                 }
+            }
+
+            // Enabling div if proper FW version
+            const divList = document.querySelectorAll("[ifFwGt]"); // All with attribute named "ifFwGt"
+            for (let i = 0; i < divList.length; i++) {
+                divElm = divList[i];
+                divFwVersionInt = parseInt(divElm.getAttribute("ifFwGt"), 16);
+                // console.log(
+                //     "divFwVersionInt=",
+                //     divFwVersionInt,
+                //     typeof divFwVersionInt,
+                // );
+                if (divFwVersionInt >= fwVersionInt)
+                    divElm.style.display = "block";
             }
 
             // Settings default EP

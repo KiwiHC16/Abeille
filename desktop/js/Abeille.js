@@ -19,6 +19,7 @@ var curEqId = -1;
 var curEq = {}; // Updated by refreshEqInfos()
 var curZgId = -1;
 var curFwVersion = 0; // Integer
+var curEqAddr = "";
 
 // console.log("LA1 eqId=", curEqId);
 
@@ -117,18 +118,9 @@ function refreshEqInfos() {
                     fwVersionInt,
                 );
             }
-
-            eqAddr = curEq.addr;
-            eqIeee = curEq.ieee;
-            eqBatteryType = curEq.batteryType;
-            // curEq = {
-            //     zigbee: {
-            //         addr: eq.addr,
-            //     },
-            //     model: {
-            //         modelName: eq.model.modelName,
-            //     },
-            // };
+            curEqAddr = curEq.addr;
+            curEqIeee = curEq.ieee;
+            curEqBatteryType = curEq.batteryType;
 
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
@@ -269,7 +261,7 @@ function refreshEqInfos() {
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
             devPart = document.getElementById("idAdvDevices");
-            if (eq.addr == "0000") {
+            if (curEq.addr == "0000") {
                 zgPart.style.display = "block";
                 devPart.style.display = "none";
             } else {
@@ -328,18 +320,23 @@ function refreshEqInfos() {
                 }
             }
 
-            // Enabling div if proper FW version
-            const divList = document.querySelectorAll("[ifFwGt]"); // All with attribute named "ifFwGt"
-            for (let i = 0; i < divList.length; i++) {
-                divElm = divList[i];
-                divFwVersionInt = parseInt(divElm.getAttribute("ifFwGt"), 16);
-                // console.log(
-                //     "divFwVersionInt=",
-                //     divFwVersionInt,
-                //     typeof divFwVersionInt,
-                // );
-                if (divFwVersionInt >= fwVersionInt)
-                    divElm.style.display = "block";
+            // Zigate only case: Enabling div if proper FW version
+            if (curEq.addr == "0000") {
+                const divList = document.querySelectorAll("[ifFwGt]"); // All with attribute named "ifFwGt"
+                for (let i = 0; i < divList.length; i++) {
+                    divElm = divList[i];
+                    divFwVersionInt = parseInt(
+                        divElm.getAttribute("ifFwGt"),
+                        16,
+                    );
+                    // console.log(
+                    //     "divFwVersionInt=",
+                    //     divFwVersionInt,
+                    //     typeof divFwVersionInt,
+                    // );
+                    if (fwVersionInt >= divFwVersionInt)
+                        divElm.style.display = "block";
+                }
             }
 
             // Settings default EP
@@ -661,7 +658,7 @@ function removeEq(zgId, eqId) {
 
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
     eqName = eqPerZigate[zgId][eqId]["name"];
-    eqAddr = eqPerZigate[zgId][eqId]["addr"];
+    // eqAddr = eqPerZigate[zgId][eqId]["addr"];
     // eqAddrList = new Array();
     // eqAddrList.push(eqAddr);
 
@@ -1324,7 +1321,7 @@ $("#idUpdateBtn").on("click", function () {
     msg += "- Mettre à jour l'équipement Jeedom à partir de son modèle<br>";
     msg += "- Et reconfigurer l'équipement<br>";
     msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
-    if (eqBatteryType != "") {
+    if (curEqBatteryType != "") {
         msg +=
             "<br><br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}";
     }
@@ -1347,7 +1344,6 @@ $("#idUpdateBtn").on("click", function () {
     WARNING: If battery powered, device must be wake up. */
 $("#idReinitBtn").on("click", function () {
     console.log("reinit(" + curEqId + ")");
-    eqId = curEqId;
 
     var msg = "{{Vous êtes sur le point de}}<br>";
     msg +=
@@ -1358,7 +1354,7 @@ $("#idReinitBtn").on("click", function () {
     msg +=
         "Attention ! Les commandes seront en ligne avec le dernier modèle, et vous pourriez être obligé de revoir les scénaris utilisant cet équipement.<br>";
 
-    if (eqBatteryType != "") {
+    if (curEqBatteryType != "") {
         msg +=
             "<br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}<br>";
     }
@@ -1370,7 +1366,7 @@ $("#idReinitBtn").on("click", function () {
         xhttp.open(
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
-                eqId,
+                curEqId,
             false,
         );
         xhttp.send();
@@ -1497,7 +1493,7 @@ $("#idModelChangeBtn").on("click", function () {
 
         // Ask confirmation (+ ask to wake up the equipment if it is on battery)
         var strSuppBatterie = "";
-        if (eqBatteryType != "") {
+        if (curEqBatteryType != "") {
             strSuppBatterie =
                 "<br><br><strong>Attention: </strong>{{Comme cet équipement fonctionne sur batterie, vous devez le réveiller immédiatement après avoir cliqué sur OK.}}";
         }
@@ -2119,7 +2115,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
 function interrogate(request) {
     console.log("interrogate(" + request + ")");
 
-    logicalId = "Abeille" + zgId + "_" + eqAddr;
+    logicalId = "Abeille" + zgId + "_" + curEqAddr;
     if (request == "getRoutingTable") {
         topic = "Cmd" + logicalId + "_getRoutingTable";
         payload = "";
@@ -2136,7 +2132,7 @@ function interrogate(request) {
         payload = "startIndex=" + startIdx;
     } else if (request == "getActiveEndPoints") {
         topic = "Cmd" + logicalId + "_getActiveEndpoints";
-        payload = "addr=" + eqAddr;
+        payload = "addr=" + curEqAddr;
     } else if (request == "getSimpleDescriptor") {
         topic = "Cmd" + logicalId + "_getSimpleDescriptor";
         ep = document.getElementById("idEpSDR").value;
@@ -2166,7 +2162,7 @@ function interrogate(request) {
         }
     } else if (request == "leaveRequest") {
         topic = "Cmd" + logicalId + "_LeaveRequest";
-        payload = "IEEE=" + eqIeee;
+        payload = "IEEE=" + curEqIeee;
     } else if (request == "readReportingConfig") {
         topic = "Cmd" + logicalId + "_readReportingConfig";
         ep = document.getElementById("idEp").value;
@@ -2174,7 +2170,7 @@ function interrogate(request) {
         attrId = document.getElementById("idAttrId").value;
         payload =
             "addr=" +
-            eqAddr +
+            curEqAddr +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2238,7 +2234,7 @@ function interrogate(request) {
         dir = document.getElementById("idDir-DiscoverCmdRx").value;
         payload =
             "addr=" +
-            eqAddr +
+            curEqAddr +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2262,7 +2258,7 @@ function interrogate(request) {
         start = "00";
         payload =
             "addr=" +
-            eqAddr +
+            curEqAddr +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2277,7 +2273,7 @@ function interrogate(request) {
         destEp = document.getElementById("idEpE2").value;
         payload =
             "addr=" +
-            eqIeee +
+            curEqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2294,7 +2290,7 @@ function interrogate(request) {
         destEp = document.getElementById("idEpDst-UBD").value;
         payload =
             "addr=" +
-            eqIeee +
+            curEqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2310,7 +2306,7 @@ function interrogate(request) {
         destGroup = document.getElementById("idGroupF").value;
         payload =
             "addr=" +
-            eqIeee +
+            curEqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2324,7 +2320,7 @@ function interrogate(request) {
         destGroup = document.getElementById("idGroup-UBG").value;
         payload =
             "addr=" +
-            eqIeee +
+            curEqIeee +
             "_ep=" +
             ep +
             "_clustId=" +

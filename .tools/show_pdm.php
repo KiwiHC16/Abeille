@@ -24,7 +24,7 @@
                 echo "  ERROR: Unexpected size. Not a multiple of 20B\n";
             }
             $nbEntries = $len / 40;
-            echo "  Child table: $nbEntries entries\n";
+            $nbUsed = 0;
             for ($i = 0; $i < $len; ) {
                 // zps_tsNwkSlistNode sNode;  /**< Single linked list node */
                 // uint16 u16Lookup;         /**< Extended address */
@@ -57,29 +57,40 @@
                 $i += 8; // Skip 2 additional bytes
 
                 echo "  Addr=$nwkAddr, Age=$age\n";
+                if ($nwkAddr != "FFFE")
+                    $nbUsed++;
             }
+            echo "  Child table: Max $nbEntries entries, $nbUsed used\n";
         } else if ($pdmId == "F102") { // SHORT_ADDRESS_MAP
             if ($len % 4) { // Each entry is 16-bits/2Bytes
                 echo "  ERROR: Unexpected size. Not a multiple of 2B\n";
             }
             $nbEntries = $len / 4;
-            echo "  SHORT_ADDRESS_MAP: $nbEntries entries\n";
+            $nbUsed = 0;
             for ($i = 0; $i < $len; ) {
                 $nwkAddr = substr($data, $i, 4);
-                echo "  Addr=$nwkAddr\n";
                 $i += 4; // Skip u16NwkAddr/2 Bytes
+
+                echo "  Addr=$nwkAddr\n";
+                if ($nwkAddr != "FFFE")
+                    $nbUsed++;
             }
+            echo "  SHORT_ADDRESS_MAP: Max $nbEntries entries, $nbUsed used\n";
         } else if ($pdmId == "F103") { // NWK_ADDRESS_MAP
             if ($len % 16) { // Each entry is 64-bits/8Bytes
                 echo "  ERROR: Unexpected size. Not a multiple of 8B\n";
             }
             $nbEntries = $len / 16;
-            echo "  NWK_ADDRESS_MAP: $nbEntries entries\n";
+            $nbUsed = 0;
             for ($i = 0; $i < $len; ) {
                 $ieeeAddr = substr($data, $i, 16);
-                echo "  Addr=$ieeeAddr\n";
                 $i += 16; // Skip ieeeAddr/8 Bytes
+
+                echo "  Addr=$ieeeAddr\n";
+                if ($ieeeAddr != "0000000000000000")
+                    $nbUsed++;
             }
+            echo "  NWK_ADDRESS_MAP: Max $nbEntries entries, $nbUsed used\n";
         }
     }
 ?>

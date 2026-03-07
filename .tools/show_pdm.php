@@ -1,8 +1,16 @@
 <?php
     /*
      * Display content of AbeillePdm-AbeilleX.json
-     * Tcharp38
+     * (C) Tcharp38
      */
+
+    $logPath = "";
+
+    function echoAndLog($msg) {
+        echo "$msg";
+        global $logPath;
+        file_put_contents($logPath, $msg, FILE_APPEND);
+    }
 
     /* JSON is given thru cmd line */
     $pdmPath = "";
@@ -10,18 +18,26 @@
         $pdmPath = $argv[$i];
     }
 
+    // echo "$pdmPath\n";
+    $pos = strrpos($pdmPath, '.');
+    $noExtension = substr($pdmPath, 0, $pos);
+    $logPath = "$noExtension.decoded";
+    // echo "$logPath\n";
+    unlink($logPath);
+    // exit(12);
+
     $jsonContent = file_get_contents($pdmPath);
     $content = json_decode($jsonContent, true);
     $pdms = $content['pdms'];
     foreach ($pdms as $pdmId => $pdm) {
         $size = $pdm['size'];
         $data = $pdm['data'];
-        echo "$pdmId: $size $data\n";
+        echoAndLog("$pdmId: $size $data\n");
 
         $len = strlen($data);
         if ($pdmId == "F101") { // Child table
             if ($len % 40) {
-                echo "  ERROR: Unexpected size. Not a multiple of 20B\n";
+                echoAndLog("  ERROR: Unexpected size. Not a multiple of 20B\n");
             }
             $nbEntries = $len / 40;
             $nbUsed = 0;
@@ -54,16 +70,16 @@
                 $i += 2; // Skip i8TXPower/1 Byte
                 $i += 2; // Skip u8MacID/1 Byte
                 $i += 4; // Skip au8Field/2 Bytes
-                $i += 8; // Skip 2 additional bytes
+                $i += 8; // Skip 4 alignment bytes
 
-                echo "  Addr=$nwkAddr, Age=$age\n";
+                echoAndLog("  Addr=$nwkAddr, Age=$age\n");
                 if ($nwkAddr != "FFFE")
                     $nbUsed++;
             }
-            echo "  Child table: Max $nbEntries entries, $nbUsed used\n";
+            echoAndLog("  Child table: Max $nbEntries entries, $nbUsed used\n");
         } else if ($pdmId == "F102") { // SHORT_ADDRESS_MAP
             if ($len % 4) { // Each entry is 16-bits/2Bytes
-                echo "  ERROR: Unexpected size. Not a multiple of 2B\n";
+                echoAndLog("  ERROR: Unexpected size. Not a multiple of 2B\n");
             }
             $nbEntries = $len / 4;
             $nbUsed = 0;
@@ -71,14 +87,14 @@
                 $nwkAddr = substr($data, $i, 4);
                 $i += 4; // Skip u16NwkAddr/2 Bytes
 
-                echo "  Addr=$nwkAddr\n";
+                echoAndLog("  Addr=$nwkAddr\n");
                 if ($nwkAddr != "FFFE")
                     $nbUsed++;
             }
-            echo "  SHORT_ADDRESS_MAP: Max $nbEntries entries, $nbUsed used\n";
+            echoAndLog("  SHORT_ADDRESS_MAP: Max $nbEntries entries, $nbUsed used\n");
         } else if ($pdmId == "F103") { // NWK_ADDRESS_MAP
             if ($len % 16) { // Each entry is 64-bits/8Bytes
-                echo "  ERROR: Unexpected size. Not a multiple of 8B\n";
+                echoAndLog("  ERROR: Unexpected size. Not a multiple of 8B\n");
             }
             $nbEntries = $len / 16;
             $nbUsed = 0;
@@ -86,11 +102,11 @@
                 $ieeeAddr = substr($data, $i, 16);
                 $i += 16; // Skip ieeeAddr/8 Bytes
 
-                echo "  Addr=$ieeeAddr\n";
+                echoAndLog("  Addr=$ieeeAddr\n");
                 if ($ieeeAddr != "0000000000000000")
                     $nbUsed++;
             }
-            echo "  NWK_ADDRESS_MAP: Max $nbEntries entries, $nbUsed used\n";
+            echoAndLog("  NWK_ADDRESS_MAP: Max $nbEntries entries, $nbUsed used\n");
         }
     }
 ?>

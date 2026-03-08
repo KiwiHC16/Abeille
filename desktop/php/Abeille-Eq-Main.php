@@ -86,6 +86,7 @@
             <div class="col-lg-3">
                 <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>{{Activer}}</label>
                 <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
+                <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="criticalTimeout"/>{{Critique}}</label>
             </div>
             <div class="col-lg-4">
             </div>

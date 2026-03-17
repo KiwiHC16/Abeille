@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 260317-BETA-1
+
 - Améliorations: Interne, parser: Code specific Xiaomi nettoyé.
 - Correction: Xiaomi WSDCGQ11LM: Pression revue (2784).
 - Amélioration: Cmde pression 'inf_zbAttr-0403-MeasuredValue' => 'inf_zbAttr-0403-MeasuredValue-hPa'.

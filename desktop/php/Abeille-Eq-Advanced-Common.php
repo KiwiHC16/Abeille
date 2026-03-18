@@ -32,7 +32,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
     <div advInfo="Time-Time" class="col-sm-5">
-        <input type="text" id="tofill" value="tofill" readonly>
+        <input type="text" value="" readonly>
     </div>
 </div>
 

@@ -121,7 +121,7 @@
         <div class="form-group">
             <label class="col-lg-3 control-label">{{Qualité du lien}} (LQI, 1-255)</label>
             <div advInfo="Link-Quality" class="col-lg-3">
-                <input type="text" id="tofill" value="tofill" readonly style="width:100%">
+                <input type="text" id="tofill" value="" readonly style="width:100%">
             </div>
             <!-- <div class="col-lg-3">
                 < ?php

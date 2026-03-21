@@ -719,7 +719,7 @@ function removeEq(zgId, eqId) {
                             }
                             modifyWithoutSave = false;
                             url += "removeSuccessFull=1";
-                            jeedomUtils.loadPage(url);
+                            loadPage(url);
                         },
                     });
                 }

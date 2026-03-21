@@ -92,6 +92,9 @@
             <!-- Gestion des ReHome / migration d equipements  -->
             <?php include 'Abeille-MigrateEq.php'; ?>
 
+            <!-- Changement d'adresse courte -->
+            <?php include 'Abeille-ChangeAddr.php'; ?>
+
             <?php include 'Abeille-NewZigate.php'; ?>
 
             <?php if (isset($dbgDeveloperMode)) { ?>

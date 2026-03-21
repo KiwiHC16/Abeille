@@ -959,6 +959,55 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Change short address of an equipment (update logicalId) */
+        if (init('action') == 'changeShortAddr') {
+            $eqId = init('eqId');
+            $newAddr = strtoupper(init('newAddr'));
+
+            $status = 0;
+            $error = "";
+
+            $eqLogic = Abeille::byId($eqId);
+            if (!is_object($eqLogic)) {
+                $status = -1;
+                $error = "Equipement inconnu (id ".$eqId.")";
+            }
+
+            if ($status == 0) {
+                // Validate new address format (4 hex chars)
+                if (!preg_match('/^[0-9A-F]{4}$/', $newAddr)) {
+                    $status = -1;
+                    $error = "Adresse invalide '".$newAddr."'. 4 caractères hexadécimaux attendus.";
+                }
+            }
+
+            if ($status == 0) {
+                list($net, $oldAddr) = explode('/', $eqLogic->getLogicalId());
+
+                if ($oldAddr == $newAddr) {
+                    $status = -1;
+                    $error = "La nouvelle adresse est identique à l'actuelle (".$oldAddr.").";
+                }
+            }
+
+            // Check no other equipment already uses this address on the same network
+            if ($status == 0) {
+                $existing = eqLogic::byLogicalId($net.'/'.$newAddr, 'Abeille');
+                if (is_object($existing)) {
+                    $status = -1;
+                    $error = "L'adresse ".$newAddr." est déjà utilisée sur ".$net." par '".$existing->getName()."'.";
+                }
+            }
+
+            if ($status == 0) {
+                log::add('Abeille', 'info', 'changeShortAddr: '.$eqLogic->getName().' ('.$net.'/'.$oldAddr.' => '.$net.'/'.$newAddr.')');
+                $eqLogic->setLogicalId($net.'/'.$newAddr);
+                $eqLogic->save();
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
             Instead 'success' callback is used. This means that
             - take care of error code returned

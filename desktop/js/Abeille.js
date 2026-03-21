@@ -1018,6 +1018,67 @@ function migrateEq() {
 //         .dialog("open");
 // }
 
+/* Change short address of an equipment */
+function changeShortAddr() {
+    console.log("changeShortAddr()");
+
+    var eqId = $("#idChangeAddrEq").val();
+    var newAddr = $("#idChangeAddrNew").val().trim().toUpperCase();
+
+    // Validate 4 hex chars
+    if (!/^[0-9A-F]{4}$/.test(newAddr)) {
+        alert("Adresse invalide. 4 caractères hexadécimaux attendus (0-9, A-F).");
+        return;
+    }
+
+    const selectedEq = document.querySelector("#idChangeAddrEq");
+    let selectedOption = selectedEq.options[selectedEq.selectedIndex];
+    var eqName = selectedOption.text;
+
+    // Extract current addr from option text "(XXXX)"
+    var match = eqName.match(/\(([0-9A-Fa-f]{4})\)$/);
+    var curAddr = match ? match[1] : "?";
+
+    if (curAddr.toUpperCase() == newAddr) {
+        alert("La nouvelle adresse est identique à l'actuelle.");
+        return;
+    }
+
+    var msg = "{{Vous souhaitez changer l'adresse courte de}}<br> - " + eqName +
+        "<br>{{de}} <b>" + curAddr + "</b> {{vers}} <b>" + newAddr + "</b>" +
+        "<br><br>{{Attention : cette opération ne modifie que Jeedom. L'adresse réelle du device ZigBee reste inchangée.}}" +
+        "<br>{{Utilisez cette fonction uniquement si vous savez que le device a changé d'adresse.}}" +
+        "<br><br>{{On y va ?}}";
+
+    bootbox.confirm(msg, function (result) {
+        if (result == false) return;
+
+        $.ajax({
+            type: "POST",
+            url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+            data: {
+                action: "changeShortAddr",
+                eqId: eqId,
+                newAddr: newAddr,
+            },
+            dataType: "json",
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'changeShortAddr' !");
+            },
+            success: function (json_res) {
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    var msg = "ERREUR ! " + res.error;
+                    alert(msg);
+                } else {
+                    window.location.reload();
+                }
+            },
+        });
+    });
+}
+
 /* Confirm unknown zigate must be accepted. */
 function acceptNewZigate() {
     console.log("acceptNewZigate()");

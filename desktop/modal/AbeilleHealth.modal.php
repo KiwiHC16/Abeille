@@ -97,6 +97,25 @@
     </tbody>
 </table>
 
+<div id="div_duplicateIEEE" style="display:none; margin-top:20px;">
+    <legend><i class="fas fa-exclamation-triangle" style="color:orange;"></i> {{Adresses IEEE dupliquées}}</legend>
+    <table class="table table-condensed tablesorter" id="table_duplicateIEEE">
+        <thead>
+            <tr>
+                <th class="header">{{IEEE}}</th>
+                <th class="header">{{ID}}</th>
+                <th class="header">{{Réseau}}</th>
+                <th class="header">{{Equipement}}</th>
+                <th class="header">{{Type}}</th>
+                <th class="header">{{Adresse}}</th>
+                <th class="header">{{Status}}</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
 <script>
     function refreshHealth() {
         console.log("refreshHealth()");
@@ -236,6 +255,53 @@
 
                 $('#table_healthAbeille tbody').empty().append(tr);
                 $("#table_healthAbeille").tablesorter().trigger('update');
+
+                // Detect duplicate IEEE addresses
+                var ieeeMap = {}; // ieee => [{net, addr, e}, ...]
+                for (net in equipments) {
+                    if (net == "") continue;
+                    n = equipments[net];
+                    for (addr in n) {
+                        e = n[addr];
+                        if (e.ieee && e.ieee != '') {
+                            if (!ieeeMap[e.ieee])
+                                ieeeMap[e.ieee] = [];
+                            ieeeMap[e.ieee].push({net: net, addr: addr, e: e});
+                        }
+                    }
+                }
+                var trDup = '';
+                var hasDuplicates = false;
+                for (var ieee in ieeeMap) {
+                    if (ieeeMap[ieee].length < 2) continue;
+                    hasDuplicates = true;
+                    var items = ieeeMap[ieee];
+                    for (var i = 0; i < items.length; i++) {
+                        var it = items[i];
+                        var statusLabel;
+                        if (it.e.isEnabled == 0)
+                            statusLabel = '<span class="label label-default" style="font-size:1em;">{{Désactivé}}</span>';
+                        else if (it.e.timeout)
+                            statusLabel = '<span class="label label-danger" style="font-size:1em;">{{Time-out}}</span>';
+                        else
+                            statusLabel = '<span class="label label-success" style="font-size:1em;">{{OK}}</span>';
+                        trDup += '<tr style="background-color:' + (i == 0 ? '#fff3cd' : '#f8d7da') + ';">';
+                        trDup += '<td>' + (i == 0 ? '<strong>' + ieee + '</strong>' : '') + '</td>';
+                        trDup += '<td>' + it.e.jId + '</td>';
+                        trDup += '<td>' + it.net + '</td>';
+                        trDup += '<td><a href="' + it.e.link + '" style="text-decoration:none;">' + it.e.hName + '</a></td>';
+                        trDup += '<td>' + it.e.type + '</td>';
+                        trDup += '<td>' + it.addr + '</td>';
+                        trDup += '<td>' + statusLabel + '</td>';
+                        trDup += '</tr>';
+                    }
+                }
+                if (hasDuplicates) {
+                    $('#table_duplicateIEEE tbody').empty().append(trDup);
+                    $('#div_duplicateIEEE').show();
+                } else {
+                    $('#div_duplicateIEEE').hide();
+                }
             }
         });
     }

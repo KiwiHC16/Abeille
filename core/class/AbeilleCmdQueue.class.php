@@ -9,6 +9,9 @@
     // Tools: Caisse a outils de fonctions.
 
     include_once __DIR__.'/AbeilleCmdPrepare.class.php';
+
+    define('MAX_INFLIGHT', 3); // Max number of in-flight commands per Zigate
+    define('QUARANTINE_DURATION', 900); // 15 minutes quarantine for noack devices
     if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != ""))
         include_once __DIR__.'/../php/AbeilleMonitor.php'; // Tracing monitor for debug purposes
 
@@ -306,12 +309,25 @@
                 }
             }
 
-            // If priority is not PRIO_LOW & device TX status is 'NO ACK', moving to low priority queue to not delay cmds to other devices
-            if ($priority != PRIO_LOW) {
+            // Quarantine check: if device is quarantined, drop command entirely
+            if ($addr != '') {
                 $dev = &getDevice($net, $addr);
-                if (isset($dev['zigbee']['txStatus']) && ($dev['zigbee']['txStatus'] == 'noack')) {
-                    cmdLog('debug', "    Device is NO-ACK: Moving cmd to low priority queue");
-                    $priority = PRIO_LOW;
+                if (isset($dev['quarantineUntil']) && ($dev['quarantineUntil'] > time())) {
+                    $remaining = $dev['quarantineUntil'] - time();
+                    cmdLog('debug', "    Device {$addr} is QUARANTINED ({$remaining}s remaining) => cmd DROPPED");
+                    return;
+                }
+                // Clear expired quarantine
+                if (isset($dev['quarantineUntil']) && ($dev['quarantineUntil'] <= time())) {
+                    unset($dev['quarantineUntil']);
+                }
+
+                // If device TX status is 'NO ACK', moving to low priority queue
+                if ($priority != PRIO_LOW) {
+                    if (isset($dev['zigbee']['txStatus']) && ($dev['zigbee']['txStatus'] == 'noack')) {
+                        cmdLog('debug', "    Device is NO-ACK: Moving cmd to low priority queue");
+                        $priority = PRIO_LOW;
+                    }
                 }
             }
 
@@ -339,19 +355,28 @@
         } // End addCmdToQueue2()
 
         /**
-         * Find cmd (by ref) corresponding to SQNAPS
-         * Returns: Found matching cmd, or null
-         *  'lastSent' is true if cmd is the last sent one for this zigate.
+         * Remove a sent command from queue and adjust sentSlots indices.
          */
-        function &getCmd($zgId, $sqnAps, &$lastSent = false) {
-            $sentPri = $GLOBALS['zigates'][$zgId]['sentPri'];
-            $sentIdx = $GLOBALS['zigates'][$zgId]['sentIdx'];
+        function removeSentCmd($zgId, $pri, $idx, $slotKey) {
+            cmdLog('debug', "  removeSentCmd(zgId={$zgId}, Pri={$pri}, Idx={$idx}, Slot={$slotKey})");
+            array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri], $idx, 1);
+            array_splice($GLOBALS['zigates'][$zgId]['sentSlots'], $slotKey, 1);
+            // Adjust remaining slot indices that pointed into the same priority queue
+            foreach ($GLOBALS['zigates'][$zgId]['sentSlots'] as &$sl) {
+                if ($sl['pri'] == $pri && $sl['idx'] > $idx)
+                    $sl['idx']--;
+            }
+            unset($sl);
+        }
+
+        /**
+         * Find cmd (by ref) corresponding to SQNAPS
+         * Returns: Found matching cmd, or empty array
+         */
+        function &getCmd($zgId, $sqnAps) {
             foreach (range(priorityMax, priorityMin) as $prio) {
                 foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio] as $cmdIdx => $cmd) {
                     if ($cmd['sqnAps'] == $sqnAps) {
-                        // Is it the last sent cmd ?
-                        if (($cmdIdx == $sentIdx) && ($prio == $sentPri))
-                            $lastSent = true;
                         return $GLOBALS['zigates'][$zgId]['cmdQueue'][$prio][$cmdIdx];
                     }
                 }
@@ -433,7 +458,8 @@
             // cmdLog("debug", __FUNCTION__." AbeilleCmdQueue constructor, zigates:".json_encode($GLOBALS['zigates']), $this->debug["AbeilleCmdClass"] );
             // foreach ($GLOBALS['zigates'] as $zgId => $zg) {
             foreach ($GLOBALS['zigates'] as $zgId => $zg) {
-                $avail = $zg['available'] ? "idle" : "BUSY";
+                $inFlight = isset($zg['sentSlots']) ? count($zg['sentSlots']) : 0;
+                $avail = $inFlight == 0 ? "idle" : "BUSY({$inFlight}/" . MAX_INFLIGHT . ")";
 
                 $queuesTxt = '';
                 foreach (range(priorityMax, priorityMin) as $prio) {
@@ -464,30 +490,50 @@
                 if (!$zg['enabled'])
                     continue; // Disabled
 
-                // Checking if a cmd is ongoing (waiting for 8000 or APS ACK)
-                // Reminder for status: ''=unsent, 'SENT'=already sent
-                $sentPri = $zg['sentPri'];
-                $sentIdx = $zg['sentIdx'];
-                if (isset($zg['cmdQueue'][$sentPri]) && isset($zg['cmdQueue'][$sentPri][$sentIdx]) && ($zg['cmdQueue'][$sentPri][$sentIdx]['status'] != '')) {
-                    // There is a command under execution
-                    $cmd = $zg['cmdQueue'][$sentPri][$sentIdx];
-                    $timeout = $cmd['timeout'];
-                    if ($cmd['sentTime'] + $timeout > time())
-                        continue; // Timeout not reached yet
+                // Check timeouts on in-flight commands in sentSlots (reverse loop for safe splice)
+                $now = time();
+                for ($s = count($zg['sentSlots']) - 1; $s >= 0; $s--) {
+                    $slot = $zg['sentSlots'][$s];
+                    if (!isset($zg['cmdQueue'][$slot['pri']][$slot['idx']])) {
+                        // Orphan slot - remove it
+                        array_splice($GLOBALS['zigates'][$zgId]['sentSlots'], $s, 1);
+                        continue;
+                    }
+                    $cmd = $zg['cmdQueue'][$slot['pri']][$slot['idx']];
+                    if ($cmd['status'] == '' || $cmd['sentTime'] + $cmd['timeout'] > $now)
+                        continue; // Not sent yet or timeout not reached
 
-                    cmdLog("debug", "WARNING: processCmdQueues(): Zigate".$zgId." cmd ".$cmd['cmd']." {$timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
-                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
-                    $GLOBALS['zigates'][$zgId]['available'] = true;
-                    unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
+                    cmdLog("debug", "WARNING: processCmdQueues(): Zigate".$zgId." cmd ".$cmd['cmd']." ".$cmd['timeout']."s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => slot freed");
+                    $this->removeSentCmd($zgId, $slot['pri'], $slot['idx'], $s);
                 }
 
-                if (!$zg['available']) {
-                    if (isset($zg['availTime']) && ($zg['availTime'] <= microtime(true))) {
-                        $GLOBALS['zigates'][$zgId]['available'] = true; // Available again
-                        unset($GLOBALS['zigates'][$zgId]['availTime']);
-                    } else
-                        continue; // Still not available
+                // Also cleanup SENT commands waiting for 8011 that have timed out (no longer in sentSlots)
+                foreach (range(priorityMax, priorityMin) as $cleanPri) {
+                    for ($ci = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$cleanPri]) - 1; $ci >= 0; $ci--) {
+                        $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$cleanPri][$ci];
+                        if ($cmd['status'] != 'SENT' || $cmd['sqnAps'] == '')
+                            continue; // Not a sent-and-waiting-for-8011 command
+                        if ($cmd['sentTime'] + $cmd['timeout'] <= $now) {
+                            cmdLog("debug", "WARNING: processCmdQueues(): Zigate".$zgId." cmd ".$cmd['cmd']." to ".$cmd['addr']." 8011 TIMEOUT (SQNAPS=".$cmd['sqnAps'].") => removed from queue");
+                            array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$cleanPri], $ci, 1);
+                            // Adjust sentSlot indices
+                            foreach ($GLOBALS['zigates'][$zgId]['sentSlots'] as &$sl) {
+                                if ($sl['pri'] == $cleanPri && $sl['idx'] > $ci)
+                                    $sl['idx']--;
+                            }
+                            unset($sl);
+                        }
+                    }
                 }
+
+                // Check if we can send more commands
+                if (count($GLOBALS['zigates'][$zgId]['sentSlots']) >= MAX_INFLIGHT) {
+                    continue; // All in-flight slots occupied
+                }
+                if (isset($zg['availTime']) && ($zg['availTime'] > microtime(true))) {
+                    continue; // Zigate temporarily unavailable (soft reset, retry delay)
+                }
+                unset($GLOBALS['zigates'][$zgId]['availTime']);
 
                 // Throughput regulation
                 // $zg['tp_time'] gives time (in us) when Zigate can be considered available again.
@@ -500,6 +546,15 @@
                 else
                     $regulation = '';
 
+                // Collect addresses that already have an in-flight command
+                $inFlightAddrs = [];
+                foreach (range(priorityMax, priorityMin) as $p) {
+                    foreach ($GLOBALS["zigates"][$zgId]["cmdQueue"][$p] as $c) {
+                        if ($c['status'] == 'SENT' && $c['addr'] != '')
+                            $inFlightAddrs[$c['addr']] = true;
+                    }
+                }
+
                 // Looking for a cmd to send in HIGH to LOW priority order
                 unset($sendIdx);
                 foreach (range(priorityMax, priorityMin) as $priority) {
@@ -507,25 +562,33 @@
                     if ($count == 0)
                         continue; // Queue empty
 
-                    // There is something to send in this priority queue
-                    // We take 1st command unless regulation is required and command is not Zigate specific.
-                    $cmdIdx = 0;
-                    $cmd = $zg['cmdQueue'][$priority][$cmdIdx];
-                    if ($cmd['zgOnly'] || ($regulation == '')) {
-                        // Zigate only or no regulation
-                        $sendIdx = 0;
-                    } else {
-                        // Regulation required. Looking for Zigate only cmd
-                        cmdLog('debug', "processCmdQueues(): ZgId={$zgId}, Pri={$priority}/Idx={$cmdIdx}, Cmd=".$cmd['cmd']." => '{$regulation}' regulation");
-                        foreach ($zg['cmdQueue'][$priority] as $cmdIdx => $cmd) {
-                            if ($cmdIdx == 0)
-                                continue; // 1st cmd already checked
-                            if (!$cmd['zgOnly'])
-                                continue;
+                    // Find first unsent command in this priority queue
+                    foreach ($zg['cmdQueue'][$priority] as $cmdIdx => $cmd) {
+                        if ($cmd['status'] != '')
+                            continue; // Already SENT, waiting for ACK - skip
 
+                        // Per-device limit: max 1 in-flight per equipment
+                        if ($cmd['addr'] != '' && isset($inFlightAddrs[$cmd['addr']])) {
+                            continue; // This device already has a command in-flight
+                        }
+
+                        if ($cmd['zgOnly'] || ($regulation == '')) {
                             $sendIdx = $cmdIdx;
                             break;
                         }
+                        // Regulation active, this cmd is blocked. Look for zgOnly or another device
+                        cmdLog('debug', "processCmdQueues(): ZgId={$zgId}, Pri={$priority}/Idx={$cmdIdx}, Cmd=".$cmd['cmd']." => '{$regulation}' regulation");
+                        foreach ($zg['cmdQueue'][$priority] as $cmdIdx2 => $cmd2) {
+                            if ($cmdIdx2 <= $cmdIdx)
+                                continue;
+                            if ($cmd2['status'] != '')
+                                continue;
+                            if (!$cmd2['zgOnly'])
+                                continue;
+                            $sendIdx = $cmdIdx2;
+                            break;
+                        }
+                        break; // Stop searching this priority
                     }
 
                     if (isset($sendIdx))
@@ -555,9 +618,10 @@
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]['try']--;
                     // cmdLog('debug', "  CmdAFTER=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$priority][$sendIdx]));
 
-                    $GLOBALS['zigates'][$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
-                    $GLOBALS['zigates'][$zgId]['sentIdx'] = $sendIdx;
-                    $GLOBALS['zigates'][$zgId]['available'] = false; // Zigate no longer free
+                    $GLOBALS['zigates'][$zgId]['sentSlots'][] = [
+                        'pri' => $priority,
+                        'idx' => $sendIdx,
+                    ]; // Track in-flight command
                     // $GLOBALS['zigates'][$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
                     if ($cmd['cmd'] == "0011") // Special case: soft reset
                         $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0; // Zg will be free in 1sec
@@ -648,8 +712,6 @@
                     $aPDU = "?";
 
                 unset($removeCmd); // Unset in case set in previous msg
-                $sentPri = $GLOBALS['zigates'][$zgId]['sentPri'];
-                $sentIdx = $GLOBALS['zigates'][$zgId]['sentIdx'];
 
                 // Tcharp38 TODO: This msg should be not passed thru this priority queue.
                 if ($msg['type'] == "8010") {
@@ -687,21 +749,23 @@
 
                 else if ($msg['type'] == "8000") {
 
+                    // 8000 arrives in FIFO order - match to sentSlots[0]
+                    if (empty($GLOBALS['zigates'][$zgId]['sentSlots'])) {
+                        cmdLog("warning", "  Unexpected 8000 msg. No sent slots.");
+                        continue;
+                    }
+                    $slot = $GLOBALS['zigates'][$zgId]['sentSlots'][0]; // FIFO front
+                    $sentPri = $slot['pri'];
+                    $sentIdx = $slot['idx'];
+
                     if (!isset($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx])) {
-                        cmdLog("warning", "  Unexpected 8000 msg. Could not find cmd with Pri={$sentPri}, Idx={$sentIdx}");
+                        cmdLog("warning", "  8000: slot points to missing cmd (Pri={$sentPri}, Idx={$sentIdx})");
+                        array_splice($GLOBALS['zigates'][$zgId]['sentSlots'], 0, 1);
                         continue;
                     }
 
-                    /* Trying to understand this
-                    [2025-03-12 21:59:27] WARNING: processCmdQueues(): Zigate1 cmd 0030 8s TIMEOUT (SQN=00, SQNAPS=DD) => Considering zigate available.
-                    [2025-03-12 21:59:27] processCmdQueues(): ZgId=1, Pri=2/Idx=0, NPDU=0, APDU=1
-                    [2025-03-12 21:59:27]   sendCmdToZigate(Dest=Abeille1, addr=0C4314FFFE86A648, cmd=0030, datas=0C4314FFFE86A6480103000300158D0001C61BE701)
-                    [2025-03-12 21:59:27] processAcks(): msg={"type":"8000","net":"Abeille1","status":"80","sqn":"00","sqnAps":"E1","packetType":"0030","nPDU":"00","aPDU":"00"}
-                    [2025-03-12 21:59:27]   8000 => ignored as packets are different: packetType=0030 cmd=0100
-                    */
-
                     cmdLog("debug", "  TEMP: cmds=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'], JSON_UNESCAPED_SLASHES));
-                    $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx];
+                    $cmd = &$GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx];
 
                     // Checking sent cmd vs received ack misalignment
                     if ($msg['packetType'] != $cmd['cmd']) {
@@ -709,64 +773,54 @@
                         continue;
                     }
 
-                    // Storing SQN APS. This is key to identify cmd linked to msg. Might not be last sent except for 8000.
-                    $GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx]['sqn'] = $msg['sqn']; // Internal SQN
-                    $GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx]['sqnAps'] = $sqnAps; // Network SQN
+                    // Storing SQN APS. This is key to identify cmd linked to msg.
+                    $cmd['sqn'] = $msg['sqn']; // Internal SQN
+                    $cmd['sqnAps'] = $sqnAps; // Network SQN
 
                     $msgStatus = $msg['status'];
                     if ($msgStatus == "00") {
 
-                        if ($cmd['waitFor'] == "ACK")
-                            continue; // On this command I m waiting for APS ACK.
+                        if ($cmd['waitFor'] == "ACK") {
+                            // Zigate accepted the cmd. Free the in-flight slot
+                            // but keep the cmd in cmdQueue (waiting for 8011 matched by sqnAps)
+                            array_splice($GLOBALS['zigates'][$zgId]['sentSlots'], 0, 1);
+                            continue;
+                        }
                         if ($cmd['waitFor'] != "8000")
                             continue; // Need to wait for something else
 
-                        // if ($cmd['ackAps']) continue; // On this command I m waiting for APS ACK.
                         $removeCmd = true;
-                        // Status is: success
-                        // $this->zgChangeStatusSentQueueFirstMessage($this->zgGetSentPri(), '8000');
-                        // $cmd['status'] = '8000';
-                        // if ($sqnAps == '00')
-                        //     $removeCmd = true; // Cmd not transmitted on air => no ack to expect
-                        // else {
-                        //     $this->zgChangesqnApsSentQueueFirstMessage($this->zgGetSentPri(), $sqnAps);
-                        //     // $cmd['sqnAps'] = $sqnAps;
-                        //     $removeCmd = true;
-                        // }
                     }
-                    else if (in_array($msgStatus, ['01', '02', '03', '05', '06', '14'])) {
-                        // Status is: bad param, unhandled, failed (?), stack already started
-                        // Status 06 = Unknown EP ? (Zigate v2)
-                        // 14/E_ZCL_ERR_ZBUFFER_FAIL: Msg too big
+                    else if (in_array($msgStatus, ['01', '02', '03', '05', '06', '14', '15'])) {
                         cmdLog("debug", "  WARNING: Zigate cmd failed (err {$msgStatus})");
                         $removeCmd = true;
                     }
                     else {
-                        // Something failed
-                        // - Case 04/Busy
-                        // - Case 80/?? => what is that ?
                         if ($cmd['try'] == 0) {
                             cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." to ".$cmd['addr']." failed and too many retries.");
                             $removeCmd = true;
                         }
                         else {
                             cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." failed (err {$msgStatus}). Will be retried ".$cmd['try']." time(s) max.");
-                            $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0; // Zg will be free in 1sec
+                            $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0;
                         }
+                    }
+
+                    if (isset($removeCmd) && $removeCmd) {
+                        $this->removeSentCmd($zgId, $sentPri, $sentIdx, 0);
+                        unset($removeCmd);
                     }
                 }
 
                 else if ($msg['type'] == "8011") {
-                    $cmd = &$this->getCmd($zgId, $msg['sqnAps'], $lastSent); // By ref
+                    $cmd = &$this->getCmd($zgId, $msg['sqnAps']); // By ref
                     if ($cmd === []) {
                         cmdLog('debug', '  Corresponding cmd not found.');
                         continue;
                     }
                     cmdLog('debug', "  cmd=".json_encode($cmd, JSON_UNESCAPED_SLASHES));
 
-                    // If ACK is requested but failed, txStatus='noack' must be stored.
-                    // Note: This is done only if cmd == last sent.
-                    if ($lastSent && ($cmd['waitFor'] == "ACK")) {
+                    if ($cmd['waitFor'] == "ACK") {
                         $removeCmd = true;
 
                         $net = $msg['net'];
@@ -776,42 +830,111 @@
                             cmdLog('debug', "  WARNING: Unknown device: Net={$net} Addr={$addr}");
                         } else {
                             cmdLog('debug', "  eq=".json_encode($eq, JSON_UNESCAPED_SLASHES));
-                            // Note: TX status makes sense only if device is always listening (rxOnWhenIdle=TRUE)
-                            //       For other devices any interrogation without waking up device may lead to NO-ACK which is normal
                             $newTxStatus = '';
                             if ($msg['status'] == '00') { // OK
-                                // Restoring 'ok'' status whatever rxOnWhenIdle or not
                                 if ($eq['zigbee']['txStatus'] !== 'ok')
                                     $newTxStatus = 'ok';
+                                // Clear quarantine if device responds
+                                if (isset($eq['quarantineUntil'])) {
+                                    unset($eq['quarantineUntil']);
+                                    cmdLog("info", "  Device {$addr} removed from quarantine (responded OK)");
+                                }
                             } else { // NO ACK
                                 if (isset($eq['zigbee']['rxOnWhenIdle']) && $eq['zigbee']['rxOnWhenIdle'] && ($eq['zigbee']['txStatus'] !== 'noack'))
                                     $newTxStatus = 'noack';
 
-                                // If 'repeat' is set, checking if cmd must be retried
                                 if (isset($cmd['repeat'])) {
                                     $repeat = $cmd['repeat'];
                                     if ($repeat != 0) {
                                         cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) but will be repeated.");
                                         $cmd['repeat'] -= 1;
                                         $cmd['status'] = ''; // Not sent
-                                        $GLOBALS['zigates'][$zgId]['available'] = true; // Zigate is free again
                                         $removeCmd = false; // Keep the cmd to be repeated
-                                    } else
-                                        cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) even if Repeat={$repeat}.");
+                                    } else {
+                                        cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) even if Repeat={$repeat}. rxOnWhenIdle=".($eq['zigbee']['rxOnWhenIdle'] ?? 'unset'));
+                                        // Quarantine: device unreachable after all retries
+                                        if (isset($eq['zigbee']['rxOnWhenIdle']) && $eq['zigbee']['rxOnWhenIdle']) {
+                                            $eq['quarantineUntil'] = time() + QUARANTINE_DURATION;
+                                            cmdLog("info", "  Device {$addr} QUARANTINED for ".QUARANTINE_DURATION."s (no ACK after all retries)");
+                                            // Persist quarantine to Jeedom DB
+                                            $qMsg = array(
+                                                'type' => 'eqTxStatusUpdate',
+                                                'net' => $net,
+                                                'addr' => $addr,
+                                                'txStatus' => 'noack',
+                                                'quarantineUntil' => $eq['quarantineUntil']
+                                            );
+                                            msgToAbeille($qMsg);
+                                            // Drop all pending commands to this device from all queues
+                                            for ($qp = priorityMax; $qp <= priorityMin; $qp++) {
+                                                for ($qi = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$qp]) - 1; $qi >= 0; $qi--) {
+                                                    $qc = $GLOBALS['zigates'][$zgId]['cmdQueue'][$qp][$qi];
+                                                    if ($qc['addr'] == $addr && $qc['status'] == '') {
+                                                        cmdLog('debug', "  Dropping queued cmd to quarantined device {$addr}");
+                                                        array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$qp], $qi, 1);
+                                                        // Adjust sentSlot indices
+                                                        foreach ($GLOBALS['zigates'][$zgId]['sentSlots'] as &$slAdj) {
+                                                            if ($slAdj['pri'] == $qp && $slAdj['idx'] > $qi)
+                                                                $slAdj['idx']--;
+                                                        }
+                                                        unset($slAdj);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             if ($newTxStatus != '') {
                                 $eq['zigbee']['txStatus'] = $newTxStatus;
                                 $msg = array(
-                                    // 'src' => 'cmd',
                                     'type' => 'eqTxStatusUpdate',
                                     'net' => $net,
                                     'addr' => $addr,
-                                    'txStatus' => $newTxStatus // 'ok', or 'noack'
+                                    'txStatus' => $newTxStatus,
+                                    'quarantineUntil' => isset($eq['quarantineUntil']) ? $eq['quarantineUntil'] : 0
                                 );
                                 msgToAbeille($msg);
                                 cmdLog2('debug', $addr, "  {$net}-{$addr} status changed to '{$newTxStatus}'");
                             }
+                        }
+
+                        // Remove the cmd from cmdQueue (slot was already freed by 8000 handler)
+                        if ($removeCmd) {
+                            $ackSqnAps = $cmd['sqnAps'];
+                            // Find cmd in cmdQueue by sqnAps and remove it
+                            $cmdRemoved = false;
+                            foreach (range(priorityMax, priorityMin) as $p) {
+                                foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'][$p] as $ci => $c) {
+                                    if (isset($c['sqnAps']) && $c['sqnAps'] == $ackSqnAps) {
+                                        // Also check if there's still a sentSlot pointing to this cmd
+                                        $slotFound = false;
+                                        foreach ($GLOBALS['zigates'][$zgId]['sentSlots'] as $sk => $sl) {
+                                            if ($sl['pri'] == $p && $sl['idx'] == $ci) {
+                                                // Slot still exists (edge case) - use removeSentCmd
+                                                $this->removeSentCmd($zgId, $p, $ci, $sk);
+                                                $slotFound = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!$slotFound) {
+                                            // Normal case: slot already freed by 8000, just remove cmd
+                                            array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$p], $ci, 1);
+                                            // Adjust any sentSlot indices in same priority
+                                            foreach ($GLOBALS['zigates'][$zgId]['sentSlots'] as &$sl2) {
+                                                if ($sl2['pri'] == $p && $sl2['idx'] > $ci)
+                                                    $sl2['idx']--;
+                                            }
+                                            unset($sl2);
+                                        }
+                                        $cmdRemoved = true;
+                                        break 2;
+                                    }
+                                }
+                            }
+                            if (!$cmdRemoved)
+                                cmdLog('debug', "  8011: Could not find cmd with sqnAps={$ackSqnAps} to remove");
+                            unset($removeCmd);
                         }
                     }
                 }
@@ -842,21 +965,7 @@
                 //         $removeCmd = true;
                 // }
 
-                // Removing last sent cmd
-                if (isset($removeCmd) && $removeCmd) {
-
-                    $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                    cmdLog('debug', "  Removing cmd from queue (Pri={$sentPri}/Idx={$sentIdx}/Count={$count})");
-                    // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                    // cmdLog('debug', '  BEFORE: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
-                    array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
-                    // cmdLog('debug', '  AFTER: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
-                    $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                    cmdLog('debug', "  Queue count after={$count}");
-
-                    $GLOBALS['zigates'][$zgId]['available'] = true; // Zigate is free again
-                    unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
-                }
+                // Removal is now handled in each 8000/8011 handler via removeSentCmd()
             }
 
             // cmdLog("debug", "  ".count($this->cmdQueue[$zgId])." remaining pending commands", $this->debug['processAcks']);

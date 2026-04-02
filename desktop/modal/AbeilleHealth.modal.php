@@ -212,6 +212,12 @@
                             else
                                 s = "{{Time-out}}/{{No-ACK}}";
                             status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">' + s + '</span>';
+                            // Show quarantine badge if device is quarantined
+                            var now = Math.floor(Date.now() / 1000);
+                            if (e.quarantineUntil && e.quarantineUntil > now) {
+                                var remaining = Math.floor((e.quarantineUntil - now) / 60);
+                                status += ' <span class="label label-warning" style="font-size: 1em; cursor: default;" title="' + remaining + ' min restantes">{{Quarantaine}}</span>';
+                            }
                         } else
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
                         tr += '<td>'+status+'</td>';

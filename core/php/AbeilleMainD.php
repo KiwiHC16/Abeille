@@ -680,6 +680,10 @@
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (is_object($eqLogic)) {
                 $eqLogic->setStatus('ab::txAck', $msg['txStatus']); // ab::txAck == 'ok' or 'noack'
+                if (isset($msg['quarantineUntil']) && $msg['quarantineUntil'] > 0)
+                    $eqLogic->setStatus('ab::quarantineUntil', $msg['quarantineUntil']);
+                else
+                    $eqLogic->setStatus('ab::quarantineUntil', 0);
                 $eqLogic->save();
             } else {
                 logMessage('error', "msgFromParser(eqTxStatusUpdate): Equipement inconnu: ".$net.'/'.$addr);

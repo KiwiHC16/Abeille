@@ -771,6 +771,7 @@
                 else
                     $e['since'] = floor((time() - strtotime($e['lastComm'])) / 3600);
                 $e['txAck'] = $eqLogic->getStatus('ab::txAck', 'ok');
+                $e['quarantineUntil'] = intval($eqLogic->getStatus('ab::quarantineUntil', 0));
 
                 // Last LQI
                 if ($eqAddr == "0000")

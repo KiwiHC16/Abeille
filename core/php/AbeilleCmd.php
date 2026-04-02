@@ -498,7 +498,7 @@
             $GLOBALS['zigates'][$gtwId]['enabled'] = ($config['ab::gtwEnabled'.$gtwId] == "Y") ? true : false;
             $GLOBALS['zigates'][$gtwId]['ieeeOk'] = ($config['ab::zgIeeeAddrOk'.$gtwId] == 1) ? true : false;
             $GLOBALS['zigates'][$gtwId]['port'] = $config['ab::gtwPort'.$gtwId];
-            $GLOBALS['zigates'][$gtwId]['available'] = true; // By default we consider the Zigate available to receive commands
+            $GLOBALS['zigates'][$gtwId]['sentSlots'] = [];  // FIFO of in-flight commands (max MAX_INFLIGHT)
             $GLOBALS['zigates'][$gtwId]['status'] = 'waitParser'; // 'waitParser', 'ok'
             $GLOBALS['zigates'][$gtwId]['hw'] = 0;           // HW version: 1=v1, 2=v2
             $GLOBALS['zigates'][$gtwId]['fw'] = 0;           // FW minor version (ex 0x321)
@@ -508,8 +508,6 @@
             foreach(range(priorityMin, priorityMax) as $prio) {
                 $GLOBALS['zigates'][$gtwId]['cmdQueue'][$prio] = [];
             }
-            $GLOBALS['zigates'][$gtwId]['sentPri'] = 0;      // Last sent cmd priority
-            $GLOBALS['zigates'][$gtwId]['sentIdx'] = 0;      // Last send cmd index
         } else {
             // Is the gateway a Zigate ?
 

@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Nouveauté: Support capteur Hobeian ZG-204Z (2785).
+
 ## 260317-BETA-1
 
 - Améliorations: Interne, parser: Code specific Xiaomi nettoyé.

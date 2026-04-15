@@ -15,7 +15,7 @@
             "security": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "Tuya-MotionSensor",
             "mainEP": "01",
             "batteryType": "1x3V CR2450"
         },

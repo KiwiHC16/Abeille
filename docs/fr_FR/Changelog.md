@@ -1,6 +1,7 @@
 # ChangeLog
 
 - Nouveauté: Support capteur Hobeian ZG-204Z (2785).
+- Correction: Xiaomi WSDCGQ11LM: Mise-à-jour 'Pressure-Scaled' (2784).
 
 ## 260317-BETA-1
 

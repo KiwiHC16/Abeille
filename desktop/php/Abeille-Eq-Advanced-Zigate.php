@@ -177,8 +177,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Reset SW}}</label>
     <div class="col-sm-5">
-        <!-- <a class="btn btn-warning" onclick="sendZigate('resetZigate', '')" title="{{Reset SW (Commande 0011)}}">{{Reset}}</a> -->
-        <?php addZgButton("{{Reset}}", "btn-warning", 'resetZigate', '', false, "{{Reset SW (Commande 0011)}}"); ?>
+        <?php addZgButton("{{Reset}}", "btn-warning", 'zgSoftReset', '', false, "{{Reset SW (Commande 0011)}}"); ?>
     </div>
 </div>
 

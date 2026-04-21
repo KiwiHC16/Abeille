@@ -2,6 +2,9 @@
 
 - Nouveauté: Support capteur Hobeian ZG-204Z (2785).
 - Correction: Xiaomi WSDCGQ11LM: Mise-à-jour 'Pressure-Scaled' (2784).
+- Correction: Interne, zgSetCertification.
+- Amélioration: Zigate reconfigurée si soft/hard reset (ex: apres erase PDM).
+- Amélioration: Configuration Zigate revue.
 
 ## 260317-BETA-1
 

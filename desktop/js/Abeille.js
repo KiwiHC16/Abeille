@@ -1660,7 +1660,7 @@ function sendZigate(action, param) {
             break;
         case "setCertif":
             topic = "CmdAbeille" + zgId + "/0000/zgSetCertification";
-            payload = param; // 'CE' or 'FCC'
+            payload = "certif=" + param; // 'CE' or 'FCC'
             break;
         case "startNetwork": // Not required for end user but for developper.
             topic = "CmdAbeille" + zgId + "/0000/zgStartNetwork";
@@ -1751,7 +1751,7 @@ function sendZigate(action, param) {
         case "setTXPower":
             topic = "CmdAbeille" + zgId + "/0000/zgSetTxPower";
             var power = $("#idZgTxPower").val();
-            payload = "txPower=" + power; // TODO
+            payload = "txPower=" + power;
             break;
         case "getTime":
             topic = "CmdAbeille" + zgId + "/0000/zgGetTimeServer";
@@ -1770,7 +1770,6 @@ function sendZigate(action, param) {
             payload = "";
             break;
         case "zgSoftReset":
-        case "resetZigate": // Obsolete
             topic = "CmdAbeille" + zgId + "/0000/zgSoftReset";
             payload = "";
             break;

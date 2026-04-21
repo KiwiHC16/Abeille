@@ -1627,7 +1627,8 @@
                     $GLOBALS['zigate'.$zgId]['ieeeStatus'] = $ieeeStatus; // Updating local status
 
                     if ($ieeeStatus == 0) {
-                        msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/zgGetNetworkStatus");
+                        // Tcharp38: Too many requests. To be revisited if required. Should be leaded by configureZigate in CmdD.
+                        // msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/zgGetNetworkStatus");
 
                         $acceptedBeforeZigateIdentified = array("0208", "0302", "8001", "8006", "8007", "8009", "8010", "8024", "9999");
                         if (!in_array($type, $acceptedBeforeZigateIdentified)) {
@@ -4583,7 +4584,7 @@
             if (isset($toCli))
                 $this->msgToClient($toCli);
 
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
+            // $this->whoTalked[] = $dest.'/'.$srcAddr;
 
             // Monitor if requested (OBSOLETE way !! Use parserLog2() instead)
             // if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
@@ -4595,6 +4596,18 @@
                 monMsgFromZigate($monMsg); // Send message to monitor
             $GLOBALS['toMon'] = []; // Clear monitoring queue
         } // End decode8002()
+
+        /* 8007/“Factory New” Restart */
+        function decode8007($dest, $payload, $lqi) {
+            $m = '8007/Factory New Restart';
+            parserLog2('debug', "0000", $dest.', Type='.$m);
+
+            $msg = array (
+                'type'  => "configureZigate",
+                'net'   => $dest
+            );
+            msgToCmdAck($msg);
+        }
 
         /* 8009/Network State Reponse */
         function decode8009($dest, $payload, $lqi) {

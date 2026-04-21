@@ -653,8 +653,8 @@
                     continue;
                 }
 
-                // Serial to parser receive channel is UP
-                if ($msg['type'] == "rcvChanStatus") {
+                // Serial to parser receive channel is UP, or SW/HW reset => configure Zigate
+                if ($msg['type'] == "configureZigate") {
                     configureZigate($zgId); // Configure Zigate
                     continue;
                 }

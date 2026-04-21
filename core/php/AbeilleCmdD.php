@@ -174,18 +174,18 @@
     }
 
     // Configure Zigate
-    // Called to configure Zigate when receive channel is already opened to not loose responses
+    // - when receive channel is opened to not loose responses (rcvChanStatus msg received from SerialRead)
     function configureZigate($zgId) {
-        cmdLog('debug', "configureZigate({$zgId})");
+        cmdLog('debug', "configureZigate($zgId)");
 
         $gtwType = isset($config['ab::gtwType'.$zgId]) ? $config['ab::gtwType'.$zgId] : 'zigate';
         if ($gtwType != 'zigate') {
-            cmdLog('error', "  Gateway {$zgId} is NOT a Zigate");
+            cmdLog('error', "  Gateway $zgId is NOT a Zigate");
             return;
         }
 
         // msgToCmd("CmdAbeille".$zgId."/0000/zgSoftReset", "");
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0011", "", "0000", null, 0);
+        // AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0011", "", "0000", null, 0);
         // Following cmds delayed by 1sec to wait for chip reset
 
         // Extended PAN ID change must be done BEFORE starting network
@@ -202,15 +202,15 @@
             $mask = 1 << $chan;
         $mask = sprintf("%08X", $mask);
         cmdLog('debug', "  Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
-        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetChannelMask&tempo=".(time()+1), "mask=".$mask);
         AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0021", $mask, "0000", null, 0);
 
-        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetTimeServer&tempo=".(time()+1), "");
+        /* Set time server */
         $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
         $zgTime = time() - $zgRef;
         $data = sprintf("%08s", dechex($zgTime));
         AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0016", $data, "0000", null, 0);
 
+        /* Set RAW mode unless hybrid requested (should not longer be required) */
         if (isset($config['ab::forceZigateHybridMode']) && ($config['ab::forceZigateHybridMode'] == "Y")) {
             $mode = "hybrid";
             $mode2 = "02";
@@ -218,11 +218,16 @@
             $mode = "raw";
             $mode2 = "01";
         }
-        cmdLog('debug', "  Configuring Zigate {$zgId} in {$mode} mode");
-        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetMode&tempo=".(time()+1), "mode={$mode}");
+        cmdLog('debug', "  Configuring Zigate $zgId in '$mode' mode");
         AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0002", $mode2, "0000", null, 0);
 
-        // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgStartNetwork&tempo=".(time()+10), "");
+        /* Set CE certification */
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0019", "01", "0000", null, 0);
+
+        /* Set device type COORDINATOR */
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0023", "00", "0000", null, 0);
+
+        /* Start Network */
         AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0024", "", "0000", null, 0);
 
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+10), "");
@@ -334,7 +339,7 @@
     // Remove all pending messages for given zgId + addr or ieee.
     // Useful for ex when addr changed on device announce.
     function clearPending($zgId, $addr, $ieee) {
-        cmdLog("debug", "  clearPending({$zgId}, {$addr}, {$ieee})");
+        cmdLog("debug", "  clearPending($zgId, {$addr}, {$ieee})");
 
         foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $pri => $q) {
             $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]);

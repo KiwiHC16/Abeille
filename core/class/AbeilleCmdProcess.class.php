@@ -2083,13 +2083,18 @@
                  */
 
                 // Zigate specific command: Set mode (raw, hybrid, normal)
+                // Mandatory params: 'mode'
                 if ($cmdName == 'zgSetMode') {
+                    $required = ['mode'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
                     $mode = $Command['cmdParams']['mode'];
-                    if ($mode == "raw") {
+                    if ($mode == "raw")
                         $modeVal = "01";
-                    } else if ($mode == "hybrid") {
+                    else if ($mode == "hybrid")
                         $modeVal = "02";
-                    } else // Normal
+                    else // Normal
                         $modeVal = "00";
                     cmdLog('debug', "  Setting mode {$modeVal}/{$mode}");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0002", $modeVal);
@@ -2097,6 +2102,7 @@
                 }
 
                 // Zigate specific command: Set certfication (CE, FCC)
+                // Mandatory params: 'certif'
                 else if ($cmdName == 'zgSetCertification') {
                     $required = ['certif'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -2234,7 +2240,7 @@
                     $zgCmd = "0806";
                     $data = $Command['cmdParams']['txPower'];
 
-                    cmdLog('debug', "  zgSetTxPower: txPower={$data}");
+                    cmdLog('debug', "  zgSetTxPower: txPower=$data");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data);
                     return;
                 }

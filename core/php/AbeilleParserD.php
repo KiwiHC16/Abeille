@@ -673,6 +673,7 @@
                     logMessage('debug', $msg['net'].' RX channel status '.$msg['status']);
                     // Message from AbeilleSerialReadX
                     // Sending msg to cmd indicating receive channel status
+                    $msg['type'] = "configureZigate";
                     msgToCmdAck($msg);
                 } else if ($msg['type'] == "serialRead") {
                     // Message from AbeilleSerialReadX

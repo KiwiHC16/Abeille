@@ -1,0 +1,11 @@
+{
+    "inf_zbCmdC-0008-MoveToLevel": {
+        "comment": "Cluster 0008, cmd 00/Move to Level, received from CLIENT side",        
+        "subType": "numeric",
+        "type": "info",
+        "logicalId": "#EP#-0008-cmd00",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

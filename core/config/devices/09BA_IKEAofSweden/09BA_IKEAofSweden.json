@@ -1,0 +1,50 @@
+{
+        "09BA_IKEAofSweden": {
+        "manufacturer": "IKEAofSweden",
+        "zbManufacturer": "IKEA",
+        "model": "09BA",
+        "type": "TRADFRI Bilresa remote control with scroll wheel",
+        "genericType": "Light",
+        "comment": "Ref. FR 706.041.72",       
+        "timeout": "60",
+        "configuration": {
+            "paramType":"telecommande",
+            "mainEP": "01",
+            "icon": "Ikea-Bilresa-Scrollwheel",
+            "batteryType": "2x1.5V AAA"
+        },
+        "category": {
+            "light": "1"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+			"Scroll-Wheel": {
+                "use": "inf_zbCmdC-0008-MoveToLevel",
+                "isVisible": 1
+            },
+            "On": {
+                "use": "inf_zbCmdC-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "inf_zbCmdC-0006-Off",
+                "isVisible": 1
+            },
+			"Double-click": {
+                "use": "inf_zbCmdC-0005-Ikea07",
+				"comment": "value = 0x00",
+                "isVisible": 0
+            },
+			"Triple-click": {
+                "use": "inf_zbCmdC-0005-Ikea07",
+                "comment": "value = 0x01",
+				"isVisible": 0            
+			}			
+        }
+    }
+}

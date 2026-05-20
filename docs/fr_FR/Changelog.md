@@ -5,6 +5,7 @@
 - Correction: Interne, zgSetCertification.
 - Amélioration: Zigate reconfigurée si soft/hard reset (ex: apres erase PDM).
 - Amélioration: Configuration Zigate revue.
+- Nouveauté: Support Ikea BILRESA (2787).
 
 ## 260317-BETA-1
 

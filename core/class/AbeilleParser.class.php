@@ -3870,8 +3870,33 @@
                     }
                 } else { // Cluster specific command
 
+                    /* Command to be treated as private/custom way ?
+                       Generic format for private clusters/commands reminder
+                        "private": {
+                            "FC00-00": { // CLUSTID-CMDID
+                                "type": "generic",
+                                "function": "philipsDecodeCmdFC00"
+                            }
+                        } */
+                    if (isset($eq['private']) && isset($eq['private'][$clustId.'-'.$cmd])) {
+                        $p = $eq['private'][$clustId.'-'.$cmd];
+                        $supportType = $p['type']; // "tuya", "tuya-zosung", "xiaomi", "generic"
+                        $fct = isset($p['function']) ? $p['function'] : "missingFunctionName";
+                        if ($supportType == 'tuya')
+                            $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        else if ($supportType == 'tuya-zosung')
+                            $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        else if ($supportType == 'generic') {
+                            if (!function_exists($fct))
+                                parserLog2("error", $srcAddr, "  Cluster specific command $clustId-$cmd: Invalid function '$fct'");
+                            else
+                                $attrReportN = $fct($dest, $srcAddr, $srcEp, $clustId, $cmd, $pl);
+                        } else
+                            parserLog2("error", $srcAddr, "  Cluster specific command $clustId-$cmd: Unsupported type '$supportType'");
+                    }
+
                     // 0004/Groups cluster specific
-                    if ($clustId == "0004") {
+                    else if ($clustId == "0004") {
                         // Duplicated message ?
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
@@ -3888,10 +3913,9 @@
                             $this->decode8002_RemoveGroupRsp($dest, $srcAddr, $srcEp, $pl, $lqi, $toAbeille);
                         } else if (!$dir && ($cmd == "03")) {
                             parserLog2('debug', $srcAddr, '  Handled by Zigate');
-                        } else {
+                        } else
                             parserLog2('debug', $srcAddr, '  Unsupported cluster 0004 specific cmd '.$cmd);
-                            // return;
-                        }
+
                     } // End clustId == "0004"
 
                     // 0005/Scenes cluster specific
@@ -4030,24 +4054,29 @@
                             parserLog2("debug", $srcAddr,  '  '.json_encode($sceneStored) );
                         }
 
-                        // Ikea specific ?
-                        else if (($cmd == "07") && ($manufCode == '117C')) {
-                            // Ikea specific
-                            $value = substr($pl, 0, 2);
+                        // // Ikea specific ?
+                        // Now supported by private section
+                        // else if (($cmd == "07") && ($manufCode == '117C')) {
+                        //     // Ikea specific
+                        //     $value = substr($pl, 0, 2);
 
-                            parserLog2("debug", $srcAddr, '  Ikea 5 buttons remote'
-                                            .': Cmd='.$cmd
-                                            .', Value='.$value
-                                            );
+                        //     parserLog2("debug", $srcAddr, '  Ikea 5 buttons remote'
+                        //                     .': Cmd='.$cmd
+                        //                     .', Value='.$value
+                        //                     );
 
-                            // $attrReportN[] = [
-                            //     array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
-                            // ];
-                            $attrReportN[] = array(
-                                'name' => $srcEp.'-0005-cmd07',
-                                'value' => $value,
-                            );
-                        }
+                        //     // $attrReportN[] = [
+                        //     //     array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
+                        //     // ];
+                        //     $attrReportN[] = array(
+                        //         'name' => $srcEp.'-0005-cmd07',
+                        //         'value' => $value,
+                        //     );
+                        // }
+
+                        else
+                            parserLog2('debug', $srcAddr, '  Unsupported cluster 0005 specific cmd '.$cmd);
+
                     } // End $clustId == "0005"
 
                     // 0006/On/Off cluster specific
@@ -4429,51 +4458,6 @@
 
                         // Checking if command must be treated as special private case
 
-                        /* Generic format for private clusters/commands reminder
-                        "private": {
-                            "EF00": { // CLUSTID
-                                "type": "tuya",
-                                "05": { // DP
-                                    "function": "rcvValue",
-                                    "info": "01-measuredValue"
-                                },
-                            },
-                            "ED00": { // CLUSTID
-                                "type": "tuya-zosung"
-                            },
-                            "0000-FF01": { // CLUSTID-ATTRID
-                                "type": "xiaomi",
-                                "01-21": {
-                                    "func": "numberDiv",
-                                    "div": 1000,
-                                    "info": "0001-01-0020"
-                                }
-                            },
-                            "FC00-00": { // CLUSTID-CMDID
-                                "type": "generic",
-                                "function": "philipsDecodeCmdFC00"
-                            }
-                        }
-                        "fromDevice": { // OBSOLETE !! Previous naming
-                            "ED00": {
-                                "type": "tuya-zosung"
-                            },
-                            "0000-FF01": { // CLUSTID-ATTRID
-                                "type": "xiaomi",
-                                "01-21": {
-                                    "func": "numberDiv",
-                                    "div": 1000,
-                                    "info": "0001-01-0020"
-                                }
-                            },
-                            "EF00": {
-                                "type": "tuya",
-                                "05": { // DP
-                                    "function": "rcvValue",
-                                    "info": "01-measuredValue"
-                                },
-                            }
-                        } */
                         // if (isset($eq['private'])) {
                         //     foreach ($eq['private'] as $key => $p2) {
                         //         $lenKey = strlen($key);
@@ -4500,33 +4484,33 @@
                         //         'value' => $pl,
                         //     );
                         // }
-                        if (isset($eq['private']) && isset($eq['private'][$clustId.'-'.$cmd])) {
-                            $p = $eq['private'][$clustId.'-'.$cmd];
-                            $supportType = $p['type']; // "tuya", "tuya-zosung", "xiaomi", "generic"
-                            if ($supportType == 'tuya')
-                                $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
-                            else if ($supportType == 'tuya-zosung')
-                                $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
-                            else if ($supportType == 'generic') {
-                                if (!isset($p['function'])) {
-                                    parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Undefined private function");
-                                } else {
-                                    $fct = $p['function'];
-                                    if (!function_exists($fct)) {
-                                        parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unknown private function '$fct'");
-                                    } else {
-                                        $attrReportN = $fct($dest, $srcAddr, $srcEp, $clustId, $cmd, $pl);
-                                    }
-                                }
-                            } else
-                                parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unsupported type '$supportType'");
-                        } else {
+                        // if (isset($eq['private']) && isset($eq['private'][$clustId.'-'.$cmd])) {
+                        //     $p = $eq['private'][$clustId.'-'.$cmd];
+                        //     $supportType = $p['type']; // "tuya", "tuya-zosung", "xiaomi", "generic"
+                        //     if ($supportType == 'tuya')
+                        //         $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        //     else if ($supportType == 'tuya-zosung')
+                        //         $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        //     else if ($supportType == 'generic') {
+                        //         if (!isset($p['function'])) {
+                        //             parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Undefined private function");
+                        //         } else {
+                        //             $fct = $p['function'];
+                        //             if (!function_exists($fct)) {
+                        //                 parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unknown private function '$fct'");
+                        //             } else {
+                        //                 $attrReportN = $fct($dest, $srcAddr, $srcEp, $clustId, $cmd, $pl);
+                        //             }
+                        //         }
+                        //     } else
+                        //         parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unsupported type '$supportType'");
+                        // } else {
                             parserLog2("debug", $srcAddr, "  Cluster '$clustId' specific command '$cmd' handled as default logic id '$srcEp-$clustId-cmd$cmd'");
                             $attrReportN[] = array(
                                 'name' => $srcEp.'-'.$clustId.'-cmd'.$cmd,
                                 'value' => (strlen($pl) > 0) ? $pl : "1",
                             );
-                        }
+                        // }
                     }
                 } // End cluster specific commands
             }

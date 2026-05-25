@@ -2,7 +2,7 @@
     "inf_zbCmdC-0005-Ikea07": {
         "comment": "Cluster 0005, cmd 07, received from CLIENT side",
         "comment2": "Ikea specific. Out of ZCL spec",
-        "subType": "binary",
+        "subType": "numeric",
         "type": "info",
         "logicalId": "#EP#-0005-cmd07",
         "configuration": {

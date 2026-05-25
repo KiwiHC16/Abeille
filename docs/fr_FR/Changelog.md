@@ -6,6 +6,8 @@
 - Amélioration: Zigate reconfigurée si soft/hard reset (ex: apres erase PDM).
 - Amélioration: Configuration Zigate revue.
 - Nouveauté: Support Ikea BILRESA (2787).
+- Amélioration: Support de commandes privées (ex: 0005-cmd07) revu => Modèle 'TRADFRIremotecontrol' mis-à-jour.
+- Amélioration: check_json.
 
 ## 260317-BETA-1
 

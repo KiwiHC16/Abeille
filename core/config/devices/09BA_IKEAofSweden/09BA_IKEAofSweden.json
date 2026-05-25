@@ -1,5 +1,5 @@
 {
-        "09BA_IKEAofSweden": {
+    "09BA_IKEAofSweden": {
         "manufacturer": "IKEAofSweden",
         "zbManufacturer": "IKEA",
         "model": "09BA",
@@ -15,6 +15,12 @@
         },
         "category": {
             "light": "1"
+        },
+        "variables": {
+            "ikea07": {
+                "0": "Double",
+                "1": "Triple"
+            }
         },
         "commands": {
             "Battery-Percent": {
@@ -35,16 +41,27 @@
                 "use": "inf_zbCmdC-0006-Off",
                 "isVisible": 1
             },
-			"Double-click": {
-                "use": "inf_zbCmdC-0005-Ikea07",
-				"comment": "value = 0x00",
-                "isVisible": 0
+            "Click": {
+                "use": "inf_generic-String",
+                "logicalId": "Click",
+                "isVisible": 1
             },
-			"Triple-click": {
+            "Click-value": {
                 "use": "inf_zbCmdC-0005-Ikea07",
-                "comment": "value = 0x01",
-				"isVisible": 0            
-			}			
+                "trigOut": {
+                    "Click": {
+                        "valueOffset": "#valueswitch-ikea07#",
+                        "comment": "Convert to human readable string",
+                        "comment2": "value=0x00 => Double, 0x01 => Triple"
+                   }
+                }
+            }
+        },
+        "private": {
+            "0005-07": {
+                "type": "generic",
+                "function": "ikeaDecodeCmd"
+            }
         }
     }
 }

@@ -94,6 +94,12 @@
             "Vert Group": {
                 "use": "VertGroup"
             }
+        },
+        "private": {
+            "0005-07": {
+                "type": "generic",
+                "function": "ikeaDecodeCmd"
+            }
         }
     }
 }

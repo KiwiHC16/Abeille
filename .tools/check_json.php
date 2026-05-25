@@ -978,9 +978,14 @@
         }
         // A cmd with sub type 'select' must have a "#select#' in 'request' and a 'listValue'
         else if ($cmd['subType'] == "select") {
-            // echo "'$cmdJName' is SELECT"."\n";
-            if (stristr($cmd['configuration']['request'], "#select#") === false)
-                $error = newDevError($devMName, "ERROR", "'select' sub-type but no '#select#' for cmd '".$cmdJName."'");
+            echo "'$cmdJName' is SELECT => ".json_encode($cmd)."\n";
+            if ($cmd['type'] == "info") {
+                // Possible sub-types for 'info': numeric, binary, string
+                $error = newDevError($devMName, "ERROR", "'select' sub-type not allowed for info cmd '$cmdJName'");
+            } else {
+                if (stristr($cmd['configuration']['request'], "#select#") === false)
+                    $error = newDevError($devMName, "ERROR", "'select' sub-type but no '#select#' for cmd '".$cmdJName."'");
+            }
             if (!isset($cmd['configuration']['listValue']))
                 $error = newDevError($devMName, "ERROR", "'select' sub-type but no 'listValue' for cmd '".$cmdJName."'");
         }

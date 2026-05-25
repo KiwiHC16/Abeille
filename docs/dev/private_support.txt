@@ -1,0 +1,95 @@
+***
+*** Abeille developer internal doc
+*** Private/custom way to support cluster attributes or commands
+*** (C) Tcharp38
+***
+
+Handling attributes or commands in a custom way is done thru "private" structure of equipement definition (model).
+
+    "private": {
+        "ED00": { // CLUSTID
+            "type": "tuya-zosung"
+        },
+        "EF00": { // CLUSTID
+            "type": "tuya",
+            "05": { // DP
+                "function": "rcvValue",
+                "info": "01-measuredValue"
+            },
+
+            // Fonctions supportées
+            // 'rcvValue'
+            // 'rcvValueEnum'
+            //     "function": "rcvValueEnum",
+            //     "enum": {
+            //          "00": "single",
+            //          "01": "double",
+            //          "02": "long"
+            //      }
+        },
+
+        "FCC0-0112": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "info": "0400-01-0000"
+        },
+        "0000-FF01": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "comment": "Xiaomi private case for <tag>-<type>",
+            "01-21": {
+                "func": "numberDiv",
+                "div": 1000,
+                "info": "0001-01-0020"
+            }
+        },
+        "0000-FF02": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "struct": 1,
+            "comment": "Xiaomi private case with 4C/struct data type",
+            "01-21": {
+                "func": "numberDiv",
+                "div": 1000,
+                "info": "0001-01-0020",
+                "comment": "Battery-Volt"
+            }
+        },
+        "FC00-00": { // CLUSTID-CMDID
+            "type": "generic",
+            "function": "philipsDecodeCmdFC00",
+            "comment": "This feature allow to overload even standard ZCL commands behavior"
+        }
+    }
+
+Tuya type
+
+    This is basically a way to support Tuya 'data points'. See 'tuya_support.txt'.
+
+Generic type
+
+    This specific case allows to overload default behavior for standard ZCL commands as well as any other unknown (private) onces.
+
+Example for Tuya cluster EF00 support using 'data points':
+
+    "private": {
+        "EF00": {
+            "type": "tuya",
+            "00": { "function": "rcvValue", "info": "0006-01-0000", "div": 10 },
+            "01": { "function": "rcvValue", "info": "0008-01-0000" },
+            "02": {
+                "function": "rcvValueEnum",
+                "enum": {
+                    "00": "single",
+                    "01": "double",
+                    "02": "long"
+                },
+                "comment": "00=single, 01=double, 02=long",
+                "info": "inf_click1"
+            },
+            "0C": {
+                "function": "rcvValve-Status"
+            },
+            "12": {
+                "function": "rcvThermostat-Mode"
+            }
+        }
+    }
+

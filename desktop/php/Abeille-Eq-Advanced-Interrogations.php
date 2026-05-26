@@ -80,6 +80,7 @@
         ?>
     </div>
 </div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label" title="getNwkAddress (NWK_addr_req)">{{Network address}}</label>
     <div class="col-sm-5">
@@ -92,14 +93,16 @@
         ?>
     </div>
 </div>
+
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Mgmt_NWK_Update_req">Mgmt network update request</label>
+    <label class="col-sm-3 control-label" title="Mgmt_NWK_Update_req">Mgmt network update request (Mgmt_NWK_Update_req)</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-warning", "mgmtNetworkUpdateReq");
         ?>
-        <input id="idMgmtNwkUpdReqSC" title="{{Scanned channels mask (ex: all=07FFF800)}}" />
-        <input id="idMgmtNwkUpdReqSD" title="{{Scan duration (01-05, FE=channel change, or FF)}}" />
+        <input id="idMgmtNwkUpdReqSC" title="{{Scanned channels mask (ex: all=07FFF800)}}" style="width: 100px" />
+        <input id="idMgmtNwkUpdReqSD" title="{{Scan duration (01-05, FE=channel change, or FF)}}" style="width: 30px" />
+        <input id="idMgmtNwkUpdReqSCount" title="{{Scan count (2 bytes hex format)}}" style="width: 30px" />
     </div>
 </div>
 

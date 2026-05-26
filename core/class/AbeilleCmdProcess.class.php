@@ -2796,13 +2796,14 @@
                 // Mandatory params: 'addr'
                 // Optional params:
                 // - 'scanChan' (hex string, default=All/'07FFF800')
-                // - 'scanDuration' (hex string, default='01', 'FE' for channel change)
+                // - 'scanDuration' (hex string 2 bytes, 0x00-0x05 or 0xfe (channel change) or 0xff, default='01')
+                // - 'scanCount' (hex string 2 bytes, 0x00 or 0x01)
                 else if ($cmdName == 'mgmtNetworkUpdateReq') {
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    // Msg Type =  0x004A
+                    // Msg Type = 0x004A
 
                     // <target short address: uint16_t>
                     // <channel mask: uint32_t>
@@ -2812,28 +2813,34 @@
                     // <network manager short address: uint16_t>
                     //
                     // Channel Mask: Mask of channels to scan
-                    // Scan Duration: 0 – 0xFF Multiple of superframe duration.
-                    // Scan count: Scan repeats 0 – 5
-                    // Network Update ID: 0 – 0xFF Transaction ID for scan
-
-                    $cmd                = "004A";
+                    // Scan Duration: 0 – 0xFF, 0x00-0x05 or 0xfe (channel change) or 0xff.
+                    // Scan count: 0 - 1 (only if ScanDuration between 0x00 to 0x05)
+                    // Network Update ID: 0 – 0xFF, Transaction ID for scan (if ScanDuration is FE or FF)
 
                     $addr               = $Command['cmdParams']['addr'];
                     $scanChan           = isset($Command['cmdParams']['scanChan']) ? hexdec($Command['cmdParams']['scanChan']) : 0x7FFF800;
                     $scanChan           = sprintf("%08X", $scanChan);
                     $scanDuration       = isset($Command['cmdParams']['scanDuration']) ? $Command['cmdParams']['scanDuration'] : "01";
                     $scanDuration       = strtoupper($scanDuration);
-                    if ($scanDuration == "FE") // Channel change request
+                    if (isset($Command['cmdParams']['scanCount']))
+                        $scanCount = $Command['cmdParams']['scanCount'];
+                    else if ($scanDuration == "FE") // Channel change request
                         $scanCount      = "00";
                     else
                         $scanCount      = "01";
-                    $networkUpdateId    = "01";
-                    $networkManagerAddr = "0000"; // Useful only if scanDuration==FF
+                    if (($scanDuration == "FE") || ($scanDuration == "FF"))
+                        $networkUpdateId    = "01";
+                    else
+                        $networkUpdateId    = ""; // Open point: Required by Zigate FW even if should not be present ?
+                    if ($scanDuration == "FF") // networkManagerAddr: Really supported by Zigate msg 004A ?
+                        $networkManagerAddr = "0000"; // Useful only if scanDuration==FF
+                    else
+                        $networkManagerAddr = ""; // Open point: Required by Zigate FW even if should not be present ?
 
-                    cmdLog('debug', "  mgmtNetworkUpdateReq: addr=".$addr.", scanChan=".$scanChan.", scanDuration=".$scanDuration.', scanCount='.$scanCount);
+                    cmdLog('debug', "  mgmtNetworkUpdateReq: Addr=$addr, ScanChan=$scanChan, ScanDuration=$scanDuration, ScanCount=$scanCount");
                     $data = $addr.$scanChan.$scanDuration.$scanCount.$networkUpdateId.$networkManagerAddr;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "004A", $data, $addr);
                     return;
                 }
 

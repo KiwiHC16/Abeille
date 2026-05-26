@@ -2153,11 +2153,16 @@ function interrogate(request) {
         topic = "Cmd" + logicalId + "_mgmtNetworkUpdateReq";
         scanChan = document.getElementById("idMgmtNwkUpdReqSC").value;
         scanDuration = document.getElementById("idMgmtNwkUpdReqSD").value;
+        scanCount = document.getElementById("idMgmtNwkUpdReqSCount").value;
         payload = "";
         if (scanChan != "") payload += "scanChan=" + scanChan;
         if (scanDuration != "") {
             if (payload != "") payload += "_";
             payload += "scanDuration=" + scanDuration;
+        }
+        if (scanCount != "") {
+            if (payload != "") payload += "_";
+            payload += "scanCount=" + scanCount;
         }
     } else if (request == "leaveRequest") {
         topic = "Cmd" + logicalId + "_LeaveRequest";

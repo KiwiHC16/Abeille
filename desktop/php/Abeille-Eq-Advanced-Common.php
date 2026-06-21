@@ -49,6 +49,7 @@
     <label class="col-sm-3 control-label">{{Documentation}}</label>
     <div class="col-sm-5">
         <a id="idDocUrl" href="tobefilled" target="_blank">{{Voir ici si présente}}</a>
+        <a id="idDocUrlLocal" href="tobefilled" target="_blank" style="display:none; margin-left:8px">{{Manuel local (PDF)}}</a>
     </div>
 </div>
 

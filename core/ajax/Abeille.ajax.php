@@ -62,6 +62,17 @@
         return true;
     }
 
+    // Locally stored PDF manuals (desktop/docs/manuals/), keyed by model name ('ab::eqModel'/'modelName').
+    // Returns the web-relative URL, or '' if no local manual is known for this model.
+    function getLocalDocUrl($modelName) {
+        $localManuals = array(
+            'TS130F__TZ3000_fccpjz5z' => 'manual-of-zigbee-curtain-module-qs-zigbee-c01-a5.pdf',
+        );
+        if (!isset($localManuals[$modelName]))
+            return '';
+        return 'plugins/Abeille/desktop/docs/manuals/'.$localManuals[$modelName];
+    }
+
     function sendToX($queueName, $msg) {
         global $abQueues;
 
@@ -648,6 +659,7 @@
                 );
                 if (isset($eqModel['variables']))
                     $eq['model']['variables'] = $eqModel['variables'];
+                $eq['model']['localDocUrl'] = getLocalDocUrl($eq['model']['modelName']);
 
                 $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
                 $eq['zigbee'] = $zigbee;
@@ -655,6 +667,7 @@
                 $eq['zbManuf'] = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
 
                 $eq['paramType'] = $eqLogic->getConfiguration('paramType', "");
+                $eq['quarantineUntil'] = intval($eqLogic->getStatus('ab::quarantineUntil', 0));
 
                 $jCmds = Cmd::byEqLogicId($eqId);
                 $eq['cmds'] = [];
@@ -1004,6 +1017,32 @@
                 log::add('Abeille', 'info', 'changeShortAddr: '.$eqLogic->getName().' ('.$net.'/'.$oldAddr.' => '.$net.'/'.$newAddr.')');
                 $eqLogic->setLogicalId($net.'/'.$newAddr);
                 $eqLogic->save();
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        /* Clear quarantine status of an equipment (allows commands to be sent to it again) */
+        if (init('action') == 'clearQuarantine') {
+            $eqId = init('eqId');
+
+            $status = 0;
+            $error = "";
+
+            $eqLogic = Abeille::byId($eqId);
+            if (!is_object($eqLogic)) {
+                $status = -1;
+                $error = "Equipement inconnu (id ".$eqId.")";
+            }
+
+            if ($status == 0) {
+                log::add('Abeille', 'info', 'clearQuarantine: '.$eqLogic->getName());
+                $eqLogic->setStatus('ab::quarantineUntil', 0);
+                $eqLogic->save();
+
+                // Tell the cmd daemon to reload this device's infos from DB,
+                // which clears its in-memory quarantine state as a side effect.
+                sendToX('xToCmd', array('type' => 'eqUpdated', 'id' => $eqId));
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));

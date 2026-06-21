@@ -131,3 +131,11 @@
         <a class="btn btn-danger" id="idRepairBtn" title="{{Tente de corriger l'état interne de l'équipement}}">{{Réparer}}</a>
     </div>
 </div>
+
+<div class="form-group" id="idQuarantineGroup" style="display:none">
+    <label class="col-sm-3 control-label">{{Quarantaine}}</label>
+    <div class="col-sm-5">
+        <input id="idQuarantineStatus" type="text" readonly style="width:220px" value="" />
+        <a class="btn btn-warning" id="idClearQuarantineBtn" style="margin-left:8px" title="{{Sort immédiatement l'équipement de quarantaine et autorise l'envoi de nouvelles commandes}}">{{Sortir de quarantaine}}</a>
+    </div>
+</div>

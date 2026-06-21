@@ -253,6 +253,17 @@ function refreshEqInfos() {
                 "href",
                 js_urlProducts + "/" + curEq.model.modelName
             );
+
+            // Local manual (PDF stored in plugins/Abeille/desktop/docs/manuals/), if known for this model
+            if (curEq.model.localDocUrl) {
+                document
+                    .getElementById("idDocUrlLocal")
+                    .setAttribute("href", curEq.model.localDocUrl);
+                $("#idDocUrlLocal").show();
+            } else {
+                $("#idDocUrlLocal").hide();
+            }
+
             if (curEq.model.modelSource == "local") {
                 $("#idDelLocalBtn").show();
             }
@@ -261,6 +272,21 @@ function refreshEqInfos() {
             else
                 document.getElementById("idBatteryType").value =
                     "{{Batterie}} " + curEq.batteryType;
+
+            // Quarantine status (set by AbeilleCmd daemon after repeated noack failures)
+            if (
+                typeof curEq.quarantineUntil != "undefined" &&
+                curEq.quarantineUntil > Math.floor(Date.now() / 1000)
+            ) {
+                var remainMin = Math.ceil(
+                    (curEq.quarantineUntil - Math.floor(Date.now() / 1000)) / 60
+                );
+                document.getElementById("idQuarantineStatus").value =
+                    "{{En quarantaine, encore}} " + remainMin + " {{min}}";
+                $("#idQuarantineGroup").show();
+            } else {
+                $("#idQuarantineGroup").hide();
+            }
 
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
@@ -1078,6 +1104,40 @@ function changeShortAddr() {
         });
     });
 }
+
+/* Clear quarantine: allows commands to be sent again to a quarantined device. */
+$("#idClearQuarantineBtn").on("click", function () {
+    console.log("clearQuarantine(" + curEqId + ")");
+
+    bootbox.confirm(
+        "{{Confirmez la sortie de quarantaine de cet équipement ?}}",
+        function (result) {
+            if (result == false) return;
+
+            $.ajax({
+                type: "POST",
+                url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+                data: {
+                    action: "clearQuarantine",
+                    eqId: curEqId,
+                },
+                dataType: "json",
+                global: false,
+                error: function (request, status, error) {
+                    bootbox.alert("ERREUR 'clearQuarantine' !");
+                },
+                success: function (json_res) {
+                    res = JSON.parse(json_res.result);
+                    if (res.status != 0) {
+                        alert("ERREUR ! " + res.error);
+                    } else {
+                        refreshEqInfos();
+                    }
+                },
+            });
+        }
+    );
+});
 
 /* Confirm unknown zigate must be accepted. */
 function acceptNewZigate() {

@@ -75,7 +75,7 @@
                     logMessage("", "  WARNING: Unsupported message type (".$msg->type.") => Ignored.");
                     continue;
                 }
-                if (hexdec($msg->startIdx) != $router['tableIndex']) {
+                if ($msg->startIdx != $router["tableIndex"]) {
                     /* Note: this case is due to too many identical 004E messages sent to eq
                        leading to several identical 804E answers */
                     logMessage("", "  WARNING: Unexpected start index (".$msg->startIdx.") => Ignored.");
@@ -148,10 +148,13 @@
         global $routingTable;
         if (isset($routingTable['routers'][$rLogicId])) {
             $router2 = $routingTable['routers'][$rLogicId];
+            foreach ($msg->table as $dest => $entry) {
+                $router2['table'][$dest] = $entry;
+            }
         } else {
             $router2 = array(
                 'addr' => $msg->srcAddr,
-                'table' => $msg->table,
+                'table' => (array)$msg->table,
             );
         }
         $routingTable['routers'][$rLogicId] = $router2;

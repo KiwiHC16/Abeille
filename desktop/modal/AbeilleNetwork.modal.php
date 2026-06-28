@@ -21,6 +21,8 @@
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else if ($what == "lqiPath")
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="loadLqiPathData('.$zgId.')">Abeille'.$zgId.'</a>';
+            else if ($what == "routes")
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayRoutesTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else // "linksGraph"
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$zgId.')">Abeille'.$zgId.'</a>';
             echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLqiTable('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
@@ -314,64 +316,16 @@
         </div>
 
         <div class="tab-pane" id="idRoutesTab">
-            <?php
-                echo '<a class="btn btn-success refreshRoutesAll"><i class="fas fa-sync"></i> {{Tout collecter}}</a>';
-                echo '<p style="margin-top:8px;color:#888;">{{Firmware Zigate ≥ 3.1d requis}}</p>';
-
-                // Build name lookup from Jeedom DB: logicalId => 'Parent-Name (addr)'
-                $eqNames = array();
-                foreach (Abeille::byType('Abeille') as $eq) {
-                    $lid = $eq->getLogicalId(); // e.g. Abeille1/A3B4
-                    $parent = $eq->getObject();
-                    $pName  = $parent ? $parent->getName() : '';
-                    $addr   = explode('/', $lid)[1];
-                    $label  = ($pName ? $pName.'-' : '').$eq->getName().' ('.$addr.')';
-                    $eqNames[$lid] = $label;
-                }
-
-                function eqLabel($logicalId, $names) {
-                    return isset($names[$logicalId]) ? $names[$logicalId] : $logicalId;
-                }
-
-                $tmpDir = jeedom::getTmpFolder('Abeille');
-                $anyData = false;
-
-                for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                    if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y') continue;
-
-                    $netName = 'Abeille'.$zgId;
-                    $file    = $tmpDir.'/AbeilleRoutes-'.$netName.'.json';
-                    if (!file_exists($file)) continue;
-
-                    $json = json_decode(file_get_contents($file), true);
-                    if (empty($json) || empty($json['routers'])) continue;
-
-                    $anyData = true;
-                    $collectTime = isset($json['collectTime']) ? date('d/m/Y H:i', $json['collectTime']) : '?';
-                    echo '<h4>'.$netName.' <small style="color:#888">{{collecté le}} '.$collectTime.'</small></h4>';
-                    echo '<table class="table table-condensed table-bordered" style="width:auto;margin-bottom:16px;">';
-                    echo '<thead><tr><th>{{Source}}</th><th>{{Destination}}</th><th>{{Prochain saut}}</th></tr></thead><tbody>';
-
-                    foreach ($json['routers'] as $routerLogicalId => $routerData) {
-                        if (empty($routerData['table'])) continue;
-                        foreach ($routerData['table'] as $dest => $nextHop) {
-                            $destLid    = $netName.'/'.$dest;
-                            $nextHopLid = $netName.'/'.$nextHop;
-                            echo '<tr>';
-                            echo '<td>'.htmlspecialchars(eqLabel($routerLogicalId, $eqNames)).'</td>';
-                            echo '<td>'.htmlspecialchars(eqLabel($destLid,         $eqNames)).'</td>';
-                            echo '<td>'.htmlspecialchars(eqLabel($nextHopLid,      $eqNames)).'</td>';
-                            echo '</tr>';
-                        }
-                    }
-
-                    echo '</tbody></table>';
-                }
-
-                if (!$anyData) {
-                    echo '<div class="alert alert-warning">{{Aucune donnée. Cliquez sur "Tout collecter" pour interroger le réseau.}}</div>';
-                }
-            ?>
+            <div style="padding:10px">
+                <div style="margin-bottom:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+                    <?php displayNetworks(maxNbOfZigate, "routes"); ?>
+                    <a class="btn btn-default btn-sm refreshRoutesAll" style="margin-left:16px"><i class="fas fa-sync"></i> {{Tout collecter}}</a>
+                </div>
+                <p style="color:#888; margin-bottom:10px;">{{Firmware Zigate ≥ 3.1d requis}}</p>
+                <div id="idRoutesTableContent">
+                    <div class="alert alert-info">{{Sélectionnez un réseau pour afficher ses routes.}}</div>
+                </div>
+            </div>
         </div>
 
         <div class="tab-pane" id="idLqiPathTab">

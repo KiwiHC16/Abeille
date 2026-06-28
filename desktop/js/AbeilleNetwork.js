@@ -738,6 +738,89 @@ function getEqList(gtwId) {
 }
 
 // Retrieve LQI table for gateway 'gtwId'
+
+// ============================================================
+// ROUTES TAB
+// ============================================================
+function displayRoutesTable(zgId) {
+    var container = $("#idRoutesTableContent");
+    container.html("<div class='alert alert-info'><i class='fas fa-spinner fa-spin'></i> {{Chargement...}}</div>");
+
+    var netName = "Abeille" + zgId;
+
+    $.when(
+        $.ajax({
+            type: "POST",
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: { action: "getTmpFile", file: "AbeilleRoutes-" + netName + ".json" },
+            dataType: "json",
+            cache: false,
+        }),
+        getEqList(zgId)
+    ).done(function (routesResp, eqResp) {
+        var routesJson = routesResp[0];
+        var eqJson     = eqResp[0];
+
+        if (routesJson.result === undefined || routesJson.result === null || routesJson.result === "") {
+            container.html("<div class='alert alert-warning'>{{Aucune donnée pour " + netName + ". Cliquez sur \"Tout collecter\".}}</div>");
+            return;
+        }
+
+        var parsed;
+        try { parsed = JSON.parse(routesJson.result); } catch(e) {
+            container.html("<div class='alert alert-danger'>{{Erreur de lecture du fichier JSON.}}</div>");
+            return;
+        }
+        if (!parsed || !parsed.routers || Object.keys(parsed.routers).length === 0) {
+            container.html("<div class='alert alert-warning'>{{Aucune route collectée pour " + netName + ".}}</div>");
+            return;
+        }
+
+        // Build name lookup: logicalId => 'Parent-Name (addr)'
+        var names = {};
+        if (eqJson && eqJson.result) {
+            var eqData = JSON.parse(eqJson.result);
+            if (eqData && eqData.eqList) {
+                for (var lid in eqData.eqList) {
+                    var eq = eqData.eqList[lid];
+                    var label = (eq.objectName ? eq.objectName + "-" : "") + eq.name + " (" + eq.addr + ")";
+                    names[lid] = label;
+                }
+            }
+        }
+        function eqLabel(lid) { return names[lid] || lid; }
+
+        var collectTime = parsed.collectTime ? new Date(parsed.collectTime * 1000).toLocaleString("fr-FR") : "?";
+        var html = "<p><strong>" + netName + "</strong> &mdash; <small style='color:#888'>{{collecté le}} " + collectTime + "</small></p>";
+        html += "<table class='table table-condensed table-bordered' style='width:auto'>";
+        html += "<thead><tr><th>{{Source}}</th><th>{{Destination}}</th><th>{{Prochain saut}}</th></tr></thead><tbody>";
+
+        var rowCount = 0;
+        for (var routerLid in parsed.routers) {
+            var routerData = parsed.routers[routerLid];
+            if (!routerData.table) continue;
+            for (var dest in routerData.table) {
+                var nextHop = routerData.table[dest];
+                html += "<tr>";
+                html += "<td>" + $("<span>").text(eqLabel(routerLid)).html() + "</td>";
+                html += "<td>" + $("<span>").text(eqLabel(netName + "/" + dest)).html() + "</td>";
+                html += "<td>" + $("<span>").text(eqLabel(netName + "/" + nextHop)).html() + "</td>";
+                html += "</tr>";
+                rowCount++;
+            }
+        }
+
+        html += "</tbody></table>";
+        if (rowCount === 0) {
+            container.html("<div class='alert alert-warning'>{{Aucune route dans ce fichier.}}</div>");
+        } else {
+            container.html(html);
+        }
+    }).fail(function () {
+        container.html("<div class='alert alert-danger'>{{Erreur lors du chargement des données.}}</div>");
+    });
+}
+
 function getLqiTable(gtwId) {
     var request = $.ajax({
         type: "POST",

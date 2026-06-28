@@ -15,6 +15,7 @@
 			'compat'    => array( 'bouton'=>'bt_supportedEqList',	'icon'=>'fa-align-left',    'text'=>'{{Compatibilité}}' ),
 			'ota'       => array( 'bouton'=>'bt_Ota',				'icon'=>'fa-paperclip',     'text'=>'{{Mises-à-jour OTA}}' ),
 			'support'   => array( 'bouton'=>'bt_maintenancePage',	'icon'=>'fa-medkit',        'text'=>'{{Maintenance}}' ),
+			'ieeeHistory' => array( 'bouton'=>'bt_ieeeHistory',     'icon'=>'fa-history',       'text'=>'{{IEEE Historique}}' ),
 		);
 		// if (isset($dbgDeveloperMode)) {
 			// No time to spent on next subject. No longer functional and useless.

@@ -463,6 +463,13 @@ $("#bt_maintenancePage").on("click", function () {
     window.open("index.php?v=d&m=Abeille&p=AbeilleMaintenance");
 });
 
+$("#bt_ieeeHistory").on("click", function () {
+    $("#md_modal").dialog({ title: "{{IEEE Historique}}" });
+    $("#md_modal")
+        .load("index.php?v=d&plugin=Abeille&modal=AbeilleIeeeHistory.modal")
+        .dialog("open");
+});
+
 $("#bt_graph").on("click", function () {
     window.open(
         "plugins/Abeille/desktop/php/AbeilleGraph.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All"

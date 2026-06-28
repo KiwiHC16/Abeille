@@ -1137,6 +1137,62 @@ class Abeille extends eqLogic {
     //     // NOT WORKING: Might be a Jeedom bug.
     // }
 
+    // Records a history entry in config table keyed by IEEE address.
+    // Key: 'zigbee:abeille:{IEEE}', value: JSON {entries:[{date,name,object,logical_id},...]}
+    // Entries accumulate over time so names/objects are preserved even after equipment is deleted/renamed.
+    public function preSave() {
+        $ieee = $this->getConfiguration('IEEE', '');
+        if ($ieee == '') return;
+
+        $key = 'zigbee:abeille:' . strtoupper($ieee);
+        // config::byKey() auto-decodes JSON, so $existing is already a PHP array or '' if not found
+        $existing = config::byKey($key, 'Abeille', '');
+        $history = is_array($existing) ? $existing : ['entries' => []];
+        if (!isset($history['entries'])) $history['entries'] = [];
+
+        $name = $this->getName();
+        $logicalId = $this->getLogicalId();
+        $obj = $this->getObject();
+        $objectName = is_object($obj) ? $obj->getName() : '';
+
+        $last = !empty($history['entries']) ? end($history['entries']) : null;
+        if ($last === null
+            || $last['name'] !== $name
+            || $last['object'] !== $objectName
+            || $last['logical_id'] !== $logicalId
+        ) {
+            $history['entries'][] = [
+                'date'       => date('Y-m-d H:i:s'),
+                'name'       => $name,
+                'object'     => $objectName,
+                'logical_id' => $logicalId,
+            ];
+            config::save($key, $history, 'Abeille'); // config::save() auto-encodes arrays to JSON
+        }
+    }
+
+    public function preRemove() {
+        $ieee = $this->getConfiguration('IEEE', '');
+        if ($ieee == '') return;
+
+        $key = 'zigbee:abeille:' . strtoupper($ieee);
+        $existing = config::byKey($key, 'Abeille', '');
+        $history = is_array($existing) ? $existing : ['entries' => []];
+        if (!isset($history['entries'])) $history['entries'] = [];
+
+        $obj = $this->getObject();
+        $objectName = is_object($obj) ? $obj->getName() : '';
+
+        $history['entries'][] = [
+            'date'       => date('Y-m-d H:i:s'),
+            'name'       => $this->getName(),
+            'object'     => $objectName,
+            'logical_id' => $this->getLogicalId(),
+            'deleted'    => true,
+        ];
+        config::save($key, $history, 'Abeille');
+    }
+
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
     public static function checkInclusionStatus($net) {
         $eqLogic = eqLogic::byLogicalId($net.'/0000', 'Abeille');

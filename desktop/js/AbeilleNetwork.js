@@ -15,6 +15,7 @@
  */
 
 var currentZigateLG = 1; // Current zigate displayed in links graph
+var currentLGRenderer = null; // Active Viva.Graph renderer (disposed before creating a new one)
 var prevTrackingMsg = ""; // Previous tracking message
 
 // Memory leak fix: store timeout IDs to allow cleanup on page navigation
@@ -752,6 +753,7 @@ function getLqiTable(gtwId) {
 
 //TODO fix on click link color change, link color upon LQI quality, node name .....
 function displayLinksGraph(gtwId) {
+    currentZigateLG = gtwId; // Track current network
     console.log("displayLinksGraph(" + gtwId + ")");
 
     // Get Jeedom equipements list => 'jeedomTable'
@@ -965,6 +967,7 @@ function displayLinksGraph(gtwId) {
                         gravity: -0.5,
                     });
 
+                    if (currentLGRenderer) { currentLGRenderer.dispose(); currentLGRenderer = null; }
                     $("#idLinksGraphTabSVG svg").remove(); // Remove previous one
 
                     var renderer = Viva.Graph.View.renderer(graph, {
@@ -975,6 +978,7 @@ function displayLinksGraph(gtwId) {
                             document.getElementById("idLinksGraphTabSVG"),
                     });
                     renderer.run();
+                    currentLGRenderer = renderer; // Store for disposal on next call
                     /*setTimeout(function () {
                             renderer.pause();
                             renderer.reset();

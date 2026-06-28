@@ -1424,8 +1424,9 @@ function computeRouteA2B() {
 // LQI PATH TAB
 // ============================================================
 var lqiPathGtwId = 1;
-var lqiPathAdj = null;   // { nodeId: { neighborId: lqi } }  (directed, from router's view)
-var lqiPathNames = null; // { nodeId: displayName }
+var lqiPathAdj   = null;  // { nodeId: { neighborId: lqi } }  (directed, from router's view)
+var lqiPathNames = null;  // { nodeId: displayName }
+var lqiPathTypes = null;  // { nodeId: "Router"|"Coordinator"|"End Device" }
 
 $("#idLqiPathTab").off("click").on("click", function () {
     if (!lqiPathAdj) loadLqiPathData(1);
@@ -1451,23 +1452,26 @@ function loadLqiPathData(gtwId) {
         $("#div_lqiPathAlert").hide();
 
         var lqiTable = JSON.parse(res.content);
-        var adj = {}, names = {};
+        var adj = {}, names = {}, types = {};
 
         for (var rId in lqiTable.routers) {
             var router = lqiTable.routers[rId];
             names[rId] = router.name;
+            types[rId] = router.type || "Router";
             if (!adj[rId]) adj[rId] = {};
             var nbrs = router.neighbors;
             if (!nbrs || Array.isArray(nbrs)) continue;
             for (var nId in nbrs) {
                 adj[rId][nId] = nbrs[nId].lqi;
                 if (!names[nId]) names[nId] = nbrs[nId].name;
+                if (!types[nId]) types[nId] = nbrs[nId].type || "Router";
                 if (!adj[nId]) adj[nId] = {};
             }
         }
 
         lqiPathAdj   = adj;
         lqiPathNames = names;
+        lqiPathTypes = types;
 
         var fromSel = $("#idLqiPathFrom").empty();
         var toSel   = $("#idLqiPathTo").empty();
@@ -1530,6 +1534,8 @@ function computeLqiPaths() {
         for (var i = 0; i < nbrs.length; i++) {
             var next = nbrs[i];
             if (visited[next]) continue;
+            // End Devices cannot be intermediate hops (only start or end)
+            if (next !== end && lqiPathTypes && lqiPathTypes[next] === "End Device") continue;
             visited[next] = true;
             path.push(next);
             dfs(next, path, visited);

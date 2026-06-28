@@ -15,6 +15,7 @@
  */
 
 var currentZigateLG = 1; // Current zigate displayed in links graph
+var currentZigateLT = 1; // Current zigate displayed in links table
 var currentLGRenderer = null; // Active Viva.Graph renderer (disposed before creating a new one)
 var prevTrackingMsg = ""; // Previous tracking message
 
@@ -34,21 +35,18 @@ window.addEventListener('beforeunload', clearAbeilleNetworkTimeouts);
 $(document).on('jeeObject-postLoad jeeObject-preSave', clearAbeilleNetworkTimeouts);
 
 // $("#tab_nodes")
-$("#idLinksTableTab")
+$('a[href="#idLinksTableTab"]')
     .off("click")
     .on("click", function () {
         console.log("idLinksTableTab click");
-        /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
-        displayLinksTable(1);
+        displayLinksTable(currentZigateLT);
     });
 
-// $("#tab_graph")
-$("#idLinksGraphTab")
+$('a[href="#idLinksGraphTab"]')
     .off("click")
     .on("click", function () {
         console.log("idLinksGraphTab click");
-        /* TODO: Tcharp38, display 1st active zigate instead of zigate 1 (might be disabled) */
-        displayLinksGraph(1);
+        displayLinksGraph(currentZigateLG);
     });
 
 // $("#tab_summary")
@@ -284,6 +282,7 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
 /* Display nodes table */
 function displayLinksTable(zgId) {
     console.log("displayLinksTable(zgId=" + zgId + ")");
+    currentZigateLT = zgId;
     $("#idLinksTableSearch").val(""); // Reset search filter on network change
 
     var jqXHR = $.ajax({

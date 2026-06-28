@@ -1,21 +1,29 @@
 <?php
     require_once __DIR__.'/../../../../core/php/core.inc.php';
 
-    // Build two maps from active equipment:
+    // Build maps from active equipment:
     // - $activeIeees   : IEEE → bool (for green/blue color coding)
     // - $activeByLogId : logicalId → id (for equipment link — more precise than IEEE when duplicates exist)
+    // - $ieeeToEqs     : IEEE → [{id, name, logicalId}] (for duplicate detection)
     $activeIeees   = [];
     $activeByLogId = [];
+    $ieeeToEqs     = [];
     foreach (eqLogic::byType('Abeille') as $eq) {
         $ieee = strtoupper($eq->getConfiguration('IEEE', ''));
         $lid  = $eq->getLogicalId();
         $id   = $eq->getId();
-        if ($ieee !== '') $activeIeees[$ieee] = true;
+        if ($ieee !== '') {
+            $activeIeees[$ieee] = true;
+            if (!isset($ieeeToEqs[$ieee])) $ieeeToEqs[$ieee] = [];
+            $ieeeToEqs[$ieee][] = ['id' => $id, 'name' => $eq->getName(), 'logicalId' => $lid];
+        }
         // Keep highest ID when logical_id is shared (duplicate equipment — last created wins)
         if (!isset($activeByLogId[$lid]) || $id > $activeByLogId[$lid]) {
             $activeByLogId[$lid] = $id;
         }
     }
+    // IEEE addresses assigned to more than one equipment
+    $duplicates = array_filter($ieeeToEqs, function($eqs) { return count($eqs) > 1; });
 
     // Fetch all IEEE history entries from config table
     $allEntries = config::searchKey('zigbee:abeille:', 'Abeille');
@@ -51,6 +59,36 @@
     define('COLOR_BLUE_TEXT',  '#31708f');
 ?>
 <div style="padding:10px;">
+<?php if (!empty($duplicates)): ?>
+    <div style="margin-bottom:14px;">
+        <legend style="margin-bottom:6px;">
+            <i class="fas fa-exclamation-triangle" style="color:orange;"></i>
+            {{Adresses IEEE dupliquées}} (<?= count($duplicates) ?>)
+        </legend>
+        <table class="table table-condensed table-bordered tablesorter" style="font-size:0.9em;">
+            <thead>
+                <tr style="background:#fff3cd;">
+                    <th style="width:165px;">{{IEEE}}</th>
+                    <th>{{ID}}</th>
+                    <th>{{Nom}}</th>
+                    <th>{{Logical ID}}</th>
+                </tr>
+            </thead>
+            <tbody>
+<?php foreach ($duplicates as $ieee => $eqs): ?>
+<?php foreach ($eqs as $i => $eq): ?>
+                <tr style="background:<?= $i === 0 ? '#fff3cd' : '#f8d7da' ?>;">
+                    <td><?= $i === 0 ? '<strong>'.htmlspecialchars($ieee).'</strong>' : '' ?></td>
+                    <td><?= $eq['id'] ?></td>
+                    <td><a href="index.php?v=d&m=Abeille&p=Abeille&id=<?= $eq['id'] ?>"><?= htmlspecialchars($eq['name']) ?></a></td>
+                    <td><?= htmlspecialchars($eq['logicalId']) ?></td>
+                </tr>
+<?php endforeach; ?>
+<?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>
     <div style="margin-bottom:10px; display:flex; gap:8px; align-items:center;">
         <input type="text" id="ieeeHistoryFilter" class="form-control"
                placeholder="{{Filtrer par IEEE, nom ou objet...}}"

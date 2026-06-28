@@ -106,6 +106,7 @@ function refreshLqiTable(zgId, page) {
                 // levelAlert = "info";
                 // $("#idLinksTable").trigger("update");
                 if (page == "linksTable") displayLinksTable(zgId);
+                else if (page == "lqiPath") loadLqiPathData(zgId);
                 else displayLinksGraph(zgId);
                 // trackLQICollectStatus(false, zgId);
             } else {
@@ -1053,6 +1054,169 @@ function displayLinksGraph(gtwId) {
             });
         }
     });
+}
+
+
+// ============================================================
+// LQI PATH TAB
+// ============================================================
+var lqiPathGtwId = 1;
+var lqiPathAdj = null;   // { nodeId: { neighborId: lqi } }  (directed, from router's view)
+var lqiPathNames = null; // { nodeId: displayName }
+
+$("#idLqiPathTab").off("click").on("click", function () {
+    if (!lqiPathAdj) loadLqiPathData(1);
+});
+
+$("#idLqiPathCompute").off("click").on("click", function () {
+    computeLqiPaths();
+});
+
+function loadLqiPathData(gtwId) {
+    lqiPathGtwId = gtwId;
+    $("#idLqiPathResults").empty();
+
+    getLqiTable(gtwId).done(function (json) {
+        var res = JSON.parse(json.result);
+        if (res.status != 0 || res.content === "") {
+            $("#div_lqiPathAlert").showAlert({
+                message: "{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}",
+                level: "danger"
+            });
+            return;
+        }
+        $("#div_lqiPathAlert").hide();
+
+        var lqiTable = JSON.parse(res.content);
+        var adj = {}, names = {};
+
+        for (var rId in lqiTable.routers) {
+            var router = lqiTable.routers[rId];
+            names[rId] = router.name;
+            if (!adj[rId]) adj[rId] = {};
+            var nbrs = router.neighbors;
+            if (!nbrs || Array.isArray(nbrs)) continue;
+            for (var nId in nbrs) {
+                adj[rId][nId] = nbrs[nId].lqi;
+                if (!names[nId]) names[nId] = nbrs[nId].name;
+                if (!adj[nId]) adj[nId] = {};
+            }
+        }
+
+        lqiPathAdj   = adj;
+        lqiPathNames = names;
+
+        var fromSel = $("#idLqiPathFrom").empty();
+        var toSel   = $("#idLqiPathTo").empty();
+        var coordId = "Abeille" + gtwId + "/0000";
+
+        var nodeList = Object.keys(names).sort(function (a, b) {
+            return (names[a] || a).localeCompare(names[b] || b);
+        });
+        nodeList.forEach(function (nodeId) {
+            var label = (names[nodeId] || nodeId) + "  (" + nodeId.split("/")[1] + ")";
+            fromSel.append(new Option(label, nodeId));
+            toSel.append(new Option(label, nodeId));
+        });
+        fromSel.val(coordId);
+        var nonCoord = nodeList.filter(function (n) { return n !== coordId; });
+        if (nonCoord.length) toSel.val(nonCoord[0]);
+    });
+}
+
+function lqiForHop(a, b) {
+    if (lqiPathAdj[a] && lqiPathAdj[a][b] !== undefined) return lqiPathAdj[a][b];
+    if (lqiPathAdj[b] && lqiPathAdj[b][a] !== undefined) return lqiPathAdj[b][a];
+    return null;
+}
+
+function lqiColor(lqi) {
+    if (lqi === null) return "#888";
+    if (lqi > 100) return "#3c763d";
+    if (lqi > 50)  return "#8a6d3b";
+    return "#a94442";
+}
+
+function computeLqiPaths() {
+    if (!lqiPathAdj) return;
+    var start = $("#idLqiPathFrom").val();
+    var end   = $("#idLqiPathTo").val();
+    if (!start || !end || start === end) {
+        $("#idLqiPathResults").html("<div class='alert alert-warning'>{{Sélectionnez deux équipements différents.}}</div>");
+        return;
+    }
+
+    // Build undirected neighbor sets for traversal
+    var undirected = {};
+    for (var a in lqiPathAdj) {
+        if (!undirected[a]) undirected[a] = [];
+        for (var b in lqiPathAdj[a]) {
+            if (!undirected[b]) undirected[b] = [];
+            if (undirected[a].indexOf(b) < 0) undirected[a].push(b);
+            if (undirected[b].indexOf(a) < 0) undirected[b].push(a);
+        }
+    }
+
+    var allPaths = [];
+    var MAX_PATHS = 100;
+
+    function dfs(cur, path, visited) {
+        if (allPaths.length >= MAX_PATHS) return;
+        if (cur === end) { allPaths.push(path.slice()); return; }
+        var nbrs = undirected[cur] || [];
+        for (var i = 0; i < nbrs.length; i++) {
+            var next = nbrs[i];
+            if (visited[next]) continue;
+            visited[next] = true;
+            path.push(next);
+            dfs(next, path, visited);
+            path.pop();
+            visited[next] = false;
+        }
+    }
+
+    var visited = {};
+    visited[start] = true;
+    dfs(start, [start], visited);
+
+    if (!allPaths.length) {
+        $("#idLqiPathResults").html("<div class='alert alert-warning'>{{Aucun chemin trouvé entre ces deux équipements.}}</div>");
+        return;
+    }
+
+    // Sort: fewest hops first, then best minimum LQI first
+    allPaths.sort(function (a, b) {
+        if (a.length !== b.length) return a.length - b.length;
+        var minA = 999, minB = 999;
+        for (var i = 0; i < a.length - 1; i++) { var l = lqiForHop(a[i], a[i+1]); if (l !== null && l < minA) minA = l; }
+        for (var i = 0; i < b.length - 1; i++) { var l = lqiForHop(b[i], b[i+1]); if (l !== null && l < minB) minB = l; }
+        return minB - minA;
+    });
+
+    var limited = allPaths.length >= MAX_PATHS;
+    var html = "<p><strong>" + allPaths.length + " chemin(s)" + (limited ? " (limite " + MAX_PATHS + " atteinte)" : "") + "</strong></p>";
+
+    allPaths.forEach(function (path, idx) {
+        var minLqi = 999, parts = [];
+        for (var i = 0; i < path.length; i++) {
+            var nodeId = path[i];
+            var name = lqiPathNames[nodeId] || nodeId;
+            var addr = nodeId.split("/")[1];
+            parts.push("<strong title='" + nodeId + "'>" + name + "</strong><small style='color:#777'>&nbsp;(" + addr + ")</small>");
+            if (i < path.length - 1) {
+                var lqi = lqiForHop(path[i], path[i+1]);
+                if (lqi !== null && lqi < minLqi) minLqi = lqi;
+                var lqiLabel = lqi !== null ? lqi : "?";
+                parts.push("&nbsp;<span style='color:" + lqiColor(lqi) + "'>&rarr;&nbsp;LQI:" + lqiLabel + "&nbsp;&rarr;</span>&nbsp;");
+            }
+        }
+        var minStr = minLqi < 999 ? " &nbsp;<small>(min&nbsp;LQI:&nbsp;<span style='color:" + lqiColor(minLqi) + ";font-weight:bold'>" + minLqi + "</span>)</small>" : "";
+        html += "<div style='margin-bottom:8px;padding:8px;border:1px solid #ddd;border-radius:4px;'>";
+        html += "<span style='color:#777'>Chemin&nbsp;" + (idx+1) + " &mdash; " + (path.length-1) + " saut(s)</span>" + minStr + "<br/>";
+        html += parts.join("") + "</div>";
+    });
+
+    $("#idLqiPathResults").html(html);
 }
 
 function filterLinksTable(value) {

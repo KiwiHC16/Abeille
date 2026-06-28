@@ -1440,7 +1440,7 @@ function loadLqiPathData(gtwId) {
     lqiPathGtwId = gtwId;
     $("#idLqiPathResults").empty();
 
-    getLqiTable(gtwId).done(function (json) {
+    $.when(getLqiTable(gtwId), getEqList(gtwId)).done(function (json, eqResp) {
         var res = JSON.parse(json.result);
         if (res.status != 0 || res.content === "") {
             $("#div_lqiPathAlert").showAlert({
@@ -1469,6 +1469,17 @@ function loadLqiPathData(gtwId) {
             }
         }
 
+        // Override names with Objet - Nom from eqList
+        try {
+            var eqData = JSON.parse(eqResp[0].result);
+            if (eqData && eqData.eqList) {
+                for (var lid in eqData.eqList) {
+                    var eq = eqData.eqList[lid];
+                    names[lid] = (eq.objectName ? eq.objectName + " - " : "") + eq.name;
+                }
+            }
+        } catch(e) {}
+
         lqiPathAdj   = adj;
         lqiPathNames = names;
         lqiPathTypes = types;
@@ -1481,7 +1492,8 @@ function loadLqiPathData(gtwId) {
             return (names[a] || a).localeCompare(names[b] || b);
         });
         nodeList.forEach(function (nodeId) {
-            var label = (names[nodeId] || nodeId) + "  (" + nodeId.split("/")[1] + ")";
+            var addr = nodeId.split("/")[1];
+            var label = (names[nodeId] || nodeId) + "  (" + addr + ")";
             fromSel.append(new Option(label, nodeId));
             toSel.append(new Option(label, nodeId));
         });

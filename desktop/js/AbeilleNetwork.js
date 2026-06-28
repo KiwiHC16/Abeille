@@ -761,13 +761,18 @@ function displayRoutesTable(zgId) {
         var routesJson = routesResp[0];
         var eqJson     = eqResp[0];
 
-        if (routesJson.result === undefined || routesJson.result === null || routesJson.result === "") {
+        var outer;
+        try { outer = JSON.parse(routesJson.result); } catch(e) {
+            container.html("<div class='alert alert-danger'>{{Erreur de lecture du fichier JSON.}}</div>");
+            return;
+        }
+        if (outer.status !== 0 || !outer.content) {
             container.html("<div class='alert alert-warning'>{{Aucune donnée pour " + netName + ". Cliquez sur \"Tout collecter\".}}</div>");
             return;
         }
 
         var parsed;
-        try { parsed = JSON.parse(routesJson.result); } catch(e) {
+        try { parsed = JSON.parse(outer.content); } catch(e) {
             container.html("<div class='alert alert-danger'>{{Erreur de lecture du fichier JSON.}}</div>");
             return;
         }

@@ -1169,6 +1169,7 @@ function displayLinksGraph(gtwId) {
 var routeA2BGtwId = 1;
 var routeA2BRouters = null; // parsed.routers from AbeilleRoutes JSON
 var routeA2BNames  = null;  // logicalId → display label
+var routeA2BLqi    = null;  // lqiTable.routers from AbeilleLQI JSON
 
 $('a[href="#idRouteA2BTab"]').off("click").on("click", function () {
     loadRouteA2BData(routeA2BGtwId);
@@ -1197,8 +1198,15 @@ function loadRouteA2BData(gtwId) {
             dataType: "json",
             cache: false,
         }),
-        getEqList(gtwId)
-    ).done(function (routesResp, eqResp) {
+        getEqList(gtwId),
+        $.ajax({
+            type: "POST",
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: { action: "getTmpFile", file: "AbeilleLQI-" + netName + ".json" },
+            dataType: "json",
+            cache: false,
+        })
+    ).done(function (routesResp, eqResp, lqiResp) {
         var outer;
         try { outer = JSON.parse(routesResp[0].result); } catch(e) {
             results.html("<div class='alert alert-danger'>{{Erreur de lecture du fichier JSON.}}</div>");
@@ -1216,6 +1224,18 @@ function loadRouteA2BData(gtwId) {
         }
 
         routeA2BRouters = parsed.routers || {};
+
+        // Parse LQI data (non-blocking: ignore errors)
+        routeA2BLqi = {};
+        try {
+            if (lqiResp && lqiResp[0] && lqiResp[0].result) {
+                var lqiOuter = JSON.parse(lqiResp[0].result);
+                if (lqiOuter.status === 0 && lqiOuter.content) {
+                    var lqiParsed = JSON.parse(lqiOuter.content);
+                    routeA2BLqi = lqiParsed.routers || {};
+                }
+            }
+        } catch(e) {}
 
         // Build name lookup
         routeA2BNames = {};
@@ -1294,6 +1314,16 @@ function computeRouteA2B() {
     var srcHasTable = !!routeA2BRouters[netName + "/" + srcAddr];
     var dstHasTable = !!routeA2BRouters[netName + "/" + dstAddr];
     function addrLabel(addr) { return routeA2BNames[netName + "/" + addr] || addr; }
+    function lqiBetween(addrA, addrB) {
+        if (!routeA2BLqi) return null;
+        var rA = routeA2BLqi[netName + "/" + addrA];
+        if (rA && rA.neighbors && rA.neighbors[netName + "/" + addrB] !== undefined)
+            return rA.neighbors[netName + "/" + addrB].lqi;
+        var rB = routeA2BLqi[netName + "/" + addrB];
+        if (rB && rB.neighbors && rB.neighbors[netName + "/" + addrA] !== undefined)
+            return rB.neighbors[netName + "/" + addrA].lqi;
+        return null;
+    }
 
     var statusColors = {
         "Active": "success", "Discovery_Underway": "warning",
@@ -1311,8 +1341,11 @@ function computeRouteA2B() {
         hops.forEach(function(hop, idx) {
             if (idx > 0) {
                 var bc = statusColors[hop.status] || "default";
+                var lqi = lqiBetween(hops[idx - 1].addr, hop.addr);
+                var lqiColor = lqi === null ? "#999" : (lqi <= 50 ? "#d9534f" : (lqi <= 100 ? "#f0ad4e" : "#5cb85c"));
                 html += "<div style='text-align:center; padding:0 4px'>";
                 html += "<div style='font-size:20px; line-height:1; color:#555'>&#8594;</div>";
+                if (lqi !== null) html += "<div style='font-size:11px; font-weight:600; color:" + lqiColor + "'>LQI " + lqi + "</div>";
                 if (hop.status) html += "<div><span class='label label-" + bc + "' style='font-size:10px; white-space:nowrap'>" + hop.status + "</span></div>";
                 html += "</div>";
             }

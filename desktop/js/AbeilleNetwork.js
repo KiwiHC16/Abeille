@@ -1204,13 +1204,31 @@ function computeLqiPaths() {
             var l = lqiForHop(path[i], path[i+1]);
             if (l !== null && l < minLqi) minLqi = l;
         }
-        if (minLqi === 999 || minLqi >= minLqiThreshold) validPaths.push(path);
+        if (minLqi === 999 || minLqi >= minLqiThreshold) validPaths.push({ path: path, minLqi: minLqi });
         else invalidCount++;
     });
 
-    var html = "";
-    validPaths.forEach(function (path, idx) {
-        var minLqi = 999, parts = [];
+    // "Most probable" = highest min LQI (best bottleneck), tie-break: fewest hops
+    var bestIdx = -1;
+    if (validPaths.length) {
+        bestIdx = 0;
+        for (var i = 1; i < validPaths.length; i++) {
+            var cur = validPaths[i], best = validPaths[bestIdx];
+            if (cur.minLqi > best.minLqi || (cur.minLqi === best.minLqi && cur.path.length < best.path.length))
+                bestIdx = i;
+        }
+    }
+
+    // Sort remaining: fewest hops first, then best min LQI
+    var bestEntry = validPaths.splice(bestIdx, 1)[0];
+    validPaths.sort(function (a, b) {
+        if (a.path.length !== b.path.length) return a.path.length - b.path.length;
+        return b.minLqi - a.minLqi;
+    });
+    if (bestEntry) validPaths.unshift(bestEntry);
+
+    function renderPath(entry, idx, isBest) {
+        var path = entry.path, minLqi = 999, parts = [];
         for (var i = 0; i < path.length; i++) {
             var nodeId = path[i];
             var name = lqiPathNames[nodeId] || nodeId;
@@ -1226,9 +1244,20 @@ function computeLqiPaths() {
         var minStr = minLqi < 999
             ? " &nbsp;<small>(min&nbsp;LQI:&nbsp;<span style='color:" + lqiColor(minLqi) + ";font-weight:bold'>" + minLqi + "</span>)</small>"
             : "";
-        html += "<div style='margin-bottom:8px;padding:8px;border:1px solid #ddd;border-radius:4px;'>";
-        html += "<span style='color:#777'>Chemin&nbsp;" + (idx+1) + " &mdash; " + (path.length-1) + " saut(s)</span>" + minStr + "<br/>";
-        html += parts.join("") + "</div>";
+        var border = isBest ? "2px solid #3c763d" : "1px solid #ddd";
+        var bg     = isBest ? "background:#f4fff4;" : "";
+        var badge  = isBest ? " &nbsp;<span class='label label-success'>{{Le plus probable}}</span>" : "";
+        var label  = isBest
+            ? "<strong style='color:#3c763d'>Chemin&nbsp;" + (idx+1) + " &mdash; " + (path.length-1) + " saut(s)</strong>"
+            : "<span style='color:#777'>Chemin&nbsp;" + (idx+1) + " &mdash; " + (path.length-1) + " saut(s)</span>";
+        return "<div style='margin-bottom:8px;padding:8px;border:" + border + ";border-radius:4px;" + bg + "'>"
+            + label + minStr + badge + "<br/>"
+            + parts.join("") + "</div>";
+    }
+
+    var html = "";
+    validPaths.forEach(function (entry, idx) {
+        html += renderPath(entry, idx, idx === 0 && bestEntry);
     });
 
     var summary = validPaths.length + " chemin(s) valide(s)";

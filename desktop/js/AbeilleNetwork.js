@@ -1230,20 +1230,19 @@ function loadRouteA2BData(gtwId) {
             }
         }
 
-        // Populate selects with all routers (source of routing tables)
-        var addrs = Object.keys(routeA2BRouters).map(function(lid) {
-            return routeA2BRouters[lid].addr;
-        }).sort(function(a, b) {
-            var na = routeA2BNames[netName + "/" + a] || a;
-            var nb = routeA2BNames[netName + "/" + b] || b;
-            return na.localeCompare(nb);
-        });
+        // Populate selects with ALL equipment from the network (not just routers with tables)
+        var allEqAddrs = Object.keys(routeA2BNames)
+            .filter(function(lid) { return lid.indexOf(netName + "/") === 0; })
+            .sort(function(a, b) { return routeA2BNames[a].localeCompare(routeA2BNames[b]); })
+            .map(function(lid) { return lid.split("/")[1]; });
 
         fromSel.empty().append('<option value="">-- {{sélectionner}} --</option>');
         toSel.empty().append('<option value="">-- {{sélectionner}} --</option>');
-        addrs.forEach(function(addr) {
-            var label = routeA2BNames[netName + "/" + addr] || addr;
-            var opt = '<option value="' + addr + '">' + label + '</option>';
+        allEqAddrs.forEach(function(addr) {
+            var lid = netName + "/" + addr;
+            var label = routeA2BNames[lid] || addr;
+            var hasTable = !!routeA2BRouters[lid];
+            var opt = '<option value="' + addr + '">' + label + (hasTable ? '' : ' ⚠') + '</option>';
             fromSel.append(opt);
             toSel.append(opt);
         });
@@ -1292,6 +1291,8 @@ function computeRouteA2B() {
     }
 
     var netName = "Abeille" + routeA2BGtwId;
+    var srcHasTable = !!routeA2BRouters[netName + "/" + srcAddr];
+    var dstHasTable = !!routeA2BRouters[netName + "/" + dstAddr];
     function addrLabel(addr) { return routeA2BNames[netName + "/" + addr] || addr; }
 
     var statusColors = {
@@ -1327,12 +1328,15 @@ function computeRouteA2B() {
         return html;
     }
 
-    var fwd = findRouteHops(routeA2BRouters, netName, srcAddr, dstAddr);
-    var ret = findRouteHops(routeA2BRouters, netName, dstAddr, srcAddr);
+    var noTableMsg = "<div class='alert alert-warning'>{{Table de routage non collectée pour cet équipement (non-routeur ou timeout).}}</div>";
+    var fwd = srcHasTable ? findRouteHops(routeA2BRouters, netName, srcAddr, dstAddr) : null;
+    var ret = dstHasTable ? findRouteHops(routeA2BRouters, netName, dstAddr, srcAddr) : null;
 
+    var fwdTitle = "&#8594; {{Aller}} : " + $("<span>").text(addrLabel(srcAddr)).html() + " &#8594; " + $("<span>").text(addrLabel(dstAddr)).html();
+    var retTitle = "&#8592; {{Retour}} : " + $("<span>").text(addrLabel(dstAddr)).html() + " &#8594; " + $("<span>").text(addrLabel(srcAddr)).html();
     results.html(
-        renderRoute(fwd, "&#8594; {{Aller}} : " + $("<span>").text(addrLabel(srcAddr)).html() + " &#8594; " + $("<span>").text(addrLabel(dstAddr)).html()) +
-        renderRoute(ret, "&#8592; {{Retour}} : " + $("<span>").text(addrLabel(dstAddr)).html() + " &#8594; " + $("<span>").text(addrLabel(srcAddr)).html())
+        (srcHasTable ? renderRoute(fwd, fwdTitle) : "<div style='margin-bottom:20px'><strong>" + fwdTitle + "</strong>" + noTableMsg + "</div>") +
+        (dstHasTable ? renderRoute(ret, retTitle) : "<div style='margin-bottom:20px'><strong>" + retTitle + "</strong>" + noTableMsg + "</div>")
     );
 }
 

@@ -77,6 +77,25 @@
     // }
 ?>
 
+<div id="div_duplicateIEEE" style="display:none; margin-bottom:20px;">
+    <legend><i class="fas fa-exclamation-triangle" style="color:orange;"></i> {{Adresses IEEE dupliquées}}</legend>
+    <table class="table table-condensed tablesorter" id="table_duplicateIEEE">
+        <thead>
+            <tr>
+                <th class="header">{{IEEE}}</th>
+                <th class="header">{{ID}}</th>
+                <th class="header">{{Réseau}}</th>
+                <th class="header">{{Equipement}}</th>
+                <th class="header">{{Type}}</th>
+                <th class="header">{{Adresse}}</th>
+                <th class="header">{{Status}}</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
     <thead>
         <tr>
@@ -96,25 +115,6 @@
     <tbody>
     </tbody>
 </table>
-
-<div id="div_duplicateIEEE" style="display:none; margin-top:20px;">
-    <legend><i class="fas fa-exclamation-triangle" style="color:orange;"></i> {{Adresses IEEE dupliquées}}</legend>
-    <table class="table table-condensed tablesorter" id="table_duplicateIEEE">
-        <thead>
-            <tr>
-                <th class="header">{{IEEE}}</th>
-                <th class="header">{{ID}}</th>
-                <th class="header">{{Réseau}}</th>
-                <th class="header">{{Equipement}}</th>
-                <th class="header">{{Type}}</th>
-                <th class="header">{{Adresse}}</th>
-                <th class="header">{{Status}}</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
 
 <script>
     function refreshHealth() {

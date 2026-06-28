@@ -1,11 +1,11 @@
 <?php
     require_once __DIR__.'/../../../../core/php/core.inc.php';
 
-    // Build set of IEEE addresses currently active in Jeedom
+    // Build map of IEEE → Jeedom ID for active equipment
     $activeIeees = [];
     foreach (eqLogic::byType('Abeille') as $eq) {
         $ieee = strtoupper($eq->getConfiguration('IEEE', ''));
-        if ($ieee !== '') $activeIeees[$ieee] = true;
+        if ($ieee !== '') $activeIeees[$ieee] = $eq->getId();
     }
 
     // Fetch all IEEE history entries from config table
@@ -69,6 +69,7 @@
     $uid       = 'ih_' . md5($ieee);
     $deleted   = $row['deleted'];
     $isActive  = $row['isActive'];
+    $eqId      = $isActive ? $activeIeees[$ieee] : null;
     $nbEntries = count($row['history']);
 
     // IEEE code cell: green = currently active in Jeedom, blue = deleted/inactive
@@ -84,7 +85,11 @@
                 <td><code style="<?= $codeStyle ?>"><?= htmlspecialchars($ieee) ?></code></td>
                 <td><?= htmlspecialchars($last['object']) ?></td>
                 <td>
+                    <?php if ($eqId): ?>
+                    <a href="index.php?v=d&m=Abeille&p=Abeille&id=<?= $eqId ?>"><?= htmlspecialchars($last['name']) ?></a>
+                    <?php else: ?>
                     <?= htmlspecialchars($last['name']) ?>
+                    <?php endif; ?>
                     <?php if ($deleted): ?>
                     <span class="label label-danger" style="margin-left:4px;">{{supprimé}}</span>
                     <?php endif; ?>

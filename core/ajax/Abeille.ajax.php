@@ -819,7 +819,31 @@
                     $eq[$eqNet][$eqAddr] = $e;
             }
 
-            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'equipments' => $eq)));
+            // IEEE conflicts: built independently of $eq to detect duplicates even when two
+            // equipments share the same logicalId (same [net][addr] slot — $eq only keeps the first).
+            $ieeeConflicts = [];
+            foreach ($eqLogics as $eqLogic) {
+                $ieee = strtoupper($eqLogic->getConfiguration('IEEE', ''));
+                if ($ieee === '') continue;
+                list($cNet, $cAddr) = explode('/', $eqLogic->getLogicalId());
+                $cModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                if (!isset($ieeeConflicts[$ieee])) $ieeeConflicts[$ieee] = [];
+                $ieeeConflicts[$ieee][] = [
+                    'jId'       => $eqLogic->getId(),
+                    'hName'     => $eqLogic->getHumanName(true),
+                    'link'      => $eqLogic->getLinkToConfiguration(),
+                    'net'       => $cNet,
+                    'addr'      => $cAddr,
+                    'type'      => isset($cModel['type']) ? $cModel['type'] : '?',
+                    'isEnabled' => $eqLogic->getIsEnable(),
+                    'timeout'   => $eqLogic->getStatus('timeout'),
+                ];
+            }
+            foreach ($ieeeConflicts as $ieee => $eqs) {
+                if (count($eqs) < 2) unset($ieeeConflicts[$ieee]);
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'equipments' => $eq, 'ieeeConflicts' => $ieeeConflicts)));
         } // End getHealthDatas
 
         // Read 'ab::settings' content

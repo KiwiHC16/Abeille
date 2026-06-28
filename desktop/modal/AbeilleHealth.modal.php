@@ -262,41 +262,30 @@
                 $('#table_healthAbeille tbody').empty().append(tr);
                 $("#table_healthAbeille").tablesorter().trigger('update');
 
-                // Detect duplicate IEEE addresses
-                var ieeeMap = {}; // ieee => [{net, addr, e}, ...]
-                for (net in equipments) {
-                    if (net == "") continue;
-                    n = equipments[net];
-                    for (addr in n) {
-                        e = n[addr];
-                        if (e.ieee && e.ieee != '') {
-                            if (!ieeeMap[e.ieee])
-                                ieeeMap[e.ieee] = [];
-                            ieeeMap[e.ieee].push({net: net, addr: addr, e: e});
-                        }
-                    }
-                }
+                // Detect duplicate IEEE addresses using server-side ieeeConflicts.
+                // Cannot derive this from equipments[net][addr] because two equipments sharing
+                // the same logicalId collapse to a single slot — only one survives in that map.
+                var ieeeConflicts = res.ieeeConflicts || {};
                 var trDup = '';
                 var hasDuplicates = false;
-                for (var ieee in ieeeMap) {
-                    if (ieeeMap[ieee].length < 2) continue;
+                for (var ieee in ieeeConflicts) {
                     hasDuplicates = true;
-                    var items = ieeeMap[ieee];
+                    var items = ieeeConflicts[ieee];
                     for (var i = 0; i < items.length; i++) {
                         var it = items[i];
                         var statusLabel;
-                        if (it.e.isEnabled == 0)
+                        if (it.isEnabled == 0)
                             statusLabel = '<span class="label label-default" style="font-size:1em;">{{Désactivé}}</span>';
-                        else if (it.e.timeout)
+                        else if (it.timeout)
                             statusLabel = '<span class="label label-danger" style="font-size:1em;">{{Time-out}}</span>';
                         else
                             statusLabel = '<span class="label label-success" style="font-size:1em;">{{OK}}</span>';
                         trDup += '<tr style="background-color:' + (i == 0 ? '#fff3cd' : '#f8d7da') + ';">';
                         trDup += '<td>' + (i == 0 ? '<strong>' + ieee + '</strong>' : '') + '</td>';
-                        trDup += '<td>' + it.e.jId + '</td>';
+                        trDup += '<td>' + it.jId + '</td>';
                         trDup += '<td>' + it.net + '</td>';
-                        trDup += '<td><a href="' + it.e.link + '" style="text-decoration:none;">' + it.e.hName + '</a></td>';
-                        trDup += '<td>' + it.e.type + '</td>';
+                        trDup += '<td><a href="' + it.link + '" style="text-decoration:none;">' + it.hName + '</a></td>';
+                        trDup += '<td>' + it.type + '</td>';
                         trDup += '<td>' + it.addr + '</td>';
                         trDup += '<td>' + statusLabel + '</td>';
                         trDup += '</tr>';

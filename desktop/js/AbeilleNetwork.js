@@ -1441,7 +1441,7 @@ function loadLqiPathData(gtwId) {
     $("#idLqiPathResults").empty();
 
     $.when(getLqiTable(gtwId), getEqList(gtwId)).done(function (json, eqResp) {
-        var res = JSON.parse(json.result);
+        var res = JSON.parse(json[0].result);
         if (res.status != 0 || res.content === "") {
             $("#div_lqiPathAlert").showAlert({
                 message: "{{Aucune donnée. Veuillez forcer la réinterrogation du réseau.}}",

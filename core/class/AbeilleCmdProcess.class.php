@@ -4377,8 +4377,8 @@
 
                     cmdLog('debug', "  cmd-0102: CmdId={$cmdId}, Extra={$extra}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId.$extra;
-
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    $repeat = isset($Command['repeat']) ? $Command['repeat'] : 0;
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode, $repeat);
                     return;
                 } // End $cmdName == 'cmd-0102'
 

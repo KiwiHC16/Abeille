@@ -825,7 +825,8 @@ function displayRoutesTable(zgId) {
                 html += "<tr>";
                 html += "<td>" + $("<span>").text(eqLabel(routerLid)).html() + "</td>";
                 html += "<td>" + $("<span>").text(eqLabel(netName + "/" + dest)).html() + "</td>";
-                html += "<td>" + $("<span>").text(eqLabel(netName + "/" + nextHop)).html() + "</td>";
+                var nextHopLabel = (nextHop === dest) ? "{{Direct}}" : eqLabel(netName + "/" + nextHop);
+                html += "<td>" + $("<span>").text(nextHopLabel).html() + "</td>";
                 html += "<td><span class='label label-" + badgeClass + "'>" + status + "</span></td>";
                 html += "</tr>";
                 rowCount++;

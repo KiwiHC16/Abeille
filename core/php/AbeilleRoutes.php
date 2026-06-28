@@ -339,31 +339,22 @@
         $collectStatus = 0;
         $done = 0;
         $total = count($routers[$zgId]);
-        foreach ($routers[$zgId] as $rLogicId => $router) { // Go thru all routers
+        foreach ($routers[$zgId] as $rLogicId => &$router) { // Go thru all routers — &$router needed so while loop sees tableIndex/tableEntries updates from msgFromParser
             logMessage("", "Zigate ".$zgId." progress: ".$done."/".$total);
 
             $name = $router['name'];
             $addr = $router['addr'];
 
             logMessage("", "Interrogating '".$name."' (".$addr.")");
-            // $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
-            // if ($nbwritten < 1) {
-            //     echo "ERROR: Can't write lock file";
-            //     logMessage("", "Unable to write lock file.");
-            //     unlink($lockFile);
-            //     exit;
-            // }
 
             // $ret = interrogateEq($zgId, $rLogicId, $netName, $addr);
             while (true) {
-                // $router = &$routers[$zgId][$rLogicId]; // Read eq status
                 msgToCmd($netName, $addr, sprintf("%02X", $router['tableIndex']));
 
                 usleep(200000); // Delay of 200ms to let response to come back
                 $ret = msgFromParser($zgId, $rLogicId);
                 if ($ret == 1) {
                     /* If time-out, cancel interrogation for current eq only */
-                    // logMessage("", "Time-out => Cancelling interrogation of '".$router['name']."' (".$router['addr'].").");
                     break;
                 }
                 if ($ret != 0) {
@@ -372,9 +363,8 @@
                     break;
                 }
 
-                // $router = $routers[$routerIdx]; // Read eq status
                 if ($router['tableIndex'] >= $router['tableEntries'])
-                    break; // Exiting interrogation loop
+                    break; // All pages received
             }
 
             $done++;
@@ -387,6 +377,7 @@
                 $collectStatus = 1; // Collect is partial due to timeout
             }
         }
+        unset($router); // Prevent reference aliasing after foreach &$router
 
         /* Write JSON cache only if collect completed successfully or on timeout */
         if ($collectStatus != -1) {

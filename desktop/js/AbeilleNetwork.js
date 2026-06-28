@@ -1184,6 +1184,8 @@ function computeLqiPaths() {
         return;
     }
 
+    var minLqiThreshold = parseInt($("#idLqiPathMinLqi").val()) || 0;
+
     // Sort: fewest hops first, then best minimum LQI first
     allPaths.sort(function (a, b) {
         if (a.length !== b.length) return a.length - b.length;
@@ -1194,7 +1196,8 @@ function computeLqiPaths() {
     });
 
     var limited = allPaths.length >= MAX_PATHS;
-    var html = "<p><strong>" + allPaths.length + " chemin(s)" + (limited ? " (limite " + MAX_PATHS + " atteinte)" : "") + "</strong></p>";
+    var validCount = 0, invalidCount = 0;
+    var html = "";
 
     allPaths.forEach(function (path, idx) {
         var minLqi = 999, parts = [];
@@ -1210,11 +1213,25 @@ function computeLqiPaths() {
                 parts.push("&nbsp;<span style='color:" + lqiColor(lqi) + "'>&rarr;&nbsp;LQI:" + lqiLabel + "&nbsp;&rarr;</span>&nbsp;");
             }
         }
-        var minStr = minLqi < 999 ? " &nbsp;<small>(min&nbsp;LQI:&nbsp;<span style='color:" + lqiColor(minLqi) + ";font-weight:bold'>" + minLqi + "</span>)</small>" : "";
-        html += "<div style='margin-bottom:8px;padding:8px;border:1px solid #ddd;border-radius:4px;'>";
-        html += "<span style='color:#777'>Chemin&nbsp;" + (idx+1) + " &mdash; " + (path.length-1) + " saut(s)</span>" + minStr + "<br/>";
+        var valid = (minLqi === 999) || (minLqi >= minLqiThreshold);
+        if (valid) validCount++; else invalidCount++;
+        var borderColor = valid ? "#ddd" : "#d9534f";
+        var bgColor     = valid ? ""     : "#fff5f5";
+        var badge       = valid
+            ? ""
+            : " &nbsp;<span class='label label-danger'>{{invalide &lt; " + minLqiThreshold + "}}</span>";
+        var minStr = minLqi < 999
+            ? " &nbsp;<small>(min&nbsp;LQI:&nbsp;<span style='color:" + lqiColor(minLqi) + ";font-weight:bold'>" + minLqi + "</span>)</small>"
+            : "";
+        html += "<div style='margin-bottom:8px;padding:8px;border:1px solid " + borderColor + ";border-radius:4px;" + (bgColor ? "background:" + bgColor + ";" : "") + "'>";
+        html += "<span style='color:#777'>Chemin&nbsp;" + (idx+1) + " &mdash; " + (path.length-1) + " saut(s)</span>" + minStr + badge + "<br/>";
         html += parts.join("") + "</div>";
     });
+
+    var summary = validCount + " chemin(s) valide(s)";
+    if (invalidCount) summary += ", " + invalidCount + " invalide(s) (LQI min &lt; " + minLqiThreshold + ")";
+    if (limited) summary += " — limite " + MAX_PATHS + " atteinte";
+    html = "<p><strong>" + summary + "</strong></p>" + html;
 
     $("#idLqiPathResults").html(html);
 }

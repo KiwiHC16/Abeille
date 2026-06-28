@@ -19,6 +19,8 @@
 
             if ($what == "linksTable")
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$zgId.')">Abeille'.$zgId.'</a>';
+            else if ($what == "lqiPath")
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="loadLqiPathData('.$zgId.')">Abeille'.$zgId.'</a>';
             else // "linksGraph"
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$zgId.')">Abeille'.$zgId.'</a>';
             echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLqiTable('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
@@ -186,6 +188,9 @@
             <!-- <li>
                 <a data-toggle="tab" href="#idNoise"> {{Bruit}}</a>
             </li> -->
+            <li>
+                <a data-toggle="tab" href="#idLqiPathTab"> {{LQI Path}}</a>
+            </li>
         </ul>
     </div>
 
@@ -366,6 +371,33 @@
                 }
                 afficheRouteTable( $routingTable );
             ?>
+        </div>
+
+        <div class="tab-pane" id="idLqiPathTab">
+            <div style="padding:10px">
+                <div id="div_lqiPathAlert" style="display:none"></div>
+                <div style="margin-bottom:10px">
+                    <?php displayNetworks(maxNbOfZigate, "lqiPath"); ?>
+                </div>
+                <div style="margin-bottom:12px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+                    <div>
+                        <label class="control-label">{{De :}}</label>
+                        <select id="idLqiPathFrom" class="form-control" style="width:220px; display:inline-block;"></select>
+                    </div>
+                    <div>
+                        <label class="control-label">{{À :}}</label>
+                        <select id="idLqiPathTo" class="form-control" style="width:220px; display:inline-block;"></select>
+                    </div>
+                    <div>
+                        <label class="control-label">{{LQI min :}}</label>
+                        <input type="number" id="idLqiPathMinLqi" class="form-control" value="50" min="0" max="255" style="width:80px; display:inline-block;">
+                    </div>
+                    <div style="padding-top:4px">
+                        <button id="idLqiPathCompute" class="btn btn-primary"><i class="fas fa-route"></i> {{Calculer}}</button>
+                    </div>
+                </div>
+                <div id="idLqiPathResults"></div>
+            </div>
         </div>
 
         <div class="tab-pane" id="idNoise">

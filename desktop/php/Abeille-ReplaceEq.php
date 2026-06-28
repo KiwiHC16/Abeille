@@ -1,6 +1,6 @@
 </br>
 <legend>
-	<i class="fas fa-cogs"></i>{{Transfert d'historique}}
+	<i class="fas fa-cogs"></i>{{Transfert d'équipement}}
 	<?php
 	echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'Utilisation.html#remplacement-d-equipements"><i class="fas fa-book"></i>{{Documentation}}</a>';
 	?>

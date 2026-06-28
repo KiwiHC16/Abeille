@@ -428,10 +428,16 @@ $("#in_searchEqlogicB")
     });
 
 $("#bt_healthAbeille").on("click", function () {
-    $("#md_modal").dialog({ title: "{{Santé Abeille}}", width: Math.min($(window).width() * 0.9, 1400) });
+    $("#md_modal").dialog({ title: "{{Santé Abeille}}" });
     $("#md_modal")
         .load("index.php?v=d&plugin=Abeille&modal=AbeilleHealth.modal")
         .dialog("open");
+    // utils.js 'open' callback resets width — override it after the call stack clears
+    setTimeout(function() {
+        var w = Math.min($(window).width() - 30, 1800);
+        $('#md_modal').dialog('option', 'width', w);
+        $('#md_modal').dialog('option', 'position', {my: 'center bottom-50', at: 'center bottom', of: window});
+    }, 0);
 });
 
 $("#bt_network").on("click", function () {

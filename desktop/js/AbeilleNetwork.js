@@ -726,7 +726,7 @@ function getEqList(gtwId) {
         url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
         data: {
             action: "getEqList",
-            gwId: gtwId,
+            gtwId: gtwId,
         },
         dataType: "json",
         cache: false,

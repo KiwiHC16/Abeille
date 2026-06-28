@@ -357,7 +357,7 @@
             // $ret = interrogateEq($zgId, $rLogicId, $netName, $addr);
             while (true) {
                 // $router = &$routers[$zgId][$rLogicId]; // Read eq status
-                msgToCmd($net, $addr, sprintf("%02X", $router['tableIndex']));
+                msgToCmd($netName, $addr, sprintf("%02X", $router['tableIndex']));
 
                 usleep(200000); // Delay of 200ms to let response to come back
                 $ret = msgFromParser($zgId, $rLogicId);

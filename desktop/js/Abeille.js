@@ -428,7 +428,7 @@ $("#in_searchEqlogicB")
     });
 
 $("#bt_healthAbeille").on("click", function () {
-    $("#md_modal").dialog({ title: "{{Santé Abeille}}" });
+    $("#md_modal").dialog({ title: "{{Santé Abeille}}", width: Math.min($(window).width() * 0.9, 1400) });
     $("#md_modal")
         .load("index.php?v=d&plugin=Abeille&modal=AbeilleHealth.modal")
         .dialog("open");

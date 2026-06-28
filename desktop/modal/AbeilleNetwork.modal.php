@@ -315,61 +315,62 @@
 
         <div class="tab-pane" id="idRoutesTab">
             <?php
-                echo '<a class="btn btn-success refreshRoutesAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
-                echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
+                echo '<a class="btn btn-success refreshRoutesAll"><i class="fas fa-sync"></i> {{Tout collecter}}</a>';
+                echo '<p style="margin-top:8px;color:#888;">{{Firmware Zigate ≥ 3.1d requis}}</p>';
 
-                function afficheRouteTable( $routingTable ) {
-                    foreach ( $routingTable as $addr=>$route ) {
-                        list( $zigate, $addrShort ) = explode ( '/', $addr );
-                        // if ( $addrShort == '0000' ) $addrShort = 'Ruche';
-                        foreach ( $route as $destination=>$nextHop ) {
-                            // if ( $destination == '0000' ) $destination = 'Ruche';
-                            // if ( $nextHop == '0000' )     $nextHop = 'Ruche';
+                // Build name lookup from Jeedom DB: logicalId => 'Parent-Name (addr)'
+                $eqNames = array();
+                foreach (Abeille::byType('Abeille') as $eq) {
+                    $lid = $eq->getLogicalId(); // e.g. Abeille1/A3B4
+                    $parent = $eq->getObject();
+                    $pName  = $parent ? $parent->getName() : '';
+                    $addr   = explode('/', $lid)[1];
+                    $label  = ($pName ? $pName.'-' : '').$eq->getName().' ('.$addr.')';
+                    $eqNames[$lid] = $label;
+                }
 
-                            $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, 'Abeille');
-                            $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, 'Abeille');
-                            $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, 'Abeille');
+                function eqLabel($logicalId, $names) {
+                    return isset($names[$logicalId]) ? $names[$logicalId] : $logicalId;
+                }
 
-                            if (!is_object($sourceEq)) continue;
-                            if (!is_object($destinationEq)) continue;
-                            if (!is_object($nextHopEq)) continue;
+                $tmpDir = jeedom::getTmpFolder('Abeille');
+                $anyData = false;
 
-                            $srcParent = $sourceEq->getObject();
-                            if ($srcParent)
-                                $srcParentName = $srcParent->getName();
-                            else
-                                $srcParentName = '';
-                            $dstParent = $destinationEq->getObject();
-                            if ($dstParent)
-                                $dstParentName = $dstParent->getName();
-                            else
-                                $dstParentName = '';
-                            $nxtHopeParent = $nextHopEq->getObject();
-                            if ($nxtHopeParent)
-                                $nxtHopeParentName = $nxtHopeParent->getName();
-                            else
-                                $nxtHopeParentName = '';
-                            echo 'Si '.$srcParentName.'-'.$sourceEq->getName().' ('.$sourceEq->getLogicalId()
-                                . ') veut joindre '.$dstParentName.'-'.$destinationEq->getName().' ('.$destinationEq->getLogicalId()
-                                . ') passera par '.$nxtHopeParentName.'-'.$nextHopEq->getName().' ('.$nextHopEq->getLogicalId()
-                                . ')<br>';
-                            // echo ' ('.$sourceEq->getLogicalId().') veut joindre ('.$destinationEq->getName(); //.') passera par ('.$nextHopEq->getName().')<br />';
+                for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                    if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y') continue;
+
+                    $netName = 'Abeille'.$zgId;
+                    $file    = $tmpDir.'/AbeilleRoutes-'.$netName.'.json';
+                    if (!file_exists($file)) continue;
+
+                    $json = json_decode(file_get_contents($file), true);
+                    if (empty($json) || empty($json['routers'])) continue;
+
+                    $anyData = true;
+                    $collectTime = isset($json['collectTime']) ? date('d/m/Y H:i', $json['collectTime']) : '?';
+                    echo '<h4>'.$netName.' <small style="color:#888">{{collecté le}} '.$collectTime.'</small></h4>';
+                    echo '<table class="table table-condensed table-bordered" style="width:auto;margin-bottom:16px;">';
+                    echo '<thead><tr><th>{{Source}}</th><th>{{Destination}}</th><th>{{Prochain saut}}</th></tr></thead><tbody>';
+
+                    foreach ($json['routers'] as $routerLogicalId => $routerData) {
+                        if (empty($routerData['table'])) continue;
+                        foreach ($routerData['table'] as $dest => $nextHop) {
+                            $destLid    = $netName.'/'.$dest;
+                            $nextHopLid = $netName.'/'.$nextHop;
+                            echo '<tr>';
+                            echo '<td>'.htmlspecialchars(eqLabel($routerLogicalId, $eqNames)).'</td>';
+                            echo '<td>'.htmlspecialchars(eqLabel($destLid,         $eqNames)).'</td>';
+                            echo '<td>'.htmlspecialchars(eqLabel($nextHopLid,      $eqNames)).'</td>';
+                            echo '</tr>';
                         }
                     }
+
+                    echo '</tbody></table>';
                 }
 
-                $routingTable = array();
-                $eqLogics = Abeille::byType('Abeille');
-                foreach ($eqLogics as $eqLogic) {
-                    $rt = $eqLogic->getConfiguration('routingTable', 'none');
-                    if ($rt == 'none')
-                        continue; // No routing info
-                    $rt2 = json_decode($rt); // JSON to array
-                    if (empty($rt2))
-                        continue; // Empty routing info
-                    $routingTable[$eqLogic->getLogicalId()] = $rt2[0];
+                if (!$anyData) {
+                    echo '<div class="alert alert-warning">{{Aucune donnée. Cliquez sur "Tout collecter" pour interroger le réseau.}}</div>';
                 }
-                afficheRouteTable( $routingTable );
             ?>
         </div>
 

@@ -1164,6 +1164,180 @@ function displayLinksGraph(gtwId) {
 
 
 // ============================================================
+// ROUTE A→B TAB
+// ============================================================
+var routeA2BGtwId = 1;
+var routeA2BRouters = null; // parsed.routers from AbeilleRoutes JSON
+var routeA2BNames  = null;  // logicalId → display label
+
+$('a[href="#idRouteA2BTab"]').off("click").on("click", function () {
+    loadRouteA2BData(routeA2BGtwId);
+});
+
+$("#idRouteA2BCompute").off("click").on("click", function () {
+    computeRouteA2B();
+});
+
+function loadRouteA2BData(gtwId) {
+    routeA2BGtwId = gtwId;
+    var netName = "Abeille" + gtwId;
+    var fromSel = $("#idRouteA2BFrom");
+    var toSel   = $("#idRouteA2BTo");
+    var results = $("#idRouteA2BResults");
+
+    fromSel.empty().append('<option value="">{{Chargement...}}</option>');
+    toSel.empty().append('<option value="">{{Chargement...}}</option>');
+    results.html("");
+
+    $.when(
+        $.ajax({
+            type: "POST",
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: { action: "getTmpFile", file: "AbeilleRoutes-" + netName + ".json" },
+            dataType: "json",
+            cache: false,
+        }),
+        getEqList(gtwId)
+    ).done(function (routesResp, eqResp) {
+        var outer;
+        try { outer = JSON.parse(routesResp[0].result); } catch(e) {
+            results.html("<div class='alert alert-danger'>{{Erreur de lecture du fichier JSON.}}</div>");
+            return;
+        }
+        if (outer.status !== 0 || !outer.content) {
+            fromSel.empty().append('<option value="">-- {{aucune donnée}} --</option>');
+            toSel.empty().append('<option value="">-- {{aucune donnée}} --</option>');
+            results.html("<div class='alert alert-warning'>{{Aucune donnée pour " + netName + ". Collectez d'abord les routes.}}</div>");
+            return;
+        }
+        var parsed;
+        try { parsed = JSON.parse(outer.content); } catch(e) {
+            results.html("<div class='alert alert-danger'>{{Erreur de lecture.}}</div>"); return;
+        }
+
+        routeA2BRouters = parsed.routers || {};
+
+        // Build name lookup
+        routeA2BNames = {};
+        var eqResult = eqResp[0];
+        if (eqResult && eqResult.result) {
+            var eqData = JSON.parse(eqResult.result);
+            if (eqData && eqData.eqList) {
+                for (var lid in eqData.eqList) {
+                    var eq = eqData.eqList[lid];
+                    routeA2BNames[lid] = (eq.objectName ? eq.objectName + " - " : "") + eq.name + " (" + eq.addr + ")";
+                }
+            }
+        }
+
+        // Populate selects with all routers (source of routing tables)
+        var addrs = Object.keys(routeA2BRouters).map(function(lid) {
+            return routeA2BRouters[lid].addr;
+        }).sort(function(a, b) {
+            var na = routeA2BNames[netName + "/" + a] || a;
+            var nb = routeA2BNames[netName + "/" + b] || b;
+            return na.localeCompare(nb);
+        });
+
+        fromSel.empty().append('<option value="">-- {{sélectionner}} --</option>');
+        toSel.empty().append('<option value="">-- {{sélectionner}} --</option>');
+        addrs.forEach(function(addr) {
+            var label = routeA2BNames[netName + "/" + addr] || addr;
+            var opt = '<option value="' + addr + '">' + label + '</option>';
+            fromSel.append(opt);
+            toSel.append(opt);
+        });
+    }).fail(function () {
+        results.html("<div class='alert alert-danger'>{{Erreur lors du chargement des données.}}</div>");
+    });
+}
+
+// Trace hop-by-hop route from srcAddr to dstAddr using routing tables.
+// Returns [{addr, status}, ...] or null if no route found.
+function findRouteHops(routers, netName, srcAddr, dstAddr) {
+    if (srcAddr === dstAddr) return [{addr: srcAddr, status: ""}];
+    var path = [{addr: srcAddr, status: ""}];
+    var visited = {};
+    visited[srcAddr] = true;
+    var current = srcAddr;
+    for (var guard = 0; guard < 20; guard++) {
+        var routerData = routers[netName + "/" + current];
+        if (!routerData || !routerData.table) return null;
+        var entry = routerData.table[dstAddr];
+        if (!entry) return null;
+        var nextHop = (typeof entry === "object") ? entry.nextHop : entry;
+        var status  = (typeof entry === "object") ? (entry.status || "") : "Active";
+        if (visited[nextHop]) return null; // loop
+        path.push({addr: nextHop, status: status});
+        visited[nextHop] = true;
+        current = nextHop;
+        if (current === dstAddr) return path;
+    }
+    return null; // max hops exceeded
+}
+
+function computeRouteA2B() {
+    var srcAddr = $("#idRouteA2BFrom").val();
+    var dstAddr = $("#idRouteA2BTo").val();
+    var results = $("#idRouteA2BResults");
+
+    if (!srcAddr || !dstAddr) {
+        results.html("<div class='alert alert-warning'>{{Sélectionnez une source et une destination.}}</div>"); return;
+    }
+    if (srcAddr === dstAddr) {
+        results.html("<div class='alert alert-warning'>{{Source et destination identiques.}}</div>"); return;
+    }
+    if (!routeA2BRouters) {
+        results.html("<div class='alert alert-warning'>{{Données non chargées.}}</div>"); return;
+    }
+
+    var netName = "Abeille" + routeA2BGtwId;
+    function addrLabel(addr) { return routeA2BNames[netName + "/" + addr] || addr; }
+
+    var statusColors = {
+        "Active": "success", "Discovery_Underway": "warning",
+        "Discovery_Failed": "danger", "Inactive": "default",
+        "Validation_Underway": "info",
+    };
+
+    function renderRoute(hops, title) {
+        var html = "<div style='margin-bottom:20px'><strong>" + title + "</strong>";
+        if (!hops) {
+            return html + "<div class='alert alert-danger' style='margin-top:8px'>{{Route introuvable dans les tables collectées.}}</div></div>";
+        }
+        html += " <small style='color:#888'>(" + (hops.length - 1) + " {{saut(s)}})</small>";
+        html += "<div style='display:flex; align-items:center; flex-wrap:wrap; gap:2px; margin-top:8px'>";
+        hops.forEach(function(hop, idx) {
+            if (idx > 0) {
+                var bc = statusColors[hop.status] || "default";
+                html += "<div style='text-align:center; padding:0 4px'>";
+                html += "<div style='font-size:20px; line-height:1; color:#555'>&#8594;</div>";
+                if (hop.status) html += "<div><span class='label label-" + bc + "' style='font-size:10px; white-space:nowrap'>" + hop.status + "</span></div>";
+                html += "</div>";
+            }
+            var isFirst = idx === 0, isLast = idx === hops.length - 1;
+            var bg     = isFirst ? "#d4edda" : (isLast ? "#cce5ff" : "#fff3cd");
+            var border = isFirst ? "#28a745" : (isLast ? "#004085" : "#856404");
+            html += "<div style='border:2px solid " + border + "; border-radius:6px; padding:4px 10px; background:" + bg + "; text-align:center; min-width:80px'>";
+            html += "<div style='font-family:monospace; font-size:11px; color:#666'>" + $("<span>").text(hop.addr).html() + "</div>";
+            html += "<div style='font-size:12px; font-weight:600'>" + $("<span>").text(addrLabel(hop.addr)).html() + "</div>";
+            html += "</div>";
+        });
+        html += "</div></div>";
+        return html;
+    }
+
+    var fwd = findRouteHops(routeA2BRouters, netName, srcAddr, dstAddr);
+    var ret = findRouteHops(routeA2BRouters, netName, dstAddr, srcAddr);
+
+    results.html(
+        renderRoute(fwd, "&#8594; {{Aller}} : " + $("<span>").text(addrLabel(srcAddr)).html() + " &#8594; " + $("<span>").text(addrLabel(dstAddr)).html()) +
+        renderRoute(ret, "&#8592; {{Retour}} : " + $("<span>").text(addrLabel(dstAddr)).html() + " &#8594; " + $("<span>").text(addrLabel(srcAddr)).html())
+    );
+}
+
+
+// ============================================================
 // LQI PATH TAB
 // ============================================================
 var lqiPathGtwId = 1;

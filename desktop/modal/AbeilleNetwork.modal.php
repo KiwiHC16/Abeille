@@ -21,6 +21,8 @@
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else if ($what == "lqiPath")
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="loadLqiPathData('.$zgId.')">Abeille'.$zgId.'</a>';
+            else if ($what == "routeA2B")
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="loadRouteA2BData('.$zgId.')">Abeille'.$zgId.'</a>';
             else if ($what == "routes")
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayRoutesTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else // "linksGraph"
@@ -191,6 +193,9 @@
                 <a data-toggle="tab" href="#idNoise"> {{Bruit}}</a>
             </li> -->
             <li>
+                <a data-toggle="tab" href="#idRouteA2BTab"> {{Route A→B}}</a>
+            </li>
+            <li>
                 <a data-toggle="tab" href="#idLqiPathTab"> {{LQI Path}}</a>
             </li>
         </ul>
@@ -328,6 +333,28 @@
             </div>
         </div>
 
+
+        <div class="tab-pane" id="idRouteA2BTab">
+            <div style="padding:10px">
+                <div style="margin-bottom:10px">
+                    <?php displayNetworks(maxNbOfZigate, "routeA2B"); ?>
+                </div>
+                <div style="margin-bottom:12px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+                    <div>
+                        <label class="control-label">{{De :}}</label><br>
+                        <select id="idRouteA2BFrom" class="form-control" style="width:240px;"></select>
+                    </div>
+                    <div>
+                        <label class="control-label">{{À :}}</label><br>
+                        <select id="idRouteA2BTo" class="form-control" style="width:240px;"></select>
+                    </div>
+                    <div style="padding-top:20px">
+                        <button id="idRouteA2BCompute" class="btn btn-primary"><i class="fas fa-route"></i> {{Calculer}}</button>
+                    </div>
+                </div>
+                <div id="idRouteA2BResults"></div>
+            </div>
+        </div>
         <div class="tab-pane" id="idLqiPathTab">
             <div style="padding:10px">
                 <div id="div_lqiPathAlert" style="display:none"></div>

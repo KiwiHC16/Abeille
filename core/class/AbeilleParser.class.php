@@ -2524,8 +2524,8 @@
                 $m = '  DestAddr='.$destAddr.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop;
                 parserLog2('debug', $srcAddr, $m);
 
-                if (($statusRouting == 0) && ($nextHop != $destAddr)) {
-                    $routingTable[$destAddr] = $nextHop;
+                if ($nextHop != $destAddr) {
+                    $routingTable[$destAddr] = array('nextHop' => $nextHop, 'status' => $statusDecoded);
                 }
             }
             // Routing table is now stored in /tmp/jeedom/Abeille/AbeilleRoutes-AbeilleX.json

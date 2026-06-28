@@ -797,18 +797,36 @@ function displayRoutesTable(zgId) {
         var collectTime = parsed.collectTime ? new Date(parsed.collectTime * 1000).toLocaleString("fr-FR") : "?";
         var html = "<p><strong>" + netName + "</strong> &mdash; <small style='color:#888'>{{collecté le}} " + collectTime + "</small></p>";
         html += "<table class='table table-condensed table-bordered' style='width:auto'>";
-        html += "<thead><tr><th>{{Source}}</th><th>{{Destination}}</th><th>{{Prochain saut}}</th></tr></thead><tbody>";
+        html += "<thead><tr><th>{{Source}}</th><th>{{Destination}}</th><th>{{Prochain saut}}</th><th>{{Statut}}</th></tr></thead><tbody>";
+
+        var statusColors = {
+            "Active":               "success",
+            "Discovery_Underway":   "warning",
+            "Discovery_Failed":     "danger",
+            "Inactive":             "default",
+            "Validation_Underway":  "info",
+        };
 
         var rowCount = 0;
         for (var routerLid in parsed.routers) {
             var routerData = parsed.routers[routerLid];
             if (!routerData.table) continue;
             for (var dest in routerData.table) {
-                var nextHop = routerData.table[dest];
+                var entry = routerData.table[dest];
+                var nextHop, status;
+                if (typeof entry === "object" && entry !== null) {
+                    nextHop = entry.nextHop;
+                    status  = entry.status || "";
+                } else {
+                    nextHop = entry; // legacy format (string)
+                    status  = "Active";
+                }
+                var badgeClass = statusColors[status] || "default";
                 html += "<tr>";
                 html += "<td>" + $("<span>").text(eqLabel(routerLid)).html() + "</td>";
                 html += "<td>" + $("<span>").text(eqLabel(netName + "/" + dest)).html() + "</td>";
                 html += "<td>" + $("<span>").text(eqLabel(netName + "/" + nextHop)).html() + "</td>";
+                html += "<td><span class='label label-" + badgeClass + "'>" + status + "</span></td>";
                 html += "</tr>";
                 rowCount++;
             }

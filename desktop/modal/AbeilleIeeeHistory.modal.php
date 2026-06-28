@@ -1,11 +1,20 @@
 <?php
     require_once __DIR__.'/../../../../core/php/core.inc.php';
 
-    // Build map of IEEE → Jeedom ID for active equipment
-    $activeIeees = [];
+    // Build two maps from active equipment:
+    // - $activeIeees   : IEEE → bool (for green/blue color coding)
+    // - $activeByLogId : logicalId → id (for equipment link — more precise than IEEE when duplicates exist)
+    $activeIeees   = [];
+    $activeByLogId = [];
     foreach (eqLogic::byType('Abeille') as $eq) {
         $ieee = strtoupper($eq->getConfiguration('IEEE', ''));
-        if ($ieee !== '') $activeIeees[$ieee] = $eq->getId();
+        $lid  = $eq->getLogicalId();
+        $id   = $eq->getId();
+        if ($ieee !== '') $activeIeees[$ieee] = true;
+        // Keep highest ID when logical_id is shared (duplicate equipment — last created wins)
+        if (!isset($activeByLogId[$lid]) || $id > $activeByLogId[$lid]) {
+            $activeByLogId[$lid] = $id;
+        }
     }
 
     // Fetch all IEEE history entries from config table
@@ -69,7 +78,7 @@
     $uid       = 'ih_' . md5($ieee);
     $deleted   = $row['deleted'];
     $isActive  = $row['isActive'];
-    $eqId      = $isActive ? $activeIeees[$ieee] : null;
+    $eqId      = $activeByLogId[$last['logical_id']] ?? null;
     $nbEntries = count($row['history']);
 
     // IEEE code cell: green = currently active in Jeedom, blue = deleted/inactive

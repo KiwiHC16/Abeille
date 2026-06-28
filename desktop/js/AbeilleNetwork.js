@@ -1361,15 +1361,57 @@ function computeRouteA2B() {
         return html;
     }
 
-    var noTableMsg = "<div class='alert alert-warning'>{{Table de routage non collectée pour cet équipement (non-routeur ou timeout).}}</div>";
-    var fwd = srcHasTable ? findRouteHops(routeA2BRouters, netName, srcAddr, dstAddr) : null;
-    var ret = dstHasTable ? findRouteHops(routeA2BRouters, netName, dstAddr, srcAddr) : null;
+    // Find parent router of an End Device via Child relationship in LQI table
+    function getParentAddr(addr) {
+        for (var rid in routeA2BLqi) {
+            var r = routeA2BLqi[rid];
+            var nb = r.neighbors && r.neighbors[netName + "/" + addr];
+            if (nb && nb.relationship === "Child") return r.addr;
+        }
+        var rSelf = routeA2BLqi[netName + "/" + addr];
+        if (rSelf && rSelf.neighbors) {
+            for (var nid in rSelf.neighbors) {
+                if (rSelf.neighbors[nid].relationship === "Parent") return rSelf.neighbors[nid].addr;
+            }
+        }
+        return null;
+    }
+
+    // Build full route: resolve End Devices to their parent router, then trace
+    function buildRoute(fromAddr, toAddr) {
+        var fromHasTable = !!routeA2BRouters[netName + "/" + fromAddr];
+        var toHasTable   = !!routeA2BRouters[netName + "/" + toAddr];
+        var fromParent   = fromHasTable ? null : getParentAddr(fromAddr);
+        var toParent     = toHasTable   ? null : getParentAddr(toAddr);
+        var fromEff = fromParent || fromAddr;
+        var toEff   = toParent   || toAddr;
+        if (!routeA2BRouters[netName + "/" + fromEff]) return null; // no table for effective src
+        var hops;
+        if (fromEff === toEff) {
+            hops = [{addr: fromEff, status: ""}];
+        } else {
+            hops = findRouteHops(routeA2BRouters, netName, fromEff, toEff);
+        }
+        if (!hops) return null;
+        if (fromParent) hops.unshift({addr: fromAddr, status: ""});
+        if (toParent)   hops.push({addr: toAddr, status: ""});
+        return hops;
+    }
+
+    // Determine routability (has table OR has a known parent router)
+    function canRoute(addr) {
+        return !!routeA2BRouters[netName + "/" + addr] || !!getParentAddr(addr);
+    }
+
+    var noTableMsg = "<div class='alert alert-warning'>{{Table de routage non collectée et aucune liaison Child trouvée pour cet équipement.}}</div>";
+    var fwd = canRoute(srcAddr) ? buildRoute(srcAddr, dstAddr) : null;
+    var ret = canRoute(dstAddr) ? buildRoute(dstAddr, srcAddr) : null;
 
     var fwdTitle = "&#8594; {{Aller}} : " + $("<span>").text(addrLabel(srcAddr)).html() + " &#8594; " + $("<span>").text(addrLabel(dstAddr)).html();
     var retTitle = "&#8592; {{Retour}} : " + $("<span>").text(addrLabel(dstAddr)).html() + " &#8594; " + $("<span>").text(addrLabel(srcAddr)).html();
     results.html(
-        (srcHasTable ? renderRoute(fwd, fwdTitle) : "<div style='margin-bottom:20px'><strong>" + fwdTitle + "</strong>" + noTableMsg + "</div>") +
-        (dstHasTable ? renderRoute(ret, retTitle) : "<div style='margin-bottom:20px'><strong>" + retTitle + "</strong>" + noTableMsg + "</div>")
+        (canRoute(srcAddr) ? renderRoute(fwd, fwdTitle) : "<div style='margin-bottom:20px'><strong>" + fwdTitle + "</strong>" + noTableMsg + "</div>") +
+        (canRoute(dstAddr) ? renderRoute(ret, retTitle) : "<div style='margin-bottom:20px'><strong>" + retTitle + "</strong>" + noTableMsg + "</div>")
     );
 }
 

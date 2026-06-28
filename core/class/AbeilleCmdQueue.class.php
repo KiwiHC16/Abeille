@@ -11,7 +11,7 @@
     include_once __DIR__.'/AbeilleCmdPrepare.class.php';
 
     define('MAX_INFLIGHT', 3); // Max number of in-flight commands per Zigate
-    define('QUARANTINE_DURATION', 900); // 15 minutes quarantine for noack devices
+    define('QUARANTINE_DURATION', 120); // 2 minutes quarantine for noack devices
     if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != ""))
         include_once __DIR__.'/../php/AbeilleMonitor.php'; // Tracing monitor for debug purposes
 

@@ -174,9 +174,7 @@
                         tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+e.jId+dis2+'</span></td>';
 
                         // Network (AbeilleX)
-                        // tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+net+dis2+'</span></td>';
-                        tr += '<td><span style="font-size:1em;cursor:default;color:black;background-color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
-                        // tr += '<td><span style="font-size:1em;cursor:default;color:'+netColor+'";">'+dis1+net+dis2+'</span></td>';
+                        tr += '<td><span style="font-size:1em;cursor:default;">'+dis1+net+dis2+'</span></td>';
 
                         // Device name
                         tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+dis1+e.hName+dis2+'</a></td>';

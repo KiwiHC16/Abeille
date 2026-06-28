@@ -283,6 +283,7 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
 /* Display nodes table */
 function displayLinksTable(zgId) {
     console.log("displayLinksTable(zgId=" + zgId + ")");
+    $("#idLinksTableSearch").val(""); // Reset search filter on network change
 
     var jqXHR = $.ajax({
         type: "POST",
@@ -1053,6 +1054,23 @@ function displayLinksGraph(gtwId) {
         }
     });
 }
+
+function filterLinksTable(value) {
+    var v = value.toLowerCase();
+    $("#idLinksTable > tbody > tr").each(function (idx, row) {
+        if (v === "") {
+            row.style.display = "";
+        } else if (row.innerHTML.toLowerCase().includes(v)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+
+$("#idLinksTableSearch").off("input").on("input", function () {
+    filterLinksTable($(this).val());
+});
 
 function filterColumnOnValue(data, col) {
     var filterValue = data;

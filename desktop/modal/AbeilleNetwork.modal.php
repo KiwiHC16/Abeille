@@ -217,6 +217,11 @@
                 <br />
                 <br />
 
+                <div style="margin-bottom:8px;">
+                    <input type="text" id="idLinksTableSearch" class="form-control" placeholder="{{Filtrer par équipement...}}" style="width:280px; display:inline-block;">
+                    <button onclick="$('#idLinksTableSearch').val('').trigger('input');" class="btn btn-default btn-sm" style="margin-left:4px;" title="{{Effacer}}"><i class="fas fa-times"></i></button>
+                </div>
+
                 <table class="table table-condensed tablesorter" id="idLinksTable">
                     <thead>
                         <tr>

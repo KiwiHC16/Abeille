@@ -1171,6 +1171,23 @@ var routeA2BRouters = null; // parsed.routers from AbeilleRoutes JSON
 var routeA2BNames  = null;  // logicalId → display label
 var routeA2BLqi    = null;  // lqiTable.routers from AbeilleLQI JSON
 
+// Find parent router of an End Device via Child relationship in LQI table
+function routeA2BGetParent(netName, addr) {
+    if (!routeA2BLqi) return null;
+    for (var rid in routeA2BLqi) {
+        var r = routeA2BLqi[rid];
+        var nb = r.neighbors && r.neighbors[netName + "/" + addr];
+        if (nb && nb.relationship === "Child") return r.addr;
+    }
+    var rSelf = routeA2BLqi[netName + "/" + addr];
+    if (rSelf && rSelf.neighbors) {
+        for (var nid in rSelf.neighbors) {
+            if (rSelf.neighbors[nid].relationship === "Parent") return rSelf.neighbors[nid].addr;
+        }
+    }
+    return null;
+}
+
 $('a[href="#idRouteA2BTab"]').off("click").on("click", function () {
     loadRouteA2BData(routeA2BGtwId);
 });
@@ -1262,7 +1279,8 @@ function loadRouteA2BData(gtwId) {
             var lid = netName + "/" + addr;
             var label = routeA2BNames[lid] || addr;
             var hasTable = !!routeA2BRouters[lid];
-            var opt = '<option value="' + addr + '">' + label + (hasTable ? '' : ' ⚠') + '</option>';
+            var hasParent = !hasTable && !!routeA2BGetParent(netName, addr);
+            var opt = '<option value="' + addr + '">' + label + (!hasTable && !hasParent ? ' ⚠' : '') + '</option>';
             fromSel.append(opt);
             toSel.append(opt);
         });
@@ -1361,21 +1379,7 @@ function computeRouteA2B() {
         return html;
     }
 
-    // Find parent router of an End Device via Child relationship in LQI table
-    function getParentAddr(addr) {
-        for (var rid in routeA2BLqi) {
-            var r = routeA2BLqi[rid];
-            var nb = r.neighbors && r.neighbors[netName + "/" + addr];
-            if (nb && nb.relationship === "Child") return r.addr;
-        }
-        var rSelf = routeA2BLqi[netName + "/" + addr];
-        if (rSelf && rSelf.neighbors) {
-            for (var nid in rSelf.neighbors) {
-                if (rSelf.neighbors[nid].relationship === "Parent") return rSelf.neighbors[nid].addr;
-            }
-        }
-        return null;
-    }
+    function getParentAddr(addr) { return routeA2BGetParent(netName, addr); }
 
     // Build full route: resolve End Devices to their parent router, then trace
     function buildRoute(fromAddr, toAddr) {

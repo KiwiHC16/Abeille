@@ -67,6 +67,7 @@
     function getLocalDocUrl($modelName) {
         $localManuals = array(
             'TS130F__TZ3000_fccpjz5z' => 'manual-of-zigbee-curtain-module-qs-zigbee-c01-a5.pdf',
+            'MINI-ZBRBS_SONOFF' => 'user_manual_mini-zbrbs_en_v1.0.pdf',
         );
         if (!isset($localManuals[$modelName]))
             return '';

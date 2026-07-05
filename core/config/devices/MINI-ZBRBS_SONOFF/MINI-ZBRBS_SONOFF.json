@@ -1,0 +1,70 @@
+{
+    "MINI-ZBRBS_SONOFF": {
+        "manufacturer": "Sonoff",
+        "model": "MINI-ZBRBS",
+        "type": "Sonoff roller shutter module",
+        "genericType": "Shutter",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Nodon-RollerShutter",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Up": {
+                "use": "act_zbCmdC-0102-UpOpen",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "act_zbCmdC-0102-Stop",
+                "isVisible": "1"
+            },
+            "Down": {
+                "use": "act_zbCmdC-0102-DownClose",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Set level": {
+                "use": "act_zbCmdC-0102-GoToLiftPercentage",
+                "comment": "ZCL 'CurrentPositionLiftPercentage' is 0=open/100=closed. Inverting so slider 100=open. Remove valueOffset/calculValueOffset below if this feels backwards on your shutter.",
+                "valueOffset": "100-#slider#",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "calculValueOffset": "100-#value#",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0102&attrId=0008"
+            },
+            "Bind 0102-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0102",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0102": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0102&attrId=0008&attrType=20",
+                "execAtCreation": "yes"
+            },
+            "Get Mode": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0102&attrId=0017",
+                "execAtCreation": 1
+            },
+            "Mode": {
+                "use": "inf_zbAttr-0102-Mode"
+            },
+            "Calibration": {
+                "use": "act_zbWriteAttribute",
+                "comment": "ZCL Window Covering 'Mode' bit 1 = Calibration mode (spec-standard, not yet verified on this specific device)",
+                "params": "clustId=0102&attrId=0017&attrType=18&attrVal=#valueoffset#",
+                "valueOffset": "#logicid0102-01-0017#|(1<<1)"
+            }
+        }
+    }
+}

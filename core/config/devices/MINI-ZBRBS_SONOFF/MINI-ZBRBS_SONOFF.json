@@ -8,7 +8,7 @@
             "opening": "1"
         },
         "configuration": {
-            "icon": "Nodon-RollerShutter",
+            "icon": "Sonoff-MINIZBRBS",
             "mainEP": "01"
         },
         "commands": {

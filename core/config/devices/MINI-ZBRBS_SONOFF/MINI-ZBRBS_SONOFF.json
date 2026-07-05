@@ -27,7 +27,7 @@
             },
             "Set level": {
                 "use": "act_zbCmdC-0102-GoToLiftPercentage",
-                "comment": "ZCL 'CurrentPositionLiftPercentage' is 0=open/100=closed. Inverting so slider 100=open. Remove valueOffset/calculValueOffset below if this feels backwards on your shutter.",
+                "comment": "Verified 2026-07-05 on the physical device: slider=30 => Level reads back 30, so this inversion (ZCL 'CurrentPositionLiftPercentage' is 0=open/100=closed, inverted so slider/Level 100=open) is correct.",
                 "valueOffset": "100-#slider#",
                 "isVisible": "1"
             },
@@ -59,7 +59,7 @@
             },
             "Calibration Status": {
                 "use": "inf_generic-NumericBadge",
-                "comment": "0=Uncalibrated, 1=Calibrated",
+                "comment": "Enum meant to be 0=Uncalibrated/1=Calibrated (per PR), but reads 0 even after calibration was confirmed done (2026-07-05: Set level to a physical device already positions accurately). Likely a parsing/manufId issue reading this proprietary eWeLink attribute rather than an actual device state - do not trust this value.",
                 "params": "clustId=FC11&attrId=5012&attrType=20&manufId=1286"
             },
             "Start Automatic Calibration": {

@@ -33,20 +33,21 @@
                 "use": "inf_zbCmdC-0008-MoveToLevel",
                 "isVisible": 1
             },
-            "On": {
-                "use": "inf_zbCmdC-0006-On",
-                "isVisible": 1
-            },
-            "Off": {
-                "use": "inf_zbCmdC-0006-Off",
-                "isVisible": 1
-            },
             "Click": {
                 "use": "inf_generic-String",
                 "logicalId": "Click",
                 "isVisible": 1
             },
-            "Click-value": {
+            "Click-0006-cmd01": {
+                "use": "inf_zbCmdC-0006-On",
+                "trigOut": {
+                    "Click": {
+                        "valueOffset": "Simple",
+                        "comment": "Simple click"
+                   }
+                }
+            },
+            "Click-0005-cmd07": {
                 "use": "inf_zbCmdC-0005-Ikea07",
                 "trigOut": {
                     "Click": {

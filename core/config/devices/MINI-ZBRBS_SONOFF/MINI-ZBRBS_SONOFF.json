@@ -51,19 +51,30 @@
                 "params": "clustId=0102&attrId=0008&attrType=20",
                 "execAtCreation": "yes"
             },
-            "Get Mode": {
+            "Get Calibration Status": {
+                "comment": "eWeLink/Sonoff proprietary cluster FC11 (manufId 1286), not standard ZCL. Source: zigbee-herdsman-converters src/devices/sonoff.ts (customClusterEwelink) and PR #11292.",
                 "use": "act_zbReadAttribute",
-                "params": "clustId=0102&attrId=0017",
-                "execAtCreation": 1
+                "params": "clustId=FC11&attrId=5012&attrType=20&manufId=1286",
+                "execAtCreation": "yes"
             },
-            "Mode": {
-                "use": "inf_zbAttr-0102-Mode"
+            "Calibration Status": {
+                "use": "inf_generic-NumericBadge",
+                "comment": "0=Uncalibrated, 1=Calibrated",
+                "params": "clustId=FC11&attrId=5012&attrType=20&manufId=1286"
             },
-            "Calibration": {
+            "Start Automatic Calibration": {
                 "use": "act_zbWriteAttribute",
-                "comment": "ZCL Window Covering 'Mode' bit 1 = Calibration mode (spec-standard, not yet verified on this specific device)",
-                "params": "clustId=0102&attrId=0017&attrType=18&attrVal=#valueoffset#",
-                "valueOffset": "#logicid0102-01-0017#|(1<<1)"
+                "comment": "Writes motorTravelCalibrationAction=2 (start_automatic). Not yet verified on this specific device: values from the referenced PR are start_automatic=2, start_manual=3, clear=4, manual_2_fully_opened=7, manual_3_fully_closed=8.",
+                "params": "clustId=FC11&attrId=5001&attrType=20&attrVal=02&manufId=1286"
+            },
+            "Get Motor Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FC11&attrId=5013&attrType=20&manufId=1286"
+            },
+            "Motor Status": {
+                "use": "inf_generic-NumericBadge",
+                "comment": "0=Stop, 1=Forward, 2=Reverse (not yet verified)",
+                "params": "clustId=FC11&attrId=5013&attrType=20&manufId=1286"
             }
         }
     }

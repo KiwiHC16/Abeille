@@ -760,26 +760,27 @@ function removeEq(zgId, eqId) {
                 "{{Êtes-vous sûr de vouloir supprimer l'équipement}} Abeille <b>" +
                 eqName +
                 "</b> ?";
-            if (Object.keys(data).length > 0) {
+            var items = (data.uses || []).concat(data.usedBy || []);
+            if (items.length > 0) {
                 text += " </br> {{Il est utilisé par ou utilise :}}</br>";
                 var complement = null;
-                for (var i in data) {
+                for (var i in items) {
                     complement = "";
-                    if ("sourceName" in data[i]) {
-                        complement = " (" + data[i].sourceName + ")";
+                    if ("sourceName" in items[i]) {
+                        complement = " (" + items[i].sourceName + ")";
                     }
                     text +=
                         "- " +
                         '<a href="' +
-                        data[i].url +
+                        items[i].url +
                         '" target="_blank">' +
-                        data[i].type +
+                        items[i].type +
                         "</a> : <b>" +
-                        data[i].name +
+                        items[i].name +
                         "</b>" +
                         complement +
                         ' <sup><a href="' +
-                        data[i].url +
+                        items[i].url +
                         '" target="_blank"><i class="fas fa-external-link-alt"></i></a></sup></br>';
                 }
             }

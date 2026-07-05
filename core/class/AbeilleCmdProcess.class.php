@@ -385,7 +385,7 @@
 
             if (isset($Command['cmdParams']['destinationEndpoint'])) {
                 if ($Command['cmdParams']['destinationEndpoint']>1 ) {
-                    $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
+                    $dstEp = $Command['cmdParams']['destinationEndpoint'];
                 }
                 else {
                     $dstEp = "01";
@@ -477,7 +477,7 @@
             $addrMode                = "02";
             $addr = $Command['cmdParams']['address'];
             $srcEp             = "01";
-            $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
+            if ($Command['cmdParams']['destinationEndpoint']>1 ) { $dstEp = $Command['cmdParams']['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
 
             $profId                  = "0104";
             $clustId                  = $Command['cmdParams']['clusterId'];
@@ -508,8 +508,6 @@
 
             $data                       = $data1.$data2;
 
-            // $length                      = sprintf("%04s",dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
             $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         }
 
@@ -594,8 +592,6 @@
 
             $data = $data1.$data2;
 
-            // $length = sprintf("%04s", dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
             $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         }
 
@@ -818,46 +814,6 @@
             //     return;
             // }
             $dest       = $Command['dest'];
-
-            //---- PDM ------------------------------------------------------------------
-            // if (isset($Command['PDM'])) {
-
-            //     if (isset($Command['req']) && $Command['req'] == "E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE") {
-            //         $cmd = "8300";
-
-            //         $PDM_E_STATUS_OK = "00";
-            //         $data = $PDM_E_STATUS_OK;
-
-            //         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-            //     }
-
-            //     if (isset($Command['req']) && $Command['req'] == "E_SL_MSG_PDM_EXISTENCE_RESPONSE") {
-            //         $cmd = "8208";
-
-            //         $recordId = $Command['recordId'];
-
-            //         $recordExist = "00";
-
-            //         if ($recordExist == "00" ) {
-            //             $size = '0000';
-            //             $persistedData = "";
-            //         }
-
-            //         $data = $recordId.$recordExist.$size;
-
-            //         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-            //     }
-            //     return;
-            // }
-
-            // abeilleList abeilleListAll
-            if ($Command['name'] == 'abeilleList') {
-
-                cmdLog('debug', "  Get Abeilles List", $this->debug['processCmd']);
-                // $this->addCmdToQueue($priority,$dest,"0015","0000","");
-                $this->addCmdToQueue2(PRIO_NORM, $dest, "0015");
-                return;
-            }
 
             //----------------------------------------------------------------------
             // Bind
@@ -1312,7 +1268,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
                 $sceneID = $Command['cmdParams']['sceneID'];
@@ -1339,7 +1295,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
                 $sceneID = $Command['cmdParams']['sceneID'];
@@ -1366,7 +1322,7 @@
                 $addrMode   = "02";                                    // Short Address -> 2
                 $address    = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp      = "01";                                 // -> 2
-                $dstEp      = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
+                $dstEp      = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
                 $groupID    = $Command['cmdParams']['groupId'];
                 $sceneID    = $Command['cmdParams']['sceneID'];
@@ -1424,7 +1380,7 @@
                 $addrMode   = "02";
                 $address    = $Command['cmdParams']['address'];
                 $srcEp      = "01";
-                $dstEp      = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
+                $dstEp      = $Command['cmdParams']['destinationEndpoint'];
 
                 $groupID    = $Command['cmdParams']['groupId'];
                 $sceneID    = $Command['cmdParams']['sceneID'];
@@ -1456,7 +1412,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
 
@@ -1483,7 +1439,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
                 $sceneID = $Command['cmdParams']['sceneID'];
@@ -1510,7 +1466,7 @@
                 $addrMode = "02";                                    // Short Address -> 2
                 $address = $Command['cmdParams']['address'];                         // -> 4
                 $srcEp = "01";                                 // -> 2
-                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01"; // -> 2
+                $dstEp = $Command['cmdParams']['destinationEndpoint']; // -> 2
 
                 $groupID = $Command['cmdParams']['groupId'];
 
@@ -1905,7 +1861,7 @@
 
                 $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
+                if (isset ( $Command['cmdParams']['destinationEndpoint'] )) { $dstEp = $Command['cmdParams']['destinationEndpoint'];} else { $dstEp = "01"; };
                 $onoff = "00";
                 $stepMode = "00"; // 00 : Up, 01 : Down
                 $stepSize = $Command['cmdParams']['step'];
@@ -1935,7 +1891,7 @@
 
                 $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
+                if (isset ( $Command['cmdParams']['destinationEndpoint'] )) { $dstEp = $Command['cmdParams']['destinationEndpoint'];} else { $dstEp = "01"; };
                 $onoff = "00";
                 $stepMode = "01"; // 00 : Up, 01 : Down
                 $stepSize = $Command['cmdParams']['step'];
@@ -1966,7 +1922,7 @@
                 $addrMode       = $Command['cmdParams']['addressMode'];
                 $address        = $Command['cmdParams']['address'];
                 $srcEp          = "01";
-                $dstEp          = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
+                $dstEp          = $Command['cmdParams']['destinationEndpoint'];
                 $action         = $Command['cmdParams']['action'];
                 $onTime         = $Command['cmdParams']['onTime'];
                 $offWaitTime    = $Command['cmdParams']['offWaitTime'];
@@ -1986,7 +1942,10 @@
             }
 
             // Take RGB (0-255) convert to X, Y and send the color
+            // OBSOLETE: To be replaced by 'cmd-0300-moveToColor-RGB'
             if ($Command['name'] == 'setColourRGB') {
+
+                cmdLog('debug', "  WARNING: OBSOLETE command 'setColourRGB'. Use 'cmd-0300-moveToColor-RGB' instead.");
 
                 // The reverse transformation
                 // https://en.wikipedia.org/wiki/SRGB
@@ -2021,25 +1980,21 @@
                 $x = $x*255*255;
                 $y = $y*255*255;
 
-                // Meme commande que la commande du dessus
-                $cmd = "00B7";
-                // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
-                $length = "000B";
+                $zgCmd = "00B7";
 
                 $addrMode = "02";
                 $address = $Command['cmdParams']['address'];
                 $srcEp = "01";
-                $dstEp = $Command['cmdParams']['destinationEndpoint'] ?? $Command['cmdParams']['destinationEndPoint'] ?? "01";
+                $dstEp = $Command['cmdParams']['ep'];
                 $colourX = str_pad( dechex($x), 4, "0", STR_PAD_LEFT);
                 $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
                 $duration = "0001";
 
-                cmdLog( 'debug', "  colourX: ".$colourX." colourY: ".$colourY, $this->debug['processCmd'] );
+                cmdLog('debug', "  setColourRGB: dstEp=$dstEp, colourX=".$colourX." colourY=".$colourY);
 
-                $data = $addrMode.$address.$srcEp.$dstEp.$colourX.$colourY.$duration ;
+                $data = $addrMode.$address.$srcEp.$dstEp.$colourX.$colourY.$duration;
 
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $address, $addrMode);
                 return;
             }
 
@@ -2128,13 +2083,18 @@
                  */
 
                 // Zigate specific command: Set mode (raw, hybrid, normal)
+                // Mandatory params: 'mode'
                 if ($cmdName == 'zgSetMode') {
+                    $required = ['mode'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
                     $mode = $Command['cmdParams']['mode'];
-                    if ($mode == "raw") {
+                    if ($mode == "raw")
                         $modeVal = "01";
-                    } else if ($mode == "hybrid") {
+                    else if ($mode == "hybrid")
                         $modeVal = "02";
-                    } else // Normal
+                    else // Normal
                         $modeVal = "00";
                     cmdLog('debug', "  Setting mode {$modeVal}/{$mode}");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0002", $modeVal);
@@ -2142,6 +2102,7 @@
                 }
 
                 // Zigate specific command: Set certfication (CE, FCC)
+                // Mandatory params: 'certif'
                 else if ($cmdName == 'zgSetCertification') {
                     $required = ['certif'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -2279,7 +2240,7 @@
                     $zgCmd = "0806";
                     $data = $Command['cmdParams']['txPower'];
 
-                    cmdLog('debug', "  zgSetTxPower: txPower={$data}");
+                    cmdLog('debug', "  zgSetTxPower: txPower=$data");
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data);
                     return;
                 }
@@ -2403,6 +2364,50 @@
                     return;
                 }
 
+                // Zigate specifc ? Get device list. What is that ?
+                else if ($cmdName == 'zgGetDevicesList') {
+
+                    cmdLog('debug', "  zgGetDevicesList");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0015");
+                    return;
+                }
+
+                // Zigate specifc: Command AB05 for FW >= AB01-0001
+                else if ($cmdName == 'zgAB05') {
+
+                    cmdLog('debug', "  zgAB05");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB05");
+                    return;
+                }
+
+                // Zigate specifc: Command AB06 for FW >= AB01-0001
+                // Optional param: 'idx' for segment index
+                else if ($cmdName == 'zgAB06') {
+
+                    // Segment idx should be 0 to 63, or 255 for ALL segments
+                    $idx = isset($Command['cmdParams']['idx']) ? $Command['cmdParams']['idx'] : 255;
+                    cmdLog('debug', "  zgAB06: Idx=$idx");
+
+                    $data = sprintf("%02X", $idx);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB06", $data);
+                    return;
+                }
+
+                // Zigate specifc: Command AB08 for FW >= AB01-0001
+                // Mandatory param: 'pdmId' for PDM ID
+                else if ($cmdName == 'zgAB08') {
+                    $required = ['pdmId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // PDM ID:
+                    $pdmId = $Command['cmdParams']['pdmId'];
+                    cmdLog('debug', "  zgAB08: PdmId=$pdmId");
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB08", $pdmId);
+                    return;
+                }
+
                 /*
                  * Zigbee standard commands
                  */
@@ -2516,8 +2521,8 @@
 
                 // Zigbee command: Bind to device or bind to group.
                 // Bind, thru command 0030 => generates 'Bind_req' / cluster 0021
-                // Mandatory params: addr, ep, clustId, destAddr
-                // Optional params: destEp required if destAddr = device ieee addr
+                // Mandatory params: addr, ep, clustId, destAddr, destEp (only if destAddr==IEEE)
+                // Optional params: none
                 else if ($cmdName == 'bind0030') {
 
                     $required = ['addr', 'ep', 'clustId', 'destAddr'];
@@ -2529,7 +2534,7 @@
                         return;
                     }
 
-                    $cmd = "0030";
+                    $zgCmd = "0030";
 
                     // <target extended address: uint64_t>
                     // <target endpoint: uint8_t>
@@ -2563,10 +2568,10 @@
                         return;
                     }
                     cmdLog('debug', '  bind0030: '.$addr.'/EP-'.$ep.'/Clust-'.$clustId.' to '.$dstTxt);
-                    $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
 
                     // Note: Bind is sent with ACK request
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, "02");
+                    $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, "02");
                     return;
                 } // End $cmdName == 'bind0030'
 
@@ -2791,13 +2796,14 @@
                 // Mandatory params: 'addr'
                 // Optional params:
                 // - 'scanChan' (hex string, default=All/'07FFF800')
-                // - 'scanDuration' (hex string, default='01', 'FE' for channel change)
+                // - 'scanDuration' (hex string 2 bytes, 0x00-0x05 or 0xfe (channel change) or 0xff, default='01')
+                // - 'scanCount' (hex string 2 bytes, 0x00 or 0x01)
                 else if ($cmdName == 'mgmtNetworkUpdateReq') {
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    // Msg Type =  0x004A
+                    // Msg Type = 0x004A
 
                     // <target short address: uint16_t>
                     // <channel mask: uint32_t>
@@ -2807,28 +2813,34 @@
                     // <network manager short address: uint16_t>
                     //
                     // Channel Mask: Mask of channels to scan
-                    // Scan Duration: 0 – 0xFF Multiple of superframe duration.
-                    // Scan count: Scan repeats 0 – 5
-                    // Network Update ID: 0 – 0xFF Transaction ID for scan
-
-                    $cmd                = "004A";
+                    // Scan Duration: 0 – 0xFF, 0x00-0x05 or 0xfe (channel change) or 0xff.
+                    // Scan count: 0 - 1 (only if ScanDuration between 0x00 to 0x05)
+                    // Network Update ID: 0 – 0xFF, Transaction ID for scan (if ScanDuration is FE or FF)
 
                     $addr               = $Command['cmdParams']['addr'];
                     $scanChan           = isset($Command['cmdParams']['scanChan']) ? hexdec($Command['cmdParams']['scanChan']) : 0x7FFF800;
                     $scanChan           = sprintf("%08X", $scanChan);
                     $scanDuration       = isset($Command['cmdParams']['scanDuration']) ? $Command['cmdParams']['scanDuration'] : "01";
                     $scanDuration       = strtoupper($scanDuration);
-                    if ($scanDuration == "FE") // Channel change request
+                    if (isset($Command['cmdParams']['scanCount']))
+                        $scanCount = $Command['cmdParams']['scanCount'];
+                    else if ($scanDuration == "FE") // Channel change request
                         $scanCount      = "00";
                     else
                         $scanCount      = "01";
-                    $networkUpdateId    = "01";
-                    $networkManagerAddr = "0000"; // Useful only if scanDuration==FF
+                    if (($scanDuration == "FE") || ($scanDuration == "FF"))
+                        $networkUpdateId    = "01";
+                    else
+                        $networkUpdateId    = ""; // Open point: Required by Zigate FW even if should not be present ?
+                    if ($scanDuration == "FF") // networkManagerAddr: Really supported by Zigate msg 004A ?
+                        $networkManagerAddr = "0000"; // Useful only if scanDuration==FF
+                    else
+                        $networkManagerAddr = ""; // Open point: Required by Zigate FW even if should not be present ?
 
-                    cmdLog('debug', "  mgmtNetworkUpdateReq: addr=".$addr.", scanChan=".$scanChan.", scanDuration=".$scanDuration.', scanCount='.$scanCount);
+                    cmdLog('debug', "  mgmtNetworkUpdateReq: Addr=$addr, ScanChan=$scanChan, ScanDuration=$scanDuration, ScanCount=$scanCount");
                     $data = $addr.$scanChan.$scanDuration.$scanCount.$networkUpdateId.$networkManagerAddr;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "004A", $data, $addr);
                     return;
                 }
 
@@ -3601,7 +3613,7 @@
                     // Attribute direction : uint8_t
                     // Attribute id : uint16_t
 
-                    $cmd        = "0122";
+                    $zgCmd      = "0122";
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
@@ -3614,9 +3626,10 @@
                     $attrDir    = "00";
                     $attrId     = $Command['cmdParams']['attrId'];
 
+                    cmdLog('debug', "  readReportingConfig: EP=$dstEp, ClustId=$clustId, AttrId=$attrId");
                     $data =  $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$nbOfAttr.$manufSpecific.$manufId.$attrDir.$attrId;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // Edn 'readReportingConfig'
 
@@ -3930,7 +3943,7 @@
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['cmdParams']['ep'];
+                    $dstEp      = $Command['cmdParams']['EP'];
                     $onoff      = "01";
                     $level      = sprintf("%02X", $Command['cmdParams']['Level']);
                     $duration   = isset($Command['cmdParams']['duration']) ? sprintf("%04X", $Command['cmdParams']['duration']) : "0001";
@@ -4377,8 +4390,8 @@
 
                     cmdLog('debug', "  cmd-0102: CmdId={$cmdId}, Extra={$extra}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId.$extra;
-                    $repeat = isset($Command['repeat']) ? $Command['repeat'] : 0;
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode, $repeat);
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-0102'
 
@@ -4455,9 +4468,41 @@
                     return;
                 } // End 'cmd-0201'
 
-                // ZCL cluster 0300/color control: Move to Colour
+                // ZCL cluster 0300/color control: 00/Move to Hue
+                else if ($cmdName == 'moveToHue') {
+                    $required = ['addr', 'ep', 'hue']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <hue: uint8_t>
+                    // <direction: uint8_t>
+                    // <transition time: uint16_t>
+
+                    $zgCmd        = "00B0"; // Move to HUE
+                    if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
+                    $addr       = $Command['cmdParams']['addr'];
+                    $srcEp      = "01";
+                    if (isset($Command['cmdParams']['ep'])) $dstEp = $Command['cmdParams']['ep']; else $dstEp = "01";
+                    $hue    = $Command['cmdParams']['hue'];
+                    $dir = '00'; // 0x00 Shortest distance, 0x01 Longest distance, 0x02 Up, 0x03 Down
+                    if (isset($Command['cmdParams']['duration']) && $Command['cmdParams']['duration']>0)
+                        $duration = sprintf("%04s", dechex($Command['cmdParams']['duration']));
+                    else
+                        $duration = "0001";
+
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$hue.$dir.$duration;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                }
+
+                // ZCL cluster 0300/color control: 07/Move to Color
                 else if ($cmdName == 'setColour') {
-                    $required = ['addr', 'X', 'Y']; // Mandatory infos
+                    $required = ['addr', 'EP', 'X', 'Y']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4473,40 +4518,99 @@
                     if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    $dstEp = $Command['cmdParams']['ep'] ?? $Command['cmdParams']['EP'] ?? "01";
-                    $colourX    = $Command['cmdParams']['X'];
-                    $colourY    = $Command['cmdParams']['Y'];
+                    $dstEp      = $Command['cmdParams']['EP'];
+                    $colorX     = $Command['cmdParams']['X'];
+                    $colorY     = $Command['cmdParams']['Y'];
                     if (isset($Command['cmdParams']['duration']) && $Command['cmdParams']['duration']>0)
                         $duration = sprintf("%04s", dechex($Command['cmdParams']['duration']));
                     else
                         $duration = "0001";
 
-                    $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration;
+                    cmdLog('debug', "  setColour: EP=$dstEp, X/Y=$colorX/$colorY, Duration=$duration");
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$colorX.$colorY.$duration;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
-                // ZCL cluster 0300/color control: Move to Colour Temperature
-                // Mandatory params: addr, EP, slider (temp in K)
-                // Note: slider=0 is specific value to force tempMireds=0000
-                else if ($cmdName == 'setTemperature') {
-                    $required = ['addr', 'slider']; // Mandatory infos
+                // ZCL cluster 0300/color control: 07/Move to Color
+                // Take RGB (0-255) convert to X, Y
+                else if ($cmdName == 'cmd-0300-moveToColor-RGB') {
+                    $required = ['addr', 'ep', 'color']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    // <target short address: uint16_t>     4
-                    // <source endpoint: uint8_t>           2
-                    // <destination endpoint: uint8_t>      2
-                    // <colour temperature: uint16_t>       4
-                    // <transition time: uint16_t>          4
+                    // Reminder: color value = '#RRGGBB'
+                    $R = hexdec(substr($Command['cmdParams']['color'], 1, 2));
+                    $G = hexdec(substr($Command['cmdParams']['color'], 3, 2));
+                    $B = hexdec(substr($Command['cmdParams']['color'], 5, 2));
 
-                    $zgCmd = "00C0"; // 00C0=Move to colour temperature
+                    // The reverse transformation
+                    // https://en.wikipedia.org/wiki/SRGB
+
+                    $a = 0.055;
+
+                    // are in the range 0 to 1. (A range of 0 to 255 can simply be divided by 255.0).
+                    $Rsrgb = $R / 255;
+                    $Gsrgb = $G / 255;
+                    $Bsrgb = $B / 255;
+
+                    if ($Rsrgb <= 0.04045 ) { $Rlin = $Rsrgb/12.92; } else { $Rlin = pow( ($Rsrgb+$a)/(1+$a), 2.4); }
+                    if ($Gsrgb <= 0.04045 ) { $Glin = $Gsrgb/12.92; } else { $Glin = pow( ($Gsrgb+$a)/(1+$a), 2.4); }
+                    if ($Bsrgb <= 0.04045 ) { $Blin = $Bsrgb/12.92; } else { $Blin = pow( ($Bsrgb+$a)/(1+$a), 2.4); }
+
+                    $X = 0.4124 * $Rlin + 0.3576 * $Glin + 0.1805 *$Blin;
+                    $Y = 0.2126 * $Rlin + 0.7152 * $Glin + 0.0722 *$Blin;
+                    $Z = 0.0193 * $Rlin + 0.1192 * $Glin + 0.9505 *$Blin;
+
+                    if (($X + $Y + $Z)!=0 ) {
+                        $x = $X / ( $X + $Y + $Z );
+                        $y = $Y / ( $X + $Y + $Z );
+                    }
+                    else {
+                        echo "Can t do the convertion.";
+                    }
+
+                    $x = $x*255*255;
+                    $y = $y*255*255;
+
+                    $zgCmd = "00B7";
+
+                    $addrMode = "02";
+                    $addr = $Command['cmdParams']['addr'];
+                    $srcEp = "01";
+                    $dstEp = $Command['cmdParams']['ep'];
+                    $colorX = str_pad(dechex($x), 4, "0", STR_PAD_LEFT);
+                    $colorY = str_pad(dechex($y), 4, "0", STR_PAD_LEFT);
+                    $duration = "0001";
+
+                    cmdLog('debug', "  moveToColor-RGB: dstEp=$dstEp, R/G/B=$R/$G/$B => X/Y=$colorX/$colorY");
+
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$colorX.$colorY.$duration;
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                } // End 'cmd-0300-moveToColor-RGB'
+
+                // ZCL cluster 0300/color control: 0A/Move To Color Temperature
+                // Mandatory params: addr, EP, slider (temp in K, decimal)
+                // Note: slider=0 is specific value to force tempMireds=0000
+                else if ($cmdName == 'setTemperature') {
+                    $required = ['addr', 'EP', 'slider']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <colour temperature: uint16_t>
+                    // <transition time: uint16_t> => Time in 1/10th of sec
+
+                    $zgCmd = "00C0"; // 00C0=Move To Color Temperature
 
                     if (isset($Command['cmdParams']['addressMode'])) $addrMode = $Command['cmdParams']['addressMode']; else $addrMode = "02";
-                    $addr       = $Command['cmdParams']['addr'];
-                    $srcEp      = "01";
-                    $dstEp = $Command['cmdParams']['ep'] ?? $Command['cmdParams']['EP'] ?? "01";
+                    $addr   = $Command['cmdParams']['addr'];
+                    $srcEp  = "01";
+                    $dstEp  = $Command['cmdParams']['EP'];
                     // Color temp K = 1,000,000 / ColorTempMireds,
                     // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
                     // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.
@@ -4520,18 +4624,61 @@
                             $tempK = 1000000;
                         $tempMireds  = sprintf("%04X", 1000000 / $tempK);
                     }
-                    $transition = "0001"; // Transition time
-
+                    $transition = "0001"; // Default = 1/10s
                     cmdLog('debug', '  setTemperature: TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
+
                     $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
-
+                    // TODO: Remove that read back. Should be done only if not reporting. Model dependant !!
                     if ($addrMode == "02") {
-                        $this->sendToCmd(priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
+                        $this->sendToCmd(PRIO_NORM, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
                     }
                     return;
                 }
+
+                // ZCL cluster 0300/color control: 0A/Move To Color Temperature
+                // Mandatory params: addr, ep, tempK (in K, decimal)
+                // Optional params: transition (in 1/10th of sec, decimal), addrMode ("02" or "01"/GroupAddr)
+                else if ($cmdName == 'cmd-0300-moveToColorTemperature-K') {
+                    $required = ['addr', 'ep', 'tempK']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <colour temperature: uint16_t>
+                    // <transition time: uint16_t> => Time in 1/10th of sec
+
+                    $zgCmd = "00C0"; // 00C0=Move To Color Temperature
+
+                    $addrMode = isset($Command['cmdParams']['addrMode']) ? $Command['cmdParams']['addrMode']: "02";
+                    $addr     = $Command['cmdParams']['addr'];
+                    $srcEp    = "01";
+                    $dstEp    = $Command['cmdParams']['ep'];
+                    // Color temp K = 1,000,000 / ColorTempMireds,
+                    // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
+                    // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.
+                    $tempK = intval($Command['cmdParams']['tempK']);
+                    if ($tempK == 0)
+                        $tempMireds = "0000";
+                    else {
+                        if ($tempK < 15.32)
+                            $tempK = 15.32;
+                        else if ($tempK > 1000000)
+                            $tempK = 1000000;
+                        $tempMireds  = sprintf("%04X", 1000000 / $tempK);
+                    }
+                    $transition = isset($Command['cmdParams']['transition']) ? $Command['cmdParams']['transition'] : 1; // In 1/10th of sec
+                    $transition = sprintf("%04X", $transition);
+
+                    cmdLog('debug', '  moveToColorTemp: TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                } // End 'cmd-0300-MoveColorTemperature-K'
 
                 // ZCL cluster 0500/IAS Zone commands
                 // Mantatory params: 'addr', 'ep', 'cmd' (00 or 01)
@@ -5015,10 +5162,10 @@
 
                 // Legrand private cluster FC41.
                 // TODO: Should be replaced by 'cmd-Private'
-                // Mandatory params: 'addr', 'Mode'
-                // Optional params: 'priority', 'EP'
+                // Mandatory params: 'addr', 'Mode', 'EP'
+                // Optional params: 'priority'
                 else if ($cmdName == 'commandLegrand') {
-                    $required = ['addr', 'Mode']; // Mandatory infos
+                    $required = ['addr', 'EP', 'Mode']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -5039,7 +5186,7 @@
                     $addrMode   = "02";
                     $addr       = $Command['cmdParams']['addr'];
                     $srcEp      = "01";
-                    if ($Command['cmdParams']['ep']>1 ) { $dstEp = $Command['cmdParams']['ep']; } else { $dstEp = "01"; } // $dstEp; // "01";
+                    $dstEp      = $Command['cmdParams']['EP'];
                     $profId     = "0104";
                     $clustId    = "FC41";
                     $secMode    = "02"; // ???

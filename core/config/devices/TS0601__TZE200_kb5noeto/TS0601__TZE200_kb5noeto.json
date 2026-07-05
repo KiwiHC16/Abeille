@@ -2,9 +2,11 @@
     "TS0601__TZE200_kb5noeto": {
         "manufacturer": "Tuya",
         "model": "ZG-204ZM",
-        "type": "Tuya PIR+24G radar+light sensor",
+        "type": "Tuya PIR 24Ghz human presnce sensor",
         "alternateIds": {
-            "TS0601__TZE200_2aaelwxk": {}
+            "TS0601__TZE200_2aaelwxk": {},
+            "TS0601__TZE200_tyffvoij": {},
+            "TS0601__TZE200_yflzeeqj": {}
         },
         "genericType": "Security",
         "timeout": "60",
@@ -32,6 +34,15 @@
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
+            },
+            "Presence": {
+                "use": "inf_presence-Detection",
+                "isVisible": 1
+            },
+            "Illuminance": {
+                "use": "inf_illuminance",
+                "nextLine": "after",
+                "isVisible": 1
             },
             "Set LED": {
                 "use": "act_tuyaEF00-SetValue",
@@ -145,15 +156,6 @@
                 "unit": "x",
                 "logicalId": "01-staticSensVal",
                 "nextLine": "after"
-            },
-            "Presence": {
-                "use": "inf_presence-Detection",
-                "isVisible": 1
-            },
-            "Illuminance": {
-                "use": "inf_illuminance",
-                "nextLine": "after",
-                "isVisible": 1
             }
         },
         "private": {

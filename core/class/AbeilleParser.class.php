@@ -25,7 +25,7 @@
             global $argv;
 
             /* Configuring log library to use 'logMessage()' */
-            logSetConf("AbeilleParser.log", true);
+            // logSetConf("AbeilleParserD.log", true); // Tcharp38: Required ? Already done by AbeilleParserD
 
             parserLog("debug", "AbeilleParser constructor", "AbeilleParserClass");
             // $this->parameters_info = AbeilleTools::getParameters();
@@ -1132,17 +1132,6 @@
            Ex: 53494E2D342D322D3230002000000014000000CCCB0020B1020100900000003D = 'SIN-4-2-20        ÌË  ±    ='
          */
         function cleanModelId($hexString) {
-            //remove all space in names for easier filename handling
-            // $hexString = str_replace(' ', '', $hexString);
-
-            // On enleve le / comme par exemple le nom des equipements Legrand
-            // $hexString = str_replace('/', '', $hexString);
-
-            // On enleve le * Ampoules GU10 Philips #1778
-            // $hexString = str_replace('*', '', $hexString);
-
-            // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-            // $hexString = str_replace("\0", '', $hexString);
 
             $m = '';
             for ($i = 0; $i < strlen($hexString); $i += 2) {
@@ -1164,15 +1153,18 @@
                 $m = $m.$in2;
             }
 
-            // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
-            if ($m == "lumi.sens") $m = "lumi.sensor_ht";
+            // Covered by alternateIds
+            // if ($m == "lumi.sens") $m = "lumi.sensor_ht";
 
+            // Covered by alternateIds
             // if ($hexString == "TRADFRI Signal Repeater") $hexString = "TRADFRI signal repeater";
 
-            if ($m == "lumi.sensor_swit") $m = "lumi.sensor_switch.aq3";
+            // Covered by alternateIds
+            // if ($m == "lumi.sensor_swit") $m = "lumi.sensor_switch.aq3";
 
             // Work-around: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
-            if (strpos($m, "sensor_86sw2") > 2) { $m="lumi.sensor_86sw2"; }
+            // Covered by alternateIds ??
+            // if (strpos($m, "sensor_86sw2") > 2) { $m="lumi.sensor_86sw2"; }
 
             if (!strncasecmp($m, "lumi.", 5))
                 $m = substr($m, 5); // Remove leading "lumi." case insensitive
@@ -1650,7 +1642,8 @@
                     $GLOBALS['zigate'.$zgId]['ieeeStatus'] = $ieeeStatus; // Updating local status
 
                     if ($ieeeStatus == 0) {
-                        msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/zgGetNetworkStatus");
+                        // Tcharp38: Too many requests. To be revisited if required. Should be leaded by configureZigate in CmdD.
+                        // msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/zgGetNetworkStatus");
 
                         $acceptedBeforeZigateIdentified = array("0208", "0302", "8001", "8006", "8007", "8009", "8010", "8024", "9999");
                         if (!in_array($type, $acceptedBeforeZigateIdentified)) {
@@ -1931,7 +1924,13 @@
                 } else if ($clustId == "0300") {
                     if ($attrId == "0007") {
                         // Color temperature in kelvins = 1,000,000 / ColorTemperatureMireds
-                        $newVal = 1000000 / $newVal;
+                        // 0x0000 indicates an undefined value.
+                        // 0xffff indicates an invalid value.
+                        if (($newVal == 0x0) || ($newVal == 0xffff)) {
+                            parserLog('debug', "  Invalid or undefined value => returning 15.32 Kelvins");
+                            $newVal = 15.32;
+                        } else
+                            $newVal = 1000000 / $newVal;
                     }
                 } else if ($clustId == "0400") {
                     if ($attrId == "0000") {
@@ -2440,7 +2439,7 @@
                     .', NRxOnWhenIdle='.$N['rxOnWhenIdle']
                     .', NRelationship='.$N['relationship']
                     .', NDepth='.$N['depth']
-                    .', NLQI='.$N['lqi']);
+                    .', NLQI='.hexdec($N['lqi']));
             }
             $toLqiCollector['nList'] = $nList;
             $this->msgToLQICollector($toLqiCollector);
@@ -2523,7 +2522,10 @@
 
                 $m = '  DestAddr='.$destAddr.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop;
                 parserLog2('debug', $srcAddr, $m);
-                $routingTable[$destAddr] = array('nextHop' => $nextHop, 'status' => $statusDecoded);
+
+                if (($statusRouting == 0) && ($nextHop != $destAddr)) {
+                    $routingTable[$destAddr] = $nextHop;
+                }
             }
             // Routing table is now stored in /tmp/jeedom/Abeille/AbeilleRoutes-AbeilleX.json
             $this->msgToRoutingCollector($srcAddr, $tableEntries, $tableListCount, $startIdx, $routingTable);
@@ -3883,8 +3885,33 @@
                     }
                 } else { // Cluster specific command
 
+                    /* Command to be treated as private/custom way ?
+                       Generic format for private clusters/commands reminder
+                        "private": {
+                            "FC00-00": { // CLUSTID-CMDID
+                                "type": "generic",
+                                "function": "philipsDecodeCmdFC00"
+                            }
+                        } */
+                    if (isset($eq['private']) && isset($eq['private'][$clustId.'-'.$cmd])) {
+                        $p = $eq['private'][$clustId.'-'.$cmd];
+                        $supportType = $p['type']; // "tuya", "tuya-zosung", "xiaomi", "generic"
+                        $fct = isset($p['function']) ? $p['function'] : "missingFunctionName";
+                        if ($supportType == 'tuya')
+                            $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        else if ($supportType == 'tuya-zosung')
+                            $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        else if ($supportType == 'generic') {
+                            if (!function_exists($fct))
+                                parserLog2("error", $srcAddr, "  Cluster specific command $clustId-$cmd: Invalid function '$fct'");
+                            else
+                                $attrReportN = $fct($dest, $srcAddr, $srcEp, $clustId, $cmd, $pl);
+                        } else
+                            parserLog2("error", $srcAddr, "  Cluster specific command $clustId-$cmd: Unsupported type '$supportType'");
+                    }
+
                     // 0004/Groups cluster specific
-                    if ($clustId == "0004") {
+                    else if ($clustId == "0004") {
                         // Duplicated message ?
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
@@ -3901,10 +3928,9 @@
                             $this->decode8002_RemoveGroupRsp($dest, $srcAddr, $srcEp, $pl, $lqi, $toAbeille);
                         } else if (!$dir && ($cmd == "03")) {
                             parserLog2('debug', $srcAddr, '  Handled by Zigate');
-                        } else {
+                        } else
                             parserLog2('debug', $srcAddr, '  Unsupported cluster 0004 specific cmd '.$cmd);
-                            // return;
-                        }
+
                     } // End clustId == "0004"
 
                     // 0005/Scenes cluster specific
@@ -4043,24 +4069,29 @@
                             parserLog2("debug", $srcAddr,  '  '.json_encode($sceneStored) );
                         }
 
-                        // Ikea specific ?
-                        else if (($cmd == "07") && ($manufCode == '117C')) {
-                            // Ikea specific
-                            $value = substr($pl, 0, 2);
+                        // // Ikea specific ?
+                        // Now supported by private section
+                        // else if (($cmd == "07") && ($manufCode == '117C')) {
+                        //     // Ikea specific
+                        //     $value = substr($pl, 0, 2);
 
-                            parserLog2("debug", $srcAddr, '  Ikea 5 buttons remote'
-                                            .': Cmd='.$cmd
-                                            .', Value='.$value
-                                            );
+                        //     parserLog2("debug", $srcAddr, '  Ikea 5 buttons remote'
+                        //                     .': Cmd='.$cmd
+                        //                     .', Value='.$value
+                        //                     );
 
-                            // $attrReportN[] = [
-                            //     array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
-                            // ];
-                            $attrReportN[] = array(
-                                'name' => $srcEp.'-0005-cmd07',
-                                'value' => $value,
-                            );
-                        }
+                        //     // $attrReportN[] = [
+                        //     //     array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
+                        //     // ];
+                        //     $attrReportN[] = array(
+                        //         'name' => $srcEp.'-0005-cmd07',
+                        //         'value' => $value,
+                        //     );
+                        // }
+
+                        else
+                            parserLog2('debug', $srcAddr, '  Unsupported cluster 0005 specific cmd '.$cmd);
+
                     } // End $clustId == "0005"
 
                     // 0006/On/Off cluster specific
@@ -4442,51 +4473,6 @@
 
                         // Checking if command must be treated as special private case
 
-                        /* Generic format for private clusters/commands reminder
-                        "private": {
-                            "EF00": { // CLUSTID
-                                "type": "tuya",
-                                "05": { // DP
-                                    "function": "rcvValue",
-                                    "info": "01-measuredValue"
-                                },
-                            },
-                            "ED00": { // CLUSTID
-                                "type": "tuya-zosung"
-                            },
-                            "0000-FF01": { // CLUSTID-ATTRID
-                                "type": "xiaomi",
-                                "01-21": {
-                                    "func": "numberDiv",
-                                    "div": 1000,
-                                    "info": "0001-01-0020"
-                                }
-                            },
-                            "FC00-00": { // CLUSTID-CMDID
-                                "type": "generic",
-                                "function": "philipsDecodeCmdFC00"
-                            }
-                        }
-                        "fromDevice": { // OBSOLETE !! Previous naming
-                            "ED00": {
-                                "type": "tuya-zosung"
-                            },
-                            "0000-FF01": { // CLUSTID-ATTRID
-                                "type": "xiaomi",
-                                "01-21": {
-                                    "func": "numberDiv",
-                                    "div": 1000,
-                                    "info": "0001-01-0020"
-                                }
-                            },
-                            "EF00": {
-                                "type": "tuya",
-                                "05": { // DP
-                                    "function": "rcvValue",
-                                    "info": "01-measuredValue"
-                                },
-                            }
-                        } */
                         // if (isset($eq['private'])) {
                         //     foreach ($eq['private'] as $key => $p2) {
                         //         $lenKey = strlen($key);
@@ -4513,33 +4499,33 @@
                         //         'value' => $pl,
                         //     );
                         // }
-                        if (isset($eq['private']) && isset($eq['private'][$clustId.'-'.$cmd])) {
-                            $p = $eq['private'][$clustId.'-'.$cmd];
-                            $supportType = $p['type']; // "tuya", "tuya-zosung", "xiaomi", "generic"
-                            if ($supportType == 'tuya')
-                                $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
-                            else if ($supportType == 'tuya-zosung')
-                                $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
-                            else if ($supportType == 'generic') {
-                                if (!isset($p['function'])) {
-                                    parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Undefined private function");
-                                } else {
-                                    $fct = $p['function'];
-                                    if (!function_exists($fct)) {
-                                        parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unknown private function '$fct'");
-                                    } else {
-                                        $attrReportN = $fct($dest, $srcAddr, $srcEp, $clustId, $cmd, $pl);
-                                    }
-                                }
-                            } else
-                                parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unsupported type '$supportType'");
-                        } else {
+                        // if (isset($eq['private']) && isset($eq['private'][$clustId.'-'.$cmd])) {
+                        //     $p = $eq['private'][$clustId.'-'.$cmd];
+                        //     $supportType = $p['type']; // "tuya", "tuya-zosung", "xiaomi", "generic"
+                        //     if ($supportType == 'tuya')
+                        //         $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        //     else if ($supportType == 'tuya-zosung')
+                        //         $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
+                        //     else if ($supportType == 'generic') {
+                        //         if (!isset($p['function'])) {
+                        //             parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Undefined private function");
+                        //         } else {
+                        //             $fct = $p['function'];
+                        //             if (!function_exists($fct)) {
+                        //                 parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unknown private function '$fct'");
+                        //             } else {
+                        //                 $attrReportN = $fct($dest, $srcAddr, $srcEp, $clustId, $cmd, $pl);
+                        //             }
+                        //         }
+                        //     } else
+                        //         parserLog2("error", $srcAddr, "  Cluster specific command ".$clustId."-".$cmd.": Unsupported type '$supportType'");
+                        // } else {
                             parserLog2("debug", $srcAddr, "  Cluster '$clustId' specific command '$cmd' handled as default logic id '$srcEp-$clustId-cmd$cmd'");
                             $attrReportN[] = array(
                                 'name' => $srcEp.'-'.$clustId.'-cmd'.$cmd,
                                 'value' => (strlen($pl) > 0) ? $pl : "1",
                             );
-                        }
+                        // }
                     }
                 } // End cluster specific commands
             }
@@ -4597,7 +4583,7 @@
             if (isset($toCli))
                 $this->msgToClient($toCli);
 
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
+            // $this->whoTalked[] = $dest.'/'.$srcAddr;
 
             // Monitor if requested (OBSOLETE way !! Use parserLog2() instead)
             // if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
@@ -4609,6 +4595,18 @@
                 monMsgFromZigate($monMsg); // Send message to monitor
             $GLOBALS['toMon'] = []; // Clear monitoring queue
         } // End decode8002()
+
+        /* 8007/“Factory New” Restart */
+        function decode8007($dest, $payload, $lqi) {
+            $m = '8007/Factory New Restart';
+            parserLog2('debug', "0000", $dest.', Type='.$m);
+
+            $msg = array (
+                'type'  => "configureZigate",
+                'net'   => $dest
+            );
+            msgToCmdAck($msg);
+        }
 
         /* 8009/Network State Reponse */
         function decode8009($dest, $payload, $lqi) {
@@ -4626,7 +4624,7 @@
             $msgDecoded = '8009/Network state response, Addr='.$addr.', ExtAddr='.$extAddr.', PANId='.$panId.', ExtPANId='.$extPanId.', Chan='.$chan;
             parserLog2('debug', $addr, $dest.', Type='.$msgDecoded, "8009");
 
-            $this->whoTalked[] = $dest.'/'.$addr;
+            // $this->whoTalked[] = $dest.'/'.$addr;
 
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
@@ -4845,58 +4843,41 @@
         }
 
         /* Get devices list response */
-        // Tcharp38: Useless
-        // function decode8015($dest, $payload, $lqi)
-        // {
-        //     // <device list – data each entry is 13 bytes>
-        //     // <ID: uint8_t>
-        //     // <Short address: uint16_t>
-        //     // <IEEE address: uint64_t>
-        //     // <Power source: bool_t> 0 – battery 1- AC power
-        //     // <LinkQuality : uint8_t> 1-255
+        // Tcharp38: What list is it ? Seems to be equivalent to Zigate neighbor table.
+        function decode8015($dest, $payload, $lqi) {
 
-        //     // Id Short IEEE             Power  LQ
-        //     // 00 ffe1  00158d0001d5c421 00     a6
-        //     // 01 c4bf  00158d0001215781 00     aa
-        //     // 02 4f34  00158d00016d8d4f 00     b5
-        //     // 03 304a  00158d0001a66ca3 00     a4
-        //     // 04 cc0D  00158d0001d6c177 00     b3
-        //     // 05 3c58  00158d00019f9199 00     9a
-        //     // 06 7c3b  000B57fffe2c82e9 00     bb
-        //     // 07 7c54  00158d000183afeb 01     c3
-        //     // 08 3db8  00158d000183af7b 01     c5
-        //     // 32 553c  000B57fffe3025ad 01     9f
-        //     // 00 -> Pourquoi 00 ?
+            // <device list – data each entry is 13 bytes>
+            // <ID: uint8_t>
+            // <Short address: uint16_t>
+            // <IEEE address: uint64_t>
+            // <Power source: bool_t> 0 – battery 1- AC power
+            // <LinkQuality : uint8_t> 1-255
 
-        //     parserLog('debug', $dest.', Type=8015/Get devices list response, Payload='.$payload);
+            parserLog2('debug', '0000', $dest.', Type=8015/Get devices list response, Payload='.$payload);
 
-        //     $nb = (strlen($payload) - 2) / 26;
-        //     parserLog('debug','  Nombre d\'abeilles: '.$nb);
+            $nb = (strlen($payload) - 2) / 26;
+            for ($i = 0; $i < $nb; $i++) {
 
-        //     for ($i = 0; $i < $nb; $i++) {
+                $addr = substr($payload, $i * 26 + 2, 4);
 
-        //         $srcAddr = substr($payload, $i * 26 + 2, 4);
+                $ieee = substr($payload, $i * 26 + 6, 16);
+                // $this->msgToAbeille($dest."/".$srcAddr, "IEEE", "Addr", $ieee);
 
-        //         // Envoie IEEE
-        //         $dataAddr = substr($payload, $i * 26 + 6, 16);
-        //         $this->msgToAbeille($dest."/".$srcAddr, "IEEE", "Addr", $dataAddr);
+                $powerSource = substr($payload, $i * 26 + 22, 2);
+                $powerSourceStr = ($powerSource == "01") ? "AC" : "Bat";
+                // $this->msgToAbeille($dest."/".$srcAddr, "Power", "Source", $powerSource);
 
-        //         // Envoie Power Source
-        //         $dataPower = substr($payload, $i * 26 + 22, 2);
-        //         $this->msgToAbeille($dest."/".$srcAddr, "Power", "Source", $dataPower);
+                $dataLink = hexdec(substr($payload, $i * 26 + 24, 2));
+                // $this->msgToAbeille($dest."/".$srcAddr, "Link", "Quality", $dataLink);
 
-        //         // Envoie Link Quality
-        //         $dataLink = hexdec(substr($payload, $i * 26 + 24, 2));
-        //         $this->msgToAbeille($dest."/".$srcAddr, "Link", "Quality", $dataLink);
-
-        //         parserLog('debug', '  i='.$i.': '
-        //                         .'ID='.substr($payload, $i * 26 + 0, 2)
-        //                         .', ShortAddr='.$srcAddr
-        //                         .', ExtAddr='.$dataAddr
-        //                         .', PowerSource (0:battery - 1:AC)='.$dataPower
-        //                         .', LinkQuality='.$dataLink   );
-        //     }
-        // }
+                parserLog('debug', '  Idx='.$i.': '
+                    .'ID='.substr($payload, $i * 26 + 0, 2)
+                    .', Addr='.$addr
+                    .', IEEE='.$ieee
+                    .", PowerSrc=$powerSource/$powerSourceStr"
+                    .', LQI='.$dataLink);
+            }
+        }
 
         /* 8017/Get Time Server Response (FW >= 3.0f) */
         function decode8017($dest, $payload, $lqi) {
@@ -5636,7 +5617,24 @@
             msgToMainD($msg);
         }
 
-        // PDM dump response (Abeille's firmware only)
+        /* 9999/Extended error */
+        function decode9999($net, $payload, $lqi) {
+            /* FW >= 3.1e
+               Extended Status: uint8_t */
+            $extStatus = substr($payload, 0, 2);
+
+            $zgId = substr($net, 7); // AbeilleX => X
+            $extra = '';
+            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['nPdu']))
+                $extra = ', NPDU='.$GLOBALS['zigate'.$zgId]['nPdu'];
+            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['aPdu']))
+                $extra .= ', APDU='.$GLOBALS['zigate'.$zgId]['aPdu'];
+
+            $decoded = '9999/Extended error'.', ExtStatus='.$extStatus.$extra;
+            parserLog('debug', $net.', Type='.$decoded);
+        }
+
+        // PDM dump response (Abeille's firmware only >= AB01-0000)
         function decodeAB01($net, $payload, $lqi) {
             $id = substr($payload, 0, 4);
             $status = substr($payload, 4, 2); // 00=OK, 01=does not exist, 02=Found but truncated
@@ -5664,7 +5662,7 @@
             );
 
             if ($last) {
-                // Dump to file 'tmp/AbeillePdm-AbeilleX.json'
+                // Dump to file '/tmp/jeedom/Abeille/AbeillePdm-AbeilleX.json'
                 $table = [];
                 $table['signature'] = "Abeille PDM tables";
                 $table['net'] = $net;
@@ -5672,7 +5670,8 @@
                 $table['fwVersion'] = $GLOBALS['zigate'.$zgId]['fwVersionMaj'].'-'.$GLOBALS['zigate'.$zgId]['fwVersionMin'];
                 $table['pdms'] = $GLOBALS['zigate'.$zgId]['pdms'];
                 $json = json_encode($table);
-                file_put_contents(__DIR__."/../../tmp/AbeillePdm-".$net.".json", $json);
+                $jTmpDir = jeedom::getTmpFolder("Abeille");
+                file_put_contents("$jTmpDir/AbeillePdm-".$net.".json", $json);
             }
         }
 
@@ -5695,21 +5694,38 @@
             msgToCmdAck($msg);
         }
 
-        /* 9999/Extended error */
-        function decode9999($net, $payload, $lqi) {
-            /* FW >= 3.1e
-               Extended Status: uint8_t */
-            $extStatus = substr($payload, 0, 2);
+        // Dump EEPROM response (Abeille's FW >= AB01-0001)
+        function decodeAB07($net, $payload, $lqi) {
+            $idx = substr($payload, 0, 2);
+            $data = substr($payload, 2);
 
-            $zgId = substr($net, 7); // AbeilleX => X
-            $extra = '';
-            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['nPdu']))
-                $extra = ', NPDU='.$GLOBALS['zigate'.$zgId]['nPdu'];
-            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['aPdu']))
-                $extra .= ', APDU='.$GLOBALS['zigate'.$zgId]['aPdu'];
+            parserLog('debug', $net.', Type=AB06/EEPROM dump response'
+                .', Idx='.$idx
+                .', Data='.$data);
 
-            $decoded = '9999/Extended error'.', ExtStatus='.$extStatus.$extra;
-            parserLog('debug', $net.', Type='.$decoded);
+            $jTmpDir = jeedom::getTmpFolder("Abeille");
+            $outFile = $jTmpDir."/AbeilleEEPROM-$net.bin";
+            if ($idx == 0)
+                $f = fopen($outFile, "wb");
+            else
+                $f = fopen($outFile, "ab");
+            if ($f === false) {
+                parserLog('debug', "  ERROR: Failed to open '$outFile'");
+                return;
+            }
+            fwrite($f, pack("H*", $data));
+            fclose($f);
+        }
+
+        // PDM table max entries response (Abeille's FW >= AB01-0001)
+        function decodeAB09($net, $payload, $lqi) {
+            $pdmId = substr($payload, 0, 4);
+            $max = substr($payload, 4, 2);
+
+            parserLog('debug', $net.', Type=AB09/PDM table max response'
+                .', PDMID='.$pdmId
+                .', Max='.$max);
+
         }
 
         // /**

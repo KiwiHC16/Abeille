@@ -48,7 +48,7 @@
                 "execAtCreation": "yes"
             },
             "Set Level": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
             "CurrentLevel-0008": {
@@ -110,8 +110,10 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0008"
             },
-            "Colour": {
-                "use": "Colour"
+            "Color": {
+                "use": "act_setColorChoice-RGB",
+                "params": "",
+                "isVisible": 1
             },
             "Set White": {
                 "use": "act_zbCmdC-0300-MoveToColor",
@@ -142,27 +144,6 @@
             },
             "RGB": {
                 "use": "setColourRGB"
-            },
-            "setRGB": {
-                "use": "setRGB"
-            },
-            "colorRouge": {
-                "use": "colorRouge"
-            },
-            "setRouge": {
-                "use": "setRouge"
-            },
-            "colorVert": {
-                "use": "colorVert"
-            },
-            "setVert": {
-                "use": "setVert"
-            },
-            "colorBleu": {
-                "use": "colorBleu"
-            },
-            "setBleu": {
-                "use": "setBleu"
             }
         }
     }

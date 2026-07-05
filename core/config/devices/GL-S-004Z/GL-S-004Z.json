@@ -3,6 +3,7 @@
         "manufacturer": "Gledopto",
         "model": "GL-C-004Z",
         "type": "Gledopto Spectre Blanc",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",
@@ -34,7 +35,7 @@
                 "params": "clustId=0006&attrId=0000"
             },
             "Set Level": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
             "Level": {
@@ -71,15 +72,15 @@
                 "calculValueOffset": "intval(1000000\\/#value#)",
                 "isVisible": 1
             },
-            "setTemperatureLight": {
-                "use": "setTemperatureLight"
-            },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
+            "Set Temperature": {
+                "use": "act_setColorTemp-K",
+                "params": "",
+                "minValue": "2200",
+                "maxValue": "4000",
                 "isVisible": 1
             },
-            "Scenes": {
-                "use": "Scene-Membership"
+            "Identify": {
+                "use": "act_zbCmdC-Identify"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

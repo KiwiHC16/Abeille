@@ -37,7 +37,7 @@
                 "nextLine": "after"
             },
             "Set brightness": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1,
                 "value": "Brightness"
             },

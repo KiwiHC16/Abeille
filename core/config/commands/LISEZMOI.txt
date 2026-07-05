@@ -110,7 +110,7 @@ Exemple de groupe de commandes
 * genericType: OBLIGATOIRE
   Permet d'associer un widget représentatif de la commande.
 
-* invertBinary: optionnel.
+* invertBinary: optionnel => Inversion d'affichage (display) et PAS de configuration.
   Utile uniquement pour une commande 'info' de subType 'binary'.
   Non inversé par défaut ("invertBinary":0).
   = Inverser les valeurs binaires (page configuration commande).

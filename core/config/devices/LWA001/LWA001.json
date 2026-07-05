@@ -27,7 +27,7 @@
                 "isVisible": 1
             },
             "Set Level": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
             "Get-Status": {

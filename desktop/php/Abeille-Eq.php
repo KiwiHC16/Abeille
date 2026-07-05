@@ -2,6 +2,13 @@
      Displays main infos + specific params + commands. -->
 
 <?php
+    $jTmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+
+    // Passing some infos to javascript
+    echo '<script>';
+    echo 'let js_jTmpDir = "'.$jTmpDir.'";';
+    echo '</script>';
+
     /* Returns cmd ID identified by its Jeedom logical ID name */
     function getCmdIdByLogicId($eqId, $cmdLogicId) {
         $cmd = cmd::byEqLogicIdAndLogicalId($eqId, $cmdLogicId);
@@ -32,8 +39,8 @@
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fas fa-arrow-circle-left"></i></a></li>
         <li role="presentation" class="active"><a href="#idMain" aria-controls="home" role="tab" data-toggle="tab">                                                <i class="fas fa-home">             </i> {{Equipement}} </a></li>
-        <li role="presentation"               ><a href="#idAdvanced" aria-controls="home" role="tab" data-toggle="tab">                                            <i class="fas fa-list-alt">         </i> {{Avancé}}     </a></li>
         <li role="presentation"               ><a href="#idCommands" aria-controls="home" role="tab" data-toggle="tab">                                            <i class="fas fa-align-left">       </i> {{Commandes}}  </a></li>
+        <li role="presentation"               ><a href="#idAdvanced" aria-controls="home" role="tab" data-toggle="tab">                                            <i class="fas fa-list-alt">         </i> {{Avancé}}     </a></li>
     </ul>
 
     <div class="tab-content">
@@ -44,14 +51,14 @@
             ?>
         </div>
 
-        <!-- Displays advanced & Zigbee specifics  -->
-        <div role="tabpanel" class="tab-pane" id="idAdvanced">
-            <?php include 'Abeille-Eq-Advanced.php'; ?>
-        </div>
-
         <!-- Displays Jeedom commands  -->
         <div role="tabpanel" class="tab-pane" id="idCommands">
             <?php include 'Abeille-Eq-Cmds.php'; ?>
+        </div>
+
+        <!-- Displays advanced & Zigbee specifics  -->
+        <div role="tabpanel" class="tab-pane" id="idAdvanced">
+            <?php include 'Abeille-Eq-Advanced.php'; ?>
         </div>
     </div>
 </div>

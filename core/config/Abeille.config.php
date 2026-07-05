@@ -3,7 +3,7 @@
      * Abeille's static config file
      */
 
-    define('lastDbVersion', 20250911);
+    define('lastDbVersion', 20260525);
     $in = "/tmp/AbeilleDeamonInput";
     $resourcePath = realpath(__DIR__.'/../../resources');
     define('wifiLink', '/tmp/zigateWifi'); // For WIFI: Socat output
@@ -29,7 +29,8 @@
     $abQueues["xToMon"] = array( "id" => 0xAB0081, "max" => 1024 ); // Messages to monitor (cmd/parser to monitor)
     // $abQueues["monToCmd"] = array( "id" => 0xAB0084, "max" => 1024 ); // Messages to cmd (addr update)
     $abQueues["parserToAssist"] = array( "id" => 0xAB008D, "max" => 512 ); // Parser to EQ assistant
-    $abQueues["xToAbeille"] = array( "id" => 0xAB026D, "max" => 1024 ); // All messages to main daemon (AbeilleMainD). TO BE RENAMED to 'xToMain'
+    $abQueues["xToMainD"] = array( "id" => 0xAB026D, "max" => 1024 ); // All messages to main daemon (AbeilleMainD).
+    $abQueues["xToAbeille"] = array( "id" => 0xAB026D, "max" => 1024 ); // OBSOLETE !! Use 'xToMainD' instead
     $GLOBALS['abQueues'] = $abQueues;
 
     // 3 priorities only: 1=MAX, 2=normal, 3=MIN
@@ -43,7 +44,7 @@
     define('PRIO_NORM', priorityInterrogation); // Normal
     define('PRIO_HIGH', priorityMax); // High priority (ex: parser to cmd to react on wakeup)
 
-    define('maxNbOfZigate', 6); // Number of supported zigates
+    define('maxNbOfZigate', 6); // OBSOLETE !! Use 'maxGateways' instead
     $GLOBALS['maxNbOfZigate'] = maxNbOfZigate;
     define('maxGateways', 6); // Number of supported gateways (zigate/ezsp)
     $GLOBALS['maxGateways'] = maxGateways;

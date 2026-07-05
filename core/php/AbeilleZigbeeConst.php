@@ -857,14 +857,17 @@
 
                 "0300" => array( "name" => "AC Frequency", "access" => "R" ),
 
-                "0505" => array( "name" => "RMS Voltage", "access" => "R", "dataType" => 0x21 ),
-                "0508" => array( "name" => "RMS Current", "access" => "R", "dataType" => 0x21 ),
+                "0505" => array( "name" => "RMS Voltage", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0508" => array( "name" => "RMS Current", "access" => "R", "dataType" => 0x21 ), // uint16
                 "050B" => array( "name" => "Active Power", "access" => "R", "dataType" => 0x29 ), // int16
 
-                "0602" => array( "name" => "AC Current Multiplier", "access" => "R" ),
-                "0603" => array( "name" => "AC Current Divisor", "access" => "R" ),
-                "0604" => array( "name" => "AC Power Multiplier", "access" => "R" ),
-                "0605" => array( "name" => "AC Power Divisor", "access" => "R" ),
+                // AC formatting
+                "0600" => array( "name" => "AC Voltage Multiplier", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0601" => array( "name" => "AC Voltage Divisor", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0602" => array( "name" => "AC Current Multiplier", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0603" => array( "name" => "AC Current Divisor", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0604" => array( "name" => "AC Power Multiplier", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0605" => array( "name" => "AC Power Divisor", "access" => "R", "dataType" => 0x21 ), // uint16
             ),
             // "commandsR" => array(
             //     // "cmd1" => array( "name" => "GetProfile" ),

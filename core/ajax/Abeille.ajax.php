@@ -544,6 +544,50 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Jeedom equipement removed => Informing daemons.
+           action = 'eqRemoved'
+           removed = Object of gateways id + array of addresses */
+        if (init('action') == 'eqRemoved') {
+            $removedJson = init('removed');
+
+            logDebug("  removedJson=".$removedJson);
+            $removed = json_decode($removedJson);
+
+            $status = 0;
+            $error = "";
+
+            /* For each ID, need network & short addr */
+            $nets = [];
+            foreach ($removed as $gtwId => $addrList) {
+                logDebug("  gtwId=$gtwId, addrList=".json_encode($addrList));
+                $n = "Abeille$gtwId";
+
+                foreach ($addrList as $a) {
+                    if (!isset($nets[$n]))
+                        $nets[$n] = "";
+                    else
+                        $nets[$n] .= "/";
+                    $nets[$n] .= $a;
+                }
+            }
+
+            logDebug("  nets=".json_encode($nets));
+            foreach($nets as $netName => $addrList) {
+                $msg = array(
+                    "type" => "eqRemoved2",
+                    "net" => $netName, // Ex: 'Abeille2'
+                    "addrList" => $addrList // Addresses separated by '/' (ex: 0134/AECD/623A)
+                );
+                logDebug("  msg=".json_encode($msg));
+
+                sendToX('xToParser', $msg);
+                sendToX('xToCmd', $msg);
+                sendToX('xToAbeille', $msg);
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /*  */
         if (init('action') == 'acceptNewZigate') {
             $zgId = init('zgId');
@@ -672,14 +716,16 @@
                 $jCmds = Cmd::byEqLogicId($eqId);
                 $eq['cmds'] = [];
                 foreach ($jCmds as $cmdLogic) {
-                    $cmdId = $cmdLogic->getId();
                     $cmdLogicId = $cmdLogic->getLogicalId('');
-                    if ($cmdLogic->getType() == 'info')
+                    $cmdType = $cmdLogic->getType();
+                    if ($cmdType == 'info')
                         $cmdVal = $cmdLogic->execCmd();
                     else
                         $cmdVal = '';
                     $eq['cmds'][$cmdLogicId] = array(
-                        'id' => $cmdId,
+                        'id' => $cmdLogic->getId(),
+                        'name' => $cmdLogic->getName(),
+                        'type' => $cmdType, // 'info' or 'action'
                         'val' => $cmdVal
                     );
                 }

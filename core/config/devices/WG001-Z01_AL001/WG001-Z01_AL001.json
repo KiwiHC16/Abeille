@@ -17,7 +17,7 @@
                 "isVisible": "1"
             },
             "Set Level": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "params": "ep=02",
                 "isVisible": "1"
             },

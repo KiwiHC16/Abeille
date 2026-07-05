@@ -17,17 +17,54 @@
 // Note: 'eqId' seems overwritten somewhere.
 var curEqId = -1;
 var curEq = {}; // Updated by refreshEqInfos()
+var curZgId = -1;
+var curFwVersion = 0; // Integer
+var curEqAddr = "";
 
 // console.log("LA1 eqId=", curEqId);
 
 // Executed on page load/refresh
+// TODO: to be revisited. Should not be called with equipments page refresh (ex index.php?v=d&m=Abeille&p=Abeille&id=Abeille)
 if (window.location.href.indexOf("id=") > -1) {
     let params = new URL(document.location).searchParams;
-    curEqId = params.get("id");
-    refreshEqInfos();
+    if (params.get("id") != "Abeille") {
+        curEqId = params.get("id");
+        refreshEqInfos();
+    }
 }
 
 // console.log("LA2 eqId=", curEqId);
+
+// Additional code to hide checkboxes (class=beeChecked) when seach bar is used.
+// Jeedom code is already handling the 'eqLogicDisplayCard' class.
+document
+    .getElementById("in_searchEqlogic")
+    ?.addEventListener("keyup", function (event) {
+        var search = event.target.value;
+        if (search == "") {
+            document.querySelectorAll(".beeChecked").seen();
+            return;
+        }
+
+        document.querySelectorAll(".beeChecked").unseen(); // Hide all
+        search = jeedomUtils.normTextLower(search);
+        var text;
+        document
+            .querySelectorAll(".eqLogicDisplayCard .name")
+            .forEach((_name) => {
+                text = jeedomUtils.normTextLower(_name.textContent);
+                if (text.includes(search)) {
+                    // console.log("TOTO=", _name);
+                    eq = _name.closest(".eqLogicDisplayCard");
+                    // console.log("EQ=", eq);
+                    eqId = eq.getAttribute("data-eqlogic_id");
+                    // console.log("ID=", eqId);
+                    document
+                        .querySelector('[name="eqSelected-' + eqId + '"]')
+                        .seen();
+                }
+            });
+    });
 
 // Sync wrapper visibility with card visibility using MutationObserver.
 // When Jeedom's filter hides/shows a card, we sync the wrapper (checkbox + card together).
@@ -70,17 +107,6 @@ $(document).on('jeeObject-postLoad jeeObject-preSave', function() {
     }
 });
 
-// Click generate on page reload too.
-$(".eqLogicDisplayCard").on("click", function () {
-    console.log("eqLogicDisplayCard click");
-    if (!isset($(this).attr("data-eqLogic_id"))) {
-        console.log("ERROR: 'data-eqLogic_id' is not defined");
-        return;
-    }
-    curEqId = $(this).attr("data-eqLogic_id");
-    refreshEqInfos();
-});
-
 // Fix: when switching tabs, the browser scrolls to the anchor target, hiding
 // the tab bar. Use scrollIntoView on the nav-tabs after tab switch to ensure
 // the tabs remain visible regardless of which ancestor container scrolled.
@@ -90,6 +116,17 @@ $(document).on('click', '.eqLogic .nav-tabs a[data-toggle="tab"]', function () {
     setTimeout(function () { navTabs.scrollIntoView({block: 'nearest', behavior: 'instant'}); }, 0);
     setTimeout(function () { navTabs.scrollIntoView({block: 'nearest', behavior: 'instant'}); }, 50);
     setTimeout(function () { navTabs.scrollIntoView({block: 'nearest', behavior: 'instant'}); }, 150);
+});
+
+// Click generate on page reload too.
+$(".eqLogicDisplayCard").on("click", function () {
+    console.log("eqLogicDisplayCard click");
+    if (!isset($(this).attr("data-eqLogic_id"))) {
+        console.log("ERROR: 'data-eqLogic_id' is not defined");
+        return;
+    }
+    curEqId = $(this).attr("data-eqLogic_id");
+    refreshEqInfos();
 });
 
 function refreshEqInfos() {
@@ -112,23 +149,30 @@ function refreshEqInfos() {
         success: function (json_res) {
             // console.log("json_res=", json_res);
             res = JSON.parse(json_res.result);
-            eq = res.eq;
+            eq = res.eq; // Obsolete. Use 'curEq' instead
             curEq = res.eq;
             console.log("curEq=", curEq);
 
             // Updating global infos
-            zgId = curEq.zgId;
-            eqAddr = curEq.addr;
-            eqIeee = curEq.ieee;
-            eqBatteryType = curEq.batteryType;
-            // curEq = {
-            //     zigbee: {
-            //         addr: eq.addr,
-            //     },
-            //     model: {
-            //         modelName: eq.model.modelName,
-            //     },
-            // };
+            zgId = curEq.zgId; // Obsolete. Use 'curZgId' instead
+            curZgId = curEq.zgId;
+            if (typeof curEq.cmds["FW-Version"] != "undefined") {
+                // Version format = MMMM-nnnn (ex: AB01-0000)
+                cmd = curEq.cmds["FW-Version"];
+                // console.log("cmd=", cmd);
+                fwVersion = cmd.val;
+                // console.log("fwVersion=", fwVersion, typeof fwVersion);
+                fwVersion =
+                    fwVersion.substring(0, 4) + fwVersion.substring(5, 9);
+                fwVersionInt = parseInt(fwVersion, 16);
+                console.log(
+                    "fwVersion=" + fwVersion + "=> fwVersionInt=",
+                    fwVersionInt,
+                );
+            }
+            curEqAddr = curEq.addr;
+            curEqIeee = curEq.ieee;
+            curEqBatteryType = curEq.batteryType;
 
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
@@ -144,6 +188,10 @@ function refreshEqInfos() {
             document.getElementById("idEqAddr").value = curEq.addr;
             document.getElementById("idZgType").value = curEq.zgType;
 
+            if (typeof curEq.zigbee.status != "undefined")
+                document.getElementById("idZbStatus").value =
+                    curEq.zigbee.status;
+            else document.getElementById("idZbStatus").value = "?";
             if (typeof curEq.zigbee.modelId != "undefined")
                 document.getElementById("idZbModel").value =
                     curEq.zigbee.modelId;
@@ -159,10 +207,10 @@ function refreshEqInfos() {
             // Reset model choice to 'auto' if model has been forced
             if (curEq.model.modelForced) {
                 var $pRestoreModelAuto = $(
-                    "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>"
+                    "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>",
                 );
                 var $aRestoreModelAuto = $(
-                    '<a href="#" id="linkRestoreAutoModel" style="text-decoration:underline;">{{ Rétablir le fonctionnement normal (modèle auto)}}</a>'
+                    '<a href="#" id="linkRestoreAutoModel" style="text-decoration:underline;">{{ Rétablir le fonctionnement normal (modèle auto)}}</a>',
                 );
                 $pRestoreModelAuto
                     .append($aRestoreModelAuto)
@@ -171,7 +219,7 @@ function refreshEqInfos() {
             if (typeof curEq.model.variables != "undefined") {
                 h = "";
                 for (const [vKey, vVal] of Object.entries(
-                    curEq.model.variables
+                    curEq.model.variables,
                 )) {
                     h += '<div class="form-group">';
                     h +=
@@ -230,7 +278,7 @@ function refreshEqInfos() {
                     curEq.zigbee.imageType;
             if (typeof curEq.zigbee.endPoints != "undefined") {
                 for (const [epId, ep] of Object.entries(
-                    curEq.zigbee.endPoints
+                    curEq.zigbee.endPoints,
                 )) {
                     // console.log("LA epId=", epId + ", ep=", ep);
                     if (
@@ -251,7 +299,7 @@ function refreshEqInfos() {
             docUrl = document.getElementById("idDocUrl");
             docUrl.setAttribute(
                 "href",
-                js_urlProducts + "/" + curEq.model.modelName
+                js_urlProducts + "/" + curEq.model.modelName,
             );
 
             // Local manual (PDF stored in plugins/Abeille/desktop/docs/manuals/), if known for this model
@@ -291,7 +339,7 @@ function refreshEqInfos() {
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
             devPart = document.getElementById("idAdvDevices");
-            if (eq.addr == "0000") {
+            if (curEq.addr == "0000") {
                 zgPart.style.display = "block";
                 devPart.style.display = "none";
             } else {
@@ -350,6 +398,25 @@ function refreshEqInfos() {
                 }
             }
 
+            // Zigate only case: Enabling div if proper FW version
+            if (curEq.addr == "0000") {
+                const divList = document.querySelectorAll("[ifFwGt]"); // All with attribute named "ifFwGt"
+                for (let i = 0; i < divList.length; i++) {
+                    divElm = divList[i];
+                    divFwVersionInt = parseInt(
+                        divElm.getAttribute("ifFwGt"),
+                        16,
+                    );
+                    // console.log(
+                    //     "divFwVersionInt=",
+                    //     divFwVersionInt,
+                    //     typeof divFwVersionInt,
+                    // );
+                    if (fwVersionInt >= divFwVersionInt)
+                        divElm.style.display = "block";
+                }
+            }
+
             // Settings default EP
             var items = document.getElementsByClassName("advEp");
             for (var i = 0; i < items.length; i++) {
@@ -393,7 +460,7 @@ function updateInfoCmdTimestamp(_options) {
     cmdId = _options.cmd_id;
     value = _options.display_value;
     console.log(
-        "updateInfoCmdTimestamp(cmdId=" + cmdId + ", val=" + value + ")"
+        "updateInfoCmdTimestamp(cmdId=" + cmdId + ", val=" + value + ")",
     );
     var elm = document.getElementById("cmdId-" + cmdId);
     if (elm == null) {
@@ -432,12 +499,6 @@ $("#bt_healthAbeille").on("click", function () {
     $("#md_modal")
         .load("index.php?v=d&plugin=Abeille&modal=AbeilleHealth.modal")
         .dialog("open");
-    // utils.js 'open' callback resets width — override it after the call stack clears
-    setTimeout(function() {
-        var w = Math.min($(window).width() - 30, 1800);
-        $('#md_modal').dialog('option', 'width', w);
-        $('#md_modal').dialog('option', 'position', {my: 'center bottom-50', at: 'center bottom', of: window});
-    }, 0);
 });
 
 $("#bt_network").on("click", function () {
@@ -478,7 +539,7 @@ $("#bt_ieeeHistory").on("click", function () {
 
 $("#bt_graph").on("click", function () {
     window.open(
-        "plugins/Abeille/desktop/php/AbeilleGraph.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All"
+        "plugins/Abeille/desktop/php/AbeilleGraph.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All",
     );
 });
 
@@ -497,7 +558,7 @@ function createRemote(zgId) {
         "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille" +
             zgId +
             "_zigate_createRemote",
-        false
+        false,
     ); // False pour bloquer sur la recuperation du fichier
     xmlhttpMQTTSendTimer.send();
     // location.reload(true);
@@ -519,7 +580,7 @@ function getSelectedEqs(zgId) {
     eval("var eqZigate = JSON.parse(js_eqZigate" + zgId + ");"); // List of eq IDs for current zigate
     for (const [eqId2, eq] of Object.entries(eqZigate)) {
         var checked = document.getElementById(
-            "idBeeChecked" + zgId + "-" + eq.id
+            "idBeeChecked" + zgId + "-" + eq.id,
         ).checked;
         if (checked == false) continue;
 
@@ -611,16 +672,13 @@ function saveEqLogic(eqLogic) {
     // Saving variables if any
     // TODO: Variables are initialized from equipment model but since user can change them, better to move
     //       them outside 'ab::eqModel'
-    if (typeof curEq.model != "undefined" && typeof curEq.model.variables != "undefined") {
+    if (typeof curEq.model.variables != "undefined") {
         varUpdated = false;
         for (const [vKey, vVal] of Object.entries(curEq.model.variables)) {
-            var inputElem = document.getElementById("idVar" + vKey);
-            if (inputElem) {
-                newVal = inputElem.value;
-                if (newVal != vVal) {
-                    curEq.model.variables[vKey] = newVal;
-                    varUpdated = true;
-                }
+            newVal = document.getElementById("idVar" + vKey).value;
+            if (newVal != vVal) {
+                curEq.model.variables[vKey] = newVal;
+                varUpdated = true;
             }
         }
         if (varUpdated) {
@@ -630,13 +688,12 @@ function saveEqLogic(eqLogic) {
                 url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
                 data: {
                     action: "saveEqConfig",
-                    eqId: curEq.id,
+                    eqId: eqId,
                     eqConfKey: "ab::eqModel",
                     eqConfVal: JSON.stringify(curEq.model),
                 },
                 dataType: "json",
                 global: false,
-                async: false, // Must be synchronous - page reloads after Jeedom save
                 success: function (json_res) {},
             });
         }
@@ -661,22 +718,34 @@ $(".eqLogicAction[data-action=abRemove]")
         }
         eqId = $(".eqLogicAttr[data-l1key=id]").value();
         eqLogicalId = $(".eqLogicAttr[data-l1key=logicalId]").value();
+        // Logical ID should be like 'Abeille1/5C88'
+        if (eqLogicalId.length != 13) {
+            // Abnormal case.
+            jeedom.eqLogic.remove({
+                type: "Abeille",
+                id: eqId,
+                success: function () {
+                    // TODO: How to go back to equipments page ?
+                },
+            });
+            return;
+        }
         zgId = eqLogicalId.substring(7, 8);
         console.log(
-            "eqId=" + eqId + ", logicId=" + eqLogicalId + " => zgId=" + zgId
+            "eqId=" + eqId + ", logicId=" + eqLogicalId + " => zgId=" + zgId,
         );
         removeEq(zgId, eqId);
     });
 
 /* Remove from Jeedom eq with ID 'eqId' but list first how it is used and ask confirmation to user */
 function removeEq(zgId, eqId) {
-    console.log("removeEq(zgId=" + zgId +", eqId=" + eqId + ")");
+    console.log("removeEq(zgId=" + zgId + ", eqId=" + eqId + ")");
 
     eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
     eqName = eqPerZigate[zgId][eqId]["name"];
-    eqAddr = eqPerZigate[zgId][eqId]["addr"];
-    eqAddrList = new Array();
-    eqAddrList.push(eqAddr);
+    // eqAddr = eqPerZigate[zgId][eqId]["addr"];
+    // eqAddrList = new Array();
+    // eqAddrList.push(eqAddr);
 
     jeedom.eqLogic.getUseBeforeRemove({
         id: eqId,
@@ -717,6 +786,15 @@ function removeEq(zgId, eqId) {
             text = text.substring(0, text.length - 2);
             bootbox.confirm(text, function (result) {
                 if (result) {
+                    removed = {};
+                    // Excluding local devices (ex: Abeille remote control with addr 'rcXX')
+                    addr = eqPerZigate[zgId][eqId]["addr"];
+                    if (addr.substring(0, 2) != "rc") {
+                        removed[zgId] = []; // Addresses list
+                        removed[zgId].push(addr);
+                    }
+                    console.log("removed=", removed);
+
                     jeedom.eqLogic.remove({
                         type: "Abeille",
                         id: eqId,
@@ -728,18 +806,42 @@ function removeEq(zgId, eqId) {
                         },
                         success: function () {
                             // Inform parser & cmd that this equipement has been removed
-                            var xhr = new XMLHttpRequest();
-                            xhr.open(
-                                "POST",
-                                "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
-                                    js_queueXToParser +
-                                    "&msg=type:eqRemoved_net:Abeille" +
-                                    zgId +
-                                    "_addrList:" +
-                                    eqAddrList,
-                                true
-                            );
-                            xhr.send();
+                            // var xhr = new XMLHttpRequest();
+                            // xhr.open(
+                            //     "POST",
+                            //     "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
+                            //         js_queueXToParser +
+                            //         "&msg=type:eqRemoved_net:Abeille" +
+                            //         zgId +
+                            //         "_addrList:" +
+                            //         eqAddrList,
+                            //     true
+                            // );
+                            // xhr.send();
+                            domUtils.ajax({
+                                // Inform daemons that device removed
+                                type: "POST",
+                                url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+                                data: {
+                                    action: "eqRemoved",
+                                    removed: JSON.stringify(removed),
+                                },
+                                dataType: "json",
+                                global: false,
+                                error: function (error) {
+                                    jeedomUtils.showAlert({
+                                        message: error.message,
+                                        level: "danger",
+                                    });
+                                },
+                                success: function (data) {
+                                    //Do stuff
+                                    // jeedomUtils.showAlert({
+                                    //     message: 'All good dude!',
+                                    //     level: 'success'
+                                    // })
+                                },
+                            });
 
                             var vars = getUrlVars();
                             var url = "index.php?";
@@ -758,7 +860,7 @@ function removeEq(zgId, eqId) {
                             }
                             modifyWithoutSave = false;
                             url += "removeSuccessFull=1";
-                            loadPage(url);
+                            jeedomUtils.loadPage(url);
                         },
                     });
                 }
@@ -823,27 +925,50 @@ function removeBees(zgId) {
 
 /* Called when 'setTimeout' button is pressed
    Allows to modify timeout of selected equipements. */
-function setBeesTimeout(zgId) {
-    console.log("setBeesTimeout(zgId=" + zgId + ")");
+// function setBeesTimeout(zgId) {
+//     console.log("setBeesTimeout(zgId=" + zgId + ")");
 
-    var sel = getSelectedEqs(zgId);
-    console.log(sel);
-    if (sel["nb"] == 0) {
-        alert("Aucun équipement sélectionné !");
-        return;
-    }
-    $("#abeilleModal").dialog({
-        title: "{{Modification du timeout}}",
+//     var sel = getSelectedEqs(zgId);
+//     console.log(sel);
+//     if (sel["nb"] == 0) {
+//         alert("Aucun équipement sélectionné !");
+//         return;
+//     }
+//     $("#abeilleModal").dialog({
+//         title: "{{Modification du timeout}}",
+//         autoOpen: false,
+//         resizable: false,
+//         modal: true,
+//         height: 300,
+//         width: 400,
+//     });
+//     $("#abeilleModal")
+//         .load(
+//             "index.php?v=d&plugin=Abeille&modal=setBeesTimeout.abeille&zgId=" +
+//                 zgId
+//         )
+//         .dialog("open");
+// }
+
+/* Equipments list view. */
+function listView(gtwId) {
+    console.log("listView(gtwId=" + gtwId + ")");
+
+    $("#md_modal").dialog({
+        title: "{{Vue liste}}",
         autoOpen: false,
         resizable: false,
         modal: true,
         height: 300,
         width: 400,
+        close: function (ev, ui) {
+            window.location.reload();
+        },
     });
-    $("#abeilleModal")
+    $("#md_modal")
         .load(
-            "index.php?v=d&plugin=Abeille&modal=setBeesTimeout.abeille&zgId=" +
-                zgId
+            "index.php?v=d&plugin=Abeille&modal=AbeilleEqList.modal&gtwId=" +
+                gtwId,
         )
         .dialog("open");
 }
@@ -881,7 +1006,7 @@ function monitorIt(zgId, zgPort) {
                     "status=" +
                     status +
                     "<br>error=" +
-                    error
+                    error,
             );
         },
         success: function (json_res) {
@@ -1269,7 +1394,11 @@ function repairReturnChannel() {
             // New or already known step ?
             if (typeof repairSteps[stepName] == "undefined") {
                 console.log(
-                    "new step '" + stepName + "' => status='" + stepStatus + "'"
+                    "new step '" +
+                        stepName +
+                        "' => status='" +
+                        stepStatus +
+                        "'",
                 );
                 repairSteps[stepName] = new Object();
 
@@ -1292,7 +1421,7 @@ function repairReturnChannel() {
                         rowIndex +
                         ", status='" +
                         stepStatus +
-                        "'"
+                        "'",
                 );
                 cell0 = myTable.rows[rowIndex].cells[0];
                 cell0.innerHTML = stepStatus;
@@ -1356,7 +1485,7 @@ $("#idDelLocalBtn").on("click", function () {
                     "GET",
                     "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
                         curEqId,
-                    false
+                    false,
                 );
                 xhttp.send();
             },
@@ -1372,7 +1501,7 @@ $("#idUpdateBtn").on("click", function () {
     msg += "- Mettre à jour l'équipement Jeedom à partir de son modèle<br>";
     msg += "- Et reconfigurer l'équipement<br>";
     msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
-    if (eqBatteryType != "") {
+    if (curEqBatteryType != "") {
         msg +=
             "<br><br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}";
     }
@@ -1385,7 +1514,7 @@ $("#idUpdateBtn").on("click", function () {
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=update&eqId=" +
                 curEqId,
-            false
+            false,
         );
         xhttp.send();
     });
@@ -1395,7 +1524,6 @@ $("#idUpdateBtn").on("click", function () {
     WARNING: If battery powered, device must be wake up. */
 $("#idReinitBtn").on("click", function () {
     console.log("reinit(" + curEqId + ")");
-    eqId = curEqId;
 
     var msg = "{{Vous êtes sur le point de}}<br>";
     msg +=
@@ -1406,7 +1534,7 @@ $("#idReinitBtn").on("click", function () {
     msg +=
         "Attention ! Les commandes seront en ligne avec le dernier modèle, et vous pourriez être obligé de revoir les scénaris utilisant cet équipement.<br>";
 
-    if (eqBatteryType != "") {
+    if (curEqBatteryType != "") {
         msg +=
             "<br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}<br>";
     }
@@ -1418,8 +1546,8 @@ $("#idReinitBtn").on("click", function () {
         xhttp.open(
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
-                eqId,
-            false
+                curEqId,
+            false,
         );
         xhttp.send();
     });
@@ -1499,7 +1627,7 @@ $("#idModelChangeBtn").on("click", function () {
                         ".json)";
                     $opt.attr(
                         "modelPath",
-                        model.modelName + "/" + model.modelNameh
+                        model.modelName + "/" + model.modelNameh,
                     );
                 }
 
@@ -1545,14 +1673,14 @@ $("#idModelChangeBtn").on("click", function () {
 
         // Ask confirmation (+ ask to wake up the equipment if it is on battery)
         var strSuppBatterie = "";
-        if (eqBatteryType != "") {
+        if (curEqBatteryType != "") {
             strSuppBatterie =
                 "<br><br><strong>Attention: </strong>{{Comme cet équipement fonctionne sur batterie, vous devez le réveiller immédiatement après avoir cliqué sur OK.}}";
         }
         if (
             confirm(
                 "{{L'équipement sera reconfiguré à partir du modèle choisi. Souhaitez-vous vraiment appliquer ce modèle ?}}" +
-                    strSuppBatterie
+                    strSuppBatterie,
             )
         ) {
             // Close dialog
@@ -1605,7 +1733,7 @@ $("body").on("click", "a#linkRestoreAutoModel", function () {
                     },
                 });
             }
-        }
+        },
     );
 
     return false; // prevent default
@@ -1690,7 +1818,7 @@ function sendZigate(action, param) {
             global: false,
             error: function (request, status, error) {
                 bootbox.alert(
-                    "ERREUR 'sendMsgToCmd' !<br>Votre installation semble corrompue."
+                    "ERREUR 'sendMsgToCmd' !<br>Votre installation semble corrompue.",
                 );
             },
             success: function (json_res) {
@@ -1712,7 +1840,7 @@ function sendZigate(action, param) {
             break;
         case "setCertif":
             topic = "CmdAbeille" + zgId + "/0000/zgSetCertification";
-            payload = param; // 'CE' or 'FCC'
+            payload = "certif=" + param; // 'CE' or 'FCC'
             break;
         case "startNetwork": // Not required for end user but for developper.
             topic = "CmdAbeille" + zgId + "/0000/zgStartNetwork";
@@ -1763,7 +1891,8 @@ function sendZigate(action, param) {
             bootbox.confirm(msg, function (result) {
                 if (result) {
                     var chan = $("#idZgChan").val();
-                    if (chan == 0) mask = 0x7fff800; // All channels = auto
+                    if (chan == 0)
+                        mask = 0x7fff800; // All channels = auto
                     else mask = 1 << chan;
                     mask = mask.toString(16);
                     // Note: missing leading 0 completed in AbeilleCmdProcess.
@@ -1802,7 +1931,7 @@ function sendZigate(action, param) {
         case "setTXPower":
             topic = "CmdAbeille" + zgId + "/0000/zgSetTxPower";
             var power = $("#idZgTxPower").val();
-            payload = "txPower=" + power; // TODO
+            payload = "txPower=" + power;
             break;
         case "getTime":
             topic = "CmdAbeille" + zgId + "/0000/zgGetTimeServer";
@@ -1821,7 +1950,6 @@ function sendZigate(action, param) {
             payload = "";
             break;
         case "zgSoftReset":
-        case "resetZigate": // Obsolete
             topic = "CmdAbeille" + zgId + "/0000/zgSoftReset";
             payload = "";
             break;
@@ -1857,11 +1985,29 @@ function sendZigate(action, param) {
                     // Why this order is not respected ?? Erase is executed AFTER restore
                     sendToZigate(
                         "CmdAbeille" + zgId + "/0000/zgRestorePdm",
-                        "file=" + "tmp/" + file
+                        "file=" + "tmp/" + file,
                     );
                 }
                 return;
             });
+            break;
+        case "zgGetDevicesList": // Cmd 0015
+            topic = "CmdAbeille" + zgId + "/0000/zgGetDevicesList";
+            payload = "";
+            break;
+        case "zgAB05": // FW >= AB01-0001. Cmd AB05 = List useful infos
+            topic = "CmdAbeille" + zgId + "/0000/zgAB05";
+            payload = "";
+            break;
+        case "zgAB06": // FW >= AB01-0001. Cmd AB06 = Dump EEPROM
+            topic = "CmdAbeille" + zgId + "/0000/zgAB06";
+            idx = document.getElementById("idDEIdx").value;
+            if (idx != "") payload = "idx=" + idx;
+            break;
+        case "zgAB08": // FW >= AB01-0001. Cmd AB08 = Get PDM table max entries
+            topic = "CmdAbeille" + zgId + "/0000/zgAB08";
+            pdmId = document.getElementById("idPdmId").value;
+            if (pdmId != "") payload = "pdmId=" + pdmId;
             break;
         default:
             console.log("ERROR: Unsupported action '" + action + "'");
@@ -1886,7 +2032,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             xhr.open(
                 "GET",
                 msg + "&topic=" + topic + "&payload=" + payload,
-                false
+                false,
             );
         else xhr.open("GET", msg + "&topic=" + topic, false);
         xhr.send();
@@ -1918,7 +2064,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             ep = param3;
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/getGroupMembership",
-                "ep=" + ep
+                "ep=" + ep,
             );
             setTimeout(function () {
                 location.reload(true);
@@ -1986,7 +2132,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
 
                 sendCmd(
                     "CmdAbeille" + zgId + "/" + addr + "/addGroup",
-                    "ep=" + ep + "&group=" + group
+                    "ep=" + ep + "&group=" + group,
                 );
                 setTimeout(function () {
                     sendCmd(
@@ -1995,7 +2141,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                             "/" +
                             addr +
                             "/getGroupMembership",
-                        "ep=" + ep
+                        "ep=" + ep,
                     );
                     location.reload(true);
                 }, 1000);
@@ -2039,7 +2185,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             group = param4;
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/removeGroup",
-                "address=" + addr + "&ep=" + ep + "&group=" + group
+                "address=" + addr + "&ep=" + ep + "&group=" + group,
             );
             setTimeout(function () {
                 location.reload(true);
@@ -2051,11 +2197,11 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             ep = param3;
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/removeAllGroups",
-                "ep=" + ep
+                "ep=" + ep,
             );
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/getGroupMembership",
-                "ep=" + ep
+                "ep=" + ep,
             );
             setTimeout(function () {
                 location.reload(true);
@@ -2072,7 +2218,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                 console.log("eq=", eq);
                 sendCmd(
                     "CmdAbeille" + eq["zgId"] + "/0000/commissioningGroupAPS",
-                    "address=" + eq["addr"] + "&groupId=" + group
+                    "address=" + eq["addr"] + "&groupId=" + group,
                 );
                 setTimeout(function () {
                     sendCmd(
@@ -2081,7 +2227,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                             "/" +
                             eq["addr"] +
                             "/getGroupMembership",
-                        "ep=" + eq["mainEp"]
+                        "ep=" + eq["mainEp"],
                     );
                     location.reload(true);
                 }, 1000);
@@ -2100,7 +2246,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                     "CmdAbeille" +
                         eq["zgId"] +
                         "/0000/commissioningGroupAPSLegrand",
-                    "address=" + eq["addr"] + "&groupId=" + group
+                    "address=" + eq["addr"] + "&groupId=" + group,
                 );
                 setTimeout(function () {
                     sendCmd(
@@ -2109,7 +2255,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                             "/" +
                             eq["addr"] +
                             "/getGroupMembership",
-                        "ep=" + eq["mainEp"]
+                        "ep=" + eq["mainEp"],
                     );
                     location.reload(true);
                 }, 1000);
@@ -2119,7 +2265,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             zgId = param1;
             sendCmd(
                 "CmdAbeille" + zgId + "/0000/zgSetPermitMode",
-                "mode=start"
+                "mode=start",
             );
             location.reload(true);
             $("#div_alert").showAlert({
@@ -2148,7 +2294,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
 function interrogate(request) {
     console.log("interrogate(" + request + ")");
 
-    logicalId = "Abeille" + zgId + "_" + eqAddr;
+    logicalId = "Abeille" + zgId + "_" + curEqAddr;
     if (request == "getRoutingTable") {
         topic = "Cmd" + logicalId + "_getRoutingTable";
         payload = "";
@@ -2165,7 +2311,7 @@ function interrogate(request) {
         payload = "startIndex=" + startIdx;
     } else if (request == "getActiveEndPoints") {
         topic = "Cmd" + logicalId + "_getActiveEndpoints";
-        payload = "addr=" + eqAddr;
+        payload = "addr=" + curEqAddr;
     } else if (request == "getSimpleDescriptor") {
         topic = "Cmd" + logicalId + "_getSimpleDescriptor";
         ep = document.getElementById("idEpSDR").value;
@@ -2187,15 +2333,20 @@ function interrogate(request) {
         topic = "Cmd" + logicalId + "_mgmtNetworkUpdateReq";
         scanChan = document.getElementById("idMgmtNwkUpdReqSC").value;
         scanDuration = document.getElementById("idMgmtNwkUpdReqSD").value;
+        scanCount = document.getElementById("idMgmtNwkUpdReqSCount").value;
         payload = "";
         if (scanChan != "") payload += "scanChan=" + scanChan;
         if (scanDuration != "") {
             if (payload != "") payload += "_";
             payload += "scanDuration=" + scanDuration;
         }
+        if (scanCount != "") {
+            if (payload != "") payload += "_";
+            payload += "scanCount=" + scanCount;
+        }
     } else if (request == "leaveRequest") {
         topic = "Cmd" + logicalId + "_LeaveRequest";
-        payload = "IEEE=" + eqIeee;
+        payload = "IEEE=" + curEqIeee;
     } else if (request == "readReportingConfig") {
         topic = "Cmd" + logicalId + "_readReportingConfig";
         ep = document.getElementById("idEp").value;
@@ -2203,7 +2354,7 @@ function interrogate(request) {
         attrId = document.getElementById("idAttrId").value;
         payload =
             "addr=" +
-            eqAddr +
+            curEqAddr +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2267,7 +2418,7 @@ function interrogate(request) {
         dir = document.getElementById("idDir-DiscoverCmdRx").value;
         payload =
             "addr=" +
-            eqAddr +
+            curEqAddr +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2291,7 +2442,7 @@ function interrogate(request) {
         start = "00";
         payload =
             "addr=" +
-            eqAddr +
+            curEqAddr +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2306,7 +2457,7 @@ function interrogate(request) {
         destEp = document.getElementById("idEpE2").value;
         payload =
             "addr=" +
-            eqIeee +
+            curEqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2323,7 +2474,7 @@ function interrogate(request) {
         destEp = document.getElementById("idEpDst-UBD").value;
         payload =
             "addr=" +
-            eqIeee +
+            curEqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2339,7 +2490,7 @@ function interrogate(request) {
         destGroup = document.getElementById("idGroupF").value;
         payload =
             "addr=" +
-            eqIeee +
+            curEqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2353,7 +2504,7 @@ function interrogate(request) {
         destGroup = document.getElementById("idGroup-UBG").value;
         payload =
             "addr=" +
-            eqIeee +
+            curEqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -2433,12 +2584,27 @@ function interrogate(request) {
         payload = "ep=" + ep + "_cmd=00";
         amount = document.getElementById("idAmountC0201-00").value;
         if (amount != "") payload += "_amount=" + amount;
+    } else if (request == "0300-MoveToHue") {
+        topic = "Cmd" + logicalId + "_moveToHue";
+        ep = document.getElementById("idEp-MTH").value;
+        hue = document.getElementById("idHue-MTH").value;
+        payload = "ep=" + ep + "_hue=" + hue;
     } else if (request == "0300-MoveToColor") {
         topic = "Cmd" + logicalId + "_setColour";
         ep = document.getElementById("idEp-MTC").value;
         X = document.getElementById("idX-MTC").value;
-        Y = document.getElementById("idX-MTC").value;
+        Y = document.getElementById("idY-MTC").value;
         payload = "EP=" + ep + "_X=" + X + "_Y=" + Y;
+    } else if (request == "cmd0300-MoveToColorTemperature-K") {
+        // Cluster 0300, cmd 0x0A
+        topic = "Cmd" + logicalId + "_cmd-0300-moveToColorTemperature-K";
+        ep = document.getElementById("idEp-MCT").value;
+        // Expecting decimal string for Kelvin.
+        tempK = Number(document.getElementById("idTempK-MCT").value);
+        console.log("tempK=", tempK, typeof tempK);
+        payload = "ep=" + ep + "_tempK=" + tempK;
+        transition = document.getElementById("idTransition-MCT").value;
+        if (transition != "") payload += "_transition=" + Number(transition);
     } else if (request == "0502-StartWarning") {
         topic = "Cmd" + logicalId + "_cmd-0502";
         ep = document.getElementById("idEp-SW").value;
@@ -2500,14 +2666,218 @@ function interrogate(request) {
             topic +
             "&payload=" +
             payload,
-        false
+        false,
     );
     xhttp.send();
 
     xhttp.onreadystatechange = function () {};
 }
 
-// addCmdToTable() to be moved there when compliant
+function addCmdToTable(_cmd) {
+    if (!isset(_cmd)) {
+        var _cmd = { configuration: {} };
+    }
+    if (!isset(_cmd.configuration)) {
+        _cmd.configuration = {};
+    }
+    console.log(
+        "addCmdToTable(typ=" + _cmd.type + ", jName=" + _cmd.name + ")",
+    );
+
+    var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
+
+    tr += '<td class="hidden-xs">'; // Col 1 = Id
+    tr +=
+        '     <span class="cmdAttr" data-l1key="id" title="{{Identifiant Jeedom}}"></span>';
+    tr += "</td>";
+
+    tr += "<td>"; // Jeedom cmd name
+    tr +=
+        '     <input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Nom}}" title="{{Nom de la commande vue par Jeedom}}">';
+    tr += "</td>";
+
+    tr += "<td>"; // Type & sub-type
+    if (init(_cmd.type) == "info") {
+        tr +=
+            '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="info" style="margin-bottom:5px;" /></span>';
+    } else if (init(_cmd.type) == "action") {
+        tr +=
+            '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="action" style="margin-bottom:5px;" /></span>';
+    } else {
+        // New command
+        tr +=
+            '<span class="type" type="' +
+            init(_cmd.type) +
+            '">' +
+            jeedom.cmd.availableType() +
+            "</span>";
+    }
+    tr +=
+        '     <span class="subType" subType="' +
+        init(_cmd.subType) +
+        '"></span>';
+    tr += "</td>";
+
+    tr += "<td>"; // Logical ID
+    tr +=
+        '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{ID logique}}" style="width:100%;">';
+    tr += "</td>";
+
+    tr += "<td>"; // Options
+    tr +=
+        '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible"/>{{Afficher}}</label></span>';
+    tr +=
+        '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="forceReturnLineBefore"/>{{Break avant}}</label></span>';
+    tr +=
+        '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="forceReturnLineAfter"/>{{Break après}}</label></span>';
+    if (init(_cmd.type) == "info") {
+        // Info
+        tr +=
+            '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span>';
+        if (_cmd.subType == "binary")
+            tr +=
+                '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span><br>';
+        tr +=
+            '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
+        tr +=
+            '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
+    } else if (init(_cmd.type) == "action") {
+        // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
+        // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
+        if (_cmd.subType == "slider") {
+            tr +=
+                '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
+            tr +=
+                '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
+        }
+    }
+    tr += "</td>";
+
+    if (typeof js_dbgDeveloperMode != "undefined") {
+        // Tcharp38: logicalId seems not really used so displaying 'topic' too
+        tr += "<td>"; // Col 4.1 = Topic
+        if (init(_cmd.type) == "action") {
+            tr +=
+                '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="topic" style="height : 33px;" placeholder="{{topic}}">';
+        }
+        tr += "</td>";
+
+        tr += "<td>"; // Col 5 = Abeille cmd params
+        if (init(_cmd.type) == "info" || init(_cmd.type) == "") {
+            // Info or new cmd
+        } else if (init(_cmd.type) == "action") {
+            tr +=
+                '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{payload}}">';
+        }
+        tr += "</td>";
+    }
+
+    tr += "<td>"; // Col 6
+    if (init(_cmd.type) == "info" || init(_cmd.type) == "") {
+        // Info/new cmd => Col 6 = Unité
+        tr +=
+            '     <input class="cmdAttr form-control input-sm" data-l1key="unite" style="width : 90px;" placeholder="{{Unité}}">';
+    } else if (init(_cmd.type) == "action") {
+        // Col 6 = Polling(cron) /
+        tr +=
+            '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="Polling" title="{{Si vous souhaitez forcer le recuperature periodique d une valeur choisissez la periode.}}" >';
+        tr += '         <option value="">Aucun</option>';
+        tr += '         <option value="cron">1 min</option>';
+        tr += '         <option value="cron5">5 min</option>';
+        tr += '         <option value="cron10">10 min</option>';
+        tr += '         <option value="cron15">15 min</option>';
+        tr += '         <option value="cron30">30 min</option>';
+        tr += '         <option value="cronHourly">Heure</option>';
+        tr += '         <option value="cronDaily">Jour</option>';
+        tr += "     </select></br>";
+        tr +=
+            '     <select class="form-control cmdAttr input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChange" title="{{Si vous souhaitez forcer l\'execution de cette commande suite a une mise-à-jour d\'une commande info, choisissez cette dernière.}}" >';
+        tr += '         <option value="">Aucun</option>';
+        // tr += '         <?php foreach ( $eqLogic->getCmd('info') as $cmd ) { echo "<option value=\"".$cmd->getLogicalId()."\">".$cmd->getName()."</option>"; } ?>';
+        for (const [cmdLogicId, cmdVal] of Object.entries(curEq.cmds)) {
+            if (cmdVal.type != "info") continue;
+            tr +=
+                '<option value="' +
+                cmdLogicId +
+                '">' +
+                cmdVal.name +
+                "</option>";
+        }
+        tr += "     </select></br>";
+        tr +=
+            '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChangeDelay" style="height : 33px;" placeholder="{{en secondes}}" title="{{Temps souhaité entre Cmd Info Change et Execution de cette commande.}}" ><br/>';
+        tr +=
+            '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="configuration" data-l2key="RefreshData" title="{{Si vous souhaitez l execution de cette commande pour rafraichir l info par exemple au demarrage d abeille.}}" />{{Rafraichir}}</label></span><br> ';
+    }
+    tr += "</td>";
+
+    tr += "<td>"; // Col 8 = Conf Adv / Tester
+    if (init(_cmd.type) == "info" || init(_cmd.type) == "") {
+        // Info or new command
+        if (is_numeric(_cmd.id)) {
+            tr +=
+                '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
+            tr +=
+                '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>';
+        }
+    } else if (init(_cmd.type) == "action") {
+        if (is_numeric(_cmd.id)) {
+            tr +=
+                ' <a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fa fa-cogs"></i></a> ';
+            tr +=
+                ' <a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>';
+        }
+    }
+    tr += "</td>";
+
+    tr += "<td>"; // Col 9 = Remove
+    tr +=
+        '     <i class="fa fa-minus-circle cmdAction cursor" data-action="remove"></i>';
+    tr += "</td>";
+
+    tr += "</tr>";
+    $("#table_cmd tbody").append(tr);
+
+    // if (init(_cmd.type) == 'info') {
+    //     $('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
+    //     if (isset(_cmd.type)) {
+    //         $('#table_cmd tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type));
+    //     }
+    //     jeedom.cmd.changeType($('#table_cmd tbody tr:last'), init(_cmd.subType));
+    // } else if (init(_cmd.type) == 'action') {
+    //     //$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
+    //     var tr = $('#table_cmd tbody tr:last');
+    //     jeedom.eqLogic.buildSelectCmd({
+    //         id: $(".li_eqLogic.active").attr('data-eqLogic_id'),
+    //         filter: {type: 'info'},
+    //         error: function (error) {
+    //             $('#div_alert').showAlert({message: error.message, level: 'danger'});
+    //         },
+    //         success: function (result) {
+    //             tr.find('.cmdAttr[data-l1key=value]').append(result);
+    //             tr.setValues(_cmd, '.cmdAttr');
+    //             jeedom.cmd.changeType(tr, init(_cmd.subType));
+    //         }
+    //     });
+    // }
+
+    var tr = $("#table_cmd tbody tr").last();
+    jeedom.eqLogic.buildSelectCmd({
+        id: $(".eqLogicAttr[data-l1key=id]").value(),
+        filter: { type: "info" },
+        error: function (error) {
+            $("#div_alert").showAlert({
+                message: error.message,
+                level: "danger",
+            });
+        },
+        success: function (result) {
+            tr.find(".cmdAttr[data-l1key=value]").append(result);
+            tr.setValues(_cmd, ".cmdAttr");
+            jeedom.cmd.changeType(tr, init(_cmd.subType));
+        },
+    });
+} // End addCmdToTable()
 
 $("#table_cmd").sortable({
     axis: "y",
@@ -2544,15 +2914,15 @@ $("#bt_addAbeilleInfo").on("click", function (event) {
 $("#bt_loadCmdFromJson").on("click", function (event) {
     console.log("loadCmdFromJson()");
 
-    $("#abeilleModal").dialog({
-        title: "{{Charge cmd JSON}}",
+    $("#md_modal").dialog({
+        title: "{{Ajout d'une commande à partir d'un modèle}}",
         autoOpen: false,
         resizable: false,
         modal: true,
         height: 250,
         width: 400,
     });
-    $("#abeilleModal")
+    $("#md_modal")
         .load("index.php?v=d&plugin=Abeille&modal=AbeilleLoadJsonCmd.modal")
         .dialog("open");
 });
@@ -2573,4 +2943,16 @@ function resetPiZigate() {
         global: false,
         success: function (json_res) {},
     });
+}
+
+/* Download PDM (need to be saved first) */
+function downloadPdm() {
+    path = js_jTmpDir + "/AbeillePdm-Abeille" + curZgId + ".json";
+    window.open(
+        "plugins/Abeille/core/php/AbeilleDownload.php?pathfile=" +
+            path +
+            "&addext=json",
+        "_blank",
+        null,
+    );
 }

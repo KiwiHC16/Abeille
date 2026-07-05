@@ -1,5 +1,5 @@
 ***
-*** Jennic module programmer v0.7
+*** Jennic module programmer
 *** Tcharp38 updated version for Abeille
 ***
 
@@ -7,6 +7,7 @@ From: https://github.com/fairecasoimeme/ZiGate/tree/master/Tools/JennicModulePro
 
 Modifications history
 =====================
+17/feb/26 T38 Build directory moved to 'tmp/JennicBuildDir'.
 12/sep/24 T38 Package revisited to be standalone + added 'flashZigate.sh' script
 2022-23   T38 Added full detection of 5168 models (zigate v1 was displayed as "unknown" chip)
                 Changed model detection to be performed BEFORE baudrate.
@@ -17,12 +18,12 @@ How to compile
 ==============
 make clean all
 
-    rm -f build/uart.o build/JN51xx_BootLoader.o build/Firmware.o build/main.o build/JennicModuleProgrammer
-    cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/uart.c -o build/uart.o
-    cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/JN51xx_BootLoader.c -o build/JN51xx_BootLoader.o
-    cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/Firmware.c -o build/Firmware.o
-    cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/main.c -o build/main.o
-    cc build/uart.o build/JN51xx_BootLoader.o build/Firmware.o build/main.o   -o build/JennicModuleProgrammer
+    rm -f ../../tmp/JennicBuildDir/uart.o ../../tmp/JennicBuildDir/JN51xx_BootLoader.o ../../tmp/JennicBuildDir/Firmware.o ../../tmp/JennicBuildDir/main.o ../../tmp/JennicBuildDir/JennicModuleProgrammer
+    cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/uart.c -o ../../tmp/JennicBuildDir/uart.o
+    cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/JN51xx_BootLoader.c -o ../../tmp/JennicBuildDir/JN51xx_BootLoader.o
+    cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/Firmware.c -o ../../tmp/JennicBuildDir/Firmware.o
+    cc -I. -Wall -O2 -I../source/ -DDBG_ENABLE -DVERSION='"56124"' -c source/main.c -o ../../tmp/JennicBuildDir/main.o
+    cc ../../tmp/JennicBuildDir/uart.o ../../tmp/JennicBuildDir/JN51xx_BootLoader.o ../../tmp/JennicBuildDir/Firmware.o ../../tmp/JennicBuildDir/main.o   -o ../../tmp/JennicBuildDir/JennicModuleProgrammer
 
 How to flash
 ============

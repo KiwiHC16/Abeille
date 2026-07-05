@@ -84,16 +84,12 @@
     sendVarToJS('js_fwListZgV2', $fwListZgV2);
 
     /* Get serial port details using 'udevadm' */
-    function getPortDetails($shortName) {
-
-        $port  = [];
-        $port['name'] = "/dev/$shortName";
-        $port['desc'] = $shortName;
+    function addPortDetails($shortName) {
 
         $vendor = "";
         $model = "";
-        $byId = false;
-		foreach (explode("\n", shell_exec('udevadm info --name=' . $port['name'] . ' --query=all')) as $line) {
+        $byId = [];
+		foreach (explode("\n", shell_exec("udevadm info --name=/dev/$shortName --query=all")) as $line) {
 			if (strpos($line, 'E: ID_VENDOR=') !== false) {
 				$vendor = trim(str_replace(array('E: ID_VENDOR=', '"'), '', $line));
                 continue;
@@ -104,54 +100,90 @@
 			}
 			if (strpos($line, 'E: DEVLINKS=') !== false) {
 				$serial_by_ids = explode(' ', trim(str_replace(array('E: DEVLINKS=', '"'), '', $line)));
-				foreach ($serial_by_ids as $serial_links) {
-					if (strpos($serial_links, '/serial/by-id') !== false) {
-						$port['name'] = trim($serial_links); // Replacing /dev/ttyXX by /dev/serial/by-id/xxx
-                        $byId = true;
-						break;
-					}
+				foreach ($serial_by_ids as $devLink) {
+					if (strpos($devLink, '/serial/by-id') === false)
+                        continue;
+                    /* Note: devLink may not exist. Ignoring then */
+                    if (file_exists(trim($devLink)))
+                        $byId[] = trim($devLink);
 				}
 			}
         }
-        if ($byId && (($vendor != "") || ($model != "")))
-            $port['desc'] .= " (by ID: $vendor, $model)";
-        else if (!$byId && (($vendor != "") || ($model != "")))
-            $port['desc'] .= " ($vendor, $model)";
 
-        return $port;
+        if (count($byId) != 0) {
+            foreach ($byId as $serialById) {
+                // $serialById=/dev/serial/by-id/xxx
+                $port = [];
+                $port['real'] = $serialById;
+                $port['name'] = substr($serialById, 12)." ($shortName, $vendor, $model)";
+                $GLOBALS['portsList'][] = $port;
+            }
+        } else {
+            $port = [];
+            $port['real'] = "/dev/$shortName"; // Real port name
+            $port['name'] = $shortName; // Default visible name
+            if (($vendor != "") || ($model != ""))
+                $port['name'] .= " ($vendor, $model)";
+            $GLOBALS['portsList'][] = $port;
+        }
     }
 
     /* Listing possible USB/serial ports */
     $GLOBALS['portsList'] = [];
     foreach (ls('/dev/', 'ttyUSB*') as $value) {
-        $GLOBALS['portsList'][] = getPortDetails($value);
+        addPortDetails($value);
     }
     foreach (ls('/dev/', 'ttyACM*') as $value) { // Modem serial without modem
-        $GLOBALS['portsList'][] = getPortDetails($value);
+        addPortDetails($value);
     }
     foreach (ls('/dev/', 'ttyS*') as $value) {
-        $GLOBALS['portsList'][] = getPortDetails($value);
+        addPortDetails($value);
     }
-    foreach (ls('/dev/', 'tty_*') as $value) {
-        $GLOBALS['portsList'][] = getPortDetails($value);
-    }
-    // KiwiHC16: 3 lignes suivantes necessaire pour KiwiHC16. Dans mon multi Zigate j ai des liens créés automatiquement pour ne pas les melanger lors d un reboot.
     foreach (ls('/dev/', 'tty*') as $value) {
-        // Ignoring ttyUSBx or ttyACMx already in the list
+        // Ignoring ttyUSBx, ttyACMx or ttySx already in the list
         if (substr($value, 0, 6) == "ttyUSB")
             continue;
         if (substr($value, 0, 6) == "ttyACM")
             continue;
         if (substr($value, 0, 4) == "ttyS")
             continue;
-        if (substr($value, 0, 5) == "ttyGS") // Serial gadget.. not a Zigate
+        if (substr($value, 0, 5) == "ttyGS") // Gadget Serial.. could not be a Zigate
             continue;
-        if (substr($value, 0, 4) == "tty_") // Already listed above
-            continue;
-        $port  = [];
-        $port['name'] = "/dev/$value";
-        $port['desc'] = $value;
+        $port = [];
+        $port['real'] = "/dev/$value";
+        $port['name'] = $value;
         $GLOBALS['portsList'][] = $port;
+    }
+
+    /* Serial ports last step: ensure that current working port is in the list.
+       Note that this is only required since '/dev/serial/by-id' could be used prior to '/dev/ttyXX' */
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+        if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
+            continue;
+        $gtwType = config::byKey("ab::gtwType{$gtwId}", 'Abeille', 'zigate', true);
+        $gtwSubType = config::byKey("ab::gtwSubType{$gtwId}", 'Abeille', '', true);
+        if (($gtwType == "zigate") && ($gtwSubType == "WIFI"))
+            continue;
+        $gtwPort = config::byKey("ab::gtwPort{$gtwId}", 'Abeille', '', true);
+
+        $found = false;
+        foreach($GLOBALS['portsList'] as $p) {
+            if ($p['real'] == $gtwPort) {
+                $found = true;
+                break; // Ok, in the list
+            }
+        }
+        if (!$found) {
+            if (file_exists($gtwPort)) {
+                // Port still exists but not longer in the list ... Adding
+                // Note this may be due to use of '/dev/serial/by-id' prior to '/dev/ttyXX'
+                $port = [];
+                $port['real'] = $gtwPort;
+                $port['name'] = $gtwPort;
+                $GLOBALS['portsList'][] = $port;
+            }
+            // else... this is unexpected. Not in the list and selected should lead to error for an active Zigate
+        }
     }
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
@@ -246,7 +278,7 @@
                     //      echo '<option value="/dev/'.$value.'">'.$value.'</option>';
                     // }
                     foreach ($portsList as $p) {
-                         echo '<option value="'.$p['name'].'">'.$p['desc'].'</option>';
+                         echo '<option value="'.$p['real'].'">'.$p['name'].'</option>';
                     }
                 echo '</select>';
             echo '</div>';
@@ -899,7 +931,7 @@
         }
         if (allowUpdFw) {
             $("#idUpdFw"+gtwId).show();
-            updateFwList(gtwId, gtwType, gtwSubType);
+            buildFwList(gtwId, gtwType, gtwSubType);
         }
     }
 
@@ -1032,15 +1064,12 @@
                 window.checkWiringPiOngoing = false;
             },
             success: function (res) {
-                var elem = document.getElementById("idWiringPiStatus");
-                if (elem) {
-                    if (res.result == 0) {
-                        // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                        elem.value = "OK";
-                    } else {
-                        // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
-                        elem.value = "NOK";
-                    }
+                if (res.result == 0) {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    document.getElementById("idWiringPiStatus").value = "OK";
+                } else {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    document.getElementById("idWiringPiStatus").value = "NOK";
                 }
                 window.checkWiringPiOngoing = false;
             }
@@ -1066,15 +1095,12 @@
                 window.checkPiGpioOngoing = false;
             },
             success: function (res) {
-                var elem = document.getElementById("idPiGpioStatus");
-                if (elem) {
-                    if (res.result == 0) {
-                        // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                        elem.value = "OK";
-                    } else {
-                        // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
-                        elem.value = "NOK";
-                    }
+                if (res.result == 0) {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    document.getElementById("idPiGpioStatus").value = "OK";
+                } else {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    document.getElementById("idPiGpioStatus").value = "NOK";
                 }
                 window.checkPiGpioOngoing = false;
             }
@@ -1203,8 +1229,9 @@
     }
 
     // Build available firmwares drop-down list
-    function updateFwList(gtwId, gtwType, gtwSubType) {
-        console.log("updateFwList("+gtwId+","+gtwType+","+gtwSubType+")");
+    function buildFwList(gtwId, gtwType, gtwSubType) {
+
+        console.log("buildFwList("+gtwId+","+gtwType+","+gtwSubType+")");
 
         let fwList = document.getElementById("idFW"+gtwId);
         // Clear current list
@@ -1212,7 +1239,8 @@
         if (gtwType == "zigate") {
             if ((gtwSubType == "PI") || (gtwSubType == "DIN")) {
                 list = js_fwListZgV1;
-                defaultFw = "0004-0323-opdm";
+                // defaultFw = "0004-0323-opdm";
+                defaultFw = "AB01-0000-opdm";
             } else { // Assuming PIv2 or DINv2
                 list = js_fwListZgV2;
                 defaultFw = "0005-0322-opdm";
@@ -1239,6 +1267,7 @@
 
     /* Called when FW update button is pressed */
     function updateZigateFw(gtwId) {
+
         console.log("updateZigateFw(gtwId="+gtwId+")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
         // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
@@ -1261,6 +1290,7 @@
 
     // Update FW
     function updateZigateFw2(zgId, zgType, zgFW) {
+
         let zgPort = $("#idSelSP"+zgId).val();
         let zgGpioLib = $("#idGpioLib").val();
         let curFw = document.getElementById("idFwVersion"+zgId).value;
@@ -1300,9 +1330,14 @@
                 msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée}}.<br><br>';
         } else {
             if (newIsOpdm == false) {
-                msg += "{{Passer d'une version 'OPDM' vers 'legacy' n'est pas recommandé. Opération interdite.}}<br><br>";
-                bootbox.confirm(msg, function (result) {});
-                return;
+                msg += "{{Passer d'une version 'OPDM' vers 'legacy' n'est PAS recommandé !}}<br><br>";
+                if ((typeof js_dbgDeveloperMode == 'undefined')) {
+                    msg += "{{Opération interdite.}}<br><br>";
+                    bootbox.confirm(msg, function (result) {});
+                    return;
+                } else {
+                    msg += "{{Mode DEV: Opération autorisée mais ATTENTION !}}<br><br>";
+                }
             }
         }
         bootbox.confirm(msg, function (result) {
@@ -1318,8 +1353,8 @@
 
     // Select & upload custom firmware
     function uploadCustomFw() {
-        console.log("uploadCustomFw()");
 
+        console.log("uploadCustomFw()");
         return new Promise((resolve, reject) => {
             var input = document.createElement('input');
             input.type = 'file';
@@ -1411,6 +1446,7 @@
     /* Called when 'developer mode' must be enabled or disabled.
     This means creating or deleting "tmp/debug.json" file. */
     function xableDevMode(enable) {
+
         console.log("xableDevMode(enable="+enable+")");
         if (enable == 1) {
             /* Enable developer mode by creating debug.json then restart */

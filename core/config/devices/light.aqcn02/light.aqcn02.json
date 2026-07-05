@@ -27,7 +27,7 @@
                 "isVisible": 1
             },
             "Set Level": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
             "Set 2700K": {
@@ -54,8 +54,12 @@
                 "maxValue": "5000",
                 "isVisible": 1
             },
-            "setTemperatureLight": {
-                "use": "setTemperatureLight1"
+            "Set Temperature": {
+                "use": "act_setColorTemp-K",
+                "params": "",
+                "minValue": "2700",
+                "maxValue": "5000",
+                "isVisible": 1
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",

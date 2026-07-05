@@ -2,75 +2,73 @@
 
 ## Version AB01.0000
 
-* First Abeille's version (Tcharp38).
-* Fix 'Mgmt_rtg_rsp' crash when network is big (60 devices in routing table in my case). See https://github.com/KiwiHC16/Abeille/issues/2705
-* Cluster 0000/Basic, attrib 4000/swBuildID now used to store build date (YYYYMMDD format).
-
-
+- First Abeille's version (Tcharp38).
+- Fix 'Mgmt_rtg_rsp' crash when network is big (60 devices in routing table in my case). See https://github.com/KiwiHC16/Abeille/issues/2705
+- Cluster 0000/Basic, attrib 4000/swBuildID now used to store build date (YYYYMMDD format).
 
 Dernieres infos: https://zigate.fr/category/informations/
 Releases: https://github.com/fairecasoimeme/ZiGate/releases
 
-## Version 3.23
+## Version 3.23 (last official FW from Zigate team)
 
-* Add all mode to RAW command (Bound, short, IEEE, group, broadcast)
-* Fix WindowCovering to permit lift percentage
-* Fix : send defaultResponse only if ZCL
+- Add all mode to RAW command (Bound, short, IEEE, group, broadcast)
+- Fix WindowCovering to permit lift percentage
+- Fix : send defaultResponse only if ZCL
 
 ## Version 3.21
 
-* Add raw message when there are errors on write attribute command
-* Fix for Xiaomi and Lumi devices which ask manufacture code (0x115f) whith node descriptor request
-* Fix BindGroup command
+- Add raw message when there are errors on write attribute command
+- Fix for Xiaomi and Lumi devices which ask manufacture code (0x115f) whith node descriptor request
+- Fix BindGroup command
 
 ## Version 3.20
 
-* Fix IASZONE to be more flexible
-* Fix Wiser endpoint
+- Fix IASZONE to be more flexible
+- Fix Wiser endpoint
 
 ## Version 3.1e
 
-* Add ACK + IEEE mode to RAW Mode
-* Add NPDU et APDU info on Status message (At the end (0x8000)
-* Add extended Message on 0x9999 command
-* Add LoRaTap command and add more compatibility on ON/OFF command
-* Add 8012/8072 command
-* Add Default response capability to RAW message
-* Fix memory issue to ZPSCFG 7 APS ACK MAX + 14 APDU + 14 NPDU + 70 Routing table
-* Fix BDB messages. Message filter when a device attack many endpoint
-* Fix duplicate packet in RAW/hybrid mode
-* Fix E_ZCL_ERR_SECURITY_RANGE on ZLO register
-* Fix HATransportKey function (Device Authentification)
-* Fix overflow on serial command
-* Fix Memory leak and clean APDU
-* Fix some other bugs
-* Delete Migration procedure
+- Add ACK + IEEE mode to RAW Mode
+- Add NPDU et APDU info on Status message (At the end (0x8000)
+- Add extended Message on 0x9999 command
+- Add LoRaTap command and add more compatibility on ON/OFF command
+- Add 8012/8072 command
+- Add Default response capability to RAW message
+- Fix memory issue to ZPSCFG 7 APS ACK MAX + 14 APDU + 14 NPDU + 70 Routing table
+- Fix BDB messages. Message filter when a device attack many endpoint
+- Fix duplicate packet in RAW/hybrid mode
+- Fix E_ZCL_ERR_SECURITY_RANGE on ZLO register
+- Fix HATransportKey function (Device Authentification)
+- Fix overflow on serial command
+- Fix Memory leak and clean APDU
+- Fix some other bugs
+- Delete Migration procedure
 
 ## Version 3.1d
 
-* Add 0x8002 command (raw command) when cluster or attribute is unknown. https://github.com/fairecasoimeme/ZiGate/pull/287 / https://github.com/fairecasoimeme/ZiGate/pull/314
-* Add PDMonHost commands for future implementation https://github.com/fairecasoimeme/ZiGate/pull/281
-* Add new message when PDM is loaded (usefull for PDMonHost implementation) https://github.com/fairecasoimeme/ZiGate/pull/281
-* Add Write Attribute Request with no response https://github.com/fairecasoimeme/ZiGate/pull/306
-* Add a new sequence number method to link status messages https://github.com/fairecasoimeme/ZiGate/pull/296 / https://github.com/fairecasoimeme/ZiGate/pull/298
-* Add rawmode hybrid and keep existing one https://github.com/fairecasoimeme/ZiGate/pull/307
-* Upgrade UART RX buffer --> 255 octets instead of 127
-* Fix configure report when using 8 bits datatype https://github.com/fairecasoimeme/ZiGate/pull/308
-* Fix 0x8100 vs 0x8102 https://github.com/fairecasoimeme/ZiGate/pull/299
-* Fix ignore unknow attribute on configureReportingCommand --> (for DANFOSS with specific attribute)
-* Fix a callback function which run before a registering https://github.com/fairecasoimeme/ZiGate/pull/293
-* Fix 24bits types handling https://github.com/fairecasoimeme/ZiGate/pull/290
-* Fix When cluster is unknow and there is not customCallbackFunction, we transmit to 0x8002 command (actually, concern 0x0300, 0x0120 and 0x0005)
-* Fix Finally desactive 0x8035 command by default
-* Fix OTA bug for Legrand OTA
-* Fix Legrand timer for controler (increment all second and reset to 0 when restart)
-* Fix UART FIFO capacity
-* Fix name error on cluster capacity (in ZCL_options.h
-        POWER_CONFIGURATION_SERVER --> POWER_CONFIGURATION_CLIENT
-        BINARY_INPUT_BASIC_SERVER --> BINARY_INPUT_BASIC_CLIENT
-        delete ELECTRICAL_MEASUREMENT_SERVER
-* Change MAX_PACKET_SIZE ( for PDMonHost implementation)
-* Fix some other bugs
+- Add 0x8002 command (raw command) when cluster or attribute is unknown. https://github.com/fairecasoimeme/ZiGate/pull/287 / https://github.com/fairecasoimeme/ZiGate/pull/314
+- Add PDMonHost commands for future implementation https://github.com/fairecasoimeme/ZiGate/pull/281
+- Add new message when PDM is loaded (usefull for PDMonHost implementation) https://github.com/fairecasoimeme/ZiGate/pull/281
+- Add Write Attribute Request with no response https://github.com/fairecasoimeme/ZiGate/pull/306
+- Add a new sequence number method to link status messages https://github.com/fairecasoimeme/ZiGate/pull/296 / https://github.com/fairecasoimeme/ZiGate/pull/298
+- Add rawmode hybrid and keep existing one https://github.com/fairecasoimeme/ZiGate/pull/307
+- Upgrade UART RX buffer --> 255 octets instead of 127
+- Fix configure report when using 8 bits datatype https://github.com/fairecasoimeme/ZiGate/pull/308
+- Fix 0x8100 vs 0x8102 https://github.com/fairecasoimeme/ZiGate/pull/299
+- Fix ignore unknow attribute on configureReportingCommand --> (for DANFOSS with specific attribute)
+- Fix a callback function which run before a registering https://github.com/fairecasoimeme/ZiGate/pull/293
+- Fix 24bits types handling https://github.com/fairecasoimeme/ZiGate/pull/290
+- Fix When cluster is unknow and there is not customCallbackFunction, we transmit to 0x8002 command (actually, concern 0x0300, 0x0120 and 0x0005)
+- Fix Finally desactive 0x8035 command by default
+- Fix OTA bug for Legrand OTA
+- Fix Legrand timer for controler (increment all second and reset to 0 when restart)
+- Fix UART FIFO capacity
+- Fix name error on cluster capacity (in ZCL_options.h
+  POWER_CONFIGURATION_SERVER --> POWER_CONFIGURATION_CLIENT
+  BINARY_INPUT_BASIC_SERVER --> BINARY_INPUT_BASIC_CLIENT
+  delete ELECTRICAL_MEASUREMENT_SERVER
+- Change MAX_PACKET_SIZE ( for PDMonHost implementation)
+- Fix some other bugs
 
 ## Version 3.1b
 
@@ -87,6 +85,7 @@ Fix dupplicate « Device announce »
 Remove #define ZED_TIMEOUT_INDEX_DEFAULT to ZED_TIMEOUT_256_MIN value.
 
 ## Version 3.1a
+
 Add Raw Mode, command 0x0002 (zigpy ) https://github.com/fairecasoimeme/ZiGate/issues/129 + https://github.com/fairecasoimeme/ZiGate/issues/153
 Add PDM migration for version changing
 Add support of cluster IAS_WD (0x0502). To manage alarm siren
@@ -115,6 +114,7 @@ Remove Analog Input basic server
 Remove double case and tidying code ZPS_ZDP_MGMT_LEAVE_RSP_CLUSTER_ID was checked twice.
 
 ## Version 3.0d
+
 Warning !!! you have to erase EEPROM or PDM. the memory structure must be regenerated.
 
 Fix max number group table to 5. https://github.com/KiwiHC16/Abeille/issues/80
@@ -123,19 +123,23 @@ Add Short Address to 0x8062 / Get Group. https://github.com/fairecasoimeme/ZiGat
 Add new command 0x0009 / 0x8009 –> NetworkState. Give network State. https://github.com/fairecasoimeme/ZiGate/issues/15
 
 ## Version 3.0c
+
 Fix Attributes Data conversion uint32. Real and true value from consumption data device
 Fix Get Xiaomi private data from cluster 0x0000 attributes 0xFF01 with specific manufacturer 0x115F
 
 ## Version 3.0b
+
 Up to 80 devices. 50 ZiGate’s children and 30 others devices linked to routers
 Add new command. 0x015 (Get Devices List) and 0x8015 for the response. More details on https://zigate.fr/wiki/commandes-zigate/
 Fix other minor bugs and enhancements
 
 ## Version 3.0a
+
 Change max number controled devices to 60
 Fix some bugs
 
 ## Version 3.0
+
 Add Orvibo ZigBee material compatibility (Device 0x0A)
 Add Pressure measurement management (Xiaomi aqara)
 Add Analog input basic cluster management (Xiaomi aqara)
@@ -149,4 +153,5 @@ Fix private cluster management
 Fix some bugs and add debugs
 
 ## Initial Version
+
 JN-AN-1216-Zigbee-3-0-IoT-ControlBridge

@@ -181,8 +181,11 @@
         // Generic functions
 
         // Use exemple:  "02": { "function": "rcvValue", "info": "0008-01-0000" },
+        // Note: option 'div' & 'mult' operations
         case "rcvValue": // Value sent as Jeedom info
             $val = hexdec($dp['data']);
+            $val = $val * $mult;
+            $val = $val / $div;
             $logMsg = "  ".$dp['m']." => 'rcvValue' => '".$info."'=".$val;
             $attributeN = array(
                 'name' => $info,
@@ -190,6 +193,7 @@
             );
             break;
         // Use exemple:  "02": { "function": "rcvValueDiv", "info": "01-setPoint", "div": 10 },
+        // OBSOLETE !! Use 'rcvValue' with 'div'
         case "rcvValueDiv": // Divided value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val / $div;
@@ -200,6 +204,7 @@
             );
             break;
         // "02": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 }
+        // OBSOLETE !! Use 'rcvValue' with 'mult'
         case "rcvValueMult": // Multiplied value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val * $mult;

@@ -725,8 +725,8 @@
                     continue;
                 }
 
-                // Serial to parser receive channel is UP
-                if ($msg['type'] == "rcvChanStatus") {
+                // Serial to parser receive channel is UP, or SW/HW reset => configure Zigate
+                if ($msg['type'] == "configureZigate") {
                     configureZigate($zgId); // Configure Zigate
                     continue;
                 }
@@ -1030,6 +1030,28 @@
                     configureDevice($msg); // Configure device (execAtCreation)
                 } else if ($msg['type'] == 'logLevelChanged') {
                     logLevelChanged($msg['level']);
+                } else if ($msg['type'] == 'eqRemoved2') {
+                    logMessage('debug', '  Some equipments removed from Jeedom');
+                    // Some equipments removed from Jeedom => phantoms if still in network
+                    // $msg['net'] = Abeille network (AbeilleX)
+                    // $msg['addrList'] = Eq addr separated by '/'
+                    $net = $msg['net'];
+                    $arr = explode('/', $msg['addrList']);
+                    foreach ($arr as $addr) {
+                        if (!isset($GLOBALS['devices'][$net])) {
+                            logMessage('debug', "  ERROR: Unknown network ".$net);
+                            continue;
+                        }
+                        if (!isset($GLOBALS['devices'][$net][$addr])) {
+                            logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
+                            continue;
+                        }
+                        // Note: No IEEE for virtual remote control (addr=rcXX)
+                        $ieee = isset($GLOBALS['devices'][$net][$addr]['zigbee']['ieee']) ? $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] : '?';
+                        unset($GLOBALS['devices'][$net][$addr]);
+                        // TODO: Instead of removing, might be worth flaging it to not loose infos if rejoin
+                        logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");
+                    }
                 } else
                     cmdLog("error", "AbeilleCmd: Message inattendu: ".$msgJson);
             } else {

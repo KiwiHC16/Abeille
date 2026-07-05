@@ -1,0 +1,18 @@
+{
+    "act_setLevel-Percent-Shutter": {
+        "comment": "Cluster 0008, Move to level with OnOff cmd 04",
+        "comment2": "For CURTAIN control with slider 0 to 100%",
+        "subType": "slider",
+        "logicalId": "#EP#-0008-CmdMoveToLevelWithOnOff",
+        "template": "default",
+        "configuration": {
+            "topic": "cmd-0008",
+            "request": "ep=#EP#&cmd=04&level=#slider#",
+            "valueOffset": "#value#*255/100",
+            "visibilityCategory": "All"
+        },
+        "type": "action",
+        "unit": "%",
+        "genericType": "SHUTTER"
+    }
+}

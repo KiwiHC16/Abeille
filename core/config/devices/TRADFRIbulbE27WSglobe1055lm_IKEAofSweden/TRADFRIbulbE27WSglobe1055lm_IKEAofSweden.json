@@ -84,8 +84,12 @@
                 "calculValueOffset": "intval(1000000\\/#value#)",
                 "isVisible": 1
             },
-            "setTemperatureLight": {
-                "use": "setTemperatureLight"
+            "Set Temperature": {
+                "use": "act_setColorTemp-K",
+                "params": "",
+                "minValue": "2200",
+                "maxValue": "4000",
+                "isVisible": 1
             },
             "Bind-0300-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -99,7 +103,7 @@
                 "execAtCreationDelay": 11
             },
             "Set brightness": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1,
                 "value": "Brightness"
             },

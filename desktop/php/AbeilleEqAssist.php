@@ -90,7 +90,7 @@
                 <?php echo '<input type="text" value="'.$eqLogic->getName().'" readonly>'; ?>
             </div>
             <?php if (isset($dbgTcharp38)) { ?>
-            <a class="btn btn-warning" title="Met à jour Jeedom à partir du fichier JSON" onclick="updateJeedom()">Mettre à jour</a>
+            <!-- <a class="btn btn-warning" title="Met à jour Jeedom à partir du fichier JSON" onclick="updateJeedom()">Mettre à jour</a> -->
             <?php } ?>
         </div>
     </div>
@@ -167,9 +167,9 @@
                 <br>
                 <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <?php if (isset($dbgTcharp38)) { ?>
-                <a class="btn btn-success pull-left" title="Genère le modèle JSON" onclick="zigbeeToModel()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour modèle</a>
+                <!-- <a class="btn btn-success pull-left" title="Genère le modèle JSON" onclick="zigbeeToModel()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour modèle</a>
                 <input type="file" id="files" name="files[]" multiple />
-                <output id="list"></output>
+                <output id="list"></output> -->
                 <?php } ?>
                 <br>
                 <br>
@@ -190,7 +190,7 @@
                             // else
                                 echo '<input id="idJsonName" type="text" value="'.$jsonName.'">';
                         ?>
-                        <a class="btn btn-default" title="(Re)lire" onclick="readConfig()">(Re)lire</a>
+                        <a class="btn btn-default" title="(Re)lire" onclick="readDeviceModel()">(Re)lire</a>
                         <a class="btn btn-alert" title="Créer/mettre à jour le modèle JSON" onclick="writeModel()">Ecrire modèle</a>
                         <a class="btn btn-default" title="Télécharger le modèle JSON" onclick="downloadConfig()"><i class="fas fa-file-download"></i> Télécharger modèle</a>
                         <a class="btn btn-default" title="Importer un 'discovery.json'" onclick="importDiscovery()"><i class="fas fa-file-upload"></i> Importer 'discovery'</a>
@@ -327,7 +327,7 @@
 
     /* Read JSON if defined */
     if (js_jsonName != '')
-        readConfig();
+        readDeviceModel();
 
     // /* Attempt to detect main supported attributs */
     // function refreshAttributsList(epIdx, cliClust, clustIdx) {
@@ -650,9 +650,9 @@
 
     /* Read JSON.
        Called from JSON read/reload button. */
-    function readConfig() {
-        console.log("readConfig()");
+    function readDeviceModel() {
 
+        console.log("readDeviceModel()");
         js_jsonName = document.getElementById("idJsonName").value;
 
         /* TODO: Check if there is any user modification and ask user to cancel them */
@@ -661,16 +661,16 @@
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
             data: {
-                action: 'readDeviceConfig',
-                jsonId: js_jsonName,
-                jsonLocation: js_jsonLocation,
+                action: 'readDeviceModel',
+                modelName: js_jsonName,
+                modelSrc: js_jsonLocation,
                 mode: 1 // 1=Do not merge commands & command files
             },
             dataType: 'json',
             global: false,
             // async: false,
             error: function (request, status, error) {
-                bootbox.alert("ERREUR 'readConfig' !<br>Votre installation semble corrompue.<br>"+error);
+                bootbox.alert("ERREUR 'readDeviceModel' !<br>Votre installation semble corrompue.<br>"+error);
                 status = -1;
             },
             success: function (json_res) {
@@ -1023,7 +1023,7 @@
                     cmds["Status"+clustIdx]["nextLine"] = "after";
                     // Adding bind + configureReporting but assuming supported
                     cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
-                    cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrId=0000&attrType=10", "yes");
+                    cmds["SetReporting "+epId+"-0006-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrId=0000&attrType=10", "yes");
                 }
             }
             onOffIdx++;
@@ -1052,7 +1052,7 @@
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
                 // Note: If device is a light bulb, need to use 'act_setLevel-Light'
-                cmds["Set "+cmdName] = newCmd("act_setLevel-Light", "ep="+epId);
+                cmds["Set "+cmdName] = newCmd("act_setLevel-Percent-Light", "ep="+epId);
                 cmds["Set "+cmdName]["isVisible"] = 1;
                 cmds["Set "+cmdName]["value"] = cmdName; // Slider default value
                 cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
@@ -1060,6 +1060,7 @@
                 cmds[cmdName] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
                 cmds[cmdName]["isVisible"] = 1;
                 cmds[cmdName]["nextLine"] = "after";
+
                 cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
                 cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrId=0000&attrType=20", "yes");
             }
@@ -1126,37 +1127,37 @@
 
                 // Color mode
                 if (isset(attributes['0008'])) {
+                    cmds["Get Color Mode"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0008");
                     cmds["Color Mode"] = newCmd("inf_zbAttr-0300-ColorMode");
                     // cmds["Color Mode"]["isVisible"] = 1;
-                    cmds["Get Color Mode"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0008");
                 }
 
                 // Hue/saturation mode
                 if (isset(attributes['0000'])) {
+                    cmds["Get Current HUE"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0000");
                     cmds["Current HUE"] = newCmd("inf_zbAttr-0300-CurrentHue");
                     // if (currentMode == 0) // If HUE + saturation
                     //     cmds["Current HUE"]["isVisible"] = 1;
-                    cmds["Get Current HUE"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0000");
                 }
                 if (isset(attributes['0001'])) {
+                    cmds["Get Current Saturation"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0001");
                     cmds["Current Saturation"] = newCmd("inf_zbAttr-0300-CurrentSaturation");
                     // if (currentMode == 0) // If HUE + saturation
                     //     cmds["Current Saturation"]["isVisible"] = 1;
-                    cmds["Get Current Saturation"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0001");
                 }
 
                 // X/Y mode
                 if (isset(attributes['0003'])) {
+                    cmds["Get Current X"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0003");
                     cmds["Current X"] = newCmd("inf_zbAttr-0300-CurrentX");
                     // if (currentMode == 1) // If X + Y
                     //     cmds["Current X"]["isVisible"] = 1;
-                    cmds["Get Current X"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0003");
                 }
                 if (isset(attributes['0004'])) {
+                    cmds["Get Current Y"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0004");
                     cmds["Current Y"] = newCmd("inf_zbAttr-0300-CurrentY");
                     // if (currentMode == 1) // If X + Y
                     //     cmds["Current Y"]["isVisible"] = 1;
-                    cmds["Get Current Y"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0004");
                 }
                 if (isset(attributes['0003']) || isset(attributes['0004'])) {
                     // Associated commands to X/Y mode:
@@ -1180,27 +1181,20 @@
                     cmds["Green"]["isVisible"] = 1;
                     cmds["Green"]["logicalId"] = "SetGreen";
 
-                    cmds["RGB"] = newCmd("setRGB");
-                    cmds["RGB"]["isVisible"] = 1;
-                    cmds["RGB"]["nextLine"] = "after";
+                    cmds["Color"] = newCmd("act_colorChoice");
+                    cmds["Color"]["isVisible"] = 1;
+                    cmds["Color"]["nextLine"] = "after";
                 }
 
                 // ColorTemperatureMireds
                 if (isset(attributes['0007'])) {
-                    // cmds["Set 2700K"] = newCmd("act_zbCmdC-0300-MoveToColorTemp", "slider=2700");
-                    // if (currentMode == 2) // ColorTemperatureMireds
-                    //     cmds["Set 2700K"]["isVisible"] = 1;
-                    // cmds["Set 4000K"] = newCmd("act_zbCmdC-0300-MoveToColorTemp", "slider=4000");
-                    // if (currentMode == 2) // ColorTemperatureMireds
-                    //     cmds["Set 4000K"]["isVisible"] = 1;
                     cmds["Set Color Temp"] = newCmd("act_zbCmdC-0300-MoveToColorTemp");
                     cmds["Set Color Temp"]["isVisible"] = 1;
 
+                    cmds["Get ColorTemperature"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0007");
+
                     cmds["Color Temp"] = newCmd("inf_zbAttr-0300-ColorTemperatureMireds");
                     cmds["Color Temp"]["isVisible"] = 1;
-                    // if (currentMode == 2) // ColorTemperatureMireds
-                    //     cmds["ColorTemperature"]["isVisible"] = 1;
-                    cmds["Get ColorTemperature"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0007");
                 }
 
                 cmds["Bind "+epId+"-0300-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0300", "yes");
@@ -1210,9 +1204,11 @@
             if (isset(ep.servClusters["0400"]) && isset(ep.servClusters["0400"]['attributes'])) {
                 attributes = ep.servClusters["0400"]['attributes'];
                 if (isset(attributes['0000'])) {
+                    cmds["Get Illuminance"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0400&attrId=0000");
+
                     cmds["Illuminance"] = newCmd("inf_zbAttr-0400-MeasuredValue", "ep="+epId);
                     cmds["Illuminance"]["isVisible"] = 1;
-                    cmds["Get Illuminance"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0400&attrId=0000");
+
                     cmds["Bind "+epId+"-0400-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0400", "yes");
                     cmds["SetReporting "+epId+"-0400-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0400&attrType=21&attrId=0000&minInterval=300&maxInterval=600&changeVal=0", "yes");
                     cmds["SetReporting "+epId+"-0400-0000"]["comment"] = "Reporting every 5 to 10mins";
@@ -1223,9 +1219,11 @@
             if (isset(ep.servClusters["0402"]) && isset(ep.servClusters["0402"]['attributes'])) {
                 attributes = ep.servClusters["0402"]['attributes'];
                 if (isset(attributes['0000'])) {
+                    cmds["Get Temperature"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
+
                     cmds["Temperature"] = newCmd("inf_zbAttr-0402-MeasuredValue", "ep="+epId);
                     cmds["Temperature"]["isVisible"] = 1;
-                    cmds["Get Temperature"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
+
                     cmds["SetReporting "+epId+"-0402-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0402&attrId=0000&attrType=29&minInterval=540&maxInterval=600", "yes");
                     cmds["SetReporting "+epId+"-0402-0000"]["comment"] = "Reporting every 9 to 10mins";
                     cmds["Bind "+epId+"-0402-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0402", "yes");
@@ -1238,9 +1236,11 @@
             if (isset(ep.servClusters["0405"]) && isset(ep.servClusters["0405"]['attributes'])) {
                 attributes = ep.servClusters["0405"]['attributes'];
                 if (isset(attributes['0000'])) {
+                    cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
+
                     cmds["Humidity"] = newCmd("inf_zbAttr-0405-MeasuredValue", "ep="+epId);
                     cmds["Humidity"]["isVisible"] = 1;
-                    cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
+
                     cmds["SetReporting "+epId+"-0405-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0405&attrId=0000&attrType=21&minInterval=540&maxInterval=600", "yes");
                     cmds["SetReporting "+epId+"-0405-0000"]["comment"] = "Reporting every 9 to 10mins";
                     cmds["Bind "+epId+"-0405-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0405", "yes");
@@ -1255,7 +1255,7 @@
                 if (isset(attributes['0000'])) {
                     cmds["Occupancy"] = newCmd("inf_zbAttr-0406-Occupancy");
                     cmds["Occupancy"]["isVisible"] = 1;
-                    // cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "clustId=0405&attrId=0000");
+
                     cmds["Bind "+epId+"-0406-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0406", "yes");
                     cmds["SetReporting "+epId+"-0406-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0406&attrId=0000&attrType=18", "yes");
                     // if (minTimeout > 10)
@@ -1269,6 +1269,7 @@
                 if (isset(attributes['0000'])) {
                     cmds["CO"] = newCmd("inf_zbAttr-040C-MeasuredValue");
                     cmds["CO"]["isVisible"] = 1;
+
                     cmds["Bind "+epId+"-040C-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=040C", "yes");
                     cmds["SetReporting "+epId+"-040C-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=040C&attrId=0000&attrType=39", "yes");
                 }
@@ -1280,6 +1281,7 @@
                 if (isset(attributes['0000'])) {
                     cmds["CO2"] = newCmd("inf_zbAttr-040D-MeasuredValue");
                     cmds["CO2"]["isVisible"] = 1;
+
                     cmds["Bind "+epId+"-040D-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=040D", "yes");
                     cmds["SetReporting "+epId+"-040D-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=040D&attrId=0000&attrType=39", "yes");
                 }
@@ -1291,6 +1293,7 @@
                 if (isset(attributes['0000'])) {
                     cmds["PM2.5"] = newCmd("inf_zbAttr-042A-MeasuredValue");
                     cmds["PM2.5"]["isVisible"] = 1;
+
                     cmds["Bind "+epId+"-042A-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=042A", "yes");
                     cmds["SetReporting "+epId+"-042A-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=042A&attrId=0000&attrType=39", "yes");
                 }
@@ -1310,7 +1313,7 @@
                 // }
 
                 // Extracting zone type for door/window case (zoneType=='0016')
-                if (isset(ep.servClusters["0500"]['attributes']['0001'])) {
+                if (isset(ep.servClusters["0500"]['attributes']['0001']))
                     zoneType = ep.servClusters["0500"]['attributes']['0001'];
                 else
                     zoneType = '';
@@ -1798,21 +1801,21 @@ console.log("missing value for "+attrId);
                 /* Display manufacturer/modelId & location if cluster 0000 is supported */
                 h += '<div id="idEP'+zEpId+'Model" style="margin-left:30px; display: none">';
                 h += '  <div class="row">';
-                h += '      <label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
+                h += '      <label class="col-lg-2 control-label" for="fname">Fabricant/0004:</label>';
                 h += '      <div class="col-lg-10">';
                 h += '          <a id="idZbManuf'+zEpId+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
                 h += '          <input type="text" id="idZbManuf'+zEpId+'" value="" readonly>';
                 h += '      </div>';
                 h += '  </div>';
                 h += '<div class="row">';
-                h += '<label class="col-lg-2 control-label" for="fname">Modèle:</label>';
+                h += '<label class="col-lg-2 control-label" for="fname">Modèle/0005:</label>';
                 h += '<div class="col-lg-10">';
                 h += '<a id="idZbModel'+zEpId+'RB" class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZbModel'+zEpId+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
-                h += '<label class="col-lg-2 control-label" for="fname">Localisation:</label>';
+                h += '<label class="col-lg-2 control-label" for="fname">Localisation/0010:</label>';
                 h += '<div class="col-lg-10">';
                 h += '<a id="idZbLocation'+zEpId+'RB" class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZbLocation'+zEpId+'" value="" readonly>';

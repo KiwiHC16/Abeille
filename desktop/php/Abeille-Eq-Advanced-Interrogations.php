@@ -80,6 +80,7 @@
         ?>
     </div>
 </div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label" title="getNwkAddress (NWK_addr_req)">{{Network address}}</label>
     <div class="col-sm-5">
@@ -92,14 +93,16 @@
         ?>
     </div>
 </div>
+
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Mgmt_NWK_Update_req">Mgmt network update request</label>
+    <label class="col-sm-3 control-label" title="Mgmt_NWK_Update_req">Mgmt network update request (Mgmt_NWK_Update_req)</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Interroger}}", "btn-warning", "mgmtNetworkUpdateReq");
         ?>
-        <input id="idMgmtNwkUpdReqSC" title="{{Scanned channels mask (ex: all=07FFF800)}}" />
-        <input id="idMgmtNwkUpdReqSD" title="{{Scan duration (01-05, FE=channel change, or FF)}}" />
+        <input id="idMgmtNwkUpdReqSC" title="{{Scanned channels mask (ex: all=07FFF800)}}" style="width: 100px" />
+        <input id="idMgmtNwkUpdReqSD" title="{{Scan duration (01-05, FE=channel change, or FF)}}" style="width: 30px" />
+        <input id="idMgmtNwkUpdReqSCount" title="{{Scan count (2 bytes hex format)}}" style="width: 30px" />
     </div>
 </div>
 
@@ -240,6 +243,38 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL: {{Configurer le reporting}}</label>
+    <div class="col-sm-9">
+        <?php
+            addButton("{{Configurer}}", "btn-danger", "configureReporting2");
+            addEpInput("idEpCR2");
+            addClusterList("idClustIdCR2");
+            addAttrInput("idAttrIdCR2");
+            addTypeList("idAttrTypeCR2");
+            addManufCodeInput("idManufCodeCR2");
+        ?>
+        <input id="idMinCR2" title="{{Interval min. Format décimal}}" placeholder="{{Min}}" style="width:60px" />
+        <input id="idMaxCR2" title="{{Interval max. Format décimal}}" placeholder="{{Max}}" style="width:60px" />
+        <input id="idChangeCR2" title="{{Change. Format décimal dépendant de l'attribut}}" placeholder="{{Change}}" />
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL:  {{Configurer le reporting}} (OBSOLETE)</label>
+    <div class="col-sm-9">
+        <?php
+            addButton("{{Configurer}}", "btn-danger", "configureReporting");
+            addEpInput("idEpCR");
+            addClusterList("idClustIdCR");
+            addAttrInput("idAttrIdCR");
+            addTypeList("idAttrTypeCR");
+            addManufCodeInput("idManufIdCR");
+        ?>
+        <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
+        <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />
+        <input id="idChangeCR" title="{{Change. Format hex string dépendant de l'attribut}}" placeholder="{{Change}}" />
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="discoverCommandsReceived">ZCL: Découverte des commandes RX</label>
     <div class="col-sm-5">
         <?php
@@ -270,38 +305,6 @@
         ?>
     </div>
 </div>
-<div class="form-group">
-    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut (BETA)">ZCL: {{Configurer le reporting}}</label>
-    <div class="col-sm-9">
-        <?php
-            addButton("{{Configurer}}", "btn-danger", "configureReporting2");
-            addEpInput("idEpCR2");
-            addClusterList("idClustIdCR2");
-            addAttrInput("idAttrIdCR2");
-            addTypeList("idAttrTypeCR2");
-            addManufCodeInput("idManufCodeCR2");
-        ?>
-        <input id="idMinCR2" title="{{Interval min. Format numérique}}" placeholder="{{Min}}" style="width:60px" />
-        <input id="idMaxCR2" title="{{Interval max. Format numérique}}" placeholder="{{Max}}" style="width:60px" />
-        <input id="idChangeCR2" title="{{Change. Format numérique dépendant de l'attribut}}" placeholder="{{Change}}" />
-    </div>
-</div>
-<div class="form-group">
-    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL:  {{Configurer le reporting}} (OBSOLETE)</label>
-    <div class="col-sm-9">
-        <?php
-            addButton("{{Configurer}}", "btn-danger", "configureReporting");
-            addEpInput("idEpCR");
-            addClusterList("idClustIdCR");
-            addAttrInput("idAttrIdCR");
-            addTypeList("idAttrTypeCR");
-            addManufCodeInput("idManufIdCR");
-        ?>
-        <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
-        <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />
-        <input id="idChangeCR" title="{{Change. Format hex string dépendant de l'attribut}}" placeholder="{{Change}}" />
-    </div>
-</div>
 
 <br>
 <!-- ZCL cluster specific commands -->
@@ -324,6 +327,8 @@
         ?>
     </div>
 </div>
+
+<!-- Cluster 0004 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0004/addGroup">ZCL: 0004 - Add group</label>
     <div class="col-sm-5">
@@ -355,6 +360,8 @@
         ?>
     </div>
 </div>
+
+<!-- Cluster 0102 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0102/WindowCovering">ZCL: 0102 - Window covering</label>
     <div class="col-sm-5">
@@ -366,6 +373,8 @@
         <input id="idExtra-0102" title="{{Valeur}}" placeholder="{{Valeur}}" style="width:60px" />
     </div>
 </div>
+
+<!-- Cluster 0201 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0201, Setpoint Raise/Lower (cmd 00)">ZCL: 0201 - Raise/lower</label>
     <div class="col-sm-5">
@@ -373,20 +382,45 @@
             addButton("{{Modifier}}", "btn-danger", "0201-SetPoint");
             addEpInput("idEpC0201-00");
         ?>
-        <input id="idAmountC0201-00" title="{{Step: format hex 2 car}}" placeholder="{{Amount}}" style="width:60px" />
+        <input id="idAmountC0201-00" title="{{Step: format hex 2 car}}" placeholder="{{Amount}}" style="width:60px; margin-left: 8px" />
+    </div>
+</div>
+
+<!-- Cluster 0300/Color control support -->
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0300, Mote to Hue (cmd 00)">ZCL: 0300/Color ctrl - 00/Move to Hue</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Appliquer}}", "btn-danger", "0300-MoveToHue");
+            addEpInput("idEp-MTH");
+        ?>
+        <input id="idHue-MTH" title="{{Hue: format hex 2 car}}" placeholder="{{Hue}}" style="width:60px; margin-left: 8px" />
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Cluster 0300, Mote to color (cmd 07)">ZCL: 0300 - Move to color</label>
+    <label class="col-sm-3 control-label" title="Cluster 0300, Mote to color (cmd 07)">ZCL: 0300/Color ctrl - 07/Move to color</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Appliquer}}", "btn-danger", "0300-MoveToColor");
             addEpInput("idEp-MTC");
         ?>
-        <input id="idX-MTC" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px" />
-        <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px" />
+        <input id="idX-MTC" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px; margin-left: 8px" />
+        <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px; margin-left: 8px" />
     </div>
 </div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0300, Move Color Temperature (cmd 0A)">ZCL: 0300/Color ctrl - 0A/Move To Color Temperature</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Appliquer}}", "btn-danger", "cmd0300-MoveToColorTemperature-K");
+            addEpInput("idEp-MCT");
+        ?>
+        <input id="idTempK-MCT" title="{{Temperature en Kelvin: format decimal}}" placeholder="{{TempK}}" style="width:60px; margin-left: 8px" />
+        <input id="idTransition-MCT" title="{{Temps de transition en 1/10 sec: format decimal}}" placeholder="{{Transition}}" style="width:60px; margin-left: 8px" />
+    </div>
+</div>
+
+<!-- Cluster 0502 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0502/IAS WD, Start warning (cmd 00)">ZCL: 0502 - Start warning</label>
     <div class="col-sm-5">
@@ -400,6 +434,8 @@
         ?>
     </div>
 </div>
+
+<!-- Cluster 1000 support -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41) to SERVER">ZCL: 1000 - Groupes req</label>
     <div class="col-sm-5">

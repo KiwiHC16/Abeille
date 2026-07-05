@@ -75,7 +75,7 @@
                     logMessage("", "  WARNING: Unsupported message type (".$msg->type.") => Ignored.");
                     continue;
                 }
-                if ($msg->startIdx != $router["tableIndex"]) {
+                if (hexdec($msg->startIdx) != $router["tableIndex"]) {
                     /* Note: this case is due to too many identical 004E messages sent to eq
                        leading to several identical 804E answers */
                     logMessage("", "  WARNING: Unexpected start index (".$msg->startIdx.") => Ignored.");

@@ -54,6 +54,7 @@
 
         // $eqId = $eqLogic->getId();
         // Note: eqBeeWrapper class is used by Abeille.js to filter checkbox + card together
+        // Note: idBeeChecked needs a special code to be filtered out when using the search bar
         echo 	'<div class="eqBeeWrapper">';
         echo        '<input id="idBeeChecked'.$zgId.'-'.$eqId.'" class="beeChecked" type="checkbox" name="eqSelected-'.$eqId.'" />';
         echo 	    '<br/>';
@@ -105,7 +106,8 @@
             // echo '<br>';
 
             /* Set timeout on selected equipements */
-            echo '<a onclick="setBeesTimeout('.$zgId.')" class="btn btn-primary btn-xs" style="margin-top:-10px; margin-left:8px" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
+            // echo '<a onclick="setBeesTimeout('.$zgId.')" class="btn btn-primary btn-xs" style="margin-top:-10px; margin-left:8px" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
+            echo '<a onclick="listView('.$zgId.')" class="btn btn-primary btn-xs" style="margin-top:-10px; margin-left:8px" title="Vue liste">{{Liste}}</a>';
         }
 
         /* Display list of equipments */

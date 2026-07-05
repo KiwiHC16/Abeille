@@ -39,8 +39,7 @@
     <label class="col-sm-3 control-label">{{Version du firmware}}</label>
     <div class="col-sm-5" advInfo="FW-Version">
         <input type="text" value="" readonly>
-        <!-- <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getZgVersion', '')">{{Lire}}</a> -->
-        <?php addZgButton("{{Lire}}", "btn-default", 'getZgVersion'); ?>
+        <?php addZgButton("{{Lire}}", "btn-success", 'getZgVersion'); ?>
     </div>
 </div>
 
@@ -49,10 +48,8 @@
     <div class="col-sm-5" advInfo="Network-Status">
         <input type="text" value="" readonly>
         <?php
-            if (isset($dbgDeveloperMode)) {
-                // echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetwork\', \'\')">{{Démarrer}}</a>';
+            if (isset($dbgDeveloperMode))
                 addZgButton("{{Démarrer}}", "btn-warning", 'startNetwork');
-            }
         ?>
     </div>
 </div>
@@ -98,9 +95,9 @@
     <div class="col-sm-7" advInfo="ZiGate-Time">
         <input type="text" id="idZgTime" value="" readonly>
         <!-- <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getTime', '')">{{Lire}}</a> -->
-        <?php addZgButton("{{Lire}}", "btn-default", 'getTime', ''); ?>
+        <?php addZgButton("{{Lire}}", "btn-success", 'getTime', ''); ?>
         <!-- <a class="btn btn-warning" onclick="sendZigate('setTime', '')">{{Mettre à l'heure}}</a> -->
-        <?php addZgButton("{{Régler}}", "btn-default", 'setTime', ''); ?>
+        <?php addZgButton("{{Régler}}", "btn-success", 'setTime', ''); ?>
     </div>
 </div>
 
@@ -130,7 +127,7 @@
     </div>
     <div class="col-sm-5" advInfo="ZiGate-Power">
         <input type="text" value="" readonly>
-        <?php addZgButton("{{Lire}}", "btn-default", 'getTXPower', ''); ?>
+        <?php addZgButton("{{Lire}}", "btn-success", 'getTXPower', ''); ?>
         <select id="idZgTxPower" style="width:80px; margin-left:4px" title="{{Puissance TX}}">
             <option value=00>{{00/Min}}</option>
             <option value=80 selected>{{80/Défaut}}</option>
@@ -144,9 +141,9 @@
     <label class="col-sm-3 control-label">LED</label>
     <div class="col-sm-5">
         <!-- <a class="btn btn-default" onclick="sendZigate('setLED', 'ON')">ON</a> -->
-        <?php addZgButton("{{ON}}", "btn-default", 'setLED', 'ON', false); ?>
+        <?php addZgButton("{{ON}}", "btn-success", 'setLED', 'ON', false); ?>
         <!-- <a class="btn btn-default" onclick="sendZigate('setLED', 'OFF')">OFF</a> -->
-        <?php addZgButton("{{OFF}}", "btn-default", 'setLED', 'OFF'); ?>
+        <?php addZgButton("{{OFF}}", "btn-success", 'setLED', 'OFF'); ?>
     </div>
 </div>
 
@@ -154,7 +151,7 @@
     <label class="col-sm-3 control-label">Certification</label>
     <div class="col-sm-5">
         <!-- <a class="btn btn-warning" onclick="sendZigate('setCertif', 'CE')">CE</a> -->
-        <?php addZgButton("{{CE}}", "btn-warning", 'setCertif', 'CE', false); ?>
+        <?php addZgButton("{{CE}}", "btn-success", 'setCertif', 'CE', false); ?>
         <!-- <a class="btn btn-warning" onclick="sendZigate('setCertif', 'FCC')">FCC</a> -->
         <?php addZgButton("{{FCC}}", "btn-warning", 'setCertif', 'FCC'); ?>
     </div>
@@ -172,7 +169,7 @@
         <div class="col-sm-5">
             <a class="btn btn-danger disabled-a"  style="width:80px" onclick="sendZigate('setMode', 'Normal')">{{Normal}}</a>
             <a class="btn btn-danger" style="width:80px; margin-left:4px" onclick="sendZigate('setMode', 'Hybride')">{{Hybride}}</a>
-            <a class="btn btn-default" style="width:80px; margin-left:4px" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
+            <a class="btn btn-success" style="width:80px; margin-left:4px" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
         </div>
     </div>
 <?php } ?>
@@ -180,8 +177,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Reset SW}}</label>
     <div class="col-sm-5">
-        <!-- <a class="btn btn-warning" onclick="sendZigate('resetZigate', '')" title="{{Reset SW (Commande 0011)}}">{{Reset}}</a> -->
-        <?php addZgButton("{{Reset}}", "btn-warning", 'resetZigate', '', false, "{{Reset SW (Commande 0011)}}"); ?>
+        <?php addZgButton("{{Reset}}", "btn-warning", 'zgSoftReset', '', false, "{{Reset SW (Commande 0011)}}"); ?>
     </div>
 </div>
 
@@ -200,16 +196,52 @@
     </div>
 </div>
 
-<!-- PDM dump => Only with Abeille firmwares (version 'ABxxyyyy') and currently in dev mode -->
-<?php if (isset($dbgDeveloperMode)) { ?>
+<div class="form-group">
+    <label class="col-sm-3 control-label">Get devices list (0015)</label>
+    <div class="col-sm-5">
+        <a class="btn btn-success" style="width:80px" onclick="sendZigate('zgGetDevicesList', '')" title="{{Cmd 0015/get devices list}}">{{Interroger}}</a>
+    </div>
+</div>
+
+<!-- Commands available with Abeille's specific FW (version 'ABxxyyyy') >= AB01-0000 -->
+<div ifFwGt=0xAB010000 style="display: none">
     <div class="form-group">
-        <label class="col-sm-3 control-label">DEV MODE: {{Sauvegarde PDM}}</label>
+        <label class="col-sm-3 control-label">{{Sauvegarde PDM}} (AB00/AB01)</label>
         <div class="col-sm-5">
-            <a class="btn btn-default" style="width:80px" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}">{{Sauver}}</a>
+            <a class="btn btn-success" style="width:80px" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}">{{Sauver}}</a>
+            <a class="btn btn-success btn-sm" onclick="downloadPdm()"><i class="fas fa-cloud-download-alt"></i> {{Télécharger}}</a>
+        </div>
+    </div>
+</div>
+
+<!-- Commands available with Abeille's specific FW (version 'ABxxyyyy') >= AB01-0001 -->
+<div ifFwGt=0xAB010001 style="display: none">
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Get PDM infos (AB05)</label>
+        <div class="col-sm-5">
+            <a class="btn btn-success" style="width:80px" onclick="sendZigate('zgAB05', '')" title="{{Cmd AB05}}">{{Interroger}}</a>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label">DEV MODE: {{Restoration PDM}}</label>
+        <label class="col-sm-3 control-label">Dump EEPROM (AB06/AB07)</label>
+        <div class="col-sm-5">
+            <a class="btn btn-success" style="width:80px" onclick="sendZigate('zgAB06', '')" title="{{Cmd AB06}}">{{Interroger}}</a>
+            <input id="idDEIdx" title="{{Segment index (Décimal: 0 to 63)}}" value="" style="width:30px; margin-left: 4px" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Get max PDM entries (AB08/AB09)</label>
+        <div class="col-sm-5">
+            <a class="btn btn-success" style="width:80px" onclick="sendZigate('zgAB08', '')" title="{{Cmd AB08}}">{{Interroger}}</a>
+            <input id="idPdmId" title="{{PDM ID (4B, hexa)}}" value="" style="width:40px; margin-left: 4px" />
+        </div>
+    </div>
+</div>
+
+<!-- Other commands available with Abeille's specific FW and dev mode -->
+<?php if (isset($dbgDeveloperMode)) { ?>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">DEV MODE: {{Restoration PDM (Not working)}}</label>
         <div class="col-sm-5">
             <a class="btn btn-danger" style="width:80px" onclick="sendZigate('zgRestorePdm', '')" title="{{Restore le contenu PDM de la Zigate}}">{{Restorer}}</a>
         </div>

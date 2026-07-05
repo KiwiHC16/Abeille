@@ -798,6 +798,46 @@ teStatus BL_EEPROMErase(int iUartFd, uint32_t iEraseAll)
 	return E_STATUS_OK;
 }
 
+#if 1
+/* Tcharp38 addition => TO BE TESTED */
+teStatus BL_EEPROMRead(int iUartFd, uint32_t u32Address, uint8_t u8Length, uint8_t *pu8Buffer)
+{
+    printf("Entered BL_EEPROMRead()\n");
+
+    uint8_t u8RxDataLen = 0;
+    uint8_t au8CmdBuffer[6];
+    teBL_Response eResponse = 0;
+    teBL_MessageType eRxType = 0;
+
+    if(u8Length > 0xfc || pu8Buffer == NULL)
+    {
+        DBG_vPrintf(TRACE_BOOTLOADER, "Parameter error\n");
+        return E_STATUS_BAD_PARAMETER;
+    }
+
+    au8CmdBuffer[0] = (uint8_t)(u32Address >> 0)  & 0xff;
+    au8CmdBuffer[1] = (uint8_t)(u32Address >> 8)  & 0xff;
+    au8CmdBuffer[2] = (uint8_t)(u32Address >> 16) & 0xff;
+    au8CmdBuffer[3] = (uint8_t)(u32Address >> 24) & 0xff;
+    au8CmdBuffer[4] = u8Length;
+    au8CmdBuffer[5] = 0;
+
+    eResponse = eBL_Request(iUartFd, BL_TIMEOUT_1S, E_BL_MSG_TYPE_EEPROM_READ_REQUEST, 6, au8CmdBuffer, 0, NULL, &eRxType, &u8RxDataLen, pu8Buffer);
+    if(eResponse != E_BL_RESPONSE_OK)
+    {
+        DBG_vPrintf(TRACE_BOOTLOADER, "%s: Response %02x\n", __FUNCTION__, eResponse);
+        return E_STATUS_ERROR_READING;
+    }
+    if (u8RxDataLen != u8Length)
+    {
+        DBG_vPrintf(TRACE_BOOTLOADER, "Requested %d bytes, got %d\n", u8Length, u8RxDataLen);
+        return E_STATUS_ERROR_READING;
+    }
+
+	return E_STATUS_OK;
+}
+#endif
+
 #if 0
 /****************************************************************************
  *
@@ -941,14 +981,6 @@ int iBL_DownloadFirmwareToRam(tsFW_Info *psFW_Info, uint64_t *pu64MAC_Address)
 	return(0);
 }
 #endif
-
-
-
-
-
-
-
-
 
 /****************************************************************************
  *
@@ -1469,7 +1501,6 @@ static int iBL_WriteMessage(int iUartFd, teBL_MessageType eType, uint8_t u8Heade
  ****************************************************************************/
 static teBL_Response eBL_ReadMessage(int iUartFd, int iTimeoutMicroseconds, teBL_MessageType *peType, uint8_t *pu8Length, uint8_t *pu8Data)
 {
-
 	int n;
 	teStatus eStatus;
 	uint8_t au8Msg[256];

@@ -702,7 +702,7 @@
                     // Neither ab::networkMap nor ab::userMap
                     $from = __DIR__."/../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
                     if (file_exists($from)) {
-                        mkdir(__DIR__."/../tmp/network_maps", 0775, true);
+                        mkdir(__DIR__."/../tmp/network_maps", 0744, true);
                         $to = __DIR__."/../tmp/network_maps/userMap.png";
                         rename($from, $to);
                         log::add('Abeille', 'debug', '  Renamed '.$from." to ".$to);
@@ -1156,8 +1156,9 @@
          * - Cmd DB: 'setLevel' update: 'EP' renamed to 'ep'
          * - Eq DB: Some icons renamed for normalization
          * - Some eq updates forced from changed model.
+         * - AbeilleCmd + Parser => AbeilleCmdD + ParserD
          */
-        if (intval($dbVersion) < 20250911) {
+        if (intval($dbVersion) < 20260525) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled{$gtwId}", "ab::gtwEnabled{$gtwId}");
@@ -1181,6 +1182,8 @@
             $toReload = array(
                 'remotecontrol' => '2024-11-17 23:30:00',
                 'TS011F__TZ3000_ksw8qtmt' => '2024-11-20 16:26:00',
+                'TRADFRIremotecontrol' => '2026-05-25 14:00:00',
+                '09BA_IKEAofSweden' => '2026-05-25 14:00:00',
             );
 
             // 'eqLogic' + 'cmd' DB updates
@@ -1256,7 +1259,12 @@
                 }
             }
 
-            config::save('ab::dbVersion', '20250911', 'Abeille');
+            // AbeilleParser.log removed => AbeilleParserD.log
+            // AbeilleCmd.log removed => AbeilleCmdD.log
+            $obsolete = ['AbeilleParser.log', 'AbeilleCmd.log'];
+            removeLogs($obsolete);
+
+            config::save('ab::dbVersion', '20260525', 'Abeille');
         }
     } // End updateConfigDB()
 

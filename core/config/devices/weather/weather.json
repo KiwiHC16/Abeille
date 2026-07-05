@@ -12,7 +12,7 @@
         "category": {
             "heating": "1"
         },
-        "type": "Xiaomi temp/humidity/pressure sensor",
+        "type": "Xiaomi temp-humidity-pressure sensor",
         "commands": {
             "Battery-Volt": {
                 "use": "inf_batteryVoltAndPercent-285-300"
@@ -25,13 +25,21 @@
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "Pressure": {
-                "use": "inf_zbAttr-0403-MeasuredValue",
-                "isVisible": 0
-            },
             "Humidity": {
                 "use": "inf_zbAttr-0405-MeasuredValue",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Pressure": {
+                "use": "inf_zbAttr-0403-MeasuredValue",
+                "calculValueOffset": "#value#*10",
+                "unit": "hPa",
                 "isVisible": 1
+            },
+            "Pressure-Scaled": {
+                "use": "inf_zbAttr-0403-ScaledValue",
+                "calculValueOffset": "#value#/10",
+                "unit": "hPa"
             }
         },
         "private": {
@@ -48,7 +56,9 @@
                     "info": "0402-01-0000"
                 },
                 "66-2B": {
-                    "func": "number",
+                    "func": "numberDiv",
+                    "div": 1000,
+                    "comment": "Convert to kPa. Will be converted to hPa by 0403-01-0000 info",
                     "info": "0403-01-0000"
                 },
                 "65-21": {

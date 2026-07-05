@@ -27,16 +27,17 @@ ab::preventUsbPowerCycle
     Y => Prevent USB power cycle attempt in case of Zigate not responding
     N => Default
 
-ab::forceZigateHybridMode
+ab::forceZigateHybridMode >>> TO BE REMOVED. Obsolete and can no longer work in 'hybrid'.
     Y => Force Zigate to use 'hybrid' mode instead of 'raw'
     N => Default
 
-ab::zgXXXX
-    Zigate specific
-
 ab::gtwTypeX
     Type of gateway X.
-    Values: 'zigate', 'ezsp'
+    Values: 'zigate', 'ezsp' (NOT functional yet)
+
+ab::gtwSubTypeX
+    Sub type for gateway X.
+    Values for 'zigate' type: 'PI', 'USB'...
 
 ab::gtwEnabledX
     Indicates if gateway X is enabled or not
@@ -49,3 +50,7 @@ ab::gtwChanX
 ab::gtwPortX
     Local port for gateway X
     Ex: /dev/ttyUSB0
+
+ab::zgIeeeAddrOkX
+    Zigate specific: Set 1 when IEEE address is validated. Used to confirm that Zigate is alive on the correct port.
+

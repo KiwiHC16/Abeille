@@ -892,7 +892,7 @@ class Abeille extends eqLogic {
         if (logGetLevelNumber() == 4) {
             $jLines = log::getConfig('maxLineLog');
             if ($jLines < 5000)
-                log::add('Abeille', 'warning', "Vous êtes en mode debug mais le nombre de lignes est inférieur à 5000 (".$jLines."). Il est recommandé d'augmenter ce nombre pour tout besoin de support.");
+                message::add("Abeille", "Vous êtes en mode debug mais le nombre de lignes est inférieur à 5000 (".$jLines."). Il est recommandé d'augmenter ce nombre pour tout besoin de support.");
         }
 
         log::add('Abeille', 'debug', 'deamon_start(): Ended');
@@ -966,51 +966,32 @@ class Abeille extends eqLogic {
     //     }
     // }
 
-    /* Called from Jeedom to install dependencies */
-    public static function dependancy_install() {
-        log::add('Abeille', 'debug', 'dependancy_install()');
+    /* Called from Jeedom to install dependencies.
+       Tcharp38: No longer used since 'packages.json' arrival but which Jeedom version ? */
+    // public static function dependancy_install() {
+    //     log::add('Abeille', 'debug', 'dependancy_install()');
 
-        message::add("Abeille", "Installation des dépendances en cours.", "N'oubliez pas de lire la documentation: https://kiwihc16.github.io/AbeilleDoc");
-        log::remove(__CLASS__.'_update');
-        $result = [
-            'script' => __DIR__.'/../scripts/installDependencies.sh '.jeedom::getTmpFolder('Abeille').'/dependencies_progress',
-            'log' => log::getPathToLog(__CLASS__.'_update')
-        ];
+    //     message::add("Abeille", "Installation des dépendances en cours.", "N'oubliez pas de lire la documentation: https://kiwihc16.github.io/AbeilleDoc");
+    //     log::remove(__CLASS__.'_update');
+    //     $result = [
+    //         'script' => __DIR__.'/../scripts/installDependencies.sh '.jeedom::getTmpFolder('Abeille').'/dependencies_progress',
+    //         'log' => log::getPathToLog(__CLASS__.'_update')
+    //     ];
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
-    /* Called from Jeedom to display dependencies status */
+    /* Called from Jeedom to display dependencies status.
+       Tcharp38: Still required (but updated) using official 'packages.json' way */
     public static function dependancy_info() {
+
         log::add('Abeille', 'debug', 'dependancy_info()');
-
-        // // Called by js dans plugin.class.js(getDependancyInfo) -> plugin.ajax.php(dependancy_info())
-        // // $dependancy_info['state'] pour affichage
-        // // state = [ok / nok / in_progress (progression/duration)] / state
-        // // il n ' y plus de dépendance hotmis pour la zigate wifi (socat) qui est installé par un script a part.
-        // $debug_dependancy_info = 1;
-
-        // $return = array();
-        // $return['state'] = 'ok';
-        // $return['progress_file'] = jeedom::getTmpFolder('Abeille').'/dependencies_progress';
-
-        // // Check package socat
-        // // Tcharp38: Wrong. This dependancy is required only if wifi zigate. Should not impact those using USB or PI
-        // $cmd = "command -v socat";
-        // exec($cmd, $output_dpkg, $return_var);
-        // if ($return_var == 1) {
-        //     message::add("Abeille", "Le package socat est nécéssaire pour l'utilisation de la zigate Wifi. Si vous avez la zigate usb, vous pouvez ignorer ce message");
-        //     log::add('Abeille', 'warning', 'Le package socat est nécéssaire pour l\'utilisation de la zigate Wifi.');
-        // }
-
-        // if ($debug_dependancy_info) log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return));
-
-        // return $return;
-
         $return = array();
-        $return['log'] = log::getPathToLog(__CLASS__ . '_update');
-        $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependencies_progress';
-        if (file_exists(jeedom::getTmpFolder(__CLASS__) . '/dependencies_progress')) {
+        // $return['log'] = log::getPathToLog(__CLASS__ . '_update');
+        // $return['progress_file'] = jeedom::getTmpFolder(__CLASS__) . '/dependencies_progress';
+        $return['log'] = log::getPathToLog(__CLASS__ . '_packages');
+        $return['progress_file'] = '/tmp/jeedom_install_in_progress_Abeille';
+        if (file_exists($return['progress_file'])) {
             $return['state'] = 'in_progress';
         } else {
             // python3 is the only base dependency but may need socat for Wifi Zigates, or a GPIO lib for PI Zigates
@@ -1112,31 +1093,6 @@ class Abeille extends eqLogic {
     //     log::add('Abeille', 'debug', 'deamon(): Main daemon stopped');
     // }
 
-    // Jeedom optional function: called before saving (create or update) an equipment
-    // public function preSave() {
-    //     log::add('Abeille', 'debug', 'preSave()');
-        // log::add('Abeille', 'debug', 'this='.json_encode($this));
-    // }
-
-    // Jeedom optional function: called after saving (create or update) an equipment
-    // public static function postSave() {
-    //     log::add('Abeille', 'debug', 'postSave()');
-        /* Tcharp38: Strange. postSave() called when starting daemons.
-           No sense to re-start main daemon from their then */
-        // log::add('Abeille', 'debug', 'postSave()');
-        // $cron = cron::byClassAndFunction('Abeille', 'deamon');
-        // if (is_object($cron) && !$cron->running()) {
-        //     $cron->run();
-        // }
-        // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
-    // }
-
-    // // Trying to capture log level change event
-    // public static function postConfig_log_level_Abeille($value) {
-    //     log::add('Abeille', 'debug', 'postConfig_log_level_Abeille(): value='.json_encode($value));
-    //     // NOT WORKING: Might be a Jeedom bug.
-    // }
-
     // Records a history entry in config table keyed by IEEE address.
     // Key: 'zigbee:abeille:{IEEE}', value: JSON {entries:[{date,name,object,logical_id},...]}
     // Entries accumulate over time so names/objects are preserved even after equipment is deleted/renamed.
@@ -1192,6 +1148,25 @@ class Abeille extends eqLogic {
         ];
         config::save($key, $history, 'Abeille');
     }
+
+    // Jeedom optional function: called after saving (create or update) an equipment
+    // public static function postSave() {
+    //     log::add('Abeille', 'debug', 'postSave()');
+        /* Tcharp38: Strange. postSave() called when starting daemons.
+           No sense to re-start main daemon from their then */
+        // log::add('Abeille', 'debug', 'postSave()');
+        // $cron = cron::byClassAndFunction('Abeille', 'deamon');
+        // if (is_object($cron) && !$cron->running()) {
+        //     $cron->run();
+        // }
+        // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
+    // }
+
+    // // Trying to capture log level change event
+    // public static function postConfig_log_level_Abeille($value) {
+    //     log::add('Abeille', 'debug', 'postConfig_log_level_Abeille(): value='.json_encode($value));
+    //     // NOT WORKING: Might be a Jeedom bug.
+    // }
 
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
     public static function checkInclusionStatus($net) {
@@ -3279,7 +3254,7 @@ class Abeille extends eqLogic {
                 if (isset($mCmd["unit"]))
                     $cmdLogic->setUnite($mCmd["unit"]);
                 else
-                    $cmdLogic->setUnite(null); // Clear unit
+                    $cmdLogic->setUnite(""); // Clear unit
 
                 $cmdLogic->setName($mCmdName);
 
@@ -3332,12 +3307,13 @@ class Abeille extends eqLogic {
             }
 
             /* Updating command 'configuration' fields.
-               In case of update, some fields may no longer be required ($unusedConfKeys).
-               They are removed if not defined in JSON model. */
-            $toRemove = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'topic', 'Polling', 'RefreshData', 'listValue'];
-            array_push($toRemove, 'ab::trigOut', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
-            array_push($toRemove, 'ab::valueOffset', 'ab::repeat');
-            $rmOnlyIfReset = $toRemove;
+               $rmIfUnset = List of fields to remove if unset in model.
+               $rmOnlyIfReset = List of fields to remove if unset in model AND if 'action' == 'reset'. */
+            $rmIfUnset = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'topic', 'Polling', 'RefreshData', 'listValue'];
+            array_push($rmIfUnset, 'ab::trigOut', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
+            array_push($rmIfUnset, 'ab::valueOffset', 'ab::repeat');
+            array_push($rmIfUnset, 'returnStateTime', 'returnStateValue');
+            $rmOnlyIfReset = $rmIfUnset;
             array_push($rmOnlyIfReset, 'minValue', 'maxValue', 'calculValueOffset', 'repeatEventManagement');
             // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)
             $toRename = ['trigOut', 'notStandard', 'valueOffset', 'repeat'];
@@ -3357,8 +3333,8 @@ class Abeille extends eqLogic {
                         $keyIdx = array_search($confKey, $rmOnlyIfReset);
                         unset($rmOnlyIfReset[$keyIdx]);
                     } else {
-                        $keyIdx = array_search($confKey, $toRemove);
-                        unset($toRemove[$keyIdx]);
+                        $keyIdx = array_search($confKey, $rmIfUnset);
+                        unset($rmIfUnset[$keyIdx]);
                     }
                 }
             }
@@ -3367,7 +3343,7 @@ class Abeille extends eqLogic {
             if ($action == 'reset')
                 $toRm = $rmOnlyIfReset;
             else
-                $toRm = $toRemove;
+                $toRm = $rmIfUnset;
             foreach ($toRm as $confKey) {
                 // If key is defined but set to null, no way to detect this. So force remove all the time.
                 // if ($cmdLogic->getConfiguration($confKey) == null)

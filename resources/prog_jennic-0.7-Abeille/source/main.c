@@ -78,6 +78,7 @@ const char *Version = "0.7-r" VERSION "-Abeille";
 
 const char *cpSerialDevice = NULL;
 const char *pcFirmwareFile = NULL;
+const char *e2pDumpFile = NULL; // EEPROM dump file
 
 char *pcMAC_Address = NULL;
 uint64_t u64MAC_Address;
@@ -97,10 +98,11 @@ void print_usage_exit(char *argv[])
     fprintf(stderr, "    -V --verbosity     <verbosity>     Verbosity level. Increses amount of debug information. Default 0.\n");
     fprintf(stderr, "    -I --initialbaud   <rate>          Set initial baud rate\n");
     fprintf(stderr, "    -P --programbaud   <rate>          Set programming baud rate\n");
-	fprintf(stderr, "    -e --erase                         Erase EEProm.\n");
+	// fprintf(stderr, "    -e --erase                         Erase EEProm.\n"); // Tcharp38 not functional yet
     fprintf(stderr, "    -f --firmware      <firmware>      Load module flash with the given firmware file.\n");
     fprintf(stderr, "    -v --verify                        Verify image. If specified, verify the image programmedwas loaded correctly.\n");
     fprintf(stderr, "    -m --mac           <MAC Address>   Set MAC address of device. If this is not specified, the address is read from flash.\n");
+    fprintf(stderr, "    -E --dumpeeprom    <dumpFile>      Dump EEPROM to <dumpFile>.\n");
     exit(EXIT_FAILURE);
 }
 
@@ -124,17 +126,19 @@ int main(int argc, char *argv[])
             {"initialbaud",             required_argument,  NULL,       'I'},
             {"programbaud",             required_argument,  NULL,       'P'},
             {"serial",                  required_argument,  NULL,       's'},
-			{"erase",                   no_argument,        NULL,       'e'},
+			// {"erase",                   no_argument,        NULL,       'e'},
             {"firmware",                required_argument,  NULL,       'f'},
             {"verify",                  no_argument,        NULL,       'v'},
             {"mac",                     required_argument,  NULL,       'm'},
+            {"dumpeeprom",              required_argument,  NULL,       'E'}, // Tcharp38 addition
             { NULL, 0, NULL, 0}
         };
         signed char opt;
         int option_index;
 
-        while ((opt = getopt_long(argc, argv, "hs:V:f:vI:P:m:e", long_options, &option_index)) != -1)
+        while ((opt = getopt_long(argc, argv, "hs:V:f:vI:P:m:E:", long_options, &option_index)) != -1)
         {
+printf("opt='%c'\n", opt);
             switch (opt)
             {
                 case 0:
@@ -148,9 +152,9 @@ int main(int argc, char *argv[])
                 case 'v':
                     // iVerify = 1;
                     break;
-				case 'e':
-                    iErase = 1;
-                    break;
+				// case 'e':
+                //     iErase = 1;
+                //     break;
                 case 'I':
                 {
                     char *pcEnd;
@@ -197,6 +201,11 @@ int main(int argc, char *argv[])
                     pu64MAC_Address = &u64MAC_Address;
                     break;
 
+                case 'E': // Dump EEPROM
+printf("optarg'%s'\n", optarg);
+                    e2pDumpFile = optarg;
+                    break;
+
                 default: /* '?' */
                     print_usage_exit(argv);
             }
@@ -237,7 +246,6 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-
     if (iVerbosity > 0)
     {
         const char *pcPartName;
@@ -272,7 +280,6 @@ int main(int argc, char *argv[])
                 sChipDetails.au8MacAddress[4] & 0xFF, sChipDetails.au8MacAddress[5] & 0xFF, sChipDetails.au8MacAddress[6] & 0xFF, sChipDetails.au8MacAddress[7] & 0xFF);
     }
 
-
     if (iInitialSpeed != iProgramSpeed)
     {
         if (iVerbosity > 1)
@@ -294,7 +301,6 @@ int main(int argc, char *argv[])
         }
     }
 
-
     if (pcFirmwareFile)
     {
         /* Have file to program */
@@ -311,6 +317,16 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (e2pDumpFile) {
+		if (BL_DownloadExtensionToRamBeforeErase(iUartFd, &sFW_Info) != 0)
+            return -1;
+
+        uint8_t buf[4 * 1024];
+        // if (BL_EEPROMRead(iUartFd, 0, (uint8_t)(4 * 1024), buf) != 0)
+        if (BL_EEPROMRead(iUartFd, 0, (uint8_t)(4), buf) != 0)
+            return -1;
+    }
+
 	if (iErase)
 	{
 
@@ -319,7 +335,8 @@ int main(int argc, char *argv[])
             printf("= ERROR opening FlashProgrammerExtension_JN5168.bin  \n");
             return -1;
         }*/
-		BL_DownloadExtensionToRamBeforeErase(iUartFd,&sFW_Info);
+		if (BL_DownloadExtensionToRamBeforeErase(iUartFd, &sFW_Info) != 0)
+            return -1;
 
 		printf("Erase EEPROM \n");
 	}

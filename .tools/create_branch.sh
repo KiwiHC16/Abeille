@@ -116,9 +116,9 @@ fi
 
 #
 # On current branch let's do
-# - version update
-# - MD5 update
-# - changelog: add VERSION if required
+# - Version update: Abeille.version + info.json/changelog + info.json/changelog_beta
+# - MD5 update: Abeille.md5
+# - Changelog: add VERSION if required
 # - add+commit, then tag + push
 
 # Updating plugin version

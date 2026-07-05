@@ -1,9 +1,13 @@
 {
     "GL-S-007Z": {
-        "type": "Gledopto GL-S-007Z GU10 Bulb RGB+CCT",
-        "comment": "Cool white or warm white or color",
         "manufacturer": "Gledopto",
         "model": "GL-S-007Z",
+        "type": "Gledopto GU10 Bulb RGB+CCT",
+        "genericType": "Light",
+        "alternateIds": {
+            "GL-S-007Z(lk)": []
+        },
+        "comment": "Cool white or warm white or color",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",
@@ -27,6 +31,11 @@
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000",
+                "execAtCreation": "Yes"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1",
@@ -40,22 +49,22 @@
             },
             "SetReporting 0006-0000": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0006&attrType=10&attrId=0000",
+                "params": "clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
             "Set brightness": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
+            },
+            "Get brightness": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
             },
             "Brightness": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1,
                 "nextLine": "after"
-            },
-            "Get brightness": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
             },
             "Bind 0008-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -115,31 +124,31 @@
                 "logicalId": "#EP#-Set-Green",
                 "isVisible": 1
             },
-            "Set RGB": {
-                "use": "setRGB",
-                "isVisible": 1,
-                "nextLine": "after"
+            "Color": {
+                "use": "act_setColorChoice-RGB",
+                "params": "",
+                "isVisible": 1
             },
             "Cool white": {
-                "use": "act_zbCmdC-0300-MoveToColorTemp",
-                "params": "slider=0",
+                "use": "act_setColorTemp-K",
+                "params": "slider=0&transition=3",
                 "subType": "other",
                 "logicalId": "#EP#-Set-Cool",
                 "isVisible": 1
             },
             "Warm white": {
-                "use": "act_zbCmdC-0300-MoveToColorTemp",
-                "params": "slider=200",
+                "use": "act_setColorTemp-K",
+                "params": "slider=200&transition=3",
                 "subType": "other",
                 "logicalId": "#EP#-Set-Warm",
                 "isVisible": 1
             },
-            "Color Temperature": {
-                "use": "inf_zbAttr-0300-ColorTemperatureMireds"
-            },
             "Get ColorTemperatureMireds": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0007"
+            },
+            "Color Temperature": {
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds"
             }
         }
     }

@@ -47,7 +47,7 @@
                 "execAtCreation": "yes"
             },
             "Set Level": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
             "Current Level": {
@@ -128,10 +128,10 @@
                 "logicalId": "#EP#-Set-Green",
                 "isVisible": "1"
             },
-            "RGB": {
-                "use": "setRGB",
-                "isVisible": "1",
-                "nextLine": "after"
+            "Color": {
+                "use": "act_setColorChoice-RGB",
+                "params": "",
+                "isVisible": 1
             },
             "ColorTemperature": {
                 "use": "inf_zbAttr-0300-ColorTemperatureMireds"

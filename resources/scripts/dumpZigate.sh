@@ -4,7 +4,7 @@
 
 ABEILLEROOT=${PWD}
 V2PROG=${ABEILLEROOT}/resources/DK6Programmer
-V1PROG=${ABEILLEROOT}/tmp/JennicModuleProgrammer
+V1PROG=${ABEILLEROOT}/tmp/JennicBuildDir/JennicModuleProgrammer
 
 # Display process ($1=Process ID)
 displayProcess() {
@@ -104,12 +104,13 @@ if [ "${PORT}" == "" ]; then
     exit 1
 fi
 if [ "${TYPE}" == "" ]; then
-    echo "ERROR: Missing Zigate type (PIv2 only so far)"
+    echo "ERROR: Missing Zigate type (PIv2 allowed)"
     exit 1
 fi
+# if [ ${TYPE} != "PI" ] && [ ${TYPE} != "PIv2" ]; then
 if [ ${TYPE} != "PIv2" ]; then
-    echo "= ERREUR: Type de Zigate invalide ! (PIv2 seulement)"
-    echo "=         dumpZigate.sh <zigatePort> <zigateType> <gpioLib> <dumpFile>"
+    echo "= ERROR: Invalid Zigate type ! (PIv2 allowed)"
+    echo "=        dumpZigate.sh <zigatePort> <zigateType> <gpioLib> <dumpFile>"
     exit 1
 fi
 if [ "${TYPE}" == "PI" ] || [ "${TYPE}" == "PIv2" ]; then

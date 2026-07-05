@@ -1,0 +1,68 @@
+{
+    "09BA_IKEAofSweden": {
+        "manufacturer": "IKEAofSweden",
+        "zbManufacturer": "IKEA",
+        "model": "09BA",
+        "type": "TRADFRI Bilresa remote control with scroll wheel",
+        "genericType": "Light",
+        "comment": "Ref. FR 706.041.72",       
+        "timeout": "60",
+        "configuration": {
+            "paramType":"telecommande",
+            "mainEP": "01",
+            "icon": "Ikea-Bilresa-Scrollwheel",
+            "batteryType": "2x1.5V AAA"
+        },
+        "category": {
+            "light": "1"
+        },
+        "variables": {
+            "ikea07": {
+                "0": "Double",
+                "1": "Triple"
+            }
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+			"Scroll-Wheel": {
+                "use": "inf_zbCmdC-0008-MoveToLevel",
+                "isVisible": 1
+            },
+            "Click": {
+                "use": "inf_generic-String",
+                "logicalId": "Click",
+                "isVisible": 1
+            },
+            "Click-0006-cmd01": {
+                "use": "inf_zbCmdC-0006-On",
+                "trigOut": {
+                    "Click": {
+                        "valueOffset": "Simple",
+                        "comment": "Simple click"
+                   }
+                }
+            },
+            "Click-0005-cmd07": {
+                "use": "inf_zbCmdC-0005-Ikea07",
+                "trigOut": {
+                    "Click": {
+                        "valueOffset": "#valueswitch-ikea07#",
+                        "comment": "Convert to human readable string",
+                        "comment2": "value=0x00 => Double, 0x01 => Triple"
+                   }
+                }
+            }
+        },
+        "private": {
+            "0005-07": {
+                "type": "generic",
+                "function": "ikeaDecodeCmd"
+            }
+        }
+    }
+}

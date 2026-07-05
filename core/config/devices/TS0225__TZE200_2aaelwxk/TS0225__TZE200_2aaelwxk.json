@@ -1,8 +1,8 @@
 {
     "TS0225__TZE200_2aaelwxk": {
         "manufacturer": "Tuya",
-        "model": "Tuya human presence detector",
-        "type": "ZG-205x",
+        "model": "Tuya 5.8/24Ghz human presence sensor",
+        "type": "ZG-205Z",
         "genericType": "Security",
         "timeout": "60",
         "category": {
@@ -13,48 +13,64 @@
             "mainEP": "01"
         },
         "commands": {
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "nextLine": "after"
+            "Presence": {
+                "use": "inf_presence-Detection",
+                "params": "ep=01",
+                "returnStateValue": "0",
+                "returnStateTime": "1",
+                "isVisible": "1"
             },
+            "Zone Status Changed": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "params": "ep=01",
+                "returnStateValue": "0",
+                "returnStateTime": "1",
+                "repeatEventManagement": "always",
+                "trigOut": {
+                    "01-presence": {
+                        "valueOffset": "#value#&1"
+                    }
+                }
+           },
             "Illuminance": {
                 "use": "inf_zbAttr-0400-MeasuredValue",
                 "params": "ep=01",
                 "isVisible": "1"
             },
-            "Get Illuminance": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0400&attrId=0000"
+            "Motion state": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-motionState",
+                "comment": "none=0, large=1, medium=2, small=3, far=4, near=5",
+                "isVisible": "1",
+                "nextLine": "before"
             },
-            "Bind 01-0400-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0400",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 01-0400-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0400&attrType=21&attrId=0000&minInterval=300&maxInterval=600&changeVal=0",
-                "execAtCreation": "yes",
-                "comment": "Reporting every 5 to 10mins"
-            },
-            "Zone Alarm1": {
-                "use": "inf_zone-Alarm1",
-                "params": "ep=01",
-                "isVisible": "1"
-            },
-            "Zone Status Changed": {
-                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
-                "trigOut": {
-                    "01-0500-alarm1": {
-                        "valueOffset": "#value#&1"
-                    }
+            "LED state": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-ledState",
+                "isVisible": 1
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "comment": "Visible DPs: 01=Status, 65=?, 6A=Illuminance",
+                "comment2": "Many other DPs during pairing",
+                "01": {
+                    "function": "rcvValue",
+                    "info": "01-presence"
                 },
-                "params": "ep=01"
-            },
-            "Bind 01-0500-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0500",
-                "execAtCreation": "yes"
+                "65": {
+                    "function": "rcvValue",
+                    "info": "01-motionState"
+                },
+                "6A": {
+                    "function": "rcvValue",
+                    "info": "0400-01-0000"
+                },
+                "6B": {
+                    "function": "rcvValue",
+                    "info": "01-ledState"
+                }
             }
         }
     }

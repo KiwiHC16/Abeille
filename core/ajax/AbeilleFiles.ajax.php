@@ -40,10 +40,10 @@
     }
 
     include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
+    include_once __DIR__.'/../php/AbeilleModels.php'; // getDeviceModel()
+    include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()
 
     try {
-
-        include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()
 
         ajax::init();
 
@@ -371,37 +371,36 @@
             ajax::success(json_encode(array('status' => $status)));
         }
 
-        /* Retrieve device configuration reading device JSON & associated commands JSON.
+        /* Retrieve device model reading device JSON & associated commands JSON.
            'jsonId' is JSON device name without extension.
            Returns: status=0 if found, -1 else */
-        // No longer used
-        // if (init('action') == 'readDeviceConfig') {
-        //     $jsonId = init('jsonId');
-        //     $jsonLocation = init('jsonLocation');
-        //     $mode = init('mode');
+        if (init('action') == 'readDeviceModel') {
+            $modelName = init('modelName');
+            $modelSrc = init('modelSrc');
+            $mode = init('mode');
 
-        //     $status = 0;
-        //     $error = "";
-        //     $content = "";
+            $status = 0;
+            $error = "";
+            $content = "";
 
-        //     if ($jsonLocation == "Abeille")
-        //         $fullPath = __DIR__.'/../config/devices/'.$jsonId.'/'.$jsonId.'.json';
-        //     else
-        //         $fullPath = __DIR__.'/../config/devices_local/'.$jsonId.'/'.$jsonId.'.json';
-        //     if (!file_exists($fullPath)) {
-        //         $status = -1;
-        //         $error = "Le fichier '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
-        //     } else {
-        //         $devModel = AbeilleTools::getDeviceModel('', $jsonId, $jsonLocation, $mode);
-        //         if ($devModel === false) {
-        //             $status = -1;
-        //             $error = "Le modèle '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
-        //         } else
-        //             $content = json_encode($devModel);
-        //     }
+            if (($modelSrc == "") || ($modelSrc == "Abeille"))
+                $fullPath = __DIR__."/../config/devices/$modelName/$modelName.json";
+            else
+                $fullPath = __DIR__."/../config/devices_local/$modelName/$modelName.json";
+            if (!file_exists($fullPath)) {
+                $status = -1;
+                $error = "Le fichier '$modelName' n'existe pas dans '$modelSrc'";
+            } else {
+                $devModel = getDeviceModel($modelSrc, "$modelName/$modelName.json", $modelName, $modelName, $mode);
+                if ($devModel === false) {
+                    $status = -1;
+                    $error = "Le modèle '$modelName' n'existe pas dans '$modelSrc'";
+                } else
+                    $content = json_encode($devModel);
+            }
 
-        //     ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));
-        // }
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));
+        }
 
         /* Write device configuration.
            'jsonId' is JSON device name without extension.

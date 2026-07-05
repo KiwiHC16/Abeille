@@ -1,32 +1,24 @@
 {
-  "id": "Abeille",
-  "name": "Abeille",
-  "description": "Plugin pour la passerelle Zigbee 'Zigate' (https://zigate.fr).",
-  "usage": "Enjoy.",
-  "licence": "AGPL",
-  "author": "KiwiHC16/Tcharp38",
-  "require": "4.0",
-  "category": "automation protocol",
-  "mobile": "Abeille",
-  "changelog": "http://gitlab2/jeedom/Abeille/-/commits/master",
-  "documentation": "https://kiwihc16.github.io/AbeilleDoc/",
-  "changelog_beta": "https://kiwihc16.github.io/AbeilleDoc/Changelog.html#251024-BETA-1",
-  "documentation_beta": "https://kiwihc16.github.io/AbeilleDoc/",
-  "languages": [
-    "fr_FR",
-    "en_US"
-  ],
-  "compatibility": [
-    "docker",
-    "rpi",
-    "diy",
-    "v4"
-  ],
-  "hasDependency": true,
-  "hasOwnDeamon": true,
-  "maxDependancyInstallTime": "45",
-  "issue": "https://github.com/KiwiHC16/Abeille/issues",
-  "link": {
-    "forum": "https://community.jeedom.com/tag/plugin-abeille"
-  }
+    "id": "Abeille",
+    "name": "Abeille",
+    "description": "Plugin pour la passerelle Zigbee 'Zigate' (https://zigate.fr).",
+    "usage": "Enjoy.",
+    "licence": "AGPL",
+    "author": "KiwiHC16/Tcharp38",
+    "require": "4.0",
+    "category": "automation protocol",
+    "mobile": "Abeille",
+    "changelog": "https://kiwihc16.github.io/AbeilleDoc/Changelog.html#260705-BETA-2",
+    "documentation": "https://kiwihc16.github.io/AbeilleDoc/",
+    "changelog_beta": "https://kiwihc16.github.io/AbeilleDoc/Changelog.html#260705-BETA-2",
+    "documentation_beta": "https://kiwihc16.github.io/AbeilleDoc/",
+    "languages": ["fr_FR", "en_US"],
+    "compatibility": ["docker", "rpi", "diy", "v4"],
+    "hasDependency": true,
+    "hasOwnDeamon": true,
+    "maxDependancyInstallTime": "45",
+    "issue": "https://github.com/KiwiHC16/Abeille/issues",
+    "link": {
+        "forum": "https://community.jeedom.com/tag/plugin-abeille"
+    }
 }

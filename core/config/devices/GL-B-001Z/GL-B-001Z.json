@@ -27,7 +27,7 @@
                 "isVisible": 1
             },
             "Set brightness": {
-                "use": "act_setLevel-Light",
+                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
             "Get brightness": {
@@ -71,11 +71,17 @@
                 "calculValueOffset": "intval(1000000\\/#value#)",
                 "isVisible": 1
             },
-            "setTemperatureLight": {
-                "use": "setTemperatureLight"
+            "Set Temperature": {
+                "use": "act_setColorTemp-K",
+                "params": "",
+                "minValue": "2200",
+                "maxValue": "4000",
+                "isVisible": 1
             },
-            "Colour": {
-                "use": "Colour"
+            "Color": {
+                "use": "act_setColorChoice-RGB",
+                "params": "",
+                "isVisible": 1
             },
             "Set White": {
                 "use": "act_zbCmdC-0300-MoveToColor",
@@ -139,37 +145,6 @@
                 "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "ColourRGB": {
-                "use": "ColourRGB"
-            },
-            "RGB": {
-                "use": "setColourRGB"
-            },
-            "setRGB": {
-                "use": "setRGB"
-            },
-            "colorRouge": {
-                "use": "colorRouge"
-            },
-            "setRouge": {
-                "use": "setRouge"
-            },
-            "colorVert": {
-                "use": "colorVert"
-            },
-            "setVert": {
-                "use": "setVert"
-            },
-            "colorBleu": {
-                "use": "colorBleu"
-            },
-            "setBleu": {
-                "use": "setBleu"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

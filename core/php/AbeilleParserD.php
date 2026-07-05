@@ -40,6 +40,7 @@
     include_once __DIR__.'/AbeilleParser-Tuya.php'; // Tuya specific functions
     include_once __DIR__.'/AbeilleParser-Xiaomi.php'; // Xiaomi specific functions
     include_once __DIR__.'/AbeilleParser-Philips.php'; // Philips specific functions
+    include_once __DIR__.'/AbeilleParser-Ikea.php'; // Ikea specific functions
     require_once __DIR__.'/AbeilleModels.php'; // getModelsList()
 
     // Needed for decode8701 and decode8702
@@ -489,7 +490,7 @@
     // ***********************************************************************************************
     // exemple d appel
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
-    logSetConf("AbeilleParser.log", true);
+    logSetConf("AbeilleParserD.log", true);
     logMessage("info", ">>> Démarrage d'AbeilleParser");
 
     // Check if already running
@@ -497,9 +498,9 @@
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
-    if ($daemons["parser"] > 1) {
+    if ($daemons["parserd"] > 1) {
         logMessage('error', "<<< Le démon 'AbeilleParser' est déja lancé ! ".json_encode($daemons));
-        AbeilleTools::captureDaemonDebugInfo('AbeilleParser', $daemons);
+        AbeilleTools::captureDaemonDebugInfo('AbeilleParserD', $daemons);
         exit(3);
     }
 
@@ -681,6 +682,7 @@
                     logMessage('debug', $msg['net'].' RX channel status '.$msg['status']);
                     // Message from AbeilleSerialReadX
                     // Sending msg to cmd indicating receive channel status
+                    $msg['type'] = "configureZigate";
                     msgToCmdAck($msg);
                 } else if ($msg['type'] == "serialRead") {
                     // Message from AbeilleSerialReadX
@@ -695,13 +697,13 @@
                         $GLOBALS['sendToCli']['ieee'] = $msg['ieee'];
                     } else if ($msg['type'] == 'readOtaFirmwares') {
                         otaReadFirmwares(); // Reread available firmwares
-                    } else if ($msg['type'] == 'eqRemoved') {
+                    } else if ($msg['type'] == 'eqRemoved2') {
                         logMessage('debug', 'Some equipments removed from Jeedom');
                         // Some equipments removed from Jeedom => phantoms if still in network
                         // $msg['net'] = Abeille network (AbeilleX)
-                        // $msg['addrList'] = Eq addr separated by ','
+                        // $msg['addrList'] = Eq addr separated by '/'
                         $net = $msg['net'];
-                        $arr = explode(',', $msg['addrList']);
+                        $arr = explode('/', $msg['addrList']);
                         foreach ($arr as $addr) {
                             if (!isset($GLOBALS['devices'][$net])) {
                                 logMessage('debug', "  ERROR: Unknown network ".$net);

@@ -45,7 +45,7 @@
                 "nextLine": "after"
             },
             "Set Level": {
-                "use": "act_zbCmdC-0008-MoveToLevelWithOnOff",
+                "use": "act_setLevel-Percent-Shutter",
                 "value": "Level",
                 "isVisible": 1
             },

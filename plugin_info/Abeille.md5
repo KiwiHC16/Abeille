@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="260705-BETA-1"
+# VERSION="260705-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -753,6 +753,8 @@ f8c99292c5da084e109a25f95d4e8c83 *core/config/devices/TS0201__TYZB01_hjsgdkfl/di
 2b56a31658e57d4b5244c92f0963f154 *core/config/devices/TS0201__TZ3000_dowj6gyi/discovery-RH3052_TUYATEC-gqhxixyk.json
 7b4c61253c8eb6a59ab18c7a67f26fdb *core/config/devices/TS0201__TZ3000_xr3htd96/TS0201__TZ3000_xr3htd96.json
 843e713a0a92e15f069624217a597e08 *core/config/devices/TS0201__TZ3000_ywagc4rj/TS0201__TZ3000_ywagc4rj.json
+378355a7b1bf2dca610251515b917f88 *core/config/devices/TS0201__TZ3210_huzkzqyk/TS0201__TZ3210_huzkzqyk.json
+c87ba8036cb1f8a8803685fcda0298f4 *core/config/devices/TS0201__TZ3210_huzkzqyk/discovery.json
 22ce58aeb63935354719b83d1ccfff78 *core/config/devices/TS0201__TZ3210_ncw88jfq/TS0201__TZ3210_ncw88jfq.json
 0c6637207cc33cbfe869b5cb32ddb6c3 *core/config/devices/TS0201__TZ3210_ncw88jfq/discovery-TS0201__TZ3210_ncw88jfq.json
 c19bdebfd0ccea47041ba1138b8270c4 *core/config/devices/TS0202__TZ3040_bb6xaihh/TS0202__TZ3040_bb6xaihh.json
@@ -1279,6 +1281,7 @@ d8217af1d6f910a47b711d19fc847410 *core/config/devices_images/node_Tuya-TS0044.pn
 b4750276f3fd1a85c2bd883203926abd *core/config/devices_images/node_Tuya-TV02.png
 9082444cfcdc4c12fa6360297f74fa9a *core/config/devices_images/node_Tuya-TempHumidity.png
 b87c4dd17c7abbdd950923a44bd89798 *core/config/devices_images/node_Tuya-TempHumidityDisplay.png
+fda5c91b529cbc29351d0399bc7ad149 *core/config/devices_images/node_Tuya-TempHumidityLargeDisplay.png
 8aa3ee6ef932bfba9bd52788ddcbe581 *core/config/devices_images/node_Tuya-UniversalRemote.png
 35f5a6865b52785efa9420956be053df *core/config/devices_images/node_Tuya-VibrationSensor.png
 ca3ca26f4e70ec38c8ce39287021864e *core/config/devices_images/node_Tuya-WallPlug.png
@@ -1498,7 +1501,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/private_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/tuya_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-99a50905b5dd9c5aa6517478441ecbe2 *docs/fr_FR/Changelog.md
+3d80c02884b13f78b583aa48098ab278 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1507,11 +1510,11 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-f712d246a6223c72834a569612f7d87b *plugin_info/Abeille.version
+fe4cc13855092772f0f1058903b1234f *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6d80d3934e14cf09d026bdb3c1c87df9 *plugin_info/configuration.php
-e9d5bc8f74c3f280c7d3c384aa4fbf07 *plugin_info/info.json
+1bf3ac548f39164a6b1921c1d0602c7e *plugin_info/info.json
 d9450adc9b9a850b8ba8c3919c16e482 *plugin_info/install.php
 fa66c2e280e095a90334aa2c690f9158 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

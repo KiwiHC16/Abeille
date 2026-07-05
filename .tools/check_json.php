@@ -978,7 +978,7 @@
         }
         // A cmd with sub type 'select' must have a "#select#' in 'request' and a 'listValue'
         else if ($cmd['subType'] == "select") {
-            echo "'$cmdJName' is SELECT => ".json_encode($cmd)."\n";
+            // echo "'$cmdJName' is SELECT => ".json_encode($cmd)."\n";
             if ($cmd['type'] == "info") {
                 // Possible sub-types for 'info': numeric, binary, string
                 $error = newDevError($devMName, "ERROR", "'select' sub-type not allowed for info cmd '$cmdJName'");

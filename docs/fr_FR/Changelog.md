@@ -11,6 +11,7 @@
 - Amélioration: Support de commandes privées (ex: 0005-cmd07) revu => Modèle 'TRADFRIremotecontrol' mis-à-jour.
 - Amélioration: Interne, check_json.
 - Amélioration: Interne, support 'mgmtNetworkUpdateReq'.
+- Nouveauté: Support Tuya NAS-TH02B2, température/humidité/display (2789).
 
 ## 260317-BETA-1
 

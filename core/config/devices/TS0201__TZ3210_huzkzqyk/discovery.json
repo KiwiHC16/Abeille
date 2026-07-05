@@ -1,0 +1,336 @@
+{
+  "epCount": 2,
+  "endPoints": {
+    "01": {
+      "profId": "0104",
+      "devId": "0106",
+      "servClusters": {
+        "0001": {
+          "attributes": {
+            "0000": {
+              "dataType": "21",
+              "access": "05",
+              "value": 0
+            },
+            "0020": {
+              "dataType": "20",
+              "access": "05",
+              "value": 3
+            },
+            "0021": {
+              "dataType": "20",
+              "access": "05",
+              "value": 100
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": "UNSUPPORTED",
+          "commandsGenerated": "UNSUPPORTED"
+        },
+        "0400": {
+          "attributes": {
+            "0000": {
+              "dataType": "21",
+              "access": "05",
+              "value": 0
+            },
+            "F001": {
+              "dataType": "21",
+              "access": "07",
+              "value": 50
+            },
+            "AA01": {
+              "dataType": "20",
+              "access": "07",
+              "value": 0
+            },
+            "AA02": {
+              "dataType": "20",
+              "access": "07",
+              "value": 0
+            },
+            "AA03": {
+              "dataType": "20",
+              "access": "07",
+              "value": 0
+            }
+          },
+          "commandsReceived": "UNSUPPORTED",
+          "commandsGenerated": "UNSUPPORTED"
+        },
+        "E002": {
+          "attributes": {
+            "D006": {
+              "dataType": "30",
+              "access": "07",
+              "value": 2
+            },
+            "D00F": {
+              "dataType": "30",
+              "access": "07",
+              "value": 2
+            },
+            "D00A": {
+              "dataType": "29",
+              "access": "07",
+              "value": 40
+            },
+            "D00B": {
+              "dataType": "29",
+              "access": "07",
+              "value": 10
+            },
+            "D00C": {
+              "dataType": "20",
+              "access": "07",
+              "value": 2
+            },
+            "D00D": {
+              "dataType": "29",
+              "access": "07",
+              "value": 90
+            },
+            "D00E": {
+              "dataType": "29",
+              "access": "07",
+              "value": 30
+            },
+            "D010": {
+              "dataType": "20",
+              "access": "07",
+              "value": 0
+            },
+            "D0FF": {
+              "dataType": "20",
+              "access": "07",
+              "value": 5
+            },
+            "E00B": {
+              "dataType": "30",
+              "access": "07",
+              "value": 0
+            }
+          },
+          "commandsGenerated": "UNSUPPORTED",
+          "commandsReceived": "UNSUPPORTED"
+        },
+        "EF00": {
+          "attributes": {
+            "0000": {
+              "dataType": "20",
+              "access": "05",
+              "value": 0
+            }
+          },
+          "commandsGenerated": "UNSUPPORTED",
+          "commandsReceived": "UNSUPPORTED"
+        },
+        "0000": {
+          "attributes": {
+            "0004": {
+              "value": "_TZ3210_huzkzqyk",
+              "dataType": "42",
+              "access": "05"
+            },
+            "0005": {
+              "value": "TS0201",
+              "dataType": "42",
+              "access": "05"
+            },
+            "0000": {
+              "dataType": "20",
+              "access": "05",
+              "value": 3
+            },
+            "0001": {
+              "dataType": "20",
+              "access": "05",
+              "value": 68
+            },
+            "0002": {
+              "dataType": "20",
+              "access": "05",
+              "value": 0
+            },
+            "0003": {
+              "dataType": "20",
+              "access": "05",
+              "value": 1
+            },
+            "0006": {
+              "dataType": "42",
+              "access": "05",
+              "value": ""
+            },
+            "0007": {
+              "dataType": "30",
+              "access": "05",
+              "value": 3
+            },
+            "FFDE": {
+              "dataType": "20",
+              "access": "07",
+              "value": 13
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 2
+            },
+            "FFFE": {
+              "dataType": "30",
+              "access": "05",
+              "value": 0
+            },
+            "FFE2": {
+              "dataType": "20",
+              "access": "05",
+              "value": 55
+            },
+            "FFE3": {
+              "dataType": "48",
+              "access": "05",
+              "value": "00"
+            }
+          },
+          "commandsReceived": "UNSUPPORTED",
+          "commandsGenerated": "UNSUPPORTED"
+        },
+        "000A": {
+          "attributes": {
+            "FFFD": {
+              "value": 1
+            }
+          }
+        },
+        "0019": {
+          "attributes": {
+            "0000": {
+              "value": "FFFFFFFFFFFFFFFF"
+            },
+            "0002": {
+              "value": 68
+            },
+            "0001": {
+              "value": 4294967295
+            },
+            "0004": {
+              "value": 4294967295
+            },
+            "0003": {
+              "value": 2
+            },
+            "0005": {
+              "value": 65535
+            },
+            "0006": {
+              "value": 0
+            },
+            "0008": {
+              "value": 65535
+            },
+            "0009": {
+              "value": 0
+            },
+            "FFFD": {
+              "value": 3
+            },
+            "0007": {
+              "value": 4417
+            }
+          }
+        }
+      },
+      "cliClusters": {
+        "0019": {
+          "attributes": {
+            "0000": {},
+            "0001": {},
+            "0002": {},
+            "0003": {},
+            "0004": {},
+            "0005": {},
+            "0006": {},
+            "0007": {},
+            "0008": {},
+            "0009": {},
+            "FFFD": {}
+          }
+        },
+        "000A": {
+          "attributes": {
+            "FFFD": {}
+          }
+        }
+      }
+    },
+    "02": {
+      "profId": "0104",
+      "devId": "0302",
+      "servClusters": {
+        "0402": {
+          "attributes": {
+            "0000": {
+              "dataType": "29",
+              "access": "05",
+              "value": 26.1
+            },
+            "0001": {
+              "dataType": "29",
+              "access": "05",
+              "value": 0
+            },
+            "0002": {
+              "dataType": "29",
+              "access": "05",
+              "value": 0
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 2
+            }
+          },
+          "commandsReceived": "UNSUPPORTED",
+          "commandsGenerated": "UNSUPPORTED"
+        },
+        "0405": {
+          "attributes": {
+            "0000": {
+              "dataType": "21",
+              "access": "05",
+              "value": 36.7
+            },
+            "0001": {
+              "dataType": "21",
+              "access": "05",
+              "value": 0
+            },
+            "0002": {
+              "dataType": "21",
+              "access": "05",
+              "value": 0
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 2
+            }
+          },
+          "commandsReceived": "UNSUPPORTED",
+          "commandsGenerated": "UNSUPPORTED"
+        }
+      },
+      "cliClusters": {
+        "": {}
+      }
+    }
+  },
+  "powerSource": "battery",
+  "fileSignature": "Abeille discovery file"
+}
+

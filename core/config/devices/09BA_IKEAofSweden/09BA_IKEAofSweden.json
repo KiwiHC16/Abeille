@@ -47,6 +47,15 @@
                    }
                 }
             },
+            "Click-0006-cmd00": {
+                "use": "inf_zbCmdC-0006-Off",
+                "trigOut": {
+                    "Click": {
+                        "valueOffset": "Simple",
+                        "comment": "Simple click"
+                   }
+                }
+            },
             "Click-0005-cmd07": {
                 "use": "inf_zbCmdC-0005-Ikea07",
                 "trigOut": {

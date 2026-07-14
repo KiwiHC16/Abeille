@@ -63,7 +63,8 @@
                 "use": "sceneGroupRecall3"
             },
             "Up-Down": {
-                "use": "Up-Down"
+                "use": "inf_zbCmdC-0008-MoveToLevel",
+                "isVisible": 1
             },
             "Click-Middle": {
                 "use": "Click-Middle"

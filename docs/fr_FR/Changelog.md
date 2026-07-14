@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Amélioration: Suppression cmde obsolete 'Up-Down' => 'inf_zbCmdC-0008-MoveToLevel'.
+
 ## 260705-BETA-2, 260705-BETA-1
 
 - Nouveauté: Support capteur Hobeian ZG-204Z (2785).

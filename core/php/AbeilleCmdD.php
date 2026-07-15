@@ -184,15 +184,16 @@
             return;
         }
 
-        // msgToCmd("CmdAbeille".$zgId."/0000/zgSoftReset", "");
-        // AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0011", "", "0000", null, 0);
+        /* Force Zigate soft reset */
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0011", "", 0, "0000", null, false);
         // Following cmds delayed by 1sec to wait for chip reset
+        sleep(1);
 
         // Extended PAN ID change must be done BEFORE starting network
         // Note: STILL NOT FUNCTIONAL. Zigate always says "BUSY" !!! Network seems to be automatically started after soft reset even without 0024/Start cmd.
         // Note: Experiement was done for Livolo TI0001 case with channel 26 and specific EPANID
         // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetExtendedPanId&tempo=".(time()+1), "extPanId=21758D1900481200");
-        // AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0020", "21758D1900481200", "0000", null);
+        // AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0020", "21758D1900481200", 0, "0000", null);
 
         global $config;
         $chan = isset($config['ab::gtwChan'.$zgId]) ? $config['ab::gtwChan'.$zgId] : 0; // Default = auto (all channels)
@@ -202,13 +203,13 @@
             $mask = 1 << $chan;
         $mask = sprintf("%08X", $mask);
         cmdLog('debug', "  Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0021", $mask, "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0021", $mask, 0, "0000", null, false);
 
         /* Set time server */
         $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
         $zgTime = time() - $zgRef;
         $data = sprintf("%08s", dechex($zgTime));
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0016", $data, "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0016", $data, 0, "0000", null, false);
 
         /* Set RAW mode unless hybrid requested (should not longer be required) */
         if (isset($config['ab::forceZigateHybridMode']) && ($config['ab::forceZigateHybridMode'] == "Y")) {
@@ -219,16 +220,16 @@
             $mode2 = "01";
         }
         cmdLog('debug', "  Configuring Zigate $zgId in '$mode' mode");
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0002", $mode2, "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0002", $mode2, 0, "0000", null, false);
 
         /* Set CE certification */
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0019", "01", "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0019", "01", 0, "0000", null, false);
 
         /* Set device type COORDINATOR */
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0023", "00", "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0023", "00", 0, "0000", null, false);
 
         /* Start Network */
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0024", "", "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0024", "", 0, "0000", null, false);
 
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+10), "");
     }

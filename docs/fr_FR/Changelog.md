@@ -1,6 +1,7 @@
 # ChangeLog
 
 - Amélioration: Suppression cmde obsolete 'Up-Down' => 'inf_zbCmdC-0008-MoveToLevel'.
+- Correction: Interne CmdD (configureZigate()).
 
 ## 260705-BETA-2, 260705-BETA-1
 

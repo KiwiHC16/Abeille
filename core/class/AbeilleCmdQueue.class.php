@@ -248,14 +248,14 @@
          * @return  none
          */
         public static function addCmdToQueue2($priority, $net, $zgCmd, $payload = '', $addr = '', $addrMode = null, $repeat = 0) {
-            cmdLog("debug", "    addCmdToQueue2(Pri={$priority}, Net={$net}, ZgCmd={$zgCmd}, Payload={$payload}, Addr={$addr}, AddrMode={$addrMode}, Repeat={$repeat})");
+            cmdLog("debug", "    addCmdToQueue2(Pri=$priority, Net=$net, ZgCmd=$zgCmd, Payload=$payload, Addr=$addr, AddrMode=$addrMode, Repeat=$repeat)");
 
             $zgId = substr($net, 7);
             // $this->zgId = $zgId;
 
             // Checking min parameters
             if (!isset($GLOBALS['zigates'][$zgId])) {
-                cmdLog("debug", "    No Zigate {$zgId} => cmd IGNORED");
+                cmdLog("debug", "    Unknown Zigate $zgId => cmd IGNORED");
                 return;
             }
             if (!$GLOBALS['zigates'][$zgId]['enabled']) {
@@ -268,16 +268,16 @@
             //     return;
             // }
             if (!ctype_xdigit($zgCmd)) {
-                cmdLog('error', '    Commande Zigate invalide: Pas en hexa ! ('.$zgCmd.')');
+                cmdLog('error', "    Commande Zigate $zgId invalide: Pas en hexa ! ($zgCmd)");
                 return;
             }
             if (($payload != '') && !ctype_xdigit($payload)) {
-                cmdLog('error', '    Invalid payload. Not hexa ! ('.$payload.')');
+                cmdLog('error', "    Commande Zigate $zgId invalide: Payload pas en hexa ! ($payload)");
                 return;
             }
             $len = strlen($payload);
             if ($len % 2) { // Checking payload length
-                cmdLog("error", "    Commande Zigate '{$zgCmd}' ignorée: Taille données impaire");
+                cmdLog('error', "    Commande Zigate $zgId invalide: Payload IMPAIRE ! ($payload)");
                 return;
             }
 
@@ -320,11 +320,11 @@
             foreach (range(priorityMax, priorityMin) as $prio) {
                 if ($queuesTxt != '')
                     $queuesTxt .= ', ';
-                $queuesTxt .= "Pri{$prio}=".count($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio]);
+                $queuesTxt .= "Pri$prio=".count($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio]);
             }
             cmdLog('debug', '    Zg '.$zgId.' queues: '.$queuesTxt);
             if (count($GLOBALS['zigates'][$zgId]['cmdQueue'][$priority]) > 50) {
-                cmdLog('debug', '    WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue: '.$priority);
+                cmdLog('debug', "    WARNING: More than 50 pending messages in Zigate $zgId cmd queue with pri=$priority");
             }
         } // End addCmdToQueue2()
 
@@ -429,7 +429,7 @@
                 foreach (range(priorityMax, priorityMin) as $prio) {
                     if ($queuesTxt != '')
                         $queuesTxt .= ', ';
-                    $queuesTxt .= "Pri{$prio}=".count($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio]);
+                    $queuesTxt .= "Pri$prio=".count($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio]);
                 }
 
                 cmdLog("debug", "Zg{$zgId} status: {$avail}, ".$queuesTxt);
@@ -465,7 +465,7 @@
                     if ($cmd['sentTime'] + $timeout > time())
                         continue; // Timeout not reached yet
 
-                    cmdLog("debug", "WARNING: processCmdQueues(): Zigate".$zgId." cmd ".$cmd['cmd']." {$timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
+                    cmdLog("debug", "WARNING: processCmdQueues(): Zigate$zgId cmd ".$cmd['cmd']." {$timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
                     $GLOBALS['zigates'][$zgId]['available'] = true;
                     unset($GLOBALS['zigates'][$zgId]['availTime']); // In case still present
@@ -484,47 +484,51 @@
                 $mt = microtime(true);
                 if (isset($zg['tp_time']) && ($zg['tp_time'] > $mt))
                     $regulation = "Throughput";
-                // NDPU regulation (NDPU too high leads to extended error due to lack of resources)
+                // NPDU regulation (NPDU too high leads to extended error due to lack of resources)
                 else if ($zg['nPDU'] > 7)
-                    $regulation = "NDPU";
+                    $regulation = "NPDU";
                 else
                     $regulation = '';
 
-                // Looking for a cmd to send in HIGH to LOW priority order
+                // Something to send ? (depend of Zigate status)
                 unset($sendIdx);
-                foreach (range(priorityMax, priorityMin) as $priority) {
-                    $count = count($zg['cmdQueue'][$priority]);
-                    if ($count == 0)
-                        continue; // Queue empty
+                if ($regulation == '') { // No regulation required
+                    // Looking for a cmd to send in HIGH to LOW priority order
+                    // If there is something to send in this priority queue, we take 1st cmd
+                    foreach (range(priorityMax, priorityMin) as $priority) {
+                        $count = count($zg['cmdQueue'][$priority]);
+                        if ($count == 0)
+                            continue; // Queue empty
 
-                    // There is something to send in this priority queue
-                    // We take 1st command unless regulation is required and command is not Zigate specific.
-                    $cmdIdx = 0;
-                    $cmd = $zg['cmdQueue'][$priority][$cmdIdx];
-                    if ($cmd['zgOnly'] || ($regulation == '')) {
-                        // Zigate only or no regulation
                         $sendIdx = 0;
-                    } else {
-                        // Regulation required. Looking for Zigate only cmd
-                        cmdLog('debug', "processCmdQueues(): ZgId={$zgId}, Pri={$priority}/Idx={$cmdIdx}, Cmd=".$cmd['cmd']." => '{$regulation}' regulation");
+                        break;
+                    } // End priorities loop
+                } else { // Regulation required
+                    cmdLog('debug', "processCmdQueues(): ZgId=$zgId => '$regulation' regulation");
+
+                    // Looking for a cmd to send in HIGH to LOW priority order
+                    // Regulation required. Looking for Zigate only cmd
+                    foreach (range(priorityMax, priorityMin) as $priority) {
+                        $count = count($zg['cmdQueue'][$priority]);
+                        if ($count == 0)
+                            continue; // Queue empty
+
                         foreach ($zg['cmdQueue'][$priority] as $cmdIdx => $cmd) {
-                            if ($cmdIdx == 0)
-                                continue; // 1st cmd already checked
                             if (!$cmd['zgOnly'])
                                 continue;
 
                             $sendIdx = $cmdIdx;
                             break;
                         }
-                    }
 
-                    if (isset($sendIdx))
-                        break;
-                } // End priorities loop
+                        if (isset($sendIdx))
+                            break;
+                    } // End priorities loop
+                }
 
                 // Finally something to send for this Zigate ?
                 if (isset($sendIdx)) {
-                    cmdLog('debug', "processCmdQueues(): ZgId={$zgId}, Pri={$priority}/Idx={$sendIdx}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
+                    cmdLog('debug', "  ZgId=$zgId, Pri=$priority/Idx=$sendIdx, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
 
                     $cmd = $zg['cmdQueue'][$priority][$sendIdx];
 
@@ -576,7 +580,7 @@
                         msg_receive($queueParserToCmdAck, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
                         continue;
                     } else if ($errCode != 42) // 42 = No message
-                        cmdLog("debug", "processAcks() ERROR: msg_receive() err ".$errCode);
+                        cmdLog("debug", "processAcks() ERROR: msg_receive() err $errCode");
                     return;
                 }
 
@@ -618,7 +622,6 @@
                 } // End type=='clearPending'
 
                 $zgId = substr($msg['net'], 7);
-                // $this->zgId = $zgId;
 
                 if (isset($msg['sqnAps']))
                     $sqnAps = $msg['sqnAps'];
@@ -678,7 +681,7 @@
                 else if ($msg['type'] == "8000") {
 
                     if (!isset($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx])) {
-                        cmdLog("warning", "  Unexpected 8000 msg. Could not find cmd with Pri={$sentPri}, Idx={$sentIdx}");
+                        cmdLog("warning", "  Unexpected 8000 msg. Could not find cmd with Pri=$sentPri, Idx=$sentIdx");
                         continue;
                     }
 
@@ -728,7 +731,7 @@
                         // Status is: bad param, unhandled, failed (?), stack already started
                         // Status 06 = Unknown EP ? (Zigate v2)
                         // 14/E_ZCL_ERR_ZBUFFER_FAIL: Msg too big
-                        cmdLog("debug", "  WARNING: Zigate cmd failed (err {$msgStatus})");
+                        cmdLog("debug", "  WARNING: Zigate cmd failed (err $msgStatus)");
                         $removeCmd = true;
                     }
                     else {
@@ -740,7 +743,7 @@
                             $removeCmd = true;
                         }
                         else {
-                            cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." failed (err {$msgStatus}). Will be retried ".$cmd['try']." time(s) max.");
+                            cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." failed (err $msgStatus). Will be retried ".$cmd['try']." time(s) max.");
                             $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0; // Zg will be free in 1sec
                         }
                     }
@@ -763,14 +766,14 @@
                         $addr = $msg['addr'];
                         $eq = &getDevice($net, $addr); // By ref
                         if ($eq === []) {
-                            cmdLog('debug', "  WARNING: Unknown device: Net={$net} Addr={$addr}");
+                            cmdLog('debug', "  WARNING: Unknown device: Net=$net Addr=$addr");
                         } else {
                             cmdLog('debug', "  eq=".json_encode($eq, JSON_UNESCAPED_SLASHES));
                             // Note: TX status makes sense only if device is always listening (rxOnWhenIdle=TRUE)
                             //       For other devices any interrogation without waking up device may lead to NO-ACK which is normal
                             $newTxStatus = '';
                             if ($msg['status'] == '00') { // OK
-                                // Restoring 'ok'' status whatever rxOnWhenIdle or not
+                                // Restoring 'ok' status whatever rxOnWhenIdle or not
                                 if ($eq['zigbee']['txStatus'] !== 'ok')
                                     $newTxStatus = 'ok';
                             } else { // NO ACK
@@ -787,7 +790,7 @@
                                         $GLOBALS['zigates'][$zgId]['available'] = true; // Zigate is free again
                                         $removeCmd = false; // Keep the cmd to be repeated
                                     } else
-                                        cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK) even if Repeat={$repeat}.");
+                                        cmdLog("debug", "  Cmd ".$cmd['cmd']." failed (no ACK)");
                                 }
                             }
                             if ($newTxStatus != '') {
@@ -800,7 +803,7 @@
                                     'txStatus' => $newTxStatus // 'ok', or 'noack'
                                 );
                                 msgToAbeille($msg);
-                                cmdLog2('debug', $addr, "  {$net}-{$addr} status changed to '{$newTxStatus}'");
+                                cmdLog2('debug', $addr, "  $net-$addr status changed to '$newTxStatus'");
                             }
                         }
                     }
@@ -836,7 +839,7 @@
                 if (isset($removeCmd) && $removeCmd) {
 
                     $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
-                    cmdLog('debug', "  Removing cmd from queue (Pri={$sentPri}/Idx={$sentIdx}/Count={$count})");
+                    cmdLog('debug', "  Removing cmd from queue (Pri=$sentPri/Idx=$sentIdx/Count={$count})");
                     // array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
                     // cmdLog('debug', '  BEFORE: count='.count($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]).', '.json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]));
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri], $sentIdx, 1);
@@ -920,11 +923,11 @@
                     $arr = explode('/', $msg['addrList']);
                     foreach ($arr as $addr) {
                         if (!isset($GLOBALS['devices'][$net])) {
-                            logMessage('debug', "  ERROR: Unknown network ".$net);
+                            logMessage('debug', "  ERROR: Unknown network $net");
                             continue;
                         }
                         if (!isset($GLOBALS['devices'][$net][$addr])) {
-                            logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
+                            logMessage('debug', "  ERROR: Unknown device $net/$addr");
                             continue;
                         }
                         // Note: No IEEE for virtual remote control (addr=rcXX)
@@ -934,7 +937,7 @@
                         logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");
                     }
                 } else
-                    cmdLog("error", "AbeilleCmd: Message inattendu: ".$msgJson);
+                    cmdLog("error", "CmdD: Message inattendu: $msgJson");
             } else {
                 // $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
                 // $topic = $msg['topic'];

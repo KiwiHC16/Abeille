@@ -313,12 +313,16 @@
     exec('uname -a', $result2);
     logIt("Kernel : ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n");
 
+    // Jeedom's version
+    $jeedomVersion = jeedom::version(); // Ex: '3.3.14'
+    logIt("Jeedom : Version $jeedomVersion\n");
+
     // Abeille's version
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");
     $line = fgets($file); // Should be a comment
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
-    logIt("Abeille: Version ".$abeilleVersion."\n\n");
+    logIt("Abeille: Version $abeilleVersion\n\n");
 
     // Zigate infos
     gatewaysInfos();

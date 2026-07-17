@@ -2144,6 +2144,17 @@
             }
             if (!isset($eq['zigbee']['manufCode']) || ($manufCode != $eq['zigbee']['manufCode']))
                 $devUpdates['manufCode'] = $manufCode;
+
+            /* Send to client if required (EQ page opened) */
+            $toCli = array(
+                // 'src' => 'parser',
+                'type' => 'nodeDesc',
+                'net' => $net,
+                'addr' => $srcAddr,
+                'logicalType' => $logicalType,
+                'macCapa' => $macCapa,
+            );
+            $this->msgToClient($toCli);
         }
 
         /* Called from decode8002() to decode "Simple_Desc_rsp"

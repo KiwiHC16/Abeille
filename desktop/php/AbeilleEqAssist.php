@@ -124,6 +124,13 @@
                     <?php echo '<input type="text" value="'.$eqIeee.'" readonly>'; ?>
                 </div>
             </div>
+            <div class="row">
+                <label class="col-lg-2 control-label" for="fname">MAC capabilities:</label>
+                <div class="col-lg-4">
+                    <a id="idMacCapaRB" class="btn btn-warning" title="Demande les MAC capabilities" onclick="requestInfos('nodeDesc')"><i class="fas fa-sync"></i></a>
+                    <input type="text" id="idMacCapa" value="" readonly>
+                </div>
+            </div>
 
             <br>
 
@@ -1710,6 +1717,9 @@
         } else if (infoType == "clustersList") {
             topic = "Cmd"+logicalId+"_getSimpleDescriptor";
             payload = "ep="+epId;
+        } else if (infoType == "nodeDesc") {
+            topic = "Cmd"+logicalId+"_getNodeDescriptor";
+            payload = "";
         } else if (infoType == "attribList") {
             topic = "Cmd"+logicalId+"_discoverAttributes";
             payload = "ep="+epId+"_clustId="+clustId+"_startAttrId=0000_maxAttrId=FF_dir="+option;
@@ -1869,7 +1879,25 @@ console.log("missing value for "+attrId);
         for (const [idx, msg] of Object.entries(res)) {
             // console.log("msg="+msg.type);
 
-            if (msg.type == "activeEndpoints") {
+            if (msg.type == "nodeDesc") {
+                // 'type' => 'nodeDesc',
+                // 'net' => $net,
+                // 'addr' => $srcAddr,
+                // 'logicalType' => $logicalType,
+                // 'macCapa' => $macCapa,
+
+                // Update display
+                elm = document.getElementById("idMacCapa");
+                elm.value = msg.macCapa;
+                changeClass("idMacCapaRB", "btn-warning", "btn-success");
+
+                // Update internal datas
+                zigbee.macCapa = msg.macCapa;
+                zigbee.logicalType = msg.logicalType;
+
+                // Request next step
+                requestInfos('epList');
+            } else if (msg.type == "activeEndpoints") {
                 // 'src' => 'parser',
                 // 'type' => 'activeEndpoints',
                 // 'net' => $dest,
@@ -2443,7 +2471,8 @@ console.log("missing value for "+attrId);
         xhttp.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?queueId="+js_queueXToParser+"&msg=type:sendToCli_net:Abeille"+js_zgNb+"_addr:"+js_eqAddr+"_ieee:"+js_eqIeee, true);
         xhttp.send();
 
-        requestInfos('epList');
+        // requestInfos('epList');
+        requestInfos('nodeDesc');
     });
 
     /* Update Jeedom infos based on current JSON part */

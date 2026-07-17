@@ -2739,6 +2739,7 @@
                 }
 
                 // Zigbee command: Node descriptor request (Node_Desc_req)
+                // Mandatory: 'addr'
                 else if ($cmdName == 'getNodeDescriptor') {
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))

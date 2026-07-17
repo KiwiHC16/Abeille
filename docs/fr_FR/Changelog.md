@@ -5,6 +5,7 @@
 - Amélioration: Ajout version Jeedom dans les infos clefs.
 - Amélioration: Interne AbeilleCmdQueue: processCmdQueues() revu.
 - Amélioration: Interne: Ajout description 'logicalType'.
+- Amélioration: Assistant découverte: Ajout 'MAC capa' + 'logical type'.
 
 ## 260705-BETA-2, 260705-BETA-1
 

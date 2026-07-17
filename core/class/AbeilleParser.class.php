@@ -2120,14 +2120,15 @@
             $macCapa = substr($pl, 12, 2); // Mac capa
             $manufCode = AbeilleTools::reverseHex(substr($pl, 14, 4));
 
-            parserLog2('debug', $srcAddr, "  LogicalType={$logicalType}, MacCapa={$macCapa}, ManufCode={$manufCode}");
+            $logicalTypeDesc = zbGetLogicalType($logicalType);
+            parserLog2('debug', $srcAddr, "  LogicalType=$logicalType/$logicalTypeDesc, MacCapa=$macCapa, ManufCode=$manufCode");
 
             // Infos to collect & store: logicalType, macCapa & manufCode
             $eq = getDevice($net, $srcAddr);
             // WARNING: macCapa can be overloaded by customization
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
                 $macCapa = $eq['customization']['macCapa'];
-                parserLog2('debug', $srcAddr, "  'macCapa' customization: ".$macCapa);
+                parserLog2('debug', $srcAddr, "  'macCapa' customization: $macCapa");
             }
 
             if (!isset($eq['zigbee']['logicalType']) || ($logicalType != $eq['zigbee']['logicalType']))

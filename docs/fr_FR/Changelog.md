@@ -4,6 +4,7 @@
 - Correction: Interne CmdD (configureZigate()).
 - Amélioration: Ajout version Jeedom dans les infos clefs.
 - Amélioration: Interne AbeilleCmdQueue: processCmdQueues() revu.
+- Amélioration: Interne: Ajout description 'logicalType'.
 
 ## 260705-BETA-2, 260705-BETA-1
 

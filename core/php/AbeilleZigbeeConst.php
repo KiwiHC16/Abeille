@@ -1182,4 +1182,15 @@
             return "Device ".$devId." inconnu";
         return $devicesTable[$profId][$devId];
     }
+
+    /* Returns Zigbee logical type description from given value (number). */
+    function zbGetLogicalType($value) {
+
+        /* Values of the Logical Type Field */
+        $logicalTypes = [ "Coordinator", "Router", "End_device" ];
+
+        if ($value <= 2)
+            return $logicalTypes[$value];
+        return "?";
+    }
 ?>

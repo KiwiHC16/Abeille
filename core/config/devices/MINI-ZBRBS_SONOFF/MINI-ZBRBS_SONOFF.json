@@ -1,0 +1,56 @@
+{
+    "MINI-ZBRBS_SONOFF": {
+        "manufacturer": "Sonoff",
+        "model": "MINI-ZBRBS",
+        "type": "Smart roller shutter switch",
+        "genericType": "Shutter",
+        "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Sonoff-MiniZBRBS",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "Up": {
+                "use": "act_zbCmdC-0102-UpOpen",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "act_zbCmdC-0102-Stop",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Down": {
+                "use": "act_zbCmdC-0102-DownClose",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0102&attrId=0008"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "SetReporting 01-0102-0008": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0102&attrId=0008&attrType=20",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0102-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0102",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

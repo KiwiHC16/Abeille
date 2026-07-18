@@ -234,7 +234,7 @@
         }
 
         /**
-         * addCmdToQueue()
+         * addCmdToQueue2()
          *
          * put in the queue the cmd to be put on the serial link to the zigate
          *
@@ -251,7 +251,6 @@
             cmdLog("debug", "    addCmdToQueue2(Pri=$priority, Net=$net, ZgCmd=$zgCmd, Payload=$payload, Addr=$addr, AddrMode=$addrMode, Repeat=$repeat)");
 
             $zgId = substr($net, 7);
-            // $this->zgId = $zgId;
 
             // Checking min parameters
             if (!isset($GLOBALS['zigates'][$zgId])) {
@@ -281,32 +280,30 @@
                 return;
             }
 
-            // Troughput optimisation: Ignoring if same cmd/payload is already in the pipe
-            // TODO: May need to take care about 'toggle' case.
-            // TODO: Is it worth removing old pendind cmd and adding new one ? Might allow to keep latest cmds order.
-            foreach (range(priorityMax, priorityMin) as $prio2) {
-                $pendingCmds = $GLOBALS['zigates'][$zgId]['cmdQueue'][$prio2];
-                foreach($pendingCmds as $pendCmd) {
-                    if ($pendCmd['cmd'] != $zgCmd)
-                        continue;
-                    if ($pendCmd['datas'] == $payload) {
-                        cmdLog('debug', "    Same cmd already pending with priority {$prio2} => ignoring");
-                        return;
+            // Latency optimization: Is targetted device in 'NO-ACK' status ?
+            $dev = &getDevice($net, $addr);
+            if (isset($dev['zigbee']['txStatus']) && ($dev['zigbee']['txStatus'] == 'noack')) {
+                cmdLog('debug', "    Device is NO-ACK: Cleaning queue & moving cmd to low priority");
+                clearPending($zgId, $addr, "");
+                $priority = PRIO_LOW;
+            } else {
+                // Troughput optimisation: Ignoring if same cmd/payload is already in the pipe
+                // TODO: May need to take care about 'toggle' case.
+                // TODO: Is it worth removing old pendind cmd and adding new one ? Might allow to keep latest cmds order.
+                foreach (range(priorityMax, priorityMin) as $prio2) {
+                    $pendingCmds = $GLOBALS['zigates'][$zgId]['cmdQueue'][$prio2];
+                    foreach($pendingCmds as $pendCmd) {
+                        if ($pendCmd['cmd'] != $zgCmd)
+                            continue;
+                        if ($pendCmd['datas'] == $payload) {
+                            cmdLog('debug', "    Same cmd already pending with priority $prio2 => ignoring");
+                            return;
+                        }
                     }
                 }
             }
 
-            // If priority is not PRIO_LOW & device TX status is 'NO ACK', moving to low priority queue to not delay cmds to other devices
-            if ($priority != PRIO_LOW) {
-                $dev = &getDevice($net, $addr);
-                if (isset($dev['zigbee']['txStatus']) && ($dev['zigbee']['txStatus'] == 'noack')) {
-                    cmdLog('debug', "    Device is NO-ACK: Moving cmd to low priority queue");
-                    $priority = PRIO_LOW;
-                }
-            }
-
             // $this->incStatCmd($cmd);
-
             AbeilleCmdQueue::pushZigateCmd($zgId, $priority, $zgCmd, $payload, $repeat, $addr, $addrMode);
 
             // TEST
@@ -777,7 +774,11 @@
                                 if ($eq['zigbee']['txStatus'] !== 'ok')
                                     $newTxStatus = 'ok';
                             } else { // NO ACK
-                                if (isset($eq['zigbee']['rxOnWhenIdle']) && $eq['zigbee']['rxOnWhenIdle'] && ($eq['zigbee']['txStatus'] !== 'noack'))
+                                // if (isset($eq['zigbee']['rxOnWhenIdle']) && $eq['zigbee']['rxOnWhenIdle'] && ($eq['zigbee']['txStatus'] !== 'noack'))
+                                //     $newTxStatus = 'noack';
+                                // Setting NOACK status even if device is not supposed to respond since sleeping.
+                                // But status must NOT be reported to user if 'rxOnWhenIdle'=false
+                                if ($eq['zigbee']['txStatus'] !== 'noack')
                                     $newTxStatus = 'noack';
 
                                 // If 'repeat' is set, checking if cmd must be retried

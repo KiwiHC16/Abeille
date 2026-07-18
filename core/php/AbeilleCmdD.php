@@ -340,11 +340,13 @@
     // Remove all pending messages for given zgId + addr or ieee.
     // Useful for ex when addr changed on device announce.
     function clearPending($zgId, $addr, $ieee) {
-        cmdLog("debug", "  clearPending($zgId, {$addr}, {$ieee})");
+        cmdLog("debug", "  clearPending(Zg=$zgId, Addr=$addr, Ieee=$ieee)");
 
         foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $pri => $q) {
             $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]);
-            cmdLog("debug", "  Pri={$pri}, Count=$count, Q=".json_encode($q));
+             if ($count == 0)
+                continue;
+            cmdLog("debug", "    Pri=$pri, Count=$count, Q=".json_encode($q));
             for ($cmdIdx = 0; $cmdIdx < $count; ) {
                 $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$pri][$cmdIdx];
                 if ($cmd['status'] != '') {
@@ -356,23 +358,25 @@
                     ((strlen($cmd['addr']) == 16) && ($cmd['addr'] == $ieee))) {
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri], $cmdIdx, 1);
                     // Note: cmd @cmdIdx is the next cmd after array_splice
-                    cmdLog("debug", "  Removed Pri={$pri}/Idx={$cmdIdx}");
+                    cmdLog("debug", "    Removed Pri=$pri, Idx=$cmdIdx");
                     $count--;
                 } else
                     $cmdIdx++;
             }
 
             // $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]);
-            // cmdLog("debug", "  Pri={$pri}, Count=$count, Q-AFTER=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]));
+            // cmdLog("debug", "  Pri=$pri, Count=$count, Q-AFTER=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]));
         }
 
         // Cleaning tempo queue too
         global $tempoMessageQueue;
         $count = count($tempoMessageQueue);
-        cmdLog("debug", "  Tempo count=$count BEFORE=".json_encode($tempoMessageQueue));
+        if ($count == 0)
+            return;
+        cmdLog("debug", "    Tempo count=$count BEFORE=".json_encode($tempoMessageQueue));
         for ($cmdIdx = 0; $cmdIdx < $count; ) {
             $cmd = $tempoMessageQueue[$cmdIdx];
-            cmdLog("debug", "  cmdIdx={$cmdIdx}, cmd=".json_encode($cmd));
+            cmdLog("debug", "  cmdIdx=$cmdIdx, cmd=".json_encode($cmd));
             /* Examples
                "topic":"CmdAbeille1/7D80/bind0030", "params":"addr=00124B002242C5C5&ep=01&clustId=0402&destAddr=00158D0001ED3365&destEp=01"
                "topic":"CmdAbeille1/7D80/configureReporting2","params":"ep=01&clustId=0402&attrType=29&attrId=0000&minInterval=600&maxInterval=900"
@@ -389,7 +393,7 @@
             if (((strlen($cmdAddr) == 4) && ($cmdAddr == $addr)) ||
                 ((strlen($cmdAddr) == 16) && ($cmdAddr == $ieee))) {
                 array_splice($tempoMessageQueue, $cmdIdx, 1);
-                cmdLog("debug", "  Removed Tempo/Idx={$cmdIdx}");
+                cmdLog("debug", "    Removed Tempo/Idx=$cmdIdx");
                 $count--;
             } else
                 $cmdIdx++;

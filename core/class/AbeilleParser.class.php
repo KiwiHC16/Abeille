@@ -4125,6 +4125,7 @@
 
                     // 0008/Level control cluster specific
                     else if ($clustId == "0008") {
+                        $value = 1; // Default
                         if (($cmd == "00") || ($cmd == "04")) { // Move to Level (without/with On/Off)
                             $level = substr($pl, 0, 2);
                             $transition = AbeilleTools::reverseHex(substr($pl, 2, 4));
@@ -4133,7 +4134,7 @@
                             $m = "  Move to level";
                             if ($cmd == "04")
                                 $m .= " with On/Off";
-                            $m .= ": level=".$level.", transition=".$transition.", optMask=".$optMask.", optOverride=".$optOverride;
+                            $m .= ": Level=$level, Transition=$transition, OptMask=$optMask, OptOverride=$optOverride";
                             parserLog2('debug', $srcAddr, $m);
                         } else if (($cmd == "01") || ($cmd == "05")) { // Move (without/with On/Off)
                             $mode = substr($pl, 0, 2);
@@ -4143,7 +4144,7 @@
                             $m = "  Move";
                             if ($cmd == "05")
                                 $m .= " with On/Off";
-                            $m .= ": mode=".$mode.", rate=".$rate.", optMask=".$optMask.", optOverride=".$optOverride;
+                            $m .= ": Mode=$mode, Rate=$rate, OptMask=$optMask, OptOverride=$optOverride";
                             parserLog2('debug', $srcAddr, $m);
                         } else if (($cmd == "02") || ($cmd == "06")) { // Step (without/with On/Off)
                             $mode = substr($pl, 0, 2);
@@ -4154,7 +4155,7 @@
                             $m = "  Step";
                             if ($cmd == "06")
                                 $m .= " with On/Off";
-                            $m .= ": mode=".$mode.", size=".$size.", transition=".$transition.", optMask=".$optMask.", optOverride=".$optOverride;
+                            $m .= ": Mode=$mode, Size=$size, Transition=$transition, OptMask=$optMask, OptOverride=$optOverride";
                             parserLog2('debug', $srcAddr, $m);
                         } else if (($cmd == "03") || ($cmd == "07")) { // Stop (without/with On/Off)
                             $optMask = substr($pl, 0, 2);
@@ -4162,7 +4163,7 @@
                             $m = "  Stop";
                             if ($cmd == "07")
                                 $m .= " with On/Off";
-                            $m .= ": optMask=".$optMask.", optOverride=".$optOverride;
+                            $m .= ": OptMask=$optMask, OptOverride=$optOverride";
                             parserLog2('debug', $srcAddr, $m);
                         } else {
                             parserLog2('debug', $srcAddr, "  Unsupported cluster 0008 specific cmd ".$cmd);
@@ -4178,9 +4179,8 @@
                         // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
                         $attrReportN[] = array(
                             'name' => $srcEp.'-0008-cmd'.$cmd,
-                            'value' => 1, // Equivalent to a click. No special value
+                            'value' => $value // ='level' for cmds 0 & 4, 1 for others
                         );
-                        // Tcharp38: Where is the data associated to cmd ? May need to decode that with 8002 instead.
                     } // End clustId == "0008"
 
                     // 0019/OTA cluster specific

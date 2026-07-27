@@ -10,6 +10,7 @@
 - Amélioration: Reduction latence si plusieurs devices ne repondent pas.
 - Amélioration: Assistant découverte: Erreur de lecture manuf/model sur EP multiples.
 - Nouveauté: Support Sonoff SNZB-01M (2792).
+- Correction: Interne ParserD: Cmds 00 & 04 (move to level) cluster 0008 retourne 'level' au lieu de 1.
 
 ## 260705-BETA-2, 260705-BETA-1
 

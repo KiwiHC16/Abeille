@@ -311,7 +311,7 @@
 <!-- </div> -->
 
 <script>
-    var eq = new Object(); // Equipement details
+    var eq = new Object(); // Equipement details (model)
     eq.zgNb = js_zgNb; // Zigate number, number
     eq.jId = js_eqId; // Jeedom ID, number
     eq.addr = js_eqAddr; // Short addr, hex string
@@ -335,301 +335,6 @@
     /* Read JSON if defined */
     if (js_jsonName != '')
         readDeviceModel();
-
-    // /* Attempt to detect main supported attributs */
-    // function refreshAttributsList(epIdx, cliClust, clustIdx) {
-    //     console.log("refreshAttributsList(epIdx="+epIdx+", cliClust="+cliClust+", clustIdx="+clustIdx+")");
-
-    //     ep = eq.endPoints[epIdx];
-    //     epNb = ep.id;
-    //     if (cliClust)
-    //         clust = ep.cliClustList[clustIdx];
-    //     else
-    //         clust = ep.servClustList[clustIdx];
-    //     clustId = clust.id;
-
-    //     // idServClustx => table of input clusters (col1=clustId, col2+=attribut)
-    //     // idCliClustx => table of output clusters (col1=clustId, col2+=attribut)
-    //     if (cliClust) {
-    //         var clustTable = document.getElementById("idCliClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     } else {
-    //         var clustTable = document.getElementById("idServClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     }
-    //     /* Cleanup tables: remove all columns except first one (cluster ID) */
-    //     var colCount = line.cells.length;
-    //     for (var i = colCount - 1; i >= 1; i--) {
-    //         line.deleteCell(i);
-    //     }
-
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
-    //         data: {
-    //             action: 'detectAttributs',
-    //             zgNb: js_zgNb,
-    //             eqAddr: js_eqAddr,
-    //             eqEP: epNb, // EP number
-    //             clustId: clustId,
-    //         },
-    //         dataType: 'json',
-    //         global: false,
-    //         async: false,
-    //         error: function (request, status, error) {
-    //             bootbox.alert("ERREUR 'detectAttributs' !<br>Votre installation semble corrompue.<br>"+error);
-    //         },
-    //         success: function (json_res) {
-    //             res = JSON.parse(json_res.result);
-    //             if (res.status != 0)
-    //                 console.log("error="+res.error);
-    //             else {
-    //                 console.log("res.resp follows:");
-    //                 console.log(res.resp);
-    //                 var resp = res.resp;
-
-    //                 attributes = resp.Attributes;
-    //                 let attrCount = attributes.length;
-    //                 console.log("nb of attr="+attrCount)
-    //                 for (attrIdx = 0; attrIdx < attrCount; attrIdx++) {
-    //                     rattr = attributes[attrIdx];
-    //                     if (rattr.Status != "00")
-    //                         continue;
-
-    //                     a = new Object();
-    //                     a.id = rattr.Id;
-    //                     // a.type = rattr.Type;
-    //                     clust.attrList.push(a);
-
-    //                     var newCol = line.insertCell(-1);
-    //                     newCol.innerHTML = rattr.Id;
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
-
-    // /* Use 0140+8002 cmd to get supported attributs list */
-    // function refreshAttributsList0140(epIdx, cliClust, clustIdx) {
-    //     console.log("refreshAttributsList0140(epIdx="+epIdx+", cliClust="+cliClust+", clustIdx="+clustIdx+")");
-
-    //     ep = eq.endPoints[epIdx];
-    //     epNb = ep.id;
-    //     if (cliClust)
-    //         clust = ep.cliClustList[clustIdx];
-    //     else
-    //         clust = ep.servClustList[clustIdx];
-    //     clustId = clust.id;
-
-    //     // idServClustx => table of input clusters (col1=clustId, col2+=attribut)
-    //     // idCliClustx => table of output clusters (col1=clustId, col2+=attribut)
-    //     if (cliClust) {
-    //         var clustTable = document.getElementById("idCliClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     } else {
-    //         var clustTable = document.getElementById("idServClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     }
-    //     /* Cleanup tables: remove all columns except first one (cluster ID) */
-    //     var colCount = line.cells.length;
-    //     for (var i = colCount - 1; i >= 1; i--) {
-    //         line.deleteCell(i);
-    //     }
-
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
-    //         data: {
-    //             action: 'getAttrDiscResp',
-    //             zgNb: js_zgNb,
-    //             eqAddr: js_eqAddr,
-    //             eqEP: epNb, // EP number
-    //             clustId: clustId,
-    //         },
-    //         dataType: 'json',
-    //         global: false,
-    //         async: false,
-    //         error: function (request, status, error) {
-    //             bootbox.alert("ERREUR 'getAttrDiscResp' !<br>Votre installation semble corrompue.<br>"+error);
-    //         },
-    //         success: function (json_res) {
-    //             res = JSON.parse(json_res.result);
-    //             if (res.status != 0)
-    //                 console.log("error="+res.error);
-    //             else {
-    //                 console.log("res.resp follows:");
-    //                 console.log(res.resp);
-    //                 var resp = res.resp;
-
-    //                 attributes = resp.Attributes;
-    //                 let attrCount = attributes.length;
-    //                 console.log("nb of attr="+attrCount)
-    //                 for (attrIdx = 0; attrIdx < attrCount; attrIdx++) {
-    //                     rattr = attributes[attrIdx];
-
-    //                     a = new Object();
-    //                     a.id = rattr.Id;
-    //                     // a.type = rattr.Type;
-    //                     clust.attrList.push(a);
-
-    //                     var newCol = line.insertCell(-1);
-    //                     newCol.innerHTML = rattr.Id;
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
-
-    // function getAttributsList(epIdx, cliClust, clustIdx) {
-    //     console.log("getAttributsList(epIdx="+epIdx+", cliClust="+cliClust+", clustIdx="+clustIdx+")");
-
-    //     ep = eq.endPoints[epIdx];
-    //     epNb = ep.id;
-    //     if (cliClust)
-    //         clust = ep.cliClustList[clustIdx];
-    //     else
-    //         clust = ep.servClustList[clustIdx];
-    //     clustId = clust.id;
-    //     document.getElementById("idStatus").value = "EP"+epNb+"/Clust"+clustId+": recherche des 'Attributs'";
-
-    //     // idServClustx => table of input clusters (col1=clustId, col2+=attribut)
-    //     // idCliClustx => table of output clusters (col1=clustId, col2+=attribut)
-    //     if (cliClust) {
-    //         var clustTable = document.getElementById("idCliClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     } else {
-    //         var clustTable = document.getElementById("idServClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     }
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
-    //         data: {
-    //             action: 'getAttrDiscResp',
-    //             zgNb: js_zgNb,
-    //             eqAddr: js_eqAddr,
-    //             eqEP: epNb, // EP number
-    //             clustId: clustId,
-    //         },
-    //         dataType: 'json',
-    //         global: false,
-    //         async: false,
-    //         error: function (request, status, error) {
-    //             bootbox.alert("ERREUR 'getAttrDiscResp' !<br>Votre installation semble corrompue.<br>"+error);
-    //         },
-    //         success: function (json_res) {
-    //             res = JSON.parse(json_res.result);
-    //             if (res.status != 0)
-    //                 console.log("error="+res.error);
-    //             else {
-    //                 console.log("res.resp follows:");
-    //                 console.log(res.resp);
-    //                 var resp = res.resp;
-
-    //                 a = new Object();
-    //                 a.type = resp.AttrType;
-    //                 a.id = resp.AttrId;
-    //                 clust.attrList.push(a);
-
-    //                 var newCol = line.insertCell(-1);
-    //                 newCol.innerHTML += a.id+"/"+a.type;
-
-    //                 document.getElementById("idStatus").value = "";
-    //             }
-    //         }
-    //     });
-    // }
-
-//     /* openReturnChannel EQ to get clusters list. */
-//     function refreshClustersList(epIdx) {
-//         console.log("refreshClustersList(epIdx="+epIdx+")");
-
-//         ep = eq.endPoints[epIdx];
-//         epNb = ep.id;
-//         document.getElementById("idStatus").value = "EP"+epNb+": recherche des 'Clusters'";
-
-//         // idServClustx => table of input clusters (col1=clustId, col2+=attribut)
-//         // idCliClustx => table of output clusters (col1=clustId, col2+=attribut)
-//         var servClustTable = document.getElementById("idServClust"+epIdx);
-//         var cliClustTable = document.getElementById("idCliClust"+epIdx);
-//         /* Cleanup tables */
-//         var rowCount = servClustTable.rows.length;
-//         for (var i = rowCount - 1; i >= 0; i--) {
-//             servClustTable.deleteRow(i);
-//         }
-//         rowCount = cliClustTable.rows.length;
-//         for (i = rowCount - 1; i >= 0; i--) {
-//             cliClustTable.deleteRow(i);
-//         }
-
-//         /* Do the request to EQ */
-//         $.ajax({
-//             type: 'POST',
-//             url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
-//             data: {
-//                 action: 'getSingleDescResp',
-//                 zgNb: js_zgNb,
-//                 eqAddr: js_eqAddr,
-//                 eqEP: epNb, // EP number
-//             },
-//             dataType: 'json',
-//             global: false,
-//             async: false,
-//             error: function (request, status, error) {
-//                 bootbox.alert("ERREUR 'getSingleDescResp' !<br>Votre installation semble corrompue.<br>"+error);
-//                 document.getElementById("idStatus").value = "ERROR clusters";
-//             },
-//             success: function (json_res) {
-//                 res = JSON.parse(json_res.result);
-//                 if (res.status != 0) {
-//                     console.log("error="+res.error);
-//                     status = -1;
-//                     document.getElementById("idStatus").value = "ERROR clusters";
-//                 } else {
-//                     console.log("res.resp follows:");
-//                     console.log(res.resp);
-//                     var resp = res.resp;
-
-// console.log("eq follows:");
-// console.log(eq);
-//                     ep.servClustCount = resp.servClustCount;
-//                     ep.servClustList = []; // List of objects
-//                     ep.cliClustCount = resp.cliClustCount;
-//                     ep.cliClustList = []; // List of objects
-//                     for (clustIdx = 0; clustIdx < resp.servClustCount; clustIdx++) {
-//                         clust = new Object();
-//                         clust.id = resp.servClustList[clustIdx];
-//                         clust.attrList = new Array();
-//                         ep.servClustList.push(clust);
-
-//                         var newRow = servClustTable.insertRow(-1);
-//                         var newCol = newRow.insertCell(0);
-// 	                    newCol.innerHTML = resp.servClustList[clustIdx]
-//                         // newCol.innerHTML += '<a class="btn btn-warning" title="Raffraichi la liste des attributs" onclick="refreshAttributsList('+epIdx+', 0, '+clustIdx+')"><i class="fas fa-sync"></i></a>';
-//                         newCol.innerHTML += '<a class="btn btn-warning" title="Raffraichi la liste des attributs 0140" onclick="refreshAttributsList0140('+epIdx+', 0, '+clustIdx+')"><i class="fas fa-sync"></i></a>';
-//                     }
-//                     for (clustIdx = 0; clustIdx < resp.cliClustCount; clustIdx++) {
-//                         clust = new Object();
-//                         clust.id = resp.cliClustList[clustIdx];
-//                         clust.attrList = new Array();
-//                         ep.cliClustList.push(clust);
-
-//                         var newRow = cliClustTable.insertRow(-1);
-//                         var newCol = newRow.insertCell(0);
-// 	                    newCol.innerHTML = resp.cliClustList[clustIdx];
-//                         // newCol.innerHTML += '<a class="btn btn-warning" title="Raffraichi la liste des attributs" onclick="refreshAttributsList('+epIdx+', 1, '+clustIdx+')"><i class="fas fa-sync"></i></a>';
-//                         newCol.innerHTML += '<a class="btn btn-warning" title="Raffraichi la liste des attributs 0140" onclick="refreshAttributsList0140('+epIdx+', 1, '+clustIdx+')"><i class="fas fa-sync"></i></a>';
-//                    }
-//                     status = 0;
-//                     document.getElementById("idStatus").value = "";
-//                 }
-//             }
-//         });
-//         console.log("refreshClustersList() END, status="+status);
-//         return status;
-//     }
-
-
 
     /* Reminder
     var eq = new Object(); // Equipement details
@@ -733,19 +438,25 @@
         });
     }
 
-    /* Display device infos in JSON area. */
+    /* Display device infos. */
     function displayDevice() {
         console.log("displayDevice()");
 
         if (typeof eq.icon !== 'undefined')
             document.getElementById("idIcon").value = eq.icon;
+        else
+            document.getElementById("idIcon").value = "?";
         if (typeof eq.batteryType !== 'undefined')
             document.getElementById("idBattery").value = eq.batteryType;
+        else
+            document.getElementById("idBattery").value = "?";
         if (typeof eq.defaultEp !== 'undefined')
             document.getElementById("idMainEP").value = eq.defaultEp;
+        else
+            document.getElementById("idMainEP").value = "?";
     }
 
-    /* Display commands in JSON column (coming either from JSON file or Zigbee discovery). */
+    /* Display commands (coming either from JSON model file or Zigbee discovery). */
     function displayCommands() {
         console.log("displayCommands()");
 
@@ -917,7 +628,7 @@
     /* Generate JSON model based on zigbee discovery datas */
     function zigbeeToModel() {
         console.log("zigbeeToModel()");
-        console.log("zigbee", zigbee);
+        console.log("zigbee=", zigbee);
 
         /* Jeedom commands naming reminder:
            - for attributes: ['Get-'/'Set-'/''][EP]-<clustId>-<attribute_name>
@@ -959,10 +670,12 @@
                 if (typeof zigbee.signature === "undefined")
                     zigbee.signature = new Object();
                 if (isset(attributes['0004'])) {
-                    zigbee.signature['manufacturer'] = attributes['0004']['value'];
+                    if (typeof zigbee.signature['manufacturer'] === "undefined")
+                        zigbee.signature['manufacturer'] = attributes['0004']['value'];
                 }
                 if (isset(attributes['0005'])) {
-                    zigbee.signature['model'] = attributes['0005']['value'];
+                    if (typeof zigbee.signature['model'] === "undefined")
+                        zigbee.signature['model'] = attributes['0005']['value'];
                 }
             }
         }
@@ -1450,10 +1163,8 @@
         }
         js_jsonName = zbModel+"_"+zbManuf;
         document.getElementById("idJsonName").value = js_jsonName;
-        document.getElementById("idMainEP").value = eq.defaultEp;
-        if (zigbee.powerSource == "battery")
-            document.getElementById("idBattery").value = "?";
-        document.getElementById("idIcon").value = "?";
+
+        displayDevice();
         displayCommands();
     } // End zigbeeToModel()
 

@@ -8,6 +8,7 @@
 - Amélioration: Assistant découverte: Ajout 'MAC capa' + 'logical type'.
 - Nouveauté: Support Sonoff MINI-ZBRBS (2791).
 - Amélioration: Reduction latence si plusieurs devices ne repondent pas.
+- Amélioration: Assistant découverte: Erreur de lecture manuf/model sur EP multiples.
 
 ## 260705-BETA-2, 260705-BETA-1
 

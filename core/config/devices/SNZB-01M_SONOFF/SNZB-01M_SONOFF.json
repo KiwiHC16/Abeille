@@ -15,9 +15,11 @@
         },
         "variables": {
             "fc12": {
-                "0": "Simple",
-                "1": "Double",
-                "2": "Triple"
+                "0": "None",
+                "1": "Simple",
+                "2": "Double",
+                "3": "Long",
+                "4": "Triple"
             }
         },
         "commands": {

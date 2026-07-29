@@ -511,7 +511,7 @@
                 foreach (range(priorityMax, priorityMin) as $cleanPri) {
                     for ($ci = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$cleanPri]) - 1; $ci >= 0; $ci--) {
                         $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$cleanPri][$ci];
-                        if ($cmd['status'] != 'SENT' || $cmd['sqnAps'] == '')
+                        if ($cmd['status'] != 'SENT')
                             continue; // Not a sent-and-waiting-for-8011 command
                         if ($cmd['sentTime'] + $cmd['timeout'] <= $now) {
                             cmdLog("debug", "WARNING: processCmdQueues(): Zigate".$zgId." cmd ".$cmd['cmd']." to ".$cmd['addr']." 8011 TIMEOUT (SQNAPS=".$cmd['sqnAps'].") => removed from queue");

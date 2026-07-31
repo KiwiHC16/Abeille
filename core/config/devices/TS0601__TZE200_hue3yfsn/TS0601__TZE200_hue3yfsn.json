@@ -94,12 +94,12 @@
                     "info": "01-windowDetectionStatus"
                 },
                 "10": {
-                    "function": "rcvValueDiv",
+                    "function": "rcvValue",
                     "div": 10,
                     "info": "01-setPoint"
                 },
                 "18": {
-                    "function": "rcvValueDiv",
+                    "function": "rcvValue",
                     "div": 10,
                     "info": "0402-01-0000"
                 },

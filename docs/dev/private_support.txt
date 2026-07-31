@@ -1,6 +1,6 @@
 ***
 *** Abeille developer internal doc
-*** Private/custom way to support cluster attributes or commands
+*** Private/custom clusters/commands support
 *** (C) Tcharp38
 ***
 
@@ -11,21 +11,11 @@ Handling attributes or commands in a custom way is done thru "private" structure
             "type": "tuya-zosung"
         },
         "EF00": { // CLUSTID
-            "type": "tuya",
+            "type": "tuya", >>> Means legacy Tuya Data Points
             "05": { // DP
                 "function": "rcvValue",
                 "info": "01-measuredValue"
             },
-
-            // Fonctions supportées
-            // 'rcvValue'
-            // 'rcvValueEnum'
-            //     "function": "rcvValueEnum",
-            //     "enum": {
-            //          "00": "single",
-            //          "01": "double",
-            //          "02": "long"
-            //      }
         },
 
         "FCC0-0112": { // CLUSTID-ATTRID
@@ -59,37 +49,55 @@ Handling attributes or commands in a custom way is done thru "private" structure
         }
     }
 
-Tuya type
-
-    This is basically a way to support Tuya 'data points'. See 'tuya_support.txt'.
-
 Generic type
 
     This specific case allows to overload default behavior for standard ZCL commands as well as any other unknown (private) onces.
 
-Example for Tuya cluster EF00 support using 'data points':
+Tuya DP type
 
-    "private": {
-        "EF00": {
-            "type": "tuya",
-            "00": { "function": "rcvValue", "info": "0006-01-0000", "div": 10 },
-            "01": { "function": "rcvValue", "info": "0008-01-0000" },
-            "02": {
-                "function": "rcvValueEnum",
-                "enum": {
+    This is basically a way to support Tuya 'data points'. See 'tuya_support.txt'.
+    Type = "tuya"
+
+    Possible functions
+
+        'rcvValue'
+            "function": "rcvValue",
+            "div": 10, >>> OPTIONAL (default div=1)
+            "mult": 2, >>> OPTIONAL (default mult=1)
+            "info": "0006-01-0000"
+
+        'rcvValueEnum'
+            "function": "rcvValueEnum",
+            "enum": {
                     "00": "single",
                     "01": "double",
                     "02": "long"
+                }
+
+
+    Example for Tuya cluster EF00 support using 'data points':
+
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "00": { "function": "rcvValue", "info": "0006-01-0000", "div": 10 },
+                "01": { "function": "rcvValue", "info": "0008-01-0000" },
+                "02": {
+                    "function": "rcvValueEnum",
+                    "enum": {
+                        "00": "single",
+                        "01": "double",
+                        "02": "long"
+                    },
+                    "comment": "00=single, 01=double, 02=long",
+                    "info": "inf_click1"
                 },
-                "comment": "00=single, 01=double, 02=long",
-                "info": "inf_click1"
-            },
-            "0C": {
-                "function": "rcvValve-Status"
-            },
-            "12": {
-                "function": "rcvThermostat-Mode"
+                "0C": {
+                    "function": "rcvValve-Status"
+                },
+                "12": {
+                    "function": "rcvThermostat-Mode"
+                }
             }
         }
-    }
 

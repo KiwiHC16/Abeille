@@ -154,7 +154,7 @@
             step('E');
             return;
         }
-        // echo "dev=".json_encode($dev)."\n";
+        // echo "checkDeviceModel(), dev=".json_encode($dev)."\n";
 
         $error = false;
         $devModel = $dev[$devModName]; // Removing top key
@@ -336,35 +336,6 @@
                 step('.');
         }
 
-        /* OBSOLETE SOON: Tuya specific checks */
-        // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
-        // if (isset($dev[$devModName]['tuyaEF00'])) {
-        //     foreach ($dev[$devModName]['tuyaEF00'] as $key => $value) {
-        //         if ($key == 'fromDevice') {
-        //             foreach ($dev[$devModName]['tuyaEF00']['fromDevice'] as $key2 => $value2) {
-        //                 if (!isset($value2['function'])) {
-        //                     $error = newDevError($devModName, "ERROR", "Missing 'function' for tuyaEF00/fromDevice");
-        //                     continue;
-        //                 }
-        //                 $func = $value2['function'];
-        //                 $supportedFunc = ['rcvValue', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
-        //                 if (!in_array($func, $supportedFunc)) {
-        //                     $error = newDevError($devModName, "ERROR", "Invalid function '".$func."' for tuyaEF00/fromDevice");
-        //                     continue;
-        //                 }
-        //                 if ($func == 'rcvValueDiv') {
-        //                     if (!isset($value2['div'])) {
-        //                         $error = newDevError($devModName, "ERROR", "Missing 'div' for DP '".$key2."' in tuyaEF00/fromDevice");
-        //                         continue;
-        //                     }
-        //                 }
-        //             }
-        //             continue;
-        //         }
-        //         newDevError($devModName, "ERROR", "Invalid Tuya key '".$key."'");
-        //     }
-        // }
-
         /* Custom cluster/attribute specific checks */
         // TODO: To be completed
         /* Generic format for private clusters/commands reminder
@@ -465,20 +436,31 @@
                     }
 
                     foreach ($private[$pKey] as $dpId => $dpVal) {
+                        // echo "LA dpId=$dpId, dpVal=".json_encode($dpVal)."\n";
                         if ($dpId == "type")
+                            continue;
+                        if (substr($dpId, 0, 7) == "comment")
                             continue;
 
                         if (!isset($dpVal['function'])) {
-                            $error = newDevError($devModName, "ERROR", "Missing 'function' for private/$pKey");
+                            $error = newDevError($devModName, "ERROR", "Missing 'function' for private/$pKey/$dpId");
                             continue;
                         }
+                        if (!isset($dpVal['info'])) {
+                            $error = newDevError($devModName, "ERROR", "Missing 'info' for private/$pKey/$dpId");
+                            continue;
+                        }
+
                         $func = $dpVal['function'];
                         $supportedFunc = ['rcvValue', 'rcvValueEnum', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
                         if (!in_array($func, $supportedFunc)) {
                             $error = newDevError($devModName, "ERROR", "Invalid function '$func' for private/$pKey DP $dpId");
                             continue;
                         }
-                        if ($func == 'rcvValueDiv') {
+
+                        if ($func == 'rcvValue') {
+                        }
+                        if ($func == 'rcvValueDiv') { // OBSOLETE
                             if (!isset($dpVal['div'])) {
                                 $error = newDevError($devModName, "ERROR", "Missing 'div' for DP '$dpId' in private/$pKey");
                                 continue;

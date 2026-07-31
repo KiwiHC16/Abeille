@@ -40,21 +40,29 @@
             "Click 1": {
                 "use": "inf_generic-String",
                 "logicalId": "click1",
+                "returnStateValue": "None",
+                "returnStateTime": "1",
                 "isVisible": 1
             },
             "Click 2": {
                 "use": "inf_generic-String",
                 "logicalId": "click2",
+                "returnStateValue": "None",
+                "returnStateTime": "1",
                 "isVisible": 1
             },
             "Click 3": {
                 "use": "inf_generic-String",
                 "logicalId": "click3",
+                "returnStateValue": "None",
+                "returnStateTime": "1",
                 "isVisible": 1
             },
             "Click 4": {
                 "use": "inf_generic-String",
                 "logicalId": "click4",
+                "returnStateValue": "None",
+                "returnStateTime": "1",
                 "isVisible": 1
             },
             "Button 1": {

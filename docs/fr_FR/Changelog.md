@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 260731-BETA-1
+
 - Amélioration: Suppression cmde obsolete 'Up-Down' => 'inf_zbCmdC-0008-MoveToLevel'.
 - Correction: Interne CmdD (configureZigate()).
 - Amélioration: Ajout version Jeedom dans les infos clefs.

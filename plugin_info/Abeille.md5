@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="260705-BETA-2"
+# VERSION="260731-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -40,12 +40,12 @@ c697264a367aa536ef60425b7fcf88ea *core/ajax/AbeilleZigate.ajax.php
 091f8ca736f192af943fe6c278956440 *core/class/Abeille.class.php
 6237ce5cee35a97f482932d32366b31b *core/class/AbeilleCmd.class.php
 50a092fb0ac8a8f99f581ce4f2d239e7 *core/class/AbeilleCmdPrepare.class.php
-57327f0eabdc64618dc5f0034b0eb20e *core/class/AbeilleCmdProcess.class.php
-ba06d610a04c901a42831b8f28cbb0d7 *core/class/AbeilleCmdQueue.class.php
+e0fd4e0590159ac4c75bb02309529221 *core/class/AbeilleCmdProcess.class.php
+a0b08aeff5a6d57caad08d2d7c606c95 *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-bcec38329377491ee2ad2008dba77cac *core/class/AbeilleParser.class.php
+0f201fb134366a70452ef6736882746a *core/class/AbeilleParser.class.php
 fd0a96e353bd450be0eae63a9a71a8d9 *core/class/AbeilleTools.class.php
-c91e951ad46b7696d9fafeccb0ad63f3 *core/config/Abeille.config.php
+5270673723886452bb4dd371675659ba *core/config/Abeille.config.php
 7effde70efa280c4973b9248dc051731 *core/config/AbeilleInternalCmds.json
 d8fe59ba5c734449970615205f5a23cc *core/config/commands/BindToGroupLevelEP03.json
 7d700c97dd32d63675fafce8e5599906 *core/config/commands/BindToGroupLevelEP04.json
@@ -70,7 +70,6 @@ b18281e08e9ec6976418f8af07e08553 *core/config/commands/LegrandContactorEtat.json
 6091bcc25de57d626fede325dc91cf86 *core/config/commands/Onlevel.json
 a1c86cf68c4a263a28d2d86207fb88ca *core/config/commands/RougeGroup.json
 0ef3463e392fc9ff2112fd5951942600 *core/config/commands/Scene-Membership.json
-95533c5694af9520839cca18708fecdf *core/config/commands/Up-Down.json
 7da6bdcc27056f93de53f73d542dd321 *core/config/commands/VertGroup.json
 3ee46d8207e8cf07d8ac4176575fa4bc *core/config/commands/WindowsCoveringDownGroup.json
 2172393f4a13a1236a463f1ea501963d *core/config/commands/WindowsCoveringGetLevel.json
@@ -242,7 +241,7 @@ c3006feb0fee9894c997adfe2355b7cb *core/config/commands/inf_zbAttr-0B04-ACPowerDi
 92a3aa158253d16ed2012bb86f09e03b *core/config/commands/inf_zbCmdC-0006-On.json
 02e3a8c8081573063d5f9979e889c69e *core/config/commands/inf_zbCmdC-0006-Toggle.json
 8bf5d5e901c3ed628749c0d67b164900 *core/config/commands/inf_zbCmdC-0008-Move.json
-108f93eed7fdfdc337a2f98d662bd281 *core/config/commands/inf_zbCmdC-0008-MoveToLevel.json
+49d344b30051860448a55d6b0a4f95c7 *core/config/commands/inf_zbCmdC-0008-MoveToLevel.json
 b932b84179bd3b4a0c4e3d40121a3f57 *core/config/commands/inf_zbCmdC-0008-MoveWithOnOff.json
 c489b438fb12df2e712292279ab7e2e3 *core/config/commands/inf_zbCmdC-0008-Step.json
 ec72cab863572c39fb54ddd13dfea349 *core/config/commands/inf_zbCmdC-0008-StepWithOnOff.json
@@ -336,7 +335,7 @@ f4b2257ee84efced07ee5cf6ecf219e9 *core/config/commands/zbCmdR-Custom.json
 50b002b8fe05498edd6341e659faff5b *core/config/commands/zbWriteGenericAttribute.json
 cb5085cdae6af71032c28eca1bd115d6 *core/config/devices/01MINIZB/01MINIZB.json
 1bfd8eebe0a1faebe21e01791cedeef4 *core/config/devices/01MINIZB/discovery.json
-371b58832317ea619a875c1110f784ae *core/config/devices/09BA_IKEAofSweden/09BA_IKEAofSweden.json
+38ab950f50422148993035b92c8e790c *core/config/devices/09BA_IKEAofSweden/09BA_IKEAofSweden.json
 eacc02d148da69c84cde43048976fd86 *core/config/devices/09BA_IKEAofSweden/discovery-09BA_IKEAofSweden.json
 cd40564b76cbe7623738c66cc43fa6d0 *core/config/devices/1-digital-input/1-digital-input.json
 a6f648a86695db45a6856ae618ccee4d *core/config/devices/3450-Geu_CentraLite/3450-Geu_CentraLite.json
@@ -441,6 +440,8 @@ a2dd92b53b155f490697c2bb41fd6ea7 *core/config/devices/ICZB-IW11SW_icasa/ICZB-IW1
 713b6788d35f44fd7bf2c20d70e24ed4 *core/config/devices/ICZB-IW11SW_icasa/discovery.json
 a0105350abc7ec4d0082de181791743a *core/config/devices/INSPELNINGSmartplug_IKEAofSweden/INSPELNINGSmartplug_IKEAofSweden.json
 e5cf8d20a55261f34bf3b605ac2c256f *core/config/devices/INSPELNINGSmartplug_IKEAofSweden/discovery-INSPELNINGSmartplug_IKEAofSweden.json
+5abf4bfb1a3239c6e272766027a109fe *core/config/devices/JM720ES-EF-3.0/JM720ES-EF-3.0.json
+2fc1f0d460dfbc188d9a5b9dfed164a2 *core/config/devices/JM720ES-EF-3.0/discovery.2.json
 79b6b0db417febb5de5ccac737bc651d *core/config/devices/KADRILJrollerblind/KADRILJrollerblind.json
 4120925979ad2fc5b8314b3a2973b1cc *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
 0d91e070c4573ffb8ca8d726650854cc *core/config/devices/KEPZB-110_frientAS/discovery.json
@@ -504,6 +505,8 @@ a4482f9cf28e9b89471037de4062cb65 *core/config/devices/LightifySwitchMini_OSRAM/L
 0f851ba6193f0c95885b2d2336557b96 *core/config/devices/LightifySwitchMini_OSRAM/discovery.json
 101e4b37d02d6fd7bf94712d54631c01 *core/config/devices/LightifySwitchMini_OSRAM/notes.txt
 95e7198d86b3e1c43c8b90d9538a07bc *core/config/devices/MAI-ZTS_Profalux/MAI-ZTS_Profalux.json
+f63da8681d3f3b3717301a3de8875cc4 *core/config/devices/MINI-ZBRBS_SONOFF/MINI-ZBRBS_SONOFF.json
+1d89cdc2698102845b336c3e4c245871 *core/config/devices/MINI-ZBRBS_SONOFF/discovery-MINI-ZBRBS_SONOFF.json
 db1db49927e333cf6459ae95251651cb *core/config/devices/MOT-C1Z06C/MOT-C1Z06C.json
 f9b2ae98e8feecce17087b0011a12468 *core/config/devices/MOT-C1Z06C/discovery-MOT-C1Z10C_Profalux.json
 ec4c365dfbcef22c285caa0cad6a210b *core/config/devices/MOT-C1Z06C/notes.txt
@@ -550,7 +553,7 @@ b3d7577c796d1f4ed48aef7011fdb221 *core/config/devices/RODRETDimmer_IKEAofSweden/
 7e6a4a1b688992da2c0049cb74ab5c61 *core/config/devices/RWL021/RWL021.json
 a1366186c526b4e7b702c19a880155e3 *core/config/devices/RWL021/discovery.json
 731ceef4aeed5de1e5ab29ac279cff4d *core/config/devices/Remoteswitch/067723_discovery.json
-ad1d9fe17a83f9a350dde68d72bfea26 *core/config/devices/Remoteswitch/Remoteswitch.json
+02fed434fa25a31481f8ef6b960e9484 *core/config/devices/Remoteswitch/Remoteswitch.json
 7bb3360f2bb835424f3f55bd5fa4a985 *core/config/devices/S26R2ZB_SONOFF/S26R2ZB_SONOFF.json
 1bdec5664a885f8ab614c37891df298e *core/config/devices/SA-003-Zigbee/SA-003-Zigbee.json
 6b54d98fa941c0adebb64b0de0b3b0cd *core/config/devices/SIN-4-2-20_NodOn/SIN-4-2-20_NodOn.json
@@ -568,6 +571,8 @@ f9de5fb2611f9dc15e729d60db6ee34e *core/config/devices/SML004/SML004.json
 6d412d19c24f979bbbcf6228ef57a9bd *core/config/devices/SML004/discoverySLM004.json
 a348a8cc39563268011312608bbe437f *core/config/devices/SMSZB-120_frientAS/SMSZB-120_frientAS.json
 1a354adcb420a647302ea6c23f551e75 *core/config/devices/SMSZB-120_frientAS/discovery.json
+b2f5b30c5827d52ac86802fa490a96ea *core/config/devices/SNZB-01M_SONOFF/SNZB-01M_SONOFF.json
+502e8826707aafc1e6e8052e8dcedc86 *core/config/devices/SNZB-01M_SONOFF/discovery-SNZB-01M_SONOFF.json
 1da49aa46f0cd9e36202b68907cc4a4f *core/config/devices/SNZB-01P_eWeLink/SNZB-01P_eWeLink.json
 b4cf34a49f4977b2af2a167c91750669 *core/config/devices/SNZB-01P_eWeLink/discovery-SNZB-01P_eWeLink.json
 b5d3a2bee0d3d11a471ac65e87c3fadc *core/config/devices/SNZB-02D_SONOFF/SNZB-02D_SONOFF.json
@@ -609,7 +614,7 @@ b2f68a86f7126368c67caf774dcf6787 *core/config/devices/TLSR82xx_AwoX/TLSR82xx_Awo
 f4094b090094a25633ea58d271c4ae78 *core/config/devices/TLSR82xx_AwoX/discovery.json
 faadeba303134e25cb466049c1246c9c *core/config/devices/TRADFRIDriver10W/TRADFRIDriver10W.json
 370f2f968aa135dfc654a279644c3f89 *core/config/devices/TRADFRIDriver30W/TRADFRIDriver30W.json
-8ce488bad2debbcf88f39ca4454e0d00 *core/config/devices/TRADFRISHORTCUTButton/TRADFRISHORTCUTButton.json
+3d905854d7eab2dd5848581d4a28db49 *core/config/devices/TRADFRISHORTCUTButton/TRADFRISHORTCUTButton.json
 085e710fd009d4be082db4c14fd9aec4 *core/config/devices/TRADFRIbulbE14CWS470lm/TRADFRIbulbE14CWS470lm.json
 1cfddf7d8ee43ad0e781344097766200 *core/config/devices/TRADFRIbulbE14CWS470lm/discovery.json
 6f3fc7568bade31dd08dc8cc6ab0d3ea *core/config/devices/TRADFRIbulbE14CWSopal600lm/TRADFRIbulbE14CWSopal600lm.json
@@ -652,7 +657,7 @@ be85bc8069bb04467808c002035e920c *core/config/devices/TRADFRIcontroloutlet/TRADF
 b83d092b1b6623060343cdd3aa6690f9 *core/config/devices/TRADFRIcontroloutlet/discovery.json
 84e678e848ba5134457e2def86705857 *core/config/devices/TRADFRImotionsensor/TRADFRImotionsensor.json
 9f8c258b42d274763f5927927595a9cc *core/config/devices/TRADFRImotionsensor/notes.txt
-462092a33ca741310e354cf1bd798c44 *core/config/devices/TRADFRIonoffswitch/TRADFRIonoffswitch.json
+ae9c34a91c8c0fab9fd35a033d23be9b *core/config/devices/TRADFRIonoffswitch/TRADFRIonoffswitch.json
 b49aa93a5654c799dfc47e504a77ada6 *core/config/devices/TRADFRIonoffswitch/discovery-TRADFRIonoffswitch_IKEAofSweden.json
 267e94a20b4bc1d49dac1c1a3254806d *core/config/devices/TRADFRIonoffswitch/notes.txt
 f0e3f3651b932b95998f65cb59b95429 *core/config/devices/TRADFRIopencloseremote/TRADFRIopencloseremote.json
@@ -818,7 +823,7 @@ f1e51aaea46956fd1a151c45220a1782 *core/config/devices/TS0601__TZE200_e3oitdyu/TS
 4012d199317dc8bf1c89e2a5e1427dbb *core/config/devices/TS0601__TZE200_e3oitdyu/discovery.json
 3500a4991051f5aba6e1732f9b9b0aaf *core/config/devices/TS0601__TZE200_f1pvdgoh/TS0601__TZE200_f1pvdgoh.json
 152b1ff18dc78f1c7555127f7f93bdba *core/config/devices/TS0601__TZE200_f1pvdgoh/discovery.json
-866225dfeb410508bdfb63c13ca2afbb *core/config/devices/TS0601__TZE200_hue3yfsn/TS0601__TZE200_hue3yfsn.json
+0864f19448387d0a0bacd24c349db888 *core/config/devices/TS0601__TZE200_hue3yfsn/TS0601__TZE200_hue3yfsn.json
 6717da48df39cc264c515e3a40054d03 *core/config/devices/TS0601__TZE200_hue3yfsn/discovery.json
 3c8ba2c0af41dca3cd593983832f9a69 *core/config/devices/TS0601__TZE200_kb5noeto/TS0601__TZE200_kb5noeto.json
 8458942cb00ee4a9ef15cd6de28aa724 *core/config/devices/TS0601__TZE200_kb5noeto/discovery-TS0601__TZE200_kb5noeto.json
@@ -1051,6 +1056,7 @@ bc6bebdd5da8889895c4a490e1a97bcc *core/config/devices_images/node_Gledopto-GL-C-
 1726054741f8db188e1d5672ac3d683c *core/config/devices_images/node_Gledopto-GL-SD-001.png
 19accb90d8f345dea966bb3ad6d90e3e *core/config/devices_images/node_Gledopto-RGBCCTLedController.png
 6063b894bc5780f69b95b51284c20526 *core/config/devices_images/node_Heiman-COSensor.png
+68ca72e6b2f36de3eb13dc59cea16080 *core/config/devices_images/node_Heiman-COSensor2.png
 f9065914800e54dcfee414bf8eb84cfb *core/config/devices_images/node_Heiman-IndoorSiren.png
 da7c53760f44c929cee81fe2de543211 *core/config/devices_images/node_Heiman-MotionSensor.png
 c9ef175ac51e333de612fd82c7556550 *core/config/devices_images/node_Heiman-TempHumidity.png
@@ -1205,10 +1211,12 @@ f7a65eca3cf57583929f4719e739eab9 *core/config/devices_images/node_SmokeSensor-EM
 b47b765a6640f32aaddadd58dfb4b1c4 *core/config/devices_images/node_Sonoff-BASICZBR3.png
 da4acb14e31b31a09103c3eee5543af8 *core/config/devices_images/node_Sonoff-Button.png
 c4798a11da0bc32246d6784b4cfa59d2 *core/config/devices_images/node_Sonoff-DoorSensor.png
+89ccb30cc6af9c6a57b8de7f71e061ba *core/config/devices_images/node_Sonoff-MiniZBRBS.png
 b747bfdea8ca710815388810ff2d1061 *core/config/devices_images/node_Sonoff-MotionSensor.png
 37cb6776b64bd0c016034b6c0af13d94 *core/config/devices_images/node_Sonoff-PresenceSensor.png
 c96fc06840975eee3783acb90901d321 *core/config/devices_images/node_Sonoff-S26R2ZB.png
 3ec9a385b5a711c08bd1415b3bd2a41d *core/config/devices_images/node_Sonoff-SNZB-01.png
+2fa82472e4363b0b5113fe24957e317a *core/config/devices_images/node_Sonoff-SNZB-01M.png
 a60015fc47af1ce4f464ff2efc298291 *core/config/devices_images/node_Sonoff-SNZB-02.png
 5e978fed76b82c06bfbd586e8d722e49 *core/config/devices_images/node_Sonoff-SNZB-03.png
 7ce6af02369d8bb7dcbbf07793ad1f53 *core/config/devices_images/node_Sonoff-SNZB-04.png
@@ -1367,7 +1375,7 @@ fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 e86186e7fdd98473bee9a2e6fe49e7ff *core/php/AbeilleCliToQueue.php
 e9b6e3e1d5d210825a300ba10b429f8c *core/php/AbeilleCmd-Profalux.php
 cb9e394ca75afed35af729c8a1ce8eac *core/php/AbeilleCmd-Tuya.php
-5e1d47770b1e852db459b0e5231adb59 *core/php/AbeilleCmdD.php
+70c475cf1b1ef5b0b9c25ef08138a2a5 *core/php/AbeilleCmdD.php
 0705c47b2aa130979756fcad255163d9 *core/php/AbeilleColorInspector.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
 e19dfc28fe5aab5966a0dcca176381ff *core/php/AbeilleGetEq.php
@@ -1391,12 +1399,12 @@ da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 8e8bca70b16030a858ddae1d72e930e3 *core/php/AbeilleSerialRead.php
 220cfe670ad55774709d2fa3e67b1c34 *core/php/AbeilleSetEq.php
 8c65e379d40a3eabe1eae242b0d21e02 *core/php/AbeilleSocat.php
-59377e6ca8dc3a1f3b686630a8f6234e *core/php/AbeilleSupportKeyInfos.php
+62d7f06424329f17627601e7dd429c91 *core/php/AbeilleSupportKeyInfos.php
 98dda2f694581222421a3bad2f6e4480 *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 4babce1ace5fa35ea4cb3d77e3bf3e79 *core/php/AbeilleZigateConst.php
 9a11b8179e9bee8085de3b12cef764c2 *core/php/AbeilleZigbee.php
-80d5664f6e3ec4f52480e1337722973c *core/php/AbeilleZigbeeConst.php
+6ba57a5163600da3915ff0e8a0867571 *core/php/AbeilleZigbeeConst.php
 fae97a01f83e8d3d32620d318f4ee744 *core/python/AbeilleEzspAsh.py
 6d5dafac6786b9dd488b32f454c4b584 *core/python/AbeilleEzspCmds.py
 a59fd32a3db93ff16afeb3152f7b26d0 *core/python/AbeilleEzspD.py
@@ -1456,7 +1464,7 @@ f5fc03f691f2d1fd87932a9e2f119ff2 *desktop/php/Abeille-Groups.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 30a5951b65bb1959054beff6ba9ea77d *desktop/php/Abeille-TopButtons.php
 fbf9ffebb297961982eb2821b5238822 *desktop/php/Abeille.php
-b06e311f263f984d2f2aa570c068c17d *desktop/php/AbeilleEqAssist.php
+43af918e14713ef3f665f70221d7006d *desktop/php/AbeilleEqAssist.php
 4516d84ab76c42d1132cebc1ebe22dbe *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
 25c62538c9d1dff6a31ae1b9cbb0e2a3 *desktop/php/AbeilleMaintenance-Logs.php
@@ -1501,7 +1509,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/private_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/tuya_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-3d80c02884b13f78b583aa48098ab278 *docs/fr_FR/Changelog.md
+259f536423475b5a5699a93f3f3461e6 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1510,12 +1518,12 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-fe4cc13855092772f0f1058903b1234f *plugin_info/Abeille.version
+854d08e48c4cfd4b60de2ac670a8ecd8 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6d80d3934e14cf09d026bdb3c1c87df9 *plugin_info/configuration.php
-1bf3ac548f39164a6b1921c1d0602c7e *plugin_info/info.json
-d9450adc9b9a850b8ba8c3919c16e482 *plugin_info/install.php
+b437a8e790653ec91b4526773c08c578 *plugin_info/info.json
+a91c4a676a706ec890893d097cef0130 *plugin_info/install.php
 fa66c2e280e095a90334aa2c690f9158 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
 d41d8cd98f00b204e9800998ecf8427e *resources/COM
@@ -1648,6 +1656,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/Toggle
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/ToggleEp06.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/ToggleEp07.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/ToggleEp08.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/Up-Down.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/Var-Duration.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/Var-ExpiryTime.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/core/config/commands/Var-RampUpDown.json

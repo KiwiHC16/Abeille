@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Amélioration: Détecteur de monoxyde de carbone Heiman HS-720ES (2793).
+
 ## 260731-BETA-1
 
 - Amélioration: Suppression cmde obsolete 'Up-Down' => 'inf_zbCmdC-0008-MoveToLevel'.

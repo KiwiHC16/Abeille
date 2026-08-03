@@ -3,9 +3,14 @@
         "manufacturer": "Heiman",
         "model": "HS-720ES",
         "type": "Heiman smart CO sensor",
+        "alternateIds": {
+            "TS0601__TZE200_hr0tdd47": {},
+            "TS0601__TZE200_rjxqso4a": {},
+            "TS0601__TZE284_rjxqso4a": {}
+        },
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "security": "1"
         },
         "configuration": {
             "icon": "Heiman-COSensor2",
@@ -13,6 +18,9 @@
             "batteryType": "2x1.5V AA"
         },
         "commands": {
+            "Tuya Init": {
+                "use": "act_tuyaConfigureMagicPacket"
+            },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
@@ -29,9 +37,9 @@
             "Zone Status": {
                 "use": "inf_zbAttr-0500-ZoneStatus"
             },
-            "Door Status": {
+            "Alarm Status": {
                 "use": "inf_zbAttr-0500-ZoneStatus-Alarm1",
-                "template": "door",
+                "template": "alert",
                 "invertBinary": 1,
                 "isVisible": "1"
             },
@@ -46,7 +54,21 @@
             },
             "SetReporting 0500-0002": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0500&attrId=0002&attrType=19",
+                "params": "clustId=0500&attrId=0002&attrType=19&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "CO concentration": {
+                "use": "inf_zbAttr-040C-MeasuredValue",
+                "isVisible": "1"
+            },
+            "SetReporting 040C-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=040C&attrId=0000&attrType=39&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 040C-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=040C",
                 "execAtCreation": "yes"
             }
         }

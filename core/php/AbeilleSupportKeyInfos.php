@@ -84,19 +84,29 @@
         logIt("{\n");
         if ($result = mysqli_query($link, $sql)) {
             while ($row = $result->fetch_assoc()) {
-                if (isset($row['id'])) {
-                    $id = $row['id'];
-                    unset($row['id']);
-                    logIt('    "'.$id.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
-                } else if (isset($row['key'])) {
-                    $key = $row['key'];
-                    unset($row['key']);
+                // Cleanup for readability: removing backslashes if any
+                // TO BE REVISITED: This is still not working => Ex: "configuration":"{\"topic\":\"ZiGate-Time\"}"
+                // Seems to be due to encoding something which is already JSON encoded (ex: configuration)
+                $row2 = [];
+                foreach ($row as $key => $val) {
+// logIt("ZOB key=$key, valType=".gettype($val).", val=$val\n");
+                    $row2[$key] = ($val !== null) ? stripslashes($val) : "";
+// if ($key == "configuration") logIt("Config=".$row2[$key]."\n");
+                }
+
+                if (isset($row2['id'])) {
+                    $id = $row2['id'];
+                    unset($row2['id']);
+                    logIt('    "'.$id.'": '.json_encode($row2, JSON_UNESCAPED_SLASHES).",\n");
+                } else if (isset($row2['key'])) {
+                    $key = $row2['key'];
+                    unset($row2['key']);
                     if (($table == 'config') && ($key == 'api'))
                         logIt('    "'.$key."\": FILTERED,\n");
                     else
-                        logIt('    "'.$key.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
+                        logIt('    "'.$key.'": '.json_encode($row2, JSON_UNESCAPED_SLASHES).",\n");
                 } else {
-                    logIt('    "'.$i.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
+                    logIt('    "'.$i.'": '.json_encode($row2, JSON_UNESCAPED_SLASHES).",\n");
                     $i++;
                 }
             }

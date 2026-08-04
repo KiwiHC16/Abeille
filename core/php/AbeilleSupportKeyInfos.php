@@ -83,36 +83,59 @@
         $i = 0;
         logIt("{\n");
         if ($result = mysqli_query($link, $sql)) {
+            $first = true;
             while ($row = $result->fetch_assoc()) {
-                // Cleanup for readability: removing backslashes if any
-                // TO BE REVISITED: This is still not working => Ex: "configuration":"{\"topic\":\"ZiGate-Time\"}"
-                // Seems to be due to encoding something which is already JSON encoded (ex: configuration)
-                $row2 = [];
-                foreach ($row as $key => $val) {
-// logIt("ZOB key=$key, valType=".gettype($val).", val=$val\n");
-                    $row2[$key] = ($val !== null) ? stripslashes($val) : "";
-// if ($key == "configuration") logIt("Config=".$row2[$key]."\n");
-                }
+                if ($first)
+                    $first = false;
+                else
+                    logIt(",\n");
 
-                if (isset($row2['id'])) {
-                    $id = $row2['id'];
-                    unset($row2['id']);
-                    logIt('    "'.$id.'": '.json_encode($row2, JSON_UNESCAPED_SLASHES).",\n");
-                } else if (isset($row2['key'])) {
-                    $key = $row2['key'];
-                    unset($row2['key']);
-                    if (($table == 'config') && ($key == 'api'))
-                        logIt('    "'.$key."\": FILTERED,\n");
-                    else
-                        logIt('    "'.$key.'": '.json_encode($row2, JSON_UNESCAPED_SLASHES).",\n");
+                if ($table == "cmd") {
+                    logIt('    "'.$row['logicalId'].'":');
+                } else if (isset($row['id'])) {
+                    // $id = $row['id'];
+                    // unset($row['id']);
+                    logIt('    "'.$row['id'].'":');
+                } else if (isset($row['key'])) {
+                    $key = $row['key'];
+                    unset($row['key']);
+                    if (($table == 'config') && ($key == 'api')) {
+                        logIt("    \"$key\": \"FILTERED\"");
+                        continue;
+                    }
+                    logIt('    "'.$key.'":');
                 } else {
-                    logIt('    "'.$i.'": '.json_encode($row2, JSON_UNESCAPED_SLASHES).",\n");
+                    logIt('    "'.$i.'":');
                     $i++;
                 }
+
+                logIt(" { ");
+                $first2 = true;
+                foreach ($row as $key => $val) {
+                    if ($first2)
+                        $first2 = false;
+                    else
+                        logIt(", ");
+
+                    if ($val === null)
+                        logIt("\"$key\": \"\"");
+                    else {
+                        // Cleanup for readability: removing backslashes if any
+                        // Ex: "configuration":"{\"topic\":\"ZiGate-Time\"}"
+                        // Seems to be due to encoding something which is already JSON encoded.
+
+                        if (substr($val, 0, 1) == "{") {
+                            $decoded = json_decode($val);
+                            logIt("\"$key\": ".json_encode($decoded, JSON_UNESCAPED_SLASHES));
+                        } else
+                            logIt("\"$key\": \"$val\"");
+                    }
+                }
+                logIt(" }");
             }
             mysqli_free_result($result);
         }
-        logIt("}\n\n");
+        logIt("\n}\n\n");
     }
 
     // Display gateways informations

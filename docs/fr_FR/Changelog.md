@@ -2,6 +2,7 @@
 
 - Amélioration: Détecteur de monoxyde de carbone Heiman HS-720ES (2793).
 - Correction: Interne ParserD: Cmds 00 & 04 (move to level) cluster 0008 retourne 'level' au lieu de 1.
+- Amélioration: Formattage infos clefs revu pour compatibilité JSON et lisibilité.
 
 ## 260731-BETA-1
 

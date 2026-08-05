@@ -3,8 +3,8 @@
      - list of EP
      - list of clusters
      - list of attributes
-     URL of this page should contain 'id' of EQ
-     -->
+    URL of this page should contain 'id' of EQ
+  -->
 
 <?php
     require_once __DIR__.'/../../core/config/Abeille.config.php';
@@ -39,8 +39,8 @@
     list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-    $jsonName = $eqModel ? $eqModel['modelName'] : '';
-    $jsonLocation = $eqModel ? $eqModel['modelSource'] : 'Abeille';
+    $modelName = $eqModel ? $eqModel['modelName'] : '';
+    $modelSource = $eqModel ? $eqModel['modelSource'] : 'Abeille';
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
     $abQueues = $GLOBALS['abQueues'];
@@ -48,8 +48,8 @@
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS
-    echo '<script>var js_jsonName = "'.$jsonName.'";</script>'; // PHP to JS
-    echo '<script>var js_jsonLocation = "'.$jsonLocation.'";</script>'; // PHP to JS
+    echo '<script>var js_jsonName = "'.$modelName.'";</script>'; // PHP to JS
+    echo '<script>var js_jsonLocation = "'.$modelSource.'";</script>'; // PHP to JS
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
 
@@ -190,15 +190,15 @@
                     <label class="col-lg-2 control-label" for="fname">Nom de fichier:</label>
                     <div class="col-lg-10">
                         <?php
-                            // if ($jsonName == '')
+                            // if ($modelName == '')
                             //     echo '<input id="idJsonName" type="text" value="-- Non défini --">';
-                            // else if (!file_exists(__DIR__.'/../../core/config/devices/'.$jsonName.'/'.$jsonName.'.json'))
-                            //     echo '<input id="idJsonName" type="text" value="'.$jsonName.' (n\'existe pas)">';
+                            // else if (!file_exists(__DIR__.'/../../core/config/devices/'.$modelName.'/'.$modelName.'.json'))
+                            //     echo '<input id="idJsonName" type="text" value="'.$modelName.' (n\'existe pas)">';
                             // else
-                                echo '<input id="idJsonName" type="text" value="'.$jsonName.'">';
+                                echo '<input id="idJsonName" type="text" value="'.$modelName.'">';
                         ?>
                         <a class="btn btn-default" title="(Re)lire" onclick="readDeviceModel()">(Re)lire</a>
-                        <a class="btn btn-alert" title="Créer/mettre à jour le modèle JSON" onclick="writeModel()">Ecrire modèle</a>
+                        <a class="btn btn-alert" title="Créer/mettre à jour le modèle JSON" onclick="writeDeviceModel()">Ecrire modèle</a>
                         <a class="btn btn-default" title="Télécharger le modèle JSON" onclick="downloadConfig()"><i class="fas fa-file-download"></i> Télécharger modèle</a>
                         <a class="btn btn-default" title="Importer un 'discovery.json'" onclick="importDiscovery()"><i class="fas fa-file-upload"></i> Importer 'discovery'</a>
                     </div>
@@ -311,11 +311,37 @@
 <!-- </div> -->
 
 <script>
+    /* Informations from model
+       Reminder:
+        var eq = new Object(); // Equipement details
+        eq.zgNb = js_zgNb; // Zigate number, number
+        eq.id = js_eqId; // Jeedom ID, number
+        eq.addr = js_eqAddr; // Short addr, hex string
+        eq.epCount = 0; // Number of EP, number
+        eq.endPoints = new Array(); // Array of objects
+            // ep = eq.endPoints[epIdx] = new Object(); // End Point object
+            // ep.id = 0; // EP id/number
+            // ep.servClustCount = 0; // IN clusters count
+            // ep.servClustList = new Array();
+            // ep.cliClustCount = 0; // OUT clusters count
+            // ep.cliClustList = new Array();
+            //     clust = new Object();
+            //     clust.id = "0000"; // Cluster id, hex string
+            //     clust.attrList = new Array(); // Attributs for this cluster
+            //         a = new Object(); // Attribut object
+            //         a.type = "00"; // Attribut type, hex string => ??? Data type ? What for ???
+            //         a.id = "0000"; // Attribut id, hex string
+            // TODO: Missing supported zigbee commands list
+            //       Currently assuming all commands from the standard are supported
+        eq.commands = new Object(); // Commands list
+    */
     var eq = new Object(); // Equipement details (model)
     eq.zgNb = js_zgNb; // Zigate number, number
     eq.jId = js_eqId; // Jeedom ID, number
     eq.addr = js_eqAddr; // Short addr, hex string
     eq.ieee = js_eqIeee; // Short addr, hex string
+
+    /* Informations from Zigbee interrogation */
     zigbee = new Object(); // Zigbee interrogation datas
         // zigbee.epCount = 0; // Number of EP, number
         // zigbee.endPoints = new Array(); // Array of objects
@@ -336,31 +362,7 @@
     if (js_jsonName != '')
         readDeviceModel();
 
-    /* Reminder
-    var eq = new Object(); // Equipement details
-    eq.zgNb = js_zgNb; // Zigate number, number
-    eq.id = js_eqId; // Jeedom ID, number
-    eq.addr = js_eqAddr; // Short addr, hex string
-    eq.epCount = 0; // Number of EP, number
-    eq.endPoints = new Array(); // Array of objects
-        // ep = eq.endPoints[epIdx] = new Object(); // End Point object
-        // ep.id = 0; // EP id/number
-        // ep.servClustCount = 0; // IN clusters count
-        // ep.servClustList = new Array();
-        // ep.cliClustCount = 0; // OUT clusters count
-        // ep.cliClustList = new Array();
-        //     clust = new Object();
-        //     clust.id = "0000"; // Cluster id, hex string
-        //     clust.attrList = new Array(); // Attributs for this cluster
-        //         a = new Object(); // Attribut object
-        //         a.type = "00"; // Attribut type, hex string => ??? Data type ? What for ???
-        //         a.id = "0000"; // Attribut id, hex string
-        // TODO: Missing supported zigbee commands list
-        //       Currently assuming all commands from the standard are supported
-    eq.commands = new Object(); // Commands list
-    */
-
-    /* Read JSON.
+    /* Read JSON device model.
        Called from JSON read/reload button. */
     function readDeviceModel() {
 
@@ -1261,10 +1263,10 @@
         return false;
     }
 
-    /* Update/create JSON file.
+    /* Update/create JSON device model file.
        Destination is always "devices_local" */
-    function writeModel() {
-        console.log("writeModel()");
+    function writeDeviceModel() {
+        console.log("writeDeviceModel()");
 
         /* Check if mandatory infos are there */
         if (checkMissingInfos() == false)

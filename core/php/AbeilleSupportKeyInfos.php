@@ -111,7 +111,19 @@
 
                 logIt(" { ");
                 $first2 = true;
+                $nextLine = "";
                 foreach ($row as $key => $val) {
+                    /* Note: Specific display for 'eqLogic' table with 'configuration' on the next line. */
+                    if (($table == 'eqLogic') && ($key == 'configuration')) {
+                        if ($nextLine == "")
+                            $nextLine = "           ";
+                        else
+                            $nextLine .= ", ";
+                        $decoded = json_decode($val);
+                        $nextLine .= "\"$key\": ".json_encode($decoded, JSON_UNESCAPED_SLASHES);
+                        continue;
+                    }
+
                     if ($first2)
                         $first2 = false;
                     else
@@ -131,6 +143,8 @@
                             logIt("\"$key\": \"$val\"");
                     }
                 }
+                if ($nextLine != "")
+                    logIt(",\n$nextLine");
                 logIt(" }");
             }
             mysqli_free_result($result);

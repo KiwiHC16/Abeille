@@ -53,7 +53,14 @@ Handling Tuya private cluster is done thru "private" structure
                             info "0006-01-0000"
                         },
                         "12": {
-                            "function": "rcvThermostat-Mode"
+                            "function": "rcvValueEnum",
+                            "enum": {
+                                "00": "auto",
+                                "01": "manual",
+                                "02": "off",
+                                "03": "holliday"
+                            },
+                            "info": "01-mode"
                         }
                     }
                 }
@@ -71,7 +78,6 @@ Possible functions:
     rcvValueMult => OBSOLETE !! Use 'rcvValue' with 'mult' declared.
     rcvValueEnum => Convert value to string.
     rcvValue0Is1 => If 0, 1 (true) transmitted to Jeedom, else 0 (false).
-    rcvThermostat-Mode => TO REMOVE. Identical to rcvValueEnum with modes as strings ?
 
 Zosung protocol
 ===============

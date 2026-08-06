@@ -1187,6 +1187,8 @@
                 'Remoteswitch' => '2026-07-14 14:00:00',
                 'TRADFRISHORTCUTButton' => '2026-07-14 14:00:00',
                 'TS0601__TZE200_81isopgh' => '2026-08-06 14:00:00', // 'rcvValve-Status' => 'rcvValueEnum'
+                'TS0601__TZE200_hue3yfsn' => '2026-08-06 14:00:00', // 'rcvThermostat-Mode' => 'rcvValueEnum'
+                'TS0601__TZE200_p3dbf6qs' => '2026-08-06 14:00:00', // 'rcvThermostat-Mode' => 'rcvValueEnum'
             );
 
             // 'eqLogic' + 'cmd' DB updates

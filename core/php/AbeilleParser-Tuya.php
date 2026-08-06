@@ -146,26 +146,27 @@
         //     "23" => "rcvBattery-Percent"
         // );
         switch ($func) {
-        case "rcvThermostat-Mode": // Mode (Checked on TV02)
-            // 00=Auto, 01=Manual, 03=Holliday
-            $mode = $dp['data'];
-            if ($mode == "00")
-                $mode = "auto";
-            else if ($mode == "01")
-                $mode = "manual";
-            else if ($mode == "02")
-                $mode = "off";
-            else if ($mode == "03")
-                $mode = "holliday";
-            else
-                $mode = "?";
-            $logMsg = "  ".$dp['m']." => Mode = ".$dp['data']."/".$mode;
-            parserLog2("debug", $addr, $logMsg, "8002");
-            $attributeN = array(
-                'name' => $ep.'-mode',
-                'value' => $mode,
-            );
-            break;
+        // OBSOLETE => T38 06/aug/26, Replaced by rcvValueEnum + enum
+        // case "rcvThermostat-Mode": // Mode (Checked on TV02)
+        //     // 00=Auto, 01=Manual, 03=Holliday
+        //     $mode = $dp['data'];
+        //     if ($mode == "00")
+        //         $mode = "auto";
+        //     else if ($mode == "01")
+        //         $mode = "manual";
+        //     else if ($mode == "02")
+        //         $mode = "off";
+        //     else if ($mode == "03")
+        //         $mode = "holliday";
+        //     else
+        //         $mode = "?";
+        //     $logMsg = "  ".$dp['m']." => Mode = ".$dp['data']."/".$mode;
+        //     parserLog2("debug", $addr, $logMsg, "8002");
+        //     $attributeN = array(
+        //         'name' => $ep.'-mode',
+        //         'value' => $mode,
+        //     );
+        //     break;
 
         // Solenoid valve Saswell SAS980SWT
         // OBSOLETE => T38 06/aug/26, Replaced by rcvValueEnum + enum
@@ -238,7 +239,7 @@
                     'value' => $valOut,
                 );
             } else {
-                parserLog2("error", $addr, "  '".$func."' for dpId=$dpId: Unknown enum");
+                parserLog2("error", $addr, "  'rcvValueEnum' for dpId=$dpId: Unknown enum $val");
                 $attributeN = false;
             }
             break;

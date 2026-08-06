@@ -5,6 +5,7 @@
 - Amélioration: Formattage infos clefs revu pour compatibilité JSON et lisibilité.
 - Amélioration: Interne assistant découverte.
 - Amélioration: Electrovanne Saswell SAS980SWT (2388): 'rcvValve-Status' => 'rcvValueEnum'.
+- Amélioration: Suppression cmde Tuya obsolete: 'rcvThermostat-Mode' => 'rcvValueEnum'
 
 ## 260731-BETA-1
 

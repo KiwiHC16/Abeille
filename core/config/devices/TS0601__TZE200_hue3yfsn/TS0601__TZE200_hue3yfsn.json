@@ -87,7 +87,14 @@
             "EF00": {
                 "type": "tuya",
                 "02": {
-                    "function": "rcvThermostat-Mode"
+                    "function": "rcvValueEnum",
+                    "enum": {
+                        "00": "auto",
+                        "01": "manual",
+                        "02": "off",
+                        "03": "holliday"
+                    },
+                    "info": "01-mode"
                 },
                 "08": {
                     "function": "rcvValue",

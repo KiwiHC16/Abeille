@@ -91,12 +91,6 @@ Tuya DP type
                     },
                     "comment": "00=single, 01=double, 02=long",
                     "info": "inf_click1"
-                },
-                "0C": {
-                    "function": "rcvValve-Status"
-                },
-                "12": {
-                    "function": "rcvThermostat-Mode"
                 }
             }
         }

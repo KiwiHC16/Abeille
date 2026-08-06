@@ -168,15 +168,16 @@
             break;
 
         // Solenoid valve Saswell SAS980SWT
-        case "rcvValve-Status":
-            $val = hexdec($dp['data']) % 2;
-            $st = ($val == 1) ? "ON" : "OFF";
-            parserLog2("debug", $addr, "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
-            $attributeN = array(
-                'name' => '0006-'.$ep.'-0000',
-                'value' => $val,
-            );
-            break;
+        // OBSOLETE => T38 06/aug/26, Replaced by rcvValueEnum + enum
+        // case "rcvValve-Status":
+        //     $val = hexdec($dp['data']) % 2;
+        //     $st = ($val == 1) ? "ON" : "OFF";
+        //     parserLog2("debug", $addr, "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
+        //     $attributeN = array(
+        //         'name' => '0006-'.$ep.'-0000',
+        //         'value' => $val,
+        //     );
+        //     break;
 
         // Generic functions
 
@@ -226,21 +227,20 @@
                 'value' => $val,
             );
             break;
-        case "rcvValueEnum": // Converting value thru enum
+        case "rcvValueEnum": // DP type 0x4: Converting value thru enum
             $val = $dp['data'];
             // parserLog2("debug", $addr, "val=$val => enum=".json_encode($enum));
-            if (isset($enum[$val]))
+            if (isset($enum[$val])) {
                 $valOut = $enum[$val];
-            else {
+                $logMsg = "  ".$dp['m']." => 'rcvValueEnum' => '".$info."'=".$valOut;
+                $attributeN = array(
+                    'name' => $info,
+                    'value' => $valOut,
+                );
+            } else {
                 parserLog2("error", $addr, "  '".$func."' for dpId=$dpId: Unknown enum");
                 $attributeN = false;
-                break;
             }
-            $logMsg = "  ".$dp['m']." => 'rcvValueEnum' => '".$info."'=".$valOut;
-            $attributeN = array(
-                'name' => $info,
-                'value' => $valOut,
-            );
             break;
 
         default:

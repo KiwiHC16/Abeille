@@ -459,10 +459,14 @@
                         }
 
                         if ($func == 'rcvValue') {
-                        }
-                        if ($func == 'rcvValueDiv') { // OBSOLETE
+                        } else if ($func == 'rcvValueDiv') { // OBSOLETE
                             if (!isset($dpVal['div'])) {
                                 $error = newDevError($devModName, "ERROR", "Missing 'div' for DP '$dpId' in private/$pKey");
+                                continue;
+                            }
+                        } else if ($func == 'rcvValueEnum') {
+                            if (!isset($dpVal['enum'])) {
+                                $error = newDevError($devModName, "ERROR", "Missing 'enum' for DP '$dpId' in private/$pKey");
                                 continue;
                             }
                         }

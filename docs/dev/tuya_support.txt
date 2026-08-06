@@ -45,7 +45,12 @@ Handling Tuya private cluster is done thru "private" structure
                             "info": "inf_click1"
                         },
                         "0C": {
-                            "function": "rcvValve-Status"
+                            "function": "rcvValueEnum",
+                            "enum": {
+                                "00": "OFF",
+                                "01": "ON"
+                            },
+                            info "0006-01-0000"
                         },
                         "12": {
                             "function": "rcvThermostat-Mode"
@@ -66,7 +71,6 @@ Possible functions:
     rcvValueMult => OBSOLETE !! Use 'rcvValue' with 'mult' declared.
     rcvValueEnum => Convert value to string.
     rcvValue0Is1 => If 0, 1 (true) transmitted to Jeedom, else 0 (false).
-    rcvValve-Status => TO REMOVE. Identical to rcvValueEnum with "ON" & "OFF" strings ?
     rcvThermostat-Mode => TO REMOVE. Identical to rcvValueEnum with modes as strings ?
 
 Zosung protocol

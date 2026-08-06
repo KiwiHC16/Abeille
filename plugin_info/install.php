@@ -1158,7 +1158,7 @@
          * - Some eq updates forced from changed model.
          * - AbeilleCmd + Parser => AbeilleCmdD + ParserD
          */
-        if (intval($dbVersion) < 20260714) {
+        if (intval($dbVersion) < 20260806) {
             // 'config' DB updates
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 renameConfigKey("ab::zgEnabled{$gtwId}", "ab::gtwEnabled{$gtwId}");
@@ -1186,6 +1186,7 @@
                 '09BA_IKEAofSweden' => '2026-05-25 14:00:00',
                 'Remoteswitch' => '2026-07-14 14:00:00',
                 'TRADFRISHORTCUTButton' => '2026-07-14 14:00:00',
+                'TS0601__TZE200_81isopgh' => '2026-08-06 14:00:00', // 'rcvValve-Status' => 'rcvValueEnum'
             );
 
             // 'eqLogic' + 'cmd' DB updates
@@ -1266,7 +1267,7 @@
             $obsolete = ['AbeilleParser.log', 'AbeilleCmd.log'];
             removeLogs($obsolete);
 
-            config::save('ab::dbVersion', '20260714', 'Abeille');
+            config::save('ab::dbVersion', '20260806', 'Abeille');
         }
     } // End updateConfigDB()
 

@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Amélioration: Interne MainD: 'createRemote' sorti de 'message()'.
+
 ## 260810-BETA-1
 
 - Amélioration: Détecteur de monoxyde de carbone Heiman HS-720ES (2793).

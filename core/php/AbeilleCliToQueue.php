@@ -94,7 +94,7 @@
 
         if (isset($_GET['msg'])) {
             $msgString = $_GET['msg'];
-            if (isset($dbgTcharp38)) logDebug("CliToQueue: msg=".$msgString);
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: msg='$msgString'");
             $msgArr = explode('_', $msgString);
             $m = array();
             foreach ($msgArr as $idx => $value) {

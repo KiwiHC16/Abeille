@@ -2,12 +2,6 @@
      Displays main infos + specific params + commands. -->
 
 <?php
-    $jTmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
-
-    // Passing some infos to javascript
-    echo '<script>';
-    echo 'let js_jTmpDir = "'.$jTmpDir.'";';
-    echo '</script>';
 
     /* Returns cmd ID identified by its Jeedom logical ID name */
     function getCmdIdByLogicId($eqId, $cmdLogicId) {

@@ -461,21 +461,35 @@ $("#bt_graph").on("click", function () {
 /* Add a virtual remote control to given zigate number */
 function createRemote(zgId) {
     console.log("createRemote(" + zgId + ")");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            xmlhttpMQTTSendTimerResult = this.responseText;
-        }
-    };
 
-    xmlhttpMQTTSendTimer.open(
+    // var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+    // xmlhttpMQTTSendTimer.onreadystatechange = function () {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         xmlhttpMQTTSendTimerResult = this.responseText;
+    //     }
+    // };
+    // xmlhttpMQTTSendTimer.open(
+    //     "GET",
+    //     "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille" +
+    //         zgId +
+    //         "_zigate_createRemote",
+    //     false,
+    // ); // False pour bloquer sur la recuperation du fichier
+    // xmlhttpMQTTSendTimer.send();
+
+    console.log("queue=" + js_queueXToMain);
+    var xhr = new XMLHttpRequest();
+    xhr.open(
         "GET",
-        "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille" +
-            zgId +
-            "_zigate_createRemote",
-        false,
-    ); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
+        "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
+            js_queueXToMain +
+            "&msg=type:createRemote_net:Abeille" +
+            zgId,
+        true,
+    );
+    xhr.onload = function () {};
+    xhr.send();
+
     // location.reload(true);
     $("#div_alert").showAlert({
         message: "{{Une nouvelle Telecommande est en création.}}",

@@ -364,70 +364,38 @@
         $value = $payload;
         $type = 'topic';         // type = topic car pas json
 
-        // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
-        // Tcharp38: To be removed. This cleanup is now done directly in parser on modelIdentifier receive
-        // if ($cmdId == "0000-01-0005") {
-        //     if ($value == "lumi.sens") {
-        //         $value = "lumi.sensor_ht";
-        //         message::add("Abeille", "lumi.sensor_ht case tracking: ".json_encode($message), '');
-        //     }
-        //     if ($value == "lumi.sensor_swit") $value = "lumi.sensor_switch.aq3";
-        //     if ($value == "TRADFRI Signal Repeater") $value = "TRADFRI signal repeater";
-        // }
-
         /* Request to create virtual remote control */
-        if ($cmdId == "createRemote") {
-            logMessage('debug', 'message(): createRemote');
+        // if ($cmdId == "createRemote") {
+        //     logMessage('debug', 'message(): createRemote');
 
-            /* Let's compute RC number */
-            $eqLogics = eqLogic::byType('Abeille');
-            $max = 1;
-            foreach ($eqLogics as $key => $eqLogic) {
-                list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
-                if ($net2 != $net)
-                    continue; // Wrong network
-                $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-                $modelName2 = $eqModel ? $eqModel['modelName'] : '';
-                if ($modelName2 != "remotecontrol")
-                    continue; // Not a remote
-                if ($addr2 == '')
-                    continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
-                $addr2 = substr($addr2, 2); // Removing 'rc'
-                if (hexdec($addr2) >= $max)
-                    $max = hexdec($addr2) + 1;
-            }
-
-            /* Remote control short addr = 'rcXX' */
-            $rcAddr = sprintf("rc%02X", $max);
-            $dev = array(
-                'net' => $dest,
-                'addr' => $rcAddr,
-                'modelSource' => 'Abeille',
-                'modelName' => 'remotecontrol',
-                'modelSig' => 'remotecontrol',
-            );
-            Abeille::createDevice("update", $dev);
-
-            return;
-        }
-
-        // /* Request to update device from JSON. Useful to avoid reinclusion */
-        // // No longer be used
-        // if ($cmdId == "updateFromJson") {
-        //     logMessage('debug', 'message(): updateFromJson, '.$net.'/'.$addr);
-
-        //     $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-        //     if (!is_object($eqLogic)) {
-        //         logMessage('debug', '  ERROR: Unknown device');
-        //         return;
+        //     /* Let's compute RC number */
+        //     $eqLogics = eqLogic::byType('Abeille');
+        //     $max = 1;
+        //     foreach ($eqLogics as $key => $eqLogic) {
+        //         list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
+        //         if ($net2 != $net)
+        //             continue; // Wrong network
+        //         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+        //         $modelName2 = $eqModel ? $eqModel['modelName'] : '';
+        //         if ($modelName2 != "remotecontrol")
+        //             continue; // Not a remote
+        //         if ($addr2 == '')
+        //             continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
+        //         $addr2 = substr($addr2, 2); // Removing 'rc'
+        //         if (hexdec($addr2) >= $max)
+        //             $max = hexdec($addr2) + 1;
         //     }
 
-        //     // createDevice("update", $dest, $addr);
+        //     /* Remote control short addr = 'rcXX' */
+        //     $rcAddr = sprintf("rc%02X", $max);
         //     $dev = array(
         //         'net' => $dest,
-        //         'addr' => $addr,
+        //         'addr' => $rcAddr,
+        //         'modelSource' => 'Abeille',
+        //         'modelName' => 'remotecontrol',
+        //         'modelSig' => 'remotecontrol',
         //     );
-        //     createDevice("update", $dev);
+        //     Abeille::createDevice("update", $dev);
 
         //     return;
         // }
@@ -479,7 +447,7 @@
                         $modelPath = isset($modelInfos['modelPath']) ? $modelInfos['modelPath'] : '';
                         $modelSig = $modelInfos['modelSig'];
                         $eqHName = $eqLogic->getHumanName();
-                        message::add("Abeille", $eqHName.": Mise-à-jour à partir du modèle '{$modelName}'", '');
+                        message::add("Abeille", $eqHName.": Mise-à-jour à partir du modèle '$modelName'", '');
                     }
                 }
             }
@@ -491,9 +459,9 @@
 
             // Was using a deleted local model ?
             if ($modelSource == "local") {
-                $fullPath = __DIR__."/../config/devices_local/{$modelName}/{$modelName}.json";
+                $fullPath = __DIR__."/../config/devices_local/$modelName/$modelName.json";
                 if (!file_exists($fullPath)) {
-                    $fullPath = __DIR__."/../config/devices/{$modelName}/{$modelName}.json";
+                    $fullPath = __DIR__."/../config/devices/$modelName/$modelName.json";
                     if (file_exists($fullPath)) {
                         logMessage('debug', "Local model not found => using official one instead");
                         $modelSource = "Abeille";
@@ -577,6 +545,7 @@
 
     /* Deal with messages coming from parser or cmd processes.
        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */
+    // Note: This function should be renamed since there is a single input queue from multiple sources (not only from parser).
     function msgFromParser($msg) {
         global $abQueues;
 
@@ -588,6 +557,42 @@
             $ep = $msg['ep'];
         else
             $ep = '';
+
+        /* Request to create virtual remote control */
+        if ($msg['type'] == "createRemote") {
+            logMessage('debug', "  msgFromParser(): createRemote");
+
+            /* Let's compute RC number */
+            $eqLogics = eqLogic::byType('Abeille');
+            $max = 1;
+            foreach ($eqLogics as $key => $eqLogic) {
+                list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
+                if ($net2 != $net)
+                    continue; // Wrong network
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+                $modelName2 = $eqModel ? $eqModel['modelName'] : '';
+                if ($modelName2 != "remotecontrol")
+                    continue; // Not a remote
+                if ($addr2 == '')
+                    continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
+                $addr2 = substr($addr2, 2); // Removing 'rc'
+                if (hexdec($addr2) >= $max)
+                    $max = hexdec($addr2) + 1;
+            }
+
+            /* Remote control short addr = 'rcXX' */
+            $rcAddr = sprintf("rc%02X", $max);
+            $dev = array(
+                'net' => $net,
+                'addr' => $rcAddr,
+                'modelSource' => 'Abeille',
+                'modelName' => 'remotecontrol',
+                'modelSig' => 'remotecontrol',
+            );
+            Abeille::createDevice("update", $dev);
+
+            return;
+        } // End 'createRemote'
 
         /* Log level has changed */
         if ($msg['type'] == "logLevelChanged") {

@@ -324,13 +324,13 @@
         // }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // demande de creation de ruche au cas ou elle n'est pas deja crée....
-        // La ruche est aussi un objet Abeille
-        if ($topic == "CmdRuche/0000/CreateRuche") {
-            // logMessage('debug', "Topic: ->".$topic."<- Value ->".$payload."<-");
-            createRuche($payload);
-            return;
-        }
+        // // demande de creation de ruche au cas ou elle n'est pas deja crée....
+        // // La ruche est aussi un objet Abeille
+        // if ($topic == "CmdRuche/0000/CreateRuche") {
+        //     // logMessage('debug', "Topic: ->".$topic."<- Value ->".$payload."<-");
+        //     createRuche($payload);
+        //     return;
+        // }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#

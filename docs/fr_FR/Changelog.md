@@ -1,6 +1,7 @@
 # ChangeLog
 
 - Amélioration: Interne MainD: 'createRemote' sorti de 'message()'.
+- Amélioration: Interne MainD: 'updateFromModel'/'resetFromModel' sorti de 'message()'.
 
 ## 260810-BETA-1
 

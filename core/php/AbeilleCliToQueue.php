@@ -201,13 +201,19 @@
 
         if ($action == "update") {
             $msg = array(
-                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/updateFromModel",
-                'payload' => '',
+                // 'topic' => "CmdCreate".$eqNet."/".$eqAddr."/updateFromModel",
+                // 'payload' => '',
+                'type' => "updateFromModel",
+                'net' => $eqNet,
+                'addr' => $eqAddr
             );
         } else { // $action == "reinit"
             $msg = array(
-                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromModel",
-                'payload' => '',
+                // 'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromModel",
+                // 'payload' => '',
+                'type' => "resetFromModel",
+                'net' => $eqNet,
+                'addr' => $eqAddr
             );
         }
         $queue = msg_get_queue($abQueues['xToAbeille']['id']);
@@ -218,58 +224,6 @@
             return; // ERROR
         }
         sleep(2); // To let Abeille.class time to update DB
-
-        // Inform parser that EQ config has changed => done at end of createDevice()
-        // $queue = msg_get_queue($abQueues['xToParser']['id']);
-        // $msg = array(
-        //     'type' => "eqUpdated",
-        //     'id' => $eqId,
-        // );
-        // if (isset($dbgTcharp38)) logDebug("'eqUpdated' msg to Parser: ".json_encode($msg));
-        // msg_send($queue, 1, json_encode($msg), false, false);
-
-        // $eqConfig = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
-        // if ($eqConfig === false) {
-        //     if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: No device config");
-        //     return; // ERROR
-        // }
-        // $mainEP = $eqLogic->getConfiguration('mainEP', '');
-        // $ieee = $eqLogic->getConfiguration('IEEE', '');
-        // $zigate = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-        // $zgIeee = $zigate->getConfiguration('IEEE', '');
-
-        // $cmds = $eqConfig['commands'];
-        // if (isset($dbgTcharp38)) logDebug("CliToQueue: cmds=".json_encode($cmds));
-        // foreach ($cmds as $cmdJName => $cmd) {
-        //     if (!isset($cmd['configuration']))
-        //         continue;
-        //     $c = $cmd['configuration'];
-        //     if (!isset($c['execAtCreation']))
-        //         continue;
-
-        //     $topic = 'Cmd'.$eqNet.'/'.$eqAddr.'/'.$c['topic'];
-        //     $request = $c['request'];
-
-        //     // TODO: #EP# defaulted to first EP but should be
-        //     //       defined in cmd use if different target EP
-        //     $request = str_ireplace('#ep#', $mainEP, $request); // Case insensitive
-
-        //     $request = str_ireplace('#ieee#', $ieee, $request); // Case insensitive
-        //     $request = str_ireplace('#addrIeee#', $ieee, $request); // Case insensitive
-
-        //     $request = str_ireplace('#zigateIeee#', $zgIeee, $request); // Case insensitive
-
-        //     $queue = msg_get_queue($abQueues['xToCmd']['id']);
-        //     $msg = array(
-        //         'topic' => $topic,
-        //         'payload' => $request,
-        //     );
-        //     $msgJson = json_encode($msg);
-        //     if (isset($dbgTcharp38)) logDebug("CliToQueue: msg_send(): ".$msgJson);
-        //     if (msg_send($queue, 1, $msgJson, false, false) == false) {
-        //         if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: msg_send()");
-        //     }
-        // }
 
         // (Re)Configure device
         $queue = msg_get_queue($abQueues['xToCmd']['id']);

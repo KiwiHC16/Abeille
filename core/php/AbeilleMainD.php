@@ -1625,7 +1625,7 @@
     /* Update all infos related to last communication time & LQI of given device.
        This is based on timestamp of last communication received from device itself.
        Note: For performances enhancements, update is done at max every 10sec. Any changes below would be ignored. */
-    function updateTimestamp2($net, $addr, $timestamp, $lqi = null) {
+    function updateTimestamp2($net, $addr, $timestamp, $lqi = null, $leftNetwork = null) {
 
         // $GLOBALS['devices'][$net][$addr] is built at 'mainD' startup
         if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {

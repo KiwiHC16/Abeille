@@ -700,6 +700,7 @@
 
                 $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
                 $eq['zigbee'] = $zigbee;
+                
                 $eq['zbModel'] = isset($zigbee['modelId']) ? $zigbee['modelId'] : '';
                 $eq['zbManuf'] = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
 

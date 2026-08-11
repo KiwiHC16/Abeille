@@ -1106,21 +1106,16 @@
             }
 
             if (isset($eqLogic)) {
-                $eqLogic->setIsEnable(0);
-                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-                $zigbee['status'] = 'left';
-                $zigbee['status_time'] = time();
-                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                updateTimestamp($eqLogic, $msg['time'], $msg['lqi'], true);
 
                 /* Display message only if NOT in include mode */
                 if (checkInclusionStatus($net) !== 1)
                     message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
 
+                $eqLogic->setIsEnable(0);
                 $eqLogic->save();
                 $eqLogic->refresh();
                 logMessage('debug', '  '.$eqLogic->getHumanName().' ('.$eqLogic->getLogicalId().') has left the network => DISABLED');
-
-                updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             } else
                 logMessage('debug', '    WARNING: Device with IEEE '.$ieee.' NOT found in Jeedom');
 
@@ -1205,12 +1200,11 @@
             }
 
             // Updating equipment life status
-    // logMessage('debug', "LA3");
             updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
-    // logMessage('debug', "LA4");
             return;
         } // End 'attributesReportN' or 'readAttributesResponseN'
 
+        // If nothing to report, at least informing device is alive to prevent timeout
         if ($msg['type'] == "deviceAlive") {
             /* $msg reminder
                 'type' => 'deviceAlive',
@@ -1220,13 +1214,6 @@
                 'lqi' => $lqi
             */
             logMessage('debug', "  msgFromParser(): Device '$net/$addr' is ALIVE");
-
-            // $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-            // if (!is_object($eqLogic)) {
-            //     logMessage('debug', "  Unknown device '$net/$addr'");
-            //     return; // Unknown device
-            // }
-            // updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
 
             // Update only if not faster than every 10sec
             updateTimestamp2($net, $addr, $msg['time'], $msg['lqi']);
@@ -1569,19 +1556,19 @@
         return -1;
     }
 
-    /* Update all infos related to last communication time & LQI of given device.
-       This is based on timestamp of last communication received from device itself. */
-    function updateTimestamp($eqLogic, $timestamp, $lqi = null) {
+    /* Update equipment infos related to last communication time & LQI.
+       This is based on timestamp of last communication received from device itself.
+       'lqi' = LQI if known
+       'leftNetwork' = True if device left network */
+    function updateTimestamp($eqLogic, $timestamp, $lqi = null, $leftNetwork = null) {
         $eqLogicId = $eqLogic->getLogicalId();
         $eqId = $eqLogic->getId();
-// logMessage('debug', "LA10");
 
         // logMessage('debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
 
         // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
         $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
 
-// logMessage('debug', "LA10.1, eqLogicalId=$eqLogicalId, eqId=$eqId");
         /* Tcharp38 note:
            The cases hereafter could be removed. Using 'lastCommunication' allows to no longer
            use these 3 specific & redondant commands. To be discussed. */
@@ -1598,14 +1585,12 @@
         else
             $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
 
-// logMessage('debug', "LA10.2");
         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
         if (is_object($cmdLogic))
         //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
         // else
             $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
 
-// logMessage('debug', "LA10.3");
         list($net, $addr) = explode("/", $eqLogicId);
         if ($addr != "0000") { // Not a gateway
             if ($lqi !== null) {
@@ -1616,12 +1601,25 @@
                     $eqLogic->checkAndUpdateCmd($cmdLogic, $lqi);
             }
 
-            // Updating corresponding Zigate alive status too
-            $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
-            $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
-            // Warning: lastCommunication update is not transmitted to client as not an info cmd
+            // Updating corresponding gateway alive status too
+            $gtw = eqLogic::byLogicalId($net.'/0000', 'Abeille');
+            $gtw->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+            // Reminder: lastCommunication update is not transmitted to client as not an info cmd
+
+            // Reminder: zigbee['status'] = 'joined' or 'left'
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if ($leftNetwork === true) {
+                $zigbee['status'] = 'left';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            } else if (!isset($zigbee['status']) || ($zigbee['status'] != 'joined')) {
+                $zigbee['status'] = 'joined';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            }
         }
-// logMessage('debug', "LA11");
     }
 
     /* Update all infos related to last communication time & LQI of given device.
@@ -1629,21 +1627,7 @@
        Note: For performances enhancements, update is done at max every 10sec. Any changes below would be ignored. */
     function updateTimestamp2($net, $addr, $timestamp, $lqi = null) {
 
-        // $GLOBALS['devices'][$net][$addr] now built at startup
-        // if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {
-        //     $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-        //     if (!is_object($eqLogic)) {
-        //         logMessage('debug', "  Unknown device '$net/$addr'");
-        //         return; // Unknown device
-        //     }
-        //     if (!isset($GLOBALS['devices'][$net]))
-        //         $GLOBALS['devices'][$net] = [];
-        //     if (!isset($GLOBALS['devices'][$net][$addr]))
-        //         $GLOBALS['devices'][$net][$addr] = array(
-        //             'eqLogic' => $eqLogic,
-        //             'timestamp' => 0
-        //         );
-        // }
+        // $GLOBALS['devices'][$net][$addr] is built at 'mainD' startup
         if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {
             logMessage('debug', "  updateTimestamp2(): Unknown device '$net/$addr'");
             return; // Unknown device
@@ -1698,10 +1682,24 @@
                     $eqLogic->checkAndUpdateCmd($cmdLogic, $lqi);
             }
 
-            // Updating corresponding Zigate alive status too
-            $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
-            $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
-            // Warning: lastCommunication update is not transmitted to client as not an info cmd
+            // Updating corresponding gateway alive status too
+            $gtw = eqLogic::byLogicalId($net.'/0000', 'Abeille');
+            $gtw->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+            // Reminder: lastCommunication update is not transmitted to client as not an info cmd
+
+            // Reminder: zigbee['status'] = 'joined' or 'left'
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if ($leftNetwork === true) {
+                $zigbee['status'] = 'left';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            } else if (!isset($zigbee['status']) || ($zigbee['status'] != 'joined')) {
+                $zigbee['status'] = 'joined';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            }
         }
     }
 

@@ -2,6 +2,7 @@
 
 - Amélioration: Interne MainD: 'createRemote' sorti de 'message()'.
 - Amélioration: Interne MainD: 'updateFromModel'/'resetFromModel' sorti de 'message()'.
+- Amélioration: Interne MainD: Status zigbee (joined/left) mis-à-jour.
 
 ## 260810-BETA-1
 

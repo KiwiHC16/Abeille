@@ -214,8 +214,17 @@ function refreshEqInfos() {
                     .toUpperCase();
 
                 console.log("maccap=", mc);
-                if ((mc >> 3) & 1) $("#idZbRxOnWhenIdle").show();
-                else $("#idZbRxOnWhenIdle").hide();
+                mcDesc = "";
+                // if ((mc >> 3) & 1) $("#idZbRxOnWhenIdle").show();
+                // else $("#idZbRxOnWhenIdle").hide();
+                if ((mc >> 3) & 1) mcDesc = "RX_Always_ON";
+                if ((mc >> 2) & 1) {
+                    // PowerSource == 1 ?
+                    if (mcDesc != "") mcDesc += " + ";
+                    mcDesc += "MAINS";
+                }
+                if (mcDesc != "")
+                    document.getElementById("idMacCapaDesc").value = mcDesc;
             }
 
             if (typeof curEq.zigbee.manufCode != "undefined")

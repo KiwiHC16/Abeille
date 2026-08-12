@@ -52,14 +52,14 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Status Zigbee}}</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input id="idZbStatus" readonly title="{{Status}}" value="" />
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input id="idZbModel" readonly title="{{Identificant Zigbee du modèle}}" value="" />
         <input id="idZbManuf" readonly style="margin-left:4px;width:200px" title="{{Identificant Zigbee du fabricant}}" value="" />
     </div>
@@ -67,7 +67,7 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input id="idEqAddr" type="text" value="" readonly>
         /
         <input id="idEqIeee" type="text" class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE" readonly></input>
@@ -76,64 +76,58 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Type logique}}</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input id="idZbLogicalType" type="text" readonly title="{{Node descriptor/Logical type}}" value="">
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">MAC capabilities</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input id="idMacCapa" type="text" readonly title="{{Node descriptor/MAC capabilities}}" value="">
-        <input id="idZbRxOnWhenIdle" type="text" readonly title="{{Indique si l'équipement est toujours en écoute}}" value="" />
+        =
+        <input id="idMacCapaDesc" type="text" readonly title="{{MAC capabilities detail}}" value="" />
     </div>
 </div>
 
-<!-- <div class="form-group">
-    <label class="col-sm-3 control-label">{{Toujours en écoute}}</label>
-    <div class="col-sm-5">
-        <input id="idZbRxOnWhenIdle" readonly title="{{'Oui' si l'équipement est toujours en écoute}}" value="" />
-    </div>
-</div> -->
-
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Code fabricant}} (ManufCode)</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input id="idManufCode" readonly title="{{Code fabricant}}" value="" />
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Type d'image}} (ImageType)</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input id="idImageType" readonly title="{{Type d'image}}" value="" />
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Date fabrication}} (DateCode)</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input type="text" id="idDateCode" title="{{Cluster 0000, attribut 0006/DateCode}}" value="" readonly>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Assistant de découverte}}</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <a class="btn btn-default" id="idEqAssistBtn">{{Ouvrir}}</a>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Etat de l'équipement}}</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <a class="btn btn-danger" id="idRepairBtn" title="{{Tente de corriger l'état interne de l'équipement}}">{{Réparer}}</a>
     </div>
 </div>
@@ -146,7 +140,7 @@
 ?>
 <!-- <div class="form-group"> -->
     <label class="col-sm-3 control-label">{{Support du cluster color}}</label>
-    <div class="col-sm-5">
+    <div class="col-sm-9">
         <a class="btn btn-danger" id="idInspectColorBtn" title="{{Analyse pour le support du cluster 0300}}">{{Inspecter}}</a>
     </div>
 </div>

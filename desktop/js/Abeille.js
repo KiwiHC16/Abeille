@@ -140,9 +140,18 @@ function refreshEqInfos() {
                 document.getElementById("idZbStatus").value =
                     curEq.zigbee.status;
             else document.getElementById("idZbStatus").value = "?";
+
+            if (typeof curEq.zigbee.status_time != "undefined") {
+                // Convert PHP timestamp to human readable time
+                dt = new Date(curEq.zigbee.status_time * 1000);
+                // console.log("dt=", dt);
+                document.getElementById("idZbStatusTime").value = dt;
+            } else document.getElementById("idZbStatusTime").value = "";
+
             if (typeof curEq.zigbee.modelId != "undefined")
                 document.getElementById("idZbModel").value =
                     curEq.zigbee.modelId;
+
             if (typeof curEq.zigbee.manufId != "undefined")
                 document.getElementById("idZbManuf").value =
                     curEq.zigbee.manufId;

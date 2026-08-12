@@ -6,6 +6,7 @@
 - Amélioration: Sonoff SNZB-02D: Ajout type de batterie.
 - Amélioration: Onglet avancé équipement: Ajout detail MAC capabilities.
 - Amélioration: Page santé: N'affiche 'NO-ACK' que si le device est en écoute permanente.
+- Amélioration: Onglet avancé équipement: Ajout date pour status Zigbee 'joined' or 'left'.
 
 ## 260810-BETA-1
 

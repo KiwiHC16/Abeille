@@ -54,6 +54,8 @@
     <label class="col-sm-3 control-label">{{Status Zigbee}}</label>
     <div class="col-sm-9">
         <input id="idZbStatus" readonly title="{{Status}}" value="" />
+        on
+        <input id="idZbStatusTime" type="text" value="" readonly style="width:240px">
     </div>
 </div>
 

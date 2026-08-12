@@ -3,6 +3,7 @@
 - Amélioration: Interne MainD: 'createRemote' sorti de 'message()'.
 - Amélioration: Interne MainD: 'updateFromModel'/'resetFromModel' sorti de 'message()'.
 - Amélioration: Interne MainD: Status zigbee (joined/left) mis-à-jour.
+- Amélioration: Sonoff SNZB-02D: Ajout type de batterie.
 
 ## 260810-BETA-1
 

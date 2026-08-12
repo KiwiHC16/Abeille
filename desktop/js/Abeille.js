@@ -253,9 +253,9 @@ function refreshEqInfos() {
                 $("#idDelLocalBtn").show();
             }
             if (curEq.batteryType == "")
-                document.getElementById("idBatteryType").value = "{{Secteur}}";
+                document.getElementById("idPowerSource").value = "{{Secteur}}";
             else
-                document.getElementById("idBatteryType").value =
+                document.getElementById("idPowerSource").value =
                     "{{Batterie}} " + curEq.batteryType;
 
             // Show/hide zigate or devices part

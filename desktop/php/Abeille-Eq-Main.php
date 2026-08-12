@@ -112,7 +112,7 @@
         <div class="form-group" >
             <label class="col-lg-3 control-label">{{Source d'alimentation}}</label>
             <div class="col-lg-3">
-                <input id="idBatteryType" readonly class="form-control" style="width:100%" title="{{Source d'alimentation}}" value="" />
+                <input id="idPowerSource" readonly class="form-control" style="width:100%" title="{{Source d'alimentation}}" value="" />
             </div>
             <div class="col-lg-4">
             </div>

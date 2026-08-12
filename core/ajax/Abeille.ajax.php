@@ -700,7 +700,7 @@
 
                 $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
                 $eq['zigbee'] = $zigbee;
-                
+
                 $eq['zbModel'] = isset($zigbee['modelId']) ? $zigbee['modelId'] : '';
                 $eq['zbManuf'] = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
 
@@ -823,6 +823,8 @@
                 else
                     $e['since'] = floor((time() - strtotime($e['lastComm'])) / 3600);
                 $e['txAck'] = $eqLogic->getStatus('ab::txAck', 'ok');
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                $e['rxOnWhenIdle'] = isset($zigbee['rxOnWhenIdle']) ? $zigbee['rxOnWhenIdle'] : 0;
 
                 // Last LQI
                 if ($eqAddr == "0000")

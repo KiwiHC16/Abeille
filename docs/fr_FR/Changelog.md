@@ -5,6 +5,7 @@
 - Amélioration: Interne MainD: Status zigbee (joined/left) mis-à-jour.
 - Amélioration: Sonoff SNZB-02D: Ajout type de batterie.
 - Amélioration: Onglet avancé équipement: Ajout detail MAC capabilities.
+- Amélioration: Page santé: N'affiche 'NO-ACK' que si le device est en écoute permanente.
 
 ## 260810-BETA-1
 

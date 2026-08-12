@@ -209,10 +209,11 @@ logDebug("running2=".json_encode($running2));
                             status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{BR désactivé}}</span>';
                         else if (addr.substr(2) == "rc") // Remote control ?
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-                        else if (e.timeout || (e.txAck == 'noack')) {
+                        else if (e.timeout || ((e.txAck == 'noack') && (e.rxOnWhenIdle))) {
                             if (e.timeout && !e.noack)
                                 s = "{{Time-out}}";
                             else if (!e.timeout && (e.txAck == 'noack'))
+                                // Note: Displaying 'NO-ACK' only if RX always ON. If not, 'noack' might be normal.
                                 s = "{{No-ACK}}";
                             else
                                 s = "{{Time-out}}/{{No-ACK}}";

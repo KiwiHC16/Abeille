@@ -33,6 +33,8 @@
     include_once __DIR__.'/../php/AbeilleLog.php'; // logGetLevelNumber()
     // include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()
 
+    const shmSize = 50; // Shared memory max size
+
 class Abeille extends eqLogic {
     /**
      * Jeedom requirement: returns health status.
@@ -211,21 +213,43 @@ class Abeille extends eqLogic {
      */
     public static function cron() {
 
-        /* If main daemon is not running, cron must do nothing */
-        // if (AbeilleTools::isAbeilleCronRunning() == false) {
-        if (AbeilleTools::isAbeilleMainRunning() == false) {
-            log::add('Abeille', 'debug', 'cron(): Main daemon stopped => cron1 canceled');
+        $pid = getmypid();
+        log::add('Abeille', 'debug', "cron(): PID=$pid");
+
+        /* Opening shared mem area (created by deamon_start()) */
+        $shm = shmop_open(12, "w", 0644, 0);
+        if ($shm === false) {
+            log::add('Abeille', 'debug', 'cron(): FAILED to open shared mem');
             return;
         }
+        $shmContent = rtrim(shmop_read($shm, 0, shmop_size($shm))); // rtrim mandatory for json_decode()
+        log::add('Abeille', 'debug', 'cron(): shmContent='.$shmContent);
+        $shmContent = json_decode($shmContent, true);
+        $writeShm = false;
+        if (!isset($shmContent['daemons'])) {
+            $shmContent['daemons'] = [];
+            $writeShm = true;
+        }
+    //     $smContent = [];
+    //     if ($start)
+    //         $smContent['daemonsPaused'] = true;
+    //     else
+    //         $smContent['daemonsPaused'] = false;
+    //     shmop_write($smId, json_encode($smContent), 0);
+
+        /* If main daemon is not running, cron must do nothing */
+        // if (AbeilleTools::isAbeilleCronRunning() == false) {
+        // if (AbeilleTools::isAbeilleMainRunning() == false) {
+        //     log::add('Abeille', 'debug', 'cron(): Main daemon stopped => cron1 canceled');
+        //     return;
+        // }
 
         // log::add( 'Abeille', 'debug', 'cron(): Start ------------------------------------------------------------------------------------------------------------------------' );
         $config = AbeilleTools::getConfig();
 
-        // Check & restart missing daemons
+        /* Check & restart missing daemons
+           For debug purposes, display 'PID/daemonShortName' */
         $dStatus = AbeilleTools::checkAllDaemons2($config);
-
-        /* For debug purposes, display 'PID/daemonShortName' */
-        // $running = AbeilleTools::getRunningDaemons2();
         $dTxt = "";
         foreach ($dStatus['running']['daemons'] as $daemonName => $daemon) {
             if ($dTxt != "")
@@ -233,6 +257,17 @@ class Abeille extends eqLogic {
             $dTxt .= $daemon['pid'].'/'.$daemonName;
         }
         log::add('Abeille', 'debug', 'cron(): Daemons: '.$dTxt);
+        if (!isset($shmContent['daemons']['state']) || ($dStatus['state'] != $shmContent['daemons']['state'])) {
+            $shmContent['daemons']['state'] = $dStatus['state'];
+            $writeShm = true;
+        }
+
+        if ($writeShm) {
+            // TODO: Be sure no write conflict with other processses
+            /* str_pad() required if 'shmString' is shorter than previous one */
+            $shmString = str_pad(json_encode($shmContent, JSON_UNESCAPED_SLASHES), shmSize, "\0");
+            shmop_write($shm, $shmString, 0);
+        }
 
         // Checking queues status to log any potential issue.
         // Moved from deamon_info()
@@ -577,16 +612,21 @@ class Abeille extends eqLogic {
      */
     // Note: Seems to be called each from a different process ID
     public static function deamon_info() {
-        // $pid = getmypid();
-        // $toto = isset($GLOBALS['toto']) ? $GLOBALS['toto'] : "UNSET";
-        // log::add('Abeille', 'debug', "deamon_info() PID={$pid} TOTO={$toto}");
 
-        // $smId = @shmop_open(12, "a", 0, 0);
-        // if ($smId !== false) {
-        //     $smContent = shmop_read($smId, 0, shmop_size($smId));
-        //     log::add('Abeille', 'debug', 'deamon_info(): smContent='.json_encode($smContent));
-        //     shmop_close($smId);
-        // }
+        /* Opening shared mem area */
+        $shm = shmop_open(12, "a", 0644, shmSize);
+        if ($shm === false) {
+            log::add('Abeille', 'debug', 'deamon_info(): FAILED to open shared mem');
+            return array(
+                'log' => 'Abeille',
+                'state' => 'nok',
+                'launchable' => 'nok',
+                'launchable_message' => "Unknown status"
+            );
+        }
+        $shmContent = rtrim(shmop_read($shm, 0, shmop_size($shm)));
+        log::add('Abeille', 'debug', "deamon_info(): shmContent='$shmContent'");
+        $shmContent = json_decode($shmContent, true);
 
         /* Notes:
            Since Abeille has its own way to restart missing daemons, reporting only
@@ -597,27 +637,40 @@ class Abeille extends eqLogic {
         /* Init with valid status */
         $status = array(
             'log' => 'Abeille',
-            'state' => 'ok',  // Assuming cron is running
+            'state' => 'ok',  // Assuming daemons are all running
             'launchable' => 'ok',  // Assuming config ok
             'launchable_message' => ""
         );
 
         /* Checking there is no error getting parameters and daemon can be started. */
         // TODO: Tcharp38. Can it be optimized ?. Each deamon_info() call leads to mysql DB interrogation.
-        $config = AbeilleTools::getConfig();
-        if ($config['parametersCheck'] != "ok") {
-            $status['launchable'] = $config['parametersCheck'];
-            // Tcharp38: Where is reported 'launchable_message' ?
-            $status['launchable_message'] = $config['parametersCheck_message'];
-            log::add('Abeille', 'warning', 'deamon_info(): Config Abeille invalide');
+        // $config = AbeilleTools::getConfig();
+        // if ($config['configCheck'] != "ok") {
+        //     $status['launchable'] = $config['configCheck'];
+        //     // Tcharp38: Where is reported 'launchable_message' ?
+        //     $status['launchable_message'] = $config['configCheckMessage'];
+        //     log::add('Abeille', 'warning', 'deamon_info(): Config Abeille invalide');
+        // }
+        /* Config saved by 'deamon_start' but need a real status if not available to not block '(Re)Start'
+           When launchable == nok, message is displayed closed to NOK configuration status */
+        if (!isset($shmContent['config'])) {
+            // This should not appear => restart required
+            $config = AbeilleTools::getConfig();
+            $status['launchable'] = isset($config['configCheck']) ? $config['configCheck'] : 'nok';
+            $status['launchable_message'] = isset($config['configCheckMessage']) ? $config['configCheckMessage'] : '';
+        } else {
+            $status['launchable'] = isset($shmContent['config']['configCheck']) ? $shmContent['config']['configCheck'] : 'nok';
+            $status['launchable_message'] = isset($shmContent['config']['configCheckMessage']) ? $shmContent['config']['configCheckMessage'] : '';
         }
 
         /* Checking main cron = main Abeille's daemon */
         // if (AbeilleTools::isAbeilleCronRunning() == false) {
-        if (AbeilleTools::isAbeilleMainRunning() == false) {
-            $status['state'] = "nok";
-            log::add('Abeille', 'warning', 'deamon_info(): Main daemon is not runnning.');
-        }
+        // if (AbeilleTools::isAbeilleMainRunning() == false) {
+        //     $status['state'] = "nok";
+        //     log::add('Abeille', 'warning', 'deamon_info(): Main daemon is not runnning.');
+        // }
+        // log::add('Abeille', 'debug', 'deamon_info4(): '.json_encode($shmContent));
+        $status['state'] = isset($shmContent['daemons']['state']) ? $shmContent['daemons']['state'] : 'nok';
 
         log::add('Abeille', 'debug', 'deamon_info(): '.json_encode($status));
         return $status;
@@ -667,25 +720,26 @@ class Abeille extends eqLogic {
     /* Jeedom required function.
        Starts all daemons.
        Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
-    public static function deamon_start($_debug = false) {
+    public static function deamon_start() {
 
         // $GLOBALS['toto'] = 12;
         // $pid = getmypid();
         // log::add('Abeille', 'debug', "deamon_start() PID={$pid} TOTO=".json_encode($GLOBALS['toto']));
         log::add('Abeille', 'debug', '>>> deamon_start()');
 
-        $smId = @shmop_open(12, "a", 0, 0);
-        if ($smId !== false) {
-            $smContent = shmop_read($smId, 0, shmop_size($smId));
-            log::add('Abeille', 'debug', 'deamon_start(): Starting. smContent='.$smContent);
-            shmop_close($smId);
-            $smContent = json_decode($smContent, true);
-            if (isset($smContent['daemonsPaused']) && ($smContent['daemonsPaused'] == true)) {
-                log::add('Abeille', 'debug', 'deamon_start(): IGNORED => daemons PAUSED');
-                return;
-            }
-        } else
-            log::add('Abeille', 'debug', 'deamon_start(): Starting. No shared mem');
+        $shm = @shmop_open(12, "c", 0, 50);
+        if ($shm === false) {
+            log::add('Abeille', 'debug', 'deamon_start(): FAILED to create shared mem');
+            return false;
+        }
+        $shmContent = rtrim(shmop_read($shm, 0, shmop_size($shm)));
+        log::add('Abeille', 'debug', "deamon_start(): Starting. shmContent='$shmContent'");
+        $shmContent = json_decode($shmContent, true);
+
+        if (isset($shmContent['daemonsPaused']) && ($shmContent['daemonsPaused'] == true)) {
+            log::add('Abeille', 'debug', 'deamon_start(): IGNORED => daemons PAUSED');
+            return false;
+        }
 
         /* Some checks before starting daemons
                - Are dependancies ok ?
@@ -708,6 +762,7 @@ class Abeille extends eqLogic {
         self::deamon_start_cleanup();
 
         $config = AbeilleTools::getConfig();
+        $shmContent['config'] = $config;
 
         /* Checking config */
         // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
@@ -786,6 +841,15 @@ class Abeille extends eqLogic {
                 message::add("Abeille", "Vous êtes en mode debug mais le nombre de lignes est inférieur à 5000 (".$jLines."). Il est recommandé d'augmenter ce nombre pour tout besoin de support.");
         }
 
+        /* Update shared mem */
+        $shmString = str_pad(json_encode($shmContent, JSON_UNESCAPED_SLASHES), shmSize, "\0");
+        $strSize = strlen($shmString);
+        log::add('Abeille', 'debug', "deamon_start(): LA writing $strSize");
+        $wSize = shmop_write($shm, $shmString, 0);
+        if ($wSize != $strSize) {
+            log::add('Abeille', 'error', "deamon_start(): Shared mem size too low (need $strSize)");
+        }
+
         log::add('Abeille', 'debug', 'deamon_start(): Ended');
         return true;
     }
@@ -838,7 +902,6 @@ class Abeille extends eqLogic {
     //     else
     //         $smContent['daemonsPaused'] = false;
     //     shmop_write($smId, json_encode($smContent), 0);
-    //     shmop_close($smId);
 
     //     log::add('Abeille', 'debug', 'pauseDaemons('.$start.')');
     //     if ($start) {

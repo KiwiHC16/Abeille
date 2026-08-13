@@ -458,16 +458,12 @@
          *
          * @return array
          */
-        // public static function getParameters() { // OBSOLETE: Use getConfig() instead
-        //     return AbeilleTools::getConfig();
-        // }
-
         public static function getConfig() {
             $config = array();
 
             // Tcharp38: getConfig() should be called once while a checkConfig() will be called by each deamon_info()
-            $config['parametersCheck'] = 'ok';
-            $config['parametersCheck_message'] = "";
+            $config['configCheck'] = 'ok';
+            $config['configCheckMessage'] = "";
 
             $nbValidGateways = 0;
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
@@ -491,8 +487,8 @@
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);
 
             if ($nbValidGateways == 0) {
-                $config['parametersCheck'] = 'nok';
-                $config['parametersCheck_message'] = "No enabled or valid gateway";
+                $config['configCheck'] = 'nok';
+                $config['configCheckMessage'] = "No enabled or valid gateway";
             }
             return $config;
         }
@@ -549,7 +545,7 @@
                 'running' => [],
             );
 
-            // Expected daemons
+            // Compute list of expected daemons (short names)
             $nbGateways = 0;
             $nbZigates = 0;
             $expected = [];
@@ -582,11 +578,11 @@
                 $expected[] = 'ParserD';
                 $expected[] = 'CmdD';
             }
-            log::add('Abeille', 'debug', '  expected='.json_encode($expected, JSON_UNESCAPED_SLASHES));
+            log::add('Abeille', 'debug', '  Expected='.json_encode($expected, JSON_UNESCAPED_SLASHES));
 
             // Running daemons
             $running = AbeilleTools::getRunningDaemons2();
-            log::add('Abeille', 'debug', '  running='.json_encode($running, JSON_UNESCAPED_SLASHES));
+            log::add('Abeille', 'debug', '  Running='.json_encode($running, JSON_UNESCAPED_SLASHES));
 
             // Restart missing ones
             $restart = '';
@@ -599,8 +595,11 @@
                     $restart .= $daemonName;
                 }
             }
-            if ($restart != '')
+            if ($restart != '') {
+                $status['state'] = "nok";
                 AbeilleTools::restartDaemons($config, $restart);
+                // Daemons restarted but will be checked on next cron()
+            }
 
             $status['running'] = $running;
             // log::add('Abeille', 'debug', '  status='.json_encode($status));

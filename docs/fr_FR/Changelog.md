@@ -7,6 +7,7 @@
 - Amélioration: Onglet avancé équipement: Ajout detail MAC capabilities.
 - Amélioration: Page santé: N'affiche 'NO-ACK' que si le device est en écoute permanente.
 - Amélioration: Onglet avancé équipement: Ajout date pour status Zigbee 'joined' or 'left'.
+- Amélioration: Interne Abeille.class. Optimisations.
 
 ## 260810-BETA-1
 

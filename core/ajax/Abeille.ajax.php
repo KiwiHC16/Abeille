@@ -466,8 +466,8 @@
                 /* Need to start AbeilleMonitor if not already running
                 and restart cmd & parser.
                 WARNING: If cron is not running, any (re)start should be avoided. */
-                $conf = AbeilleTools::getConfig();
-                AbeilleTools::restartDaemons($conf, "AbeilleMonitor AbeilleParser AbeilleCmd");
+                $config = AbeilleTools::getAndCheckConfig();
+                AbeilleTools::restartDaemons($config, "AbeilleMonitor AbeilleParser AbeilleCmd");
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
@@ -960,7 +960,7 @@
             $status = 0;
             $error = "";
 
-            $config = AbeilleTools::getConfig();
+            $config = AbeilleTools::getAndCheckConfig();
             $configJson = json_encode($config);
             logDebug('configJson='.$configJson);
 
@@ -972,7 +972,7 @@
             $status = 0;
             $error = "";
 
-            $config = AbeilleTools::getConfig();
+            $config = AbeilleTools::getAndCheckConfig();
             AbeilleTools::restartDaemons($config, "");
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));

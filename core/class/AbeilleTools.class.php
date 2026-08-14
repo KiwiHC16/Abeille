@@ -458,13 +458,13 @@
          *
          * @return array
          */
-        public static function getConfig() {
+        public static function getAndCheckConfig() {
             $config = array();
 
-            // Tcharp38: getConfig() should be called once while a checkConfig() will be called by each deamon_info()
-            $config['configCheck'] = 'ok';
-            $config['configCheckMessage'] = "";
+            $config['checkStatus'] = 'ok';
+            $config['checkStatusMessage'] = "";
 
+            $error = "";
             $nbValidGateways = 0;
             for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
                 $config['ab::gtwType'.$gtwId] = config::byKey('ab::gtwType'.$gtwId, 'Abeille', 'zigate', 1);
@@ -478,17 +478,42 @@
 
                 if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
                     continue;
-                // Tcharp38: More checks to do
+
+                $sp = $config['ab::gtwPort'.$gtwId];
+                if (($sp == 'none') || ($sp == "")) {
+                    $error = "Port série invalide pour la passerelle $gtwId";
+                }
+                if ($error == "") {
+                    if (($config["ab::gtwType$gtwId"] == "zigate") && ($config["ab::gtwSubType$gtwId"] == "WIFI")) {
+                        $wifiAddr = $config["ab::gtwIpAddr$gtwId"];
+                        if (($wifiAddr == 'none') || ($wifiAddr == "")) {
+                            $error = "Adresse Wifi invalide pour la Zigate $gtwId";
+                        }
+                    }
+                }
+                if ($error != "") {
+                    $config["ab::gtwEnabled$gtwId"] = 'N';
+                    config::save("ab::gtwEnabled$gtwId", 'N', 'Abeille');
+                    log::add('Abeille', 'error', "$error => Passerelle désactivée.");
+                    continue;
+                }
+
                 $nbValidGateways++;
+                if (($config['ab::gtwSubType'.$gtwId] == "PI") || ($config['ab::gtwSubType'.$gtwId] == "PIv2")) {
+                    $config["piZigateFound"] = true;
+                }
             }
             $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
             $config['ab::forceZigateHybridMode'] = config::byKey('ab::forceZigateHybridMode', 'Abeille', 'N');
             $config['ab::monitorId'] = config::byKey('ab::monitorId', 'Abeille', false);
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);
 
-            if ($nbValidGateways == 0) {
-                $config['configCheck'] = 'nok';
-                $config['configCheckMessage'] = "No enabled or valid gateway";
+            if ($error != "") {
+                $config['checkStatus'] = 'nok';
+                $config['checkStatusMessage'] = $error;
+            } else if ($nbValidGateways == 0) {
+                $config['checkStatus'] = 'nok';
+                $config['checkStatusMessage'] = "No enabled or valid gateway";
             }
             return $config;
         }
@@ -502,6 +527,7 @@
          * @return string of comma separated missing daemon
          */
         public static function getMissingDaemons(array $parameters, $running): string {
+
             $found = self::diffExpectedRunningDaemons($parameters, $running);
             $missing = "";
             foreach ($found as $daemon => $value) {
@@ -518,6 +544,50 @@
             } else {
                 return "";
             }
+        }
+
+        /**
+         * Compute list of expected daemons according to configuration.
+         *
+         * @param $config
+         * @return array
+         */
+        public static function getExpectedDaemons($config) {
+
+            $nbGateways = 0;
+            $nbZigates = 0;
+            $expected = [];
+            for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+                if ($config['ab::gtwEnabled'.$gtwId] == "N")
+                    continue;
+
+                $nbGateways++;
+                $gtwType = $config['ab::gtwType'.$gtwId];
+                $gtwSubType = $config['ab::gtwSubType'.$gtwId];
+                if ($gtwType == "zigate") {
+                    $nbZigates++;
+
+                    $expected[] = 'SerialRead'.$gtwId;
+
+                    // If type 'WIFI', socat daemon required too
+                    if ($gtwSubType == "WIFI")
+                        $expected[] = 'Socat'.$gtwId;
+                } else { // gtwType == "ezsp"
+
+                }
+            }
+            if ($nbGateways == 0) {
+                log::add('Abeille', 'debug', '  getExpectedDaemons(): NO active gateway');
+                return $status;
+            }
+
+            if ($nbZigates != 0) {
+                $expected[] = 'MainD';
+                $expected[] = 'ParserD';
+                $expected[] = 'CmdD';
+            }
+            log::add('Abeille', 'debug', '  Expected='.json_encode($expected, JSON_UNESCAPED_SLASHES));
+            return $expected;
         }
 
         /**
@@ -546,39 +616,7 @@
             );
 
             // Compute list of expected daemons (short names)
-            $nbGateways = 0;
-            $nbZigates = 0;
-            $expected = [];
-            for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
-                if ($config['ab::gtwEnabled'.$gtwId] == "N")
-                    continue;
-
-                $nbGateways++;
-                $gtwType = $config['ab::gtwType'.$gtwId];
-                $gtwSubType = $config['ab::gtwSubType'.$gtwId];
-                if ($gtwType == "zigate") {
-                    $nbZigates++;
-
-                    $expected[] = 'SerialRead'.$gtwId;
-
-                    // If type 'WIFI', socat daemon required too
-                    if ($gtwSubType == "WIFI")
-                        $expected[] = 'Socat'.$gtwId;
-                } else { // gtwType == "ezsp"
-
-                }
-            }
-            if ($nbGateways == 0) {
-                log::add('Abeille', 'debug', '  NO active gateway');
-                return $status;
-            }
-
-            if ($nbZigates != 0) {
-                $expected[] = 'MainD';
-                $expected[] = 'ParserD';
-                $expected[] = 'CmdD';
-            }
-            log::add('Abeille', 'debug', '  Expected='.json_encode($expected, JSON_UNESCAPED_SLASHES));
+            $expected = AbeilleTools::getExpectedDaemons($config);
 
             // Running daemons
             $running = AbeilleTools::getRunningDaemons2();
@@ -596,9 +634,8 @@
                 }
             }
             if ($restart != '') {
-                $status['state'] = "nok";
-                AbeilleTools::restartDaemons($config, $restart);
-                // Daemons restarted but will be checked on next cron()
+                if (AbeilleTools::restartDaemons($config, $restart) == false)
+                    $status['state'] = "nok";
             }
 
             $status['running'] = $running;
@@ -710,19 +747,19 @@
             $found['maind'] = 0;
             $nbProcessExpected = 3; // MainD, ParserD and CmdD mandatory
 
-            log::add('Abeille', 'debug', "config=".json_encode($config));
-            log::add('Abeille', 'debug', "running=".json_encode($running));
+            // log::add('Abeille', 'debug', "  Config=".json_encode($config, JSON_UNESCAPED_SLASHES));
+            // log::add('Abeille', 'debug', "  Running=".json_encode($running, JSON_UNESCAPED_SLASHES));
 
             // Count number of processes we should have based on configuration, init $found['process x'] to 0.
             for ($n = 1; $n <= maxGateways; $n++) {
-                if ($config['ab::gtwEnabled'.$n] != "Y")
+                if ($config["ab::gtwEnabled$n"] != "Y")
                     continue;
 
-                if ($config['ab::gtwType'.$n] == 'zigate') {
+                if ($config["ab::gtwType$n"] == 'zigate') {
                     $found['serialread'.$n] = 0;
                     $nbProcessExpected++;
 
-                    if ($config['ab::gtwSubType'.$n] == "WIFI") {
+                    if ($config["ab::gtwSubType$n"] == "WIFI") {
                         $found['socat'.$n] = 0;
                         $nbProcessExpected++;
                     }
@@ -764,26 +801,26 @@
          * Ex: $daemons = "AbeilleMonitor AbeilleCmdD AbeilleParserD"
          * @param string $daemons Deamons list to stop, space separated. Empty string = ALL
          */
-        public static function stopDaemons($toStop = "") {
-            log::add('Abeille', 'debug', "  stopDaemons($toStop)");
+        public static function stopDaemons($daemons = "") {
+            log::add('Abeille', 'debug', "  stopDaemons(daemons=$daemons)");
             /* 'pgrep -a php | grep Abeille' example:
                 6333 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSocat.php /tmp/zigateWifi2 debug 192.168.0.102:9999
                 'pgrep -a socat' example:
                 16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
 
             $cmd1 = $cmd2 = "";
-            if ($toStop != "") {
+            if ($daemons != "") {
                 $running2 = self::getRunningDaemons2();
                 if ($running2['runningNb'] == 0) {
                     log::add('Abeille', 'debug', '  stopDaemons(): No active daemons');
                     return true;
                 }
-                $toStopArr = explode(" ", $toStop);
+                $daemonsArr = explode(" ", $daemons);
                 $running = [];
                 $running['daemons'] = [];
                 foreach($running2['daemons'] as $daemonName => $daemon) {
                     $found = false;
-                    foreach($toStopArr as $daemonToStop) {
+                    foreach($daemonsArr as $daemonToStop) {
                         if (strstr($daemon['cmd'], $daemonToStop) !== false) {
                             $found = true;
                             break;
@@ -796,7 +833,7 @@
                 $running['runningNb'] = sizeof($running['daemons']);
                 $running['runBits'] = 0; // TODO if required
 
-                // $daemonsArr = explode(" ", $toStop);
+                // $daemonsArr = explode(" ", $daemons);
                 // $grep = "";
                 // $grep2 = ""; // Grep pattern for 'socat'
                 // foreach ($daemonsArr as $daemon) {
@@ -901,8 +938,10 @@
          * Start daemons.
          * Ex: $daemons = "AbeilleMonitor AbeilleCmdD AbeilleParserD"
          * @param string $daemons Deamons list to start, space separated. Empty string = ALL
+         * Returns: 'true' if ok, 'false' if some daemons failed to start
          */
         public static function startDaemons($config, $daemons = "") {
+
             if ($daemons == "") {
                 /* Note: starting input daemons first to not loose any returned
                 value/status as opposed to cmd being started first */
@@ -943,8 +982,9 @@
                     $daemons .= " AbeilleMonitor";
             }
 
-            log::add('Abeille', 'debug', "  startDaemons(): ".$daemons);
+            log::add('Abeille', 'debug', "  startDaemons(daemons=$$daemons)");
             $daemonsArr = explode(" ", $daemons);
+            $expectedNb = count($daemonsArr);
             foreach ($daemonsArr as $daemon) {
                 $cmd = self::getStartCommand($config, $daemon);
                 if ($cmd == "")
@@ -952,6 +992,19 @@
                 else
                     exec($cmd.' &');
             }
+
+            /* Checking if deamons are realling running */
+            /* Waiting until timeout that all daemons be ended */
+            $running = self::getRunningDaemons2();
+            for ($t = 0; ($running['runningNb'] < $expectedNb) && ($t < daemonStartTimeout); $t+=500) {
+                usleep(500000); // Sleep 500ms
+                $running = self::getRunningDaemons2();
+            }
+            if ($running['runningNb'] < $expectedNb) {
+                log::add('Abeille', 'debug', "  startDaemons(): ERROR, some daemons not started after 2s");
+                return false;
+            }
+
             return true;
         }
 
@@ -963,10 +1016,11 @@
         public static function restartDaemons($config, $daemons = "") {
 
             log::add('Abeille', 'debug', "  restartDaemons(daemons={$daemons})");
-            if (AbeilleTools::stopDaemons($daemons) == false)
+            if (self::stopDaemons($daemons) == false)
                 return false; // Error
 
-            AbeilleTools::startDaemons($config, $daemons);
+            if (self::startDaemons($config, $daemons) == false)
+                return false; // Some daemons did not restart
 
             return true; // ok
         }

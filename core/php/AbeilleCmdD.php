@@ -409,7 +409,7 @@
     // MAIN
     // ***********************************************************************************************
 
-    $config = AbeilleTools::getConfig();
+    $config = AbeilleTools::getAndCheckConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
@@ -436,7 +436,7 @@
     if ($queueParserToCmdAck === false)
         logMessage("error", "msg_get_queue(ParserToCmdAck) ERROR");
     if (($queueXToAbeille === false) || ($queueXToCmd === false) || ($queueParserToCmdAck === false)) {
-        logMessage('info', '<<< Pb de création de queues => Arret du démon AbeilleCmd');
+        logMessage('info', '<<< Pb de création de queues => Arret du démon AbeilleCmdD');
         exit(4);
     }
     $queueXToCmdMax         = $abQueues["xToCmd"]["max"];
@@ -519,9 +519,7 @@
             }
             $GLOBALS['zigates'][$gtwId]['sentPri'] = 0;      // Last sent cmd priority
             $GLOBALS['zigates'][$gtwId]['sentIdx'] = 0;      // Last send cmd index
-        } else {
-            // Is the gateway a Zigate ?
-
+        } else { // It's a device, not a gateway
             if (!isset($GLOBALS['devices'][$net]))
                 $GLOBALS['devices'][$net] = [];
 

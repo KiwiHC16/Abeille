@@ -53,7 +53,6 @@
     function createRuche($dest) {
         $gtwId = substr($dest, 7); // AbeilleX => X
 
-        // $config = AbeilleTools::getConfig();
         $config = $GLOBALS['config']; // Present as global since main daemon
         $eqLogic = eqLogic::byLogicalId($dest."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
@@ -236,7 +235,6 @@
     function createEzspGateway($net) {
         $gtwId = substr($net, 7); // AbeilleX => X
 
-        // $config = AbeilleTools::getConfig();
         $config = $GLOBALS['config']; // Present as global since main daemon
         $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
@@ -278,7 +276,6 @@
         $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
         $eqLogic->setName($eqName);
         $eqLogic->setLogicalId($logicalId);
-        // $config = AbeilleTools::getConfig();
         $config = $GLOBALS['config']; // Present as global since main daemon
         $eqLogic->setObject_id($config['ab::defaultParent']);
         $eqLogic->setConfiguration('IEEE', $ieee);
@@ -316,7 +313,6 @@
             return;
         }
 
-        // $config = AbeilleTools::getConfig();
         $config = $GLOBALS['config']; // Present as global since main daemon
 
         // if (!preg_match("(Time|Link-Quality)", $topic)) {
@@ -1922,7 +1918,7 @@
     logSetConf("AbeilleMainD.log", true);
     logMessage('info', ">>> Démarrage d'AbeilleMainD");
 
-    $config = AbeilleTools::getConfig();
+    $config = AbeilleTools::getAndCheckConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));

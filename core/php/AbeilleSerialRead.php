@@ -104,7 +104,7 @@
     logMessage('info', ">>> Démarrage d'AbeilleSerialRead sur port ${serial}");
 
     // Check if already running
-    $config = AbeilleTools::getConfig();
+    $config = AbeilleTools::getAndCheckConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons='.json_encode($daemons));

@@ -33,7 +33,8 @@
     include_once __DIR__.'/../php/AbeilleLog.php'; // logGetLevelNumber()
     // include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()
 
-    const shmSize = 50; // Shared memory max size
+    const shmKey = 0xAB0100; // Shared memory id
+    const shmSize = 1400; // Shared memory max size
 
 class Abeille extends eqLogic {
     /**
@@ -48,7 +49,7 @@ class Abeille extends eqLogic {
      */
     public static function health() {
         $result = '';
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+        for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
             if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') == 'N')
                 continue; // Disabled
             if (config::byKey('ab::gtwSubType'.$gtwId, 'Abeille', '') == 'WIFI')
@@ -122,82 +123,6 @@ class Abeille extends eqLogic {
     // }
 
     /**
-     * cronDaily
-     * Called by Jeedom every days.
-     * Refresh LQI
-     * Poll Cmd cronDaily
-     *
-     * @return          Does not return anything as all action are triggered by sending messages in queues
-     */
-    public static function cronDaily() {
-        log::add('Abeille', 'debug', 'cronDaily() starting');
-
-        $preventLQIRequest = config::byKey('ab::preventLQIAutoUpdate', 'Abeille', 'no');
-        if ($preventLQIRequest == "yes") {
-            log::add('Abeille', 'debug', 'cronD: LQI request (AbeilleLQI.php) prevented on user request.');
-        } else {
-            // Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
-            log::add('Abeille', 'debug', 'cronD: Starting LQI request (AbeilleLQI.php)');
-            $ROOT = __DIR__."/../php";
-            $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php 1>/dev/null 2>/dev/null &";
-            log::add('Abeille', 'debug', 'cronD: cmd=\''.$cmd.'\'');
-            exec($cmd);
-        }
-
-        // Poll Cmd
-        self::executePollCmds("cronDaily");
-    }
-
-    /**
-     * cronHourly
-     * Called by Jeedom every 60 minutes.
-     * Refresh Ampoule Ikea Bind et set Report
-     *
-     * @return          Does not return anything as all action are triggered by sending messages in queues
-     */
-    public static function cronHourly() {
-        log::add('Abeille', 'debug', 'cronHourly() starting');
-
-        // log::add('Abeille', 'debug', 'Check Zigate Presence');
-
-        // $config = AbeilleTools::getConfig();
-// if (0) {
-//         //--------------------------------------------------------
-//         // Refresh Ampoule Ikea Bind et set Report
-//         log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
-
-//         $eqLogics = Abeille::byType('Abeille');
-//         $i = 0;
-//         foreach ($eqLogics as $eqLogic) {
-//             // Filtre sur Ikea
-//             if (strpos("_".$eqLogic->getConfiguration("ab::icon"), "IkeaTradfriBulb") > 0) {
-//                 list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
-//                 $i = $i + 1;
-
-//                 // Recupere IEEE de la Ruche/ZiGate
-//                 $ZiGateIEEE = self::getIEEE($dest.'/0000');
-
-//                 // Recupere IEEE de l Abeille
-//                 $addrIEEE = self::getIEEE($dest.'/'.$addr);
-
-//                 log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
-//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE);
-//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE);
-//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10");
-//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20");
-//             }
-//         }
-//         if (($i * 33) > (3600)) {
-//             message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 heure.", "Contactez KiwiHC16 sur le Forum.");
-//         }
-//     }
-        // Poll Cmd
-        self::executePollCmds("cronHourly");
-
-        log::add('Abeille', 'debug', 'Ending cronHourly ------------------------------------------------------------------------------------------------------------------------');
-    }
-
-    /**
      * cron1
      * - Called by Jeedom every 1 minutes.
      * - Check (& restart if required) daemons status
@@ -213,17 +138,22 @@ class Abeille extends eqLogic {
      */
     public static function cron() {
 
-        $pid = getmypid();
-        log::add('Abeille', 'debug', "cron(): PID=$pid");
+        if (!isset($GLOBALS['myPid']))
+            $GLOBALS['myPid'] = getmypid();
+        $myPid = $GLOBALS['myPid'];
+
+        // log::add('Abeille', 'debug', "$myPid cron()");
 
         /* Opening shared mem area (created by deamon_start()) */
-        $shm = shmop_open(12, "w", 0644, 0);
+        $shm = @shmop_open(shmKey, "w", 0644, 0);
         if ($shm === false) {
-            log::add('Abeille', 'debug', 'cron(): FAILED to open shared mem');
+            log::add('Abeille', 'debug', "$myPid cron(): Failed to open shared mem");
             return;
         }
-        $shmContent = rtrim(shmop_read($shm, 0, shmop_size($shm))); // rtrim mandatory for json_decode()
-        log::add('Abeille', 'debug', 'cron(): shmContent='.$shmContent);
+        $shmContent = shmop_read($shm, 0, shmop_size($shm));
+        $endPos = strpos($shmContent, "\0");
+        $shmContent = substr($shmContent, 0, $endPos);
+        log::add('Abeille', 'debug', "$myPid cron(): shmContent='$shmContent'");
         $shmContent = json_decode($shmContent, true);
         $writeShm = false;
         if (!isset($shmContent['daemons'])) {
@@ -244,8 +174,12 @@ class Abeille extends eqLogic {
         //     return;
         // }
 
-        // log::add( 'Abeille', 'debug', 'cron(): Start ------------------------------------------------------------------------------------------------------------------------' );
-        $config = AbeilleTools::getConfig();
+        if (isset($shmContent['daemons']['reqState']) && ($shmContent['daemons']['reqState'] == "stop")) {
+            log::add('Abeille', 'info', "$myPid cron(): Daemons STOP requested => do not check status");
+            return;
+        }
+
+        $config = isset($shmContent['config']) ? $shmContent['config'] : AbeilleTools::getAndCheckConfig();
 
         /* Check & restart missing daemons
            For debug purposes, display 'PID/daemonShortName' */
@@ -256,16 +190,16 @@ class Abeille extends eqLogic {
                 $dTxt .= ", ";
             $dTxt .= $daemon['pid'].'/'.$daemonName;
         }
-        log::add('Abeille', 'debug', 'cron(): Daemons: '.$dTxt);
-        if (!isset($shmContent['daemons']['state']) || ($dStatus['state'] != $shmContent['daemons']['state'])) {
+        log::add('Abeille', 'debug', "$myPid cron(): Running-daemons: ".$dTxt);
+        if (!isset($shmContent['daemons']['state']) || ($shmContent['daemons']['state'] != $dStatus['state'])) {
             $shmContent['daemons']['state'] = $dStatus['state'];
             $writeShm = true;
         }
 
         if ($writeShm) {
             // TODO: Be sure no write conflict with other processses
-            /* str_pad() required if 'shmString' is shorter than previous one */
-            $shmString = str_pad(json_encode($shmContent, JSON_UNESCAPED_SLASHES), shmSize, "\0");
+            /* Adding '\0' required if 'shmString' is shorter than previous one */
+            $shmString = json_encode($shmContent, JSON_UNESCAPED_SLASHES)."\0";
             shmop_write($shm, $shmString, 0);
         }
 
@@ -276,11 +210,11 @@ class Abeille extends eqLogic {
             $queueId = $queueDesc['id'];
             $queue = msg_get_queue($queueId);
             if ($queue === false) {
-                log::add('Abeille', 'info', "cron(): ERREUR: Pb d'accès à la queue '".$queueName."' (id ".$queueId.")");
+                log::add('Abeille', 'info', "$myPid cron(): ERREUR: Pb d'accès à la queue '".$queueName."' (id ".$queueId.")");
                 continue;
             }
             if (msg_stat_queue($queue)["msg_qnum"] >= 50) {
-                log::add('Abeille', 'error', "cron(): La queue '".$queueName."' (id ".dechex($queueId).") contient plus de 50 messages => redémarrage des démons.");
+                log::add('Abeille', 'error', "$myPid cron(): La queue '".$queueName."' (id ".dechex($queueId).") contient plus de 50 messages => redémarrage des démons.");
                 self::deamon_start(); // Start is doing a stop first
             }
         }
@@ -288,7 +222,7 @@ class Abeille extends eqLogic {
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+        for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
             if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
                 continue; // Gateway disabled
             if ($config['ab::gtwPort'.$gtwId] == "none")
@@ -416,7 +350,7 @@ class Abeille extends eqLogic {
 
         // Checking how many gateways are in pairing mode
         $count = 0;
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+        for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
             $incStatus = self::checkInclusionStatus("Abeille{$gtwId}");
             log::add('Abeille', 'debug', "cron(): Abeille{$gtwId} => inclusion status = {$incStatus}");
             if ($incStatus === 1) {
@@ -440,7 +374,6 @@ class Abeille extends eqLogic {
      */
     public static function cron5() {
         /* If main daemon is not running, cron must do nothing */
-        // if (AbeilleTools::isAbeilleCronRunning() == false) {
         if (AbeilleTools::isAbeilleMainRunning() == false) {
             log::add('Abeille', 'debug', 'cron5: Main daemon stopped => cron5 canceled');
             return;
@@ -492,7 +425,7 @@ class Abeille extends eqLogic {
         /* Look every 15 minutes if the kernel driver is not in error */
         // Disabled. Now power cycling USB/USBv2 zigate if lastComm > 2mins
         // log::add('Abeille', 'debug', 'cron15(): Check USB driver potential crash');
-        // $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
+        // $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'Failed|stopped'";
         // $output = array();
         // exec(system::getCmdSudo().$cmd, $output);
         // $usbZigateStatus = !is_null($output) ? (is_numeric($output[0]) ? $output[0] : '-1') : '-1';
@@ -502,9 +435,9 @@ class Abeille extends eqLogic {
         // }
 
         log::add('Abeille', 'debug', 'cron15(): Interrogating devices silent for more than 15mins.');
-        $config = AbeilleTools::getConfig();
+        $config = AbeilleTools::getAndCheckConfig();
         $i = 0;
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+        for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
             $zigate = Abeille::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
             if (!is_object($zigate))
                 continue; // Does not exist on Jeedom side.
@@ -606,26 +539,92 @@ class Abeille extends eqLogic {
     } // End cron30()
 
     /**
+     * cronHourly
+     * Called by Jeedom every 60 minutes.
+     * Refresh Ampoule Ikea Bind et set Report
+     *
+     * @return          Does not return anything as all action are triggered by sending messages in queues
+     */
+    public static function cronHourly() {
+
+        /* If main daemon is not running, cron must do nothing */
+        if (AbeilleTools::isAbeilleMainRunning() == false) {
+            log::add('Abeille', 'debug', 'cronHourly: Main daemon stopped => cronHourly canceled');
+            return;
+        }
+
+        log::add('Abeille', 'debug', 'cronHourly() starting');
+
+        // Poll Cmd
+        self::executePollCmds("cronHourly");
+
+        // log::add('Abeille', 'debug', 'cronHourly() ended');
+    }
+
+    /**
+     * cronDaily
+     * Called by Jeedom every days.
+     * Refresh LQI
+     * Poll Cmd cronDaily
+     *
+     * @return Nothing
+     */
+    public static function cronDaily() {
+
+        /* If main daemon is not running, cron must do nothing */
+        if (AbeilleTools::isAbeilleMainRunning() == false) {
+            log::add('Abeille', 'debug', 'cronDaily: Main daemon stopped => cronDaily canceled');
+            return;
+        }
+
+        log::add('Abeille', 'debug', 'cronDaily() starting');
+
+        $preventLQIRequest = config::byKey('ab::preventLQIAutoUpdate', 'Abeille', 'no');
+        if ($preventLQIRequest == "yes") {
+            log::add('Abeille', 'debug', 'cronD: LQI request (AbeilleLQI.php) prevented on user request.');
+        } else {
+            // Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
+            log::add('Abeille', 'debug', 'cronD: Starting LQI request (AbeilleLQI.php)');
+            $ROOT = __DIR__."/../php";
+            $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php 1>/dev/null 2>/dev/null &";
+            log::add('Abeille', 'debug', 'cronD: cmd=\''.$cmd.'\'');
+            exec($cmd);
+        }
+
+        // Poll Cmd
+        self::executePollCmds("cronDaily");
+    }
+
+    /**
      * Jeedom required function: report plugin & config status
      * @param none
-     * @return array with state, launchable, launchable_message
+     * @return array with 'state', 'launchable', & 'launchable_message'
      */
     // Note: Seems to be called each from a different process ID
     public static function deamon_info() {
 
-        /* Opening shared mem area */
-        $shm = shmop_open(12, "a", 0644, shmSize);
-        if ($shm === false) {
-            log::add('Abeille', 'debug', 'deamon_info(): FAILED to open shared mem');
-            return array(
-                'log' => 'Abeille',
+        if (!isset($GLOBALS['myPid']))
+            $GLOBALS['myPid'] = getmypid();
+        $myPid = $GLOBALS['myPid'];
+
+        /* Init status to return */
+        $status = array(
+            'log' => 'Abeille',
                 'state' => 'nok',
-                'launchable' => 'nok',
-                'launchable_message' => "Unknown status"
-            );
+                'launchable' => 'ok', // Note: Keep ok or it will prevent to (Re)Start
+                'launchable_message' => ""
+        );
+
+        /* Opening shared mem area */
+        $shm = @shmop_open(shmKey, "a", 0644, 0);
+        if ($shm === false) {
+            log::add('Abeille', 'debug', "$myPid deamon_info(): Failed to open shared mem");
+            return $status;
         }
-        $shmContent = rtrim(shmop_read($shm, 0, shmop_size($shm)));
-        log::add('Abeille', 'debug', "deamon_info(): shmContent='$shmContent'");
+        $shmContent = shmop_read($shm, 0, shmop_size($shm));
+        $endPos = strpos($shmContent, "\0");
+        $shmContent = substr($shmContent, 0, $endPos);
+        // log::add('Abeille', 'debug', "$myPid deamon_info(): shmContent='$shmContent'");
         $shmContent = json_decode($shmContent, true);
 
         /* Notes:
@@ -634,33 +633,24 @@ class Abeille extends eqLogic {
            - Jeedom asking daemons restart (automatic management)
            - Abeille internal daemons restart mecanism */
 
-        /* Init with valid status */
-        $status = array(
-            'log' => 'Abeille',
-            'state' => 'ok',  // Assuming daemons are all running
-            'launchable' => 'ok',  // Assuming config ok
-            'launchable_message' => ""
-        );
-
         /* Checking there is no error getting parameters and daemon can be started. */
         // TODO: Tcharp38. Can it be optimized ?. Each deamon_info() call leads to mysql DB interrogation.
-        // $config = AbeilleTools::getConfig();
-        // if ($config['configCheck'] != "ok") {
-        //     $status['launchable'] = $config['configCheck'];
+        // $config = AbeilleTools::getAndCheckConfig();
+        // if ($config['checkStatus'] != "ok") {
+        //     $status['launchable'] = $config['checkStatus'];
         //     // Tcharp38: Where is reported 'launchable_message' ?
-        //     $status['launchable_message'] = $config['configCheckMessage'];
+        //     $status['launchable_message'] = $config['checkStatusMessage'];
         //     log::add('Abeille', 'warning', 'deamon_info(): Config Abeille invalide');
         // }
-        /* Config saved by 'deamon_start' but need a real status if not available to not block '(Re)Start'
-           When launchable == nok, message is displayed closed to NOK configuration status */
+        // Note: Return 'launchable' == 'ok' when 'checkStatus' is undefined to allow (Re)Start
         if (!isset($shmContent['config'])) {
             // This should not appear => restart required
-            $config = AbeilleTools::getConfig();
-            $status['launchable'] = isset($config['configCheck']) ? $config['configCheck'] : 'nok';
-            $status['launchable_message'] = isset($config['configCheckMessage']) ? $config['configCheckMessage'] : '';
+            $config = AbeilleTools::getAndCheckConfig();
+            $status['launchable'] = isset($config['checkStatus']) ? $config['checkStatus'] : 'ok';
+            $status['launchable_message'] = isset($config['checkStatusMessage']) ? $config['checkStatusMessage'] : '';
         } else {
-            $status['launchable'] = isset($shmContent['config']['configCheck']) ? $shmContent['config']['configCheck'] : 'nok';
-            $status['launchable_message'] = isset($shmContent['config']['configCheckMessage']) ? $shmContent['config']['configCheckMessage'] : '';
+            $status['launchable'] = isset($shmContent['config']['checkStatus']) ? $shmContent['config']['checkStatus'] : 'ok';
+            $status['launchable_message'] = isset($shmContent['config']['checkStatusMessage']) ? $shmContent['config']['checkStatusMessage'] : '';
         }
 
         /* Checking main cron = main Abeille's daemon */
@@ -672,15 +662,15 @@ class Abeille extends eqLogic {
         // log::add('Abeille', 'debug', 'deamon_info4(): '.json_encode($shmContent));
         $status['state'] = isset($shmContent['daemons']['state']) ? $shmContent['daemons']['state'] : 'nok';
 
-        log::add('Abeille', 'debug', 'deamon_info(): '.json_encode($status));
+        log::add('Abeille', 'debug', "$myPid deamon_info(): ".json_encode($status));
         return $status;
-    }
+    } // End 'deamon_info()'
 
     /* This function is used before starting daemons to
         - run some cleanup
         - update the config database if changes needed
         Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
-    public static function deamon_start_cleanup() {
+    public static function deamon_start_cleanup($myPid) {
         // log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
 
         // Remove Abeille's user messages
@@ -690,14 +680,14 @@ class Abeille extends eqLogic {
         $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI.lock';
         if (file_exists($lockFile)) {
             unlink($lockFile);
-            log::add('Abeille', 'debug', 'deamon_start_cleanup(): Removed '.$lockFile);
+            log::add('Abeille', 'debug', "$myPid deamon_start_cleanup(): Removed '$lockFile'");
         }
 
         // Clear zigate IEEE status to detect any port switch.
         // ab::zgIeeeAddrOk=-1: Zigate IEEE is NOT the expected one (port switch ?)
         //     "         = 0: IEEE check to be done
         //     "         = 1: Zigate on the right port
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+        for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
             config::save("ab::zgIeeeAddrOk".$gtwId, 0, 'Abeille');
         }
 
@@ -705,13 +695,23 @@ class Abeille extends eqLogic {
         $dbVersion = config::byKey('ab::dbVersion', 'Abeille', '0');
         $dbVersionLast = lastDbVersion;
         if (($dbVersion == '') || (intval($dbVersion) < $dbVersionLast)) {
-            log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' < v'.$dbVersionLast.' => Update required.');
+            log::add('Abeille', 'debug', "$myPid deamon_start_cleanup(): DB config v".$dbVersion.' < v'.$dbVersionLast.' => Update required.');
             updateConfigDB();
         } else
-            log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' is up-to-date.');
+            log::add('Abeille', 'debug', "$myPid deamon_start_cleanup(): DB config v".$dbVersion.' is up-to-date.');
 
         // Removing empty dir in "devices_local"
         AbeilleTools::cleanDevices();
+
+        /* Removing all queues */
+        $abQueues = $GLOBALS['abQueues'];
+        foreach ($abQueues as $qName => $q) {
+            $qKey = $q['id'];
+            if (msg_queue_exists($qKey) === true) {
+                if (msg_remove_queue(msg_get_queue($qKey)) === false)
+                    log::add('Abeille', 'debug', "$myPid deamon_start_cleanup(): msg_remove_queue($qName) Failed");
+            }
+        }
 
         // log::add('Abeille', 'debug', 'deamon_start_cleanup(): Terminé');
         return;
@@ -722,22 +722,25 @@ class Abeille extends eqLogic {
        Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
     public static function deamon_start() {
 
-        // $GLOBALS['toto'] = 12;
-        // $pid = getmypid();
-        // log::add('Abeille', 'debug', "deamon_start() PID={$pid} TOTO=".json_encode($GLOBALS['toto']));
-        log::add('Abeille', 'debug', '>>> deamon_start()');
+        if (!isset($GLOBALS['myPid']))
+            $GLOBALS['myPid'] = getmypid();
+        $myPid = $GLOBALS['myPid'];
 
-        $shm = @shmop_open(12, "c", 0, 50);
+        log::add('Abeille', 'debug', "$myPid >>> deamon_start()");
+
+        $shm = @shmop_open(shmKey, "c", 0644, shmSize);
         if ($shm === false) {
-            log::add('Abeille', 'debug', 'deamon_start(): FAILED to create shared mem');
+            log::add('Abeille', 'error', "$myPid deamon_start(): Failed to create shared mem");
             return false;
         }
-        $shmContent = rtrim(shmop_read($shm, 0, shmop_size($shm)));
-        log::add('Abeille', 'debug', "deamon_start(): Starting. shmContent='$shmContent'");
+        $shmContent = shmop_read($shm, 0, shmop_size($shm));
+        $endPos = strpos($shmContent, "\0");
+        $shmContent = substr($shmContent, 0, $endPos);
+        log::add('Abeille', 'debug', "$myPid deamon_start(): Starting. shmContent='$shmContent'");
         $shmContent = json_decode($shmContent, true);
 
         if (isset($shmContent['daemonsPaused']) && ($shmContent['daemonsPaused'] == true)) {
-            log::add('Abeille', 'debug', 'deamon_start(): IGNORED => daemons PAUSED');
+            log::add('Abeille', 'debug', "$myPid deamon_start(): IGNORED => daemons PAUSED");
             return false;
         }
 
@@ -746,7 +749,7 @@ class Abeille extends eqLogic {
                - does Abeille cron exist ? */
         if (self::dependancy_info()['state'] != 'ok') {
             message::add("Abeille", "Tentative de démarrage alors qu'il y a un souci avec les dépendances");
-            log::add('Abeille', 'debug', "Tentative de démarrage alors qu'il y a un souci avec les dépendances");
+            log::add('Abeille', 'debug', "$myPid deamon_start(): Dependencies issues => Start ignored");
             return false;
         }
         // if (!is_object(cron::byClassAndFunction('Abeille', 'deamon'))) {
@@ -756,76 +759,93 @@ class Abeille extends eqLogic {
         // }
 
         /* Stop all, in case not already the case */
+        // Really needed ? It looks like Jeedom is calling deamon_stop() first
         self::deamon_stop();
 
-        /* Cleanup */
-        self::deamon_start_cleanup();
-
-        $config = AbeilleTools::getConfig();
+        $config = AbeilleTools::getAndCheckConfig();
         $shmContent['config'] = $config;
-
-        /* Checking config */
-        // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
-            if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
-                continue; // Disabled
-
-            /* This zigate is enabled. Checking other parameters */
-            $error = "";
-            $sp = $config['ab::gtwPort'.$gtwId];
-            if (($sp == 'none') || ($sp == "")) {
-                $error = "Port série invalide pour la passerelle {$gtwId}";
-            }
-            if ($error == "") {
-                if ($config['ab::gtwSubType'.$gtwId] == "WIFI") {
-                    $wifiAddr = $config['ab::gtwIpAddr'.$gtwId];
-                    if (($wifiAddr == 'none') || ($wifiAddr == "")) {
-                        $error = "Adresse Wifi invalide pour la Zigate {$gtwId}";
-                    }
-                }
-            }
-            if ($error != "") {
-                $config['ab::gtwEnabled'.$gtwId] = 'N';
-                config::save('ab::gtwEnabled'.$gtwId, 'N', 'Abeille');
-                log::add('Abeille', 'error', $error." => Passerelle désactivée.");
-            } else if (($config['ab::gtwSubType'.$gtwId] == "PI") || ($config['ab::gtwSubType'.$gtwId] == "PIv2")) {
-                /* Configuring GPIO for PiZigate if one active found.
-                    PiZigate reminder (using 'WiringPi'):
-                    - port 0 = RESET
-                    - port 2 = FLASH
-                    - Production mode: FLASH=1, RESET=0 then 1 */
-                AbeilleTools::setPIGpio(); // Found an active PI Zigate. Configure GPIO (needed once).
-            }
+        if ($config['checkStatus'] == "nok") {
+            log::add('Abeille', 'debug', "$myPid deamon_start(): Config check failed => Start ignored");
+            return false;
         }
 
-        /* Starting all required daemons */
+        // OBSOLETE => Done by getAndCheckConfig()
+        // /* Checking config */
+        // for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+        //     if ($config['ab::gtwEnabled'.$gtwId] != 'Y')
+        //         continue; // Disabled
+
+        //     /* This zigate is enabled. Checking other parameters */
+        //     $error = "";
+        //     $sp = $config['ab::gtwPort'.$gtwId];
+        //     if (($sp == 'none') || ($sp == "")) {
+        //         $error = "Port série invalide pour la passerelle {$gtwId}";
+        //     }
+        //     if ($error == "") {
+        //         if ($config['ab::gtwSubType'.$gtwId] == "WIFI") {
+        //             $wifiAddr = $config['ab::gtwIpAddr'.$gtwId];
+        //             if (($wifiAddr == 'none') || ($wifiAddr == "")) {
+        //                 $error = "Adresse Wifi invalide pour la Zigate {$gtwId}";
+        //             }
+        //         }
+        //     }
+        //     if ($error != "") {
+        //         $config['ab::gtwEnabled'.$gtwId] = 'N';
+        //         config::save('ab::gtwEnabled'.$gtwId, 'N', 'Abeille');
+        //         log::add('Abeille', 'error', $error." => Passerelle désactivée.");
+        //     } else if (($config['ab::gtwSubType'.$gtwId] == "PI") || ($config['ab::gtwSubType'.$gtwId] == "PIv2")) {
+        //         /* Configuring GPIO for PiZigate if one active found.
+        //             PiZigate reminder (using 'WiringPi'):
+        //             - port 0 = RESET
+        //             - port 2 = FLASH
+        //             - Production mode: FLASH=1, RESET=0 then 1 */
+        //         AbeilleTools::setPIGpio(); // Found an active PI Zigate. Configure GPIO (needed once).
+        //     }
+        // }
+
+        /* Cleanup */
+        self::deamon_start_cleanup($myPid);
+
+        /* If PI Zigate, need to configure PIO */
+        if (isset($config['piZigateFound']) && $config['piZigateFound']) {
+            /* Configuring GPIO for PiZigate if one active found.
+                PiZigate reminder (using 'WiringPi'):
+                - port 0 = RESET
+                - port 2 = FLASH
+                - Production mode: FLASH=1, RESET=0 then 1 */
+            AbeilleTools::setPIGpio(); // Found an active PI Zigate. Configure GPIO (needed once).
+        }
+
+        /* Starting all required daemons. Will return 'true' if ok */
         if (AbeilleTools::startDaemons($config) == false) {
             // Probably no active Zigate. Startup cancelled.
-            return;
+            return false;
         }
+        $shmContent['daemons']['state'] = 'ok';
+        $shmContent['daemons']['reqState'] = 'start';
 
-        /* Waiting for background daemons to be up & running.
-           If not, the return of first commands sent to zigate might be lost.
-           This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
-        // TODO Tcharp38: Note: This should not longer be required as the parser itself do the request on startup
-        $expected = constant("daemonMain"); // 1 bit per expected serial read daemon
-        for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
-            if (($config['ab::gtwPort'.$gtwId] == 'none') or ($config['ab::gtwEnabled'.$gtwId] != 'Y'))
-                continue; // Undefined or disabled
+        // /* Waiting for background daemons to be up & running.
+        //    If not, the return of first commands sent to zigate might be lost.
+        //    This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
+        // // TODO Tcharp38: Note: This should not longer be required as the parser itself do the request on startup
+        // $expected = constant("daemonMain"); // 1 bit per expected serial read daemon
+        // for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
+        //     if (($config['ab::gtwPort'.$gtwId] == 'none') or ($config['ab::gtwEnabled'.$gtwId] != 'Y'))
+        //         continue; // Undefined or disabled
 
-            $expected |= constant("daemonSerialRead".$gtwId);
-            if ($config['ab::gtwSubType'.$gtwId] == 'WIFI')
-                $expected |= constant("daemonSocat".$gtwId);
-        }
-        $timeout = 10;
-        for ($t = 0; $t < $timeout; $t++) {
-            $runArr = AbeilleTools::getRunningDaemons2();
-            if (($runArr['runBits'] & $expected) == $expected)
-                break;
-            sleep(1);
-        }
-        if ($t == $timeout)
-            log::add('Abeille', 'debug', 'deamon_start(): ERROR, still some missing daemons after timeout');
+        //     $expected |= constant("daemonSerialRead".$gtwId);
+        //     if ($config['ab::gtwSubType'.$gtwId] == 'WIFI')
+        //         $expected |= constant("daemonSocat".$gtwId);
+        // }
+        // $timeout = 10;
+        // for ($t = 0; $t < $timeout; $t++) {
+        //     $runArr = AbeilleTools::getRunningDaemons2();
+        //     if (($runArr['runBits'] & $expected) == $expected)
+        //         break;
+        //     sleep(1);
+        // }
+        // if ($t == $timeout)
+        //     log::add('Abeille', 'debug', "$myPid deamon_start(): ERROR, still some missing daemons after timeout");
 
         // Starting main daemon; this will start to treat received messages
         // cron::byClassAndFunction('Abeille', 'deamon')->run();
@@ -842,98 +862,74 @@ class Abeille extends eqLogic {
         }
 
         /* Update shared mem */
-        $shmString = str_pad(json_encode($shmContent, JSON_UNESCAPED_SLASHES), shmSize, "\0");
+        $shmString = json_encode($shmContent, JSON_UNESCAPED_SLASHES)."\0";
         $strSize = strlen($shmString);
-        log::add('Abeille', 'debug', "deamon_start(): LA writing $strSize");
         $wSize = shmop_write($shm, $shmString, 0);
         if ($wSize != $strSize) {
-            log::add('Abeille', 'error', "deamon_start(): Shared mem size too low (need $strSize)");
+            log::add('Abeille', 'error', "$myPid deamon_start(): Shared mem size too low (need $strSize)");
         }
 
-        log::add('Abeille', 'debug', 'deamon_start(): Ended');
+        log::add('Abeille', 'debug', "$myPid deamon_start(): Ended");
         return true;
-    }
+    } // End 'deamon_start()'
 
     /* Jeedom required function.
        Stopping all daemons and removing queues */
     public static function deamon_stop() {
-        log::add('Abeille', 'debug', 'deamon_stop(): Starting');
+
+        if (!isset($GLOBALS['myPid']))
+            $GLOBALS['myPid'] = getmypid();
+        $myPid = $GLOBALS['myPid'];
+
+        log::add('Abeille', 'debug', "$myPid <<< deamon_stop(): Starting");
+
+        /* Opening shared mem area */
+        $shm = shmop_open(shmKey, "w", 0644, 0);
+        if ($shm === false) {
+            log::add('Abeille', 'debug', "$myPid deamon_stop(): Failed to open shared mem");
+            return $status;
+        }
+        $shmContent = shmop_read($shm, 0, shmop_size($shm));
+        $endPos = strpos($shmContent, "\0");
+        $shmContent = substr($shmContent, 0, $endPos);
+        log::add('Abeille', 'debug', "$myPid deamon_stop(): shmContent='$shmContent'");
+        $shmContent = json_decode($shmContent, true);
 
         /* Stopping cron */
-        $cron = cron::byClassAndFunction('Abeille', 'deamon');
-        if (!is_object($cron))
-            log::add('Abeille', 'error', 'deamon_stop(): Tache cron introuvable');
-        else if ($cron->running()) {
-            log::add('Abeille', 'debug', 'deamon_stop(): Stopping cron');
-            $cron->halt();
-            while ($cron->running()) {
-                usleep(500000);
-                log::add('Abeille', 'debug', 'deamon_stop(): cron STILL running');
-            }
-        } else
-            log::add('Abeille', 'debug', 'deamon_stop(): cron already stopped');
+        // $cron = cron::byClassAndFunction('Abeille', 'deamon');
+        // if (!is_object($cron))
+        //     log::add('Abeille', 'error', "$myPid deamon_stop(): Tache cron introuvable");
+        // else if ($cron->running()) {
+        //     log::add('Abeille', 'debug', "$myPid deamon_stop(): Stopping cron");
+        //     $cron->halt();
+        //     while ($cron->running()) {
+        //         usleep(500000);
+        //         log::add('Abeille', 'debug', "$myPid deamon_stop(): cron STILL running");
+        //     }
+        // } else
+        //     log::add('Abeille', 'debug', "$myPid deamon_stop(): cron already stopped");
 
         /* Stopping all 'Abeille' daemons */
-        AbeilleTools::stopDaemons();
+        if (AbeilleTools::stopDaemons() == false)
+            return false;
 
-        /* Removing all queues */
-        $abQueues = $GLOBALS['abQueues'];
-        foreach ($abQueues as $qName => $q) {
-            $qKey = $q['id'];
-            if (msg_queue_exists($qKey) === true) {
-                if (msg_remove_queue(msg_get_queue($qKey)) === false)
-                    log::add('Abeille', 'debug', "deamon_stop(): msg_remove_queue({$qName}) FAILED");
-            }
+        $shmContent['daemons']['state'] = 'nok';
+        $shmContent['daemons']['reqState'] = 'stop';
+
+        /* Update shared mem */
+        $shmString = json_encode($shmContent, JSON_UNESCAPED_SLASHES)."\0";
+        $strSize = strlen($shmString);
+        $wSize = shmop_write($shm, $shmString, 0);
+        if ($wSize != $strSize) {
+            log::add('Abeille', 'error', "$myPid deamon_stop(): Shared mem size too low (need $strSize)");
         }
+
         // $ret = shell_exec("ipcs -q");
         // if ($ret !== false)
         //     log::add('Abeille', 'debug', "deamon_stop(): ipcs -q => ".$ret);
 
-        log::add('Abeille', 'debug', 'deamon_stop(): Ended');
+        log::add('Abeille', 'debug', "$myPid deamon_stop(): Ended");
     }
-
-    // Tcharp38: Moved to 'Abeille.ajax.php'. During Git update, auto-restart is disabled thru config/deamonAutoMode
-    // /* Temporary stop daemons and prevent auto-restart from Jeedom */
-    // public static function pauseDaemons($start) {
-    //     $smId = shmop_open(12, "c", 0644, 50);
-    //     $smContent = [];
-    //     if ($start)
-    //         $smContent['daemonsPaused'] = true;
-    //     else
-    //         $smContent['daemonsPaused'] = false;
-    //     shmop_write($smId, json_encode($smContent), 0);
-
-    //     log::add('Abeille', 'debug', 'pauseDaemons('.$start.')');
-    //     if ($start) {
-    //         $daemons = AbeilleTools::getRunningDaemons2();
-    //         if ($daemons['runBits'] == 0)
-    //             $GLOBALS['daemonsRunning'] = false; // No running daemon
-    //         else
-    //             $GLOBALS['daemonsRunning'] = true;
-    //         log::add('Abeille', 'debug', 'Stopping daemons');
-    //         self::deamon_stop(); // Stopping daemons
-    //     } else {
-    //         if ($GLOBALS['daemonsRunning']) {
-    //             log::add('Abeille', 'debug', 'Restarting daemons');
-    //             abeille::deamon_start(); // Restarting daemon
-    //         }
-    //     }
-    // }
-
-    /* Called from Jeedom to install dependencies.
-       Tcharp38: No longer used since 'packages.json' arrival but which Jeedom version ? */
-    // public static function dependancy_install() {
-    //     log::add('Abeille', 'debug', 'dependancy_install()');
-
-    //     message::add("Abeille", "Installation des dépendances en cours.", "N'oubliez pas de lire la documentation: https://kiwihc16.github.io/AbeilleDoc");
-    //     log::remove(__CLASS__.'_update');
-    //     $result = [
-    //         'script' => __DIR__.'/../scripts/installDependencies.sh '.jeedom::getTmpFolder('Abeille').'/dependencies_progress',
-    //         'log' => log::getPathToLog(__CLASS__.'_update')
-    //     ];
-
-    //     return $result;
-    // }
 
     /* Called from Jeedom to display dependencies status.
        Tcharp38: Still required (but updated) using official 'packages.json' way */
@@ -959,93 +955,6 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return, JSON_UNESCAPED_SLASHES));
         return $return;
     }
-
-    // /* This is Abeille's main daemon, directly controlled by Jeedom itself. */
-    // // TODO: This is currently launched as cron. Should be isolated as main Abeille's daemon and not depends on cron
-    // public static function deamon() {
-    //     global $abQueues;
-
-    //     log::add('Abeille', 'debug', 'deamon(): Main daemon starting');
-
-    //     // $pid = getmypid();
-    //     // log::add('Abeille', 'debug', "deamon() PID={$pid} TOTO=".json_encode($GLOBALS['toto']));
-
-    //     /* Main daemon starting.
-    //        This means that other daemons have started too. Abeille can communicate with them */
-
-    //     // Send a message to Abeille to ask for behive creation/update.
-    //     // Tcharp38: Moved from deamon_start()
-    //     $config = AbeilleTools::getConfig();
-    //     $GLOBALS['config'] = $config;
-    //     for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
-    //         if ($config['ab::gtwPort'.$gtwId] == 'none')
-    //             continue; // Port undefined
-
-    //         if ($config['ab::gtwEnabled'.$gtwId] == 'Y') {
-    //             // Create/update beehive equipment on Jeedom side
-    //             // Note: This will reset 'FW-Version' to '---------' to mark FW version invalid.
-    //             if ($config['ab::gtwType'.$gtwId] == "zigate")
-    //                 self::createRuche("Abeille{$gtwId}");
-    //             else
-    //                 self::createEzspGateway("Abeille{$gtwId}");
-    //         } else {
-    //             // Gateway disabled. Ensure equipment is disabled too
-    //             $eqLogic = eqLogic::byLogicalId("Abeille{$gtwId}/0000", 'Abeille');
-    //             if (is_object($eqLogic) && ($eqLogic->getIsEnable() != 0)) {
-    //                 $eqLogic->setIsEnable(0);
-    //                 $eqLogic->save();
-    //             }
-    //         }
-    //     }
-
-    //     // Essaye de recuperer les etats des equipements
-    //     // Tcharp38: Moved from deamon_start()
-    //     self::refreshCmd();
-
-    //     try {
-    //         $abQueues = $GLOBALS['abQueues'];
-    //         while(true) {
-    //             $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
-    //             if ($queueXToAbeille !== false)
-    //                 break;
-
-    //             log::add('Abeille', 'debug', 'deamon(): msg_get_queue(xToAbeille) ERROR');
-    //             usleep(500000); // Sleep 500ms
-    //         }
-    //         $queueXToAbeilleMax = $abQueues["xToAbeille"]["max"];
-
-    //         // https: github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
-    //         // const int EINVAL = 22;
-    //         // const int ENOMSG = 42; /* No message of desired type */
-
-    //         // Blocking queue read
-    //         log::add('Abeille', 'debug', 'deamon(): Infinite listening to queueXToAbeille');
-    //         while (true) {
-    //             log::add('Abeille', 'debug', 'deamon(): msg_receive, msg_qnum='.msg_stat_queue($queueXToAbeille)["msg_qnum"]);
-    //             if (@msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, 0, $errCode) == false) {
-    //                 if ($errCode == 7) {
-    //                     msg_receive($queueXToAbeille, 0, $rxMsgType, $queueXToAbeilleMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-    //                     log::add('Abeille', 'error', "Message (xToAbeille) trop grand ignoré: ".$msgJson);
-    //                     continue; // Continue without sleeping
-    //                 }
-
-    //                 log::add('Abeille', 'debug', 'deamon(): msg_receive(xToAbeille) erreur '.$errCode);
-    //                 usleep(500000); // Sleep 500ms
-    //                 continue;
-    //             }
-
-    //             $msg = json_decode($msgJson, true);
-    //             if (isset($msg['topic']))
-    //                 self::message($msg['topic'], $msg['payload']);
-    //             else
-    //                 self::msgFromParser($msg);
-    //         }
-    //     } catch (Exception $e) {
-    //         log::add('Abeille', 'error', 'deamon(): Exception '.$e->getMessage());
-    //     }
-
-    //     log::add('Abeille', 'debug', 'deamon(): Main daemon stopped');
-    // }
 
     // Jeedom optional function: called before saving (create or update) an equipment
     // public function preSave() {
@@ -1088,66 +997,6 @@ class Abeille extends eqLogic {
             return $incStatus;
         return -1;
     }
-
-    // /* Trig another command defined by 'trigLogicId'.
-    //    The 'newValue' is computed with 'trigOffset' if required then applied to 'trigLogicId' */
-    // public static function trigCommand($eqLogic, $value, $trigLogicId, $trigOffset = '') {
-    //     $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
-    //     if (!is_object($trigCmd)) {
-    //         log::add('Abeille', 'debug', "  trigCommand(): Unknown Jeedom command logicId='{$trigLogicId}'");
-    //         return;
-    //     }
-
-    //     log::add('Abeille', 'debug', "  trigCommand(Val={$value}, TrigOffset='{$trigOffset}')");
-    //     if ($trigOffset != '') {
-    //         $vsPos = stripos($trigOffset, '#valueswitch-'); // Any #valueswitch-....# variable ?
-    //         if ($vsPos !== false) {
-    //             $vs = substr($trigOffset, $vsPos + 13);
-    //             $vsPos2 = strpos($vs, '#');
-    //             $varName = substr($vs, 0, $vsPos2);
-    //             log::add('Abeille', 'debug', "  'valueswitch' detected: VarName='{$varName}'");
-
-    //             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-    //             $varUp = strtoupper($varName);
-    //             if (!isset($eqModel['variables']) || !isset($eqModel['variables'][$varUp])) {
-    //                 $eqHName = $eqLogic->getHumanName();
-    //                 message::add("Abeille", "{$eqHName}: La variable '{$varUp}' n'est pas définie");
-    //                 return;
-    //             }
-    //             $var = $eqModel['variables'][$varUp];
-    //             log::add('Abeille', 'debug', "  Var=".json_encode($var, JSON_UNESCAPED_SLASHES));
-    //             $varType = gettype($var);
-    //             log::add('Abeille', 'debug', "  varType={$varType}");
-    //             if ($varType == "array") {
-    //                 // Variable is an array so keys are string. If value is int => convert to hex string.
-    //                 log::add('Abeille', 'debug', "  valueType=".gettype($value));
-    //                 if (gettype($value) != "string") {
-    //                     $value2 = strval($value);
-    //                     log::add('Abeille', 'debug', "  value2={$value2}");
-    //                     $newValue = $var[$value2];
-    //                 } else
-    //                     $newValue = $var[$value];
-    //             } else
-    //                 $newValue = $var;
-    //             log::add('Abeille', 'debug', "  newValue=".json_encode($newValue, JSON_UNESCAPED_SLASHES));
-    //             $trigValue = jeedom::evaluateExpression(str_ireplace("#valueswitch-{$varName}#", $newValue, $trigOffset));
-    //         } else
-    //             $trigValue = jeedom::evaluateExpression(str_ireplace('#value#', $value, $trigOffset));
-    //     } else
-    //         $trigValue = $value;
-
-    //     $trigName = $trigCmd->getName();
-    //     log::add('Abeille', 'debug', "  Triggering cmd '{$trigName}' ({$trigLogicId}) with Val='{$trigValue}'");
-    //     $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
-
-    //     // Is the triggered command a battery percent reporting ?
-    //     if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
-    //         $trigValue = round($trigValue, 0);
-    //         log::add('Abeille', 'debug', "  Battery % reporting: {$trigLogicId}, Val={$trigValue}");
-    //         $eqLogic->setStatus('battery', $trigValue);
-    //         $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-    //     }
-    // }
 
     // /* Called on info cmd update (attribute report or attribute read) to see if any action cmd must be executed */
     // public static function infoCmdUpdate($eqLogic, $cmdLogic, $value) {
@@ -1301,7 +1150,7 @@ class Abeille extends eqLogic {
     // public static function createRuche($dest) {
     //     $gtwId = substr($dest, 7); // AbeilleX => X
 
-    //     // $config = AbeilleTools::getConfig();
+    //     // $config = AbeilleTools::getAndCheckConfig();
     //     $config = $GLOBALS['config']; // Present as global since main daemon
     //     $eqLogic = eqLogic::byLogicalId($dest."/0000", 'Abeille');
     //     if (!is_object($eqLogic)) {
@@ -1485,7 +1334,7 @@ class Abeille extends eqLogic {
     // public static function createEzspGateway($net) {
     //     $gtwId = substr($net, 7); // AbeilleX => X
 
-    //     // $config = AbeilleTools::getConfig();
+    //     // $config = AbeilleTools::getAndCheckConfig();
     //     $config = $GLOBALS['config']; // Present as global since main daemon
     //     $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
     //     if (!is_object($eqLogic)) {
@@ -1527,7 +1376,7 @@ class Abeille extends eqLogic {
     //     $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
     //     $eqLogic->setName($eqName);
     //     $eqLogic->setLogicalId($logicalId);
-    //     // $config = AbeilleTools::getConfig();
+    //     // $config = AbeilleTools::getAndCheckConfig();
     //     $config = $GLOBALS['config']; // Present as global since main daemon
     //     $eqLogic->setObject_id($config['ab::defaultParent']);
     //     $eqLogic->setConfiguration('IEEE', $ieee);
@@ -1651,7 +1500,7 @@ class Abeille extends eqLogic {
             $eqName = $eqType." - ".$eqId; // Default name (ex: '<eqType> - 12')
             $eqLogic->setName($eqName);
             $eqLogic->setLogicalId($eqLogicId);
-            // $config = AbeilleTools::getConfig();
+            // $config = AbeilleTools::getAndCheckConfig();
             $config = $GLOBALS['config']; // Present as global since main daemon
             $eqLogic->setObject_id($config['ab::defaultParent']);
             if (isset($dev['ieee'])) $eqLogic->setConfiguration('IEEE', $dev['ieee']); // No IEEE for virtual remote

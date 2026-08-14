@@ -36,7 +36,7 @@
         }
     }
 
-    $parameters = AbeilleTools::getConfig();
+    $parameters = AbeilleTools::getAndCheckConfig();
 // logToFile("parameters=".json_encode($parameters));
     $running = AbeilleTools::getRunningDaemons();
     $diff = AbeilleTools::diffExpectedRunningDaemons($parameters, $running);

@@ -51,9 +51,9 @@
     logSetConf("AbeilleSocat".$zgId.".log", true); // Log to file with line nb check
 
     //check already running
-    $parameters = AbeilleTools::getConfig();
+    $config = AbeilleTools::getAndCheckConfig();
     $running = AbeilleTools::getRunningDaemons();
-    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
     #Two at least expected,the original and this one
     if ($daemons["socat".$zgId] > 1) {

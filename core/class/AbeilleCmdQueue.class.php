@@ -21,25 +21,6 @@
 
         function __construct($debugLevel='debug') {
             // cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
-            // cmdLog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
-
-            // $abQueues = $GLOBALS['abQueues'];
-            // $this->queueParserToCmdAck      = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
-            // $this->queueParserToCmdAckMax   = $abQueues["parserToCmdAck"]["max"];
-            // $this->queueXToCmd              = msg_get_queue($abQueues["xToCmd"]["id"]);
-            // $this->queueXToCmdMax           = $abQueues["xToCmd"]["max"];
-
-            // $this->tempoMessageQueue = array();
-
-            // $GLOBALS['zigates'] = array();
-            // cmdLog("debug", "AbeilleCmdQueue constructor");
-            // for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            //     $GLOBALS['zigates'][$zgId] = $this->initNewZigateDefault($zgId);
-            //     cmdLog("debug", "  zg".$zgId.'='.json_encode($GLOBALS['zigates'][$zgId]), $this->debug["AbeilleCmdClass"] );
-            // }
-
-            // Used to know which Zigate we are working on right now. Sort of global variable. Would have been better to have queue objects and not queue array. Perhaps in the futur could improve the code...
-            // $this->zgId = 1;
 
             $this->displayStatus();
 

@@ -33,8 +33,9 @@
     include_once __DIR__.'/../php/AbeilleLog.php'; // logGetLevelNumber()
     // include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()
 
-    const shmKey = 0xAB0100; // Shared memory id
+    const shmKey = 0xAB0100; // Shared memory ID
     const shmSize = 1400; // Shared memory max size
+    const semKey = 0xAB0101; // Semaphore ID
 
 class Abeille extends eqLogic {
     /**
@@ -122,6 +123,29 @@ class Abeille extends eqLogic {
     //     log::add('Abeille', 'debug', 'refreshCmd: end');
     // }
 
+    /* Write shared mem content using semaphore to avoid conflicts */
+    public static function shmWrite($shm, $shmContent) {
+        /* Acquire semaphore during write to avoid write conflicts */
+        if (!isset($GLOBALS['shmSem']))
+            $GLOBALS['shmSem'] = sem_get(semKey, 10);
+        $shmSem = $GLOBALS['shmSem'];
+        if ($shmSem === false) {
+            log::add('Abeille', 'error', "  Can't get semaphore");
+        } else {
+            sem_acquire($shmSem);
+        }
+
+        /* Adding '\0' required if 'shmString' is shorter than previous one */
+        $shmString = json_encode($shmContent, JSON_UNESCAPED_SLASHES)."\0";
+        $strSize = strlen($shmString);
+        $wSize = shmop_write($shm, $shmString, 0);
+        if ($wSize != $strSize) {
+            log::add('Abeille', 'error', "  Shared mem size too low (need $strSize)");
+        }
+
+        sem_release($shmSem);
+    }
+
     /**
      * cron1
      * - Called by Jeedom every 1 minutes.
@@ -197,10 +221,7 @@ class Abeille extends eqLogic {
         }
 
         if ($writeShm) {
-            // TODO: Be sure no write conflict with other processses
-            /* Adding '\0' required if 'shmString' is shorter than previous one */
-            $shmString = json_encode($shmContent, JSON_UNESCAPED_SLASHES)."\0";
-            shmop_write($shm, $shmString, 0);
+            self::shmWrite($shm, $shmContent);
         }
 
         // Checking queues status to log any potential issue.
@@ -293,8 +314,6 @@ class Abeille extends eqLogic {
 
             log::add('Abeille', 'debug', 'cron(): poll=1 found, interrogating addr='.$address);
             $mainEP = $eqLogic->getConfiguration('mainEP');
-            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
-            // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");
             Abeille::msgToCmd(PRIO_NORM, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
             Abeille::msgToCmd(PRIO_NORM, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");
             $i++;
@@ -351,11 +370,10 @@ class Abeille extends eqLogic {
         // Checking how many gateways are in pairing mode
         $count = 0;
         for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
-            $incStatus = self::checkInclusionStatus("Abeille{$gtwId}");
-            log::add('Abeille', 'debug', "cron(): Abeille{$gtwId} => inclusion status = {$incStatus}");
+            $incStatus = self::checkInclusionStatus("Abeille$gtwId");
+            log::add('Abeille', 'debug', "cron(): Abeille$gtwId => inclusion status = $incStatus");
             if ($incStatus === 1) {
-                // Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "CmdAbeille{$gtwId}/0000/permitJoin", "Status");
-                Abeille::msgToCmd(PRIO_NORM, "CmdAbeille{$gtwId}/0000/permitJoin", "Status");
+                Abeille::msgToCmd(PRIO_NORM, "CmdAbeille$gtwId/0000/permitJoin", "Status");
                 $count++;
             }
         }
@@ -779,13 +797,13 @@ class Abeille extends eqLogic {
         //     $error = "";
         //     $sp = $config['ab::gtwPort'.$gtwId];
         //     if (($sp == 'none') || ($sp == "")) {
-        //         $error = "Port série invalide pour la passerelle {$gtwId}";
+        //         $error = "Port série invalide pour la passerelle $gtwId";
         //     }
         //     if ($error == "") {
         //         if ($config['ab::gtwSubType'.$gtwId] == "WIFI") {
         //             $wifiAddr = $config['ab::gtwIpAddr'.$gtwId];
         //             if (($wifiAddr == 'none') || ($wifiAddr == "")) {
-        //                 $error = "Adresse Wifi invalide pour la Zigate {$gtwId}";
+        //                 $error = "Adresse Wifi invalide pour la Zigate $gtwId";
         //             }
         //         }
         //     }
@@ -862,12 +880,7 @@ class Abeille extends eqLogic {
         }
 
         /* Update shared mem */
-        $shmString = json_encode($shmContent, JSON_UNESCAPED_SLASHES)."\0";
-        $strSize = strlen($shmString);
-        $wSize = shmop_write($shm, $shmString, 0);
-        if ($wSize != $strSize) {
-            log::add('Abeille', 'error', "$myPid deamon_start(): Shared mem size too low (need $strSize)");
-        }
+        self::shmWrite($shm, $shmContent);
 
         log::add('Abeille', 'debug', "$myPid deamon_start(): Ended");
         return true;
@@ -917,19 +930,14 @@ class Abeille extends eqLogic {
         $shmContent['daemons']['reqState'] = 'stop';
 
         /* Update shared mem */
-        $shmString = json_encode($shmContent, JSON_UNESCAPED_SLASHES)."\0";
-        $strSize = strlen($shmString);
-        $wSize = shmop_write($shm, $shmString, 0);
-        if ($wSize != $strSize) {
-            log::add('Abeille', 'error', "$myPid deamon_stop(): Shared mem size too low (need $strSize)");
-        }
+        self::shmWrite($shm, $shmContent);
 
         // $ret = shell_exec("ipcs -q");
         // if ($ret !== false)
         //     log::add('Abeille', 'debug', "deamon_stop(): ipcs -q => ".$ret);
 
         log::add('Abeille', 'debug', "$myPid deamon_stop(): Ended");
-    }
+    } // End 'deamon_stop()'
 
     /* Called from Jeedom to display dependencies status.
        Tcharp38: Still required (but updated) using official 'packages.json' way */

@@ -266,7 +266,7 @@
         logTitle("Devices");
         logIt("Reminder: TO=timeout, NA=no-ack, DIS=disabled\n");
 
-        for ($gtwId = 1; $gtwId <= maxNbOfZigate; $gtwId++) {
+        for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
             if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
 

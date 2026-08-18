@@ -200,7 +200,7 @@
             <br />
             <div id="div_routingTable">
                 <?php
-                    displayNetworks(maxNbOfZigate, "linksTable");
+                    displayNetworks(maxGateways, "linksTable");
                 ?>
                 <br />
                 <!-- <hr> -->
@@ -249,7 +249,7 @@
         <div class="tab-pane" id="idLinksGraphTab">
             <div class="ab-container-left">
                 <?php
-                    displayNetworks(maxNbOfZigate, "linksGraph", "column");
+                    displayNetworks(maxGateways, "linksGraph", "column");
                 ?>
                 <br>
                 Actuel :

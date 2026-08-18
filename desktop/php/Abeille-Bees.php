@@ -75,7 +75,7 @@
     }
 
     $NbOfZigatesON = 0; // Number of enabled zigates
-    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+    for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
 
         if ( config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y' )
             continue; // This Zigate is not enabled

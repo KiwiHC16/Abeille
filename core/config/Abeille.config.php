@@ -3,8 +3,9 @@
      * Abeille's static config file
      */
 
-    /* Note: Better to use const instead of define().
-             'const' is set at compilation while define at run-time */
+    /* Note: Better to use const instead of define(). 'const' is set at compilation while define at run-time.
+             As a general rule, use const by default for cleaner, faster, and more readable code.
+             Reserve define() only when you strictly need conditional logic, dynamic names, or global initialization patterns. */
 
     const lastDbVersion = 20260806;
 
@@ -49,9 +50,9 @@
     define('PRIO_HIGH', priorityMax); // High priority (ex: parser to cmd to react on wakeup)
 
     const maxGateways = 6; // Number of supported gateways (zigate/ezsp)
-    $GLOBALS['maxGateways'] = maxGateways; // OBSOLETE !! Use 'maxGateways' instead
-    define('maxNbOfZigate', maxGateways); // OBSOLETE !! Use 'maxGateways' instead
-    $GLOBALS['maxNbOfZigate'] = maxGateways; // OBSOLETE !! Use 'maxGateways' instead
+    // $GLOBALS['maxGateways'] = maxGateways; // OBSOLETE !! Use 'maxGateways' instead
+    // define('maxNbOfZigate', maxGateways); // OBSOLETE !! Use 'maxGateways' instead
+    // $GLOBALS['maxNbOfZigate'] = maxGateways; // OBSOLETE !! Use 'maxGateways' instead
 
     define('maxRetryDefault', 3);
 
@@ -60,7 +61,8 @@
     define('urlUserMan', "https://kiwihc16.github.io/AbeilleDoc/");
 
     /* Developer config file */
-    define('dbgFile', __DIR__.'/../../tmp/debug.json');
+    // define('dbgFile', __DIR__.'/../../tmp/debug.json');
+    const dbgFile =  __DIR__.'/../../tmp/debug.json';
 
     /* A bit per daemon */
     define('daemonCmd', 1 << 0);

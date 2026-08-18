@@ -44,7 +44,7 @@
     $oneMissing = FALSE;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
-    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
+    for ($zgNb = 1; $zgNb <= maxGateways; $zgNb++) {
         if ($parameters['ab::gtwEnabled'.$zgNb] != "Y")
             continue; // Zigate disabled
         displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
@@ -54,7 +54,7 @@
 
     echo "<hr>";
 
-    for ($i = 1; $i <= maxNbOfZigate; $i++) {
+    for ($i = 1; $i <= maxGateways; $i++) {
         if (config::byKey('ab::gtwEnabled'.$i, 'Abeille', 'N', 1) == "Y") {
 ?>
         <div class="ui-block-a">

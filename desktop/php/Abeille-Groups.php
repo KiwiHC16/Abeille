@@ -98,7 +98,7 @@
 			echo '<a class="btn btn-warning" onclick="sendToCmd(\'setGroupRemoteLegrand\')">Set group remote Legrand</a>';
 			echo '<br>';
 
-			for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+			for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
 				if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
 					continue; // This Zigate is disabled
 

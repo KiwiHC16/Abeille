@@ -156,7 +156,7 @@
         //    - Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI'
         //  */
         // if (intval($dbVersion) < 20200510) {
-        //     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+        //     for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
         //         if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', '') != "Y")
         //             continue; // Disabled or undefined
 
@@ -177,7 +177,7 @@
         //  */
         // if (intval($dbVersion) < 20201025) {
         //     /* Updating addresses in config */
-        //     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+        //     for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
         //         $ieee = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', '');
         //         if ($ieee == "")
         //             continue; // Undefined
@@ -397,14 +397,14 @@
 
             // Remove obsolete log files
             $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser', 'AbeilleDebug.log', 'AbeilleConfig'];
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
                 $obsolete[] = 'AbeilleSocat'.$zgId;
                 $obsolete[] = 'AbeilleSerialRead'.$zgId;
             }
             removeLogs($obsolete);
 
             // Updating WIFI serial port (/dev/zigateX => constant wifiLink)
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
                 $port = config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '');
                 if ($port == "")
                     continue;
@@ -650,7 +650,7 @@
             } // End 'eqLogic' updates
 
             // 'config' DB updates
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
                 renameConfigKey('AbeilleActiver'.$zgId, 'ab::zgEnabled'.$zgId);
                 renameConfigKey('AbeilleType'.$zgId, 'ab::zgType'.$zgId);
                 renameConfigKey('AbeilleSerialPort'.$zgId, 'ab::zgPort'.$zgId);
@@ -665,7 +665,7 @@
             config::remove('blocageRecuperationEquipement', 'Abeille');
             config::remove('blocageTraitementAnnonce', 'Abeille');
             renameConfigKey('DbVersion', 'ab::dbVersion');
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
                 if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                     continue;
                 if (config::byKey('ab::zgChan'.$zgId, 'Abeille', 0) != 0)
@@ -1137,7 +1137,7 @@
 
             // Remove obsolete logs
             $obsolete = [];
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
                 $obsolete[] = "AbeilleSerialRead{$zgId}.log";
             }
             removeLogs($obsolete);

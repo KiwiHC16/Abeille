@@ -1944,7 +1944,7 @@
 
     // Create/update 'gateway' equipments
     $GLOBALS['config'] = $config;
-    for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
         if ($config['ab::gtwPort'.$gtwId] == 'none')
             continue; // Port undefined
 

@@ -1,5 +1,8 @@
 {
     "FYRTURblock-outrollerblind": {
+        "manufacturer": "Ikea",
+        "model": "E1757",
+        "type": "FYRTUR Blackout Roller Blind",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,19 +11,18 @@
         "category": {
             "automatism": "1"
         },
-        "type": "FYRTUR blind",
         "commands": {
-            "ZCL Version": {
-                "use": "inf_zbAttr-0000-ZCLVersion"
-            },
             "Up": {
-                "use": "act_zbCmdC-0102-UpOpen"
-            },
-            "Down": {
-                "use": "act_zbCmdC-0102-DownClose"
+                "use": "act_zbCmdC-0102-UpOpen",
+                "isVisible": 1
             },
             "Stop": {
-                "use": "act_zbCmdC-0102-Stop"
+                "use": "act_zbCmdC-0102-Stop",
+                "isVisible": 1
+            },
+            "Down": {
+                "use": "act_zbCmdC-0102-DownClose",
+                "isVisible": 1
             },
             "Level": {
                 "use": "WindowsCoveringLevel"

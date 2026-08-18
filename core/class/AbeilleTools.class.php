@@ -982,7 +982,7 @@
                     $daemons .= " AbeilleMonitor";
             }
 
-            log::add('Abeille', 'debug', "  startDaemons(daemons=$$daemons)");
+            log::add('Abeille', 'debug', "  startDaemons(daemons=$daemons)");
             $daemonsArr = explode(" ", $daemons);
             $expectedNb = count($daemonsArr);
             foreach ($daemonsArr as $daemon) {

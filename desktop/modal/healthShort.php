@@ -178,9 +178,20 @@
             $statusClass = ['status-ok', 'status-warn', 'status-alert'][$alert];
             echo '<td class="'.$statusClass.'" data-sort="'.$alert.'">'.$status.'</td>';
 
-            // Depuis
-            $depuisVal = floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600);
-            echo '<td class="col-depuis" data-sort="'.$depuisVal.'">'.$depuisVal.'</td>';
+            // Depuis: real last comm from info cmds collect dates ('lastCommunication' status
+            // is overwritten by Jeedom core on plugin restart/reenable). 'Xh (Yj)' over 72h.
+            $lastRealComm = AbeilleTools::getLastRealComm($eqLogic);
+            if ($lastRealComm == '') {
+                $depuisVal = -1;
+                $depuisTxt = '?';
+            } else {
+                $depuisVal = floor((time() - strtotime($lastRealComm)) / 3600);
+                if ($depuisVal > 72)
+                    $depuisTxt = $depuisVal.'h ('.floor($depuisVal / 24).'j)';
+                else
+                    $depuisTxt = $depuisVal;
+            }
+            echo '<td class="col-depuis" data-sort="'.$depuisVal.'">'.$depuisTxt.'</td>';
 
         }
     ?>

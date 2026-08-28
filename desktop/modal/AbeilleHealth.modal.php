@@ -246,8 +246,11 @@ logDebug("running2=".json_encode($running2));
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
                         tr += '<td>'+status+'</td>';
 
-                        // Time in H since last comm.
-                        since = '<span style="font-size:1em;cursor:default;">'+dis1+e.since+dis2+'</span>';
+                        // Time in H since last comm. Displayed as 'Xh (Yj)' over 72h
+                        sinceTxt = e.since;
+                        if (Number.isInteger(e.since) && (e.since > 72))
+                            sinceTxt = e.since+'h ('+Math.floor(e.since / 24)+'j)';
+                        since = '<span style="font-size:1em;cursor:default;">'+dis1+sinceTxt+dis2+'</span>';
                         tr += '<td>'+since+'</td>';
 
                         // Last comm.

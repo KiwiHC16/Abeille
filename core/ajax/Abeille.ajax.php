@@ -825,9 +825,13 @@
                 $e['ieee'] = $eqLogic->getConfiguration('IEEE', '');
                 $e['isEnabled'] = $eqLogic->getIsEnable();
                 $e['timeout'] = $eqLogic->getStatus('timeout');
-                $e['lastComm'] = $eqLogic->getStatus('lastCommunication');
+                // Real last comm from info cmds collect dates. 'lastCommunication' status is
+                // overwritten by Jeedom core on plugin restart/reenable => wrong 'since' value.
+                $e['lastComm'] = AbeilleTools::getLastRealComm($eqLogic);
                 if (substr($eqAddr, 0, 2) == "rc") // Remote control ?
                     $e['since'] = '-';
+                else if ($e['lastComm'] == '')
+                    $e['since'] = '?';
                 else
                     $e['since'] = floor((time() - strtotime($e['lastComm'])) / 3600);
                 $e['txAck'] = $eqLogic->getStatus('ab::txAck', 'ok');

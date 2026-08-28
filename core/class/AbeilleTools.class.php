@@ -37,6 +37,29 @@
         }
 
         /**
+         * Get last REAL communication date for the given equipment.
+         * The 'lastCommunication' eqLogic status can't be trusted for this: Jeedom core
+         * overwrites it with current date whenever the equipment is re-enabled
+         * (eqLogic::setIsEnable()), which happens for ALL equipments on plugin
+         * restart/update. Info commands 'collectDate' are only updated on real
+         * messages from the device, so the newest one is the real last communication.
+         *
+         * @param eqLogic $eqLogic
+         * @return string Date 'Y-m-d H:i:s', or '' if unknown
+         */
+        public static function getLastRealComm($eqLogic) {
+            $last = '';
+            foreach ($eqLogic->getCmd('info') as $cmd) {
+                $cDate = $cmd->getCollectDate();
+                if ($cDate > $last)
+                    $last = $cDate; // String compare ok on 'Y-m-d H:i:s' format
+            }
+            if ($last == '')
+                $last = $eqLogic->getStatus('lastCommunication', '');
+            return $last;
+        }
+
+        /**
          * Convert log level string to number to compare more easily.
          *
          * @param $loglevel

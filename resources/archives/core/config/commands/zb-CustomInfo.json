@@ -1,9 +1,0 @@
-{
-    "zb-CustomInfo": {
-        "name": "Custom info",
-        "subType": "numeric",
-        "configuration": [],
-        "type": "info",
-        "logicalId": "#CLUSTID#-#EP#-#ATTRID#"
-    }
-}

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="260901-BETA-1"
+# VERSION="260901-STABLE-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1512,7 +1512,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/private_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/tuya_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-cea4bc19890d85066cd424bfa427978a *docs/fr_FR/Changelog.md
+de0198614972b96068526bc81abafdb5 *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1521,11 +1521,11 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-39faf7f55c726cf64a41a3eb9d2ddfd7 *plugin_info/Abeille.version
+600fe2137ad7c54a9937bb6700242abc *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6d80d3934e14cf09d026bdb3c1c87df9 *plugin_info/configuration.php
-a6db3d9034d612ba9398551ed394ae04 *plugin_info/info.json
+8d228d65f54d7d2f5112ab6d8f245751 *plugin_info/info.json
 bfc35db7c6cb31030b98bf925fb293ea *plugin_info/install.php
 fa66c2e280e095a90334aa2c690f9158 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

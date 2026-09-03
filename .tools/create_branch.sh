@@ -46,7 +46,7 @@ if [ $# -gt 0 ]; then
                 shift
             ;;
             *)    # unknown option
-                echo "= ERROR: Only 'beta' or 'master' accepted as argument"
+                echo "= ERROR: Only 'beta' or 'stable' accepted as argument"
                 exit 1
             ;;
         esac
@@ -177,8 +177,10 @@ fi
 
 # Create local temporary branch & switch to it
 # Note: Local branch deleted if already exists
+# Note 01/sep/26: Moving local name from 'beta-temp-xxx' to 'beta'
 TODAY=`date +"%y%m%d"`
-LOCAL_BRANCH="$TARG_BRANCH-temp-${TODAY}"
+# LOCAL_BRANCH="$TARG_BRANCH-temp-${TODAY}"
+LOCAL_BRANCH="$TARG_BRANCH"
 git show-ref refs/heads/$LOCAL_BRANCH >/dev/null
 if [ $? -eq 0 ]; then
     # Note: -D to force delete

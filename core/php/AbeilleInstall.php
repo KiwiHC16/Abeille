@@ -34,7 +34,7 @@
      */
     function Abeille_pre_update_analysis($log, $echo) {
 
-        log::add('Abeille', 'debug', 'Launch of Abeille_pre_update_analysis()');
+        log::add('Abeille', 'debug', 'Start of Abeille_pre_update_analysis()');
 
         $tmpDir = jeedom::getTmpFolder('Abeille');
         if ($echo) echo '{{Repertoire Temporaire}}: '.$tmpDir.'<br><br>';
@@ -64,7 +64,7 @@
             if ($log) log::add('Abeille', 'debug', 'Pas de soucis détecté.' );
         }
 
-        log::add('Abeille', 'debug', 'End of Abeille_pre_update()');
+        log::add('Abeille', 'debug', 'End of Abeille_pre_update_analysis()');
     }
 
     /**

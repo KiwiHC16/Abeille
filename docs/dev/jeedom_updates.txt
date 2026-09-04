@@ -1,0 +1,67 @@
+
+***
+*** Abeille developer internal doc
+*** Plugin updates
+*** Tcharp38
+***
+
+Info about plugin update or creation process.
+
+Useful links
+============
+https://github.com/jeedom/plugin-template/blob/master/plugin_info/install.php
+https://github.com/jeedom/plugin-template/blob/master/plugin_info/pre_install.php
+
+Sequencing
+==========
+
+- Download plugin.zip
+        2026-09-04 13:05:11 (916 KB/s) - '/tmp/jeedom/market/Abeille.zip' saved [48460279]
+- Decompress
+- Call Abeille_pre_update()
+- TO BE COMPLETED !!
+
+plugin_info/install.php
+=======================
+// Fonction exécutée automatiquement après l'installation du plugin
+function template_install() {
+}
+
+// Fonction exécutée automatiquement après la mise à jour du plugin
+function template_update() {
+}
+
+// Fonction exécutée automatiquement après la suppression du plugin
+function template_remove() {
+}
+
+plugin_info/pre_install.php
+===========================
+// Fonction exécutée automatiquement avant la mise à jour du plugin
+function template_pre_update() {
+}
+
+Example
+=======
+
+        2026-09-04 13:05:11 (916 KB/s) - '/tmp/jeedom/market/Abeille.zip' saved [48460279]
+
+        [2026-09-04 13:05:11][ALERT] OK
+
+        [2026-09-04 13:05:11][ALERT] Décompression du zip...
+        [2026-09-04 13:05:14][ALERT] OK
+
+        [2026-09-04 13:05:16][ALERT] Action de pré-update...
+        [2026-09-04 13:05:17][ALERT] OK
+
+        [2026-09-04 13:05:57][ALERT] Post-installation de Abeille...
+        [2026-09-04 13:05:57][ALERT] Vérification des droits sur les fichiers...
+        [2026-09-04 13:05:58][ALERT] OK
+
+        [2026-09-04 13:05:58][ALERT] Suppression des fichiers inutiles...
+        [2026-09-04 13:07:23][ALERT] OK
+
+        [2026-09-04 13:07:23][ALERT] END UPDATE SUCCESS
+
+        [2026-09-04 13:07:24][ALERT] Launch cron dependancy plugins
+        [2026-09-04 13:07:24][ALERT] [END UPDATE SUCCESS]

@@ -35,6 +35,12 @@
     require_once __DIR__.'/../../../../core/php/core.inc.php';
     require_once __DIR__.'/AbeilleLog.php'; // logDebug()
 
+    include_file('core', 'authentification', 'php');
+    if (!isConnect('admin')) {
+        http_response_code(401);
+        die('401 - Accès non autorisé');
+    }
+
     if (isset($_GET['action']))
         $action = $_GET['action'];
     else

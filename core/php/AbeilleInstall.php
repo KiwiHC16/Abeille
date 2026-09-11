@@ -184,6 +184,8 @@
                         continue; // Ignoring 'tmp' dir
                     if ($dir.$entry == "core/config/devices_local")
                         continue; // Ignoring local/user devices
+                    if ($dir.$entry == "resources/python_env")
+                        continue; // Ignoring python virtual env installed by Jeedom (dependencies with 'packages.json')
 
                     if (is_dir(pluginRoot.$dir.$entry)) {
                         cleanDir($dir.$entry."/", $refFiles);

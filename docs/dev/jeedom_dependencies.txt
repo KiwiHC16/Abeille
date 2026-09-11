@@ -10,17 +10,54 @@ Useful links
 https://blog.jeedom.com/6170-introduction-jeedom-4-2-installation-de-dependance/
 https://doc.jeedom.com/fr_FR/dev/daemon_plugin
 
-New way based on 'packages.json'
-================================
+New way based on 'packages.json' (currently active in Abeille)
+==============================================================
+Requires
+
+    - plugin_info/packages.json
+
 If this files exists, Jeedom handles directly dependencies installation.
 In that case dependancy_install() in Abeille.class is useless.
-but dependancy_info() is still required but checking new paths.
+  but dependancy_info() is still required but checking new paths.
 
 Log file        : 'Abeille_packages'
 In progress file: '/tmp/jeedom_install_in_progress_Abeille', contains percentage
 
+Example
+
+    {
+        "apt": {
+            "python3": {},
+            "python3-sysv-ipc": {}
+        },
+        "pip3": {
+            "pyserial": {}
+        },
+        "pre-install" : {
+            "script" : "plugins/Abeille/resources/pre-install.sh"
+        },
+        "post-install": {
+            "restart_apache": true
+            "script" : "plugins/Abeille/resources/post-install.sh"
+        }
+    }
+
 Legacy way (as a reminder)
 ==========================
-Requires in Abelle.class
-    dependancy_install()
-    dependancy_info()
+Requires
+    in Abelle.class
+    - dependancy_install()
+    - dependancy_info()
+
+    Example
+    =======
+    public static function dependancy_install() {
+        log::remove(__CLASS__ . '_update');
+        return array('script' => dirname(__FILE__) . '/../../resources/install_#stype#.sh ' . jeedom::getTmpFolder(__CLASS__) . '/dependance', 'log' => log::getPathToLog(__CLASS__ . '_update'));
+    }
+
+About Python VENV
+=================
+Python virtual environment is installed by Jeedom in 'Abeille/resources/python_env'.
+It seems that there is no way to choose an alternative directory.
+

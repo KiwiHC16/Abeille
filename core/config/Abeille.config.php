@@ -84,5 +84,5 @@
     define('daemonMonitor', 1 << 22);
     define('daemonMain', 1 << 23);
 
-    define ("daemonStopTimeout", 2000); // 2sec
+    define ("daemonStopTimeout", 5000); // 5sec - was 2sec, too short for daemons stuck on slow/flaky network I/O (zigate WiFi bridge incident 2026-09-09)
 ?>

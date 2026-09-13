@@ -808,7 +808,10 @@
                 foreach($running2['daemons'] as $daemonName => $daemon) {
                     $found = false;
                     foreach($toStopArr as $daemonToStop) {
-                        if (strstr($daemon['cmd'], $daemonToStop) !== false) {
+                        // Matching on cmdline substring (legacy behavior) OR exact short name
+                        // (needed for Socat: 'SocatN'/'socatN' never appear as a contiguous
+                        // substring in the actual process cmdline, so they'd otherwise never match).
+                        if (strstr($daemon['cmd'], $daemonToStop) !== false || $daemonName === $daemonToStop) {
                             $found = true;
                             break;
                         }
@@ -969,12 +972,18 @@
 
             log::add('Abeille', 'debug', "  startDaemons(): ".$daemons);
             $daemonsArr = explode(" ", $daemons);
+            // Dedupe by generated command: 2 tokens (ex: 'SocatN'/'socatN') can resolve to
+            // the identical start command and must not launch the same daemon twice.
+            $cmdsToRun = [];
             foreach ($daemonsArr as $daemon) {
                 $cmd = self::getStartCommand($config, $daemon);
                 if ($cmd == "")
                     log::add('Abeille', 'debug', "  startDaemons(): ERROR, empty cmd for '".$daemon."'");
                 else
-                    exec($cmd.' &');
+                    $cmdsToRun[$cmd] = true;
+            }
+            foreach (array_keys($cmdsToRun) as $cmd) {
+                exec($cmd.' &');
             }
             return true;
         }

@@ -911,7 +911,13 @@ class Abeille extends eqLogic {
         else if ($cron->running()) {
             log::add('Abeille', 'debug', 'deamon_stop(): Stopping cron');
             $cron->halt();
+            // Attente bornee (30 s) : sans limite, un cron qui ne s'arrete pas bloquait deamon_stop() indefiniment
+            $waitLoops = 0;
             while ($cron->running()) {
+                if (++$waitLoops > 60) {
+                    log::add('Abeille', 'warning', 'deamon_stop(): cron toujours actif apres 30 s, on continue');
+                    break;
+                }
                 usleep(500000);
                 log::add('Abeille', 'debug', 'deamon_stop(): cron STILL running');
             }

@@ -655,7 +655,9 @@
          *  )
          **/
         public static function getRunningDaemons2(): array {
-            $cmd1 = "pgrep -a php | grep Abeille";
+            // Uniquement les scripts du plugin (chemin '/plugins/Abeille/'), pas tout process php dont la
+            // ligne de commande contient "Abeille" (ex: php -r "...Abeille::deamon_stop()..." etait tue lui-meme)
+            $cmd1 = "pgrep -a php | grep '/plugins/Abeille/'";
             exec($cmd1, $running); // Get all Abeille daemons
             /* 'pgrep -a php | grep Abeille' example:
                 6333 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSocat.php /tmp/zigateWifi2 debug 192.168.0.102:9999 */
@@ -663,7 +665,7 @@
             exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
             /*  'pgrep -a socat' example:
                 16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
-            $cmd3 = "pgrep -a python3 | grep Abeille";
+            $cmd3 = "pgrep -a python3 | grep '/plugins/Abeille/'";
             exec($cmd3, $running3); // Get all Abeille python3 daemons
 
             $processes = array_merge($running, $running2, $running3);
@@ -703,8 +705,11 @@
                     $gtwId = substr($line, $pos + 8, 1); // 'xxx --gtwid=Y' => Y
                     $shortName = "ezsp".$gtwId;
                     // $runBits |= constant("daemonSocat".$zgId);
-                } else
-                    $shortName = "Unknown";
+                } else {
+                    // Process non reconnu : ne jamais le considerer comme un demon a arreter
+                    log::add('Abeille', 'debug', "getRunningDaemons2(): process ignore: ".$line);
+                    continue;
+                }
                 $d = array(
                     'pid' => $lineArr[0],
                     'cmd' => substr($line, strpos($line, " ")),

@@ -1782,17 +1782,20 @@
         $cmds = cmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
         $cmdLogicId = $cmdLogic->getLogicalId();
         foreach ($cmds as $cmd) {
-            if ($cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
+            // Abeille#59: the triggered cmd's logicId must not overwrite $cmdLogicId (the received
+            // attribute). With an empty logicId (e.g. getPlugVAW) every following cmd having
+            // PollingOnCmdChange='' matched too, so Get-Status re-read 0006-0000 in an endless loop.
+            if ($cmdLogicId == '' || $cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
                 continue;
             $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
             $cmdName = $cmd->getName();
-            $cmdLogicId = $cmd->getLogicalId();
+            $trigLogicId = $cmd->getLogicalId();
             if ($delay != 0) {
-                logMessage('debug', "    Triggering '{$cmdName}' ({$cmdLogicId}) with delay ".$delay);
+                logMessage('debug', "    Triggering '{$cmdName}' ({$trigLogicId}) with delay ".$delay);
                 // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
                 msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
             } else {
-                logMessage('debug', "    Triggering '{$cmdName}' ({$cmdLogicId})");
+                logMessage('debug', "    Triggering '{$cmdName}' ({$trigLogicId})");
                 // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
                 msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
             }

@@ -356,7 +356,22 @@ class Abeille extends eqLogic {
                     }
                 } else if (($zgType == "PI") || ($zgType == "PIv2")) {
                     log::add('Abeille', 'Debug', 'Performing HW reset on Zigate '.$gtwId);
-                    exec("python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py");
+                    // Meme methode qu'AbeilleTools::setPIGpio(). Avant : "python" (2.7) sur un script
+                    // Python 3 => SyntaxError a chaque minute, sans que personne ne le voie
+                    // (Zigbee de jeedomcedar muet ~9 h le 2026-09-28).
+                    $output = array();
+                    $exitCode = 0;
+                    $gpioLib = config::byKey('ab::defaultGpioLib', 'Abeille', 'WiringPi', 1);
+                    if ($gpioLib == "PiGpio") {
+                        $pigpiodHost = config::byKey('ab::pigpiodHost', 'Abeille', '127.0.0.1', 1);
+                        exec("python3 ".__DIR__."/../scripts/resetPiZigate.py --host=".escapeshellarg($pigpiodHost)." 2>&1", $output, $exitCode);
+                    } else {
+                        exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 2>&1", $output, $exitCode);
+                    }
+                    if ($exitCode != 0) {
+                        log::add('Abeille', 'error', "Reset matériel de la PiZigate ".$gtwId." en échec (".$gpioLib.", code ".$exitCode.") : ".implode(' | ', $output));
+                        message::add("Abeille", "La Zigate ".$gtwId." (PiZigate) ne répond plus et son reset matériel échoue (".$gpioLib."). Voir le log Abeille.", '', 'piZigateResetFailed'.$gtwId);
+                    }
                 } else if (($zgType == "WIFI") || ($zgType == "WIFIv2")) {
                     log::add('Abeille', 'Debug', 'Restarting socat for Zigate '.$gtwId);
                     AbeilleTools::restartDaemons($config, "Socat".$gtwId." socat".$gtwId);

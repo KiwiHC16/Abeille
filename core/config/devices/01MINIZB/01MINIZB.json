@@ -19,7 +19,8 @@
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
-                "params": "ep=01"
+                "params": "ep=01",
+                "isVisible": 1
             },
             "Off": {
                 "use": "act_zbCmdC-0006-Off",

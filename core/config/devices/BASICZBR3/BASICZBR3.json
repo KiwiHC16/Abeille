@@ -17,7 +17,8 @@
                 "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdC-0006-On"
+                "use": "act_zbCmdC-0006-On",
+                "isVisible": 1
             },
             "Off": {
                 "use": "act_zbCmdC-0006-Off",

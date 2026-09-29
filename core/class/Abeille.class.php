@@ -204,39 +204,63 @@ class Abeille extends eqLogic {
     public static function cronHourly() {
         log::add('Abeille', 'debug', 'cronHourly() starting');
 
-        // log::add('Abeille', 'debug', 'Check Zigate Presence');
+        //--------------------------------------------------------
+        // Reactive le 30/09/2026 (Ben) : les ampoules IKEA perdent parfois leur bind/reporting
+        // (cluster 0006 On/Off, 0008 Level) au fil du temps, ce qui casse le retour d'etat sans
+        // qu'aucune erreur ne soit visible (la lampe repond toujours a une lecture directe).
+        // L'ancienne version de ce rafraichissement (ci-dessous, desactivee par 'if (0)') passait
+        // par publishMosquitto(), qui n'existe plus dans cette version d'Abeille. On reutilise ici
+        // directement les commandes action deja presentes sur chaque equipement (Bind-*-ToZigate,
+        // SetReporting-*), exactement ce qu'un clic manuel declenche - voir l'investigation du
+        // 30/09/2026 sur les ampoules P1-P5 de la piscine (jeedompro).
+        log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
 
-        // $config = AbeilleTools::getConfig();
-// if (0) {
-//         //--------------------------------------------------------
-//         // Refresh Ampoule Ikea Bind et set Report
-//         log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
+        $eqLogics = self::byType('Abeille');
+        $i = 0;
+        foreach ($eqLogics as $eqLogic) {
+            if (!is_object($eqLogic) || $eqLogic->getIsEnable() != 1) {
+                continue;
+            }
+            // Filtre sur Ikea (le filtre historique sur le nom d'icone "IkeaTradfriBulb" ne
+            // correspondait plus a rien : les icones actuelles sont du type "TRADFRIbulbE27...")
+            $model = $eqLogic->getConfiguration('ab::eqModel');
+            if (!is_array($model) || strcasecmp((string) ($model['manuf'] ?? ''), 'Ikea') !== 0) {
+                continue;
+            }
 
-//         $eqLogics = Abeille::byType('Abeille');
-//         $i = 0;
-//         foreach ($eqLogics as $eqLogic) {
-//             // Filtre sur Ikea
-//             if (strpos("_".$eqLogic->getConfiguration("ab::icon"), "IkeaTradfriBulb") > 0) {
-//                 list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
-//                 $i = $i + 1;
+            // getCmd($type, $logicalId) filtre sur le logicalId (ex. "bind-01-0006-ToZigate"),
+            // pas sur le nom affiche : on parcourt donc les commandes de l'equipement par nom.
+            $cmdsByName = array();
+            foreach ($eqLogic->getCmd() as $c) {
+                $cmdsByName[$c->getName()] = $c;
+            }
 
-//                 // Recupere IEEE de la Ruche/ZiGate
-//                 $ZiGateIEEE = self::getIEEE($dest.'/0000');
+            $refreshed = false;
+            foreach (array('0006', '0008') as $clusterId) {
+                $bindCmd = isset($cmdsByName['Bind-'.$clusterId.'-ToZigate']) ? $cmdsByName['Bind-'.$clusterId.'-ToZigate'] : null;
+                $reportCmd = isset($cmdsByName['SetReporting-'.$clusterId.'-0000']) ? $cmdsByName['SetReporting-'.$clusterId.'-0000'] : null;
+                if (!is_object($bindCmd) || !is_object($reportCmd)) {
+                    continue;
+                }
+                try {
+                    $bindCmd->execCmd();
+                    usleep(200000);
+                    $reportCmd->execCmd();
+                    usleep(200000);
+                    $refreshed = true;
+                } catch (\Throwable $e) {
+                    log::add('Abeille', 'warning', 'cronHourly(): echec refresh bind/report cluster '.$clusterId.' sur '.$eqLogic->getHumanName().' : '.$e->getMessage());
+                }
+            }
+            if ($refreshed) {
+                $i = $i + 1;
+                log::add('Abeille', 'debug', 'cronHourly(): bind/report rafraichis pour '.$eqLogic->getHumanName());
+            }
+        }
+        if ($i > 0) {
+            log::add('Abeille', 'debug', 'cronHourly(): '.$i.' ampoule(s) Ikea rafraichie(s)');
+        }
 
-//                 // Recupere IEEE de l Abeille
-//                 $addrIEEE = self::getIEEE($dest.'/'.$addr);
-
-//                 log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
-//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE);
-//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE);
-//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10");
-//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20");
-//             }
-//         }
-//         if (($i * 33) > (3600)) {
-//             message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 heure.", "Contactez KiwiHC16 sur le Forum.");
-//         }
-//     }
         // Poll Cmd
         self::executePollCmds("cronHourly");
 

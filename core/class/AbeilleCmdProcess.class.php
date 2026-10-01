@@ -2666,6 +2666,8 @@
                 // Zigbee command: Network address request (NWK_addr_req)
                 // Mandatory: 'ieee'
                 // Optional: 'reqType' (00=single=default, 01=extended)
+                //           'addr' (destination, default 0000=gateway ; FFFD = broadcast to all
+                //           rx-on-when-idle devices, to find a device whose short address is unknown/changed)
                 else if ($cmdName == 'getNwkAddress') {
                     $required = ['ieee'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -2678,16 +2680,18 @@
                     // <request type: uint8_t> 0 = Single Request 1 = Extended Request
                     // <start index: uint8_t>
 
-                    $addr = '0000'; // What for ?
+                    $addr = isset($Command['cmdParams']['addr']) ? strtoupper($Command['cmdParams']['addr']) : '0000';
                     $ieee = $Command['cmdParams']['ieee'];
                     $reqType = isset($Command['cmdParams']['reqType']) ? $Command['cmdParams']['reqType'] : "00";
                     $startIndex = "00";
 
                     $data = $addr.$ieee.$reqType.$startIndex ;
 
-                    cmdLog('debug', "  getNwkAddress: IEEE={$ieee}, ReqType={$reqType}");
+                    cmdLog('debug', "  getNwkAddress: Dest={$addr}, IEEE={$ieee}, ReqType={$reqType}");
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
+                    // Broadcast (FFF8-FFFF): no APS ACK to wait for (same as zgSetPermitMode)
+                    $ackAddr = (hexdec($addr) >= 0xFFF8) ? '' : $addr;
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $ackAddr);
                     return;
                 }
 

@@ -231,6 +231,12 @@
         AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0024", "", "0000", null, 0);
 
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+10), "");
+
+        /* Gateway infos shown in 'advanced' tab (IEEE, PAN ID, ext PAN ID, time, TX power).
+           Only answered by Zigate itself (no radio traffic), once network is started. */
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetNetworkStatus&tempo=".(time()+12), "");
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetTimeServer&tempo=".(time()+12), "");
+        msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetTxPower&tempo=".(time()+12), "");
     }
 
     // Configure device during 'device announce' or on user request (model update/reinit)

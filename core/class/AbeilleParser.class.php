@@ -982,6 +982,22 @@
         }
 
         /* Update received during discovering process */
+        /* Discover Attributes (Extended) Response with 'discovery complete' = 00: the device has more
+           attributes than fitted in its answer. Asking next ones, starting after the last received.
+           Ids always increase, so this ends (at the latest when an answer is complete or empty). */
+        function discoverNextAttributes($net, $addr, $ep, $clustId, $fcf, $completed, $attributes, $cmdName, $startParam) {
+            if ($completed != "00" || count($attributes) == 0)
+                return;
+            $lastId = max(array_map('hexdec', array_keys($attributes)));
+            if ($lastId >= 0xFFFF)
+                return;
+            $nextId = sprintf("%04X", $lastId + 1);
+            // Response from server side (FCF direction bit set) => request was sent to server side
+            $dir = ((hexdec($fcf) >> 3) & 1) ? '00' : '01';
+            parserLog2('debug', $addr, "  Discovery not complete => {$cmdName} from {$nextId}");
+            msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/{$cmdName}", "ep={$ep}&clustId={$clustId}&dir={$dir}&{$startParam}={$nextId}");
+        }
+
         function discoverUpdate($net, $addr, $ep, $updType, $val1 = null, $val2 = null, $val3 = null) {
             if (!isset($GLOBALS['devices']))
                 return; // No dev announce before
@@ -3734,11 +3750,10 @@
                         // Duplicated message ?
                         // if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                         //     return;
-                        // Tcharp38: Need to check how to deal with 'completed' flag
 
                         parserLog2('debug', $srcAddr, "  Discover Attributes Response");
 
-                        $completed = substr($msg, 2);
+                        $completed = substr($msg, 0, 2);
                         $msg = substr($msg, 2); // Skipping 'completed' status
 
                         // parserLog('debug', "  msg=".$msg);
@@ -3769,6 +3784,7 @@
                             $isServer = (hexdec($fcf) >> 3) & 1;
                             $this->discoverUpdate($dest, $srcAddr, $srcEp, 'DiscoverAttributesResponse', $clustId, $isServer, $attributes);
                         }
+                        $this->discoverNextAttributes($dest, $srcAddr, $srcEp, $clustId, $fcf, $completed, $attributes, 'discoverAttributes', 'startAttrId');
 
                         /* Send to client if required (EQ page opened) */
                         $toCli = array(
@@ -3789,14 +3805,14 @@
                         // Duplicated message ?
                         // if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                         //     return;
-                        // Tcharp38: Need to check how to deal with 'completed' flag
+                        // TODO: 'completed' flag not followed yet (see discoverNextAttributes())
 
                         // if ($cmd == "12")
                         //     $toMon[] = "8002/Discover Commands Received Response"; // For monitor
                         // else
                         //     $toMon[] = "8002/Discover Commands Generated Response"; // For monitor
 
-                        $completed = substr($msg, 2);
+                        $completed = substr($msg, 0, 2);
                         $msg = substr($msg, 2); // Skipping 'completed' status
                         $commands = [];
                         $l = strlen($msg);
@@ -3827,9 +3843,8 @@
                         // Duplicated message ?
                         // if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                         //     return;
-                        // Tcharp38: Need to check how to deal with 'completed' flag
 
-                        $completed = substr($msg, 2);
+                        $completed = substr($msg, 0, 2);
                         $msg = substr($msg, 2); // Skipping 'completed' status
 
                         $attributes = [];
@@ -3865,6 +3880,7 @@
                             $isServer = (hexdec($fcf) >> 3) & 1;
                             $this->discoverUpdate($dest, $srcAddr, $srcEp, 'DiscoverAttributesExtResponse', $clustId, $isServer, $attributes);
                         }
+                        $this->discoverNextAttributes($dest, $srcAddr, $srcEp, $clustId, $fcf, $completed, $attributes, 'discoverAttributesExt', 'startId');
 
                         /* Send to client if required (ex: EQ page opened) */
                         $toCli = array(

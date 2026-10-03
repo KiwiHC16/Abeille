@@ -3301,7 +3301,8 @@
 
                 // ZCL global: Discover Attributes Extended
                 // Mandatory params: 'addr', 'ep', 'clustId'
-                // Optional params: startId (default=0000), max (default=FF)
+                // Optional params: startId (attribute id, as written elsewhere, ex: 0005, default=0000), max (default=FF),
+                //                  'dir' (00=toServer=default, 01=toClient)
                 else if ($cmdName == 'discoverAttributesExt') {
                     /* Mandatory infos: addr, ep, clustId */
                     $required = ['addr', 'ep', 'clustId'];
@@ -3338,13 +3339,18 @@
                     // $fcf            = "10"; // Frame Control Field
                     // $sqn            = $this->genSqn();
                     // $cmdId          = "15"; // Discover Attributes Extended
+                    $dir = isset($Command['cmdParams']['dir']) ? $Command['cmdParams']['dir'] : '00'; // 00 = to server side, 01 = to client side
                     $hParams = array(
                         'cmdId' => '15', // Discover Attributes Extended
+                        'toCli' => ($dir == "00") ? false : true,
                     );
                     $zclHeader = $this->genZclHeader($hParams);
 
+                    // Attribute id is little endian in ZCL payload
                     $startId        = isset($Command['cmdParams']['startId']) ? $Command['cmdParams']['startId'] : "0000";
+                    $startId        = AbeilleTools::reverseHex(sprintf("%04X", hexdec($startId)));
                     $max            = isset($Command['cmdParams']['max']) ? $Command['cmdParams']['max'] : "FF";
+                    cmdLog('debug', "  discoverAttributesExt: dir={$dir}, startId(LE)={$startId}, max={$max}");
                     // $data2 = $fcf.$sqn.$cmdId.$startId.$max;
                     $data2 = $zclHeader.$startId.$max;
 

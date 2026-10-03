@@ -30,17 +30,60 @@
             "Power": {
                 "use": "inf_zbAttr-000C-PresentValue",
                 "params": "ep=15",
-                "isVisible": 1
+                "isVisible": 1,
+                "comment": "Ancien firmware (EP 15, cluster 000C)"
+            },
+            "Puissance active": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "ep=01&mult=1&div=10",
+                "isVisible": 1,
+                "comment": "Firmware récent (ex: application 43, 2023) : cluster 0B04 sur EP 01, en 1/10 W"
             },
             "Consommation": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",
-                "params": "ep=01&div=1",
+                "params": "ep=01&div=1000",
                 "unit": "KWh",
-                "isVisible": 1
+                "isVisible": 1,
+                "comment": "0702 en Wh (diviseur 1000) => kWh"
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
+            },
+            "Bind-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Bind-0B04-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0B04",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 2
+            },
+            "Bind-0702-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0702",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 4
+            },
+            "SetReporting-0006-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0&maxInterval=300",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 6
+            },
+            "SetReporting-0B04-050B": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=5&maxInterval=300&changeVal=10",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 8
+            },
+            "SetReporting-0702-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0702&attrType=25&attrId=0000&minInterval=10&maxInterval=600&changeVal=1",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 10
             }
         },
         "private": {
@@ -52,7 +95,7 @@
                 },
                 "95-39": {
                     "func": "numberMult",
-                    "mult": "1",
+                    "mult": "1000",
                     "info": "0702-01-0000"
                 }
             }

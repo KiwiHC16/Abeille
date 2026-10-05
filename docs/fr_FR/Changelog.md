@@ -1,6 +1,7 @@
 # ChangeLog
 
 - Correction: Python venv (resources/python_venv) n'est plus supprimé lors de la mise-à-jour d'Abeille.
+- Correction: Interne AbeilleCmd: Status cmd nettoyé si erreur & retry.
 
 ## 260901-STABLE-1, 260901-BETA-1, 260827-BETA-1
 

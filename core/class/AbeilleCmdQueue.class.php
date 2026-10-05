@@ -191,7 +191,7 @@
                 'timeout'   => $ackAps ? 8 : 4, // Cmd expiration time
                 'sqn'       => '', // Zigate SQN
                 'sqnAps'    => '', // Network SQN
-                'ackAps'    => $ackAps, // True if ACK, false else => OBSOLETE. Replaced by 'waitFor'
+                // 'ackAps'    => $ackAps, // True if ACK, false else => OBSOLETE. Replaced by 'waitFor'
                 'waitFor'   => $ackAps ? "ACK": "8000",
                 'repeat'    => $repeat, // Repeat cmd until ACKed
             );
@@ -436,7 +436,7 @@
                 // Reminder for status: ''=unsent, 'SENT'=already sent
                 $sentPri = $zg['sentPri'];
                 $sentIdx = $zg['sentIdx'];
-                if (isset($zg['cmdQueue'][$sentPri]) && isset($zg['cmdQueue'][$sentPri][$sentIdx]) && ($zg['cmdQueue'][$sentPri][$sentIdx]['status'] != '')) {
+                if (isset($zg['cmdQueue'][$sentPri]) && isset($zg['cmdQueue'][$sentPri][$sentIdx]) && ($zg['cmdQueue'][$sentPri][$sentIdx]['status'] == 'SENT')) {
                     // There is a command under execution
                     $cmd = $zg['cmdQueue'][$sentPri][$sentIdx];
                     $timeout = $cmd['timeout'];
@@ -722,6 +722,7 @@
                         }
                         else {
                             cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." failed (err $msgStatus). Will be retried ".$cmd['try']." time(s) max.");
+                            $GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx]['status'] = ''; // Mark unsent
                             $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0; // Zg will be free in 1sec
                         }
                     }

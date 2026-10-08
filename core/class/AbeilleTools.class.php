@@ -883,8 +883,12 @@
             //     $arr = explode(" ", $running[$i]);
             //     $allPids .= ' '.$arr[0];
             // }
+            // Remember the exact PIDs targeted by THIS call, so the wait loop below
+            // can re-check only them, not every Abeille daemon currently running.
+            $targetPids = [];
             foreach($running['daemons'] as $daemon) {
                 $allPids .= ' '.$daemon['pid'];
+                $targetPids[] = $daemon['pid'];
                 if (strstr($daemon['cmd'], "AbeilleSerialRead") !== false)
                     $allPids2 .= ' '.$daemon['pid']; // AbeilleSerialRead needs a 2nd kill
             }
@@ -897,18 +901,24 @@
             log::add('Abeille', 'debug', '  stopDaemons(): '.$cmd);
             exec($cmd);
 
-            /* Waiting until timeout that all daemons be ended */
+            /* Waiting until timeout that all daemons be ended.
+               BUGFIX (2026-10-09): must re-check only $targetPids, not ALL currently running
+               Abeille daemons. Re-fetching the unfiltered list here used to make $nbOfDaemons
+               never reach 0 as soon as other gateways/shared daemons were legitimately still
+               running, which made the loop always hit the timeout below and then SIGKILL
+               every Abeille daemon instead of just the ones this call was meant to stop
+               (root cause of the 2026-10-08 cascading ZiGate outage: a "SocatN socatN"-only
+               restart ended up killing ParserD/CmdD/MainD and the 2 other ZiGates too). */
             for ($t = 0; ($nbOfDaemons != 0) && ($t < daemonStopTimeout); $t+=500) {
                 usleep(500000); // Sleep 500ms
-                // $running = array(); // Clear previous result.
-                // $running2 = array(); // Clear previous result.
-                // exec($cmd1, $running);
-                // if ($cmd2 != "") {
-                //     exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
-                //     $running = array_merge($running, $running2);
-                // }
-                // $nbOfDaemons = sizeof($running);
-                $running = self::getRunningDaemons2();
+                $runningNow = self::getRunningDaemons2();
+                $stillRunning = [];
+                foreach ($runningNow['daemons'] as $daemonName => $daemon) {
+                    if (in_array($daemon['pid'], $targetPids))
+                        $stillRunning[$daemonName] = $daemon;
+                }
+                $running['daemons'] = $stillRunning;
+                $running['runningNb'] = sizeof($stillRunning);
                 $nbOfDaemons = $running['runningNb'];
             }
             if ($nbOfDaemons != 0) {

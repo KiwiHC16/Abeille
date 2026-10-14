@@ -330,11 +330,28 @@
             $GLOBALS['devices'][$net] = [];
 
         if (isset($GLOBALS['devices'][$net][$addr])) {
-            if (($GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] === null) && ($ieee !== null)) {
+            if (($GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] !== null) || ($ieee === null))
+                return $GLOBALS['devices'][$net][$addr];
+
+            // Addr seen without IEEE (traffic from a new short addr without device announce), IEEE now known.
+            // If this IEEE is already known under another addr/network, it is a short addr change or a
+            // migration, not a new device: drop the temporary entry and let the IEEE search below handle it.
+            $knownElsewhere = false;
+            foreach ($GLOBALS['devices'] as $net2 => $devices2) {
+                foreach ($devices2 as $addr2 => $eq2) {
+                    if ((($net2 != $net) || ($addr2 != $addr)) && isset($eq2['zigbee']['ieee']) && ($eq2['zigbee']['ieee'] === $ieee)) {
+                        $knownElsewhere = true;
+                        break 2;
+                    }
+                }
+            }
+            if (!$knownElsewhere) {
                 $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] = $ieee;
                 addNewJeedomDevice($net, $addr, $ieee);
+                return $GLOBALS['devices'][$net][$addr];
             }
-            return $GLOBALS['devices'][$net][$addr];
+            parserLog('debug', "  {$addr} (temp entry without IEEE) is already known device {$ieee} => addr change/migration");
+            unset($GLOBALS['devices'][$net][$addr]);
         }
 
         // Not found. If IEEE is given let's check if short addr has changed or if equipment has migrated from another network.

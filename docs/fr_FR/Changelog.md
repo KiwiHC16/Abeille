@@ -2,7 +2,8 @@
 
 - Correction: Python venv (resources/python_venv) n'est plus supprimé lors de la mise-à-jour d'Abeille.
 - Correction: Interne AbeilleCmd: Status cmd nettoyé si erreur & retry.
-- Amélioration: Ajout support Sonoff SNZB-02LD (2796).
+- Nouveauté: Ajout support Sonoff SNZB-02LD (2796).
+- Nouveauté: Ajout support Sonoff SNZB-02DR2 (2797).
 
 ## 260901-STABLE-1, 260901-BETA-1, 260827-BETA-1
 

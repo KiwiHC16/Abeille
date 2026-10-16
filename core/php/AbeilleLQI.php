@@ -419,7 +419,11 @@
     if (file_exists($lockFile)) {
         $content = file_get_contents($lockFile);
         logMessage("", "Lock content: '${content}'");
-        if (substr($content, 0, 4) != "done") {
+        // A clean previous run writes "= Collecte terminée: <ts>/<status>" (see updateLockFile() at the
+        // end of the collect loop below). Older versions used to write a "done" prefix instead; the check
+        // below never matched the current format, so every run fell through to the pgrep check even after
+        // a clean completion the day before.
+        if (substr($content, 0, 10) != "= Collecte") {
             exec("pgrep -a php | grep AbeilleLQI", $running);
             if (sizeof($running) != 0) {
                 echo 'ERROR: Collect already ongoing';

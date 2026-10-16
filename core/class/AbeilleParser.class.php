@@ -3694,6 +3694,24 @@
                                         $updates[$clustId.'-'.$attr['id']] = $attr['value'];
                                 }
 
+                                // Aqara/Xiaomi motion sensors (e.g. RTCGQ11LM) send a periodic (~hourly)
+                                // "check-in" burst made of a cluster 0000 (Basic) report immediately
+                                // followed by a cluster 0406 (Occupancy) report with value=1, even without
+                                // any real motion. Track the last cluster 0000 report per device and ignore
+                                // an occupancy=1 report that follows it within a few seconds: this is the
+                                // device's own heartbeat, not a real detection.
+                                static $lastBasicReportTs = [];
+                                $basicCheckinKey = $dest.'/'.$srcAddr;
+                                if ($clustId == "0000") {
+                                    $lastBasicReportTs[$basicCheckinKey] = microtime(true);
+                                }
+                                if (($clustId == "0406") && ($attr['id'] == "0000") && ($attr['value'] == 1)
+                                        && isset($lastBasicReportTs[$basicCheckinKey])
+                                        && ((microtime(true) - $lastBasicReportTs[$basicCheckinKey]) < 5)) {
+                                    parserLog2('info', $srcAddr, '  Occupancy=1 ignoré : suit un check-in cluster 0000 du même appareil à moins de 5s (faux positif connu Aqara/Xiaomi)', "8002");
+                                    continue;
+                                }
+
                                 // Log
                                 $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
                                 $m = '  AttrId='.$attr['id'].'/'.$attrName

@@ -1532,30 +1532,15 @@
         // else
         //     $eqLogic->checkAndUpdateCmd($cmdLogic, $timestamp);
 
-        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
-        if (!is_object($cmdLogic))
-            logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-Time'");
-        else
-            $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
+        // 'Time-Time', 'online' and 'Link-Quality' no longer updated (2026-10-19): Time-Time duplicated
+        // 'lastCommunication' above, 'online' was only ever set to 1, none of them was used anywhere, and each
+        // update cost a cmd event + jeelink listener per received message (group feedback arrived lamp by lamp)
 
 // logMessage('debug', "LA10.2");
-        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
-        if (is_object($cmdLogic))
-        //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
-        // else
-            $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
 
 // logMessage('debug', "LA10.3");
         list($net, $addr) = explode("/", $eqLogicId);
         if ($addr != "0000") { // Not a gateway
-            if ($lqi !== null) {
-                $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Link-Quality');
-                if (!is_object($cmdLogic))
-                    logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Link-Quality'");
-                else
-                    $eqLogic->checkAndUpdateCmd($cmdLogic, $lqi);
-            }
-
             // Updating corresponding Zigate alive status too
             $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
             $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
@@ -1616,28 +1601,13 @@
         // else
         //     $eqLogic->checkAndUpdateCmd($cmdLogic, $timestamp);
 
-        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
-        if (!is_object($cmdLogic))
-            logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-Time'");
-        else
-            $eqLogic->checkAndUpdateCmd($cmdLogic, date("Y-m-d H:i:s", $timestamp));
+        // 'Time-Time', 'online' and 'Link-Quality' no longer updated (2026-10-19): Time-Time duplicated
+        // 'lastCommunication' above, 'online' was only ever set to 1, none of them was used anywhere, and each
+        // update cost a cmd event + jeelink listener per received message (group feedback arrived lamp by lamp)
 
-        $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
-        if (is_object($cmdLogic))
-        //     logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
-        // else
-            $eqLogic->checkAndUpdateCmd($cmdLogic, 1);
 
         list($net, $addr) = explode("/", $eqLogicId);
         if ($addr != "0000") { // Not a gateway
-            if ($lqi !== null) {
-                $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Link-Quality');
-                if (!is_object($cmdLogic))
-                    logMessage('debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Link-Quality'");
-                else
-                    $eqLogic->checkAndUpdateCmd($cmdLogic, $lqi);
-            }
-
             // Updating corresponding Zigate alive status too
             $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
             $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));

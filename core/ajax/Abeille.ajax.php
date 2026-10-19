@@ -730,6 +730,9 @@
                         'val' => $cmdVal
                     );
                 }
+                // 'Time-Time' is no longer updated by the main daemon: show the equipment last communication instead
+                if (isset($eq['cmds']['Time-Time']))
+                    $eq['cmds']['Time-Time']['val'] = $eqLogic->getStatus('lastCommunication', '');
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));

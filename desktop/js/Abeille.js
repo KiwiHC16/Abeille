@@ -2808,3 +2808,18 @@ function downloadPdm() {
         null,
     );
 }
+
+/* Attempt to install generic event listener to catch useful infos from Abeille's daemons.
+   WORK ONGOING. Not functional */
+
+$(document).off('jeedom.change.Abeille_hub'); // Clear any existing listener
+
+$(document).on('jeedom.change.Abeille_hub', function (event, data) {
+    if (data && data.type === 'Abeille::generic_event' && data.value) {
+        
+        const payload = data.value; // Le tableau PHP arrive généralement encapsulé ici
+        const type = payload.type;
+
+        console.log("Generic event catched. Type=" + type);
+    }
+});

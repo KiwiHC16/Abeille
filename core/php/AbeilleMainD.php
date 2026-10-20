@@ -1081,7 +1081,6 @@
 
                 $ieee2 = $eqLogic2->getConfiguration('IEEE', '');
                 if ($ieee2 == '') {
-                    logMessage('debug', "    WARNING. No IEEE addr in '".$eqLogicId2."' config.");
                     $cmd = $eqLogic2->getCmd('info', 'IEEE-Addr');
                     if (is_object($cmd)) {
                         $ieee2 = $cmd->execCmd();
@@ -1091,8 +1090,9 @@
                         //           since IEEE always provided with device announce.
                         $eqLogic2->setConfiguration('IEEE', $ieee2);
                         $eqLogic2->save();
-                        logMessage('debug', "    Missing IEEE addr corrected");
-                    }
+                        logMessage('debug', "    '$eqLogicId2': Missing IEEE addr fixed");
+                    } else
+                        logMessage('debug', "    '$eqLogicId2': WARNING ! Missing IEEE addr and can't fix.");
                 }
                 if ($ieee2 != $ieee)
                     continue; // Not the right equipment
@@ -1101,20 +1101,27 @@
                 break; // No need to go thru other equipments
             }
 
-            if (isset($eqLogic)) {
-                updateTimestamp($eqLogic, $msg['time'], $msg['lqi'], true);
+            if (!isset($eqLogic)) {
+                logMessage('debug', "    WARNING: Device with IEEE '$ieee' NOT found in Jeedom");
+                return;
+            }
 
-                /* Display message only if NOT in include mode */
-                if (checkInclusionStatus($net) !== 1)
-                    message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
+            updateTimestamp($eqLogic, $msg['time'], $msg['lqi'], true);
 
-                $eqLogic->setIsEnable(0);
-                $eqLogic->save();
-                $eqLogic->refresh();
-                logMessage('debug', '  '.$eqLogic->getHumanName().' ('.$eqLogic->getLogicalId().') has left the network => DISABLED');
-            } else
-                logMessage('debug', '    WARNING: Device with IEEE '.$ieee.' NOT found in Jeedom');
+            $eqLogic->setIsEnable(0);
+            $eqLogic->save();
+            $eqLogic->refresh();
+            logMessage('debug', '  '.$eqLogic->getHumanName().' ('.$eqLogic->getLogicalId().') has left the network => DISABLED');
 
+            /* Display message only if NOT in include mode */
+            if (checkInclusionStatus($net) !== 1)
+                message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
+
+            // // Sending generic event to opened pages
+            // event::add('Abeille::generic_event', array(
+            //     'type' => 'eqLeft',
+            //     'eqLogicId' => $eqLogic->getLogicalId()
+            // ));
             return;
         } // End 'leaveIndication'
 

@@ -1777,6 +1777,12 @@ class Abeille extends eqLogic {
         );
         Abeille::msgToCmd2($msg);
         Abeille::msgToParser($msg);
+
+        // // Sending generic event to opened pages
+        // event::add('Abeille::generic_event', array(
+        //     'type' => 'eqUpdated',
+        //     'eqId' => $eqId
+        // ));
     } // End createDevice()
 
     // /* Update all infos related to last communication time & LQI of given device.

@@ -288,6 +288,8 @@
         $eqLogic->setIsEnable(1);
         $eqLogic->save();
 
+        updateDevicesCache($eqLogic); // Update local device cache
+
         // TODO ? Missing basic cmds at this step
         // [2025-07-04 12:14:43]   updateTimestamp(): WARNING: Abeille1/F909, missing cmd 'Time-Time'
         // [2025-07-04 12:14:43]   updateTimestamp(): WARNING: Abeille1/F909, missing cmd 'Link-Quality'
@@ -649,24 +651,10 @@
             if ($modelPath != '')
                 $dev['modelPath'] = $modelPath;
             Abeille::createDevice($action, $dev);
+            // Note: this call should trig a 'eqUpdated' message meaning cache must be updated from DB
 
             return;
         } // End 'updateFromModel' or  'resetFromModel'
-
-        // // 2nd way to support 'updateFromModel' .. why ?
-        // if ($msg['type'] == "updateFromModel") {
-        //     logMessage('debug', "  msgFromParser(): updateFromModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
-        //     $dev = array(
-        //         'net' => $net,
-        //         'addr' => $addr,
-        //         'ieee' => $ieee,
-        //         'modelName' => $msg['modelName'],
-        //         'modelSource' => $msg['modelSource'],
-        //     );
-        //     Abeille::createDevice("update", $dev);
-
-        //     return;
-        // } // End 'updateFromModel'
 
         /* Log level has changed */
         if ($msg['type'] == "logLevelChanged") {
@@ -871,6 +859,9 @@
             }
             if ($eqChanged) {
                 $eqLogic->save();
+
+                updateDeviceCache($eqLogic);
+
             // if (isset($informCmd)) {
                 // Inform cmd that EQ config has changed
                 $msg = array(
@@ -1001,7 +992,7 @@
             // 'srcAddr' => $oldAddr,
 
             $oldLogicId = $msg['srcNet'].'/'.$msg['srcAddr'];
-            logMessage('debug', "  msgFromParser(): Device migration from ".$oldLogicId." to ".$net."/".$addr);
+            logMessage('debug', "  msgFromParser(): Device migration from '$oldLogicId' to '$net/$addr'");
 
             $eqLogic = eqLogic::byLogicalId($oldLogicId, 'Abeille');
             if (!is_object($eqLogic)) {
@@ -1014,6 +1005,10 @@
             $eqLogic->setIsEnable(1);
             $eqLogic->save();
             message::add("Abeille", $eqLogic->getHumanName().": a migré vers le réseau ".$net, '');
+
+            // Update cache
+            $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$msg['srcNet']][$msg['srcAddr']];
+            unset($GLOBALS['devices'][$msg['srcNet']][$msg['srcAddr']]);
 
             // Inform cmd that EQ config has changed
             $msg = array(
@@ -1052,6 +1047,12 @@
 
             return;
         } // End 'eqRemoved2'
+
+        // TODO
+        // /* Some equipments removed from Jeedom. */
+        // if ($msg['type'] == "eqUpdated") {
+        //     logMessage('debug', "  '$net/$addr' infos in DB have been updated");
+        // } // End 'eqUpdated'
 
         /* Parser has received a "leave indication" */
         if ($msg['type'] == "leaveIndication") {
@@ -1920,6 +1921,42 @@
         // }
     }
 
+    // Update device local cache from DB
+    function updateDeviceCache($eqLogic) {
+
+        $eqLogicId = $eqLogic->getLogicalId();
+        list($net, $addr) = explode("/", $eqLogicId);
+        $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
+        if ($gtwId == '')
+            return; // Incorrect case
+
+        // Creating list of cmds sorted by logical ID
+        $jCmdsAll = $eqLogic->getCmd();
+        $cmds = [];
+        foreach ($jCmdsAll as $jCmd) {
+            $cmdLogicId = $jCmd->getLogicalId();
+            $cmds[$cmdLogicId] = array(
+                'name' => $jCmd->getName(),
+                'type' => $jCmd->getType(),
+            );
+        }
+
+        // Storing device in internal DB
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+        if (!isset($GLOBALS['devices'][$net][$addr]))
+            $GLOBALS['devices'][$net][$addr] = array(
+                'eqLogic' => $eqLogic,
+                'timestamp' => 0,
+
+                'cmds' => $cmds
+            );
+    } // End updateDeviceCache()
+
+    // // Update device local cache from DB
+    // function updateDeviceCache2($net, $addr) {
+    // }
+
     logSetConf("AbeilleMainD.log", true);
     logMessage('info', ">>> Démarrage d'AbeilleMainD");
 
@@ -1970,27 +2007,22 @@
         }
     }
 
-    /* Internal devices list
+    /* Devices local cache
     $GLOBALS['devices'][$net][$addr]
         $eqLogic
         $timestamp
+
+        $cmds => array[], sorted by cmdLogicId
     */
+    logMessage('debug', "Creating local cache for existing Jeedom devices");
     $GLOBALS['devices'] = [];
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
+        updateDeviceCache($eqLogic);
+
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
-        $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
-        if ($gtwId == '')
-            continue; // Incorrect case
-
-        if (!isset($GLOBALS['devices'][$net]))
-            $GLOBALS['devices'][$net] = [];
-        if (!isset($GLOBALS['devices'][$net][$addr]))
-            $GLOBALS['devices'][$net][$addr] = array(
-                'eqLogic' => $eqLogic,
-                'timestamp' => 0
-            );
+        logMessage('debug', "  $eqLogicId=".json_encode($GLOBALS['devices'][$net][$addr], JSON_UNESCAPED_SLASHES));
     }
 
     try {

@@ -6,6 +6,7 @@
 - Nouveauté: Ajout support Sonoff SNZB-02DR2 (2797).
 - Amélioration: Power cycle clef USB.
 - Correction: Interne MainD: Crash sur checkTrigOut() quand delay != 0.
+- Amélioration: Interne CmdD: Ajout cache interne pour optimisation acces DB.
 
 ## 260901-STABLE-1, 260901-BETA-1, 260827-BETA-1
 

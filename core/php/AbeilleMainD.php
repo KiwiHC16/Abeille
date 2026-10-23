@@ -1845,16 +1845,14 @@
         foreach ($cmds as $cmd) {
             if ($cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
                 continue;
-            $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
+            $delay = intval($cmd->getConfiguration('PollingOnCmdChangeDelay', '0'));
             $cmdName = $cmd->getName();
             $cmdLogicId = $cmd->getLogicalId();
             if ($delay != 0) {
-                logMessage('debug', "    Triggering '{$cmdName}' ({$cmdLogicId}) with delay ".$delay);
-                // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
+                logMessage('debug', "    Triggering '$cmdName' ($cmdLogicId) with delay ".$delay);
                 msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
             } else {
-                logMessage('debug', "    Triggering '{$cmdName}' ({$cmdLogicId})");
-                // publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
+                logMessage('debug', "    Triggering '$cmdName' ($cmdLogicId)");
                 msgToCmd("TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
             }
         }

@@ -1518,8 +1518,10 @@
 
         // logMessage('debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
 
-        // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
-        $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+        // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp.
+        // 'ab::lastRealComm' = same date, but never overwritten by Jeedom core on equipment re-enable (see AbeilleTools::getLastRealComm())
+        $lastComm = date('Y-m-d H:i:s', $timestamp);
+        $eqLogic->setStatus(array('lastCommunication' => $lastComm, 'ab::lastRealComm' => $lastComm, 'timeout' => 0));
 
 // logMessage('debug', "LA10.1, eqLogicalId=$eqLogicalId, eqId=$eqId");
         /* Tcharp38 note:
@@ -1588,8 +1590,10 @@
 
         // logMessage('debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
 
-        // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
-        $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+        // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp.
+        // 'ab::lastRealComm' = same date, but never overwritten by Jeedom core on equipment re-enable (see AbeilleTools::getLastRealComm())
+        $lastComm = date('Y-m-d H:i:s', $timestamp);
+        $eqLogic->setStatus(array('lastCommunication' => $lastComm, 'ab::lastRealComm' => $lastComm, 'timeout' => 0));
 
         /* Tcharp38 note:
            The cases hereafter could be removed. Using 'lastCommunication' allows to no longer

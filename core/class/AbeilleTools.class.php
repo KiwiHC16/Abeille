@@ -41,14 +41,17 @@
          * The 'lastCommunication' eqLogic status can't be trusted for this: Jeedom core
          * overwrites it with current date whenever the equipment is re-enabled
          * (eqLogic::setIsEnable()), which happens for ALL equipments on plugin
-         * restart/update. Info commands 'collectDate' are only updated on real
-         * messages from the device, so the newest one is the real last communication.
+         * restart/update. The main daemon stores the real date in 'ab::lastRealComm' status
+         * (untouched by core). Info commands 'collectDate' are only updated on real
+         * messages from the device, and are used for equipments not yet having this status.
+         * Note: since 2026-10-19 'Time-Time' is no longer updated on each message, so
+         * collectDate alone is stale for equipments whose values do not change.
          *
          * @param eqLogic $eqLogic
          * @return string Date 'Y-m-d H:i:s', or '' if unknown
          */
         public static function getLastRealComm($eqLogic) {
-            $last = '';
+            $last = $eqLogic->getStatus('ab::lastRealComm', '');
             foreach ($eqLogic->getCmd('info') as $cmd) {
                 $cDate = $cmd->getCollectDate();
                 if ($cDate > $last)

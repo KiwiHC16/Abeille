@@ -590,14 +590,10 @@ class Abeille extends eqLogic {
                 $eqName = $eqLogic->getname();
 
                 /* Checking if received some news in the last 15mins */
-                $cmd = $eqLogic->getCmd('info', 'Time-Time');
-                // $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
-                if (!is_object($cmd)) { // Cmd not found
-                    log::add('Abeille', 'warning', "cron15(): Commande 'Time-Time' manquante pour ".$eqName);
-                    continue; // No sense to interrogate EQ if Time-Time does not exists
-                }
-                $lastComm = $cmd->execCmd();
-                $lastComm = strtotime($lastComm); // If 'Time-Time'
+                // 'Time-Time' is no longer updated on each message since 2026-10-19: every mains powered
+                // equipment looked silent and was polled every 15mins. Using last real communication instead.
+                $lastComm = AbeilleTools::getLastRealComm($eqLogic);
+                $lastComm = strtotime($lastComm);
                 if (!is_numeric($lastComm)) { // Does it avoid PHP warning ?
                     // No comm from EQ yet.
                     $daemonsStart = config::byKey('lastDeamonLaunchTime', 'Abeille', '');

@@ -74,7 +74,7 @@
 
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         if (!isset($GLOBALS['devices'][$net][$addr]) && ($ieee == '')) {
-            logMessage('debug', "  ERROR: updateDeviceFromDB(): Unknown addr '{$net}/{$addr}' and IEEE is undefined");
+            logMessage('debug', "  ERROR: updateDeviceFromDB(): Unknown addr '$net/$addr' and IEEE is undefined");
             return;
         }
 
@@ -89,7 +89,7 @@
                     $found = true;
                     $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net][$addr2];
                     unset($GLOBALS['devices'][$net][$addr2]);
-                    logMessage('debug', "  Device ID {$eqId} address changed from '{$net}/{$addr2}' to '{$net}/{$addr}'.");
+                    logMessage('debug', "  Device ID {$eqId} address changed from '$net/$addr2' to '$net/$addr'.");
                     break;
                 }
             }
@@ -104,7 +104,7 @@
                         $found = true;
                         $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net2][$addr2];
                         unset($GLOBALS['devices'][$net2][$addr2]);
-                        logMessage('debug', "  Device ID {$eqId} migrated from '{$net2}/{$addr2}' to '{$net}/{$addr}'.");
+                        logMessage('debug', "  Device ID {$eqId} migrated from '{$net2}/{$addr2}' to '$net/$addr'.");
                         break;
                     }
                 }

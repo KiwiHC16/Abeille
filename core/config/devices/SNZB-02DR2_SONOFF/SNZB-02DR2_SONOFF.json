@@ -1,7 +1,7 @@
 {
     "SNZB-02DR2_SONOFF": {
         "manufacturer": "Sonoff",
-        "model": "SNZB-02D",
+        "model": "SNZB-02DR2",
         "type": "Sonoff temperature & humidity display with min/max",
         "genericType": "Environment",
         "timeout": "60",

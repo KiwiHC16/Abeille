@@ -3321,6 +3321,15 @@
                                     $timeZone = zbFormatData(0, "2B"); // int32
                                     msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=2B&attrVal='.$timeZone);
                                     parserLog2('debug', $srcAddr, "  Attribute 0002/TimeZone: Answering 0 to device");
+                                } else if ($attrId == "0003") { // DstStart, type=uint32
+                                    msgToCmd(PRIO_NORM, "Cmd$dest/$srcAddr/sendReadAttributesResponse", "ep=$srcEp&clustId=$clustId&attrId=$attrId&status=86");
+                                    parserLog2('debug', $srcAddr, "  Attribute 0003/DstStart: Answering UNSUPPORTED attribute");
+                                } else if ($attrId == "0004") { // DstEnd, type=uint32
+                                    msgToCmd(PRIO_NORM, "Cmd$dest/$srcAddr/sendReadAttributesResponse", "ep=$srcEp&clustId=$clustId&attrId=$attrId&status=86");
+                                    parserLog2('debug', $srcAddr, "  Attribute 0004/DstStart: Answering UNSUPPORTED attribute");
+                                } else if ($attrId == "0005") { // DstShift, type=uint32
+                                    msgToCmd(PRIO_NORM, "Cmd$dest/$srcAddr/sendReadAttributesResponse", "ep=$srcEp&clustId=$clustId&attrId=$attrId&status=86");
+                                    parserLog2('debug', $srcAddr, "  Attribute 0005/DstStart: Answering UNSUPPORTED attribute");
                                 } else if ($attrId == "0007") { // LocalTime
                                     // Reminder: Zigbee uses 00:00:00 @1st of jan 2000 as ref
                                     //           PHP uses 00:00:00 @1st of jan 1970 (Linux ref)
@@ -3333,9 +3342,10 @@
                                         $localTime -= mktime(0, 0, 0, 1, 1, 2000); // PHP to Zigbee shift
                                         $localTime = sprintf("%04X", $localTime);
                                         msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=23&attrVal='.$localTime);
-                                        parserLog2('debug', $srcAddr, "  Attribute 0007/LocalTime: Answering to device");
+                                        parserLog2('debug', $srcAddr, "  Attribute 0007/LocalTime: Answering '$localTime' to device");
                                     }
                                 } else {
+                                    msgToCmd(PRIO_NORM, "Cmd$dest/$srcAddr/sendReadAttributesResponse", "ep=$srcEp&clustId=$clustId&attrId=$attrId&status=86");
                                     parserLog2('debug', $srcAddr, "  WARNING: Unsupported time cluster attribute ".$attrId);
                                 }
                             }

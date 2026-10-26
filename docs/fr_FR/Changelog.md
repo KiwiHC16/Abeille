@@ -9,6 +9,7 @@
 - Amélioration: Interne CmdD: Ajout cache interne pour optimisation acces DB.
 - Correction: Interne CmdD: 'sendReadAttributesResponse' peut envoyer status 86.
 - Correction: Interne ParserD: Renvoi 'unsupported' pour cluster 000A attrib 0003, 0004, & 0005.
+- Correction: Interne ParserD: Specifique Zigate.
 
 ## 260901-STABLE-1, 260901-BETA-1, 260827-BETA-1
 

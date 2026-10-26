@@ -330,7 +330,8 @@
             $GLOBALS['devices'][$net] = [];
 
         if (isset($GLOBALS['devices'][$net][$addr])) {
-            if (($GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] === null) && ($ieee !== null)) {
+            // Note: Zigate has currently no IEEE stored
+            if (isset($GLOBALS['devices'][$net][$addr]['zigbee']['ieee']) && ($GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] === null) && ($ieee !== null)) {
                 $GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] = $ieee;
                 addNewJeedomDevice($net, $addr, $ieee);
             }

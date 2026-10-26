@@ -860,7 +860,7 @@
             if ($eqChanged) {
                 $eqLogic->save();
 
-                updateDeviceCache($eqLogic);
+                updateDeviceFromDB($eqLogic);
 
             // if (isset($informCmd)) {
                 // Inform cmd that EQ config has changed
@@ -1922,7 +1922,7 @@
     }
 
     // Update device local cache from DB
-    function updateDeviceCache($eqLogic) {
+    function updateDeviceFromDB($eqLogic) {
 
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
@@ -1951,10 +1951,10 @@
 
                 'cmds' => $cmds
             );
-    } // End updateDeviceCache()
+    } // End updateDeviceFromDB()
 
     // // Update device local cache from DB
-    // function updateDeviceCache2($net, $addr) {
+    // function updateDeviceFromDB2($net, $addr) {
     // }
 
     logSetConf("AbeilleMainD.log", true);
@@ -2018,7 +2018,7 @@
     $GLOBALS['devices'] = [];
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
-        updateDeviceCache($eqLogic);
+        updateDeviceFromDB($eqLogic);
 
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);

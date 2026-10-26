@@ -1,7 +1,7 @@
 {
     "01MINIZB": {
         "manufacturer": "Sonoff",
-        "model": "SBMINI",
+        "model": "ZBMINI",
         "timeout": "30",
         "configuration": {
             "mainEP": "01",
@@ -13,10 +13,6 @@
         },
         "type": "Sonoff smart switch",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "params": "ep=01"
@@ -28,6 +24,10 @@
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
             },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",

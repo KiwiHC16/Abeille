@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Amélioration: Revue modèle 01MINIZB.
+
 ## 261026-BETA-1
 
 - Correction: Python venv (resources/python_venv) n'est plus supprimé lors de la mise-à-jour d'Abeille.

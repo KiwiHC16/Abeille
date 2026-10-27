@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Amélioration: Suppression arriere plan de qq icones.
+
 ## 261027-BETA-1
 
 - Amélioration: Revue modèle 01MINIZB.

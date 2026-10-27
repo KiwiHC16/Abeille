@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="261027-BETA-1"
+# VERSION="261027-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1091,6 +1091,7 @@ eb2b41927d722ea4c7ea819984872b5f *core/config/devices_images/node_Ikea-OnOffSwit
 036be9979709d30de6ed2cbf9f783925 *core/config/devices_images/node_Ikea-Plug.png
 f14744505ef665856e0555565e38fcfa *core/config/devices_images/node_Ikea-Remote-5buttons.png
 0b2cb21804f3f9f79d75c1e3607a521f *core/config/devices_images/node_Ikea-SignalRepeater.png
+d8a892e06b9dc6f170bb61943d78ea29 *core/config/devices_images/node_Ikea-Styrbar.png
 9c90f3dac1628d9b5e577a2124a1406a *core/config/devices_images/node_Ikea-Tradfri-Dimmer.png
 b3d3a024b10286b98e4fe995be34e96e *core/config/devices_images/node_Ikea-Transformer.png
 c0b2640f0c40ded390c58901b440c55b *core/config/devices_images/node_Ikea-Tredansen-White.png
@@ -1145,15 +1146,15 @@ aa0b6fbb1dc25bb92343a1bfd1b43169 *core/config/devices_images/node_LivarnoHome-Bu
 4a51c8a57a1c803404b80221028c37dc *core/config/devices_images/node_Loratap-3GangRemote-2.png
 14efe6ba9f33aa1d91c704f46438c3d6 *core/config/devices_images/node_Loratap-3GangRemote.png
 511c2be5e03e7231520f67c0da5c243a *core/config/devices_images/node_Loratap-6ButtonsRemote.png
-aa94566c62c5b7af0ae2076c56f119b7 *core/config/devices_images/node_Loratap-RollerShutterModule.png
+bff8279ea72e4ab963b2bf3acdb8ef0c *core/config/devices_images/node_Loratap-RollerShutterModule.png
 90d137e6f768355aa8a3746ceb5c42ca *core/config/devices_images/node_Loratap-RollerShutterTouchSwitch-v2.png
 5a0a6ebfd926dcefdee7df49da022e52 *core/config/devices_images/node_Mhcozy-TYWD-4ch-RF.png
 3fdd20560ccf834a7a6378b87fbb88fe *core/config/devices_images/node_Mhcozy-ZG-005-RF.png
 c7eb84a0209dea5d051bc07b7b8b0cf5 *core/config/devices_images/node_Moes-3ButtonsSceneSwitch.png
 7d686a21a3e5fca537952b382557e8dd *core/config/devices_images/node_Moes-CurtainModule.png
 524c2093bcd5648a5c86142e37018c6f *core/config/devices_images/node_Moes-DimmerModule.png
-c1f693f3903f3be5a373d1743c5ef951 *core/config/devices_images/node_Moes-DoorSensor.png
-456b12e66e96a99d484b4c46eb1119bf *core/config/devices_images/node_Moes-DualDimmerModule.png
+1ed20e776e8ac8dee45ac9a04af2c020 *core/config/devices_images/node_Moes-DoorSensor.png
+b7f6aa46e8a9c9bf915daf2692670ad3 *core/config/devices_images/node_Moes-DualDimmerModule.png
 cebe6880a3cbc7480ad43b91c598890d *core/config/devices_images/node_Moes-MS-105Z.png
 4be84382afe6e08d21f59c2a96be347f *core/config/devices_images/node_Moes-SmartDimmer-ZM-105-M.png
 c296a322893ffbda7d4ab9d460f7ae47 *core/config/devices_images/node_Moes-Thermometer.png
@@ -1223,7 +1224,7 @@ bdbeae7da2a300b11027d279f6c176ea *core/config/devices_images/node_Sonoff-AirGuar
 b47b765a6640f32aaddadd58dfb4b1c4 *core/config/devices_images/node_Sonoff-BASICZBR3.png
 da4acb14e31b31a09103c3eee5543af8 *core/config/devices_images/node_Sonoff-Button.png
 c4798a11da0bc32246d6784b4cfa59d2 *core/config/devices_images/node_Sonoff-DoorSensor.png
-89ccb30cc6af9c6a57b8de7f71e061ba *core/config/devices_images/node_Sonoff-MiniZBRBS.png
+aa2b9483f92352413dfda92274dbe09f *core/config/devices_images/node_Sonoff-MiniZBRBS.png
 b747bfdea8ca710815388810ff2d1061 *core/config/devices_images/node_Sonoff-MotionSensor.png
 37cb6776b64bd0c016034b6c0af13d94 *core/config/devices_images/node_Sonoff-PresenceSensor.png
 c96fc06840975eee3783acb90901d321 *core/config/devices_images/node_Sonoff-S26R2ZB.png
@@ -1301,6 +1302,7 @@ f82774d304779b3a468e37bb7e3988b9 *core/config/devices_images/node_Tuya-SolarRain
 d8217af1d6f910a47b711d19fc847410 *core/config/devices_images/node_Tuya-TS0044.png
 7a9931bceb04d3fe3ed7eb5257acc56a *core/config/devices_images/node_Tuya-TS0501B-LedController.png
 b4750276f3fd1a85c2bd883203926abd *core/config/devices_images/node_Tuya-TV02.png
+6dfd74b505a0664f9cd1d1c0ab36d2c2 *core/config/devices_images/node_Tuya-TempHumidity-2.png
 9082444cfcdc4c12fa6360297f74fa9a *core/config/devices_images/node_Tuya-TempHumidity.png
 b87c4dd17c7abbdd950923a44bd89798 *core/config/devices_images/node_Tuya-TempHumidityDisplay.png
 fda5c91b529cbc29351d0399bc7ad149 *core/config/devices_images/node_Tuya-TempHumidityLargeDisplay.png
@@ -1308,9 +1310,9 @@ fda5c91b529cbc29351d0399bc7ad149 *core/config/devices_images/node_Tuya-TempHumid
 35f5a6865b52785efa9420956be053df *core/config/devices_images/node_Tuya-VibrationSensor.png
 ca3ca26f4e70ec38c8ce39287021864e *core/config/devices_images/node_Tuya-WallPlug.png
 463a08ac6e35cff53c5458b941c64917 *core/config/devices_images/node_Tuya-ZG-003-RF.png
-43e9f68f06818353cbcb23081193b0ba *core/config/devices_images/node_UseeLink-SM-SO306.png
+44aedd1bfd56e175dc28c4b1a4ac1e52 *core/config/devices_images/node_UseeLink-SM-SO306.png
 7848ede9d58c39d81a2d7c644a9bbb74 *core/config/devices_images/node_WS2812_light_controller.png
-52ec2b21b35041ba648d0e342123827f *core/config/devices_images/node_Woox-WaterIrrigation.png
+b4b851fb73a97af7f73be33281fc5c33 *core/config/devices_images/node_Woox-WaterIrrigation.png
 22a16218547cfb00dd052a6317702bf0 *core/config/devices_images/node_Xiaomi-Button-1.png
 db040e28e0b726a120f9ee31a00f8c34 *core/config/devices_images/node_Xiaomi-Button-2.png
 8548493b8395f81c79d6b4b584151483 *core/config/devices_images/node_Xiaomi-Button-3.png
@@ -1322,7 +1324,7 @@ ad4e834508273853a60a8c3e763c9350 *core/config/devices_images/node_Xiaomi-DoorSen
 5cd4fd4bc594236eaaaa41b7b5688fd6 *core/config/devices_images/node_Xiaomi-LeakSensor.png
 671d6a8236f3e2e029a81d0625c7a74e *core/config/devices_images/node_Xiaomi-LightSensor-1.png
 164ad6c758086a583987eec6daac96ca *core/config/devices_images/node_Xiaomi-MotionSensor.png
-14490a6a8a1a541d4990a8235b39f74a *core/config/devices_images/node_Xiaomi-MotionSensorP1.png
+c79e48499764da39b3705de4dcb36f32 *core/config/devices_images/node_Xiaomi-MotionSensorP1.png
 d58878feb61769085ce8dcbfb4bd345b *core/config/devices_images/node_Xiaomi-Plug-EU.png
 a10e0b0828d6219d0a61c1487826e138 *core/config/devices_images/node_Xiaomi-Plug.png
 c22f70fd2103815987ca316f7bd74fb1 *core/config/devices_images/node_Xiaomi-SmartPlug.png
@@ -1336,7 +1338,7 @@ e5704375e7084b2ee0f32492269e67b5 *core/config/devices_images/node_XiaomiAqara-Op
 559ee13277ec81ec87c86758928786d7 *core/config/devices_images/node_XiaomiAqara-QBKG26LM.png
 3bd1d0b0c755da5f3166a4c8dea29de2 *core/config/devices_images/node_XiaomiAqara-SSM-U01.png
 811402dc549dd68a1afc402be5bdf420 *core/config/devices_images/node_XiaomiAqara-SSM-U02.png
-8d621a6dbdba88e635d230e4c5e96e1d *core/config/devices_images/node_XiaomiAqara-WRS-R02.png
+422851f5532af37f26939779218f5e00 *core/config/devices_images/node_XiaomiAqara-WRS-R02.png
 e067a0d41a1b0f083db8d4371dd9709e *core/config/devices_images/node_XiaomiButtonSW861.png
 c1321282b8497766c6852cfbf677f077 *core/config/devices_images/node_XiaomiButtonSW861acn01.png
 c1321282b8497766c6852cfbf677f077 *core/config/devices_images/node_XiaomiButtonb186acn01.png
@@ -1350,7 +1352,7 @@ fc8fdb896567c4d73fb073aff681cb9d *core/config/devices_images/node_ZLO-ExtendedCo
 a974ffe61a8e3f502fcd24ae31c6ac9e *core/config/devices_images/node_ZLO-LTOSensor.png
 807e8ad00803ee38ea14435d36a33c1a *core/config/devices_images/node_ZLO-OccupancySensor.png
 b7eb63dff5703896147781076f9989a4 *core/config/devices_images/node_Zemismart-2ButtonsSwitch.png
-bb69f46bc88f0a988ba4da5646d86952 *core/config/devices_images/node_Zemismart-DoorSensor.png
+c982929812a5c065bb05a9c4befb28f4 *core/config/devices_images/node_Zemismart-DoorSensor.png
 ccb34d97ffa00e0f4f038193d9a7bb1e *core/config/devices_images/node_Zemismart-LXX60-CS27LX1.0.png
 0abbf0a7a7cce78de303e48e206a31c4 *core/config/devices_images/node_ctrl_86plug.aq1.png
 6e5c178ccce618a80a906bf3cd44142f *core/config/devices_images/node_ctrl_ln1.aq1.png
@@ -1524,7 +1526,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/private_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/tuya_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-2ac8d3f23162c8055bfb685798025b2c *docs/fr_FR/Changelog.md
+7660d88a9ab30aed4ab7d5955020b9fc *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1533,11 +1535,11 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-0183abb6a5f42af6f9c8ec1aec78891d *plugin_info/Abeille.version
+de0125003faeea8a16a4809b6edc4dec *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6d80d3934e14cf09d026bdb3c1c87df9 *plugin_info/configuration.php
-c12c8a31b9c3757bcd2adc195fe7211f *plugin_info/info.json
+5b3fd99c168625c1f8fc2d74be04367d *plugin_info/info.json
 bfc35db7c6cb31030b98bf925fb293ea *plugin_info/install.php
 fa66c2e280e095a90334aa2c690f9158 *plugin_info/packages.json
 9de02c231ae5e2ac5bf3901a385ef0f4 *plugin_info/pre_install.php

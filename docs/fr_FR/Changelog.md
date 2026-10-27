@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 261027-BETA-2
+
 - Amélioration: Suppression arriere plan de qq icones.
 
 ## 261027-BETA-1

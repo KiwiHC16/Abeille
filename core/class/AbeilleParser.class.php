@@ -4030,7 +4030,7 @@
                         // }
 
                         // Get Scene Membership Response
-                        else if ( $cmd == "06" ) {
+                        else if ($cmd == "06") {
                             $sceneStatus            = substr($payload,32, 2);
                             if ( $sceneStatus == "85" ) {  // Invalid Field
                                 $sceneRemainingCapacity = substr($payload,34, 2);
@@ -4096,9 +4096,13 @@
                         //     );
                         // }
 
-                        else
-                            parserLog2('debug', $srcAddr, '  Unsupported cluster 0005 specific cmd '.$cmd);
-
+                        else {
+                            parserLog2('debug', $srcAddr, "  Cluster 0005, cmd '$cmd' => Returning '$srcEp-0005-cmd$cmd'");
+                            $attrReportN[] = array(
+                                'name' => "$srcEp-0005-cmd$cmd",
+                                'value' => 1,
+                            );
+                        }
                     } // End $clustId == "0005"
 
                     // 0006/On/Off cluster specific
@@ -4190,7 +4194,7 @@
 
                         // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
                         $attrReportN[] = array(
-                            'name' => $srcEp.'-0008-cmd'.$cmd,
+                            'name' => "$srcEp-0008-cmd$cmd",
                             'value' => $value // ='level' for cmds 0 & 4, 1 for others
                         );
                     } // End clustId == "0008"

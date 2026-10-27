@@ -3,6 +3,7 @@
 - Amélioration: Revue modèle 01MINIZB.
 - Correction: Interne Zigbee const: Syntaxe PHP.
 - Nouveauté: Ajout support Ikea Stybar (2798).
+- Amélioration: ParserD: Cluster 0005, cmds non supportées remonte '<EP>-0005-cmd0X' (pour 2798).
 
 ## 261026-BETA-1
 

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="261026-BETA-1"
+# VERSION="261027-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -43,7 +43,7 @@ c697264a367aa536ef60425b7fcf88ea *core/ajax/AbeilleZigate.ajax.php
 c849b226950b0ea0ef9f30295a715eab *core/class/AbeilleCmdProcess.class.php
 f157bb2ec6c124a26e83eb253e103e6a *core/class/AbeilleCmdQueue.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-954a2fcb941e0280ef13e07c8ca0d722 *core/class/AbeilleParser.class.php
+1091166e9b7a29058591eb8e3c9ade78 *core/class/AbeilleParser.class.php
 f6326b6212d9d9b029acb9aee66fc406 *core/class/AbeilleTools.class.php
 735805172dbfa2b5158a21148df88332 *core/config/Abeille.config.php
 7effde70efa280c4973b9248dc051731 *core/config/AbeilleInternalCmds.json
@@ -236,7 +236,10 @@ c3006feb0fee9894c997adfe2355b7cb *core/config/commands/inf_zbAttr-0B04-ACPowerDi
 95c22953dd03eef7ae9745432261477f *core/config/commands/inf_zbAttr-0B04-RMSCurrent.json
 75fd25b946fd24e50e5c7b44b501b13e *core/config/commands/inf_zbAttr-0B04-RMSVoltage.json
 461ca9d65e9e4221f5990d5621914d3f *core/config/commands/inf_zbCmd-Generic.json
+1ba73789931bf6fe028d2df08b8db554 *core/config/commands/inf_zbCmdC-0005-Cmd07.json
+713dd4edc608f9b3996c0482506e4575 *core/config/commands/inf_zbCmdC-0005-Cmd09.json
 26826e01c61efb0358552547ffc72572 *core/config/commands/inf_zbCmdC-0005-Ikea07.json
+f648248985b499c0efc1385533448cfc *core/config/commands/inf_zbCmdC-0005-RecallScene.json
 631cfa440f34c2badd141107e26f04b7 *core/config/commands/inf_zbCmdC-0006-Off.json
 92a3aa158253d16ed2012bb86f09e03b *core/config/commands/inf_zbCmdC-0006-On.json
 02e3a8c8081573063d5f9979e889c69e *core/config/commands/inf_zbCmdC-0006-Toggle.json
@@ -333,7 +336,7 @@ d2e935098727ae8e291918b4ac4eee26 *core/config/commands/upGroup.json
 6f3996502c76497794868dd23c64f775 *core/config/commands/writeAttributeRequestIAS_WD_Sound.json
 f4b2257ee84efced07ee5cf6ecf219e9 *core/config/commands/zbCmdR-Custom.json
 50b002b8fe05498edd6341e659faff5b *core/config/commands/zbWriteGenericAttribute.json
-cb5085cdae6af71032c28eca1bd115d6 *core/config/devices/01MINIZB/01MINIZB.json
+9bd2cdfab1f85e1b9dc051353b4e8ae8 *core/config/devices/01MINIZB/01MINIZB.json
 1bfd8eebe0a1faebe21e01791cedeef4 *core/config/devices/01MINIZB/discovery.json
 38ab950f50422148993035b92c8e790c *core/config/devices/09BA_IKEAofSweden/09BA_IKEAofSweden.json
 eacc02d148da69c84cde43048976fd86 *core/config/devices/09BA_IKEAofSweden/discovery-09BA_IKEAofSweden.json
@@ -552,6 +555,8 @@ b63938d4df73ee3d04f498bca0dda7c2 *core/config/devices/RH3040/RH3040.json
 b3d7577c796d1f4ed48aef7011fdb221 *core/config/devices/RODRETDimmer_IKEAofSweden/discovery-RODRETDimmer_IKEAofSweden.json
 7e6a4a1b688992da2c0049cb74ab5c61 *core/config/devices/RWL021/RWL021.json
 a1366186c526b4e7b702c19a880155e3 *core/config/devices/RWL021/discovery.json
+271ba7107076880b344561a4d54075ed *core/config/devices/RemoteControlN2_IKEAofSweden/RemoteControlN2_IKEAofSweden.json
+1fc6b09ab5181dfdf9de58f64607c153 *core/config/devices/RemoteControlN2_IKEAofSweden/discovery-RemoteControlN2_IKEAofSweden.json
 731ceef4aeed5de1e5ab29ac279cff4d *core/config/devices/Remoteswitch/067723_discovery.json
 02fed434fa25a31481f8ef6b960e9484 *core/config/devices/Remoteswitch/Remoteswitch.json
 7bb3360f2bb835424f3f55bd5fa4a985 *core/config/devices/S26R2ZB_SONOFF/S26R2ZB_SONOFF.json
@@ -609,6 +614,7 @@ e01e88dce276c42086b17ea69a1d6d7c *core/config/devices/Shutterswitchwithneutral/d
 91ef8cd4f3d7c455200f3e2218b3d4aa *core/config/devices/SmokeSensor-N-3.0/SmokeSensor-N-3.0.json
 614855aef557cd677c28146dd3090371 *core/config/devices/Switch4xEU-LIGHTIFY/Switch4xEU-LIGHTIFY.json
 30b3ac19f2ea8f770e5b097c9ee2e859 *core/config/devices/TH01/TH01.json
+f1345754af4a6cc01575278b53eae8db *core/config/devices/TH01_Zbeacon/TH01_Zbeacon.json
 261098b2a52fc4245280d68afb98c396 *core/config/devices/THS317-ET_OWON/THS317-ET_OWON-old.json
 9e85e9d1a462371a5d04b6582531a4d2 *core/config/devices/THS317-ET_OWON/THS317-ET_OWON.json
 d77dccb72789b078761c1df8b1c72fec *core/config/devices/THS317-ET_OWON/discovery-20211101.json
@@ -1412,7 +1418,7 @@ ec8548dd0db0927323cc6977bb30ed06 *core/php/AbeilleSupportKeyInfos.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 4babce1ace5fa35ea4cb3d77e3bf3e79 *core/php/AbeilleZigateConst.php
 9a11b8179e9bee8085de3b12cef764c2 *core/php/AbeilleZigbee.php
-6ba57a5163600da3915ff0e8a0867571 *core/php/AbeilleZigbeeConst.php
+0dcf5ffcffd425066bfb39f60ce5b94e *core/php/AbeilleZigbeeConst.php
 fae97a01f83e8d3d32620d318f4ee744 *core/python/AbeilleEzspAsh.py
 6d5dafac6786b9dd488b32f454c4b584 *core/python/AbeilleEzspCmds.py
 a59fd32a3db93ff16afeb3152f7b26d0 *core/python/AbeilleEzspD.py
@@ -1518,7 +1524,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/private_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/remote_controls.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/tuya_support.txt
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *docs/dev/zigbee_notes.txt
-3db31a1960b9a3c9f9f82331a24e7d66 *docs/fr_FR/Changelog.md
+2ac8d3f23162c8055bfb685798025b2c *docs/fr_FR/Changelog.md
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1527,11 +1533,11 @@ ef07bed7cde5d10d47bf2d186fe355c9 *images/death.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-c89a8b301e4e49b7577151f003d7aa28 *plugin_info/Abeille.version
+0183abb6a5f42af6f9c8ec1aec78891d *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon-orig.png
 fb6b465ec4a792559cfcc138720be6e2 *plugin_info/Abeille_icon.png
 6d80d3934e14cf09d026bdb3c1c87df9 *plugin_info/configuration.php
-234e263a920df7860c182bc073c4263c *plugin_info/info.json
+c12c8a31b9c3757bcd2adc195fe7211f *plugin_info/info.json
 bfc35db7c6cb31030b98bf925fb293ea *plugin_info/install.php
 fa66c2e280e095a90334aa2c690f9158 *plugin_info/packages.json
 9de02c231ae5e2ac5bf3901a385ef0f4 *plugin_info/pre_install.php

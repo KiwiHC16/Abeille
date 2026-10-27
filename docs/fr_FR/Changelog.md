@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 261027-BETA-1
+
 - Amélioration: Revue modèle 01MINIZB.
 - Correction: Interne Zigbee const: Syntaxe PHP.
 - Nouveauté: Ajout support Ikea Stybar (2798).

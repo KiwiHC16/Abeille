@@ -1,0 +1,11 @@
+{
+    "inf_zbCmdC-0005-RecallScene": {
+        "comment": "Cluster 0005/RecallScene cmd, received from CLIENT side",       
+        "subType": "numeric",
+        "type": "info",
+        "logicalId": "#EP#-0005-cmd05",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

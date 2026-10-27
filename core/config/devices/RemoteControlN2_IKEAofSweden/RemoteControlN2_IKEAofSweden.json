@@ -1,0 +1,74 @@
+{
+    "RemoteControlN2_IKEAofSweden": {
+        "manufacturer": "IKEAofSweden",
+        "model": "RemoteControlN2",
+        "type": "STYRBAR",
+        "genericType": "Light",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "paramType": "telecommande",
+            "icon": "Ikea-Styrbar",
+            "batteryType": "2x1.5V AAA"
+        },
+        "category": {
+            "light": "1"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "On": {
+                "use": "inf_zbCmdC-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "inf_zbCmdC-0006-Off",
+                "isVisible": 1
+            },
+            "On Long": {
+                "use": "inf_zbCmdC-0008-MoveWithOnOff",
+                "isVisible": 1
+            },
+            "Off Long": {
+                "use": "inf_zbCmdC-0008-Move",
+                "isVisible": 1
+            },
+            "Left-Right": {
+                "use": "inf_zbCmdC-0005-Cmd07",
+                "isVisible": 1
+            },
+            "Long Left": {
+                "use": "inf_zbCmdC-0005-Cmd09",
+                "isVisible": 1
+            },
+            "Long Right": {
+                "use": "inf_zbCmdC-0005-RecallScene",
+                "isVisible": 1
+            },
+            "Bind-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Bind-0005-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0005",
+                "execAtCreation": "Yes"
+            },
+            "Bind-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Bind-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes"
+            }
+        }
+    }
+}

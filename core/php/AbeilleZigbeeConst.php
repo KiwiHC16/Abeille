@@ -118,7 +118,7 @@
         switch ($pj) {
         case 0: $desc .= "PermitJoinOFF"; break;
         case 1: $desc .= "PermitJoinON"; break;
-        default; $desc .= "?"; break;
+        default: $desc .= "?"; break;
         }
 
         $rel = ($bitMap >> 4) & 0x7;
@@ -128,22 +128,22 @@
         case 2: $desc .= "/Sibling"; break;
         case 3: $desc .= "/None"; break;
         case 4: $desc .= "/Previous"; break;
-        default; $desc .= "/?"; break;
+        default: $desc .= "/?"; break;
         }
 
         $rx = ($bitMap >> 2) & 0x3;
         switch ($rx) {
         case 0: $desc .= "/RxOFFWhenIdle"; break;
         case 1: $desc .= "/RxONWhenIdle"; break;
-        default; $desc .= "/?"; break;
+        default: $desc .= "/?"; break;
         }
 
         $dt = ($bitMap >> 0) & 0x3;
         switch ($dt) {
         case 0: $desc .= "/Coordinator"; break;
         case 1: $desc .= "/Router"; break;
-        case 2; $desc .= "/EndDevice"; break;
-        default; $desc .= "/?"; break;
+        case 2: $desc .= "/EndDevice"; break;
+        default: $desc .= "/?"; break;
         }
 
         return $desc;

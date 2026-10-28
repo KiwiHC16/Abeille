@@ -89,6 +89,18 @@
            the log itself before it is saved */
         $GLOBALS["logMaxLines"] = log::getConfig('maxLineLog') - 10;
 
+        /* A PHP fatal error (ex: uncaught PHP 8 TypeError) goes to the daemon's
+           stderr, which still points to the log file renamed by the "Log max"
+           rotation: log it through the current log path instead. */
+        if (!isset($GLOBALS["logFatalHandler"])) {
+            $GLOBALS["logFatalHandler"] = true;
+            register_shutdown_function(function () {
+                $e = error_get_last();
+                if (($e !== null) && in_array($e['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR]))
+                    logMessage('error', 'Arrêt sur erreur fatale: '.$e['message'].' ('.basename($e['file']).':'.$e['line'].')');
+            });
+        }
+
         if ($lFile == "")
             return; // Output of STDOUT
         if (substr($lFile, 0, 1) == "/") {
@@ -177,6 +189,13 @@
                 $GLOBALS["logNbOfLines"] = 1;
             }
         }
+    }
+
+    /* PHP 8: TypeError, ValueError... are Error, not Exception, and would stop
+       the daemon. Log them with their location, the daemon then goes on. */
+    function logThrowable($context, $t) {
+        logMessage('error', $context.': '.get_class($t).': '.$t->getMessage().' ('.basename($t->getFile()).':'.$t->getLine().')');
+        logMessage('debug', $t->getTraceAsString());
     }
 
     /* Log function for development purposes.

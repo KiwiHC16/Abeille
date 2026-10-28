@@ -1958,10 +1958,14 @@
 
             logMessage('debug', "  msg=$msgJson");
             $msg = json_decode($msgJson, true);
-            if (isset($msg['topic']))
-                message($msg['topic'], $msg['payload']);
-            else
-                msgFromParser($msg);
+            try {
+                if (isset($msg['topic']))
+                    message($msg['topic'], $msg['payload']);
+                else
+                    msgFromParser($msg);
+            } catch (Throwable $t) {
+                logThrowable('Message '.substr($msgJson, 0, 200), $t);
+            }
         }
     } catch (Exception $e) {
         logMessage('error', 'Exception '.$e->getMessage());

@@ -580,21 +580,25 @@
         // $rerouteNet = ""; // Rerouted network if defined (ex: 'Abeille1')
 
         while (true) {
-            // Treat Zigate key infos (ex 0x8000 cmd) coming from parser
-            $AbeilleCmdQueue->processAcksQueue();
+            try {
+                // Treat Zigate key infos (ex 0x8000 cmd) coming from parser
+                $AbeilleCmdQueue->processAcksQueue();
 
-            // Treat pending commands for zigate
-            $AbeilleCmdQueue->processCmdQueues();
+                // Treat pending commands for zigate
+                $AbeilleCmdQueue->processCmdQueues();
 
-            // Check zigates status => Now part of processCmdQueues()
-            // $AbeilleCmdQueue->checkZigatesStatus();
+                // Check zigates status => Now part of processCmdQueues()
+                // $AbeilleCmdQueue->checkZigatesStatus();
 
-            // Check 'xToCmd' queue
-            $AbeilleCmdQueue->processXToCmdQueue();
+                // Check 'xToCmd' queue
+                $AbeilleCmdQueue->processXToCmdQueue();
 
-            // Check tempo queue
-            // TODO: This should be a separate thread to not disturb cmd to Zigate process.
-            $AbeilleCmdQueue->execTempoCmdAbeille();
+                // Check tempo queue
+                // TODO: This should be a separate thread to not disturb cmd to Zigate process.
+                $AbeilleCmdQueue->execTempoCmdAbeille();
+            } catch (Throwable $t) {
+                logThrowable('Boucle CmdD', $t);
+            }
 
             /* Display queues status every 30sec */
             if ((time() - $last) > 30) {

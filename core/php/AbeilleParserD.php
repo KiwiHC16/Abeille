@@ -703,7 +703,11 @@
                     msgToCmdAck($msg);
                 } else if ($msg['type'] == "serialRead") {
                     // Message from AbeilleSerialReadX
-                    $AbeilleParser->protocolDatas($msg['net'], $msg['msg']);
+                    try {
+                        $AbeilleParser->protocolDatas($msg['net'], $msg['msg']);
+                    } catch (Throwable $t) {
+                        logThrowable('Trame '.$msg['net'].' '.substr(json_encode($msg['msg']), 0, 200), $t);
+                    }
                 } else if ($msg['type'] == "logLevelChanged") {
                     logLevelChanged($msg['level']);
                 } else {

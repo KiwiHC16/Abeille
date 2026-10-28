@@ -105,7 +105,9 @@
             },
             "Get Active Power": {
                 "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=050B"
+                "params": "clustId=0B04&attrId=050B",
+                "Polling": "cron5",
+                "comment": "Firmware ignores maxInterval for 050B"
             },
             "Bind 0B04-ToZigate": {
                 "use": "act_zbBindToZigate",

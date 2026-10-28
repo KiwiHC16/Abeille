@@ -114,13 +114,15 @@
             },
             "SetReporting 0B04-0508": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0B04&attrId=0508&attrType=21",
-                "execAtCreation": "yes"
+                "params": "clustId=0B04&attrId=0508&attrType=21&minInterval=10&maxInterval=300",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 10s to 5mins"
             },
             "SetReporting 0B04-050B": {
                 "use": "act_zbConfigureReporting2",
-                "params": "clustId=0B04&attrId=050B&attrType=29",
-                "execAtCreation": "yes"
+                "params": "clustId=0B04&attrId=050B&attrType=29&minInterval=10&maxInterval=300",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 10s to 5mins"
             }
         }
     }

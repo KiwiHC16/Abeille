@@ -2307,8 +2307,10 @@ function interrogate(request) {
         else payload = "";
     } else if (request == "getNeighborTable") {
         topic = "Cmd" + logicalId + "_getNeighborTable";
-        startIdx = document.getElementById("idStartIdx").value;
-        // TODO: How to allow 1 digit and convert (ex 3 => 03) ?
+        startIdx = document.getElementById("idStartIdx").value.trim();
+        // Hex byte expected: empty => "00", 1 digit => "03"
+        if (startIdx == "") startIdx = "00";
+        else if (startIdx.length == 1) startIdx = "0" + startIdx;
         payload = "startIndex=" + startIdx;
     } else if (request == "getActiveEndPoints") {
         topic = "Cmd" + logicalId + "_getActiveEndpoints";

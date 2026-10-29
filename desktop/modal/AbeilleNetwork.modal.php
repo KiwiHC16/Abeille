@@ -29,7 +29,9 @@
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayBindingsTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else // "linksGraph"
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$zgId.')">Abeille'.$zgId.'</a>';
-            if ($what != "bindings") // Binding tables have their own refresh
+            if ($what == "bindings")
+                echo '<a class="btn btn-warning" title="Interroge les tables de liaison de tous les équipements toujours à l\'écoute de ce réseau. Un équipement endormi doit être réveillé puis interrogé seul." onclick="collectBindings('.$zgId.', [])"><i class="fas fa-sync"></i></a>';
+            else
                 echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLqiTable('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
             if ($mode == "column")
@@ -393,7 +395,6 @@
                 <div id="div_bindingsAlert" style="display:none"></div>
                 <div style="margin-bottom:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
                     <?php displayNetworks(maxNbOfZigate, "bindings"); ?>
-                    <a class="btn btn-default btn-sm" id="idBindingsCollectAll" style="margin-left:16px" title="{{Interroge tous les équipements toujours à l'écoute. Un équipement endormi doit être réveillé puis interrogé seul.}}"><i class="fas fa-sync"></i> {{Tout interroger}}</a>
                 </div>
                 <p style="color:#888; margin-bottom:10px;">{{Table de liaison (binding) de chaque équipement : vers où il envoie ses rapports et commandes. Une liaison vers le coordinateur d'un autre réseau est obsolète (équipement déplacé) : l'équipement cherche cette destination par diffusion à chaque envoi, ce qui charge tout le réseau.}}</p>
                 <div id="idBindingsContent">

@@ -1728,9 +1728,9 @@ function bindingsReloadSoon() {
     });
 }
 
-function collectBindings(addrs) {
-    if (bindingsZgId === null) return;
-    bindingsAjax({ action: "getBindingTables", net: "Abeille" + bindingsZgId, addrs: addrs }).done(function (json) {
+function collectBindings(zgId, addrs) {
+    if (bindingsZgId !== zgId) displayBindingsTable(zgId);
+    bindingsAjax({ action: "getBindingTables", net: "Abeille" + zgId, addrs: addrs }).done(function (json) {
         var res = JSON.parse(json.result);
         if (res.status != 0) {
             $("#div_bindingsAlert").showAlert({ message: res.error, level: "danger" });
@@ -1764,10 +1764,6 @@ function removeBindings(list) {
         bindingsReloadSoon();
     });
 }
-
-$("#idBindingsCollectAll").off("click").on("click", function () {
-    collectBindings([]);
-});
 
 function displayBindingsTable(zgId) {
     bindingsZgId = zgId;
@@ -1832,7 +1828,7 @@ function displayBindingsTable(zgId) {
             var label = (eq.objectName ? eq.objectName + "-" : "") + eq.name + " (" + eq.addr + ")";
             var asleep = eq.rxOnWhenIdle === 0;
             var ask = "<a class='btn btn-default btn-xs' title='" + (asleep ? "{{Équipement endormi : réveillez-le (appui sur un bouton) juste avant}}" : "{{Interroger}}") +
-                "' onclick='collectBindings([\"" + eq.addr + "\"])'><i class='fas fa-sync'></i></a>";
+                "' onclick='collectBindings(" + zgId + ", [\"" + eq.addr + "\"])'><i class='fas fa-sync'></i></a>";
             var entries = dev && dev.entries ? Object.values(dev.entries) : null;
             if (!entries) {
                 html += "<tr><td>" + esc(label) + "</td><td colspan='4' style='color:#888'>" +

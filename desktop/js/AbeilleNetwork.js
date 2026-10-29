@@ -1830,6 +1830,12 @@ function displayBindingsTable(zgId) {
             var ask = "<a class='btn btn-default btn-xs' title='" + (asleep ? "{{Équipement endormi : réveillez-le (appui sur un bouton) juste avant}}" : "{{Interroger}}") +
                 "' onclick='collectBindings(" + zgId + ", [\"" + eq.addr + "\"])'><i class='fas fa-sync'></i></a>";
             var entries = dev && dev.entries ? Object.values(dev.entries) : null;
+            if (entries) {
+                // By cluster, then endpoint and destination
+                entries.sort(function (x, y) {
+                    return (x.clustId + x.srcEp + (x.dstIeee || x.group)).localeCompare(y.clustId + y.srcEp + (y.dstIeee || y.group));
+                });
+            }
             if (!entries) {
                 html += "<tr><td>" + esc(label) + "</td><td colspan='4' style='color:#888'>" +
                     (asleep ? "{{Non interrogé (endormi)}}" : "{{Non interrogé}}") + "</td><td>" + ask + "</td></tr>";

@@ -2375,6 +2375,51 @@
             // msgToMainD($msg);
         } // End decode8002_UnbindRsp()
 
+        /* Stores a Mgmt_Bind_rsp page in 'AbeilleBindings-<net>.json' (tmp dir) for the 'Liaisons' tab
+           of the network page, then requests the next page until the whole table is known. */
+        function saveBindingTable($net, $addr, $tableSize, $startIdx, $entries) {
+            $file = jeedom::getTmpFolder("Abeille")."/AbeilleBindings-".$net.".json";
+            $f = fopen($file, "c+");
+            if ($f === false) {
+                parserLog('debug', "  ERROR: Failed to open '$file'");
+                return;
+            }
+            flock($f, LOCK_EX);
+            $table = json_decode(stream_get_contents($f), true);
+            if (!is_array($table) || !isset($table['devices']))
+                $table = array('net' => $net, 'devices' => []);
+
+            $dev = isset($table['devices'][$addr]) ? $table['devices'][$addr] : [];
+            // First page: forget what was known before
+            if (($startIdx == 0) || !isset($dev['entries']))
+                $dev['entries'] = [];
+            foreach ($entries as $i => $entry)
+                $dev['entries'][$startIdx + $i] = $entry;
+            foreach (array_keys($dev['entries']) as $idx) {
+                if ($idx >= $tableSize)
+                    unset($dev['entries'][$idx]);
+            }
+            ksort($dev['entries']);
+            $dev['tableSize'] = $tableSize;
+            $dev['collectTime'] = time();
+            $table['devices'][$addr] = $dev;
+
+            ftruncate($f, 0);
+            rewind($f);
+            fwrite($f, json_encode($table, JSON_UNESCAPED_SLASHES));
+            flock($f, LOCK_UN);
+            fclose($f);
+
+            $next = $startIdx + count($entries);
+            if ((count($entries) > 0) && ($next < $tableSize)) {
+                $msg = array(
+                    'topic' => 'Cmd'.$net.'/'.$addr.'/getBindingTable',
+                    'payload' => 'addr='.$addr.'&startIdx='.sprintf("%02X", $next),
+                );
+                $this->msgToCmd2(PRIO_NORM, $msg);
+            }
+        }
+
         /* Called from decode8002() to decode "Mgmt_lqi_rsp" message */
         function decode8002_MgmtLqiRsp($dest, $srcAddr, $pl) {
 
@@ -2852,6 +2897,7 @@
                             .', TableCount='.$tableCount, "8002");
 
                     $pl = substr($pl, 10);
+                    $entries = [];
                     for ($i = 0; $i < $tableCount; $i++) {
                         $srcIeee = AbeilleTools::reverseHex(substr($pl, 0, 16));
                         $srcEp  = substr($pl, 16, 2);
@@ -2861,18 +2907,22 @@
                             // 16-bit group address for DstAddr and DstEndpoint not present
                             $dstAddr = AbeilleTools::reverseHex(substr($pl, 24, 4));
                             parserLog2('debug', $srcAddr, '  '.$srcIeee.', EP '.$srcEp.', Clust '.$clustId.' => group '.$dstAddr);
+                            $entries[] = array('srcIeee' => $srcIeee, 'srcEp' => $srcEp, 'clustId' => $clustId, 'group' => $dstAddr);
                             $pl = substr($pl, 28);
                         } else if ($dstAddrMode == "03") {
                             // 64-bit extended address for DstAddr and DstEndp present
                             $destIeee = AbeilleTools::reverseHex(substr($pl, 24, 16));
                             $dstEp  = substr($pl, 40, 2);
                             parserLog2('debug', $srcAddr, '  '.$srcIeee.', EP '.$srcEp.', Clust '.$clustId.' => device '.$destIeee.', EP '.$dstEp);
+                            $entries[] = array('srcIeee' => $srcIeee, 'srcEp' => $srcEp, 'clustId' => $clustId, 'dstIeee' => $destIeee, 'dstEp' => $dstEp);
                             $pl = substr($pl, 42);
                         } else {
                             parserLog2('debug', $srcAddr, '  ERROR: Unexpected DstAddrMode '.$dstAddrMode);
                             return;
                         }
                     }
+                    if ($status == "00")
+                        $this->saveBindingTable($dest, $srcAddr, $tableSize, $index, $entries);
 
                     // $updates = [];
                     $devUpdates['bindingTableSize'] = $tableSize;

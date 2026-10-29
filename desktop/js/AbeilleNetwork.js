@@ -1694,6 +1694,198 @@ function filterColumnOnValue(data, col) {
     });
 }
 
+// ============================================================
+// BINDINGS TAB
+// ============================================================
+var bindingsZgId = null;
+var bindingsObsolete = []; // Obsolete bindings of the displayed network, for 'remove all'
+
+var bindingsClusters = {
+    "0000": "Basic", "0001": "Batterie", "0003": "Identify", "0004": "Groupes", "0005": "Scènes",
+    "0006": "On/Off", "0008": "Niveau", "0019": "OTA", "0020": "Poll control", "0102": "Volet",
+    "0201": "Thermostat", "0300": "Couleur", "0400": "Luminosité", "0402": "Température",
+    "0403": "Pression", "0405": "Humidité", "0406": "Présence", "0500": "Zone IAS",
+    "0702": "Compteur", "0B04": "Mesure électrique", "1000": "Touchlink",
+};
+
+function bindingsAjax(data) {
+    return $.ajax({
+        type: "POST",
+        url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+        data: data,
+        dataType: "json",
+        cache: false,
+    });
+}
+
+// Reloads the table a few times while answers arrive
+function bindingsReloadSoon() {
+    var zgId = bindingsZgId;
+    [4000, 12000, 25000].forEach(function (delay) {
+        setTimeout(function () {
+            if (bindingsZgId === zgId) displayBindingsTable(zgId);
+        }, delay);
+    });
+}
+
+function collectBindings(addrs) {
+    if (bindingsZgId === null) return;
+    bindingsAjax({ action: "getBindingTables", net: "Abeille" + bindingsZgId, addrs: addrs }).done(function (json) {
+        var res = JSON.parse(json.result);
+        if (res.status != 0) {
+            $("#div_bindingsAlert").showAlert({ message: res.error, level: "danger" });
+            return;
+        }
+        $("#div_bindingsAlert").showAlert({
+            message: res.sent.length + " {{équipement(s) interrogé(s). Les réponses arrivent en quelques secondes.}}",
+            level: "info",
+        });
+        bindingsReloadSoon();
+    });
+}
+
+function removeBindings(list) {
+    if (list.length === 0) return;
+    var msg = list.length == 1
+        ? "{{Supprimer cette liaison ?}}"
+        : "{{Supprimer}} " + list.length + " {{liaisons obsolètes ?}}";
+    bootbox.confirm(msg, function (result) {
+        if (!result) return;
+        list.forEach(function (b, i) {
+            // Reread the table only after the last removal of each device
+            var last = list.slice(i + 1).every(function (o) { return o.addr != b.addr; });
+            var data = $.extend({ action: "removeBinding", net: "Abeille" + bindingsZgId, reread: last ? 1 : 0 }, b);
+            bindingsAjax(data).done(function (json) {
+                var res = JSON.parse(json.result);
+                if (res.status != 0)
+                    $("#div_bindingsAlert").showAlert({ message: res.error, level: "danger" });
+            });
+        });
+        bindingsReloadSoon();
+    });
+}
+
+$("#idBindingsCollectAll").off("click").on("click", function () {
+    collectBindings([]);
+});
+
+function displayBindingsTable(zgId) {
+    bindingsZgId = zgId;
+    var netName = "Abeille" + zgId;
+    var container = $("#idBindingsContent");
+
+    $.when(
+        $.ajax({
+            type: "POST",
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: { action: "getTmpFile", file: "AbeilleBindings-" + netName + ".json" },
+            dataType: "json",
+            cache: false,
+        }),
+        getEqList(0) // All networks, to recognize the other coordinators
+    ).done(function (bindResp, eqResp) {
+        var eqData = JSON.parse(eqResp[0].result);
+        var eqList = eqData && eqData.eqList ? eqData.eqList : {};
+
+        var devices = {};
+        var outer = JSON.parse(bindResp[0].result);
+        if (outer.status === 0 && outer.content) {
+            try { devices = JSON.parse(outer.content).devices || {}; } catch (e) { devices = {}; }
+        }
+
+        // IEEE => description of the destination
+        var byIeee = {};
+        for (var lid in eqList) {
+            var eq = eqList[lid];
+            if (!eq.ieee) continue;
+            if (eq.addr == "0000")
+                byIeee[eq.ieee] = { kind: eq.net == netName ? "coord" : "otherCoord", label: "{{Coordinateur}} " + eq.net };
+            else if (!byIeee[eq.ieee] || eq.net == netName)
+                byIeee[eq.ieee] = { kind: eq.net == netName ? "device" : "otherDevice", label: (eq.objectName ? eq.objectName + "-" : "") + eq.name + " (" + eq.net + ")" };
+        }
+
+        var eqs = [];
+        for (var lid in eqList) {
+            var eq = eqList[lid];
+            if (eq.net == netName && eq.addr != "0000" && eq.enabled == 1) eqs.push(eq);
+        }
+        eqs.sort(function (a, b) {
+            return ((a.objectName || "") + a.name).localeCompare((b.objectName || "") + b.name);
+        });
+
+        function esc(t) { return $("<span>").text(t).html(); }
+        var verdicts = {
+            coord:       ["success", "{{OK}}"],
+            device:      ["info",    "{{Équipement}}"],
+            group:       ["info",    "{{Groupe}}"],
+            otherCoord:  ["danger",  "{{Obsolète : autre réseau}}"],
+            otherDevice: ["danger",  "{{Obsolète : autre réseau}}"],
+            unknown:     ["warning", "{{Inconnue}}"],
+        };
+
+        bindingsObsolete = [];
+        var html = "<table class='table table-condensed table-bordered' style='width:auto'>";
+        html += "<thead><tr><th>{{Équipement}}</th><th>{{EP}}</th><th>{{Cluster}}</th><th>{{Destination}}</th><th>{{État}}</th><th></th></tr></thead><tbody>";
+        var nObsolete = 0;
+        eqs.forEach(function (eq) {
+            var dev = devices[eq.addr];
+            var label = (eq.objectName ? eq.objectName + "-" : "") + eq.name + " (" + eq.addr + ")";
+            var asleep = eq.rxOnWhenIdle === 0;
+            var ask = "<a class='btn btn-default btn-xs' title='" + (asleep ? "{{Équipement endormi : réveillez-le (appui sur un bouton) juste avant}}" : "{{Interroger}}") +
+                "' onclick='collectBindings([\"" + eq.addr + "\"])'><i class='fas fa-sync'></i></a>";
+            var entries = dev && dev.entries ? Object.values(dev.entries) : null;
+            if (!entries) {
+                html += "<tr><td>" + esc(label) + "</td><td colspan='4' style='color:#888'>" +
+                    (asleep ? "{{Non interrogé (endormi)}}" : "{{Non interrogé}}") + "</td><td>" + ask + "</td></tr>";
+                return;
+            }
+            var when = new Date(dev.collectTime * 1000).toLocaleString("fr-FR");
+            if (entries.length === 0) {
+                html += "<tr><td>" + esc(label) + "</td><td colspan='4' style='color:#888'>{{Aucune liaison}} &mdash; " + when + "</td><td>" + ask + "</td></tr>";
+                return;
+            }
+            entries.forEach(function (b, i) {
+                var kind, dest, params;
+                if (b.group !== undefined) {
+                    kind = "group";
+                    dest = "{{Groupe}} " + b.group;
+                    params = { addr: eq.addr, srcIeee: b.srcIeee, srcEp: b.srcEp, clustId: b.clustId, group: b.group };
+                } else {
+                    var known = byIeee[b.dstIeee];
+                    kind = known ? known.kind : "unknown";
+                    dest = (known ? known.label : b.dstIeee) + ", EP " + b.dstEp;
+                    params = { addr: eq.addr, srcIeee: b.srcIeee, srcEp: b.srcEp, clustId: b.clustId, dstIeee: b.dstIeee, dstEp: b.dstEp };
+                }
+                var v = verdicts[kind];
+                if (v[0] == "danger") {
+                    nObsolete++;
+                    bindingsObsolete.push(params);
+                }
+                var cl = bindingsClusters[b.clustId] ? b.clustId + " " + bindingsClusters[b.clustId] : b.clustId;
+                html += "<tr>";
+                if (i === 0)
+                    html += "<td rowspan='" + entries.length + "'>" + esc(label) + "<br><small style='color:#888'>" + when + "</small> " + ask + "</td>";
+                html += "<td>" + esc(b.srcEp) + "</td><td>" + esc(cl) + "</td>";
+                html += "<td title='" + esc(b.dstIeee || b.group) + "'>" + esc(dest) + "</td>";
+                html += "<td><span class='label label-" + v[0] + "'>" + v[1] + "</span></td>";
+                html += "<td><a class='btn btn-" + (v[0] == "danger" ? "danger" : "default") + " btn-xs' title='{{Supprimer cette liaison}}' " +
+                    "onclick='removeBindings([" + esc(JSON.stringify(params)) + "])'><i class='fas fa-trash'></i></a></td>";
+                html += "</tr>";
+            });
+        });
+        html += "</tbody></table>";
+
+        var head = "<p><strong>" + netName + "</strong>";
+        if (nObsolete > 0)
+            head += " &mdash; <a class='btn btn-danger btn-sm' onclick='removeBindings(bindingsObsolete)'><i class='fas fa-trash'></i> {{Supprimer les}} " +
+                nObsolete + " {{liaisons obsolètes}}</a>";
+        head += "</p>";
+        container.html(head + html);
+    }).fail(function () {
+        container.html("<div class='alert alert-danger'>{{Erreur lors du chargement des données.}}</div>");
+    });
+}
+
 /* Refresh display if node name changed */
 $("#idShowObject").on("change", function (event) {
     console.log("idShowObject click");

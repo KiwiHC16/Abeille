@@ -792,6 +792,8 @@
                     'name' => $eqLogic->getName(),
                     'id' => $eqLogic->getId(),
                     'logicId' => $eqLogicId,
+                    'ieee' => strtoupper($eqLogic->getConfiguration('IEEE', '')),
+                    'rxOnWhenIdle' => isset($zigbee['macCapa']) ? ((hexdec($zigbee['macCapa']) >> 3) & 1) : -1,
                     'objectName' => $objName,
                     'enabled' => $eqLogic->getIsEnable(),
                     'zbType' => $zbType,
@@ -1121,6 +1123,84 @@
                 // Tell the cmd daemon to reload this device's infos from DB,
                 // which clears its in-memory quarantine state as a side effect.
                 sendToX('xToCmd', array('type' => 'eqUpdated', 'id' => $eqId));
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        /* Requests the binding table of the given devices of network 'net' (ex: 'Abeille3').
+           'addrs' = list of short addresses, or empty for all enabled devices that are always listening.
+           Responses are stored by the parser in 'AbeilleBindings-<net>.json'. */
+        if (init('action') == 'getBindingTables') {
+            $net = init('net');
+            $addrs = init('addrs', []);
+
+            $status = 0;
+            $error = "";
+            $sent = [];
+
+            if (!preg_match('/^Abeille[0-9]+$/', $net)) {
+                $status = -1;
+                $error = "Réseau invalide";
+            } else {
+                if (!is_array($addrs) || (count($addrs) == 0)) {
+                    $addrs = [];
+                    foreach (eqLogic::byType('Abeille') as $eqLogic) {
+                        list($eqNet, $eqAddr) = explode("/", $eqLogic->getLogicalId());
+                        if (($eqNet != $net) || ($eqAddr == "0000") || !$eqLogic->getIsEnable())
+                            continue;
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        if (!isset($zigbee['macCapa']) || !((hexdec($zigbee['macCapa']) >> 3) & 1))
+                            continue; // Sleeping device: it would not answer
+                        $addrs[] = $eqAddr;
+                    }
+                }
+                foreach ($addrs as $addr) {
+                    if (!preg_match('/^[0-9A-F]{4}$/', $addr))
+                        continue;
+                    Abeille::msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "addr=".$addr."&startIdx=00");
+                    $sent[] = $addr;
+                }
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'sent' => $sent)));
+        }
+
+        /* Removes one binding of a device then rereads its binding table (unless 'reread' = 0).
+           Destination is either 'dstIeee' + 'dstEp' or 'group'. */
+        if (init('action') == 'removeBinding') {
+            $net = init('net');
+            $addr = init('addr');
+            $srcIeee = init('srcIeee');
+            $srcEp = init('srcEp');
+            $clustId = init('clustId');
+            $dstIeee = init('dstIeee', '');
+            $dstEp = init('dstEp', '');
+            $group = init('group', '');
+
+            $status = 0;
+            $error = "";
+
+            if (!preg_match('/^Abeille[0-9]+$/', $net) || !preg_match('/^[0-9A-F]{4}$/', $addr)
+                || !preg_match('/^[0-9A-F]{16}$/', $srcIeee) || !preg_match('/^[0-9A-F]{2}$/', $srcEp)
+                || !preg_match('/^[0-9A-F]{4}$/', $clustId)) {
+                $status = -1;
+                $error = "Paramètres invalides";
+            } else if (preg_match('/^[0-9A-F]{16}$/', $dstIeee) && preg_match('/^[0-9A-F]{2}$/', $dstEp)) {
+                $dst = "destAddr=".$dstIeee."&destEp=".$dstEp;
+            } else if (preg_match('/^[0-9A-F]{4}$/', $group)) {
+                $dst = "destAddr=".$group;
+            } else {
+                $status = -1;
+                $error = "Destination invalide";
+            }
+
+            if ($status == 0) {
+                log::add('Abeille', 'info', 'removeBinding: '.$net.'/'.$addr.' EP'.$srcEp.' clust '.$clustId.' => '.$dst);
+                // Unbind_req expects the IEEE address of the device in 'addr'
+                Abeille::msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/unbind0031", "addr=".$srcIeee."&ep=".$srcEp."&clustId=".$clustId."&".$dst);
+                if (init('reread', 1) == 1)
+                    Abeille::msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "addr=".$addr."&startIdx=00");
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));

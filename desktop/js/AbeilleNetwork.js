@@ -1699,6 +1699,7 @@ function filterColumnOnValue(data, col) {
 // ============================================================
 var bindingsZgId = null;
 var bindingsObsolete = []; // Obsolete bindings of the displayed network, for 'remove all'
+var bindingsDevices = {}; // Last binding tables read, per short address
 
 var bindingsClusters = {
     "0000": "Basic", "0001": "Batterie", "0003": "Identify", "0004": "Groupes", "0005": "Scènes",
@@ -1719,13 +1720,22 @@ function bindingsAjax(data) {
 }
 
 // Reloads the table a few times while answers arrive
-function bindingsReloadSoon() {
+// Rereads the tables quietly (no loading wheel) until all 'addrs' answered, 30 s at most
+function bindingsReloadSoon(addrs) {
     var zgId = bindingsZgId;
-    [4000, 12000, 25000].forEach(function (delay) {
-        setTimeout(function () {
-            if (bindingsZgId === zgId) displayBindingsTable(zgId);
-        }, delay);
-    });
+    var before = {};
+    addrs.forEach(function (a) { before[a] = bindingsDevices[a] ? bindingsDevices[a].collectTime : 0; });
+    var tries = 0;
+    function poll() {
+        if (bindingsZgId !== zgId) return;
+        displayBindingsTable(zgId, true).done(function () {
+            var waiting = addrs.filter(function (a) {
+                return !bindingsDevices[a] || bindingsDevices[a].collectTime == before[a];
+            });
+            if (waiting.length && ++tries < 10) setTimeout(poll, 3000);
+        });
+    }
+    setTimeout(poll, 3000);
 }
 
 function collectBindings(zgId, addrs) {
@@ -1740,7 +1750,7 @@ function collectBindings(zgId, addrs) {
             message: res.sent.length + " {{équipement(s) interrogé(s). Les réponses arrivent en quelques secondes.}}",
             level: "info",
         });
-        bindingsReloadSoon();
+        bindingsReloadSoon(res.sent);
     });
 }
 
@@ -1761,24 +1771,33 @@ function removeBindings(list) {
                     $("#div_bindingsAlert").showAlert({ message: res.error, level: "danger" });
             });
         });
-        bindingsReloadSoon();
+        bindingsReloadSoon(list.map(function (b) { return b.addr; }).filter(function (a, i, all) { return all.indexOf(a) == i; }));
     });
 }
 
-function displayBindingsTable(zgId) {
+// 'quiet' = periodic reread: no loading wheel
+function displayBindingsTable(zgId, quiet = false) {
     bindingsZgId = zgId;
     var netName = "Abeille" + zgId;
     var container = $("#idBindingsContent");
 
-    $.when(
+    return $.when(
         $.ajax({
             type: "POST",
             url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: { action: "getTmpFile", file: "AbeilleBindings-" + netName + ".json" },
             dataType: "json",
+            global: !quiet,
             cache: false,
         }),
-        getEqList(0) // All networks, to recognize the other coordinators
+        $.ajax({
+            type: "POST",
+            url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+            data: { action: "getEqList", gtwId: 0 }, // All networks, to recognize the other coordinators
+            dataType: "json",
+            global: !quiet,
+            cache: false,
+        })
     ).done(function (bindResp, eqResp) {
         var eqData = JSON.parse(eqResp[0].result);
         var eqList = eqData && eqData.eqList ? eqData.eqList : {};
@@ -1788,6 +1807,7 @@ function displayBindingsTable(zgId) {
         if (outer.status === 0 && outer.content) {
             try { devices = JSON.parse(outer.content).devices || {}; } catch (e) { devices = {}; }
         }
+        bindingsDevices = devices;
 
         // IEEE => description of the destination
         var byIeee = {};

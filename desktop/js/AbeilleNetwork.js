@@ -1894,7 +1894,7 @@ function displayBindingsTable(zgId) {
                 if (i == 0) html += "<td rowspan='" + n + "' style='vertical-align:middle'>" + who + "</td>";
                 html += "<td title='" + esc(v[3] + " (" + d.title + ")") + "'><i class='fas " + v[1] + "' style='color:" + v[2] + "'></i> " + esc(d.label) + "</td><td>";
                 d.clusters.forEach(function (b) {
-                    var name = bindingsClusters[b.clustId] || b.clustId;
+                    var name = b.clustId + (bindingsClusters[b.clustId] ? " " + bindingsClusters[b.clustId] : "");
                     html += "<span class='label label-default' style='margin-right:3px; font-weight:normal' title='" + b.clustId + (b.srcEp != "01" ? ", EP " + b.srcEp : "") + "'>" +
                         esc(name) + (b.srcEp != "01" ? " (EP " + b.srcEp + ")" : "") + "</span>";
                 });

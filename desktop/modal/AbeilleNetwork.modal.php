@@ -204,7 +204,7 @@
                 <a data-toggle="tab" href="#idLqiPathTab"> {{LQI Path}}</a>
             </li>
             <li>
-                <a data-toggle="tab" href="#idBindingsTab"> {{Liaisons}}</a>
+                <a data-toggle="tab" href="#idBindingsTab"> {{Binding}}</a>
             </li>
         </ul>
     </div>

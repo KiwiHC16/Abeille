@@ -1819,6 +1819,7 @@ function displayBindingsTable(zgId) {
 
         // One line per device and destination, clusters grouped
         var rows = [];
+        var clusters = {}; // Cluster ids present in this network => one column each
         var nAsked = 0, nNotAsked = 0, nObsolete = 0, nUnknown = 0;
         bindingsObsolete = [];
         for (var lid in eqList) {
@@ -1847,6 +1848,7 @@ function displayBindingsTable(zgId) {
                     r.dests.push(byDest[key]);
                 }
                 byDest[key].clusters.push(b);
+                clusters[b.clustId] = true;
                 byDest[key].params.push(params);
                 if (verdicts[kind][0] == "danger") { nObsolete++; bindingsObsolete.push(params); r.worst = Math.max(r.worst, 2); }
                 else if (kind == "unknown") { nUnknown++; r.worst = Math.max(r.worst, 1); }
@@ -1872,7 +1874,13 @@ function displayBindingsTable(zgId) {
         html += "</div>";
 
         html += "<table class='table table-condensed' style='width:auto; min-width:60%'>";
-        html += "<thead><tr><th>{{Équipement}}</th><th>{{Envoie vers}}</th><th>{{Clusters}}</th><th></th></tr></thead>";
+        var cols = Object.keys(clusters).sort();
+        html += "<thead><tr><th style='vertical-align:bottom'>{{Équipement}}</th><th style='vertical-align:bottom'>{{Envoie vers}}</th>";
+        cols.forEach(function (c) {
+            html += "<th style='text-align:center; vertical-align:bottom; font-weight:normal'><b>" + c + "</b>" +
+                (bindingsClusters[c] ? "<br><small style='color:#888'>" + esc(bindingsClusters[c]) + "</small>" : "") + "</th>";
+        });
+        html += "<th></th></tr></thead>";
         rows.forEach(function (r) {
             var eq = r.eq;
             var asleep = eq.rxOnWhenIdle === 0;
@@ -1885,20 +1893,25 @@ function displayBindingsTable(zgId) {
             html += "<tbody style='border-top:2px solid #ddd'>";
             if (r.dests.length == 0) {
                 var msg = !r.dev ? (asleep ? "{{Non interrogé (endormi)}}" : "{{Non interrogé}}") : "{{Aucune liaison}}";
-                html += "<tr><td>" + who + "</td><td colspan='2' style='color:#888'><i>" + msg + "</i></td><td></td></tr></tbody>";
+                html += "<tr><td>" + who + "</td><td colspan='" + (cols.length + 1) + "' style='color:#888'><i>" + msg + "</i></td><td></td></tr></tbody>";
                 return;
             }
             r.dests.forEach(function (d, i) {
                 var v = verdicts[d.kind];
                 html += "<tr class='" + v[0] + "'>";
                 if (i == 0) html += "<td rowspan='" + n + "' style='vertical-align:middle'>" + who + "</td>";
-                html += "<td title='" + esc(v[3] + " (" + d.title + ")") + "'><i class='fas " + v[1] + "' style='color:" + v[2] + "'></i> " + esc(d.label) + "</td><td>";
-                d.clusters.forEach(function (b) {
-                    var name = b.clustId + (bindingsClusters[b.clustId] ? " " + bindingsClusters[b.clustId] : "");
-                    html += "<span class='label label-default' style='margin-right:3px; font-weight:normal' title='" + b.clustId + (b.srcEp != "01" ? ", EP " + b.srcEp : "") + "'>" +
-                        esc(name) + (b.srcEp != "01" ? " (EP " + b.srcEp + ")" : "") + "</span>";
+                html += "<td title='" + esc(v[3] + " (" + d.title + ")") + "'><i class='fas " + v[1] + "' style='color:" + v[2] + "'></i> " + esc(d.label) + "</td>";
+                cols.forEach(function (c) {
+                    var eps = d.clusters.filter(function (b) { return b.clustId == c; }).map(function (b) { return b.srcEp; });
+                    html += "<td style='text-align:center'>";
+                    if (eps.length) {
+                        html += "<i class='fas fa-check' style='color:" + v[2] + "'></i>";
+                        var other = eps.filter(function (ep) { return ep != "01"; });
+                        if (other.length) html += " <small>EP " + other.join(",") + "</small>";
+                    }
+                    html += "</td>";
                 });
-                html += "</td><td style='white-space:nowrap'>";
+                html += "<td style='white-space:nowrap'>";
                 // No delete on the coordinator of this network: the device would stop reporting
                 if (d.kind != "coord")
                     html += "<a class='btn btn-" + (v[0] == "danger" ? "danger" : "default") + " btn-xs' title='{{Supprimer ces liaisons}}' " +

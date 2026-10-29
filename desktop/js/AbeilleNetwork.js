@@ -1800,89 +1800,115 @@ function displayBindingsTable(zgId) {
                 byIeee[eq.ieee] = { kind: eq.net == netName ? "device" : "otherDevice", label: (eq.objectName ? eq.objectName + "-" : "") + eq.name + " (" + eq.net + ")" };
         }
 
-        var eqs = [];
-        for (var lid in eqList) {
-            var eq = eqList[lid];
-            if (eq.net == netName && eq.addr != "0000" && eq.enabled == 1) eqs.push(eq);
-        }
-        eqs.sort(function (a, b) {
-            return ((a.objectName || "") + a.name).localeCompare((b.objectName || "") + b.name);
-        });
-
         function esc(t) { return $("<span>").text(t).html(); }
+        function age(t) {
+            var m = Math.round((Date.now() / 1000 - t) / 60);
+            if (m < 60) return m + " min";
+            if (m < 48 * 60) return Math.round(m / 60) + " h";
+            return Math.round(m / 1440) + " j";
+        }
+        // Destination kind => [row class, icon, text]
         var verdicts = {
-            coord:       ["success", "{{OK}}"],
-            device:      ["info",    "{{Équipement}}"],
-            group:       ["info",    "{{Groupe}}"],
-            otherCoord:  ["danger",  "{{Obsolète : autre réseau}}"],
-            otherDevice: ["danger",  "{{Obsolète : autre réseau}}"],
-            unknown:     ["warning", "{{Inconnue}}"],
+            coord:       ["",        "fa-check-circle", "#5cb85c", "{{Coordinateur de ce réseau}}"],
+            device:      ["",        "fa-link",         "#5bc0de", "{{Équipement de ce réseau}}"],
+            group:       ["",        "fa-object-group", "#5bc0de", "{{Groupe}}"],
+            otherCoord:  ["danger",  "fa-times-circle", "#d9534f", "{{Obsolète : coordinateur d'un autre réseau}}"],
+            otherDevice: ["danger",  "fa-times-circle", "#d9534f", "{{Obsolète : équipement d'un autre réseau}}"],
+            unknown:     ["warning", "fa-question-circle", "#f0ad4e", "{{Destination inconnue}}"],
         };
 
+        // One line per device and destination, clusters grouped
+        var rows = [];
+        var nAsked = 0, nNotAsked = 0, nObsolete = 0, nUnknown = 0;
         bindingsObsolete = [];
-        var html = "<table class='table table-condensed table-bordered' style='width:auto'>";
-        html += "<thead><tr><th>{{Équipement}}</th><th>{{EP}}</th><th>{{Cluster}}</th><th>{{Destination}}</th><th>{{État}}</th><th></th></tr></thead><tbody>";
-        var nObsolete = 0;
-        eqs.forEach(function (eq) {
+        for (var lid in eqList) {
+            var eq = eqList[lid];
+            if (eq.net != netName || eq.addr == "0000" || eq.enabled != 1 || !/^[0-9A-F]{4}$/.test(eq.addr))
+                continue; // Not a Zigbee device of this network (virtual remotes...)
             var dev = devices[eq.addr];
-            var label = (eq.objectName ? eq.objectName + "-" : "") + eq.name + " (" + eq.addr + ")";
-            var asleep = eq.rxOnWhenIdle === 0;
-            var ask = "<a class='btn btn-default btn-xs' title='" + (asleep ? "{{Équipement endormi : réveillez-le (appui sur un bouton) juste avant}}" : "{{Interroger}}") +
-                "' onclick='collectBindings(" + zgId + ", [\"" + eq.addr + "\"])'><i class='fas fa-sync'></i></a>";
-            var entries = dev && dev.entries ? Object.values(dev.entries) : null;
-            if (entries) {
-                // By cluster, then endpoint and destination
-                entries.sort(function (x, y) {
-                    return (x.clustId + x.srcEp + (x.dstIeee || x.group)).localeCompare(y.clustId + y.srcEp + (y.dstIeee || y.group));
-                });
-            }
-            if (!entries) {
-                html += "<tr><td>" + esc(label) + "</td><td colspan='4' style='color:#888'>" +
-                    (asleep ? "{{Non interrogé (endormi)}}" : "{{Non interrogé}}") + "</td><td>" + ask + "</td></tr>";
-                return;
-            }
-            var when = new Date(dev.collectTime * 1000).toLocaleString("fr-FR");
-            if (entries.length === 0) {
-                html += "<tr><td>" + esc(label) + "</td><td colspan='4' style='color:#888'>{{Aucune liaison}} &mdash; " + when + "</td><td>" + ask + "</td></tr>";
-                return;
-            }
-            entries.forEach(function (b, i) {
-                var kind, dest, params;
+            var r = { eq: eq, dev: dev, dests: [], worst: 0 };
+            rows.push(r);
+            if (!dev || !dev.entries) { nNotAsked++; r.worst = -1; continue; }
+            nAsked++;
+            var byDest = {};
+            Object.values(dev.entries).forEach(function (b) {
+                var key, kind, label, params;
                 if (b.group !== undefined) {
-                    kind = "group";
-                    dest = "{{Groupe}} " + b.group;
+                    key = "G" + b.group; kind = "group"; label = "{{Groupe}} " + b.group;
                     params = { addr: eq.addr, srcIeee: b.srcIeee, srcEp: b.srcEp, clustId: b.clustId, group: b.group };
                 } else {
                     var known = byIeee[b.dstIeee];
-                    kind = known ? known.kind : "unknown";
-                    dest = (known ? known.label : b.dstIeee) + ", EP " + b.dstEp;
+                    key = b.dstIeee + "/" + b.dstEp; kind = known ? known.kind : "unknown";
+                    label = (known ? known.label : b.dstIeee) + (b.dstEp != "01" ? " EP " + b.dstEp : "");
                     params = { addr: eq.addr, srcIeee: b.srcIeee, srcEp: b.srcEp, clustId: b.clustId, dstIeee: b.dstIeee, dstEp: b.dstEp };
                 }
-                var v = verdicts[kind];
-                if (v[0] == "danger") {
-                    nObsolete++;
-                    bindingsObsolete.push(params);
+                if (!byDest[key]) {
+                    byDest[key] = { kind: kind, label: label, title: b.dstIeee || b.group, clusters: [], params: [] };
+                    r.dests.push(byDest[key]);
                 }
-                var cl = bindingsClusters[b.clustId] ? b.clustId + " " + bindingsClusters[b.clustId] : b.clustId;
-                html += "<tr>";
-                if (i === 0)
-                    html += "<td rowspan='" + entries.length + "'>" + esc(label) + "<br><small style='color:#888'>" + when + "</small> " + ask + "</td>";
-                html += "<td>" + esc(b.srcEp) + "</td><td>" + esc(cl) + "</td>";
-                html += "<td title='" + esc(b.dstIeee || b.group) + "'>" + esc(dest) + "</td>";
-                html += "<td><span class='label label-" + v[0] + "'>" + v[1] + "</span></td>";
-                html += "<td><a class='btn btn-" + (v[0] == "danger" ? "danger" : "default") + " btn-xs' title='{{Supprimer cette liaison}}' " +
-                    "onclick='removeBindings([" + esc(JSON.stringify(params)) + "])'><i class='fas fa-trash'></i></a></td>";
-                html += "</tr>";
+                byDest[key].clusters.push(b);
+                byDest[key].params.push(params);
+                if (verdicts[kind][0] == "danger") { nObsolete++; bindingsObsolete.push(params); r.worst = Math.max(r.worst, 2); }
+                else if (kind == "unknown") { nUnknown++; r.worst = Math.max(r.worst, 1); }
             });
+            r.dests.forEach(function (d) {
+                d.clusters.sort(function (x, y) { return (x.clustId + x.srcEp).localeCompare(y.clustId + y.srcEp); });
+            });
+            r.dests.sort(function (x, y) { return (x.kind == "coord" ? 0 : 1) - (y.kind == "coord" ? 0 : 1) || x.label.localeCompare(y.label); });
+        }
+        // Problems first, then by room and name; devices not asked at the end
+        rows.sort(function (a, b) {
+            var wa = a.worst < 0 ? -9 : a.worst, wb = b.worst < 0 ? -9 : b.worst;
+            return (wb - wa) || ((a.eq.objectName || "") + a.eq.name).localeCompare((b.eq.objectName || "") + b.eq.name);
         });
-        html += "</tbody></table>";
 
-        var head = "<p><strong>" + netName + "</strong>";
-        if (nObsolete > 0)
-            head += " &mdash; <a class='btn btn-danger btn-sm' onclick='removeBindings(bindingsObsolete)'><i class='fas fa-trash'></i> {{Supprimer les}} " +
-                nObsolete + " {{liaisons obsolètes}}</a>";
-        head += "</p>";
-        container.html(head + html);
+        var html = "<div style='margin-bottom:10px'>";
+        html += "<span class='label label-default' style='font-size:12px'>" + nAsked + " {{interrogés}}</span> ";
+        html += "<span class='label label-" + (nObsolete ? "danger" : "success") + "' style='font-size:12px'>" + nObsolete + " {{obsolètes}}</span> ";
+        if (nUnknown) html += "<span class='label label-warning' style='font-size:12px'>" + nUnknown + " {{inconnues}}</span> ";
+        if (nNotAsked) html += "<span class='label label-default' style='font-size:12px; opacity:.6'>" + nNotAsked + " {{non interrogés}}</span> ";
+        if (nObsolete)
+            html += "&nbsp; <a class='btn btn-danger btn-xs' onclick='removeBindings(bindingsObsolete)'><i class='fas fa-trash'></i> {{Supprimer les}} " + nObsolete + " {{liaisons obsolètes}}</a>";
+        html += "</div>";
+
+        html += "<table class='table table-condensed' style='width:auto; min-width:60%'>";
+        html += "<thead><tr><th>{{Équipement}}</th><th>{{Envoie vers}}</th><th>{{Clusters}}</th><th></th></tr></thead>";
+        rows.forEach(function (r) {
+            var eq = r.eq;
+            var asleep = eq.rxOnWhenIdle === 0;
+            var ask = "<a class='btn btn-default btn-xs' title='" + (asleep ? "{{Équipement endormi : réveillez-le (appui sur un bouton) juste avant}}" : "{{Relire la table}}") +
+                "' onclick='collectBindings(" + zgId + ", [\"" + eq.addr + "\"])'><i class='fas fa-sync'></i></a>";
+            var who = "<b>" + esc(eq.name) + "</b> <small style='color:#888'>" + esc(eq.objectName || "") + " &middot; " + eq.addr +
+                (r.dev ? " &middot; {{lue il y a}} " + age(r.dev.collectTime) : "") + "</small> " + ask;
+            var n = Math.max(r.dests.length, 1);
+            // Body per device so that rows of the same device stay visually together
+            html += "<tbody style='border-top:2px solid #ddd'>";
+            if (r.dests.length == 0) {
+                var msg = !r.dev ? (asleep ? "{{Non interrogé (endormi)}}" : "{{Non interrogé}}") : "{{Aucune liaison}}";
+                html += "<tr><td>" + who + "</td><td colspan='2' style='color:#888'><i>" + msg + "</i></td><td></td></tr></tbody>";
+                return;
+            }
+            r.dests.forEach(function (d, i) {
+                var v = verdicts[d.kind];
+                html += "<tr class='" + v[0] + "'>";
+                if (i == 0) html += "<td rowspan='" + n + "' style='vertical-align:middle'>" + who + "</td>";
+                html += "<td title='" + esc(v[3] + " (" + d.title + ")") + "'><i class='fas " + v[1] + "' style='color:" + v[2] + "'></i> " + esc(d.label) + "</td><td>";
+                d.clusters.forEach(function (b) {
+                    var name = bindingsClusters[b.clustId] || b.clustId;
+                    html += "<span class='label label-default' style='margin-right:3px; font-weight:normal' title='" + b.clustId + (b.srcEp != "01" ? ", EP " + b.srcEp : "") + "'>" +
+                        esc(name) + (b.srcEp != "01" ? " (EP " + b.srcEp + ")" : "") + "</span>";
+                });
+                html += "</td><td style='white-space:nowrap'>";
+                // No delete on the coordinator of this network: the device would stop reporting
+                if (d.kind != "coord")
+                    html += "<a class='btn btn-" + (v[0] == "danger" ? "danger" : "default") + " btn-xs' title='{{Supprimer ces liaisons}}' " +
+                        "onclick='removeBindings(" + esc(JSON.stringify(d.params)) + ")'><i class='fas fa-trash'></i></a>";
+                html += "</td></tr>";
+            });
+            html += "</tbody>";
+        });
+        html += "</table>";
+        container.html("<p><strong>" + netName + "</strong></p>" + html);
     }).fail(function () {
         container.html("<div class='alert alert-danger'>{{Erreur lors du chargement des données.}}</div>");
     });

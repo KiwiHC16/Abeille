@@ -341,6 +341,12 @@ class Abeille extends eqLogic {
             // TODO: Better to read time to correct it if required, instead of version that rarely changes
             Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$gtwId."/0000/zgGetVersion");
 
+            // Zigate pas encore identifiée (ni 8009 ni 8024 reçu) => le parser ignore tous ses messages.
+            // Arrive si les démons ont démarré pendant que la passerelle était injoignable : le
+            // zgGetNetworkStatus de configureZigate() est perdu et rien ne le redemande (ZiGate 2, 2026-10-29).
+            if (config::byKey('ab::zgIeeeAddrOk'.$gtwId, 'Abeille', 0, true) == 0)
+                Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$gtwId."/0000/zgGetNetworkStatus");
+
             // Checking that Zigate is still alive
             $eqLogic = eqLogic::byLogicalId('Abeille'.$gtwId.'/0000', 'Abeille');
             if (!is_object($eqLogic)) {
@@ -400,6 +406,21 @@ class Abeille extends eqLogic {
                     log::add('Abeille', 'Debug', 'Restarting socat for Zigate '.$gtwId);
                     AbeilleTools::restartDaemons($config, "Socat".$gtwId." socat".$gtwId);
                 }
+            }
+
+            // Passerelle muette depuis plus de 5 min : message utilisateur, retiré à son retour
+            // (ZiGate 2 coupée 5 h puis 9 h les 29-30/10/2026 sans que personne ne soit prévenu).
+            $downCache = 'Abeille::zigateDown'.$gtwId;
+            if (($lastComm != 0) && ((time() - $lastComm) > (5 * 60))) {
+                if (cache::byKey($downCache)->getValue(0) == 0) {
+                    log::add('Abeille', 'error', "La Zigate ".$gtwId." ne répond plus depuis le ".date('d/m H:i', $lastComm));
+                    message::add("Abeille", "La Zigate ".$gtwId." ne répond plus depuis le ".date('d/m à H:i', $lastComm).". Vérifier son alimentation et son réseau (la débrancher/rebrancher).", '', 'zigateDown'.$gtwId);
+                    cache::set($downCache, 1);
+                }
+            } else if (cache::byKey($downCache)->getValue(0) == 1) {
+                log::add('Abeille', 'info', "La Zigate ".$gtwId." répond de nouveau");
+                message::removeAll("Abeille", 'zigateDown'.$gtwId);
+                cache::set($downCache, 0);
             }
         }
 

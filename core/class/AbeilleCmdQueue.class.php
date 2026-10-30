@@ -688,6 +688,27 @@
                     // Remove any pending messages to be sent to old address
                     $zgId = substr($msg['net'], 7);
                     clearPending($zgId, $msg['addr'], $msg['ieee']);
+
+                    // Device announce = device alive: quarantine & 'noack' no longer relevant.
+                    // Otherwise the read/configure sent on announce are dropped (Ampoule garde manger, 2026-10-30).
+                    $net = $msg['net'];
+                    $addr = $msg['addr'];
+                    if (isset($GLOBALS['devices'][$net][$addr])) {
+                        $dev = &$GLOBALS['devices'][$net][$addr];
+                        if (isset($dev['quarantineUntil']) || (isset($dev['zigbee']['txStatus']) && ($dev['zigbee']['txStatus'] == 'noack'))) {
+                            unset($dev['quarantineUntil']);
+                            $dev['zigbee']['txStatus'] = 'ok';
+                            cmdLog("info", "  Device {$addr} removed from quarantine (device announce)");
+                            msgToAbeille(array(
+                                'type' => 'eqTxStatusUpdate',
+                                'net' => $net,
+                                'addr' => $addr,
+                                'txStatus' => 'ok',
+                                'quarantineUntil' => 0
+                            ));
+                        }
+                        unset($dev);
+                    }
                     continue;
                 } // End type=='clearPending'
 

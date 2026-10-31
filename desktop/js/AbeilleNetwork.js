@@ -121,17 +121,34 @@ function refreshLqiTable(zgId, page) {
     });
 }
 
-function refreshRoutes(device) {
-    console.log("refreshRoutes(" + device + ")");
-    // $.ajax({
-    //     type: "POST",
-    //     url:
-    //         "/plugins/Abeille/core/ajax/AbeilleRoutes.ajax.php?device=" +
-    //         device,
-    // });
+/* Collect the routing tables of a network, then refresh the tab that asked for it */
+function refreshRoutes(zgId, page) {
+    console.log("refreshRoutes(zgId=" + zgId + ", page=" + page + ")");
+
+    function showError(message) {
+        $("#div_networkZigbeeAlert").showAlert({ message: message, level: "danger" });
+        abeilleNetworkTimeouts.push(window.setTimeout(function () {
+            $("#div_networkZigbeeAlert").hide();
+        }, 10000));
+    }
+
+    $("#div_networkZigbeeAlert").showAlert({ message: "{{Collecte des routes en cours...}}", level: "info" });
     $.ajax({
-        type: "POST",
-        url: "/plugins/Abeille/core/php/AbeilleRoutes.php",
+        url: "/plugins/Abeille/core/php/AbeilleRoutes.php?zigate=" + zgId,
+        async: true,
+        error: function () {
+            showError("ERREUR ! Impossible de démarrer la collecte.");
+        },
+        success: function (data) {
+            console.log("AbeilleRoutes.php output=" + data);
+            if (data.indexOf("successfully") < 0) {
+                showError(data);
+                return;
+            }
+            $("#div_networkZigbeeAlert").hide();
+            if (page == "routeA2B") loadRouteA2BData(zgId);
+            else displayRoutesTable(zgId);
+        },
     });
 }
 
@@ -766,7 +783,7 @@ function displayRoutesTable(zgId) {
             return;
         }
         if (outer.status !== 0 || !outer.content) {
-            container.html("<div class='alert alert-warning'>{{Aucune donnée pour " + netName + ". Cliquez sur \"Tout collecter\".}}</div>");
+            container.html("<div class='alert alert-warning'>{{Aucune donnée pour " + netName + ". Cliquez sur le bouton orange.}}</div>");
             return;
         }
 

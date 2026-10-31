@@ -44,9 +44,11 @@
     $eqLogics = Abeille::byType('Abeille');
     $queueId = $abQueues["xToCmd"]['id'];
 
-    if ($device == "All") {
+    if (preg_match('/^Abeille[0-9]+$/', $device)) { // A whole network
         foreach ($eqLogics as $eqLogic) {
             list($net, $addr) = explode('/', $eqLogic->getLogicalId());
+            if ($net != $device)
+                continue;
             log::add('Abeille', 'debug', "refreshNoise(): '${net}/${addr}'");
             sendToCmd($queueId, PRIO_NORM, "Cmd".$net."/".$addr."/mgmtNetworkUpdateReq", "");
         }

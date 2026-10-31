@@ -17,7 +17,9 @@
             if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Disabled
 
-            if ($what == "linksTable")
+            if ($what == "noise")
+                echo '<span style="margin-left:4px">Abeille'.$zgId.'</span>';
+            else if ($what == "linksTable")
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else if ($what == "lqiPath")
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="loadLqiPathData('.$zgId.')">Abeille'.$zgId.'</a>';
@@ -31,6 +33,10 @@
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$zgId.')">Abeille'.$zgId.'</a>';
             if ($what == "bindings")
                 echo '<a class="btn btn-warning" title="Interroge les tables de liaison de tous les équipements toujours à l\'écoute de ce réseau. Un équipement endormi doit être réveillé puis interrogé seul." onclick="collectBindings('.$zgId.', [])"><i class="fas fa-sync"></i></a>';
+            else if ($what == "routes" || $what == "routeA2B")
+                echo '<a class="btn btn-warning" title="Interroge les tables de routage des routeurs de ce réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshRoutes('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
+            else if ($what == "noise")
+                echo '<a class="btn btn-warning" title="Demande aux équipements de ce réseau de mesurer le bruit sur les canaux 11 à 26." style="margin-left:4px" onclick="refreshNoise(\'Abeille'.$zgId.'\')"><i class="fas fa-sync"></i></a>';
             else
                 echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLqiTable('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
@@ -332,7 +338,6 @@
             <div style="padding:10px">
                 <div style="margin-bottom:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
                     <?php displayNetworks(maxNbOfZigate, "routes"); ?>
-                    <a class="btn btn-default btn-sm refreshRoutesAll" style="margin-left:16px"><i class="fas fa-sync"></i> {{Tout collecter}}</a>
                 </div>
                 <p style="color:#888; margin-bottom:10px;">{{Firmware Zigate ≥ 3.1d requis}}</p>
                 <div id="idRoutesTableContent">
@@ -418,15 +423,15 @@
             - occupé: camera wifi sur 2.4GHz Canal Wifi 1, avec un débit de l ordre de 2Mbps, posée sur l ampoule.
             Avec ce test on voit clairement que les canaux zigbee 11, 12, 13 sont impactés.<br />
             A noter: la mesure se fait sur une courte periode, il faut peut faire plusieures mesures pour avoir une bonne idée de la charge des canaux.<br />
-            A noter: Apres un appui sur Refresh All, il n y a pas encore d affichage d avancement du processus.<br />
+            A noter: Apres un appui sur le bouton orange d un reseau, il n y a pas encore d affichage d avancement du processus.<br />
             Attendez et rafraichissez la page au bout d un certain temps. Il faut compter 5s par équipement...<br />
             Si une mesure a ete faite pour un equipement le graph doit apparaitre.<br />
             Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br />
             <br />
-            Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br />
+            Attention: Apres un "Collecter" ou un appui sur le bouton orange il faut rafraichir la page pour mettre a jour les graphiques.<br />
 
             <?php
-                echo '<a class="btn btn-success refreshNoiseAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
+                echo '<div style="margin-bottom:10px">'; displayNetworks(maxNbOfZigate, "noise"); echo '</div>';
 
                 function afficheGraph( $title, $logicalId, $values ) {
                 // Vertical
@@ -501,17 +506,9 @@
 
         $eqLogics = Abeille::byType('Abeille');
 
-        echo '$(".btn.refreshNoiseAll").off("click").on("click", function () { refreshNoise("All"); });'."\n";
         foreach ($eqLogics as $eqLogic) {
             if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
                 echo '$(".btn.refreshNoise_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshNoise("'.$eqLogic->getLogicalId().'"); });'."\n";
-            }
-        }
-
-        echo '$(".btn.refreshRoutesAll").off("click").on("click", function () { refreshRoutes("All"); });'."\n";
-        foreach ($eqLogics as $eqLogic) {
-            if( $eqLogic->getConfiguration('routingTable') ) {
-                echo '$(".btn.refreshRoutes_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshRoutes("'.$eqLogic->getLogicalId().'"); });'."\n";
             }
         }
     ?>

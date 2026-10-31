@@ -3,7 +3,8 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "FYRTURblock-outrollerblind"
+            "icon": "FYRTURblock-outrollerblind",
+            "batteryType": "1x battery pack"
         },
         "category": {
             "automatism": "1"
@@ -30,6 +31,29 @@
             },
             "GoToLevel": {
                 "use": "WindowsCoveringGoToLevel"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 0102-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0102",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0102-0008": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0102&attrId=0008&attrType=20&minInterval=10&maxInterval=1800&changeVal=1",
+                "execAtCreation": "yes"
             }
         }
     }

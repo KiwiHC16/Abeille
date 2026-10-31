@@ -1156,8 +1156,26 @@ class Abeille extends eqLogic {
     // }
 
     // Records a history entry in config table keyed by IEEE address.
-    // Key: 'zigbee:abeille:{IEEE}', value: JSON {entries:[{date,name,object,logical_id},...]}
+    // Key: 'zigbee:abeille:{IEEE}', value: JSON {entries:[{date,name,object,logical_id,pan},...]}
     // Entries accumulate over time so names/objects are preserved even after equipment is deleted/renamed.
+    // 'pan' = PAN ID du reseau a la date de l'entree (absent des entrees plus anciennes).
+
+    // Retourne le PAN ID courant du reseau de cet equipement, '' si inconnu.
+    // Ne doit jamais faire echouer la sauvegarde de l'equipement.
+    private function getNetworkPanForHistory() {
+        try {
+            $net = explode('/', $this->getLogicalId())[0];
+            $gtw = eqLogic::byLogicalId($net.'/0000', 'Abeille');
+            if (!is_object($gtw)) return '';
+            $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($gtw->getId(), 'PAN-ID');
+            if (!is_object($cmd)) return '';
+            $pan = strtoupper(trim((string) $cmd->execCmd()));
+            return (preg_match('/^[0-9A-F]{4}$/', $pan) && $pan !== '0000') ? $pan : '';
+        } catch (Throwable $e) {
+            return '';
+        }
+    }
+
     public function preSave() {
         $ieee = $this->getConfiguration('IEEE', '');
         if ($ieee == '') return;
@@ -1172,18 +1190,21 @@ class Abeille extends eqLogic {
         $logicalId = $this->getLogicalId();
         $obj = $this->getObject();
         $objectName = is_object($obj) ? $obj->getName() : '';
+        $pan = $this->getNetworkPanForHistory();
 
         $last = !empty($history['entries']) ? end($history['entries']) : null;
         if ($last === null
             || $last['name'] !== $name
             || $last['object'] !== $objectName
             || $last['logical_id'] !== $logicalId
+            || ($pan !== '' && ($last['pan'] ?? '') !== $pan)
         ) {
             $history['entries'][] = [
                 'date'       => date('Y-m-d H:i:s'),
                 'name'       => $name,
                 'object'     => $objectName,
                 'logical_id' => $logicalId,
+                'pan'        => $pan,
             ];
             config::save($key, $history, 'Abeille'); // config::save() auto-encodes arrays to JSON
         }
@@ -1206,6 +1227,7 @@ class Abeille extends eqLogic {
             'name'       => $this->getName(),
             'object'     => $objectName,
             'logical_id' => $this->getLogicalId(),
+            'pan'        => $this->getNetworkPanForHistory(),
             'deleted'    => true,
         ];
         config::save($key, $history, 'Abeille');

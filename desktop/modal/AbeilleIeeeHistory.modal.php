@@ -105,6 +105,7 @@
                 <th>{{Objet}}</th>
                 <th>{{Nom}}</th>
                 <th style="width:130px;">{{Logical ID}}</th>
+                <th style="width:60px;">{{PAN}}</th>
                 <th style="width:140px;">{{Dernière modif.}}</th>
                 <th style="width:90px; text-align:center;">{{Historique}}</th>
             </tr>
@@ -142,6 +143,7 @@
                     <?php endif; ?>
                 </td>
                 <td><?= htmlspecialchars($last['logical_id']) ?></td>
+                <td><?= htmlspecialchars(($last['pan'] ?? '') !== '' ? $last['pan'] : '—') ?></td>
                 <td style="white-space:nowrap;"><?= htmlspecialchars(substr($last['date'], 0, 16)) ?></td>
                 <td style="text-align:center;">
                     <?php if ($nbEntries > 1): ?>
@@ -156,7 +158,7 @@
             </tr>
 <?php if ($nbEntries > 1): ?>
             <tr class="history-detail tablesorter-ignoreRow" id="<?= $uid ?>" style="display:none;">
-                <td colspan="6" style="background:#fafafa; padding:6px 20px;">
+                <td colspan="7" style="background:#fafafa; padding:6px 20px;">
                     <table class="table table-condensed" style="margin:0; font-size:0.85em;">
                         <thead>
                             <tr>
@@ -164,6 +166,7 @@
                                 <th>{{Objet}}</th>
                                 <th>{{Nom}}</th>
                                 <th>{{Logical ID}}</th>
+                                <th>{{PAN}}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -177,6 +180,7 @@
                                 <td><?= htmlspecialchars($e['object']) ?></td>
                                 <td><?= htmlspecialchars($e['name']) ?></td>
                                 <td><?= htmlspecialchars($e['logical_id']) ?></td>
+                                <td><?= htmlspecialchars(($e['pan'] ?? '') !== '' ? $e['pan'] : '—') ?></td>
                                 <td>
 <?php if (isset($e['deleted']) && $e['deleted']): ?>
                                     <span class="label label-danger">{{supprimé}}</span>
@@ -201,7 +205,7 @@
     // Init tablesorter — sort by Objet (col 1) then Nom (col 2) by default, last column not sortable
     $("#table_ieeeHistory").tablesorter({
         sortList: [[1, 0], [2, 0]],
-        headers: { 5: { sorter: false } }
+        headers: { 6: { sorter: false } }
     });
 
     function triggerTablesorterUpdate() {

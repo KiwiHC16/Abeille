@@ -1330,6 +1330,32 @@ function findRouteHops(routers, netName, srcAddr, dstAddr) {
     return null; // max hops exceeded
 }
 
+// Path through the Parent/Child relations of the LQI table, for networks whose routing
+// tables say little: many-to-one routing keeps real paths out of them.
+function findLinkHops(netName, srcAddr, dstAddr) {
+    function ancestors(addr) {
+        var chain = [addr];
+        for (var guard = 0; guard < 20; guard++) {
+            var parent = routeA2BGetParent(netName, chain[chain.length - 1]);
+            if (!parent || chain.indexOf(parent) >= 0) break;
+            chain.push(parent);
+        }
+        return chain;
+    }
+
+    var up = ancestors(srcAddr);
+    var down = ancestors(dstAddr);
+    for (var i = 0; i < up.length; i++) {
+        var meet = down.indexOf(up[i]);
+        if (meet < 0) continue;
+        var addrs = up.slice(0, i + 1).concat(down.slice(0, meet).reverse());
+        return addrs.map(function (addr, idx) {
+            return {addr: addr, status: idx > 0 ? "Déduit" : ""};
+        });
+    }
+    return null;
+}
+
 function computeRouteA2B() {
     var srcAddr = $("#idRouteA2BFrom").val();
     var dstAddr = $("#idRouteA2BTo").val();
@@ -1363,7 +1389,7 @@ function computeRouteA2B() {
     var statusColors = {
         "Active": "success", "Discovery_Underway": "warning",
         "Discovery_Failed": "danger", "Inactive": "default",
-        "Validation_Underway": "info",
+        "Validation_Underway": "info", "Déduit": "info",
     };
 
     function renderRoute(hops, title) {
@@ -1372,6 +1398,9 @@ function computeRouteA2B() {
             return html + "<div class='alert alert-danger' style='margin-top:8px'>{{Route introuvable dans les tables collectées.}}</div></div>";
         }
         html += " <small style='color:#888'>(" + (hops.length - 1) + " {{saut(s)}})</small>";
+        if (hops.length > 1 && hops[1].status === "Déduit") {
+            html += " <small style='color:#888'>{{déduit de la table des liens, pas lu dans les routes}}</small>";
+        }
         html += "<div style='display:flex; align-items:center; flex-wrap:wrap; gap:2px; margin-top:8px'>";
         hops.forEach(function(hop, idx) {
             if (idx > 0) {
@@ -1399,7 +1428,7 @@ function computeRouteA2B() {
     function getParentAddr(addr) { return routeA2BGetParent(netName, addr); }
 
     // Build full route: resolve End Devices to their parent router, then trace
-    function buildRoute(fromAddr, toAddr) {
+    function buildTableRoute(fromAddr, toAddr) {
         var fromHasTable = !!routeA2BRouters[netName + "/" + fromAddr];
         var toHasTable   = !!routeA2BRouters[netName + "/" + toAddr];
         var fromParent   = fromHasTable ? null : getParentAddr(fromAddr);
@@ -1417,6 +1446,10 @@ function computeRouteA2B() {
         if (fromParent) hops.unshift({addr: fromAddr, status: ""});
         if (toParent)   hops.push({addr: toAddr, status: ""});
         return hops;
+    }
+
+    function buildRoute(fromAddr, toAddr) {
+        return buildTableRoute(fromAddr, toAddr) || findLinkHops(netName, fromAddr, toAddr);
     }
 
     // Determine routability (has table OR has a known parent router)

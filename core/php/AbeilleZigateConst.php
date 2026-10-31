@@ -254,8 +254,14 @@
         "8063" => array(
             "name" => "Remove group response", // Unused by Abeille
         ),
+        "8085" => array(
+            "name" => "Level update response", // Unused by Abeille
+        ),
+        "8095" => array(
+            "name" => "On/Off update response", // Unused by Abeille
+        ),
         "80A0" => array(
-            "name" => "Scene View", // Unused by Abeille
+            "name" => "View scene response", // Unused by Abeille
         ),
         "80A1" => array(
             "name" => "Add scene response", // Unused by Abeille
@@ -264,16 +270,16 @@
             "name" => "Remove scene response", // Unused by Abeille
         ),
         "80A3" => array(
-            "name" => "SRemove All Scene", // Unused by Abeille
+            "name" => "Remove all scene response", // Unused by Abeille
         ),
         "80A4" => array(
-            "name" => "Store Scene Response", // Unused by Abeille
+            "name" => "Store scene response", // Unused by Abeille
         ),
         "80A6" => array(
-            "name" => "?",
+            "name" => "Scene Membership response",
         ),
         "80A7" => array(
-            "name" => "?",
+            "name" => "Scene update response",
         ),
         "8100" => array(
             "name" => "Read individual attribute response", // Unused by Abeille

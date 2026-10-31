@@ -5,6 +5,7 @@
 - Amélioration: Suppression arriere plan de qq icones.
 - Amélioration: Support Zbeacon TH01 (2799).
 - Correction: Info 'EP-0008-cmd00/04' remonte comme entier et non plus comme chaine hexa.
+- Amélioration: Interne: Constantes Zigate (cosmetique).
 
 ## 261027-BETA-2
 

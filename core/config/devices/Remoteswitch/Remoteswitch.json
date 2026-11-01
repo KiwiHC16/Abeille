@@ -12,6 +12,7 @@
             "light": "1"
         },
         "type": "Legrand remote switch",
+        "genericType": "Electricity",
         "commands": {
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"

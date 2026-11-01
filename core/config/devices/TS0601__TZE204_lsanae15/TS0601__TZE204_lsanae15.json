@@ -14,12 +14,27 @@
             "mainEP": "01"
         },
         "commands": {
+            "On": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=10&data=01",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=10&data=00",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "logicalId": "state",
+                "nextLine": "after",
+                "isVisible": 1
+            },
             "Total power": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "energy",
                 "unit": "KWh",
-                "isVisible": 1,
-                "nextLine": "after"
+                "isVisible": 1
             }
         },
         "private": {
@@ -29,6 +44,10 @@
                     "function": "rcvValue",
                     "div": 100,
                     "info": "energy"
+                },
+                "10": {
+                    "function": "rcvValue",
+                    "info": "state"
                 }
             }
         }

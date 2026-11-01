@@ -23,6 +23,12 @@ Format: 1 or more datapoints
 
     AttributeValue = DpID DpType DpLen DpValue [DpID DpType DpLen DpVal] ...
 
+    Possible DP types:
+        00/raw
+        01/bool
+        02/value
+        03/string
+
 Legacy support in device models
 ===============================
 

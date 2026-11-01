@@ -37,16 +37,16 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Version du firmware}}</label>
-    <div class="col-sm-5" advInfo="FW-Version">
-        <input type="text" value="" readonly>
+    <div class="col-sm-5" >
+        <input type="text" abCmdLogicId="FW-Version" value="" readonly>
         <?php addZgButton("{{Lire}}", "btn-success", 'getZgVersion'); ?>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Status réseau}}</label>
-    <div class="col-sm-5" advInfo="Network-Status">
-        <input type="text" value="" readonly>
+    <div class="col-sm-5" >
+        <input type="text" abCmdLogicId="Network-Status" value="" readonly>
         <?php
             if (isset($dbgDeveloperMode))
                 addZgButton("{{Démarrer}}", "btn-warning", 'startNetwork');
@@ -59,8 +59,8 @@
         <label class="">{{Canal Zigbee}}</label>
     </div>
     <div class="col-sm-5">
-        <div advInfo="Network-Channel">
-            <input type="text" id="idChannel" title="{{Canal actuel}}" value="YY" readonly>
+        <div >
+            <input type="text" id="idChannel" abCmdLogicId="Network-Channel" title="{{Canal actuel}}" value="YY" readonly>
             <select id="idZgChan" style="width:80px; margin-left:4px" title="{{Canal Zigbee choisi}}">
                 <?php
                 for ($i = 11; $i < 27; $i++) {
@@ -78,8 +78,8 @@
     <div class="col-sm-3 control-label">
         <label class="">{{Mode inclusion}}</label>
     </div>
-    <div class="col-sm-5" advInfo="permitJoin-Status">
-        <input type="text" id="idInclusionMode" value="" readonly>
+    <div class="col-sm-5" >
+        <input type="text" id="idInclusionMode" abCmdLogicId="permitJoin-Status" value="" readonly>
         <!-- <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setInclusion', 'start')">{{Démarrer}}</a> -->
         <?php addZgButton("{{Démarrer}}", "btn-warning", 'setInclusion', 'start'); ?>
         <!-- <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setInclusion', 'stop')">{{Arrêter}}</a> -->
@@ -92,8 +92,8 @@
         <label class="">{{Heure Zigate}}</label>
         <!-- <a class="btn btn-primary btn-xs" target="_blank" href="https://kiwihc16.github.io/AbeilleDoc/Radio.html#zigate-channel-selection"><i class="fas fa-book"></i> ?</a> -->
     </div>
-    <div class="col-sm-7" advInfo="ZiGate-Time">
-        <input type="text" id="idZgTime" value="" readonly>
+    <div class="col-sm-7" >
+        <input type="text" id="idZgTime" abCmdLogicId="ZiGate-Time" value="" readonly>
         <!-- <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getTime', '')">{{Lire}}</a> -->
         <?php addZgButton("{{Lire}}", "btn-success", 'getTime', ''); ?>
         <!-- <a class="btn btn-warning" onclick="sendZigate('setTime', '')">{{Mettre à l'heure}}</a> -->
@@ -103,8 +103,8 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">PAN ID</label>
-    <div class="col-sm-5" advInfo="PAN-ID">
-        <input type="text" value="" readonly>
+    <div class="col-sm-5" >
+        <input type="text" abCmdLogicId="PAN-ID" value="" readonly>
     </div>
 </div>
 
@@ -113,8 +113,8 @@
         <label class="">Extended PAN ID</label>
         <!-- <a class="btn btn-primary btn-xs" target="_blank" href="https://kiwihc16.github.io/AbeilleDoc/Radio.html"><i class="fas fa-book"></i> ?</a> -->
     </div>
-    <div class="col-sm-5" advInfo="Ext_PAN-ID">
-        <input type="text" value="">
+    <div class="col-sm-5" >
+        <input type="text" abCmdLogicId="Ext_PAN-ID" value="">
         <!-- FW >= AB01-0000 required. ExtPanId saved in PDM & used at reset -->
         <?php addZgButton("{{Appliquer}}", "btn-danger", 'forceExtPANId', 'Ext_PAN-ID'); ?>
     </div>
@@ -125,8 +125,8 @@
         <label class="">TX power</label>
         <!-- <a class="btn btn-primary btn-xs" target="_blank" href="https://kiwihc16.github.io/AbeilleDoc/Radio.html"><i class="fas fa-book"></i> ?</a> -->
     </div>
-    <div class="col-sm-5" advInfo="ZiGate-Power">
-        <input type="text" value="" readonly>
+    <div class="col-sm-5" >
+        <input type="text" abCmdLogicId="ZiGate-Power" value="" readonly>
         <?php addZgButton("{{Lire}}", "btn-success", 'getTXPower', ''); ?>
         <select id="idZgTxPower" style="width:80px; margin-left:4px" title="{{Puissance TX}}">
             <option value=00>{{00/Min}}</option>

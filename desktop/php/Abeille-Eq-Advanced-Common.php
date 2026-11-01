@@ -30,8 +30,8 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
-    <div advInfo="Time-Time" class="col-sm-9">
-        <input type="text" value="" readonly style="width:240px">
+    <div class="col-sm-9">
+        <input type="text" abCmdLogicId="Time-Time" value="" readonly style="width:240px">
     </div>
 </div>
 

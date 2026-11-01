@@ -307,34 +307,56 @@ function refreshEqInfos() {
                 document.getElementById("paramABC").style.display = "none";
             }
 
-            // Updating info cmds
-            const advInfoCmds = document.querySelectorAll("[advInfo]"); // All with attribute named "advInfo"
-            for (let i = 0; i < advInfoCmds.length; i++) {
-                elm = advInfoCmds[i];
-                console.log("advInfoCmd=", advInfoCmds[i]);
-                cmdLogicId = elm.getAttribute("advInfo");
+            // // Updating info cmds => OBSOLETE. To be removed when all advInfo updated to abCmdLogicId
+            // const advInfoCmds = document.querySelectorAll("[advInfo]"); // All with attribute named "advInfo"
+            // for (let i = 0; i < advInfoCmds.length; i++) {
+            //     elm = advInfoCmds[i];
+            //     console.log("advInfoCmd=", advInfoCmds[i]);
+            //     cmdLogicId = elm.getAttribute("advInfo");
+            //     console.log("cmdLogicId=", cmdLogicId);
+            //     if (typeof eq.cmds[cmdLogicId] != "undefined") {
+            //         cmd = eq.cmds[cmdLogicId];
+            //         // console.log("cmd=", cmd);
+            //         cmdId = cmd.id;
+            //         cmdVal = cmd.val;
+            //         // console.log("cmdVal=", cmdVal);
+            //         // elm.setAttribute('data-cmd_id', cmdId);
+            //         child = elm.firstElementChild;
+            //         if (child != null) {
+            //             // console.log("child=", child);
+            //             child.id = "cmdId-" + cmdId;
+            //             child.setAttribute("value", cmdVal);
+            //         }
+
+            //         // jeedom.cmd.addUpdateFunction(cmdId, updateInfoCmd);
+            //         // Warning: addUpdateFunction() seems only available since v4.4 core
+            //         if (!isset(jeedom.cmd.update)) jeedom.cmd.update = [];
+            //         if (cmdLogicId == "Time-TimeStamp")
+            //             jeedom.cmd.update[cmdId] = updateInfoCmdTimestamp;
+            //         else jeedom.cmd.update[cmdId] = updateInfoCmd;
+            //         console.log("jeedom.cmd.update=", jeedom.cmd.update);
+            //     }
+            // }
+
+            // Installing automatic update function for each 'info' cmd to be auto-updated
+            const auInfoCmds = document.querySelectorAll("[abCmdLogicId]"); // All with attribute "abCmdLogicId"
+            for (let i = 0; i < auInfoCmds.length; i++) {
+                elm = auInfoCmds[i];
+                console.log("auInfoCmds=", auInfoCmds[i]);
+
+                cmdLogicId = elm.getAttribute("abCmdLogicId");
                 console.log("cmdLogicId=", cmdLogicId);
+
                 if (typeof eq.cmds[cmdLogicId] != "undefined") {
                     cmd = eq.cmds[cmdLogicId];
-                    // console.log("cmd=", cmd);
                     cmdId = cmd.id;
-                    cmdVal = cmd.val;
-                    // console.log("cmdVal=", cmdVal);
-                    // elm.setAttribute('data-cmd_id', cmdId);
-                    child = elm.firstElementChild;
-                    if (child != null) {
-                        // console.log("child=", child);
-                        child.id = "cmdId-" + cmdId;
-                        child.setAttribute("value", cmdVal);
-                    }
+                    cmdValue = cmd.val;
+                    console.log("  cmdId=" + cmdId + ", cmdValue=" + cmdValue);
+                    elm.setAttribute('abCmdId', cmdId); // To allow updateInfoCmd() to identify element to update
+                    elm.value = cmdValue; // Set current value
 
-                    // jeedom.cmd.addUpdateFunction(cmdId, updateInfoCmd);
-                    // Warning: addUpdateFunction() seems only available since v4.4 core
                     if (!isset(jeedom.cmd.update)) jeedom.cmd.update = [];
-                    if (cmdLogicId == "Time-TimeStamp")
-                        jeedom.cmd.update[cmdId] = updateInfoCmdTimestamp;
-                    else jeedom.cmd.update[cmdId] = updateInfoCmd;
-                    console.log("jeedom.cmd.update=", jeedom.cmd.update);
+                    jeedom.cmd.update[cmdId] = updateInfoCmd;
                 }
             }
 
@@ -381,18 +403,31 @@ function refreshEqInfos() {
 // This function is called each time a corresponding info cmd has a value update.
 // Reminder: jeedom.cmd.update[cmdId] = updateInfoCmd()
 function updateInfoCmd(_options) {
+    // cmdId = _options.cmd_id;
+    // value = _options.display_value;
+    // console.log("updateInfoCmd(cmdId=" + cmdId + ", val=" + value + ")");
+    // var elm = document.getElementById("cmdId-" + cmdId);
+    // if (elm == null) {
+    //     console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
+    //     return;
+    // }
+    // console.log("elm=", elm);
+    // if (true /*$isInput*/) elm.value = value;
+    // // Not <input>. Assuming <span>
+    // else elm.textContent = value;
+
     cmdId = _options.cmd_id;
     value = _options.display_value;
     console.log("updateInfoCmd(cmdId=" + cmdId + ", val=" + value + ")");
-    var elm = document.getElementById("cmdId-" + cmdId);
+    elm = document.querySelector('[abCmdId="' + cmdId + '"]');
     if (elm == null) {
-        console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
+        console.log("ERROR: Cannot find elm 'abCmdId=" + cmdId + "'");
         return;
     }
     console.log("elm=", elm);
     if (true /*$isInput*/) elm.value = value;
-    // Not <input>. Assuming <span>
-    else elm.textContent = value;
+    else elm.textContent = value; // Not <input>. Assuming <span>
+    
 }
 
 // Same as updateInfoCmd() but dedicated to 'Time-Timestamp' info display

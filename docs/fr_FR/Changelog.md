@@ -8,6 +8,7 @@
 - Amélioration: Interne: Constantes Zigate (cosmetique).
 - Nouveauté: Ajout support Tuya energy meter (2801).
 - Amélioration: Info 'Up-Down' pour cluster 0008 n'est plus remontée (obsolete => 'EP-0008-cmdXX').
+- Amélioration: Interne page eq. Mise-à-jour auto de certaines infos.
 
 ## 261027-BETA-2
 

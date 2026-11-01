@@ -2003,6 +2003,78 @@ $("#idShowObject").on("change", function (event) {
     displayLinksGraph(currentZigateLG); // Refresh current links graph
 });
 
+/* Tab "Clusters": one line per end point, one column per cluster found on the displayed network(s) */
+var clustersZgId = 0;
+var clustersRefreshDelay = 15000; // ms, time for the devices to answer
+
+function clustersEscape(text) {
+    return $("<div>").text(text).html();
+}
+
+/* Returns table HTML from data of 'getClusters' */
+function clustersTableHtml(data) {
+    var ids = Object.keys(data.names).sort();
+    var html = "<table class='table table-condensed table-bordered' style='width:auto'><thead><tr>";
+    html += "<th>{{Équipement}}</th><th>{{Réseau}}</th><th>{{Adresse}}</th><th>EP</th><th>{{Profil}}</th><th>{{Type}}</th><th></th>";
+    ids.forEach(function (id) {
+        html += "<th title='" + id + "' style='vertical-align:bottom; text-align:center; padding:4px 2px'>"
+            + "<span style='writing-mode:vertical-rl; transform:rotate(180deg); white-space:nowrap; font-weight:normal'>"
+            + id + " " + clustersEscape(data.names[id]) + "</span></th>";
+    });
+    html += "</tr></thead><tbody>";
+    data.endPoints.forEach(function (ep) {
+        var serv = ep.servClusters;
+        var cli = ep.cliClusters === null ? [] : ep.cliClusters;
+        html += "<tr class='clusterRow' data-name='" + clustersEscape(ep.name.toLowerCase()).replace(/'/g, "&#39;") + "'>";
+        html += "<td style='white-space:nowrap'>" + clustersEscape(ep.name) + "</td><td>" + ep.net + "</td><td>" + ep.addr + "</td><td>" + ep.ep + "</td>";
+        html += "<td>" + ep.profId + "</td><td>" + ep.devId + "</td>";
+        html += "<td style='white-space:nowrap'>" + (ep.cliClusters === null ? "<span title='{{Clients pas encore lus}}'>? </span>" : "")
+            + "<a class='btn btn-warning btn-xs' title='{{Interroger cet équipement}}' onclick=\"readClusters(" + ep.net.substr(7) + ", '" + ep.addr + "')\"><i class='fas fa-sync'></i></a></td>";
+        ids.forEach(function (id) {
+            var mark = (serv.indexOf(id) >= 0 ? "S" : "") + (cli.indexOf(id) >= 0 ? "C" : "");
+            var color = mark == "S" ? "#5cb85c" : mark == "C" ? "#5bc0de" : mark == "SC" ? "#f0ad4e" : "";
+            html += "<td title='" + (mark ? id + " " + clustersEscape(data.names[id]) : "") + "' style='text-align:center; padding:4px 2px"
+                + (color ? "; background:" + color + "; color:#000" : "") + "'>" + mark + "</td>";
+        });
+        html += "</tr>";
+    });
+    return html + "</tbody></table>";
+}
+
+function displayClustersTable(zgId) {
+    clustersZgId = zgId;
+    return bindingsAjax({ action: "getClusters", net: zgId == 0 ? "" : "Abeille" + zgId }).done(function (json) {
+        var data = JSON.parse(json.result).clusters;
+        var unread = data.endPoints.filter(function (ep) { return ep.cliClusters === null; }).length;
+        var html = "<p>" + data.endPoints.length + " {{points d'accès}}, " + Object.keys(data.names).length + " {{clusters}}";
+        if (unread > 0)
+            html += ", " + unread + " {{dont les clients ne sont pas encore lus}}";
+        html += "</p><div style='overflow:auto; max-height:calc(100vh - 300px)'>" + clustersTableHtml(data) + "</div>";
+        $("#idClustersContent").html(html);
+        filterClustersTable();
+    });
+}
+
+function filterClustersTable() {
+    var filter = $("#idClustersFilter").val().toLowerCase();
+    $("#idClustersContent .clusterRow").each(function () {
+        $(this).toggle($(this).attr("data-name").indexOf(filter) >= 0);
+    });
+}
+
+/* Requests clusters of one device, or of all the always listening devices if no 'addr' */
+function readClusters(zgId, addr = "") {
+    bindingsAjax({ action: "readClusters", net: "Abeille" + zgId, addrs: addr == "" ? [] : [addr] }).done(function (json) {
+        var res = JSON.parse(json.result);
+        if (res.status != 0) {
+            $("#div_clustersAlert").showAlert({ message: res.error, level: "danger" });
+            return;
+        }
+        $("#div_clustersAlert").showAlert({ message: res.sent + " {{demandes envoyées, tableau rafraîchi dans 15 s}}", level: "info" });
+        setTimeout(function () { displayClustersTable(clustersZgId == 0 ? 0 : zgId); }, clustersRefreshDelay);
+    });
+}
+
 // Default display
 // TODO: Should be set to first enabled gateway
 displayLinksTable(1);

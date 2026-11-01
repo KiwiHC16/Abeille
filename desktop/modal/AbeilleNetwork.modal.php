@@ -29,10 +29,14 @@
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayRoutesTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else if ($what == "bindings")
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayBindingsTable('.$zgId.')">Abeille'.$zgId.'</a>';
+            else if ($what == "clusters")
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayClustersTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else // "linksGraph"
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$zgId.')">Abeille'.$zgId.'</a>';
             if ($what == "bindings")
                 echo '<a class="btn btn-warning" title="Interroge les tables de liaison de tous les équipements toujours à l\'écoute de ce réseau. Un équipement endormi doit être réveillé puis interrogé seul." onclick="collectBindings('.$zgId.', [])"><i class="fas fa-sync"></i></a>';
+            else if ($what == "clusters")
+                echo '<a class="btn btn-warning" title="Interroge les clusters de tous les équipements toujours à l\'écoute de ce réseau. Un équipement endormi doit être réveillé puis interrogé seul." style="margin-left:4px" onclick="readClusters('.$zgId.')"><i class="fas fa-sync"></i></a>';
             else if ($what == "routes" || $what == "routeA2B")
                 echo '<a class="btn btn-warning" title="Interroge les tables de routage des routeurs de ce réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshRoutes('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
             else if ($what == "noise")
@@ -211,6 +215,9 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#idBindingsTab"> {{Binding}}</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#idClustersTab"> {{Clusters}}</a>
             </li>
         </ul>
     </div>
@@ -404,6 +411,21 @@
                 <p style="color:#888; margin-bottom:10px;">{{Table de liaison (binding) de chaque équipement : vers où il envoie ses rapports et commandes. Une liaison vers le coordinateur d'un autre réseau est obsolète (équipement déplacé) : l'équipement cherche cette destination par diffusion à chaque envoi, ce qui charge tout le réseau.}}</p>
                 <div id="idBindingsContent">
                     <div class="alert alert-info">{{Sélectionnez un réseau pour afficher ses liaisons.}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="idClustersTab">
+            <div style="padding:10px; width:100%">
+                <div id="div_clustersAlert" style="display:none"></div>
+                <div style="margin-bottom:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+                    <a class="btn btn-success" onclick="displayClustersTable(0)">{{Tous les réseaux}}</a>
+                    <?php displayNetworks(maxNbOfZigate, "clusters"); ?>
+                    <input id="idClustersFilter" class="form-control" style="width:220px" placeholder="{{Filtrer les équipements}}" oninput="filterClustersTable()">
+                </div>
+                <p style="color:#888; margin-bottom:10px;">{{Services de chaque point d'accès, tels que l'équipement les déclare : S = serveur, C = client, ? = clients pas encore lus. Un équipement endormi doit être réveillé juste avant d'appuyer sur son bouton.}}</p>
+                <div id="idClustersContent">
+                    <div class="alert alert-info">{{Sélectionnez un réseau pour afficher ses clusters.}}</div>
                 </div>
             </div>
         </div>

@@ -773,6 +773,10 @@
                         $zigbee['groups'][$ep] = '';
                     $zigbeeChanged = true;
                     logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][servClusters]' updated to {$jsonUpdVal}");
+                } else if ($updKey == 'cliClusters') {
+                    $zigbee['endPoints'][$ep]['cliClusters'] = $updVal;
+                    $zigbeeChanged = true;
+                    logMessage('debug', '    '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints][{$ep}][cliClusters]' updated to {$jsonUpdVal}");
                 } else if ($updKey == 'manufId') {
                     if (!isset($zigbee['endPoints'][$ep]['manufId'])) {
                         $zigbee['endPoints'][$ep]['manufId'] = $updVal;

@@ -2540,6 +2540,56 @@ class Abeille extends eqLogic {
     //         log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
     // } // End publishMosquitto()
 
+    /* Returns the end points of the enabled Zigbee devices (of network 'net' if given) with their clusters.
+       'cliClusters' is null until a simple descriptor has been read since they are stored. */
+    public static function getClusters($net = '') {
+        require_once __DIR__.'/../php/AbeilleZigbeeConst.php';
+
+        $split = function ($clusters) {
+            return ($clusters == '') ? [] : explode('/', $clusters);
+        };
+        $endPoints = [];
+        $names = [];
+        foreach (self::byType('Abeille') as $eqLogic) {
+            list($eqNet, $eqAddr) = explode("/", $eqLogic->getLogicalId()."/");
+            if (($net != '') && ($eqNet != $net))
+                continue;
+            if (!$eqLogic->getIsEnable() || ($eqAddr == "0000") || !preg_match('/^[0-9A-F]{4}$/', $eqAddr))
+                continue; // Disabled, coordinator or not a Zigbee device (virtual remotes...)
+
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            $eps = isset($zigbee['endPoints']) ? $zigbee['endPoints'] : [];
+            $eq = [
+                'net' => $eqNet,
+                'addr' => $eqAddr,
+                'name' => $eqLogic->getHumanName(),
+                'alwaysOn' => isset($zigbee['macCapa']) && ((hexdec($zigbee['macCapa']) >> 3) & 1),
+            ];
+            $found = false;
+            foreach ($eps as $epId => $ep) {
+                if (!preg_match('/^[0-9A-Fa-f]{2}$/', $epId) || ($epId == "00"))
+                    continue; // Old bugs
+                $found = true;
+                $serv = isset($ep['servClusters']) ? $split($ep['servClusters']) : [];
+                $cli = isset($ep['cliClusters']) ? $split($ep['cliClusters']) : null;
+                foreach (array_merge($serv, $cli === null ? [] : $cli) as $clustId)
+                    $names[$clustId] = zbGetZCLClusterName($clustId);
+                $endPoints[] = array_merge($eq, [
+                    'ep' => $epId,
+                    'profId' => isset($ep['profId']) ? $ep['profId'] : '',
+                    'devId' => isset($ep['devId']) ? $ep['devId'] : '',
+                    'servClusters' => $serv,
+                    'cliClusters' => $cli,
+                ]);
+            }
+            if (!$found)
+                $endPoints[] = array_merge($eq, ['ep' => '', 'profId' => '', 'devId' => '', 'servClusters' => [], 'cliClusters' => null]);
+        }
+        ksort($names);
+
+        return ['endPoints' => $endPoints, 'names' => $names];
+    }
+
     public static function msgToCmd($priority, $topic, $payload = "") {
         static $queueStatus = []; // "ok" or "error"
 

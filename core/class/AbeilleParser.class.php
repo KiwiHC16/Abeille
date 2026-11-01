@@ -476,6 +476,11 @@
                         $eq['zigbee']['endPoints'][$ep]['servClusters'] = $value;
                         $abUpdates["servClusters"] = $value;
                     }
+                } else if ($updType == 'cliClusters') { // Client clusters for $ep ('' = none)
+                    if (!isset($eq['zigbee']['endPoints'][$ep]['cliClusters']) || ($eq['zigbee']['endPoints'][$ep]['cliClusters'] !== $value)) {
+                        $eq['zigbee']['endPoints'][$ep]['cliClusters'] = $value;
+                        $abUpdates["cliClusters"] = $value;
+                    }
                 }
 
                 // Updates from cluster 0000
@@ -2250,6 +2255,7 @@
                 $devUpdates['profId'] = $profId;
                 $devUpdates['devId'] = $devId;
                 $devUpdates['servClusters'] = $inputClusters;
+                $devUpdates['cliClusters'] = $outputClusters;
             } else {
                 $sdr = [];
                 $sdr['servClustCount'] = $servClustCount;

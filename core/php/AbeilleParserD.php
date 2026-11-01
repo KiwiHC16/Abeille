@@ -260,6 +260,7 @@
                     profId
                     devId
                     servClusters
+                    cliClusters
                     modelId => From cluster 0000: unset, set to false, or set to proper value
                     manufId => From cluster 0000: unset, set to false, or set to proper value
                     location => From cluster 0000: unset, set to false, or set to proper value

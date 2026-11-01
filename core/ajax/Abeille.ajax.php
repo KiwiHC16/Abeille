@@ -1128,6 +1128,39 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Returns end points and clusters of all devices of network 'net' (empty = all networks). */
+        if (init('action') == 'getClusters') {
+            ajax::success(json_encode(array('status' => 0, 'error' => "", 'clusters' => Abeille::getClusters(init('net')))));
+        }
+
+        /* Requests the simple descriptor of each end point of the given devices of network 'net'.
+           'addrs' = list of short addresses, or empty for all enabled devices that are always listening.
+           Clusters are stored in 'ab::zigbee' when the responses come back. */
+        if (init('action') == 'readClusters') {
+            $net = init('net');
+            $addrs = init('addrs', []);
+
+            $status = 0;
+            $error = "";
+            $sent = 0;
+
+            if (!preg_match('/^Abeille[0-9]+$/', $net)) {
+                $status = -1;
+                $error = "Réseau invalide";
+            } else {
+                if (!is_array($addrs))
+                    $addrs = [];
+                foreach (Abeille::getClusters($net)['endPoints'] as $ep) {
+                    if (($ep['ep'] == "") || (count($addrs) == 0 ? !$ep['alwaysOn'] : !in_array($ep['addr'], $addrs)))
+                        continue; // No known end point, or sleeping device that would not answer
+                    Abeille::msgToCmd(PRIO_NORM, "Cmd".$net."/".$ep['addr']."/getSimpleDescriptor", "ep=".$ep['ep']);
+                    $sent++;
+                }
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'sent' => $sent)));
+        }
+
         /* Requests the binding table of the given devices of network 'net' (ex: 'Abeille3').
            'addrs' = list of short addresses, or empty for all enabled devices that are always listening.
            Responses are stored by the parser in 'AbeilleBindings-<net>.json'. */

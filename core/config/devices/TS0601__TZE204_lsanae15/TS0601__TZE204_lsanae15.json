@@ -1,0 +1,36 @@
+{
+    "TS0601__TZE204_lsanae15": {
+        "manufacturer": "Tuya",
+        "model": "TS0601",
+        "type": "DIN energy meter",
+        "alternateIds": { "TS0601__TZE200_lsanae15": {}},
+        "genericType": "Electricity",
+        "timeout": "60",
+        "category": {
+            "energy": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-DINEnergyMeter",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Total power": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "energy",
+                "unit": "KWh",
+                "isVisible": 1,
+                "nextLine": "after"
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "01": {
+                    "function": "rcvValue",
+                    "div": 100,
+                    "info": "energy"
+                }
+            }
+        }
+    }
+}

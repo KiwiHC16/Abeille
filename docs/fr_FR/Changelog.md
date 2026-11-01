@@ -6,6 +6,7 @@
 - Amélioration: Support Zbeacon TH01 (2799).
 - Correction: Info 'EP-0008-cmd00/04' remonte comme entier et non plus comme chaine hexa.
 - Amélioration: Interne: Constantes Zigate (cosmetique).
+- Nouveauté: Ajout support Tuya energy meter (2801).
 
 ## 261027-BETA-2
 

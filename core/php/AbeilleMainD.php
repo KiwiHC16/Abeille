@@ -362,117 +362,6 @@
         $value = $payload;
         $type = 'topic';         // type = topic car pas json
 
-        /* Request to create virtual remote control */
-        // if ($cmdId == "createRemote") {
-        //     logMessage('debug', 'message(): createRemote');
-
-        //     /* Let's compute RC number */
-        //     $eqLogics = eqLogic::byType('Abeille');
-        //     $max = 1;
-        //     foreach ($eqLogics as $key => $eqLogic) {
-        //         list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
-        //         if ($net2 != $net)
-        //             continue; // Wrong network
-        //         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-        //         $modelName2 = $eqModel ? $eqModel['modelName'] : '';
-        //         if ($modelName2 != "remotecontrol")
-        //             continue; // Not a remote
-        //         if ($addr2 == '')
-        //             continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
-        //         $addr2 = substr($addr2, 2); // Removing 'rc'
-        //         if (hexdec($addr2) >= $max)
-        //             $max = hexdec($addr2) + 1;
-        //     }
-
-        //     /* Remote control short addr = 'rcXX' */
-        //     $rcAddr = sprintf("rc%02X", $max);
-        //     $dev = array(
-        //         'net' => $dest,
-        //         'addr' => $rcAddr,
-        //         'modelSource' => 'Abeille',
-        //         'modelName' => 'remotecontrol',
-        //         'modelSig' => 'remotecontrol',
-        //     );
-        //     Abeille::createDevice("update", $dev);
-
-        //     return;
-        // }
-
-        // /* Request to update or reset device from JSON. Useful to avoid reinclusion */
-        // if (($cmdId == "updateFromModel") || ($cmdId == "resetFromModel")) {
-        //     if ($cmdId == 'updateFromModel')
-        //         $action = 'update';
-        //     else
-        //         $action = 'reset';
-        //     logMessage('debug', 'message(): '.$cmdId.', '.$net.'/'.$addr);
-
-        //     $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-        //     if (!is_object($eqLogic)) {
-        //         logMessage('error', '  '.$cmdId.': Equipement inconnu: '.$net.'/'.$addr);
-        //         return;
-        //     }
-
-        //     $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        //     $modelSource = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
-        //     $modelName = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
-        //     $modelPath = isset($eqModel['modelPath']) ? $eqModel['modelPath'] : '';
-        //     $modelForced = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
-        //     $modelSig = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : $modelName;
-        //     $modelName1 = $modelName;
-
-        //     // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
-        //     // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
-        //     if (($modelName == '') || (($modelName == "defaultUnknown") && !$modelForced)) {
-        //         // Any better model ?
-        //         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-        //         if (isset($zigbee['modelId']) && ($zigbee['modelId'] != "")) {
-        //             $modelInfos = identifyModel($zigbee['modelId'], $zigbee['manufId']);
-        //             if ($modelInfos !== false) {
-        //                 $modelSource = $modelInfos['modelSource'];
-        //                 $modelName = $modelInfos['modelName'];
-        //                 $modelPath = isset($modelInfos['modelPath']) ? $modelInfos['modelPath'] : '';
-        //                 $modelSig = $modelInfos['modelSig'];
-        //                 $eqHName = $eqLogic->getHumanName();
-        //                 message::add("Abeille", $eqHName.": Mise-à-jour à partir du modèle '$modelName'", '');
-        //             }
-        //         }
-        //     }
-
-        //     if ($modelName == '') {
-        //         message::add("Abeille", $eqHName.": Mise-à-jour impossible. Modele non identifié => Réparer", '');
-        //         return;
-        //     }
-
-        //     // Was using a deleted local model ?
-        //     if ($modelSource == "local") {
-        //         $fullPath = __DIR__."/../config/devices_local/$modelName/$modelName.json";
-        //         if (!file_exists($fullPath)) {
-        //             $fullPath = __DIR__."/../config/devices/$modelName/$modelName.json";
-        //             if (file_exists($fullPath)) {
-        //                 logMessage('debug', "Local model not found => using official one instead");
-        //                 $modelSource = "Abeille";
-        //             } else {
-        //                 logMessage('debug', "Local model not found but NO official one found.");
-        //                 return;
-        //             }
-        //         }
-        //     }
-
-        //     $dev = array(
-        //         'net' => $dest,
-        //         'addr' => $addr,
-        //         'ieee' => $eqLogic->getConfiguration('IEEE'),
-        //         'modelSource' => $modelSource, // Model file location
-        //         'modelName' => $modelName, // Model file name
-        //         'modelSig' => $modelSig, // Model signature
-        //     );
-        //     if ($modelPath != '')
-        //         $dev['modelPath'] = $modelPath;
-        //     Abeille::createDevice($action, $dev);
-
-        //     return;
-        // }
-
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Cherche l objet par sa ref short Address et la commande
         $eqLogic = eqLogic::byLogicalId($nodeid, 'Abeille');
@@ -621,7 +510,7 @@
             }
 
             if ($modelName == '') {
-                message::add("Abeille", $eqHName.": Mise-à-jour impossible. Modele non identifié => Réparer", '');
+                message::add("Abeille", $eqHName.": Mise-à-jour impossible. Modèle non identifié => Réparer", '');
                 return;
             }
 

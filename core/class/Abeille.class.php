@@ -1133,9 +1133,11 @@ class Abeille extends eqLogic {
     /* Create or update Jeedom device based on its JSON model.
        Called in the following cases
        - On 'eqAnnounce' message from parser (device announce) => action = 'update'
-       - To create/update a virtual 'remotecontrol' => action = 'update'
+       - To create/update a virtual 'remotecontrol' => action = 'update' + modelName/modelSig='remotecontrol'
        - To update from JSON (identical to re-inclusion) => action = 'update'
-       - To force a different model than the one auto-detected => action = 'update'
+       - To reset from JSON (identical to re-inclusion) => action = 'reset'
+       - To force a different model than the one auto-detected => action = 'reset' + modelName/modelSig
+       - To removed previous forced model => action='reset' + modelName/modelSig
      */
     // WARNING: This CAN'T be moved in 'AbeilleMainD.php' as it is used by 'install.php'too
     public static function createDevice($action, $dev) {

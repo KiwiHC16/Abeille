@@ -12,7 +12,7 @@
 - Amélioration: Interne support Tuya DP. Ajout function custom 'voltageCurrentPower2' pour 2801.
 - Amélioration: Interne 'check_json'.
 - Correction: Interne Abeille.class: eqAnnounce, changement nom modele (defaultUnknown => xxx).
-- Amélioration: Page de config: Correction du type de Zigate en fonction de la version du FW.
+- Amélioration: Page de config: Alerte si type de Zigate ne correspond pas à la version du FW.
 
 ## 261027-BETA-2
 

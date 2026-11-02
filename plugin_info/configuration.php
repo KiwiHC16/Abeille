@@ -341,7 +341,7 @@
                 // echo "<div abGtwId=\"$eqId\" abCmdLogicId=\"FW-Version\">";
                 // echo    '<input id="idFwVersion'.$gtwId.'" type="text" value="?" readonly style="width:100%">';
                 // echo '</div>';
-                echo '<input abGtwId="'.$gtwId.'" abCmdLogicId="FW-Version" type="text" value="?" readonly style="width:100%">';
+                echo '<input abGtwId="'.$gtwId.'" abCmdLogicId="FW-Version" type="text" value="" readonly style="width:100%">';
             echo '</div>';
             echo '<div class="col-lg-2">';
                 echo '<a id="idReadFwB'.$gtwId.'" class="btn btn-default form-control" onclick="checkSerialPort('.$gtwId.')" title="{{Lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Lire}}</a>';
@@ -811,8 +811,6 @@
                 $("#idSelSP"+gtwId).val(js_wifiLink+gtwId);
                 checkSocatInstallation();
             } else { // USB, PI or DIN
-                // $("#idCommTest"+gtwId).show();
-
                 if ((gtwSubType == "PI") || (gtwSubType == "PIv2")) {
                     // $("#idWiringPi"+gtwId).show();
                     let zgGpioLib = $("#idGpioLib").val();
@@ -854,6 +852,9 @@
                 allowReadFwV = true;
                 break;
             }
+            // elmFwVersion = document.querySelector('input[abGtwId="' + gtwId + '"][abCmdLogicId="FW-Version"]');
+            // fwVersion = elmFwVersion.value;
+            // checkZigateTypeVsFw(gtwId, fwVersion);
         } else {
             var gtwSubType = $("#idEzspSubType" + gtwId).val();
             console.log('Gtw '+gtwId+' ('+gtwType+') sub type changed to "'+gtwSubType+'"');
@@ -1466,6 +1467,9 @@
        FW 0003-xxxx/0004-xxxx/AB01-xxxx => Zigate v1 */
     function checkZigateTypeVsFw(gtwId, fwVersion) {
         console.log("checkZigateTypeVsFw(Gtw=" + gtwId + ", FW=" + fwVersion + ")");
+        if (fwVersion == "")
+            return;
+
         subType = js_gateways[gtwId]['subType'];
         newSubType = "";
         if (fwVersion.substr(0, 4) == "0005") {
@@ -1487,8 +1491,11 @@
         }
         if (newSubType == "")
             console.log("Zigate " + gtwId + " is a V" + zgVersion + " (FW " + fwVersion + ") => sub-type " + subType + " ok");
-        else
+        else {
             console.log("Zigate " + gtwId + " is a V" + zgVersion + " (FW " + fwVersion + ") => sub-type " + subType + " ERROR (should be " + newSubType + ")");
+            msg = "La Zigate " + gtwId + " est une v" + zgVersion + ". Type '" + subType + "' incorrect.";
+            $('#div_alert').showAlert({message: msg, level: 'danger'});
+        }
     }
 
     /* This function is called each time a corresponding info cmd has a value update.

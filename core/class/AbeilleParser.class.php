@@ -218,7 +218,7 @@
             $ma = !isset($eq['zigbee']['manufId']) ? '' : (($eq['zigbee']['manufId'] === false) ? 'false' : "'".$eq['zigbee']['manufId']."'");
             $mo = !isset($eq['zigbee']['modelId']) ? '' : (($eq['zigbee']['modelId'] === false) ? 'false' : "'".$eq['zigbee']['modelId']."'");
             $lo = !isset($eq['zigbee']['location']) ? '' : (($eq['zigbee']['location'] === false) ? 'false' : "'".$eq['zigbee']['location']."'");
-            parserLog('debug', "  findModel(), manufId=".$ma.", modelId=".$mo.", loc=".$lo);
+            parserLog('debug', "    findModel(), manufId=".$ma.", modelId=".$mo.", loc=".$lo);
 
             /* If forced model, do not attempt to auto-detect proper model unless forced model is not valid */
             if (isset($eq['eqModel']['modelForced']) && $eq['eqModel']['modelForced']) {
@@ -228,10 +228,10 @@
                 $fullPath = ($modelSource == "Abeille") ? modelsDir : modelsLocalDir;
                 $fullPath .= $modelPath;
                 if (is_file($fullPath)) {
-                    parserLog('debug', "    Forced model ({$modelPath}) is still valid");
+                    parserLog('debug', "    Forced model ($modelPath) is still valid");
                     return;
                 } else
-                    parserLog('debug', "    Forced model ({$modelPath}) is NO LONGER valid");
+                    parserLog('debug', "    Forced model ($modelPath) is NO LONGER valid");
             }
 
             /* Looking for corresponding JSON if supported device.
@@ -249,10 +249,10 @@
                      if (isset($GLOBALS['customEqList'][$identifier])) {
                         $modelSig = $identifier;
                         $modelSource = "local";
-                        parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
+                        parserLog('debug', "    EQ is supported as user/custom config with '".$identifier."' identifier");
                     } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
                         $modelSig = $identifier;
-                        parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
+                        parserLog('debug', "    EQ is supported with '".$identifier."' identifier");
                     }
                 }
                 if ($modelSig == '') {
@@ -261,10 +261,10 @@
                      if (isset($GLOBALS['customEqList'][$identifier])) {
                         $modelSig = $identifier;
                         $modelSource = "local";
-                        parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
+                        parserLog('debug', "    EQ is supported as user/custom config with '".$identifier."' identifier");
                     } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
                         $modelSig = $identifier;
-                        parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
+                        parserLog('debug', "    EQ is supported with '".$identifier."' identifier");
                     }
                 }
             } else if (($eq['zigbee']['location'] !== false) && ($eq['zigbee']['location'] != '')) {
@@ -273,10 +273,10 @@
                  if (isset($GLOBALS['customEqList'][$identifier])) {
                     $modelSig = $identifier;
                     $modelSource = "local";
-                    parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' location identifier");
+                    parserLog('debug', "    EQ is supported as user/custom config with '".$identifier."' location identifier");
                 } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
                     $modelSig = $identifier;
-                    parserLog('debug', "  EQ is supported with '".$identifier."' location identifier");
+                    parserLog('debug', "    EQ is supported with '".$identifier."' location identifier");
                 }
             }
 
@@ -284,7 +284,7 @@
                 $eq['eqModel']['modelSig'] = "";
                 $eq['eqModel']['modelName'] = "defaultUnknown";
                 $eq['eqModel']['modelSource'] = "Abeille";
-                parserLog('debug', "  EQ is UNsupported. 'defaultUnknown' config will be used");
+                parserLog('debug', "    EQ is UNsupported. 'defaultUnknown' config will be used");
                 return false;
             }
 
@@ -294,7 +294,7 @@
             else
                 $eq['eqModel']['modelName'] = $GLOBALS['customEqList'][$modelSig]['modelName'];
             $eq['eqModel']['modelSource'] = $modelSource;
-            parserLog('debug', "  ModelName='".$eq['eqModel']['modelName']."', Source='{$modelSource}'");
+            parserLog('debug', "    ModelName='".$eq['eqModel']['modelName']."', Source='{$modelSource}'");
             return true;
         } // End findModel()
 
@@ -344,11 +344,14 @@
                 msgToCmdAck($msg);
             }
 
+            // Anything to force/overwrite ?
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
                 $eq['zigbee']['macCapa'] = $eq['customization']['macCapa'];
                 parserLog('debug', "  'macCapa' customized: ".$macCapa." => ".$eq['zigbee']['macCapa']);
             } else
                 $eq['zigbee']['macCapa'] = $macCapa;
+            
+            // 
             $ao = (hexdec($eq['zigbee']['macCapa']) >> 3) & 0b1;
             $eq['zigbee']['rxOnWhenIdle'] = $ao ? true : false;
             $eq['rejoin'] = $rejoin;
@@ -398,7 +401,7 @@
             /* Default identification: need EP list.
                Tcharp38 note: Some devices may not answer to active endpoints request at all. */
             parserLog('debug', '  Requesting active end points list');
-            msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getActiveEndpoints");
+            msgToCmd(PRIO_NORM, "Cmd$net/$addr/getActiveEndpoints");
 
             /* Special trick for NXP based devices.
                - Note: 00158D=Jennic Ltd.
@@ -408,7 +411,7 @@
             $nxp = (substr($ieee, 0, 9) == "00158D000") ? true : false;
             if ($nxp) {
                 parserLog('debug', '  NXP based device. Requesting modelIdentifier from EP 01');
-                msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/readAttribute", "ep=01&clustId=0000&attrId=0005");
+                msgToCmd(PRIO_NORM, "Cmd$net/$addr/readAttribute", "ep=01&clustId=0000&attrId=0005");
             }
         }
 
@@ -583,14 +586,14 @@
 
             if (!isset($eq['zigbee']['ieee'])) {
                 parserLog('debug', '    Requesting IEEE');
-                msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getIeeeAddress");
+                msgToCmd(PRIO_HIGH, "Cmd$net/$addr/getIeeeAddress");
                 return $ret;
             }
             // IEEE is available
 
             if (!isset($eq['zigbee']['endPoints'])) {
                 parserLog('debug', '    Requesting active endpoints list');
-                msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getActiveEndpoints");
+                msgToCmd(PRIO_HIGH, "Cmd$net/$addr/getActiveEndpoints");
                 return $ret;
             }
             // Endpoints list is available
@@ -602,7 +605,7 @@
 
                 if (!isset($ep2['servClusters'])) {
                     parserLog('debug', "    'servClusters' missing: Requesting simple descriptor from EP {$epId2}");
-                    msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getSimpleDescriptor", "ep=".$epId2);
+                    msgToCmd(PRIO_HIGH, "Cmd$net/$addr/getSimpleDescriptor", "ep=".$epId2);
                     // break; // To reduce requests on first missing descriptor
                     return $ret;
                 } else if (strpos($ep2['servClusters'], '0004') !== false) {
@@ -610,7 +613,7 @@
                     //     parserLog('debug', '    Groups='.json_encode($ep2['groups']));
                     if (!isset($eq['zigbee']['groups']) || !isset($eq['zigbee']['groups'][$epId2])) {
                         parserLog('debug', '    Requesting groups membership for EP '.$epId2);
-                        msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getGroupMembership", "ep=".$epId2);
+                        msgToCmd(PRIO_HIGH, "Cmd$net/$addr/getGroupMembership", "ep=".$epId2);
                         return $ret; // To reduce requests on first missing groups membership
                     }
                 }
@@ -619,7 +622,7 @@
 
             if (!isset($eq['zigbee']['manufCode']) || ($eq['zigbee']['manufCode'] === null)) {
                 parserLog('debug', "    Requesting node descriptor for 'manufCode'");
-                msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/getNodeDescriptor");
+                msgToCmd(PRIO_HIGH, "Cmd$net/$addr/getNodeDescriptor");
                 return $ret;
             }
 
@@ -678,7 +681,7 @@
                     }
                     if ($missing != '') {
                         parserLog('debug', "    Requesting {$missingTxt} from EP {$epId2}");
-                        msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+                        msgToCmd(PRIO_HIGH, "Cmd$net/$addr/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                         break; // Reducing requests on first missing stuff
                     }
                 }
@@ -705,7 +708,7 @@
                 }
                 if ($missing != '') {
                     parserLog('debug', "    Requesting {$missingTxt} from EP {$epId2}");
-                    msgToCmd(PRIO_HIGH, "Cmd{$net}/{$addr}/readAttribute", "ep={$epId2}&clustId=0000&attrId={$missing}");
+                    msgToCmd(PRIO_HIGH, "Cmd$net/$addr/readAttribute", "ep={$epId2}&clustId=0000&attrId={$missing}");
                     break; // Reducing requests on first missing stuff
                 }
             }
@@ -763,12 +766,12 @@
                 if ($profalux && ($eq['zigbee']['modelId'] !== false) && ($eq['zigbee']['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
                         parserLog('debug', '    Profalux v2: Requesting binding table size.');
-                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getBindingTable", "");
+                        msgToCmd(PRIO_NORM, "Cmd$net/$addr/getBindingTable", "");
                         return false; // Remote still not binded with curtain
                     }
                     if ($eq['bindingTableSize'] == 0) {
                         parserLog('debug', '    Profalux v2: Waiting remote to be binded.');
-                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getBindingTable", "");
+                        msgToCmd(PRIO_NORM, "Cmd$net/$addr/getBindingTable", "");
                         return false; // Remote still not binded with curtain
                     }
                     parserLog('debug', '    Profalux v2: Remote binded. Let\'s configure.');
@@ -874,10 +877,10 @@
                 //     $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
                 //     parserLog('debug', '      topic='.$topic.", request='".$request."'");
                 //     if ($delay == 0)
-                //         msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/".$topic, $request);
+                //         msgToCmd(PRIO_NORM, "Cmd$net/$addr/".$topic, $request);
                 //     else {
                 //         $delay = time() + $delay;
-                //         msgToCmd(PRIO_NORM, "TempoCmd{$net}/{$addr}/".$topic.'&time='.$delay, $request);
+                //         msgToCmd(PRIO_NORM, "TempoCmd$net/$addr/".$topic.'&time='.$delay, $request);
                 //     }
                 // }
 
@@ -938,12 +941,12 @@
             // foreach ($epArr as $epId) {
             //     $eq['zigbee']['endPoints'][$epId] = [];
             //     parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-            //     msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getSimpleDescriptor", 'ep='.$epId);
+            //     msgToCmd(PRIO_NORM, "Cmd$net/$addr/getSimpleDescriptor", 'ep='.$epId);
             // }
             foreach ($eq['zigbee']['endPoints'] as $epId => $ep) {
                 $eq['discovery']['endPoints'][$epId] = [];
                 parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-                msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/getSimpleDescriptor", 'ep='.$epId);
+                msgToCmd(PRIO_NORM, "Cmd$net/$addr/getSimpleDescriptor", 'ep='.$epId);
             }
 
             /* Discover ongoing. Informing Abeille for EQ creation/update */
@@ -1001,10 +1004,10 @@
 
                     /* Requesting list of supported attributes */
                     foreach ($val2['servClusters'] as $clustId => $clust) {
-                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
+                        msgToCmd(PRIO_NORM, "Cmd$net/$addr/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
                     }
                     foreach ($val2['cliClusters'] as $clustId => $clust) {
-                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=01&startAttrId=0000&maxAttrId=FF');
+                        msgToCmd(PRIO_NORM, "Cmd$net/$addr/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=01&startAttrId=0000&maxAttrId=FF');
                     }
                 }
             }
@@ -1033,12 +1036,12 @@
                     if ($missingAttrNb < 4)
                         continue;
 
-                    msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    msgToCmd(PRIO_NORM, "Cmd$net/$addr/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
                     $missingAttr = '';
                     $missingAttrNb = 0;
                 }
                 if ($missingAttrNb != 0)
-                    msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    msgToCmd(PRIO_NORM, "Cmd$net/$addr/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
             }
 
             // discoverUpdate($dest, $srcAddr, $srcEp, 'DiscoverAttributesExtResponse', $clustId, $isServer, $attributes);
@@ -1058,7 +1061,7 @@
                     if (isset($attr['access']))
                         $clust['attributes'][$attrId]['access'] = $attr['access'];
                     if (!isset($clust['attributes'][$attrId]['value']))
-                        msgToCmd(PRIO_NORM, "Cmd{$net}/{$addr}/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
+                        msgToCmd(PRIO_NORM, "Cmd$net/$addr/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
                 }
             }
 

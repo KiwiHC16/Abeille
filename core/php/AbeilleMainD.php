@@ -895,7 +895,7 @@
             $logicalId = $net.'/'.$addr;
             $modelName = $msg['modelName'];
             $modelSource = $msg['modelSource']; // 'Abeille' or 'local'
-            logMessage('debug', "  msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$modelName."'".", jsonLoc='".$modelSource."'");
+            logMessage('debug', "  msgFromParser(): Eq announce received for '$net/$addr', ModelName='$modelName', ModelSrc='$modelSource'");
 
             $ieee = $msg['ieee'];
 

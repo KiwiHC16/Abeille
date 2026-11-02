@@ -11,6 +11,7 @@
 - Amélioration: Interne page eq. Mise-à-jour auto de certaines infos.
 - Amélioration: Interne support Tuya DP. Ajout function custom 'voltageCurrentPower2' pour 2801.
 - Amélioration: Interne 'check_json'.
+- Correction: Interne Abeille.class: eqAnnouce, changement nom modele.
 
 ## 261027-BETA-2
 

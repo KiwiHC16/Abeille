@@ -1139,7 +1139,7 @@ class Abeille extends eqLogic {
      */
     // WARNING: This CAN'T be moved in 'AbeilleMainD.php' as it is used by 'install.php'too
     public static function createDevice($action, $dev) {
-        log::add('Abeille', 'debug', '  createDevice('.$action.', dev='.json_encode($dev, JSON_UNESCAPED_SLASHES));
+        log::add('Abeille', 'debug', '  createDevice('.$action.', Dev='.json_encode($dev, JSON_UNESCAPED_SLASHES));
 
         /* $action reminder
               'update' => create or update device (device announce/update)
@@ -1160,7 +1160,7 @@ class Abeille extends eqLogic {
         }
         $net = $dev['net'];
         $addr = $dev['addr'];
-        $eqLogicId = "{$net}/{$addr}";
+        $eqLogicId = "$net/$addr";
         $eqLogic = eqLogic::byLogicalId($eqLogicId, 'Abeille');
 
         // Do we have all informations about model to use ?
@@ -1174,35 +1174,46 @@ class Abeille extends eqLogic {
 
             if (isset($dev['modelSig']))
                 $modelSig = $dev['modelSig'];
-        }
-        if ((!isset($modelName) || !isset($modelSig)) && is_object($eqLogic)) {
-            // Missing modelName and/or modelSig => already stored in ab::eqModel ?
+        } else if (is_object($eqLogic)) {
+            // Missing modelName => already stored in ab::eqModel ?
+            // TODO: Why this case ?
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
-            if (!isset($modelName)) {
-                $modelSource = isset($jEqModel['modelSource']) ? $jEqModel['modelSource']: '';
-                $modelName = isset($jEqModel['modelName']) ? $jEqModel['modelName']: '';
-                if (isset($jEqModel['modelPath']))
-                    $modelPath = $jEqModel['modelPath'];
-                $modelForced = isset($jEqModel['modelForced']) ? $jEqModel['modelForced']: false;
-            }
-            if (!isset($modelSig) && isset($jEqModel['modelSig']))
+            if (isset($jEqModel['modelSource']))
+                $modelSource = $jEqModel['modelSource'];
+            $modelName = isset($jEqModel['modelName']) ? $jEqModel['modelName']: '';
+            if (isset($jEqModel['modelPath']))
+                $modelPath = $jEqModel['modelPath'];
+            $modelForced = isset($jEqModel['modelForced']) ? $jEqModel['modelForced']: false;
+            if (isset($jEqModel['modelSig']))
                 $modelSig = $jEqModel['modelSig'];
         }
+        // if ((!isset($modelName) || !isset($modelSig)) && is_object($eqLogic)) {
+        //     // Missing modelName and/or modelSig => already stored in ab::eqModel ?
+        //     $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
+        //     if (!isset($modelName)) {
+        //         $modelSource = isset($jEqModel['modelSource']) ? $jEqModel['modelSource']: '';
+        //         $modelName = isset($jEqModel['modelName']) ? $jEqModel['modelName']: '';
+        //         if (isset($jEqModel['modelPath']))
+        //             $modelPath = $jEqModel['modelPath'];
+        //         $modelForced = isset($jEqModel['modelForced']) ? $jEqModel['modelForced']: false;
+        //     }
+        //     if (!isset($modelSig) && isset($jEqModel['modelSig']))
+        //         $modelSig = $jEqModel['modelSig'];
+        // }
         if (!isset($modelName)) {
-            log::add('Abeille', 'error', "  createDevice({$net}/{$addr}): 'modelName' non renseigné");
+            log::add('Abeille', 'error', "  createDevice($net/$addr): 'modelName' non renseigné");
             return;
         }
 
         // Ok, 'modelName' is defined
-        if ($modelSource == '')
+        if (!isset($modelSource) || ($modelSource == ''))
             $modelSource = 'Abeille';
         if (!isset($modelPath))
-            $modelPath = "{$modelName}/{$modelName}.json";
+            $modelPath = "$modelName/$modelName.json";
         if (!isset($modelSig))
             $modelSig = $modelName;
 
         if (($modelSource != '') && ($modelPath != '')) {
-            // $model = AbeilleTools::getDeviceModel($modelSig, $modelName, $modelSource);
             $model = getDeviceModel($modelSource, $modelPath, $modelName, $modelSig);
             if ($model === false) {
                 log::add('Abeille', 'debug', '  ERRRRRRRRR');

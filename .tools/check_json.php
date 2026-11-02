@@ -347,7 +347,7 @@
                 "type": "tuya",
                 "05": { // DP
                     "function": "rcvValue",
-                    "info": "01-measuredValue"
+                    "info": "01-measuredValue" >> Not required if function=='voltageCurrentPower2'
                 },
             },
             "0000-FF01": { // CLUSTID-ATTRID Xiaomi with tag/type decode
@@ -446,13 +446,13 @@
                             $error = newDevError($devModName, "ERROR", "Missing 'function' for private/$pKey/$dpId");
                             continue;
                         }
-                        if (!isset($dpVal['info'])) {
+                        if (($dpVal['function'] != 'voltageCurrentPower2') && !isset($dpVal['info'])) {
                             $error = newDevError($devModName, "ERROR", "Missing 'info' for private/$pKey/$dpId");
                             continue;
                         }
 
                         $func = $dpVal['function'];
-                        $supportedFunc = ['rcvValue', 'rcvValueEnum', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
+                        $supportedFunc = ['rcvValue', 'rcvValueEnum', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1', 'voltageCurrentPower2'];
                         if (!in_array($func, $supportedFunc)) {
                             $error = newDevError($devModName, "ERROR", "Invalid function '$func' for private/$pKey DP $dpId");
                             continue;

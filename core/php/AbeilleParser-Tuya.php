@@ -75,8 +75,6 @@
     function tuyaGetDp($msg) {
         $tDpId = substr($msg, 0, 2);
         $tDataType = substr($msg, 2, 2);
-        // $tFunc = substr($msg, 4, 2); // What for ?
-        // $tLen = substr($msg, 6, 2);
         $tLen = substr($msg, 4, 4);
         $tData = substr($msg, 8, hexdec($tLen) * 2);
         $tDataTypeTxt = tuyaGetDpDataType($tDataType);
@@ -92,34 +90,27 @@
         return $dp;
     }
 
-
     // Receive a datapoint, map it to a specific function an decode it.
     // Mapping is defined "per device" directly in its model (private + type="tuya").
-    function tuyaDecodeDp($addr, $ep, $dp, $mapping) {
+    function tuyaDecodeDp($addr, $ep, $dp, $mapping, &$attributeN) {
         $dpId = $dp['id'];
         if (!isset($mapping[$dpId])) {
             parserLog2("debug", $addr, "  ".$dp['m'].": Unrecognized DP !", "8002");
             return false;
         }
 
-        /* New syntax
+        /* Syntax reminder
             "private": {
                 "EF00": {
                     "type": "tuya",
-                    "01": { "function": "rcvValueDiv", "info": "0006-01-0000", "div": 1 },
+                    "01": { "function": "rcvValue", "info": "0006-01-0000", "div": 1 },
                     "02": { "function": "rcvValue", "info": "0008-01-0000" },
-                }
-            }
-           Old syntax
-            "tuyaEF00": {
-                "fromDevice": {
-                    "01": "rcvOnOff",
-                    "02": "rcvLevel"
+                    "04": { "function": "voltageCurrentPower2" }, // Extract voltage, current & power
                 }
             }
          */
 
-
+        $status = true;
         $info = "undefined-info";
         $div = 1; // For optional value division
         $mult = 1; // For optional value multiplication
@@ -162,7 +153,7 @@
         //         $mode = "?";
         //     $logMsg = "  ".$dp['m']." => Mode = ".$dp['data']."/".$mode;
         //     parserLog2("debug", $addr, $logMsg, "8002");
-        //     $attributeN = array(
+        //     $attributeN[] = array(
         //         'name' => $ep.'-mode',
         //         'value' => $mode,
         //     );
@@ -174,7 +165,7 @@
         //     $val = hexdec($dp['data']) % 2;
         //     $st = ($val == 1) ? "ON" : "OFF";
         //     parserLog2("debug", $addr, "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
-        //     $attributeN = array(
+        //     $attributeN[] = array(
         //         'name' => '0006-'.$ep.'-0000',
         //         'value' => $val,
         //     );
@@ -189,7 +180,7 @@
             $val = $val * $mult;
             $val = $val / $div;
             $logMsg = "  ".$dp['m']." => 'rcvValue' => '".$info."'=".$val;
-            $attributeN = array(
+            $attributeN[] = array(
                 'name' => $info,
                 'value' => $val,
             );
@@ -200,7 +191,7 @@
             $val = hexdec($dp['data']);
             $val = $val / $div;
             $logMsg = "  ".$dp['m']." => 'rcvValueDiv', Div=".$div." => '".$info."'=".$val;
-            $attributeN = array(
+            $attributeN[] = array(
                 'name' => $info,
                 'value' => $val,
             );
@@ -211,7 +202,7 @@
             $val = hexdec($dp['data']);
             $val = $val * $mult;
             $logMsg = "  ".$dp['m']." => 'rcvValueMult', Mult=".$mult." => '".$info."'=".$val;
-            $attributeN = array(
+            $attributeN[] = array(
                 'name' => $info,
                 'value' => $val,
             );
@@ -223,7 +214,7 @@
             else
                 $val = 0;
             $logMsg = "  ".$dp['m']." => 'rcvValue0Is1' => '".$info."'=".$val;
-            $attributeN = array(
+            $attributeN[] = array(
                 'name' => $info,
                 'value' => $val,
             );
@@ -234,26 +225,51 @@
             if (isset($enum[$val])) {
                 $valOut = $enum[$val];
                 $logMsg = "  ".$dp['m']." => 'rcvValueEnum' => '".$info."'=".$valOut;
-                $attributeN = array(
+                $attributeN[] = array(
                     'name' => $info,
                     'value' => $valOut,
                 );
             } else {
                 parserLog2("error", $addr, "  'rcvValueEnum' for dpId=$dpId: Unknown enum $val");
-                $attributeN = false;
+                $status = false;
             }
+            break;
+        case "voltageCurrentPower2":
+            // Memo
+            // phaseVariant2: {
+            //     from: (v: string) => {
+            //         const buf = Buffer.from(v, "base64");
+            //         return {voltage: (buf[1] | (buf[0] << 8)) / 10, current: (buf[4] | (buf[3] << 8)) / 1000, power: buf[7] | (buf[6] << 8)};
+            //     },
+            // },
+            $val = $dp['data'];
+            $voltage = hexdec(substr($val, 0, 4)) / 10;
+            $current = hexdec(substr($val, 6, 4)) / 1000;
+            $power = hexdec(substr($val, 12, 4));
+            $logMsg = "  ".$dp['m']." => 'voltageCurrentPower2' => 'voltage'=$voltage, 'current'=$current, 'power'=$power";
+            $attributeN[] = array(
+                'name' => 'voltage',
+                'value' => $voltage,
+            );
+            $attributeN[] = array(
+                'name' => 'current',
+                'value' => $current,
+            );
+            $attributeN[] = array(
+                'name' => 'power',
+                'value' => $power,
+            );
             break;
 
         default:
             parserLog2("error", $addr, "  Unknown Tuya function '".$func."' for dpId=".$dpId);
-            $attributeN = false;
+            $status = false;
             break;
         }
 
-        if (isset($logMsg)) {
+        if (isset($logMsg))
             parserLog2("debug", $addr, $logMsg, "8002");
-        }
-        return $attributeN;
+        return $status;
     }
 
     // Decode cluster EF00 received cmd 24 => Time synchronization
@@ -326,17 +342,12 @@
 
             $tSqn = substr($msg, 0, 4); // uint16
             $msg = substr($msg, 4); // Skip tSqn
-            parserLog2("debug", $addr, "  Tuya EF00 specific cmd ".$cmdId." (tSQN=".$tSqn.")", "8002");
+            parserLog2("debug", $addr, "  Tuya EF00 specific cmd '$cmdId' (tSQN=$tSqn) => $msg");
             while (strlen($msg) != 0) {
+                // TODO: Check that msg len contains at least DP+TYPE+LEN+1B
                 $dp = tuyaGetDp($msg);
 
-                $a = tuyaDecodeDp($addr, $ep, $dp, $mapping);
-                if ($a !== false)
-                    $attributesN[] = $a;
-                else { // Unknown DP
-                    // if (!isset($eq['tuyaEF00']['unknown']) || !isset($eq['tuyaEF00'][$dp['id']]))
-                    //     $eq['tuyaEF00']['unknown'][$dp['id']] = $dp;
-                    // TODO: Is that the right converstion to 'private' section ?
+                if (tuyaDecodeDp($addr, $ep, $dp, $mapping, $attributesN) === false) { // Unknown DP
                     $eq['private']['EF00']['unknown'][$dp['id']] = $dp;
                 }
 
@@ -350,9 +361,7 @@
             $msg = substr($msg, 4); // Skip tSqn
             $dp = tuyaGetDp($msg);
             $mapping = $eq['private']['EF00'];
-            $a = tuyaDecodeDp($addr, $ep, $dp, $mapping);
-            if ($a !== false)
-                $attributesN[] = $a;
+            tuyaDecodeDp($addr, $ep, $dp, $mapping, $attributesN);
         } else if ($cmdId == "11") { // TUYA_MCU_VERSION_RSP
             parserLog2('debug', $addr, "  TUYA_MCU_VERSION_RSP: ".$msg);
         } else if ($cmdId == "25") { // TUYA_INTERNET_STATUS

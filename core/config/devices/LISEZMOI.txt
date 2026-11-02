@@ -185,18 +185,20 @@ La syntaxe actuelle est la suivante :
             "type": "tuya",
             "05": { // DP
                 "function": "rcvValue",
+                "div": 10, // OPTIONNEL si division nécessaire
+                "mult": 10, // OPTIONNEL si multiplication nécessaire
                 "info": "01-measuredValue"
             },
-
-            // Fonctions supportées
-            // 'rcvValue'
-            // 'rcvValueEnum'
-            //     "function": "rcvValueEnum",
-            //     "enum": {
-            //          "00": "single",
-            //          "01": "double",
-            //          "02": "long"
-            //      }
+            "06": { // DP
+                "function": "rcvValueEnum",
+                "enum": {
+                    "00": "auto",
+                    "01": "manual",
+                    "02": "off",
+                    "03": "holliday"
+                },
+                "info": "01-mode"
+            }
         },
 
         "FCC0-0112": { // CLUSTID-ATTRID

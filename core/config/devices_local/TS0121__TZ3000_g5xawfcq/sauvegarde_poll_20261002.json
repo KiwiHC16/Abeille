@@ -1,0 +1,38 @@
+{
+    "Abeille1\/C326": {
+        "poll": "1",
+        "cmds": {
+            "82679": [
+                "Poll 0B04",
+                "cron"
+            ]
+        }
+    },
+    "Abeille2\/3DFD": {
+        "poll": "1",
+        "cmds": {
+            "74655": [
+                "getPlugVAW",
+                "cron"
+            ]
+        }
+    },
+    "Abeille2\/D657": {
+        "poll": "1",
+        "cmds": {
+            "82359": [
+                "Poll 0B04",
+                "cron"
+            ]
+        }
+    },
+    "Abeille2\/5974": {
+        "poll": "1",
+        "cmds": {
+            "79225": [
+                "Poll 0B04",
+                "cron"
+            ]
+        }
+    }
+}

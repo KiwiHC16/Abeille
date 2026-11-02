@@ -1,0 +1,6 @@
+Modèle local créé le 02/10/2026 (Ben / Claude) pour les 4 prises TS0121 de jeedompro (Lampe Verte, Radiateur Prise SdB SdJ, Prise Déshumidificateur SdB tour, Déshumidificateur chambre des parents).
+Copie du modèle officiel core/config/devices/TS0121__TZ3000_g5xawfcq avec :
+- "poll": "1" retiré (lecture de 0006 et 0008 chaque minute inutile : la prise envoie son état elle-même, et 0008 n'existe pas sur une prise) ;
+- "Poll 0B04" (puissance, courant, tension) toutes les 5 min (cron5) au lieu de chaque minute ; toujours relu 5 s après chaque marche/arrêt.
+Raison : charge permanente (environ 4 échanges avec accusé par prise et par minute) sur la ZiGate JnJ, en cause dans ses redémarrages (NPDU bloqué).
+Ce dossier n'est pas effacé par les mises à jour d'Abeille. Pour revenir au modèle officiel : supprimer ce dossier.

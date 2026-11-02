@@ -1,0 +1,111 @@
+{
+    "TS011F__TZ3000_amdymr7l": {
+        "manufacturer": "BlitzWolf",
+        "model": "BW-SHP13",
+        "type": "BlitzWolf smart plug",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Blitzwolf-SmartPlug",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify"
+            },
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle"
+            },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Bind 0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0006": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "yes"
+            },
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "div=1",
+                "unit": "KWh",
+                "isVisible": "1"
+            },
+            "Get Total power": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0702&attrId=0000"
+            },
+            "RMS Voltage": {
+                "use": "inf_zbAttr-0B04-RMSVoltage",
+                "params": "mult=1&div=1",
+                "isVisible": "0"
+            },
+            "Get RMS Voltage": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=0505"
+            },
+            "RMS Current": {
+                "use": "inf_zbAttr-0B04-RMSCurrent",
+                "params": "mult=1&div=1",
+                "isVisible": "1"
+            },
+            "Get RMS Current": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=0508"
+            },
+            "Active Power": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": "1"
+            },
+            "Get Active Power": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=050B"
+            },
+            "Bind 0B04-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0B04",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B04-0508": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=0508&attrType=21&minInterval=30&maxInterval=300&changeVal=50",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B04-050B": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=050B&attrType=29&minInterval=30&maxInterval=300&changeVal=5",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B04-0505": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrId=0505&attrType=21&minInterval=60&maxInterval=900&changeVal=3",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0702-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0702&attrId=0000&attrType=25&minInterval=60&maxInterval=1800&changeVal=10",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

@@ -1,0 +1,9 @@
+Modèle local créé le 02/10/2026 (Ben / Claude) pour la prise « Pompe Eau Chaude Boucle » (jeedompro, Abeille2/2AAE, BlitzWolf BW-SHP13).
+Copie du modèle officiel core/config/devices/TS011F__TZ3000_amdymr7l avec des rapports limités :
+- 0B04/050B puissance : min 30 s, max 300 s (600 s avant le 28/10/2026), variation 5 W
+- 0B04/0508 courant : min 30 s, max 300 s (600 s avant le 28/10/2026), variation 50 mA
+- 0B04/0505 tension : min 60 s, max 900 s, variation 3 V (ajouté)
+- 0702/0000 consommation : min 60 s, max 1800 s, variation 10 (ajouté)
+Raison : le réglage officiel (min 0, variation 1) produisait des rafales de rapports ; avec une liaison radio faible vers le cellier, la ZiGate JnJ restait bloquée (NPDU) et Abeille la redémarrait.
+Ce dossier n'est pas effacé par les mises à jour d'Abeille. Pour revenir au modèle officiel : supprimer ce dossier.
+Détails : Obsidian, Domotique/ZiGate redémarrages (NPDU bloqué).

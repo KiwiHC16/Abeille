@@ -1,0 +1,66 @@
+{
+    "TS0121__TZ3000_g5xawfcq": {
+        "manufacturer": "Blitzwolf",
+        "model": "BW-SHP13",
+        "type": "Blitzwolf smart plug",
+        "genericType": "Outlet",
+        "comment": "Cluster 0006 attr 0000 reports without configureReporting",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Blitzwolf-SmartPlug"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
+            },
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "isVisible": 1
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle"
+            },
+            "Get-Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Voltage": {
+                "use": "inf_zbAttr-0B04-RMSVoltage",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
+            "Current": {
+                "use": "inf_zbAttr-0B04-RMSCurrent",
+                "isVisible": 1
+            },
+            "Power": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
+            "Poll 0B04": {
+                "use": "act_poll-0B04-0505-0508-050B",
+                "Polling": "cron5"
+            }
+        }
+    }
+}

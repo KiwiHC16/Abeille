@@ -173,20 +173,22 @@
                 "value" => $jCmd->execCmd() // Current value
             );
         }
+
+        $gtwSubType = config::byKey("ab::gtwSubType$gtwId", 'Abeille', '', true);
         $gateways[$gtwId] = array(
             "id" => $gtwId,
             "enabled" => $enabled, // 'Y' or 'N'
             "cmds" => $cmds, // Array of cmds, sorted by cmd logic ID
+            "subType" => $gtwSubType
         );
         if ($enabled != 'Y')
             continue;
 
         $gtwType = config::byKey("ab::gtwType$gtwId", 'Abeille', 'zigate', true);
-        $gtwSubType = config::byKey("ab::gtwSubType$gtwId", 'Abeille', '', true);
         if (($gtwType == "zigate") && ($gtwSubType == "WIFI"))
             continue;
-        $gtwPort = config::byKey("ab::gtwPort$gtwId", 'Abeille', '', true);
 
+        $gtwPort = config::byKey("ab::gtwPort$gtwId", 'Abeille', '', true);
         $found = false;
         foreach($GLOBALS['portsList'] as $p) {
             if ($p['real'] == $gtwPort) {
@@ -1459,21 +1461,55 @@
         });
     }
 
+    /* Check if Zigate type matches FW version.
+       FW 0005-xxxx => Zigate v2
+       FW 0003-xxxx/0004-xxxx/AB01-xxxx => Zigate v1 */
+    function checkZigateTypeVsFw(gtwId, fwVersion) {
+        console.log("checkZigateTypeVsFw(Gtw=" + gtwId + ", FW=" + fwVersion + ")");
+        subType = js_gateways[gtwId]['subType'];
+        newSubType = "";
+        if (fwVersion.substr(0, 4) == "0005") {
+            zgVersion = 2;
+            if (subType == "PI")
+                newSubType = "PIv2";
+            else if (subType == "USB")
+                newSubType = "USBv2";
+            else if (subType == "DIN")
+                newSubType = "DINv2";
+        } else {
+            zgVersion = 1;
+            if (subType == "PIv2")
+                newSubType = "PI";
+            else if (subType == "USBv2")
+                newSubType = "USB";
+            else if (subType == "DINv2")
+                newSubType = "DIN";
+        }
+        if (newSubType == "")
+            console.log("Zigate " + gtwId + " is a V" + zgVersion + " (FW " + fwVersion + ") => sub-type " + subType + " ok");
+        else
+            console.log("Zigate " + gtwId + " is a V" + zgVersion + " (FW " + fwVersion + ") => sub-type " + subType + " ERROR (should be " + newSubType + ")");
+    }
+
     /* This function is called each time a corresponding info cmd has a value update.
        Reminder: jeedom.cmd.update[cmdId] = updateInfoCmd() */
     function updateInfoCmd(_options) {
         cmdId = _options.cmd_id;
         value = _options.display_value;
         console.log("updateInfoCmd(cmdId=" + cmdId + ", val=" + value + ")");
-        // var elm = document.getElementById("abCmdId-" + cmdId);
         elm = document.querySelector('[abCmdId="' + cmdId + '"]');
         if (elm == null) {
             console.log("ERROR: Cannot find elm 'abCmdId=" + cmdId + "'");
             return;
         }
-        console.log("elm=", elm);
+        console.log("  elm=", elm);
         if (true /*$isInput*/) elm.value = value;
         else elm.textContent = value; // Not <input>. Assuming <span>
+
+        if (elm.abCmdLogicId == "FW-Version") {
+            gtwId = elm.getAttribute("abGtwId");
+            checkZigateTypeVsFw(gtwId, value);
+        }
     }
 
     // throw new Error("Arrêt forcé ici.");
@@ -1733,6 +1769,9 @@
             elm.setAttribute('abCmdId', cmdId); // To allow updateInfoCmd() to identify element to update
             elm.value = cmdValue; // Set current value
             jeedom.cmd.update[cmdId] = updateInfoCmd;
+
+            if (cmdLogicId == "FW-Version")
+                checkZigateTypeVsFw(gtwId, cmdValue);
         }   
         console.log("  jeedom.cmd.update=", jeedom.cmd.update);
     }

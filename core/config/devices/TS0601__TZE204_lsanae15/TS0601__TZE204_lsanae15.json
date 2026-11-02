@@ -46,6 +46,12 @@
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "energy",
                 "unit": "KWh",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Fault": {
+                "use": "inf_generic-String",
+                "logicalId": "fault",
                 "isVisible": 1
             }
         },
@@ -63,6 +69,17 @@
                 },
                 "06": {
                     "function": "voltageCurrentPower2"
+                },
+                "0F": {
+                    "function": "rcvValueEnum",
+                    "enum": {
+                        "00": "none",
+                        "01": "Over current",
+                        "02": "Over power",
+                        "04": "Over voltage",
+                        "08": "Wrong freq"
+                    },
+                    "info": "fault"
                 }
             }
         }

@@ -104,7 +104,7 @@
                         "03": "holliday"
                     },
                     "info": "01-mode"
-               },
+                },
                 "03": {
                     "function": "rcvValue0Is1",
                     "info": "01-chauffage",

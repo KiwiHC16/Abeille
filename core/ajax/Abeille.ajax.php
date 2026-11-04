@@ -478,8 +478,8 @@
                 /* Need to start AbeilleMonitor if not already running
                 and restart cmd & parser.
                 WARNING: If cron is not running, any (re)start should be avoided. */
-                $conf = AbeilleTools::getConfig();
-                AbeilleTools::restartDaemons($conf, "AbeilleMonitor AbeilleParser AbeilleCmd");
+                $config = AbeilleTools::getAndCheckConfig();
+                AbeilleTools::restartDaemons($config, "AbeilleMonitor AbeilleParser AbeilleCmd");
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
@@ -708,6 +708,7 @@
 
                 $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
                 $eq['zigbee'] = $zigbee;
+
                 $eq['zbModel'] = isset($zigbee['modelId']) ? $zigbee['modelId'] : '';
                 $eq['zbManuf'] = isset($zigbee['manufId']) ? $zigbee['manufId'] : '';
 
@@ -841,6 +842,8 @@
                     $e['since'] = floor((time() - strtotime($e['lastComm'])) / 3600);
                 $e['txAck'] = $eqLogic->getStatus('ab::txAck', 'ok');
                 $e['quarantineUntil'] = intval($eqLogic->getStatus('ab::quarantineUntil', 0));
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                $e['rxOnWhenIdle'] = isset($zigbee['rxOnWhenIdle']) ? $zigbee['rxOnWhenIdle'] : 0;
 
                 // Last LQI
                 if ($eqAddr == "0000")
@@ -1000,7 +1003,7 @@
             $status = 0;
             $error = "";
 
-            $config = AbeilleTools::getConfig();
+            $config = AbeilleTools::getAndCheckConfig();
             $configJson = json_encode($config);
             logDebug('configJson='.$configJson);
 
@@ -1012,7 +1015,7 @@
             $status = 0;
             $error = "";
 
-            $config = AbeilleTools::getConfig();
+            $config = AbeilleTools::getAndCheckConfig();
             AbeilleTools::restartDaemons($config, "");
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));

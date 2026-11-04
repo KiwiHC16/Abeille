@@ -1,6 +1,6 @@
 {
     "inf_zbAttr-0403-MeasuredValue": {
-        "comment": "0403/Pressure cluster, attrib 0000/MeasuredValue",
+        "comment": "0403/Pressure cluster, attrib 0000/MeasuredValue => returned in kPa",
         "subType": "numeric",
         "template": "badge",
         "isHistorized": "1",

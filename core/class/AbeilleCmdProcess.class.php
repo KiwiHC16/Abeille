@@ -2743,6 +2743,7 @@
                 }
 
                 // Zigbee command: Node descriptor request (Node_Desc_req)
+                // Mandatory: 'addr'
                 else if ($cmdName == 'getNodeDescriptor') {
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -3245,9 +3246,12 @@
                 } // End 'discoverCommandsGenerated'
 
                 // ZCL global: Read Attributes Response
-                // Mandatory params: 'addr', 'ep', 'clustId', 'attrId', 'status', 'attrType', 'attrVal'
+                // Mandatory params: 'addr', 'ep', 'clustId', 'attrId', 'status', and if status==00: 'attrType' , 'attrVal'
                 else if ($cmdName == 'sendReadAttributesResponse') {
-                    $required = ['addr', 'ep', 'clustId', 'attrId', 'status', 'attrType', 'attrVal'];
+                    if ($Command['cmdParams']['status'] == "00")
+                        $required = ['addr', 'ep', 'clustId', 'attrId', 'status', 'attrType', 'attrVal'];
+                    else
+                        $required = ['addr', 'ep', 'clustId', 'attrId', 'status'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -3284,16 +3288,14 @@
                     $cmdId          = "01"; // Read Attributes Response
                     $data2 = $fcf.$sqn.$cmdId;
 
-                    // if (!isset($Command['cmdParams']['attrId']) || !isset($Command['cmdParams']['status']) || !isset($Command['cmdParams']['attrType'])) {}
-                    //     cmdLog('debug', "  ERROR: Missing '".$param."'");
-                    //     return;
-                    // }
                     $attrId = AbeilleTools::reverseHex($Command['cmdParams']['attrId']);
                     $status = $Command['cmdParams']['status'];
-                    $attrType = $Command['cmdParams']['attrType'];
-                    $attrVal = AbeilleTools::reverseHex($Command['cmdParams']['attrVal']);
-                    $data2 = $data2.$attrId.$status.$attrType.$attrVal;
-
+                    if ($status == "00") {
+                        $attrType = $Command['cmdParams']['attrType'];
+                        $attrVal = AbeilleTools::reverseHex($Command['cmdParams']['attrVal']);
+                        $data2 = $data2.$attrId.$status.$attrType.$attrVal;
+                    } else
+                        $data2 = $data2.$attrId.$status;
                     $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
 
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
@@ -3301,7 +3303,7 @@
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
-                }
+                } // End 'sendReadAttributesResponse'
 
                 // ZCL global: Discover Attributes Extended
                 // Mandatory params: 'addr', 'ep', 'clustId'

@@ -192,9 +192,18 @@ function refreshEqInfos() {
                 document.getElementById("idZbStatus").value =
                     curEq.zigbee.status;
             else document.getElementById("idZbStatus").value = "?";
+
+            if (typeof curEq.zigbee.status_time != "undefined") {
+                // Convert PHP timestamp to human readable time
+                dt = new Date(curEq.zigbee.status_time * 1000);
+                // console.log("dt=", dt);
+                document.getElementById("idZbStatusTime").value = dt;
+            } else document.getElementById("idZbStatusTime").value = "";
+
             if (typeof curEq.zigbee.modelId != "undefined")
                 document.getElementById("idZbModel").value =
                     curEq.zigbee.modelId;
+
             if (typeof curEq.zigbee.manufId != "undefined")
                 document.getElementById("idZbManuf").value =
                     curEq.zigbee.manufId;
@@ -266,8 +275,17 @@ function refreshEqInfos() {
                     .toUpperCase();
 
                 console.log("maccap=", mc);
-                if ((mc >> 3) & 1) $("#idZbRxOnWhenIdle").show();
-                else $("#idZbRxOnWhenIdle").hide();
+                mcDesc = "";
+                // if ((mc >> 3) & 1) $("#idZbRxOnWhenIdle").show();
+                // else $("#idZbRxOnWhenIdle").hide();
+                if ((mc >> 3) & 1) mcDesc = "RX_Always_ON";
+                if ((mc >> 2) & 1) {
+                    // PowerSource == 1 ?
+                    if (mcDesc != "") mcDesc += " + ";
+                    mcDesc += "MAINS";
+                }
+                if (mcDesc != "")
+                    document.getElementById("idMacCapaDesc").value = mcDesc;
             }
 
             if (typeof curEq.zigbee.manufCode != "undefined")
@@ -316,9 +334,9 @@ function refreshEqInfos() {
                 $("#idDelLocalBtn").show();
             }
             if (curEq.batteryType == "")
-                document.getElementById("idBatteryType").value = "{{Secteur}}";
+                document.getElementById("idPowerSource").value = "{{Secteur}}";
             else
-                document.getElementById("idBatteryType").value =
+                document.getElementById("idPowerSource").value =
                     "{{Batterie}} " + curEq.batteryType;
 
             // Quarantine status (set by AbeilleCmd daemon after repeated noack failures)
@@ -367,34 +385,56 @@ function refreshEqInfos() {
                 document.getElementById("paramABC").style.display = "none";
             }
 
-            // Updating info cmds
-            const advInfoCmds = document.querySelectorAll("[advInfo]"); // All with attribute named "advInfo"
-            for (let i = 0; i < advInfoCmds.length; i++) {
-                elm = advInfoCmds[i];
-                console.log("advInfoCmd=", advInfoCmds[i]);
-                cmdLogicId = elm.getAttribute("advInfo");
+            // // Updating info cmds => OBSOLETE. To be removed when all advInfo updated to abCmdLogicId
+            // const advInfoCmds = document.querySelectorAll("[advInfo]"); // All with attribute named "advInfo"
+            // for (let i = 0; i < advInfoCmds.length; i++) {
+            //     elm = advInfoCmds[i];
+            //     console.log("advInfoCmd=", advInfoCmds[i]);
+            //     cmdLogicId = elm.getAttribute("advInfo");
+            //     console.log("cmdLogicId=", cmdLogicId);
+            //     if (typeof eq.cmds[cmdLogicId] != "undefined") {
+            //         cmd = eq.cmds[cmdLogicId];
+            //         // console.log("cmd=", cmd);
+            //         cmdId = cmd.id;
+            //         cmdVal = cmd.val;
+            //         // console.log("cmdVal=", cmdVal);
+            //         // elm.setAttribute('data-cmd_id', cmdId);
+            //         child = elm.firstElementChild;
+            //         if (child != null) {
+            //             // console.log("child=", child);
+            //             child.id = "cmdId-" + cmdId;
+            //             child.setAttribute("value", cmdVal);
+            //         }
+
+            //         // jeedom.cmd.addUpdateFunction(cmdId, updateInfoCmd);
+            //         // Warning: addUpdateFunction() seems only available since v4.4 core
+            //         if (!isset(jeedom.cmd.update)) jeedom.cmd.update = [];
+            //         if (cmdLogicId == "Time-TimeStamp")
+            //             jeedom.cmd.update[cmdId] = updateInfoCmdTimestamp;
+            //         else jeedom.cmd.update[cmdId] = updateInfoCmd;
+            //         console.log("jeedom.cmd.update=", jeedom.cmd.update);
+            //     }
+            // }
+
+            // Installing automatic update function for each 'info' cmd to be auto-updated
+            const auInfoCmds = document.querySelectorAll("[abCmdLogicId]"); // All with attribute "abCmdLogicId"
+            for (let i = 0; i < auInfoCmds.length; i++) {
+                elm = auInfoCmds[i];
+                console.log("auInfoCmds=", auInfoCmds[i]);
+
+                cmdLogicId = elm.getAttribute("abCmdLogicId");
                 console.log("cmdLogicId=", cmdLogicId);
+
                 if (typeof eq.cmds[cmdLogicId] != "undefined") {
                     cmd = eq.cmds[cmdLogicId];
-                    // console.log("cmd=", cmd);
                     cmdId = cmd.id;
-                    cmdVal = cmd.val;
-                    // console.log("cmdVal=", cmdVal);
-                    // elm.setAttribute('data-cmd_id', cmdId);
-                    child = elm.firstElementChild;
-                    if (child != null) {
-                        // console.log("child=", child);
-                        child.id = "cmdId-" + cmdId;
-                        child.setAttribute("value", cmdVal);
-                    }
+                    cmdValue = cmd.val;
+                    console.log("  cmdId=" + cmdId + ", cmdValue=" + cmdValue);
+                    elm.setAttribute('abCmdId', cmdId); // To allow updateInfoCmd() to identify element to update
+                    elm.value = cmdValue; // Set current value
 
-                    // jeedom.cmd.addUpdateFunction(cmdId, updateInfoCmd);
-                    // Warning: addUpdateFunction() seems only available since v4.4 core
                     if (!isset(jeedom.cmd.update)) jeedom.cmd.update = [];
-                    if (cmdLogicId == "Time-TimeStamp")
-                        jeedom.cmd.update[cmdId] = updateInfoCmdTimestamp;
-                    else jeedom.cmd.update[cmdId] = updateInfoCmd;
-                    console.log("jeedom.cmd.update=", jeedom.cmd.update);
+                    jeedom.cmd.update[cmdId] = updateInfoCmd;
                 }
             }
 
@@ -441,18 +481,31 @@ function refreshEqInfos() {
 // This function is called each time a corresponding info cmd has a value update.
 // Reminder: jeedom.cmd.update[cmdId] = updateInfoCmd()
 function updateInfoCmd(_options) {
+    // cmdId = _options.cmd_id;
+    // value = _options.display_value;
+    // console.log("updateInfoCmd(cmdId=" + cmdId + ", val=" + value + ")");
+    // var elm = document.getElementById("cmdId-" + cmdId);
+    // if (elm == null) {
+    //     console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
+    //     return;
+    // }
+    // console.log("elm=", elm);
+    // if (true /*$isInput*/) elm.value = value;
+    // // Not <input>. Assuming <span>
+    // else elm.textContent = value;
+
     cmdId = _options.cmd_id;
     value = _options.display_value;
     console.log("updateInfoCmd(cmdId=" + cmdId + ", val=" + value + ")");
-    var elm = document.getElementById("cmdId-" + cmdId);
+    elm = document.querySelector('[abCmdId="' + cmdId + '"]');
     if (elm == null) {
-        console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
+        console.log("ERROR: Cannot find elm 'abCmdId=" + cmdId + "'");
         return;
     }
     console.log("elm=", elm);
     if (true /*$isInput*/) elm.value = value;
-    // Not <input>. Assuming <span>
-    else elm.textContent = value;
+    else elm.textContent = value; // Not <input>. Assuming <span>
+    
 }
 
 // Same as updateInfoCmd() but dedicated to 'Time-Timestamp' info display
@@ -546,21 +599,35 @@ $("#bt_graph").on("click", function () {
 /* Add a virtual remote control to given zigate number */
 function createRemote(zgId) {
     console.log("createRemote(" + zgId + ")");
-    var xmlhttpMQTTSendTimer = new XMLHttpRequest();
-    xmlhttpMQTTSendTimer.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            xmlhttpMQTTSendTimerResult = this.responseText;
-        }
-    };
 
-    xmlhttpMQTTSendTimer.open(
+    // var xmlhttpMQTTSendTimer = new XMLHttpRequest();
+    // xmlhttpMQTTSendTimer.onreadystatechange = function () {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         xmlhttpMQTTSendTimerResult = this.responseText;
+    //     }
+    // };
+    // xmlhttpMQTTSendTimer.open(
+    //     "GET",
+    //     "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille" +
+    //         zgId +
+    //         "_zigate_createRemote",
+    //     false,
+    // ); // False pour bloquer sur la recuperation du fichier
+    // xmlhttpMQTTSendTimer.send();
+
+    console.log("queue=" + js_queueXToMain);
+    var xhr = new XMLHttpRequest();
+    xhr.open(
         "GET",
-        "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille" +
-            zgId +
-            "_zigate_createRemote",
-        false,
-    ); // False pour bloquer sur la recuperation du fichier
-    xmlhttpMQTTSendTimer.send();
+        "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
+            js_queueXToMain +
+            "&msg=type:createRemote_net:Abeille" +
+            zgId,
+        true,
+    );
+    xhr.onload = function () {};
+    xhr.send();
+
     // location.reload(true);
     $("#div_alert").showAlert({
         message: "{{Une nouvelle Telecommande est en création.}}",
@@ -2959,3 +3026,18 @@ function downloadPdm() {
         null,
     );
 }
+
+/* Attempt to install generic event listener to catch useful infos from Abeille's daemons.
+   WORK ONGOING. Not functional */
+
+$(document).off('jeedom.change.Abeille_hub'); // Clear any existing listener
+
+$(document).on('jeedom.change.Abeille_hub', function (event, data) {
+    if (data && data.type === 'Abeille::generic_event' && data.value) {
+        
+        const payload = data.value; // Le tableau PHP arrive généralement encapsulé ici
+        const type = payload.type;
+
+        console.log("Generic event catched. Type=" + type);
+    }
+});

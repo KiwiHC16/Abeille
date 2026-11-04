@@ -74,7 +74,7 @@
 
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         if (!isset($GLOBALS['devices'][$net][$addr]) && ($ieee == '')) {
-            logMessage('debug', "  ERROR: updateDeviceFromDB(): Unknown addr '{$net}/{$addr}' and IEEE is undefined");
+            logMessage('debug', "  ERROR: updateDeviceFromDB(): Unknown addr '$net/$addr' and IEEE is undefined");
             return;
         }
 
@@ -89,7 +89,7 @@
                     $found = true;
                     $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net][$addr2];
                     unset($GLOBALS['devices'][$net][$addr2]);
-                    logMessage('debug', "  Device ID {$eqId} address changed from '{$net}/{$addr2}' to '{$net}/{$addr}'.");
+                    logMessage('debug', "  Device ID {$eqId} address changed from '$net/$addr2' to '$net/$addr'.");
                     break;
                 }
             }
@@ -104,7 +104,7 @@
                         $found = true;
                         $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net2][$addr2];
                         unset($GLOBALS['devices'][$net2][$addr2]);
-                        logMessage('debug', "  Device ID {$eqId} migrated from '{$net2}/{$addr2}' to '{$net}/{$addr}'.");
+                        logMessage('debug', "  Device ID {$eqId} migrated from '{$net2}/{$addr2}' to '$net/$addr'.");
                         break;
                     }
                 }
@@ -178,21 +178,23 @@
     function configureZigate($zgId) {
         cmdLog('debug', "configureZigate($zgId)");
 
+        global $config;
         $gtwType = isset($config['ab::gtwType'.$zgId]) ? $config['ab::gtwType'.$zgId] : 'zigate';
         if ($gtwType != 'zigate') {
             cmdLog('error', "  Gateway $zgId is NOT a Zigate");
             return;
         }
 
-        // msgToCmd("CmdAbeille".$zgId."/0000/zgSoftReset", "");
-        // AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0011", "", "0000", null, 0);
+        /* Force Zigate soft reset */
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0011", "", 0, "0000", null, false);
         // Following cmds delayed by 1sec to wait for chip reset
+        sleep(1);
 
         // Extended PAN ID change must be done BEFORE starting network
         // Note: STILL NOT FUNCTIONAL. Zigate always says "BUSY" !!! Network seems to be automatically started after soft reset even without 0024/Start cmd.
         // Note: Experiement was done for Livolo TI0001 case with channel 26 and specific EPANID
         // msgToCmd("TempoCmdAbeille".$zgId."/0000/zgSetExtendedPanId&tempo=".(time()+1), "extPanId=21758D1900481200");
-        // AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0020", "21758D1900481200", "0000", null);
+        // AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0020", "21758D1900481200", 0, "0000", null);
 
         global $config;
         $chan = isset($config['ab::gtwChan'.$zgId]) ? $config['ab::gtwChan'.$zgId] : 0; // Default = auto (all channels)
@@ -202,13 +204,13 @@
             $mask = 1 << $chan;
         $mask = sprintf("%08X", $mask);
         cmdLog('debug', "  Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0021", $mask, "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0021", $mask, 0, "0000", null, false);
 
         /* Set time server */
         $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
         $zgTime = time() - $zgRef;
         $data = sprintf("%08s", dechex($zgTime));
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0016", $data, "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0016", $data, 0, "0000", null, false);
 
         /* Set RAW mode unless hybrid requested (should not longer be required) */
         if (isset($config['ab::forceZigateHybridMode']) && ($config['ab::forceZigateHybridMode'] == "Y")) {
@@ -219,16 +221,16 @@
             $mode2 = "01";
         }
         cmdLog('debug', "  Configuring Zigate $zgId in '$mode' mode");
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0002", $mode2, "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0002", $mode2, 0, "0000", null, false);
 
         /* Set CE certification */
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0019", "01", "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0019", "01", 0, "0000", null, false);
 
         /* Set device type COORDINATOR */
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0023", "00", "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0023", "00", 0, "0000", null, false);
 
         /* Start Network */
-        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0024", "", "0000", null, 0);
+        AbeilleCmdQueue::pushZigateCmd($zgId, PRIO_HIGH, "0024", "", 0, "0000", null, false);
 
         msgToCmd("TempoCmdAbeille".$zgId."/0000/zgGetVersion&tempo=".(time()+10), "");
 
@@ -345,11 +347,13 @@
     // Remove all pending messages for given zgId + addr or ieee.
     // Useful for ex when addr changed on device announce.
     function clearPending($zgId, $addr, $ieee) {
-        cmdLog("debug", "  clearPending({$zgId}, {$addr}, {$ieee})");
+        cmdLog("debug", "  clearPending(Zg=$zgId, Addr=$addr, Ieee=$ieee)");
 
         foreach ($GLOBALS['zigates'][$zgId]['cmdQueue'] as $pri => $q) {
             $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]);
-            cmdLog("debug", "  Pri={$pri}, Count=$count, Q=".json_encode($q));
+             if ($count == 0)
+                continue;
+            cmdLog("debug", "    Pri=$pri, Count=$count, Q=".json_encode($q));
             for ($cmdIdx = 0; $cmdIdx < $count; ) {
                 $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$pri][$cmdIdx];
                 if ($cmd['status'] != '') {
@@ -361,23 +365,25 @@
                     ((strlen($cmd['addr']) == 16) && ($cmd['addr'] == $ieee))) {
                     array_splice($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri], $cmdIdx, 1);
                     // Note: cmd @cmdIdx is the next cmd after array_splice
-                    cmdLog("debug", "  Removed Pri={$pri}/Idx={$cmdIdx}");
+                    cmdLog("debug", "    Removed Pri=$pri, Idx=$cmdIdx");
                     $count--;
                 } else
                     $cmdIdx++;
             }
 
             // $count = count($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]);
-            // cmdLog("debug", "  Pri={$pri}, Count=$count, Q-AFTER=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]));
+            // cmdLog("debug", "  Pri=$pri, Count=$count, Q-AFTER=".json_encode($GLOBALS['zigates'][$zgId]['cmdQueue'][$pri]));
         }
 
         // Cleaning tempo queue too
         global $tempoMessageQueue;
         $count = count($tempoMessageQueue);
-        cmdLog("debug", "  Tempo count=$count BEFORE=".json_encode($tempoMessageQueue));
+        if ($count == 0)
+            return;
+        cmdLog("debug", "    Tempo count=$count BEFORE=".json_encode($tempoMessageQueue));
         for ($cmdIdx = 0; $cmdIdx < $count; ) {
             $cmd = $tempoMessageQueue[$cmdIdx];
-            cmdLog("debug", "  cmdIdx={$cmdIdx}, cmd=".json_encode($cmd));
+            cmdLog("debug", "  cmdIdx=$cmdIdx, cmd=".json_encode($cmd));
             /* Examples
                "topic":"CmdAbeille1/7D80/bind0030", "params":"addr=00124B002242C5C5&ep=01&clustId=0402&destAddr=00158D0001ED3365&destEp=01"
                "topic":"CmdAbeille1/7D80/configureReporting2","params":"ep=01&clustId=0402&attrType=29&attrId=0000&minInterval=600&maxInterval=900"
@@ -394,7 +400,7 @@
             if (((strlen($cmdAddr) == 4) && ($cmdAddr == $addr)) ||
                 ((strlen($cmdAddr) == 16) && ($cmdAddr == $ieee))) {
                 array_splice($tempoMessageQueue, $cmdIdx, 1);
-                cmdLog("debug", "  Removed Tempo/Idx={$cmdIdx}");
+                cmdLog("debug", "    Removed Tempo/Idx=$cmdIdx");
                 $count--;
             } else
                 $cmdIdx++;
@@ -410,7 +416,7 @@
     // MAIN
     // ***********************************************************************************************
 
-    $config = AbeilleTools::getConfig();
+    $config = AbeilleTools::getAndCheckConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
@@ -438,7 +444,7 @@
     if ($queueParserToCmdAck === false)
         logMessage("error", "msg_get_queue(ParserToCmdAck) ERROR");
     if (($queueXToAbeille === false) || ($queueXToCmd === false) || ($queueParserToCmdAck === false)) {
-        logMessage('info', '<<< Pb de création de queues => Arret du démon AbeilleCmd');
+        logMessage('info', '<<< Pb de création de queues => Arret du démon AbeilleCmdD');
         exit(4);
     }
     $queueXToCmdMax         = $abQueues["xToCmd"]["max"];
@@ -519,9 +525,7 @@
             foreach(range(priorityMin, priorityMax) as $prio) {
                 $GLOBALS['zigates'][$gtwId]['cmdQueue'][$prio] = [];
             }
-        } else {
-            // Is the gateway a Zigate ?
-
+        } else { // It's a device, not a gateway
             if (!isset($GLOBALS['devices'][$net]))
                 $GLOBALS['devices'][$net] = [];
 

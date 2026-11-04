@@ -389,12 +389,12 @@
                 $fullPath = __DIR__."/../config/devices_local/$modelName/$modelName.json";
             if (!file_exists($fullPath)) {
                 $status = -1;
-                $error = "Le fichier '$modelName' n'existe pas dans '$modelSrc'";
+                $error = "Le fichier '$modelName.json' n'existe pas dans '$modelSrc'";
             } else {
                 $devModel = getDeviceModel($modelSrc, "$modelName/$modelName.json", $modelName, $modelName, $mode);
                 if ($devModel === false) {
                     $status = -1;
-                    $error = "Le modèle '$modelName' n'existe pas dans '$modelSrc'";
+                    $error = "Le modèle '$modelName.json' n'existe pas dans '$modelSrc'";
                 } else
                     $content = json_encode($devModel);
             }

@@ -36,7 +36,7 @@
         }
     }
 
-    $parameters = AbeilleTools::getConfig();
+    $parameters = AbeilleTools::getAndCheckConfig();
 // logToFile("parameters=".json_encode($parameters));
     $running = AbeilleTools::getRunningDaemons();
     $diff = AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
@@ -44,7 +44,7 @@
     $oneMissing = FALSE;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
-    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
+    for ($zgNb = 1; $zgNb <= maxGateways; $zgNb++) {
         if ($parameters['ab::gtwEnabled'.$zgNb] != "Y")
             continue; // Zigate disabled
         displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
@@ -58,7 +58,7 @@
 <script>var js_queueXToCmd = <?php echo $abQueues['xToCmd']['id']; ?>;</script>
 <div id="inclusionButtons" style="display:flex; flex-wrap:wrap; gap:5px;">
 <?php
-    for ($i = 1; $i <= maxNbOfZigate; $i++) {
+    for ($i = 1; $i <= maxGateways; $i++) {
         if (config::byKey('ab::gtwEnabled'.$i, 'Abeille', 'N', 1) == "Y") {
 ?>
 			    <a id="bt_include<?php echo $i;?>" href="#" class="btn-inclusion ui-btn ui-btn-raised clr-primary waves-effect waves-button" data-zgid="<?php echo $i;?>" style="margin:0;">

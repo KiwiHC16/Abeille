@@ -78,9 +78,9 @@
     }
 
     //check already running (after lock acquired)
-    $parameters = AbeilleTools::getConfig();
+    $config = AbeilleTools::getAndCheckConfig();
     $running = AbeilleTools::getRunningDaemons();
-    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
     #Check if socat daemon already running (not counting this instance which just started)
     if ($daemons["socat".$zgId] > 1) {

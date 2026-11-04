@@ -1,6 +1,6 @@
 {
     "inf_zbCmdC-0008-MoveToLevel": {
-        "comment": "Cluster 0008, cmd 00/Move to Level, received from CLIENT side",        
+        "comment": "Cluster 0008, cmd 00/Move to Level, received from CLIENT side. #value# = Level",        
         "subType": "numeric",
         "type": "info",
         "logicalId": "#EP#-0008-cmd00",

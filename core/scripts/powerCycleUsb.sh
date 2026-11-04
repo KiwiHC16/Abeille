@@ -40,41 +40,47 @@ else
 fi
 echo "Short dev: $DEV"
 
-# Identifing corresponding port using dmesg
-# [   11.037185] usb 3-1.2: cp210x converter now attached to ttyUSB0
-#DMESG=`dmesg | grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/'`
-DMESG=$(dmesg 2>/dev/null | grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/')
-if [ "${DMESG}" == "" ]; then
-    echo "ERROR: Grep on dmesg failed."
-    echo
-    echo "'dmesg' output"
-    echo "=============="
-    dmesg
-    echo
-    echo "'lsusb' output"
-    echo "=============="
-    lsusb
-    echo
-    echo "'lsusb -t' output"
-    echo "=============="
-    lsusb -t
-    if [[ "${FULLDEV}" == "/dev/serial/by-id"* ]]; then
-        echo
-        echo "'ls -l /dev/serial/by-id' output"
-        echo "================================"
-        ls -l /dev/serial/by-id
-    fi
-    exit 3
-fi
+# Note: Port identification thru dmesg may not be functional when log restarted from scratch
+# # Identifing corresponding port using dmesg
+# # [   11.037185] usb 3-1.2: cp210x converter now attached to ttyUSB0
+# #DMESG=`dmesg | grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/'`
+# DMESG=$(dmesg 2>/dev/null | grep "now attached to ${DEV}" | sed 's/^.*\(usb .*\).*$/\1/')
+# if [ "${DMESG}" == "" ]; then
+#     echo "ERROR: Grep on dmesg failed."
+#     echo
+#     echo "'dmesg' output"
+#     echo "=============="
+#     dmesg
+#     echo
+#     echo "'lsusb' output"
+#     echo "=============="
+#     lsusb
+#     echo
+#     echo "'lsusb -t' output"
+#     echo "=============="
+#     lsusb -t
+#     if [[ "${FULLDEV}" == "/dev/serial/by-id"* ]]; then
+#         echo
+#         echo "'ls -l /dev/serial/by-id' output"
+#         echo "================================"
+#         ls -l /dev/serial/by-id
+#     fi
+#     exit 3
+# fi
+# # TODO: DMESG may contains a list of "now attached to". How to keep most recent/last one ?
 
-# TODO: DMESG may contains a list of "now attached to". How to keep most recent/last one ?
+# #echo "DMESG=$DMESG"
+# DMESG2=`echo ${DMESG} | sed 's/:.*//'` # Remove everything after ':'
+# CONVERTOR=`echo ${DMESG} | awk '{ print $3 }'`
+# # echo "DMESG2='$DMESG2'"
+# PORT=${DMESG2#usb }
+# echo "CONVERTOR=${CONVERTOR}, PORT='${PORT}'"
 
-#echo "DMESG=$DMESG"
-DMESG2=`echo ${DMESG} | sed 's/:.*//'` # Remove everything after ':'
-CONVERTOR=`echo ${DMESG} | awk '{ print $3 }'`
-# echo "DMESG2='$DMESG2'"
-PORT=${DMESG2#usb }
-echo "CONVERTOR=${CONVERTOR}, PORT='${PORT}'"
+# Identifing corresponding port using udevadm
+UDEVADM=`udevadm info --name=${FULLDEV} -q path`
+UDEVADM2=`echo ${UDEVADM} | awk -F'/' '{for(i=1;i<=NF;i++) if($i ~ /^[0-9]+-[0-9.]+$/) print $i}'`
+echo "UDEVADM2=${UDEVADM2}"
+PORT=${UDEVADM2}
 
 # Port identified. Let's do power cycling
 if [ -e "/sys/bus/usb/drivers/usb/unbind" ]; then

@@ -1,5 +1,7 @@
 {
     "KADRILJrollerblind": {
+        "manufacturer": "Ikea",
+        "model": "KADRILJ",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -10,9 +12,6 @@
         },
         "type": "KADRILJ roller blind",
         "commands": {
-            "ZCL Version": {
-                "use": "inf_zbAttr-0000-ZCLVersion"
-            },
             "Up": {
                 "use": "act_zbCmdC-0102-UpOpen"
             },

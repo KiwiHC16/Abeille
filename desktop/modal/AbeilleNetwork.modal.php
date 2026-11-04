@@ -233,7 +233,7 @@
             <br />
             <div id="div_routingTable">
                 <?php
-                    displayNetworks(maxNbOfZigate, "linksTable");
+                    displayNetworks(maxGateways, "linksTable");
                 ?>
                 <br />
                 <!-- <hr> -->
@@ -287,7 +287,7 @@
         <div class="tab-pane" id="idLinksGraphTab">
             <div class="ab-container-left">
                 <?php
-                    displayNetworks(maxNbOfZigate, "linksGraph", "column");
+                    displayNetworks(maxGateways, "linksGraph", "column");
                 ?>
                 <br>
                 Actuel :
@@ -344,7 +344,7 @@
         <div class="tab-pane" id="idRoutesTab">
             <div style="padding:10px">
                 <div style="margin-bottom:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
-                    <?php displayNetworks(maxNbOfZigate, "routes"); ?>
+                    <?php displayNetworks(maxGateways, "routes"); ?>
                 </div>
                 <p style="color:#888; margin-bottom:10px;">{{Firmware Zigate ≥ 3.1d requis}}</p>
                 <div id="idRoutesTableContent">
@@ -357,7 +357,7 @@
         <div class="tab-pane" id="idRouteA2BTab">
             <div style="padding:10px">
                 <div style="margin-bottom:10px">
-                    <?php displayNetworks(maxNbOfZigate, "routeA2B"); ?>
+                    <?php displayNetworks(maxGateways, "routeA2B"); ?>
                 </div>
                 <div style="margin-bottom:12px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
                     <div>
@@ -379,7 +379,7 @@
             <div style="padding:10px">
                 <div id="div_lqiPathAlert" style="display:none"></div>
                 <div style="margin-bottom:10px">
-                    <?php displayNetworks(maxNbOfZigate, "lqiPath"); ?>
+                    <?php displayNetworks(maxGateways, "lqiPath"); ?>
                 </div>
                 <div style="margin-bottom:12px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
                     <div>
@@ -406,7 +406,7 @@
             <div style="padding:10px">
                 <div id="div_bindingsAlert" style="display:none"></div>
                 <div style="margin-bottom:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
-                    <?php displayNetworks(maxNbOfZigate, "bindings"); ?>
+                    <?php displayNetworks(maxGateways, "bindings"); ?>
                 </div>
                 <p style="color:#888; margin-bottom:10px;">{{Table de liaison (binding) de chaque équipement : vers où il envoie ses rapports et commandes. Une liaison vers le coordinateur d'un autre réseau est obsolète (équipement déplacé) : l'équipement cherche cette destination par diffusion à chaque envoi, ce qui charge tout le réseau.}}</p>
                 <div id="idBindingsContent">
@@ -420,7 +420,7 @@
                 <div id="div_clustersAlert" style="display:none"></div>
                 <div style="margin-bottom:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
                     <a class="btn btn-success" onclick="displayClustersTable(0)">{{Tous les réseaux}}</a>
-                    <?php displayNetworks(maxNbOfZigate, "clusters"); ?>
+                    <?php displayNetworks(maxGateways, "clusters"); ?>
                     <input id="idClustersFilter" class="form-control" style="width:220px" placeholder="{{Filtrer les équipements}}" oninput="filterClustersTable()">
                 </div>
                 <p style="color:#888; margin-bottom:10px;">{{Services de chaque point d'accès, tels que l'équipement les déclare : S = serveur, C = client, ? = clients pas encore lus. Un équipement endormi doit être réveillé juste avant d'appuyer sur son bouton.}}</p>
@@ -453,7 +453,7 @@
             Attention: Apres un "Collecter" ou un appui sur le bouton orange il faut rafraichir la page pour mettre a jour les graphiques.<br />
 
             <?php
-                echo '<div style="margin-bottom:10px">'; displayNetworks(maxNbOfZigate, "noise"); echo '</div>';
+                echo '<div style="margin-bottom:10px">'; displayNetworks(maxGateways, "noise"); echo '</div>';
 
                 function afficheGraph( $title, $logicalId, $values ) {
                 // Vertical

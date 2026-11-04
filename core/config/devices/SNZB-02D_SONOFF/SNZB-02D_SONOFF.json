@@ -10,7 +10,8 @@
         },
         "configuration": {
             "icon": "Sonoff-TempHumidityDisplay",
-            "mainEP": "01"
+            "mainEP": "01",
+            "batteryType": "1x3V CR2450"
         },
         "commands": {
             "Battery-Percent": {

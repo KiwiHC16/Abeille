@@ -1,0 +1,273 @@
+{
+    "endPoints": {
+        "01": {
+            "status": "00",
+            "servClusters": {
+                "0000": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "20",
+                            "value": 3
+                        },
+                        "0001": {
+                            "dataType": "20",
+                            "value": 18
+                        },
+                        "0002": {
+                            "dataType": "20",
+                            "value": 2
+                        },
+                        "0003": {
+                            "dataType": "20",
+                            "value": 17
+                        },
+                        "0004": {
+                            "dataType": "42",
+                            "value": "HEIMAN"
+                        },
+                        "0005": {
+                            "dataType": "42",
+                            "value": "JM720ES-EF-3.0"
+                        },
+                        "0006": {
+                            "dataType": "42",
+                            "value": "20260109"
+                        },
+                        "0007": {
+                            "dataType": "30",
+                            "value": 3
+                        },
+                        "0008": {
+                            "dataType": "30",
+                            "value": 193
+                        },
+                        "000D": {
+                            "dataType": "42",
+                            "value": ""
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0001": {
+                    "attributes": {
+                        "0020": {
+                            "dataType": "20",
+                            "value": 3
+                        },
+                        "0021": {
+                            "dataType": "20",
+                            "value": 100
+                        },
+                        "0034": {
+                            "dataType": "20",
+                            "value": 30
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0003": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0020": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "23",
+                            "value": 28800
+                        },
+                        "0001": {
+                            "dataType": "23",
+                            "value": 28800
+                        },
+                        "0002": {
+                            "dataType": "21",
+                            "value": 4
+                        },
+                        "0003": {
+                            "dataType": "21",
+                            "value": 40
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "040C": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "39",
+                            "value": 0
+                        },
+                        "0001": {
+                            "dataType": "39",
+                            "value": 0
+                        },
+                        "0002": {
+                            "dataType": "39",
+                            "value": 1.3998971658604923e-42
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "040E": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "39",
+                            "value": 0
+                        },
+                        "0001": {
+                            "dataType": "39",
+                            "value": 0
+                        },
+                        "0002": {
+                            "dataType": "39",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0500": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "30",
+                            "value": 0
+                        },
+                        "0001": {
+                            "dataType": "31",
+                            "value": 43
+                        },
+                        "0002": {
+                            "dataType": "19",
+                            "value": 32
+                        },
+                        "0010": {
+                            "dataType": "F0",
+                            "value": "00158D00021E13F9"
+                        },
+                        "0011": {
+                            "dataType": "20",
+                            "value": 255
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0502": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "21",
+                            "value": 240
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0B05": {
+                    "attributes": {
+                        "011B": {
+                            "dataType": "21",
+                            "value": 1
+                        },
+                        "011C": {
+                            "dataType": "20",
+                            "value": 228
+                        },
+                        "011D": {
+                            "dataType": "28",
+                            "value": -43
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0019": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "0001": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "0002": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "0003": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "0004": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "0005": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "0006": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "0007": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "0008": {
+                            "dataType": "",
+                            "value": false
+                        },
+                        "FFFD": {
+                            "dataType": "",
+                            "value": false
+                        }
+                    }
+                }
+            },
+            "cliClusters": {
+                "0019": {
+                    "attributes": {
+                        "0000": [],
+                        "0001": [],
+                        "0002": [],
+                        "0003": [],
+                        "0004": [],
+                        "0005": [],
+                        "0006": [],
+                        "0007": [],
+                        "0008": [],
+                        "FFFD": []
+                    }
+                }
+            }
+        }
+    }
+}

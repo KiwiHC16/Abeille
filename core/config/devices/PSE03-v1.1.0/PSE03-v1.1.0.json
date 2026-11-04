@@ -10,13 +10,6 @@
         },
         "type": "Alarm PSE03-v1.1.0",
         "commands": {
-            "ZCL Version": {
-                "use": "inf_zbAttr-0000-ZCLVersion"
-            },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
-            },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0006",

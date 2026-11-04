@@ -78,7 +78,7 @@ Exemple
   Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => '<zbModelId>_<zbManufId>'
 
 * alternateIds: optionnel
-  Permet d'identifier le même équipement avec une signature differente ou vendu sous une autre marque
+  Permet d'identifier le même équipement avec une signature differente (peut-etre vendu sous une autre marque)
   ex: 'TRAFRISignalRepeater' & 'TRAFRIsignalrepeater'
 
 * type: OBLIGATOIRE, courte description du type d'équipement
@@ -185,18 +185,20 @@ La syntaxe actuelle est la suivante :
             "type": "tuya",
             "05": { // DP
                 "function": "rcvValue",
+                "div": 10, // OPTIONNEL si division nécessaire
+                "mult": 10, // OPTIONNEL si multiplication nécessaire
                 "info": "01-measuredValue"
             },
-
-            // Fonctions supportées
-            // 'rcvValue'
-            // 'rcvValueEnum'
-            //     "function": "rcvValueEnum",
-            //     "enum": {
-            //          "00": "single",
-            //          "01": "double",
-            //          "02": "long"
-            //      }
+            "06": { // DP
+                "function": "rcvValueEnum",
+                "enum": {
+                    "00": "auto",
+                    "01": "manual",
+                    "02": "off",
+                    "03": "holliday"
+                },
+                "info": "01-mode"
+            }
         },
 
         "FCC0-0112": { // CLUSTID-ATTRID

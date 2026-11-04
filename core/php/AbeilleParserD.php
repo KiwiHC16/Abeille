@@ -331,7 +331,9 @@
             $GLOBALS['devices'][$net] = [];
 
         if (isset($GLOBALS['devices'][$net][$addr])) {
-            if (($GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] !== null) || ($ieee === null))
+            // Note: Zigate has currently no IEEE stored (upstream d2445a2e2) => no 'ieee' key
+            if (!array_key_exists('ieee', $GLOBALS['devices'][$net][$addr]['zigbee'] ?? []) ||
+                ($GLOBALS['devices'][$net][$addr]['zigbee']['ieee'] !== null) || ($ieee === null))
                 return $GLOBALS['devices'][$net][$addr];
 
             // Addr seen without IEEE (traffic from a new short addr without device announce), IEEE now known.
@@ -512,7 +514,7 @@
     logMessage("info", ">>> Démarrage d'AbeilleParser");
 
     // Check if already running
-    $config = AbeilleTools::getConfig();
+    $config = AbeilleTools::getAndCheckConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));

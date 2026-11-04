@@ -9,9 +9,6 @@
         "comment2": "WARNING: below 2.3.075: suppports binding to groups only, 2.3.075 and greater: supports binding to DEVICES ONLY",
         "timeout": "60",
         "configuration": {
-            "remote": {
-                "type": "bindToDev"
-            },
             "mainEP": "01",
             "icon": "Ikea-OnOffSwitch",
             "batteryType": "1x3V CR2032"

@@ -1,0 +1,12 @@
+{
+    "inf_zbCmdC-0005-Cmd09": {
+        "comment": "Cluster 0005, cmd 09, received from CLIENT side",
+        "comment2": "Out of ZCL spec but used by Ikea",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0005-cmd09",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

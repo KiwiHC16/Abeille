@@ -1,0 +1,55 @@
+{
+    "TH01_Zbeacon": {
+        "manufacturer": "Zbeacon",
+        "model": "TH01",
+        "type": "Zbeacon temperature and humidity sensor",
+        "genericType": "Environment",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Tuya-TempHumidity-2",
+            "batteryType": "?"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "isVisible": 1
+            },
+            "SetReporting 01-0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0402&attrType=29&attrId=0000&minInterval=300&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "0F": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                },
+                "05": {
+                    "function": "rcvValue",
+                    "info": "0402-01-0000",
+                    "div": 10
+                },
+                "6D": {
+                    "function": "rcvValue",
+                    "info": "0405-01-0000"
+                }
+            }
+        }
+    }
+}

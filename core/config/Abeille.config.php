@@ -3,7 +3,12 @@
      * Abeille's static config file
      */
 
-    define('lastDbVersion', 20260525);
+    /* Note: Better to use const instead of define(). 'const' is set at compilation while define at run-time.
+             As a general rule, use const by default for cleaner, faster, and more readable code.
+             Reserve define() only when you strictly need conditional logic, dynamic names, or global initialization patterns. */
+
+    const lastDbVersion = 20260806;
+
     $in = "/tmp/AbeilleDeamonInput";
     $resourcePath = realpath(__DIR__.'/../../resources');
     define('wifiLink', '/tmp/zigateWifi'); // For WIFI: Socat output
@@ -18,19 +23,19 @@
        array['<queueName>'] = array("id" => queueId, "max" => maxMsgSize)
        Note: Prefix = 0xAB xxxx to identify Abeille's queues */
     $abQueues = array();
-    $abQueues["xToParser"] = array( "id" => 0xAB0336, "max" => 2048 );
-    $abQueues["parserToLQI"] = array( "id" => 0xAB00E1, "max" => 2048 );
-    $abQueues["parserToRoutes"] = array( "id" => 0xAB00E2, "max" => 2048 );
-    $abQueues["parserToCli"] = array( "id" => 0xAB02D4, "max" => 1024 );
-    $abQueues["parserToCmdAck"] = array( "id" => 0xAB03E7, "max" => 512 ); // Parser to cmd for 8000/8012/8702 statuses
-    $abQueues["xToCmd"] = array( "id" => 0xAB04BC, "max" => 1024 ); // AbeilleCmd inputs
+    $abQueues["xToParser"] = array( "id" => 0xAB0001, "max" => 2048 );
+    $abQueues["parserToLQI"] = array( "id" => 0xAB0002, "max" => 2048 );
+    $abQueues["parserToRoutes"] = array( "id" => 0xAB0003, "max" => 2048 );
+    $abQueues["parserToCli"] = array( "id" => 0xAB0004, "max" => 1024 );
+    $abQueues["parserToCmdAck"] = array( "id" => 0xAB0005, "max" => 512 ); // Parser to cmd for 8000/8012/8702 statuses
+    $abQueues["xToCmd"] = array( "id" => 0xAB0006, "max" => 1024 ); // AbeilleCmd inputs
     // $abQueues["cmdToMon"] = array( "id" => 0xAB0082, "max" => 512 ); // Messages to zigate (cmd to monitor)
     // $abQueues["parserToMon"] = array( "id" => 0xAB0083, "max" => 1024 ); // Messages from zigate (parser to monitor)
-    $abQueues["xToMon"] = array( "id" => 0xAB0081, "max" => 1024 ); // Messages to monitor (cmd/parser to monitor)
+    $abQueues["xToMon"] = array( "id" => 0xAB0007, "max" => 1024 ); // Messages to monitor (cmd/parser to monitor)
     // $abQueues["monToCmd"] = array( "id" => 0xAB0084, "max" => 1024 ); // Messages to cmd (addr update)
-    $abQueues["parserToAssist"] = array( "id" => 0xAB008D, "max" => 512 ); // Parser to EQ assistant
-    $abQueues["xToMainD"] = array( "id" => 0xAB026D, "max" => 1024 ); // All messages to main daemon (AbeilleMainD).
-    $abQueues["xToAbeille"] = array( "id" => 0xAB026D, "max" => 1024 ); // OBSOLETE !! Use 'xToMainD' instead
+    $abQueues["parserToAssist"] = array( "id" => 0xAB0008, "max" => 512 ); // Parser to EQ assistant
+    $abQueues["xToMainD"] = array( "id" => 0xAB0009, "max" => 1024 ); // All messages to main daemon (AbeilleMainD).
+    $abQueues["xToAbeille"] = array( "id" => 0xAB0009, "max" => 1024 ); // OBSOLETE !! Use 'xToMainD' instead
     $GLOBALS['abQueues'] = $abQueues;
 
     // 3 priorities only: 1=MAX, 2=normal, 3=MIN
@@ -44,10 +49,10 @@
     define('PRIO_NORM', priorityInterrogation); // Normal
     define('PRIO_HIGH', priorityMax); // High priority (ex: parser to cmd to react on wakeup)
 
-    define('maxNbOfZigate', 6); // OBSOLETE !! Use 'maxGateways' instead
-    $GLOBALS['maxNbOfZigate'] = maxNbOfZigate;
-    define('maxGateways', 6); // Number of supported gateways (zigate/ezsp)
-    $GLOBALS['maxGateways'] = maxGateways;
+    const maxGateways = 6; // Number of supported gateways (zigate/ezsp)
+    // $GLOBALS['maxGateways'] = maxGateways; // OBSOLETE !! Use 'maxGateways' instead
+    // define('maxNbOfZigate', maxGateways); // OBSOLETE !! Use 'maxGateways' instead
+    // $GLOBALS['maxNbOfZigate'] = maxGateways; // OBSOLETE !! Use 'maxGateways' instead
 
     define('maxRetryDefault', 3);
 
@@ -56,7 +61,8 @@
     define('urlUserMan', "https://kiwihc16.github.io/AbeilleDoc/");
 
     /* Developer config file */
-    define('dbgFile', __DIR__.'/../../tmp/debug.json');
+    // define('dbgFile', __DIR__.'/../../tmp/debug.json');
+    const dbgFile =  __DIR__.'/../../tmp/debug.json';
 
     /* A bit per daemon */
     define('daemonCmd', 1 << 0);
@@ -84,5 +90,6 @@
     define('daemonMonitor', 1 << 22);
     define('daemonMain', 1 << 23);
 
-    define ("daemonStopTimeout", 5000); // 5sec - was 2sec, too short for daemons stuck on slow/flaky network I/O (zigate WiFi bridge incident 2026-09-09)
+    const daemonStopTimeout = 5000; // 5sec - was 2sec, too short for daemons stuck on slow/flaky network I/O (zigate WiFi bridge incident 2026-09-09)
+    const daemonStartTimeout = 2000; // 2sec
 ?>

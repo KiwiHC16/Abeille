@@ -53,7 +53,6 @@
     function createRuche($dest) {
         $gtwId = substr($dest, 7); // AbeilleX => X
 
-        // $config = AbeilleTools::getConfig();
         $config = $GLOBALS['config']; // Present as global since main daemon
         $eqLogic = eqLogic::byLogicalId($dest."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
@@ -236,7 +235,6 @@
     function createEzspGateway($net) {
         $gtwId = substr($net, 7); // AbeilleX => X
 
-        // $config = AbeilleTools::getConfig();
         $config = $GLOBALS['config']; // Present as global since main daemon
         $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
@@ -278,7 +276,6 @@
         $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
         $eqLogic->setName($eqName);
         $eqLogic->setLogicalId($logicalId);
-        // $config = AbeilleTools::getConfig();
         $config = $GLOBALS['config']; // Present as global since main daemon
         $eqLogic->setObject_id($config['ab::defaultParent']);
         $eqLogic->setConfiguration('IEEE', $ieee);
@@ -290,6 +287,8 @@
         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
         $eqLogic->setIsEnable(1);
         $eqLogic->save();
+
+        updateDevicesCache($eqLogic); // Update local device cache
 
         // TODO ? Missing basic cmds at this step
         // [2025-07-04 12:14:43]   updateTimestamp(): WARNING: Abeille1/F909, missing cmd 'Time-Time'
@@ -316,7 +315,6 @@
             return;
         }
 
-        // $config = AbeilleTools::getConfig();
         $config = $GLOBALS['config']; // Present as global since main daemon
 
         // if (!preg_match("(Time|Link-Quality)", $topic)) {
@@ -324,13 +322,13 @@
         // }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        // demande de creation de ruche au cas ou elle n'est pas deja crée....
-        // La ruche est aussi un objet Abeille
-        if ($topic == "CmdRuche/0000/CreateRuche") {
-            // logMessage('debug', "Topic: ->".$topic."<- Value ->".$payload."<-");
-            createRuche($payload);
-            return;
-        }
+        // // demande de creation de ruche au cas ou elle n'est pas deja crée....
+        // // La ruche est aussi un objet Abeille
+        // if ($topic == "CmdRuche/0000/CreateRuche") {
+        //     // logMessage('debug', "Topic: ->".$topic."<- Value ->".$payload."<-");
+        //     createRuche($payload);
+        //     return;
+        // }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // On ne prend en compte que les message Abeille|Ruche|CmdCreate/#/#
@@ -368,161 +366,6 @@
         $nodeid = $net.'/'.$addr;
         $value = $payload;
         $type = 'topic';         // type = topic car pas json
-
-        // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
-        // Tcharp38: To be removed. This cleanup is now done directly in parser on modelIdentifier receive
-        // if ($cmdId == "0000-01-0005") {
-        //     if ($value == "lumi.sens") {
-        //         $value = "lumi.sensor_ht";
-        //         message::add("Abeille", "lumi.sensor_ht case tracking: ".json_encode($message), '');
-        //     }
-        //     if ($value == "lumi.sensor_swit") $value = "lumi.sensor_switch.aq3";
-        //     if ($value == "TRADFRI Signal Repeater") $value = "TRADFRI signal repeater";
-        // }
-
-        /* Request to create virtual remote control */
-        if ($cmdId == "createRemote") {
-            logMessage('debug', 'message(): createRemote');
-
-            /* Let's compute RC number */
-            $eqLogics = eqLogic::byType('Abeille');
-            $max = 1;
-            foreach ($eqLogics as $key => $eqLogic) {
-                list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
-                if ($net2 != $net)
-                    continue; // Wrong network
-                $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-                $modelName2 = $eqModel ? $eqModel['modelName'] : '';
-                if ($modelName2 != "remotecontrol")
-                    continue; // Not a remote
-                if ($addr2 == '')
-                    continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
-                $addr2 = substr($addr2, 2); // Removing 'rc'
-                if (hexdec($addr2) >= $max)
-                    $max = hexdec($addr2) + 1;
-            }
-
-            /* Remote control short addr = 'rcXX' */
-            $rcAddr = sprintf("rc%02X", $max);
-            $dev = array(
-                'net' => $dest,
-                'addr' => $rcAddr,
-                'modelSource' => 'Abeille',
-                'modelName' => 'remotecontrol',
-                'modelSig' => 'remotecontrol',
-            );
-            Abeille::createDevice("update", $dev);
-
-            return;
-        }
-
-        // /* Request to update device from JSON. Useful to avoid reinclusion */
-        // // No longer be used
-        // if ($cmdId == "updateFromJson") {
-        //     logMessage('debug', 'message(): updateFromJson, '.$net.'/'.$addr);
-
-        //     $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-        //     if (!is_object($eqLogic)) {
-        //         logMessage('debug', '  ERROR: Unknown device');
-        //         return;
-        //     }
-
-        //     // createDevice("update", $dest, $addr);
-        //     $dev = array(
-        //         'net' => $dest,
-        //         'addr' => $addr,
-        //     );
-        //     createDevice("update", $dev);
-
-        //     return;
-        // }
-
-        /* Request to update or reset device from JSON. Useful to avoid reinclusion */
-        if (($cmdId == "updateFromModel") || ($cmdId == "resetFromModel")) {
-            if ($cmdId == 'updateFromModel')
-                $action = 'update';
-            else
-                $action = 'reset';
-            logMessage('debug', 'message(): '.$cmdId.', '.$net.'/'.$addr);
-
-            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!is_object($eqLogic)) {
-                logMessage('error', '  '.$cmdId.': Equipement inconnu: '.$net.'/'.$addr);
-                return;
-            }
-
-            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            $modelSource = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
-            $modelName = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
-            $modelPath = isset($eqModel['modelPath']) ? $eqModel['modelPath'] : '';
-            $modelForced = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
-            $modelSig = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : $modelName;
-            $modelName1 = $modelName;
-
-            // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
-            // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
-            // $eqSig = $eqLogic->getConfiguration('ab::signature', []);
-            // if (($eqSig != []) && ($eqSig['modelId'] != "") && !$modelForced) {
-            //     // Any user or official model ?
-            //     // $modelInfos = findModel($eqSig['modelId'], $eqSig['manufId']);
-            //     $modelInfos = identifyModel($eqSig['modelId'], $eqSig['manufId']);
-            //     if ($modelInfos !== false) {
-            //         $modelSig = $modelInfos['modelSig'];
-            //         $modelName = $modelInfos['modelName'];
-            //         $modelSource = $modelInfos['modelSource'];
-            //         $eqHName = $eqLogic->getHumanName();
-            //     }
-            // }
-            if (($modelName == '') || (($modelName == "defaultUnknown") && !$modelForced)) {
-                // Any better model ?
-                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-                if (isset($zigbee['modelId']) && ($zigbee['modelId'] != "")) {
-                    $modelInfos = identifyModel($zigbee['modelId'], $zigbee['manufId']);
-                    if ($modelInfos !== false) {
-                        $modelSource = $modelInfos['modelSource'];
-                        $modelName = $modelInfos['modelName'];
-                        $modelPath = isset($modelInfos['modelPath']) ? $modelInfos['modelPath'] : '';
-                        $modelSig = $modelInfos['modelSig'];
-                        $eqHName = $eqLogic->getHumanName();
-                        message::add("Abeille", $eqHName.": Mise-à-jour à partir du modèle '{$modelName}'", '');
-                    }
-                }
-            }
-
-            if ($modelName == '') {
-                message::add("Abeille", $eqHName.": Mise-à-jour impossible. Modele non identifié => Réparer", '');
-                return;
-            }
-
-            // Was using a deleted local model ?
-            if ($modelSource == "local") {
-                $fullPath = __DIR__."/../config/devices_local/{$modelName}/{$modelName}.json";
-                if (!file_exists($fullPath)) {
-                    $fullPath = __DIR__."/../config/devices/{$modelName}/{$modelName}.json";
-                    if (file_exists($fullPath)) {
-                        logMessage('debug', "Local model not found => using official one instead");
-                        $modelSource = "Abeille";
-                    } else {
-                        logMessage('debug', "Local model not found but NO official one found.");
-                        return;
-                    }
-                }
-            }
-
-            $dev = array(
-                'net' => $dest,
-                'addr' => $addr,
-                'ieee' => $eqLogic->getConfiguration('IEEE'),
-                'modelSource' => $modelSource, // Model file location
-                'modelName' => $modelName, // Model file name
-                'modelSig' => $modelSig, // Model signature
-            );
-            if ($modelPath != '')
-                $dev['modelPath'] = $modelPath;
-            Abeille::createDevice($action, $dev);
-
-            return;
-        }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Cherche l objet par sa ref short Address et la commande
@@ -582,6 +425,7 @@
 
     /* Deal with messages coming from parser or cmd processes.
        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */
+    // Note: This function should be renamed since there is a single input queue from multiple sources (not only from parser).
     function msgFromParser($msg) {
         global $abQueues;
 
@@ -593,6 +437,118 @@
             $ep = $msg['ep'];
         else
             $ep = '';
+
+        /* Request to create virtual remote control */
+        if ($msg['type'] == "createRemote") {
+            logMessage('debug', "  msgFromParser(): createRemote");
+
+            /* Let's compute RC number */
+            $eqLogics = eqLogic::byType('Abeille');
+            $max = 1;
+            foreach ($eqLogics as $key => $eqLogic) {
+                list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
+                if ($net2 != $net)
+                    continue; // Wrong network
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+                $modelName2 = $eqModel ? $eqModel['modelName'] : '';
+                if ($modelName2 != "remotecontrol")
+                    continue; // Not a remote
+                if ($addr2 == '')
+                    continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
+                $addr2 = substr($addr2, 2); // Removing 'rc'
+                if (hexdec($addr2) >= $max)
+                    $max = hexdec($addr2) + 1;
+            }
+
+            /* Remote control short addr = 'rcXX' */
+            $rcAddr = sprintf("rc%02X", $max);
+            $dev = array(
+                'net' => $net,
+                'addr' => $rcAddr,
+                'modelSource' => 'Abeille',
+                'modelName' => 'remotecontrol',
+                'modelSig' => 'remotecontrol',
+            );
+            Abeille::createDevice("update", $dev);
+
+            return;
+        } // End 'createRemote'
+
+        /* Request to update or reset device from JSON. Useful to avoid reinclusion */
+        if (($msg['type'] == "updateFromModel") || ($msg['type'] == "resetFromModel")) {
+            if ($msg['type'] == 'updateFromModel')
+                $action = 'update';
+            else
+                $action = 'reset';
+            logMessage('debug', 'message(): '.$msg['type'].', '.$net.'/'.$addr);
+
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!is_object($eqLogic)) {
+                logMessage('error', '  '.$msg['type'].': Equipement inconnu: '.$net.'/'.$addr);
+                return;
+            }
+
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $modelSource = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
+            $modelName = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+            $modelPath = isset($eqModel['modelPath']) ? $eqModel['modelPath'] : '';
+            $modelForced = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
+            $modelSig = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : $modelName;
+            $modelName1 = $modelName;
+
+            // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
+            // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
+            if (($modelName == '') || (($modelName == "defaultUnknown") && !$modelForced)) {
+                // Any better model ?
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                if (isset($zigbee['modelId']) && ($zigbee['modelId'] != "")) {
+                    $modelInfos = identifyModel($zigbee['modelId'], $zigbee['manufId']);
+                    if ($modelInfos !== false) {
+                        $modelSource = $modelInfos['modelSource'];
+                        $modelName = $modelInfos['modelName'];
+                        $modelPath = isset($modelInfos['modelPath']) ? $modelInfos['modelPath'] : '';
+                        $modelSig = $modelInfos['modelSig'];
+                        $eqHName = $eqLogic->getHumanName();
+                        message::add("Abeille", $eqHName.": Mise-à-jour à partir du modèle '$modelName'", '');
+                    }
+                }
+            }
+
+            if ($modelName == '') {
+                message::add("Abeille", $eqHName.": Mise-à-jour impossible. Modèle non identifié => Réparer", '');
+                return;
+            }
+
+            // Was using a deleted local model ?
+            if ($modelSource == "local") {
+                $fullPath = __DIR__."/../config/devices_local/$modelName/$modelName.json";
+                if (!file_exists($fullPath)) {
+                    $fullPath = __DIR__."/../config/devices/$modelName/$modelName.json";
+                    if (file_exists($fullPath)) {
+                        logMessage('debug', "Local model not found => using official one instead");
+                        $modelSource = "Abeille";
+                    } else {
+                        logMessage('debug', "Local model not found but NO official one found.");
+                        return;
+                    }
+                }
+            }
+
+            $dev = array(
+                'net' => $net,
+                'addr' => $addr,
+                'ieee' => $eqLogic->getConfiguration('IEEE'),
+                'modelSource' => $modelSource, // Model file location
+                'modelName' => $modelName, // Model file name
+                'modelSig' => $modelSig, // Model signature
+            );
+            if ($modelPath != '')
+                $dev['modelPath'] = $modelPath;
+            Abeille::createDevice($action, $dev);
+            // Note: this call should trig a 'eqUpdated' message meaning cache must be updated from DB
+
+            return;
+        } // End 'updateFromModel' or  'resetFromModel'
 
         /* Log level has changed */
         if ($msg['type'] == "logLevelChanged") {
@@ -654,20 +610,6 @@
 
             return;
         } // End 'removeForcedModel'
-
-        if ($msg['type'] == "updateFromModel") {
-            logMessage('debug', "  msgFromParser(): updateFromModel: ".json_encode($msg, JSON_UNESCAPED_SLASHES));
-            $dev = array(
-                'net' => $net,
-                'addr' => $addr,
-                'ieee' => $ieee,
-                'modelName' => $msg['modelName'],
-                'modelSource' => $msg['modelSource'],
-            );
-            Abeille::createDevice("update", $dev);
-
-            return;
-        } // End 'updateFromModel'
 
         /* Parser has found a new device. Basic Jeedom entry to be created. */
         if ($msg['type'] == "newDevice") {
@@ -819,6 +761,9 @@
             }
             if ($eqChanged) {
                 $eqLogic->save();
+
+                updateDeviceFromDB($eqLogic);
+
             // if (isset($informCmd)) {
                 // Inform cmd that EQ config has changed
                 $msg = array(
@@ -852,7 +797,7 @@
             $logicalId = $net.'/'.$addr;
             $modelName = $msg['modelName'];
             $modelSource = $msg['modelSource']; // 'Abeille' or 'local'
-            logMessage('debug', "  msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$modelName."'".", jsonLoc='".$modelSource."'");
+            logMessage('debug', "  msgFromParser(): Eq announce received for '$net/$addr', ModelName='$modelName', ModelSrc='$modelSource'");
 
             $ieee = $msg['ieee'];
 
@@ -949,7 +894,7 @@
             // 'srcAddr' => $oldAddr,
 
             $oldLogicId = $msg['srcNet'].'/'.$msg['srcAddr'];
-            logMessage('debug', "  msgFromParser(): Device migration from ".$oldLogicId." to ".$net."/".$addr);
+            logMessage('debug', "  msgFromParser(): Device migration from '$oldLogicId' to '$net/$addr'");
 
             $eqLogic = eqLogic::byLogicalId($oldLogicId, 'Abeille');
             if (!is_object($eqLogic)) {
@@ -962,6 +907,10 @@
             $eqLogic->setIsEnable(1);
             $eqLogic->save();
             message::add("Abeille", $eqLogic->getHumanName().": a migré vers le réseau ".$net, '');
+
+            // Update cache
+            $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$msg['srcNet']][$msg['srcAddr']];
+            unset($GLOBALS['devices'][$msg['srcNet']][$msg['srcAddr']]);
 
             // Inform cmd that EQ config has changed
             $msg = array(
@@ -1001,6 +950,12 @@
             return;
         } // End 'eqRemoved2'
 
+        // TODO
+        // /* Some equipments removed from Jeedom. */
+        // if ($msg['type'] == "eqUpdated") {
+        //     logMessage('debug', "  '$net/$addr' infos in DB have been updated");
+        // } // End 'eqUpdated'
+
         /* Parser has received a "leave indication" */
         if ($msg['type'] == "leaveIndication") {
             /* $msg reminder
@@ -1029,7 +984,6 @@
 
                 $ieee2 = $eqLogic2->getConfiguration('IEEE', '');
                 if ($ieee2 == '') {
-                    logMessage('debug', "    WARNING. No IEEE addr in '".$eqLogicId2."' config.");
                     $cmd = $eqLogic2->getCmd('info', 'IEEE-Addr');
                     if (is_object($cmd)) {
                         $ieee2 = $cmd->execCmd();
@@ -1039,8 +993,9 @@
                         //           since IEEE always provided with device announce.
                         $eqLogic2->setConfiguration('IEEE', $ieee2);
                         $eqLogic2->save();
-                        logMessage('debug', "    Missing IEEE addr corrected");
-                    }
+                        logMessage('debug', "    '$eqLogicId2': Missing IEEE addr fixed");
+                    } else
+                        logMessage('debug', "    '$eqLogicId2': WARNING ! Missing IEEE addr and can't fix.");
                 }
                 if ($ieee2 != $ieee)
                     continue; // Not the right equipment
@@ -1049,25 +1004,27 @@
                 break; // No need to go thru other equipments
             }
 
-            if (isset($eqLogic)) {
-                $eqLogic->setIsEnable(0);
-                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-                $zigbee['status'] = 'left';
-                $zigbee['status_time'] = time();
-                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+            if (!isset($eqLogic)) {
+                logMessage('debug', "    WARNING: Device with IEEE '$ieee' NOT found in Jeedom");
+                return;
+            }
 
-                /* Display message only if NOT in include mode */
-                if (checkInclusionStatus($net) !== 1)
-                    message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
+            updateTimestamp($eqLogic, $msg['time'], $msg['lqi'], true);
 
-                $eqLogic->save();
-                $eqLogic->refresh();
-                logMessage('debug', '  '.$eqLogic->getHumanName().' ('.$eqLogic->getLogicalId().') has left the network => DISABLED');
+            $eqLogic->setIsEnable(0);
+            $eqLogic->save();
+            $eqLogic->refresh();
+            logMessage('debug', '  '.$eqLogic->getHumanName().' ('.$eqLogic->getLogicalId().') has left the network => DISABLED');
 
-                updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
-            } else
-                logMessage('debug', '    WARNING: Device with IEEE '.$ieee.' NOT found in Jeedom');
+            /* Display message only if NOT in include mode */
+            if (checkInclusionStatus($net) !== 1)
+                message::add("Abeille", $eqLogic->getHumanName().": A quitté le réseau => désactivé.", '');
 
+            // // Sending generic event to opened pages
+            // event::add('Abeille::generic_event', array(
+            //     'type' => 'eqLeft',
+            //     'eqLogicId' => $eqLogic->getLogicalId()
+            // ));
             return;
         } // End 'leaveIndication'
 
@@ -1149,12 +1106,11 @@
             }
 
             // Updating equipment life status
-    // logMessage('debug', "LA3");
             updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
-    // logMessage('debug', "LA4");
             return;
         } // End 'attributesReportN' or 'readAttributesResponseN'
 
+        // If nothing to report, at least informing device is alive to prevent timeout
         if ($msg['type'] == "deviceAlive") {
             /* $msg reminder
                 'type' => 'deviceAlive',
@@ -1164,13 +1120,6 @@
                 'lqi' => $lqi
             */
             logMessage('debug', "  msgFromParser(): Device '$net/$addr' is ALIVE");
-
-            // $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-            // if (!is_object($eqLogic)) {
-            //     logMessage('debug', "  Unknown device '$net/$addr'");
-            //     return; // Unknown device
-            // }
-            // updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
 
             // Update only if not faster than every 10sec
             updateTimestamp2($net, $addr, $msg['time'], $msg['lqi']);
@@ -1513,12 +1462,13 @@
         return -1;
     }
 
-    /* Update all infos related to last communication time & LQI of given device.
-       This is based on timestamp of last communication received from device itself. */
-    function updateTimestamp($eqLogic, $timestamp, $lqi = null) {
+    /* Update equipment infos related to last communication time & LQI.
+       This is based on timestamp of last communication received from device itself.
+       'lqi' = LQI if known
+       'leftNetwork' = True if device left network */
+    function updateTimestamp($eqLogic, $timestamp, $lqi = null, $leftNetwork = null) {
         $eqLogicId = $eqLogic->getLogicalId();
         $eqId = $eqLogic->getId();
-// logMessage('debug', "LA10");
 
         // logMessage('debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
 
@@ -1527,7 +1477,6 @@
         $lastComm = date('Y-m-d H:i:s', $timestamp);
         $eqLogic->setStatus(array('lastCommunication' => $lastComm, 'ab::lastRealComm' => $lastComm, 'timeout' => 0));
 
-// logMessage('debug', "LA10.1, eqLogicalId=$eqLogicalId, eqId=$eqId");
         /* Tcharp38 note:
            The cases hereafter could be removed. Using 'lastCommunication' allows to no longer
            use these 3 specific & redondant commands. To be discussed. */
@@ -1542,39 +1491,36 @@
         // 'lastCommunication' above, 'online' was only ever set to 1, none of them was used anywhere, and each
         // update cost a cmd event + jeelink listener per received message (group feedback arrived lamp by lamp)
 
-// logMessage('debug', "LA10.2");
 
-// logMessage('debug', "LA10.3");
         list($net, $addr) = explode("/", $eqLogicId);
         if ($addr != "0000") { // Not a gateway
             // Updating corresponding Zigate alive status too
             $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
             $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
             // Warning: lastCommunication update is not transmitted to client as not an info cmd
+
+            // Reminder: zigbee['status'] = 'joined' or 'left' (upstream 5db778e37)
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if ($leftNetwork === true) {
+                $zigbee['status'] = 'left';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            } else if (!isset($zigbee['status']) || ($zigbee['status'] != 'joined')) {
+                $zigbee['status'] = 'joined';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            }
         }
-// logMessage('debug', "LA11");
     }
 
     /* Update all infos related to last communication time & LQI of given device.
        This is based on timestamp of last communication received from device itself.
        Note: For performances enhancements, update is done at max every 10sec. Any changes below would be ignored. */
-    function updateTimestamp2($net, $addr, $timestamp, $lqi = null) {
+    function updateTimestamp2($net, $addr, $timestamp, $lqi = null, $leftNetwork = null) {
 
-        // $GLOBALS['devices'][$net][$addr] now built at startup
-        // if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {
-        //     $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-        //     if (!is_object($eqLogic)) {
-        //         logMessage('debug', "  Unknown device '$net/$addr'");
-        //         return; // Unknown device
-        //     }
-        //     if (!isset($GLOBALS['devices'][$net]))
-        //         $GLOBALS['devices'][$net] = [];
-        //     if (!isset($GLOBALS['devices'][$net][$addr]))
-        //         $GLOBALS['devices'][$net][$addr] = array(
-        //             'eqLogic' => $eqLogic,
-        //             'timestamp' => 0
-        //         );
-        // }
+        // $GLOBALS['devices'][$net][$addr] is built at 'mainD' startup
         if (!isset($GLOBALS['devices'][$net]) || !isset($GLOBALS['devices'][$net][$addr])) {
             logMessage('debug', "  updateTimestamp2(): Unknown device '$net/$addr'");
             return; // Unknown device
@@ -1620,6 +1566,20 @@
             $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
             $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
             // Warning: lastCommunication update is not transmitted to client as not an info cmd
+
+            // Reminder: zigbee['status'] = 'joined' or 'left' (upstream 5db778e37)
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if ($leftNetwork === true) {
+                $zigbee['status'] = 'left';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            } else if (!isset($zigbee['status']) || ($zigbee['status'] != 'joined')) {
+                $zigbee['status'] = 'joined';
+                $zigbee['status_time'] = time();
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            }
         }
     }
 
@@ -1765,7 +1725,7 @@
             // PollingOnCmdChange='' matched too, so Get-Status re-read 0006-0000 in an endless loop.
             if ($cmdLogicId == '' || $cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
                 continue;
-            $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
+            $delay = intval($cmd->getConfiguration('PollingOnCmdChangeDelay', '0'));
             $cmdName = $cmd->getName();
             $trigLogicId = $cmd->getLogicalId();
             if ($delay != 0) {
@@ -1842,10 +1802,46 @@
         // }
     }
 
+    // Update device local cache from DB
+    function updateDeviceFromDB($eqLogic) {
+
+        $eqLogicId = $eqLogic->getLogicalId();
+        list($net, $addr) = explode("/", $eqLogicId);
+        $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
+        if ($gtwId == '')
+            return; // Incorrect case
+
+        // Creating list of cmds sorted by logical ID
+        $jCmdsAll = $eqLogic->getCmd();
+        $cmds = [];
+        foreach ($jCmdsAll as $jCmd) {
+            $cmdLogicId = $jCmd->getLogicalId();
+            $cmds[$cmdLogicId] = array(
+                'name' => $jCmd->getName(),
+                'type' => $jCmd->getType(),
+            );
+        }
+
+        // Storing device in internal DB
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+        if (!isset($GLOBALS['devices'][$net][$addr]))
+            $GLOBALS['devices'][$net][$addr] = array(
+                'eqLogic' => $eqLogic,
+                'timestamp' => 0,
+
+                'cmds' => $cmds
+            );
+    } // End updateDeviceFromDB()
+
+    // // Update device local cache from DB
+    // function updateDeviceFromDB2($net, $addr) {
+    // }
+
     logSetConf("AbeilleMainD.log", true);
     logMessage('info', ">>> Démarrage d'AbeilleMainD");
 
-    $config = AbeilleTools::getConfig();
+    $config = AbeilleTools::getAndCheckConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
@@ -1872,7 +1868,7 @@
 
     // Create/update 'gateway' equipments
     $GLOBALS['config'] = $config;
-    for ($gtwId = 1; $gtwId <= $GLOBALS['maxGateways']; $gtwId++) {
+    for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
         if ($config['ab::gtwPort'.$gtwId] == 'none')
             continue; // Port undefined
 
@@ -1893,27 +1889,22 @@
         }
     }
 
-    /* Internal devices list
+    /* Devices local cache
     $GLOBALS['devices'][$net][$addr]
         $eqLogic
         $timestamp
+
+        $cmds => array[], sorted by cmdLogicId
     */
+    logMessage('debug', "Creating local cache for existing Jeedom devices");
     $GLOBALS['devices'] = [];
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
+        updateDeviceFromDB($eqLogic);
+
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
-        $gtwId = substr($net, 7); // 'AbeilleX' => 'X'
-        if ($gtwId == '')
-            continue; // Incorrect case
-
-        if (!isset($GLOBALS['devices'][$net]))
-            $GLOBALS['devices'][$net] = [];
-        if (!isset($GLOBALS['devices'][$net][$addr]))
-            $GLOBALS['devices'][$net][$addr] = array(
-                'eqLogic' => $eqLogic,
-                'timestamp' => 0
-            );
+        logMessage('debug', "  $eqLogicId=".json_encode($GLOBALS['devices'][$net][$addr], JSON_UNESCAPED_SLASHES));
     }
 
     try {

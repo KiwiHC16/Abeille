@@ -1,5 +1,7 @@
 {
     "GUNNARPpanelround": {
+        "manufacturer": "Ikea",
+        "model": "Gunnarp",
         "comment": "IKEA LED ceiling/wall lamp, white dimmable, white spectrum, 40 cm",
         "comment 2": "https://www.ikea.com/jo/en/p/gunnarp-led-ceiling-wall-lamp-white-dimmable-white-spectrum-40360076/",
         "timeout": "60",
@@ -12,9 +14,17 @@
         },
         "type": "IKEA GUNNARP",
         "commands": {
-            "etat": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
+            },
+            "Set Level": {
+                "use": "act_setLevel-Percent-Light",
+                "isVisible": 1
+            },
+            "Get-CurrentLevel": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
             },
             "CurrentLevel-0008": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
@@ -26,10 +36,6 @@
             },
             "Off": {
                 "use": "act_zbCmdC-0006-Off",
-                "isVisible": 1
-            },
-            "Set Level": {
-                "use": "act_setLevel-Percent-Light",
                 "isVisible": 1
             },
             "Set 2200K": {
@@ -60,14 +66,6 @@
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
-            },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",

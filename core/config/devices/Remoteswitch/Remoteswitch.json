@@ -12,6 +12,7 @@
             "light": "1"
         },
         "type": "Legrand remote switch",
+        "genericType": "Electricity",
         "commands": {
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
@@ -63,7 +64,8 @@
                 "use": "sceneGroupRecall3"
             },
             "Up-Down": {
-                "use": "Up-Down"
+                "use": "inf_zbCmdC-0008-MoveToLevel",
+                "isVisible": 1
             },
             "Click-Middle": {
                 "use": "Click-Middle"

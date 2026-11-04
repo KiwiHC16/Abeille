@@ -3,8 +3,8 @@
      - list of EP
      - list of clusters
      - list of attributes
-     URL of this page should contain 'id' of EQ
-     -->
+    URL of this page should contain 'id' of EQ
+  -->
 
 <?php
     require_once __DIR__.'/../../core/config/Abeille.config.php';
@@ -39,8 +39,8 @@
     list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-    $jsonName = $eqModel ? $eqModel['modelName'] : '';
-    $jsonLocation = $eqModel ? $eqModel['modelSource'] : 'Abeille';
+    $modelName = $eqModel ? $eqModel['modelName'] : '';
+    $modelSource = $eqModel ? $eqModel['modelSource'] : 'Abeille';
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
     $abQueues = $GLOBALS['abQueues'];
@@ -48,8 +48,8 @@
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS
-    echo '<script>var js_jsonName = "'.$jsonName.'";</script>'; // PHP to JS
-    echo '<script>var js_jsonLocation = "'.$jsonLocation.'";</script>'; // PHP to JS
+    echo '<script>var js_jsonName = "'.$modelName.'";</script>'; // PHP to JS
+    echo '<script>var js_jsonLocation = "'.$modelSource.'";</script>'; // PHP to JS
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
 
@@ -124,6 +124,13 @@
                     <?php echo '<input type="text" value="'.$eqIeee.'" readonly>'; ?>
                 </div>
             </div>
+            <div class="row">
+                <label class="col-lg-2 control-label" for="fname">MAC capabilities:</label>
+                <div class="col-lg-4">
+                    <a id="idMacCapaRB" class="btn btn-warning" title="Demande les MAC capabilities" onclick="requestInfos('nodeDesc')"><i class="fas fa-sync"></i></a>
+                    <input type="text" id="idMacCapa" value="" readonly>
+                </div>
+            </div>
 
             <br>
 
@@ -183,15 +190,15 @@
                     <label class="col-lg-2 control-label" for="fname">Nom de fichier:</label>
                     <div class="col-lg-10">
                         <?php
-                            // if ($jsonName == '')
+                            // if ($modelName == '')
                             //     echo '<input id="idJsonName" type="text" value="-- Non défini --">';
-                            // else if (!file_exists(__DIR__.'/../../core/config/devices/'.$jsonName.'/'.$jsonName.'.json'))
-                            //     echo '<input id="idJsonName" type="text" value="'.$jsonName.' (n\'existe pas)">';
+                            // else if (!file_exists(__DIR__.'/../../core/config/devices/'.$modelName.'/'.$modelName.'.json'))
+                            //     echo '<input id="idJsonName" type="text" value="'.$modelName.' (n\'existe pas)">';
                             // else
-                                echo '<input id="idJsonName" type="text" value="'.$jsonName.'">';
+                                echo '<input id="idJsonName" type="text" value="'.$modelName.'">';
                         ?>
                         <a class="btn btn-default" title="(Re)lire" onclick="readDeviceModel()">(Re)lire</a>
-                        <a class="btn btn-alert" title="Créer/mettre à jour le modèle JSON" onclick="writeModel()">Ecrire modèle</a>
+                        <a class="btn btn-alert" title="Créer/mettre à jour le modèle JSON" onclick="writeDeviceModel()">Ecrire modèle</a>
                         <a class="btn btn-default" title="Télécharger le modèle JSON" onclick="downloadConfig()"><i class="fas fa-file-download"></i> Télécharger modèle</a>
                         <a class="btn btn-default" title="Importer un 'discovery.json'" onclick="importDiscovery()"><i class="fas fa-file-upload"></i> Importer 'discovery'</a>
                     </div>
@@ -304,11 +311,37 @@
 <!-- </div> -->
 
 <script>
-    var eq = new Object(); // Equipement details
+    /* Informations from model
+       Reminder:
+        var eq = new Object(); // Equipement details
+        eq.zgNb = js_zgNb; // Zigate number, number
+        eq.id = js_eqId; // Jeedom ID, number
+        eq.addr = js_eqAddr; // Short addr, hex string
+        eq.epCount = 0; // Number of EP, number
+        eq.endPoints = new Array(); // Array of objects
+            // ep = eq.endPoints[epIdx] = new Object(); // End Point object
+            // ep.id = 0; // EP id/number
+            // ep.servClustCount = 0; // IN clusters count
+            // ep.servClustList = new Array();
+            // ep.cliClustCount = 0; // OUT clusters count
+            // ep.cliClustList = new Array();
+            //     clust = new Object();
+            //     clust.id = "0000"; // Cluster id, hex string
+            //     clust.attrList = new Array(); // Attributs for this cluster
+            //         a = new Object(); // Attribut object
+            //         a.type = "00"; // Attribut type, hex string => ??? Data type ? What for ???
+            //         a.id = "0000"; // Attribut id, hex string
+            // TODO: Missing supported zigbee commands list
+            //       Currently assuming all commands from the standard are supported
+        eq.commands = new Object(); // Commands list
+    */
+    var eq = new Object(); // Equipement details (model)
     eq.zgNb = js_zgNb; // Zigate number, number
     eq.jId = js_eqId; // Jeedom ID, number
     eq.addr = js_eqAddr; // Short addr, hex string
     eq.ieee = js_eqIeee; // Short addr, hex string
+
+    /* Informations from Zigbee interrogation */
     zigbee = new Object(); // Zigbee interrogation datas
         // zigbee.epCount = 0; // Number of EP, number
         // zigbee.endPoints = new Array(); // Array of objects
@@ -329,326 +362,7 @@
     if (js_jsonName != '')
         readDeviceModel();
 
-    // /* Attempt to detect main supported attributs */
-    // function refreshAttributsList(epIdx, cliClust, clustIdx) {
-    //     console.log("refreshAttributsList(epIdx="+epIdx+", cliClust="+cliClust+", clustIdx="+clustIdx+")");
-
-    //     ep = eq.endPoints[epIdx];
-    //     epNb = ep.id;
-    //     if (cliClust)
-    //         clust = ep.cliClustList[clustIdx];
-    //     else
-    //         clust = ep.servClustList[clustIdx];
-    //     clustId = clust.id;
-
-    //     // idServClustx => table of input clusters (col1=clustId, col2+=attribut)
-    //     // idCliClustx => table of output clusters (col1=clustId, col2+=attribut)
-    //     if (cliClust) {
-    //         var clustTable = document.getElementById("idCliClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     } else {
-    //         var clustTable = document.getElementById("idServClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     }
-    //     /* Cleanup tables: remove all columns except first one (cluster ID) */
-    //     var colCount = line.cells.length;
-    //     for (var i = colCount - 1; i >= 1; i--) {
-    //         line.deleteCell(i);
-    //     }
-
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
-    //         data: {
-    //             action: 'detectAttributs',
-    //             zgNb: js_zgNb,
-    //             eqAddr: js_eqAddr,
-    //             eqEP: epNb, // EP number
-    //             clustId: clustId,
-    //         },
-    //         dataType: 'json',
-    //         global: false,
-    //         async: false,
-    //         error: function (request, status, error) {
-    //             bootbox.alert("ERREUR 'detectAttributs' !<br>Votre installation semble corrompue.<br>"+error);
-    //         },
-    //         success: function (json_res) {
-    //             res = JSON.parse(json_res.result);
-    //             if (res.status != 0)
-    //                 console.log("error="+res.error);
-    //             else {
-    //                 console.log("res.resp follows:");
-    //                 console.log(res.resp);
-    //                 var resp = res.resp;
-
-    //                 attributes = resp.Attributes;
-    //                 let attrCount = attributes.length;
-    //                 console.log("nb of attr="+attrCount)
-    //                 for (attrIdx = 0; attrIdx < attrCount; attrIdx++) {
-    //                     rattr = attributes[attrIdx];
-    //                     if (rattr.Status != "00")
-    //                         continue;
-
-    //                     a = new Object();
-    //                     a.id = rattr.Id;
-    //                     // a.type = rattr.Type;
-    //                     clust.attrList.push(a);
-
-    //                     var newCol = line.insertCell(-1);
-    //                     newCol.innerHTML = rattr.Id;
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
-
-    // /* Use 0140+8002 cmd to get supported attributs list */
-    // function refreshAttributsList0140(epIdx, cliClust, clustIdx) {
-    //     console.log("refreshAttributsList0140(epIdx="+epIdx+", cliClust="+cliClust+", clustIdx="+clustIdx+")");
-
-    //     ep = eq.endPoints[epIdx];
-    //     epNb = ep.id;
-    //     if (cliClust)
-    //         clust = ep.cliClustList[clustIdx];
-    //     else
-    //         clust = ep.servClustList[clustIdx];
-    //     clustId = clust.id;
-
-    //     // idServClustx => table of input clusters (col1=clustId, col2+=attribut)
-    //     // idCliClustx => table of output clusters (col1=clustId, col2+=attribut)
-    //     if (cliClust) {
-    //         var clustTable = document.getElementById("idCliClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     } else {
-    //         var clustTable = document.getElementById("idServClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     }
-    //     /* Cleanup tables: remove all columns except first one (cluster ID) */
-    //     var colCount = line.cells.length;
-    //     for (var i = colCount - 1; i >= 1; i--) {
-    //         line.deleteCell(i);
-    //     }
-
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
-    //         data: {
-    //             action: 'getAttrDiscResp',
-    //             zgNb: js_zgNb,
-    //             eqAddr: js_eqAddr,
-    //             eqEP: epNb, // EP number
-    //             clustId: clustId,
-    //         },
-    //         dataType: 'json',
-    //         global: false,
-    //         async: false,
-    //         error: function (request, status, error) {
-    //             bootbox.alert("ERREUR 'getAttrDiscResp' !<br>Votre installation semble corrompue.<br>"+error);
-    //         },
-    //         success: function (json_res) {
-    //             res = JSON.parse(json_res.result);
-    //             if (res.status != 0)
-    //                 console.log("error="+res.error);
-    //             else {
-    //                 console.log("res.resp follows:");
-    //                 console.log(res.resp);
-    //                 var resp = res.resp;
-
-    //                 attributes = resp.Attributes;
-    //                 let attrCount = attributes.length;
-    //                 console.log("nb of attr="+attrCount)
-    //                 for (attrIdx = 0; attrIdx < attrCount; attrIdx++) {
-    //                     rattr = attributes[attrIdx];
-
-    //                     a = new Object();
-    //                     a.id = rattr.Id;
-    //                     // a.type = rattr.Type;
-    //                     clust.attrList.push(a);
-
-    //                     var newCol = line.insertCell(-1);
-    //                     newCol.innerHTML = rattr.Id;
-    //                 }
-    //             }
-    //         }
-    //     });
-    // }
-
-    // function getAttributsList(epIdx, cliClust, clustIdx) {
-    //     console.log("getAttributsList(epIdx="+epIdx+", cliClust="+cliClust+", clustIdx="+clustIdx+")");
-
-    //     ep = eq.endPoints[epIdx];
-    //     epNb = ep.id;
-    //     if (cliClust)
-    //         clust = ep.cliClustList[clustIdx];
-    //     else
-    //         clust = ep.servClustList[clustIdx];
-    //     clustId = clust.id;
-    //     document.getElementById("idStatus").value = "EP"+epNb+"/Clust"+clustId+": recherche des 'Attributs'";
-
-    //     // idServClustx => table of input clusters (col1=clustId, col2+=attribut)
-    //     // idCliClustx => table of output clusters (col1=clustId, col2+=attribut)
-    //     if (cliClust) {
-    //         var clustTable = document.getElementById("idCliClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     } else {
-    //         var clustTable = document.getElementById("idServClust"+epIdx);
-    //         var line = clustTable.rows[clustIdx];
-    //     }
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
-    //         data: {
-    //             action: 'getAttrDiscResp',
-    //             zgNb: js_zgNb,
-    //             eqAddr: js_eqAddr,
-    //             eqEP: epNb, // EP number
-    //             clustId: clustId,
-    //         },
-    //         dataType: 'json',
-    //         global: false,
-    //         async: false,
-    //         error: function (request, status, error) {
-    //             bootbox.alert("ERREUR 'getAttrDiscResp' !<br>Votre installation semble corrompue.<br>"+error);
-    //         },
-    //         success: function (json_res) {
-    //             res = JSON.parse(json_res.result);
-    //             if (res.status != 0)
-    //                 console.log("error="+res.error);
-    //             else {
-    //                 console.log("res.resp follows:");
-    //                 console.log(res.resp);
-    //                 var resp = res.resp;
-
-    //                 a = new Object();
-    //                 a.type = resp.AttrType;
-    //                 a.id = resp.AttrId;
-    //                 clust.attrList.push(a);
-
-    //                 var newCol = line.insertCell(-1);
-    //                 newCol.innerHTML += a.id+"/"+a.type;
-
-    //                 document.getElementById("idStatus").value = "";
-    //             }
-    //         }
-    //     });
-    // }
-
-//     /* openReturnChannel EQ to get clusters list. */
-//     function refreshClustersList(epIdx) {
-//         console.log("refreshClustersList(epIdx="+epIdx+")");
-
-//         ep = eq.endPoints[epIdx];
-//         epNb = ep.id;
-//         document.getElementById("idStatus").value = "EP"+epNb+": recherche des 'Clusters'";
-
-//         // idServClustx => table of input clusters (col1=clustId, col2+=attribut)
-//         // idCliClustx => table of output clusters (col1=clustId, col2+=attribut)
-//         var servClustTable = document.getElementById("idServClust"+epIdx);
-//         var cliClustTable = document.getElementById("idCliClust"+epIdx);
-//         /* Cleanup tables */
-//         var rowCount = servClustTable.rows.length;
-//         for (var i = rowCount - 1; i >= 0; i--) {
-//             servClustTable.deleteRow(i);
-//         }
-//         rowCount = cliClustTable.rows.length;
-//         for (i = rowCount - 1; i >= 0; i--) {
-//             cliClustTable.deleteRow(i);
-//         }
-
-//         /* Do the request to EQ */
-//         $.ajax({
-//             type: 'POST',
-//             url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
-//             data: {
-//                 action: 'getSingleDescResp',
-//                 zgNb: js_zgNb,
-//                 eqAddr: js_eqAddr,
-//                 eqEP: epNb, // EP number
-//             },
-//             dataType: 'json',
-//             global: false,
-//             async: false,
-//             error: function (request, status, error) {
-//                 bootbox.alert("ERREUR 'getSingleDescResp' !<br>Votre installation semble corrompue.<br>"+error);
-//                 document.getElementById("idStatus").value = "ERROR clusters";
-//             },
-//             success: function (json_res) {
-//                 res = JSON.parse(json_res.result);
-//                 if (res.status != 0) {
-//                     console.log("error="+res.error);
-//                     status = -1;
-//                     document.getElementById("idStatus").value = "ERROR clusters";
-//                 } else {
-//                     console.log("res.resp follows:");
-//                     console.log(res.resp);
-//                     var resp = res.resp;
-
-// console.log("eq follows:");
-// console.log(eq);
-//                     ep.servClustCount = resp.servClustCount;
-//                     ep.servClustList = []; // List of objects
-//                     ep.cliClustCount = resp.cliClustCount;
-//                     ep.cliClustList = []; // List of objects
-//                     for (clustIdx = 0; clustIdx < resp.servClustCount; clustIdx++) {
-//                         clust = new Object();
-//                         clust.id = resp.servClustList[clustIdx];
-//                         clust.attrList = new Array();
-//                         ep.servClustList.push(clust);
-
-//                         var newRow = servClustTable.insertRow(-1);
-//                         var newCol = newRow.insertCell(0);
-// 	                    newCol.innerHTML = resp.servClustList[clustIdx]
-//                         // newCol.innerHTML += '<a class="btn btn-warning" title="Raffraichi la liste des attributs" onclick="refreshAttributsList('+epIdx+', 0, '+clustIdx+')"><i class="fas fa-sync"></i></a>';
-//                         newCol.innerHTML += '<a class="btn btn-warning" title="Raffraichi la liste des attributs 0140" onclick="refreshAttributsList0140('+epIdx+', 0, '+clustIdx+')"><i class="fas fa-sync"></i></a>';
-//                     }
-//                     for (clustIdx = 0; clustIdx < resp.cliClustCount; clustIdx++) {
-//                         clust = new Object();
-//                         clust.id = resp.cliClustList[clustIdx];
-//                         clust.attrList = new Array();
-//                         ep.cliClustList.push(clust);
-
-//                         var newRow = cliClustTable.insertRow(-1);
-//                         var newCol = newRow.insertCell(0);
-// 	                    newCol.innerHTML = resp.cliClustList[clustIdx];
-//                         // newCol.innerHTML += '<a class="btn btn-warning" title="Raffraichi la liste des attributs" onclick="refreshAttributsList('+epIdx+', 1, '+clustIdx+')"><i class="fas fa-sync"></i></a>';
-//                         newCol.innerHTML += '<a class="btn btn-warning" title="Raffraichi la liste des attributs 0140" onclick="refreshAttributsList0140('+epIdx+', 1, '+clustIdx+')"><i class="fas fa-sync"></i></a>';
-//                    }
-//                     status = 0;
-//                     document.getElementById("idStatus").value = "";
-//                 }
-//             }
-//         });
-//         console.log("refreshClustersList() END, status="+status);
-//         return status;
-//     }
-
-
-
-    /* Reminder
-    var eq = new Object(); // Equipement details
-    eq.zgNb = js_zgNb; // Zigate number, number
-    eq.id = js_eqId; // Jeedom ID, number
-    eq.addr = js_eqAddr; // Short addr, hex string
-    eq.epCount = 0; // Number of EP, number
-    eq.endPoints = new Array(); // Array of objects
-        // ep = eq.endPoints[epIdx] = new Object(); // End Point object
-        // ep.id = 0; // EP id/number
-        // ep.servClustCount = 0; // IN clusters count
-        // ep.servClustList = new Array();
-        // ep.cliClustCount = 0; // OUT clusters count
-        // ep.cliClustList = new Array();
-        //     clust = new Object();
-        //     clust.id = "0000"; // Cluster id, hex string
-        //     clust.attrList = new Array(); // Attributs for this cluster
-        //         a = new Object(); // Attribut object
-        //         a.type = "00"; // Attribut type, hex string => ??? Data type ? What for ???
-        //         a.id = "0000"; // Attribut id, hex string
-        // TODO: Missing supported zigbee commands list
-        //       Currently assuming all commands from the standard are supported
-    eq.commands = new Object(); // Commands list
-    */
-
-    /* Read JSON.
+    /* Read JSON device model.
        Called from JSON read/reload button. */
     function readDeviceModel() {
 
@@ -726,19 +440,25 @@
         });
     }
 
-    /* Display device infos in JSON area. */
+    /* Display device infos. */
     function displayDevice() {
         console.log("displayDevice()");
 
         if (typeof eq.icon !== 'undefined')
             document.getElementById("idIcon").value = eq.icon;
+        else
+            document.getElementById("idIcon").value = "?";
         if (typeof eq.batteryType !== 'undefined')
             document.getElementById("idBattery").value = eq.batteryType;
+        else
+            document.getElementById("idBattery").value = "?";
         if (typeof eq.defaultEp !== 'undefined')
             document.getElementById("idMainEP").value = eq.defaultEp;
+        else
+            document.getElementById("idMainEP").value = "?";
     }
 
-    /* Display commands in JSON column (coming either from JSON file or Zigbee discovery). */
+    /* Display commands (coming either from JSON model file or Zigbee discovery). */
     function displayCommands() {
         console.log("displayCommands()");
 
@@ -909,8 +629,23 @@
 
     /* Generate JSON model based on zigbee discovery datas */
     function zigbeeToModel() {
+
         console.log("zigbeeToModel()");
-        console.log("zigbee", zigbee);
+        console.log("zigbee=", zigbee);
+
+        var cmds = new Object();
+        var cmdNb = 0;
+        endPoints = zigbee.endPoints;
+        mainEp = -1;
+        minTimeout = 60; // Min timeout = 60min
+        if (typeof zigbee.macCapa != "undefined") {
+            mc = parseInt(zigbee.macCapa, 16);
+            if ((mc >> 3) & 1)
+                rxOnWhenIdle = true;
+            else
+                rxOnWhenIdle = false;
+        } else
+            rxOnWhenIdle = false;
 
         /* Jeedom commands naming reminder:
            - for attributes: ['Get-'/'Set-'/''][EP]-<clustId>-<attribute_name>
@@ -918,11 +653,6 @@
            EP is optional and must be set only if same
              attribute or command exists in another EP.
          */
-        var cmds = new Object();
-        var cmdNb = 0;
-        endPoints = zigbee.endPoints;
-        mainEp = -1;
-        minTimeout = 60; // Min timeout = 60min
 
         // 0000/Basic cluster on all EP
         for (var epId in endPoints) {
@@ -952,10 +682,12 @@
                 if (typeof zigbee.signature === "undefined")
                     zigbee.signature = new Object();
                 if (isset(attributes['0004'])) {
-                    zigbee.signature['manufacturer'] = attributes['0004']['value'];
+                    if (typeof zigbee.signature['manufacturer'] === "undefined")
+                        zigbee.signature['manufacturer'] = attributes['0004']['value'];
                 }
                 if (isset(attributes['0005'])) {
-                    zigbee.signature['model'] = attributes['0005']['value'];
+                    if (typeof zigbee.signature['model'] === "undefined")
+                        zigbee.signature['model'] = attributes['0005']['value'];
                 }
             }
         }
@@ -983,9 +715,11 @@
 
             /* 0003/Identify cluster */
             if (typeof ep.servClusters["0003"] !== "undefined") {
-                cmds["Identify"] = newCmd("act_zbCmdC-Identify");
-                // cmds["Identify"]["isVisible"] = 1; // Hidden by default. Rarely used
-                cmds["Identify"]["nextLine"] = "after";
+                if (rxOnWhenIdle) {
+                    cmds["Identify"] = newCmd("act_zbCmdC-Identify");
+                    // cmds["Identify"]["isVisible"] = 1; // Hidden by default. Rarely used
+                    cmds["Identify"]["nextLine"] = "after";
+                }
             }
 
             /* 0004/Groups cluster */
@@ -1219,7 +953,8 @@
             if (isset(ep.servClusters["0402"]) && isset(ep.servClusters["0402"]['attributes'])) {
                 attributes = ep.servClusters["0402"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Get Temperature"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
+                    if (rxOnWhenIdle)
+                        cmds["Get Temperature"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
 
                     cmds["Temperature"] = newCmd("inf_zbAttr-0402-MeasuredValue", "ep="+epId);
                     cmds["Temperature"]["isVisible"] = 1;
@@ -1232,11 +967,33 @@
                 }
             }
 
+            /* 0403/Pressure cluster */
+            if (isset(ep.servClusters["0403"]) && isset(ep.servClusters["0403"]['attributes'])) {
+                attributes = ep.servClusters["0403"]['attributes'];
+                if (isset(attributes['0000'])) {
+                    if (rxOnWhenIdle)
+                        cmds["Get Pressure"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
+
+                    cmds["Pressure"] = newCmd("inf_zbAttr-0403-MeasuredValue", "ep="+epId);
+                    cmds["Pressure"]["isVisible"] = 1;
+                    cmds["Pressure"]["unit"] = "hPa";
+                    // Note: 0403-0000 currently reported in 'kPa' by parser. Converting to more standard 'hPa'
+                    cmds["Pressure"]["calculValueOffset"] = "#value#*10";
+
+                    cmds["SetReporting "+epId+"-0403-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0403&attrId=0000&attrType=29&minInterval=540&maxInterval=600", "yes");
+                    cmds["SetReporting "+epId+"-0403-0000"]["comment"] = "Reporting every 9 to 10mins";
+                    cmds["Bind "+epId+"-0403-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0403", "yes");
+                    if (minTimeout > 10)
+                        minTimeout = 10;
+                }
+            }
+
             /* 0405/Humidity cluster */
             if (isset(ep.servClusters["0405"]) && isset(ep.servClusters["0405"]['attributes'])) {
                 attributes = ep.servClusters["0405"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
+                    if (rxOnWhenIdle)
+                        cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
 
                     cmds["Humidity"] = newCmd("inf_zbAttr-0405-MeasuredValue", "ep="+epId);
                     cmds["Humidity"]["isVisible"] = 1;
@@ -1443,10 +1200,8 @@
         }
         js_jsonName = zbModel+"_"+zbManuf;
         document.getElementById("idJsonName").value = js_jsonName;
-        document.getElementById("idMainEP").value = eq.defaultEp;
-        if (zigbee.powerSource == "battery")
-            document.getElementById("idBattery").value = "?";
-        document.getElementById("idIcon").value = "?";
+
+        displayDevice();
         displayCommands();
     } // End zigbeeToModel()
 
@@ -1543,10 +1298,10 @@
         return false;
     }
 
-    /* Update/create JSON file.
+    /* Update/create JSON device model file.
        Destination is always "devices_local" */
-    function writeModel() {
-        console.log("writeModel()");
+    function writeDeviceModel() {
+        console.log("writeDeviceModel()");
 
         /* Check if mandatory infos are there */
         if (checkMissingInfos() == false)
@@ -1710,6 +1465,9 @@
         } else if (infoType == "clustersList") {
             topic = "Cmd"+logicalId+"_getSimpleDescriptor";
             payload = "ep="+epId;
+        } else if (infoType == "nodeDesc") {
+            topic = "Cmd"+logicalId+"_getNodeDescriptor";
+            payload = "";
         } else if (infoType == "attribList") {
             topic = "Cmd"+logicalId+"_discoverAttributes";
             payload = "ep="+epId+"_clustId="+clustId+"_startAttrId=0000_maxAttrId=FF_dir="+option;
@@ -1869,7 +1627,25 @@ console.log("missing value for "+attrId);
         for (const [idx, msg] of Object.entries(res)) {
             // console.log("msg="+msg.type);
 
-            if (msg.type == "activeEndpoints") {
+            if (msg.type == "nodeDesc") {
+                // 'type' => 'nodeDesc',
+                // 'net' => $net,
+                // 'addr' => $srcAddr,
+                // 'logicalType' => $logicalType,
+                // 'macCapa' => $macCapa,
+
+                // Update display
+                elm = document.getElementById("idMacCapa");
+                elm.value = msg.macCapa;
+                changeClass("idMacCapaRB", "btn-warning", "btn-success");
+
+                // Update internal datas
+                zigbee.macCapa = msg.macCapa;
+                zigbee.logicalType = msg.logicalType;
+
+                // Request next step
+                requestInfos('epList');
+            } else if (msg.type == "activeEndpoints") {
                 // 'src' => 'parser',
                 // 'type' => 'activeEndpoints',
                 // 'net' => $dest,
@@ -2443,7 +2219,8 @@ console.log("missing value for "+attrId);
         xhttp.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?queueId="+js_queueXToParser+"&msg=type:sendToCli_net:Abeille"+js_zgNb+"_addr:"+js_eqAddr+"_ieee:"+js_eqIeee, true);
         xhttp.send();
 
-        requestInfos('epList');
+        // requestInfos('epList');
+        requestInfos('nodeDesc');
     });
 
     /* Update Jeedom infos based on current JSON part */

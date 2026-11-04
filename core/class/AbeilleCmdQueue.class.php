@@ -823,6 +823,9 @@
                         }
                         else {
                             cmdLog("debug", "  WARNING: Cmd ".$cmd['cmd']." failed (err {$msgStatus}). Will be retried ".$cmd['try']." time(s) max.");
+                            // Upstream e1c42648f: mark unsent so it can be retried, and free its in-flight slot
+                            $cmd['status'] = '';
+                            array_splice($GLOBALS['zigates'][$zgId]['sentSlots'], 0, 1);
                             $GLOBALS['zigates'][$zgId]['availTime'] = microtime(true) + 1.0;
                         }
                     }

@@ -405,7 +405,7 @@
     if ($zgId == -1) {
         logMessage("", "Request to interrogate all active zigates");
         $zgStart = 1;
-        $zgEnd = maxNbOfZigate;
+        $zgEnd = maxGateways;
     } else {
         logMessage("", "Request to interrogate zigate ".$zgId." only");
         $zgStart = $zgId;

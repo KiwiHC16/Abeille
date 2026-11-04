@@ -23,6 +23,12 @@ Format: 1 or more datapoints
 
     AttributeValue = DpID DpType DpLen DpValue [DpID DpType DpLen DpVal] ...
 
+    Possible DP types:
+        00/raw
+        01/bool
+        02/value
+        03/string
+
 Legacy support in device models
 ===============================
 
@@ -45,10 +51,22 @@ Handling Tuya private cluster is done thru "private" structure
                             "info": "inf_click1"
                         },
                         "0C": {
-                            "function": "rcvValve-Status"
+                            "function": "rcvValueEnum",
+                            "enum": {
+                                "00": "OFF",
+                                "01": "ON"
+                            },
+                            info "0006-01-0000"
                         },
                         "12": {
-                            "function": "rcvThermostat-Mode"
+                            "function": "rcvValueEnum",
+                            "enum": {
+                                "00": "auto",
+                                "01": "manual",
+                                "02": "off",
+                                "03": "holliday"
+                            },
+                            "info": "01-mode"
                         }
                     }
                 }
@@ -66,8 +84,6 @@ Possible functions:
     rcvValueMult => OBSOLETE !! Use 'rcvValue' with 'mult' declared.
     rcvValueEnum => Convert value to string.
     rcvValue0Is1 => If 0, 1 (true) transmitted to Jeedom, else 0 (false).
-    rcvValve-Status => TO REMOVE. Identical to rcvValueEnum with "ON" & "OFF" strings ?
-    rcvThermostat-Mode => TO REMOVE. Identical to rcvValueEnum with modes as strings ?
 
 Zosung protocol
 ===============

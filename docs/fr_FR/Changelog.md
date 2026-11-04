@@ -1,5 +1,87 @@
 # ChangeLog
 
+## 261104-BETA-1
+
+- Amélioration: Infos clefs table 'cmd' tri par 'eqLogic_id'.
+- Amélioration: Interne page config. Mise-à-jour auto de certaines infos.
+- Amélioration: Suppression arriere plan de qq icones.
+- Amélioration: Support Zbeacon TH01 (2799).
+- Correction: Info 'EP-0008-cmd00/04' remonte comme entier et non plus comme chaine hexa.
+- Amélioration: Interne: Constantes Zigate (cosmetique).
+- Nouveauté: Ajout support Tuya energy meter (2801).
+- Amélioration: Info 'Up-Down' pour cluster 0008 n'est plus remontée (obsolete => 'EP-0008-cmdXX').
+- Amélioration: Interne page eq. Mise-à-jour auto de certaines infos.
+- Amélioration: Interne support Tuya DP. Ajout function custom 'voltageCurrentPower2' pour 2801.
+- Amélioration: Interne 'check_json'.
+- Correction: Interne Abeille.class: eqAnnounce, changement nom modele (defaultUnknown => xxx).
+- Amélioration: Page de config: Alerte si type de Zigate ne correspond pas à la version du FW.
+
+## 261027-BETA-2
+
+- Amélioration: Suppression arriere plan de qq icones.
+
+## 261027-BETA-1
+
+- Amélioration: Revue modèle 01MINIZB.
+- Correction: Interne Zigbee const: Syntaxe PHP.
+- Nouveauté: Ajout support Ikea Stybar (2798).
+- Amélioration: ParserD: Cluster 0005, cmds non supportées remonte '<EP>-0005-cmd0X' (pour 2798).
+- Nouveauté: Ajout support Zbeacon TH01 (2799).
+
+## 261026-BETA-1
+
+- Correction: Python venv (resources/python_venv) n'est plus supprimé lors de la mise-à-jour d'Abeille.
+- Correction: Interne AbeilleCmd: Status cmd nettoyé si erreur & retry.
+- Nouveauté: Ajout support Sonoff SNZB-02LD (2796).
+- Nouveauté: Ajout support Sonoff SNZB-02DR2 (2797).
+- Amélioration: Power cycle clef USB.
+- Correction: Interne MainD: Crash sur checkTrigOut() quand delay != 0.
+- Amélioration: Interne CmdD: Ajout cache interne pour optimisation acces DB.
+- Correction: Interne CmdD: 'sendReadAttributesResponse' peut envoyer status 86.
+- Correction: Interne ParserD: Renvoi 'unsupported' pour cluster 000A attrib 0003, 0004, & 0005.
+- Correction: Interne ParserD: Specifique Zigate.
+
+## 260901-STABLE-1, 260901-BETA-1, 260827-BETA-1
+
+- Nouveauté: Support Sonoff SNZB-02M température/humidité/pression (2794).
+- Amélioration: Interne. Assistant modèle (ajout 'Pressure' en 'hPa').
+
+## 260820-BETA-1
+
+- Amélioration: Interne MainD: 'createRemote' sorti de 'message()'.
+- Amélioration: Interne MainD: 'updateFromModel'/'resetFromModel' sorti de 'message()'.
+- Amélioration: Interne MainD: Status zigbee (joined/left) mis-à-jour.
+- Amélioration: Sonoff SNZB-02D: Ajout type de batterie.
+- Amélioration: Onglet avancé équipement: Ajout detail MAC capabilities.
+- Amélioration: Page santé: N'affiche 'NO-ACK' que si le device est en écoute permanente.
+- Amélioration: Onglet avancé équipement: Ajout date pour status Zigbee 'joined' or 'left'.
+- Amélioration: Interne Abeille.class + AbeilleTools. Optimisations.
+- Amélioration: Interne. Optimisations.
+
+## 260810-BETA-1
+
+- Amélioration: Détecteur de monoxyde de carbone Heiman HS-720ES (2793).
+- Correction: Interne ParserD: Cmds 00 & 04 (move to level) cluster 0008 retourne 'level' au lieu de 1.
+- Amélioration: Formattage infos clefs revu pour compatibilité JSON et lisibilité.
+- Amélioration: Interne assistant découverte.
+- Amélioration: Electrovanne Saswell SAS980SWT (2388): 'rcvValve-Status' => 'rcvValueEnum'.
+- Amélioration: Suppression cmde Tuya obsolete: 'rcvThermostat-Mode' => 'rcvValueEnum'
+
+## 260731-BETA-1
+
+- Amélioration: Suppression cmde obsolete 'Up-Down' => 'inf_zbCmdC-0008-MoveToLevel'.
+- Correction: Interne CmdD (configureZigate()).
+- Amélioration: Ajout version Jeedom dans les infos clefs.
+- Amélioration: Interne AbeilleCmdQueue: processCmdQueues() revu.
+- Amélioration: Interne: Ajout description 'logicalType'.
+- Amélioration: Assistant découverte: Ajout 'MAC capa' + 'logical type'.
+- Nouveauté: Support Sonoff MINI-ZBRBS (2791).
+- Amélioration: Reduction latence si plusieurs devices ne repondent pas.
+- Amélioration: Assistant découverte: Erreur de lecture manuf/model sur EP multiples.
+- Nouveauté: Support Sonoff SNZB-01M (2792).
+- Correction: Interne ParserD: Cmds 00 & 04 (move to level) cluster 0008 retourne 'level' au lieu de 1.
+- Nouveauté: Détecteur de monoxyde de carbone Heiman HS-720ES (2793).
+
 ## 260705-BETA-2, 260705-BETA-1
 
 - Nouveauté: Support capteur Hobeian ZG-204Z (2785).

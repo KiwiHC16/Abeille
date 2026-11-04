@@ -1,0 +1,87 @@
+{
+    "TS0601__TZE204_lsanae15": {
+        "manufacturer": "Tuya",
+        "model": "DAC2161C",
+        "type": "DIN energy meter",
+        "alternateIds": { "TS0601__TZE200_lsanae15": {} },
+        "genericType": "Electricity",
+        "timeout": "60",
+        "category": {
+            "energy": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-DINEnergyMeter",
+            "mainEP": "01"
+        },
+        "commands": {
+            "On": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=10&data=01",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=10&data=00",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "logicalId": "state",
+                "nextLine": "after",
+                "isVisible": 1
+            },
+            "Power": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "power",
+                "unit": "W",
+                "isVisible": 1
+            },
+            "Current": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "current",
+                "unit": "A",
+                "isVisible": 1
+            },
+            "Total power": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "energy",
+                "unit": "KWh",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Fault": {
+                "use": "inf_generic-String",
+                "logicalId": "fault",
+                "isVisible": 1
+            }
+        },
+        "private": {
+            "EF00": {
+                "type": "tuya",
+                "01": {
+                    "function": "rcvValue",
+                    "div": 100,
+                    "info": "energy"
+                },
+                "10": {
+                    "function": "rcvValue",
+                    "info": "state"
+                },
+                "06": {
+                    "function": "voltageCurrentPower2"
+                },
+                "0F": {
+                    "function": "rcvValueEnum",
+                    "enum": {
+                        "00": "none",
+                        "01": "Over current",
+                        "02": "Over power",
+                        "04": "Over voltage",
+                        "08": "Wrong freq"
+                    },
+                    "info": "fault"
+                }
+            }
+        }
+    }
+}

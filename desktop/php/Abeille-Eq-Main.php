@@ -113,7 +113,7 @@
         <div class="form-group" >
             <label class="col-lg-3 control-label">{{Source d'alimentation}}</label>
             <div class="col-lg-3">
-                <input id="idBatteryType" readonly class="form-control" style="width:100%" title="{{Source d'alimentation}}" value="" />
+                <input id="idPowerSource" readonly class="form-control" style="width:100%" title="{{Source d'alimentation}}" value="" />
             </div>
             <div class="col-lg-4">
             </div>
@@ -121,8 +121,8 @@
 
         <div class="form-group">
             <label class="col-lg-3 control-label">{{Qualité du lien}} (LQI, 1-255)</label>
-            <div advInfo="Link-Quality" class="col-lg-3">
-                <input type="text" id="tofill" value="" readonly style="width:100%">
+            <div class="col-lg-3">
+                <input type="text" abCmdLogicId="Link-Quality" value="" readonly style="width:100%">
             </div>
             <!-- <div class="col-lg-3">
                 < ?php

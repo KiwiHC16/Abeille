@@ -48,7 +48,7 @@
     	<div class="col-sm-10">
 			<select id="idDstZg" style="width : 40%">
 			<?php
-				for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+				for ($zgId = 1; $zgId <= maxGateways; $zgId++) {
 					if (config::byKey('ab::gtwEnabled'.$zgId, 'Abeille', 'N') != 'Y')
 						continue; // Disabled
 					echo '<option value="'.$zgId.'">Zigate '.$zgId.'</option>';

@@ -78,31 +78,78 @@
         case "cron": $sql = "SELECT * FROM `cron` WHERE `class` = 'Abeille'"; break;
         case "config": $sql = "SELECT * FROM `config` WHERE `plugin` = 'Abeille'"; break;
         case "eqLogic": $sql = "SELECT * FROM `eqLogic` WHERE `eqType_name` = 'Abeille'"; break;
-        case "cmd": $sql = "SELECT * FROM `cmd` WHERE `eqType` = 'Abeille'"; break;
+        case "cmd": $sql = "SELECT * FROM `cmd` WHERE `eqType` = 'Abeille' ORDER BY `eqLogic_id` ASC"; break;
         }
         $i = 0;
         logIt("{\n");
         if ($result = mysqli_query($link, $sql)) {
+            $first = true;
             while ($row = $result->fetch_assoc()) {
-                if (isset($row['id'])) {
-                    $id = $row['id'];
-                    unset($row['id']);
-                    logIt('    "'.$id.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
+                if ($first)
+                    $first = false;
+                else
+                    logIt(",\n");
+
+                if ($table == "cmd") {
+                    logIt('    "'.$row['logicalId'].'":');
+                } else if (isset($row['id'])) {
+                    // $id = $row['id'];
+                    // unset($row['id']);
+                    logIt('    "'.$row['id'].'":');
                 } else if (isset($row['key'])) {
                     $key = $row['key'];
                     unset($row['key']);
-                    if (($table == 'config') && ($key == 'api'))
-                        logIt('    "'.$key."\": FILTERED,\n");
-                    else
-                        logIt('    "'.$key.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
+                    if (($table == 'config') && ($key == 'api')) {
+                        logIt("    \"$key\": \"FILTERED\"");
+                        continue;
+                    }
+                    logIt('    "'.$key.'":');
                 } else {
-                    logIt('    "'.$i.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
+                    logIt('    "'.$i.'":');
                     $i++;
                 }
+
+                logIt(" { ");
+                $first2 = true;
+                $nextLine = "";
+                foreach ($row as $key => $val) {
+                    /* Note: Specific display for 'eqLogic' table with 'configuration' on the next line. */
+                    if (($table == 'eqLogic') && ($key == 'configuration')) {
+                        if ($nextLine == "")
+                            $nextLine = "           ";
+                        else
+                            $nextLine .= ", ";
+                        $decoded = json_decode($val);
+                        $nextLine .= "\"$key\": ".json_encode($decoded, JSON_UNESCAPED_SLASHES);
+                        continue;
+                    }
+
+                    if ($first2)
+                        $first2 = false;
+                    else
+                        logIt(", ");
+
+                    if ($val === null)
+                        logIt("\"$key\": \"\"");
+                    else {
+                        // Cleanup for readability: removing backslashes if any
+                        // Ex: "configuration":"{\"topic\":\"ZiGate-Time\"}"
+                        // Seems to be due to encoding something which is already JSON encoded.
+
+                        if (substr($val, 0, 1) == "{") {
+                            $decoded = json_decode($val);
+                            logIt("\"$key\": ".json_encode($decoded, JSON_UNESCAPED_SLASHES));
+                        } else
+                            logIt("\"$key\": \"$val\"");
+                    }
+                }
+                if ($nextLine != "")
+                    logIt(",\n$nextLine");
+                logIt(" }");
             }
             mysqli_free_result($result);
         }
-        logIt("}\n\n");
+        logIt("\n}\n\n");
     }
 
     // Display gateways informations
@@ -219,7 +266,7 @@
         logTitle("Devices");
         logIt("Reminder: TO=timeout, NA=no-ack, DIS=disabled\n");
 
-        for ($gtwId = 1; $gtwId <= maxNbOfZigate; $gtwId++) {
+        for ($gtwId = 1; $gtwId <= maxGateways; $gtwId++) {
             if (config::byKey('ab::gtwEnabled'.$gtwId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
 
@@ -313,12 +360,16 @@
     exec('uname -a', $result2);
     logIt("Kernel : ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n");
 
+    // Jeedom's version
+    $jeedomVersion = jeedom::version(); // Ex: '3.3.14'
+    logIt("Jeedom : Version $jeedomVersion\n");
+
     // Abeille's version
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");
     $line = fgets($file); // Should be a comment
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
-    logIt("Abeille: Version ".$abeilleVersion."\n\n");
+    logIt("Abeille: Version $abeilleVersion\n\n");
 
     // Zigate infos
     gatewaysInfos();

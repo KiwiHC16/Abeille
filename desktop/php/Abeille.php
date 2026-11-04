@@ -22,6 +22,7 @@
     $abQueues = $GLOBALS['abQueues'];
     echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToMain = "'.$abQueues['xToMainD']['id'].'";</script>'; // PHP to JS
 
     /* Creating a per Zigate list of eq ids.
        For each zigate, the first eq is the zigate.
@@ -70,6 +71,8 @@
 
     echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
     echo '<script>var js_urlProducts = "'.urlProducts.'";</script>';
+    $jTmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+    echo "<script>var js_jTmpDir = '$jTmpDir';</script>";
 ?>
 
 <!-- For all modals on 'Abeille' page. -->

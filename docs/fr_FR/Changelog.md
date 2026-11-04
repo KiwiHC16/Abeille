@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 261104-BETA-1
+
 - Amélioration: Infos clefs table 'cmd' tri par 'eqLogic_id'.
 - Amélioration: Interne page config. Mise-à-jour auto de certaines infos.
 - Amélioration: Suppression arriere plan de qq icones.

@@ -163,6 +163,38 @@
         }
     }
 
+    /* Queue ids used by Abeille before 261104 (xToCmd 0xAB04BC, xToMainD 0xAB026D).
+       PHP processes started before an upgrade (other plugins' daemons, like TimerSeconde)
+       keep the old config loaded and keep sending to the old ids, which nobody reads anymore:
+       their commands are silently lost. Such messages are forwarded to the new queues.
+       The old queue is only checked if it exists (no creation). */
+    function forwardLegacyQueues() {
+        static $lastCheck = 0;
+        static $warned = [];
+        $now = microtime(true);
+        if (($now - $lastCheck) < 0.5)
+            return;
+        $lastCheck = $now;
+
+        global $queueXToCmd, $queueXToAbeille;
+        $legacy = [ 0xAB04BC => $queueXToCmd, 0xAB026D => $queueXToAbeille ];
+        foreach ($legacy as $oldKey => $newQueue) {
+            if (!msg_queue_exists($oldKey))
+                continue;
+            $oldQueue = msg_get_queue($oldKey);
+            while (@msg_receive($oldQueue, 0, $msgType, 4096, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR)) {
+                $oldHex = sprintf("0x%X", $oldKey);
+                if (!isset($warned[$oldKey])) {
+                    logMessage('warning', "Message reçu sur l'ancienne file {$oldHex} : un démon Jeedom lancé avant la mise à jour d'Abeille est à redémarrer. Message transmis.");
+                    $warned[$oldKey] = true;
+                }
+                cmdLog('debug', "Legacy queue {$oldHex} => forwarded: ".$msgJson);
+                if (@msg_send($newQueue, $msgType, $msgJson, false, false, $errCode) == false)
+                    cmdLog('debug', "  forwardLegacyQueues() ERROR {$errCode}/".AbeilleTools::getMsgSendErr($errCode));
+            }
+        }
+    }
+
     /* Send msg to Abeille ('xToAbeille' queue) */
     function msgToAbeille($msg) {
 
@@ -596,6 +628,9 @@
 
                 // Check 'xToCmd' queue
                 $AbeilleCmdQueue->processXToCmdQueue();
+
+                // Forward messages sent to pre-261104 queue ids
+                forwardLegacyQueues();
 
                 // Check tempo queue
                 // TODO: This should be a separate thread to not disturb cmd to Zigate process.

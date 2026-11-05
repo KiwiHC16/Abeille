@@ -1405,7 +1405,7 @@ fe99369b88ceb7cae45f3453c63f485b  core/i18n/fr_FR.json
 2cde977b2dd2f6ca6984b8292a3f7a3f  core/php/AbeilleCliToQueue.php
 e9b6e3e1d5d210825a300ba10b429f8c  core/php/AbeilleCmd-Profalux.php
 cb9e394ca75afed35af729c8a1ce8eac  core/php/AbeilleCmd-Tuya.php
-9091730c360a18ae7aa50402c455e058  core/php/AbeilleCmdD.php
+5c415777a585fc5058fa6f3e364d67ea  core/php/AbeilleCmdD.php
 0705c47b2aa130979756fcad255163d9  core/php/AbeilleColorInspector.php
 3a8347a9ea19d1ee67793bc7080ab672  core/php/AbeilleDownload.php
 e1f54992b5dc71dfd41a9b365f49f8f4  core/php/AbeilleGetEq.php

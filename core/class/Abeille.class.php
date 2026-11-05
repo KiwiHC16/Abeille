@@ -891,13 +891,14 @@ class Abeille extends eqLogic {
 
         log::add('Abeille', 'debug', "$myPid >>> deamon_start()");
 
-        $shm = @shmop_open(shmKey, "c", 0644, shmSize);
-        if (($shm !== false) && (shmop_size($shm) < shmSize)) {
-            /* Segment created by a previous version with a smaller size: "c" reuses it as is => recreate it */
-            log::add('Abeille', 'debug', "$myPid deamon_start(): Shared mem too small (".shmop_size($shm)." < ".shmSize."), recreating it");
-            shmop_delete($shm);
-            $shm = @shmop_open(shmKey, "c", 0644, shmSize);
+        /* A segment created by a previous version may be smaller than shmSize: shmop_open("c") then fails
+           (shmget EINVAL). Delete it and create it again at the right size. */
+        $old = @shmop_open(shmKey, "w", 0, 0);
+        if (($old !== false) && (shmop_size($old) < shmSize)) {
+            log::add('Abeille', 'debug', "$myPid deamon_start(): Shared mem too small (".shmop_size($old)." < ".shmSize."), recreating it");
+            shmop_delete($old);
         }
+        $shm = @shmop_open(shmKey, "c", 0644, shmSize);
         if ($shm === false) {
             log::add('Abeille', 'error', "$myPid deamon_start(): Failed to create shared mem");
             return false;

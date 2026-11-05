@@ -39,7 +39,7 @@ e50afc255c9070bbfe70092800d14ef2  core/ajax/AbeilleFiles.ajax.php
 925883ec8140b98f8144a29c13348615  core/ajax/AbeilleModelChange.ajax.php
 e56e2df666472e08c687fd86beb376c8  core/ajax/AbeilleOTA.ajax.php
 c697264a367aa536ef60425b7fcf88ea  core/ajax/AbeilleZigate.ajax.php
-9e6172d9b68da0a32342bd89974fd55f  core/class/Abeille.class.php
+b4df386a795615c8a7da88f6a0bea503  core/class/Abeille.class.php
 6237ce5cee35a97f482932d32366b31b  core/class/AbeilleCmd.class.php
 50a092fb0ac8a8f99f581ce4f2d239e7  core/class/AbeilleCmdPrepare.class.php
 c5978a41d2ab6ff1b2ded5d9b0e50e48  core/class/AbeilleCmdProcess.class.php

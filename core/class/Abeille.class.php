@@ -34,7 +34,7 @@
     // include_once __DIR__.'/../php/AbeilleModels.php'; // library to deal with models => getModelsList()
 
     const shmKey = 0xAB0100; // Shared memory ID
-    const shmSize = 1400; // Shared memory max size
+    const shmSize = 8192; // Shared memory max size (1400 too small: 3 gateways = 12 daemons need ~1500 bytes)
     const semKey = 0xAB0101; // Semaphore ID
 
 class Abeille extends eqLogic {
@@ -892,6 +892,12 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', "$myPid >>> deamon_start()");
 
         $shm = @shmop_open(shmKey, "c", 0644, shmSize);
+        if (($shm !== false) && (shmop_size($shm) < shmSize)) {
+            /* Segment created by a previous version with a smaller size: "c" reuses it as is => recreate it */
+            log::add('Abeille', 'debug', "$myPid deamon_start(): Shared mem too small (".shmop_size($shm)." < ".shmSize."), recreating it");
+            shmop_delete($shm);
+            $shm = @shmop_open(shmKey, "c", 0644, shmSize);
+        }
         if ($shm === false) {
             log::add('Abeille', 'error', "$myPid deamon_start(): Failed to create shared mem");
             return false;

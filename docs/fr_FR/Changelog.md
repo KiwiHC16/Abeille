@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Amélioration: Interne. Suppression surcouche AbeilleDebug.class.
+
 ## 261104-BETA-1
 
 - Amélioration: Infos clefs table 'cmd' tri par 'eqLogic_id'.

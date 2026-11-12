@@ -268,6 +268,7 @@
              */
 
             case "UpGroup":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $Command = array(
                     "name" => "UpGroup",
                     "priority" => $priority,
@@ -281,6 +282,7 @@
                 );
                 break;
             case "DownGroup":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $Command = array(
                     "name" => "DownGroup",
                     "priority" => $priority,
@@ -330,6 +332,7 @@
             //     );
             //     break;
             case "OnOffGroupTimed":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -523,6 +526,7 @@
                 break;
 
             case "setLevelRaw":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -540,6 +544,7 @@
                 }
                 break;
             case "setLevelOSRAM":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                     "name" => "setLevel",
@@ -555,6 +560,7 @@
                                 );
                 break;
             case "setLevelVolet":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $eqLogic = eqLogic::byLogicalId($dest."/".$address, "Abeille" );
                 $a = $eqLogic->getConfiguration('paramA', 0);
                 $b = $eqLogic->getConfiguration('paramB', 1);
@@ -592,6 +598,7 @@
                 );
                 break;
             case "moveToLiftAndTiltBSO":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = $this->proper_parse_str($msg);
@@ -637,6 +644,7 @@
             //                         );
             //     break;
             case "setLevelHue":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                     "name" => "setLevel",
@@ -652,6 +660,7 @@
                                 );
                 break;
             case "setLevelGroup":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -687,6 +696,7 @@
             //     }
             //     break;
             case "setColourGroup":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = $this->proper_parse_str($msg);
@@ -839,6 +849,7 @@
                                 );
                 break;
             case "setColourHue":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                     "name" => "setColour",
@@ -853,6 +864,7 @@
                                 );
                 break;
             case "setColourOSRAM":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                     "name" => "setColour",
@@ -887,6 +899,7 @@
             //                         );
             //     break;
             case "setTemperatureGroup":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 // T°K   Hex sent  Dec eq
                 // 2200     01C6       454
                 // 2700     0172       370
@@ -1077,6 +1090,7 @@
             //     break;
 
             case "WindowsCoveringLevel":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = $this->proper_parse_str($msg);
@@ -1095,6 +1109,7 @@
                 break;
 
             case "WindowsCoveringGroup":
+                cmdLog('debug', "  WARNING: Using OBSOLETE command '$action'.");
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = $this->proper_parse_str($msg);

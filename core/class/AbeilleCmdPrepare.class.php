@@ -79,8 +79,8 @@
 
             $dest = str_replace('Cmd', '',  $type); // Remove 'Cmd' prefix
 
-            cmdLog("debug", '    Msg Received: Topic: {'.$topic.'} => '.$msg);
-            cmdLog("debug", '    (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
+            // cmdLog("debug", '    Msg Received: Topic: {'.$topic.'} => '.$msg);
+            // cmdLog("debug", '    (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action);
 
             $convertOnOff = array(
                 "On"      => "01",

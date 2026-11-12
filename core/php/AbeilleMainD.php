@@ -288,7 +288,7 @@
         $eqLogic->setIsEnable(1);
         $eqLogic->save();
 
-        updateDevicesCache($eqLogic); // Update local device cache
+        updateDeviceFromDB($eqLogic); // Update local device cache
 
         // TODO ? Missing basic cmds at this step
         // [2025-07-04 12:14:43]   updateTimestamp(): WARNING: Abeille1/F909, missing cmd 'Time-Time'

@@ -1,6 +1,7 @@
 # ChangeLog
 
 - Amélioration: Interne. Suppression surcouche AbeilleDebug.class.
+- Correction: MainD crash: updateDevicesCache() missing.
 
 ## 261104-BETA-1
 

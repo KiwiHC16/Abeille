@@ -339,7 +339,7 @@ function refreshEqInfos() {
             // }
 
             // Installing automatic update function for each 'info' cmd to be auto-updated
-            const auInfoCmds = document.querySelectorAll("[abCmdLogicId]"); // All with attribute "abCmdLogicId"
+            auInfoCmds = document.querySelectorAll("[abCmdLogicId]"); // All with attribute "abCmdLogicId"
             for (let i = 0; i < auInfoCmds.length; i++) {
                 elm = auInfoCmds[i];
                 console.log("auInfoCmds=", auInfoCmds[i]);

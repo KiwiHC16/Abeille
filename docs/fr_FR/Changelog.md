@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Correction: Support Tuya energy meter (2801).
+
 ## 261112-BETA-1
 
 - Amélioration: Interne. Suppression surcouche AbeilleDebug.class.

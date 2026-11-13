@@ -70,7 +70,7 @@
                 "06": {
                     "function": "voltageCurrentPower2"
                 },
-                "0F": {
+                "0A": {
                     "function": "rcvValueEnum",
                     "enum": {
                         "00": "none",

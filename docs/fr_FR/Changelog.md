@@ -3,6 +3,7 @@
 - Correction: Support Tuya energy meter (2801).
 - Correction: Interne Abeille.js (const auInfoCmds).
 - Amélioration: Interne. Support Tuya.
+- Nouveauté: Ajout support Sonoff Mini-ZBD (2803).
 
 ## 261112-BETA-1
 

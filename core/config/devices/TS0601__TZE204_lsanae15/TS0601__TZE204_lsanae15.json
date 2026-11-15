@@ -52,6 +52,8 @@
             "Fault": {
                 "use": "inf_generic-String",
                 "logicalId": "fault",
+                "returnStateValue": "none",
+                "returnStateTime": "1",
                 "isVisible": 1
             }
         },

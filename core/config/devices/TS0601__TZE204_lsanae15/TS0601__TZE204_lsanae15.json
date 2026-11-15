@@ -73,11 +73,11 @@
                 "0A": {
                     "function": "rcvValueEnum",
                     "enum": {
-                        "00": "none",
-                        "01": "Over current",
-                        "02": "Over power",
-                        "04": "Over voltage",
-                        "08": "Wrong freq"
+                        "00000000": "none",
+                        "00000001": "Over current",
+                        "00000002": "Over power",
+                        "00000004": "Over voltage",
+                        "00000008": "Wrong freq"
                     },
                     "info": "fault"
                 }

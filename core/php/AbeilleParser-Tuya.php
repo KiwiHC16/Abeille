@@ -78,7 +78,7 @@
         $tLen = substr($msg, 4, 4);
         $tData = substr($msg, 8, hexdec($tLen) * 2);
         $tDataTypeTxt = tuyaGetDpDataType($tDataType);
-        $m = "Dp={$tDpId}, Type={$tDataType}/{$tDataTypeTxt}, Len={$tLen}, ValueHex=".$tData;
+        $m = "Dp=$tDpId, Type=$tDataType/$tDataTypeTxt, Len=$tLen, ValueHex=$tData";
 
         $dp = array(
             'id' => $tDpId,
@@ -99,21 +99,32 @@
             return false;
         }
 
-        /* Syntax reminder
+        /* Syntax examples
             "private": {
                 "EF00": {
                     "type": "tuya",
                     "01": { "function": "rcvValue", "info": "0006-01-0000", "div": 1 },
                     "02": { "function": "rcvValue", "info": "0008-01-0000" },
                     "04": { "function": "voltageCurrentPower2" }, // Extract voltage, current & power
+                    "0A": {
+                        "function": "rcvValueEnum",
+                        "enum": {
+                            "00": "none",
+                            "01": "Over current",
+                            "02": "Over power",
+                            "04": "Over voltage",
+                            "08": "Wrong freq"
+                        },
+                        "info": "fault"
+                    }
                 }
             }
          */
 
         $status = true;
         $info = "undefined-info";
-        $div = 1; // For optional value division
-        $mult = 1; // For optional value multiplication
+        $div = 1; // For rcvValue optional division
+        $mult = 1; // For rcvValue optional multiplication
         $enum = []; // For rcvValueEnum
         if (isset($mapping[$dpId]['function'])) {
             $func = $mapping[$dpId]['function'];
@@ -219,7 +230,10 @@
                 'value' => $val,
             );
             break;
-        case "rcvValueEnum": // DP type 0x4: Converting value thru enum
+        case "rcvValueEnum": // Converting received value to string thru enum
+            // Note: received value could be enum (1B), bitmap (1/2/4 B) or even value (variable)
+            /* WARNING: Currently enum must be defined with exact data size
+               if "04" is defined and "00000004" is received (bitmap 4B) this will not match */
             $val = $dp['data'];
             // parserLog2("debug", $addr, "val=$val => enum=".json_encode($enum));
             if (isset($enum[$val])) {
@@ -230,6 +244,7 @@
                     'value' => $valOut,
                 );
             } else {
+                $logMsg = "  ".$dp['m']." => 'rcvValueEnum' => Unknown enum $val";
                 parserLog2("error", $addr, "  'rcvValueEnum' for dpId=$dpId: Unknown enum $val");
                 $status = false;
             }

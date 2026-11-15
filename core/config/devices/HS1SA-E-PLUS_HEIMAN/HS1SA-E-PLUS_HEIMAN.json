@@ -1,0 +1,71 @@
+{
+    "HS1SA-E-PLUS_HEIMAN": {
+        "manufacturer": "Heiman",
+        "model": "HS1SA-E-PLUS",
+        "type": "Heiman smoke detector",
+        "alternateIds" : {
+            "HS1SA-EF-3.0_HEIMAN": {}
+        },
+        "genericType": "Security",
+        "timeout": "60",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Heiman-COSensor",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "SetReporting 01-0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=3600&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "SetReporting 01-0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0402&attrId=0000&attrType=29&minInterval=540&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 9 to 10mins"
+            },
+            "Bind 01-0402-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "ZoneStatus-ChangeNotification": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "params": "ep=01",
+                "trigOut": {
+                    "01-0500-alarm1": {
+                        "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean bit0 value",
+                        "valueOffset": "#value#&1"
+                    }
+                }
+            },
+            "Zone Alarm1": {
+                "use": "inf_zone-Alarm1",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Bind 01-0500-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0500",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

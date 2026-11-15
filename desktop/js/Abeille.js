@@ -974,7 +974,6 @@ function monitorIt(zgId, zgPort) {
 
     $.ajax({
         type: "POST",
-        // url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
         url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
         data: {
             action: "monitor",

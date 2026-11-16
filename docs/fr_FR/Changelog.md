@@ -5,6 +5,7 @@
 - Amélioration: Interne. Support Tuya.
 - Nouveauté: Ajout support Sonoff Mini-ZBD (2803).
 - Nouveauté: Ajout support Heiman HS1SA-E-PLUS (2802).
+- Amélioration: Interne. Zigbee consts enhancements.
 
 ## 261112-BETA-1
 

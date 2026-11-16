@@ -1,5 +1,7 @@
 # ChangeLog
 
+## 261116-BETA-1
+
 - Correction: Support Tuya energy meter (2801).
 - Correction: Interne Abeille.js (const auInfoCmds).
 - Amélioration: Interne. Support Tuya.

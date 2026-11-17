@@ -1,5 +1,7 @@
 # ChangeLog
 
+- Correction: Interne page config: error JS (auInfoCmds already been declared).
+
 ## 261116-BETA-1
 
 - Correction: Support Tuya energy meter (2801).

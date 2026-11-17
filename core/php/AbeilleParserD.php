@@ -441,7 +441,7 @@
     function updateDeviceFromDB($eqId) {
         $eqLogic = eqLogic::byId($eqId);
         if (!is_object($eqLogic)) {
-            parserLog('error', "updateDeviceFromDB(${eqId}): Equipement inconnu");
+            parserLog('error', "ParserD/updateDeviceFromDB($eqId): Equipement inconnu");
             return;
         }
         $eqLogicId = $eqLogic->getLogicalId();
@@ -454,11 +454,6 @@
         $eq = &$GLOBALS['devices'][$net][$addr];
 
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        // $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
-        // $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
-        // $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
-        // if (isset($eqModel['modelPath'])) // Forced model variant case
-        //     $eq['modelPath'] = $eqModel['modelPath'];
         if (!isset($eqModel['modelSource']))
             $eqModel['modelSource'] = ''; // Default
         if (!isset($eqModel['modelPath']))
@@ -468,17 +463,6 @@
             parserLog('debug', "  'private' updated to ".json_encode($eq['private'], JSON_UNESCAPED_SLASHES));
         } else if (isset($GLOBALS['devices'][$net][$addr]['private']))
             unset($GLOBALS['devices'][$net][$addr]['private']);
-
-        // $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', null); // OBSOLETE soon. Replaced by 'private'
-        // if ($fromDevice !== null) { // OBSOLETE soon. Replaced by 'private'
-        //     $eq['fromDevice'] = $fromDevice;
-        //     parserLog('debug', "  'fromDevice' updated to ".json_encode($eq['fromDevice']));
-        // } else if (isset($eq['fromDevice']))
-        //     unset($GLOBALS['devices'][$net][$addr]['fromDevice']);
-        // $eq['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null); // OBSOLETE soon. Replaced by 'private'
-        // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($eq['tuyaEF00'])); // OBSOLETE soon. Replaced by 'private'
-        // $eq['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null); // OBSOLETE soon. Replaced by 'private'
-        // parserLog('debug', "  'xiaomi' updated to ".json_encode($eq['xiaomi'])); // OBSOLETE soon. Replaced by 'private'
 
         $eq['customization'] = $eqLogic->getConfiguration('ab::customization', null);
         parserLog('debug', "  'customization' updated to ".json_encode($eq['customization']));

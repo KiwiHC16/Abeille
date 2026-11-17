@@ -1290,7 +1290,7 @@ class Abeille extends eqLogic {
         }
 
         if ($modelSource == "local") {
-            $fullPath = __DIR__."/../config/devices/{$modelName}/{$modelName}.json";
+            $fullPath = __DIR__."/../config/devices/$modelName/$modelName.json";
             if (file_exists($fullPath))
                 message::add("Abeille", $eqHName.": Attention ! Modèle local (devices_local) utilisé alors qu'un modèle officiel existe.", '');
         }
@@ -1402,18 +1402,6 @@ class Abeille extends eqLogic {
         else
             $eqLogic->setConfiguration('poll', null);
 
-        // Tuya specific infos: OBSOLETE ! Replaced by 'private' + 'EF00' + 'type=tuya'
-        // if (isset($model['tuyaEF00']))
-        //     $eqLogic->setConfiguration('ab::tuyaEF00', $model['tuyaEF00']);
-        // else
-        //     $eqLogic->setConfiguration('ab::tuyaEF00', null);
-
-        // Xiaomi specific infos: OBSOLETE soon. Replaced by 'fromDevice'
-        // if (isset($model['xiaomi']))
-        //     $eqLogic->setConfiguration('ab::xiaomi', $model['xiaomi']);
-        // else
-        //     $eqLogic->setConfiguration('ab::xiaomi', null);
-
         // Zigbee & customization from model
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         if (isset($model['customization'])) {
@@ -1458,12 +1446,10 @@ class Abeille extends eqLogic {
             // 'variables' // Optional
             // 'private' // Optional
         );
-        if ($modelPath != "{$modelName}/{$modelName}.json")
+        if ($modelPath != "$modelName/$modelName.json")
             $eqModelInfos['modelPath'] = $modelPath;
         if (isset($model['private'])) // Private cluster or command specific infos
             $eqModelInfos['private'] = $model['private'];
-        // else if (isset($model['fromDevice'])) // OBSOLETE soon => replaced by 'private'
-        //     $eqModelInfos['fromDevice'] = $model['fromDevice'];
         if (isset($model['variables'])) // Optional variables
             $eqModelInfos['variables'] = $model['variables'];
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);

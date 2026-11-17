@@ -1746,7 +1746,7 @@
         Gateway FW version
         Gateway Zigbee channel (TODO) */
     // TODO: Currently missing initial value when page opens
-    const auInfoCmds = document.querySelectorAll("[abCmdLogicId]"); // All with attribute named abCmdLogicId=#logicalId#"
+    auInfoCmds = document.querySelectorAll("[abCmdLogicId]"); // All with attribute named abCmdLogicId=#logicalId#"
     if (auInfoCmds.length != 0) {
         console.log("Installing auto-update functions");
         for (let i = 0; i < auInfoCmds.length; i++) {
